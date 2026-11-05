@@ -7,7 +7,7 @@ The agreed sequence is to finish assembling the software before executing traini
 - [x] Establish the scientific scope and architecture.
 - [x] Define the canonical one-target-per-row observation contract.
 - [x] Define publication, provenance, and data-governance standards.
-- [x] Keep Astronaut integration explicitly deferred.
+- [x] Keep Astronaut integration explicitly deferred.\n- [x] Add a dependency-free, offline-first assistant adapter contract in Kinetics.\n- [x] Document the future Astronaut adapter boundary and security requirements.
 
 ## Stage 1 — Data and provenance
 - [x] Canonical kinetic observation schema and explicit unit conversion.

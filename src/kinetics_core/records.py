@@ -68,6 +68,8 @@ class KineticObservation:
 
 def canonicalize_measurement(target: Target, value: float, unit: str) -> tuple[float, str]:
     """Validate and convert a single measurement to its canonical SI-compatible unit."""
+    if target not in ("km", "kcat"):
+        raise ValueError("target must be 'km' or 'kcat'")
     factors = _KM_TO_M if target == "km" else _KCAT_TO_S
     if unit not in factors:
         raise ValueError(f"Unsupported unit {unit!r} for {target}; choose {sorted(factors)}")

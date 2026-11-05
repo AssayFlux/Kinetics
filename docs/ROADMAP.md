@@ -15,6 +15,7 @@ The agreed sequence is to finish assembling the software before executing traini
 - [x] Canonical kinetic observation schema and explicit unit conversion.
 - [x] Source-table normalization with configurable column mapping.
 - [x] Row-level rejected-record audit.
+- [x] Non-destructive duplicate/conflict and metadata-completeness audit.
 - [x] SHA-256 source file provenance and curation manifests.
 - [x] CatPred-DB target-specific normalization adapter.
 - [x] Grouped and double-cold partition utilities.

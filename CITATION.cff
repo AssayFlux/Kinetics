@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use Kinetics in research, please cite the software release and the upstream datasets and methods used."
+title: "Kinetics: Reproducible Enzyme Kinetic Research Software"
+type: software
+authors:
+  - name: AssayFlux
+version: 0.2.0
+date-released: 2026-11-05
+repository-code: "https://github.com/AssayFlux/Kinetics"

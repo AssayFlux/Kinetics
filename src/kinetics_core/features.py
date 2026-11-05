@@ -41,8 +41,11 @@ class ESM2Encoder:
         self._load()
         import torch
         sequence = sequence.strip().upper()
+        standard_amino_acids = set("ACDEFGHIKLMNPQRSTVWY")
         if not sequence or len(sequence) > self.max_residues:
             raise ValueError(f"Sequence must contain 1..{self.max_residues} residues")
+        if not set(sequence) <= standard_amino_acids:
+            raise ValueError("Sequence contains non-standard amino-acid symbols")
         tokens = self._tokenizer(sequence, return_tensors="pt", truncation=False)
         tokens = {name: value.to(self.device) for name, value in tokens.items()}
         with torch.inference_mode():

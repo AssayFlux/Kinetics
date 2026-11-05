@@ -48,10 +48,10 @@ def cluster_sequences(
     fasta = output / "sequences.fasta"
     token_to_record: dict[str, str] = {}
     with fasta.open("w", encoding="utf-8") as handle:
-        for index, row in enumerate(frame.itertuples(index=False)):
+        for index, (_, row) in enumerate(frame.iterrows()):
             token = f"kinetics_seq_{index:09d}"
-            record_id = str(getattr(row, record_id_column))
-            sequence = str(getattr(row, sequence_column)).strip().upper()
+            record_id = str(row[record_id_column])
+            sequence = str(row[sequence_column]).strip().upper()
             if not sequence:
                 raise ValueError(f"Empty sequence for record {record_id}")
             token_to_record[token] = record_id

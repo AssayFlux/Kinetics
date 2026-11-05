@@ -7,32 +7,27 @@ The helper checks exact source-record ID order before appending context features
 Apply the saved encoder unchanged to calibration and test rows:
 
 ```python
-from kinetics_core.context import augment_feature_archive
+from kinetics_core.context import attach_context_archive
 
-augment_feature_archive(
+attach_context_archive(
     "data/features/km_train.npz",
     "data/metadata/km_train.csv",
-    "data/features/km_train_context.npz",
-    encoder_path="artifacts/km/context_encoder.joblib",
-    fit_encoder=True,
+    "data/features/km_train_context.npz"
 )
-augment_feature_archive(
+attach_context_archive(
     "data/features/km_calibration.npz",
     "data/metadata/km_calibration.csv",
-    "data/features/km_calibration_context.npz",
-    encoder_path="artifacts/km/context_encoder.joblib",
-)
-augment_feature_archive(
+    "data/features/km_calibration_context.npz")
+attach_context_archive(
     "data/features/km_test.npz",
     "data/metadata/km_test.csv",
-    "data/features/km_test_context.npz",
-    encoder_path="artifacts/km/context_encoder.joblib",
-)
+    "data/features/km_test_context.npz")
 ```
 
-The metadata CSV must contain `source_record_id` and the configured assay
-columns. Rows must be in exactly the same order as the feature archive. Fit the
-encoder on training data only; do not fit or refit on calibration or test data.
+Each metadata CSV must contain `source_record_id` and the configured assay
+columns. Rows must be in exactly the same order as its feature archive. The
+fold-local pipeline learns preprocessing only from each CV training fold, then
+refits on the full training partition before calibration and final test.
 
 ## Independent calibration and model fitting
 
@@ -53,7 +48,6 @@ fit_target_model(
     holdout_group_arrays=("protein_cluster_id", "scaffold_id"),
     calibration_archive="data/features/km_calibration_context.npz",
     conformal_alpha=0.10,
-    context_encoder_path="artifacts/km/context_encoder.joblib",
 )
 ```
 

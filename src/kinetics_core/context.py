@@ -104,3 +104,81 @@ class AssayContextEncoder(BaseEstimator, TransformerMixin):
         """Return stable names for encoded assay-context dimensions."""
         check_is_fitted(self, attributes=["transformer_"])
         return self.transformer_.get_feature_names_out(input_features)
+
+
+
+def augment_feature_archive(
+    feature_archive: str,
+    context_csv: str,
+    output_archive: str,
+    *,
+    numeric_columns: Sequence[str] = ("ph", "temperature_k"),
+    categorical_columns: Sequence[str] = ("organism", "assay_method", "cofactor"),
+    encoder_path: str | None = None,
+    fit_encoder: bool = False,
+    id_column: str = "source_record_id",
+) -> str:
+    """Append assay-context features to an NPZ while enforcing row identity.
+
+    Fit mode is intended for the training archive only and persists the fitted
+    encoder. Transform mode loads that exact encoder for calibration/test data.
+    The CSV must contain one row per feature row in identical order, keyed by
+    the source record ID. No join/reordering is performed implicitly.
+    """
+    from pathlib import Path
+
+    import joblib
+    import numpy as np
+
+    archive_path = Path(feature_archive)
+    csv_path = Path(context_csv)
+    output_path = Path(output_archive)
+    if not archive_path.is_file() or not csv_path.is_file():
+        raise FileNotFoundError("feature archive and context CSV must both exist")
+    if not encoder_path:
+        raise ValueError("encoder_path is required to persist or load the context encoder")
+    with np.load(archive_path, allow_pickle=False) as data:
+        arrays = {key: data[key] for key in data.files}
+    if "source_record_ids" not in arrays:
+        raise ValueError("feature archive must contain source_record_ids for alignment")
+    context_frame = pd.read_csv(csv_path)
+    if id_column not in context_frame:
+        raise ValueError(f"context CSV is missing identity column {id_column!r}")
+    archive_ids = arrays["source_record_ids"].astype(str).reshape(-1)
+    context_ids = context_frame[id_column].astype(str).to_numpy()
+    if len(archive_ids) != len(context_ids) or not np.array_equal(archive_ids, context_ids):
+        raise ValueError(
+            "context CSV record IDs must exactly match feature archive IDs and row order"
+        )
+    encoder_file = Path(encoder_path)
+    if fit_encoder:
+        if encoder_file.exists():
+            raise FileExistsError(
+                f"Refusing to overwrite fitted encoder: {encoder_file}; choose a new path"
+            )
+        encoder = AssayContextEncoder(
+            numeric_columns=numeric_columns,
+            categorical_columns=categorical_columns,
+        )
+        encoded = encoder.fit_transform(context_frame)
+        encoder_file.parent.mkdir(parents=True, exist_ok=True)
+        joblib.dump(encoder, encoder_file, compress=3)
+    else:
+        if not encoder_file.is_file():
+            raise FileNotFoundError(encoder_file)
+        encoder = joblib.load(encoder_file)
+        if tuple(encoder.numeric_columns) != tuple(numeric_columns):
+            raise ValueError("loaded encoder numeric columns differ from requested columns")
+        if tuple(encoder.categorical_columns) != tuple(categorical_columns):
+            raise ValueError("loaded encoder categorical columns differ from requested columns")
+        encoded = encoder.transform(context_frame)
+    encoded = np.asarray(encoded, dtype=np.float32)
+    base = np.asarray(arrays["X"], dtype=np.float32)
+    if encoded.ndim != 2 or encoded.shape[0] != base.shape[0]:
+        raise ValueError("encoded context rows do not align with base feature matrix")
+    arrays["X"] = np.concatenate([base, encoded], axis=1).astype(np.float32)
+    arrays["context_feature_names"] = encoder.get_feature_names_out().astype(str)
+    arrays["context_encoder_path"] = np.asarray([str(encoder_file)])
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(output_path, **arrays)
+    return str(output_path)

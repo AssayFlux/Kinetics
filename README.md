@@ -154,3 +154,5 @@ The new research utilities are implementation work, not a claim of completed mod
 
 
 See [the implementation roadmap](docs/ROADMAP.md) for the staged build and final verification sequence.
+
+Additional implementation references: [sequence and chemical splits](docs/SEQUENCE_AND_CHEMICAL_SPLITS.md), [modeling and uncertainty](docs/MODELING_AND_UNCERTAINTY.md), [research paper outline](docs/RESEARCH_PAPER_OUTLINE.md), and [contribution guide](docs/CONTRIBUTING.md).

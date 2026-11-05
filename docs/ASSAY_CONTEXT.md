@@ -34,3 +34,8 @@ reported value/unit in the canonical observation/provenance records.
 This transformer is a feature utility; it has not yet been connected to the
 model-fitting orchestrator or scientifically evaluated. Compare context-aware
 and context-free models using identical, leakage-resistant split manifests.
+
+
+## Cross-validation integration
+
+For model fitting, prefer `attach_context_archive` from `kinetics_core.context`. It attaches raw metadata arrays after exact source-record alignment. The model workflow builds a scikit-learn preprocessing pipeline, so imputation, scaling, and one-hot vocabularies are fitted separately inside each cross-validation training fold. This avoids the subtle leakage that occurs when preprocessing is fitted once on the full training partition before CV. The standalone `AssayContextEncoder` remains available for exploratory use, but pre-encoded context archives are rejected by the publication-oriented fitting workflow.

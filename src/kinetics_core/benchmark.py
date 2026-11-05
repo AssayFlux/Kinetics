@@ -20,7 +20,9 @@ from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
 from .metrics import regression_report
 from .modeling import _load_feature_file, _validate_feature_metadata
-from .provenance import write_json_atomic
+from .experiments import build_experiment_manifest, save_experiment_manifest
+from .model_card import write_model_card
+from .provenance import file_record, write_json_atomic
 
 
 def _candidates(random_state: int) -> dict[str, Any]:
@@ -132,12 +134,75 @@ def compare_regressors(
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     import joblib
+    model_path = output / f"{target}_baseline_comparison_model.joblib"
+    report_path = output / f"{target}_baseline_comparison.json"
+    predictions_path = output / f"{target}_baseline_predictions.csv"
+    model_card_path = output / f"{target}_BASELINE_MODEL_CARD.md"
     joblib.dump({
         "estimator": selected,
         "target": target,
         "feature_dimension": int(X_train.shape[1]),
         "selected_model": selected_name,
         "selection_rule": report["selection_rule"],
-    }, output / f"{target}_baseline_comparison_model.joblib", compress=3)
-    write_json_atomic(report, output / f"{target}_baseline_comparison.json")
+    }, model_path, compress=3)
+    prediction_table = pd.DataFrame({
+        "source_record_id": (
+            np.asarray(test["source_record_ids"]).astype(str)
+            if "source_record_ids" in test else np.arange(len(y_test)).astype(str)
+        ),
+        "y_true_log10": y_test.astype(float),
+        "y_pred_log10": test_prediction.astype(float),
+        "residual_log10": (test_prediction - y_test).astype(float),
+    })
+    prediction_table.to_csv(predictions_path, index=False)
+    write_json_atomic(report, report_path)
+    write_model_card({
+        "model_name": f"Kinetics {target} baseline comparison",
+        "model_version": "0.1.0",
+        "software_version": "0.2.0",
+        "created_at": None,
+        "intended_use": ["Research baseline comparison and hypothesis generation."],
+        "out_of_scope_use": ["Treating predictions as experimental measurements."],
+        "dataset": {
+            "name": "Training feature archive",
+            "version": "see experiment manifest",
+            "source_url": "see source provenance",
+            "license": "see source provenance",
+            "n_observations": int(len(y_train)),
+        },
+        "evaluation": {
+            "split_strategy": split_label,
+            "n_test": int(len(y_test)),
+            "metrics": report["held_out"],
+            "model_selection": report["selection_rule"],
+            "uncertainty_method": "not calibrated",
+        },
+        "limitations": [
+            "Model selection uses fixed candidates and training-only cross-validation.",
+            "Held-out results are not used for candidate selection.",
+            "No uncertainty calibration is performed by this comparison workflow.",
+        ],
+        "feature_encoder": str(train.get("feature_model", np.asarray(["unknown"])).reshape(-1)[0]),
+        "model_sha256": file_record(model_path)["sha256"],
+        "random_seed": random_state,
+    }, model_card_path)
+    manifest = build_experiment_manifest(
+        experiment_id=f"{target}-baseline-comparison",
+        research_question=f"Compare classical baselines for enzyme {target} prediction",
+        inputs=[train_archive, test_archive],
+        outputs=[model_path, report_path, predictions_path, model_card_path],
+        configuration={
+            "target": target,
+            "cv_strategy": split_label,
+            "folds": int(folds),
+            "selected_model": selected_name,
+            "candidate_results": results,
+            "random_state": random_state,
+        },
+        notes=[
+            "Candidate selection uses training-only CV; the held-out archive is scored once.",
+            "Predictions are computational estimates, not experimental measurements.",
+        ],
+    )
+    save_experiment_manifest(manifest, output / f"{target}_baseline_experiment_manifest.json")
     return report

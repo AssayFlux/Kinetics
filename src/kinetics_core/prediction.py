@@ -8,7 +8,6 @@ import numpy as np
 
 from .features import ObservationFeatureBuilder
 from .uncertainty import conformal_interval
-from .context import context_design_matrix
 
 
 def predict_one(

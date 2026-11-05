@@ -12,6 +12,8 @@ from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
 from .experiments import build_experiment_manifest, save_experiment_manifest
 from .metrics import regression_report
+from .uncertainty import conformal_quantile
+from .applicability import ApplicabilityDomain
 from .model_card import write_model_card
 from .provenance import file_record, write_json_atomic
 
@@ -47,6 +49,10 @@ def fit_target_model(
     n_estimators: int = 500,
     max_depth: int = 6,
     n_splits: int = 5,
+    calibration_archive: str | Path | None = None,
+    conformal_alpha: float = 0.1,
+    context_encoder_path: str | Path | None = None,
+    applicability_quantile: float = 0.95,
 ) -> dict[str, Any]:
     """Fit one target model, evaluate a held-out archive, and save full metadata.
 
@@ -137,6 +143,44 @@ def fit_target_model(
     )
     estimator.fit(X_train, y_train)
     predictions = estimator.predict(X_test)
+    calibration = _load_feature_file(calibration_archive) if calibration_archive else None
+    conformal_q = None
+    if calibration is not None:
+        X_cal, y_cal = calibration["X"], calibration["y_log10"]
+        if X_cal.shape[1] != X_train.shape[1]:
+            raise ValueError("Calibration feature dimension does not match training features")
+        if "target" in calibration and str(calibration["target"].reshape(-1)[0]) != target:
+            raise ValueError("Calibration archive target does not match requested target")
+        for metadata_key in ("feature_model", "fingerprint_radius", "fingerprint_bits"):
+            if metadata_key in train and metadata_key in calibration:
+                if not np.array_equal(train[metadata_key], calibration[metadata_key]):
+                    raise ValueError(f"Calibration feature metadata differ: {metadata_key}")
+        for group_name in holdout_group_arrays:
+            if group_name not in calibration:
+                raise ValueError(f"Calibration archive missing leakage-check array: {group_name}")
+            train_groups = set(np.asarray(train[group_name]).astype(str).reshape(-1))
+            calibration_groups = set(np.asarray(calibration[group_name]).astype(str).reshape(-1))
+            test_groups = set(np.asarray(test[group_name]).astype(str).reshape(-1))
+            if train_groups.intersection(calibration_groups):
+                raise ValueError(f"Group leakage between training and calibration: {group_name}")
+            if train_groups.intersection(test_groups) or calibration_groups.intersection(test_groups):
+                raise ValueError(f"Group leakage across train/calibration/test: {group_name}")
+        calibration_predictions = estimator.predict(X_cal)
+        conformal_q = conformal_quantile(
+            y_cal, calibration_predictions, alpha=conformal_alpha
+        )
+
+    domain = ApplicabilityDomain(quantile=applicability_quantile).fit(X_train)
+    domain_test = domain.score(X_test)
+    applicability_summary = {
+        "method": domain_test["method"],
+        "threshold": float(domain_test["threshold"]),
+        "quantile": float(domain_test["quantile"]),
+        "reference_size": int(domain_test["reference_size"]),
+        "within_domain_fraction": float(np.mean(domain_test["within_domain"])),
+        "n_flagged": int(np.sum(~domain_test["within_domain"])),
+        "interpretation": domain_test["interpretation"],
+    }
     if "source_record_ids" in test:
         record_ids = np.asarray(test["source_record_ids"]).astype(str)
     else:
@@ -169,6 +213,26 @@ def fit_target_model(
             "subsample": 0.85,
             "colsample_bytree": 0.85,
         },
+        "applicability_domain": applicability_summary,
+        "calibration": ({
+            "method": "split_conformal_absolute_residual",
+            "alpha": float(conformal_alpha),
+            "quantile_log10": float(conformal_q),
+            "n_calibration": int(len(calibration["y_log10"])),
+            "test_empirical_coverage": float(np.mean(
+                np.abs(y_test - predictions) <= conformal_q
+            )),
+            "test_mean_interval_width_log10": float(2.0 * conformal_q),
+            "coverage_note": (
+                "Empirical coverage on the held-out test set is descriptive; "
+                "formal split-conformal guarantees require exchangeability and "
+                "a calibration set untouched by model selection."
+            ),
+        } if calibration is not None else {
+            "method": None,
+            "status": "not_calibrated",
+            "reason": "No independent calibration archive was supplied."
+        }),
         "warning": (
             "Row-random CV is diagnostic only; it does not establish protein or "
             "chemical cold-start generalization."
@@ -185,7 +249,14 @@ def fit_target_model(
         "fingerprint_radius": int(train.get("fingerprint_radius", np.asarray([-1])).reshape(-1)[0]),
         "fingerprint_bits": int(train.get("fingerprint_bits", np.asarray([-1])).reshape(-1)[0]),
         "canonical_unit": "M" if target == "km" else "s^-1",
+        "conformal_quantile_log10": conformal_q,
+        "conformal_alpha": float(conformal_alpha) if conformal_q is not None else None,
+        "applicability_domain": domain,
+        "context_encoder": None,
     }
+    if context_encoder_path is not None:
+        bundle["context_encoder"] = joblib.load(context_encoder_path)
+
     joblib.dump(bundle, output / f"{target}_model.joblib", compress=3)
     estimator.save_model(output / f"{target}_model.json")
     metrics_path = output / f"{target}_metrics.json"

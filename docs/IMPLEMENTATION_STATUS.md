@@ -22,6 +22,11 @@ Status is updated as code is added. This document separates implementation from 
 - RDKit canonical SMILES and Bemis-Murcko scaffold utilities.
 - Target-specific protein/substrate feature archives with optional grouping arrays.
 - Target-specific model-fitting and inference workflows with grouped cross-validation and multi-axis holdout leakage checks.
+- Independent split-conformal calibration archive workflow with held-out empirical coverage reporting.
+- Training-reference nearest-neighbour applicability-domain warnings (explicitly not calibrated confidence).
+- Train-fitted assay-context archive augmentation with exact source-record ID/order checks.
+- Fixed classical model-family comparison with CV-only selection and untouched held-out reporting.
+- Research CLI for baseline comparison and target-specific fitting.
 - Separate log-scale and original-unit metric reporting.
 - Split-conformal interval utilities.
 - Model-card generation, target-specific prediction interface, experiment report generation, and parity/residual plotting utilities.
@@ -35,7 +40,8 @@ Status is updated as code is added. This document separates implementation from 
 - Connect canonical observation outputs to the legacy preprocessing, prediction, and ONNX paths.
 - Retire or isolate the legacy two-target-per-row assumption without breaking documented compatibility.
 - Add end-to-end sequence-cluster and scaffold generation to the dataset workflow.
-- Complete end-to-end CLI orchestration, model-family comparison, and residual/subgroup analysis.
+- Complete multi-stage orchestration from public-source acquisition and curation through split, features, calibration, model selection, and reporting.
+- Expand residual/subgroup, shift, and uncertainty coverage-versus-width analyses.
 - Expand calibration evaluation to subgroup/shift analyses and add coverage-versus-width reporting.
 - Add BRENDA and SABIO-RK adapters after verifying current source schemas and terms.
 - Integrate report/figure utilities into a single reproducible experiment orchestrator.

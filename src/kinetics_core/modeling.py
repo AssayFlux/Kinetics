@@ -84,6 +84,9 @@ def fit_target_model(
     """
     if target not in ("km", "kcat"):
         raise ValueError("target must be 'km' or 'kcat'")
+    leakage_axes = tuple(
+        dict.fromkeys((*holdout_group_arrays, *((group_array,) if group_array else ())))
+    )
     try:
         from xgboost import XGBRegressor
         import joblib
@@ -207,7 +210,7 @@ def fit_target_model(
         if "target" in calibration and str(calibration["target"].reshape(-1)[0]) != target:
             raise ValueError("Calibration archive target does not match requested target")
         _validate_feature_metadata(train, calibration, label="training/calibration")
-        for group_name in holdout_group_arrays:
+        for group_name in leakage_axes:
             if group_name not in calibration:
                 raise ValueError(f"Calibration archive missing leakage-check array: {group_name}")
             calibration_groups_array = np.asarray(calibration[group_name]).astype(str).reshape(-1)
@@ -281,8 +284,8 @@ def fit_target_model(
             "alpha": float(conformal_alpha),
             "quantile_log10": float(conformal_q),
             "n_calibration": int(len(calibration["y_log10"])),
-            "group_independence_checked": bool(holdout_group_arrays),
-            "group_axes_checked": list(holdout_group_arrays),
+            "group_independence_checked": bool(leakage_axes),
+            "group_axes_checked": list(leakage_axes),
             "test_empirical_coverage": float(np.mean(
                 np.abs(y_test - predictions) <= conformal_q
             )),
@@ -309,7 +312,7 @@ def fit_target_model(
             target=target, min_group_size=5,
             conformal_quantile_log10=conformal_q,
         )
-        for group_name in holdout_group_arrays
+        for group_name in leakage_axes
     }
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)

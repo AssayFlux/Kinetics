@@ -387,7 +387,7 @@ def fit_target_model(
     manifest = build_experiment_manifest(
         experiment_id=f"{target}-{run_stamp}",
         research_question=f"Estimate enzyme {target} from protein sequence and substrate representation",
-        inputs=[train_archive, test_archive] + ([calibration_archive] if calibration_archive else []) + ([context_encoder_path] if context_encoder_path else []),
+        inputs=[train_archive, test_archive] + ([calibration_archive] if calibration_archive else []),
         outputs=[model_path, output / f"{target}_model.json", metrics_path,
                  predictions_path, model_card_path],
         configuration={

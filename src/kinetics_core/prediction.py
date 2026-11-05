@@ -8,6 +8,7 @@ import numpy as np
 
 from .features import ObservationFeatureBuilder
 from .uncertainty import conformal_interval
+from .context import context_design_matrix
 
 
 def predict_one(
@@ -42,21 +43,32 @@ def predict_one(
         device=device,
     )
     features = builder.transform_one(sequence, smiles).reshape(1, -1)
-    context_encoder = bundle.get("context_encoder")
-    if context_encoder is not None:
+    context_enabled = bool(bundle.get("context_enabled", False))
+    if context_enabled:
         if assay_context is None:
             raise ValueError("This model requires assay_context values for prediction")
         import pandas as pd
-        context_frame = pd.DataFrame([assay_context])
-        encoded_context = context_encoder.transform(context_frame)
-        features = np.concatenate(
-            [features, np.asarray(encoded_context, dtype=np.float32)], axis=1
-        )
-    elif assay_context:
-        raise ValueError("Model was not trained with an assay-context encoder")
+        numeric_columns = bundle.get("context_numeric_columns", [])
+        categorical_columns = bundle.get("context_categorical_columns", [])
+        required_context = [*numeric_columns, *categorical_columns]
+        missing_context = [name for name in required_context if name not in assay_context]
+        if missing_context:
+            raise ValueError(f"Missing required assay context values: {missing_context}")
+        context_row = {
+            f"base_{index}": float(value)
+            for index, value in enumerate(features.reshape(-1))
+        }
+        context_row.update({name: assay_context[name] for name in required_context})
+        model_input = pd.DataFrame([context_row])
+        domain_input = bundle["estimator"].named_steps["preprocessing"].transform(model_input)
+    else:
+        if assay_context:
+            raise ValueError("Model was not trained with assay-context features")
+        model_input = features
+        domain_input = features
     if features.shape[1] != int(bundle["feature_dimension"]):
         raise ValueError("Generated feature dimension does not match the model artifact")
-    prediction_log10 = float(bundle["estimator"].predict(features)[0])
+    prediction_log10 = float(bundle["estimator"].predict(model_input)[0])
     unit = "M" if target == "km" else "s^-1"
     result: dict[str, Any] = {
         "target": target,
@@ -79,7 +91,7 @@ def predict_one(
         }
     domain = bundle.get("applicability_domain")
     if domain is not None:
-        domain_result = domain.score(features)
+        domain_result = domain.score(domain_input)
         result["applicability_domain"] = {
             "within_domain": bool(domain_result["within_domain"][0]),
             "nearest_reference_distance": float(

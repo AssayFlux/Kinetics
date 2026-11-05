@@ -59,6 +59,8 @@ def subgroup_regression_report(
     Small groups remain visible but are marked insufficient for stable metric
     interpretation. Coverage is descriptive, not a subgroup guarantee.
     """
+    if target not in ("km", "kcat"):
+        raise ValueError("target must be 'km' or 'kcat'")
     truth = np.asarray(y_true_log10, dtype=float).reshape(-1)
     prediction = np.asarray(y_pred_log10, dtype=float).reshape(-1)
     labels = np.asarray(groups).astype(str).reshape(-1)

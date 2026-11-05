@@ -21,10 +21,10 @@ Status is updated as code is added. This document separates implementation from 
 - MMseqs2 sequence-clustering wrapper with version/command manifest.
 - RDKit canonical SMILES and Bemis-Murcko scaffold utilities.
 - Target-specific protein/substrate feature archives with optional grouping arrays.
-- Target-specific model-fitting workflow with grouped cross-validation support.
+- Target-specific model-fitting and inference workflows with grouped cross-validation and multi-axis holdout leakage checks.
 - Separate log-scale and original-unit metric reporting.
 - Split-conformal interval utilities.
-- Model-card generation and target-specific prediction interface.
+- Model-card generation, target-specific prediction interface, experiment report generation, and parity/residual plotting utilities.
 - Installable kinetics_core package metadata and CLI entry point.
 - Scientific architecture, data model, split design, publication protocol, paper outline, contribution guidance, and citation metadata.
 
@@ -36,7 +36,7 @@ Status is updated as code is added. This document separates implementation from 
 - Add assay-context feature engineering and applicability-domain diagnostics.
 - Add calibration-data workflow and prediction-time uncertainty outputs to the inference interface.
 - Add BRENDA and SABIO-RK adapters after verifying current source schemas and terms.
-- Add end-to-end experiment orchestration and reproducible figure/table/report generation.
+- Integrate the report/figure utilities into a complete end-to-end experiment orchestrator.
 - Complete CLI ergonomics, packaging compatibility, and user documentation.
 
 ## Verification status

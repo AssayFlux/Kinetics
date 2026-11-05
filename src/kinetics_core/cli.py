@@ -15,6 +15,16 @@ def build_parser() -> argparse.ArgumentParser:
     audit.add_argument("--output-dir", required=True)
     audit.add_argument("--log10-tolerance", type=float, default=1e-8)
 
+    partition = subparsers.add_parser("partition")
+    partition.add_argument("--observations", required=True)
+    partition.add_argument("--output-dir", required=True)
+    partition.add_argument("--target", choices=("km", "kcat"), required=True)
+    partition.add_argument("--protein-group-column", default="protein_cluster_id")
+    partition.add_argument("--substrate-group-column", default="scaffold_id")
+    partition.add_argument("--test-fraction", type=float, default=0.2)
+    partition.add_argument("--calibration-fraction", type=float, default=0.2)
+    partition.add_argument("--random-state", type=int, default=42)
+
     for command in ("compare", "fit"):
         sub = subparsers.add_parser(command)
         sub.add_argument("--train", required=True, help="Training NPZ feature archive")
@@ -38,7 +48,18 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    if args.command == "audit":
+    if args.command == "partition":
+        from .partition import prepare_target_partitions
+
+        result = prepare_target_partitions(
+            args.observations, args.output_dir, target=args.target,
+            protein_group_column=args.protein_group_column,
+            substrate_group_column=args.substrate_group_column,
+            test_fraction=args.test_fraction,
+            calibration_fraction=args.calibration_fraction,
+            random_state=args.random_state,
+        )
+    elif args.command == "audit":
         from pathlib import Path
         import pandas as pd
         from .quality import audit_observations

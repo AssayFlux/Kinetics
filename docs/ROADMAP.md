@@ -16,13 +16,14 @@ The agreed sequence is to finish assembling the software before executing traini
 - [x] SHA-256 source file provenance and curation manifests.
 - [x] CatPred-DB target-specific normalization adapter.
 - [x] Grouped and double-cold partition utilities.
-- [ ] Automated sequence-cluster assignment and versioned cluster metadata.
-- [ ] Automated substrate standardization and scaffold assignment.
+- [x] MMseqs2 sequence-clustering wrapper with versioned mapping manifest.
+- [x] RDKit canonical SMILES and Bemis-Murcko scaffold assignment utilities.
 - [ ] BRENDA and SABIO-RK adapters after source schema/license verification.
 
 ## Stage 2 — Feature and model architecture
 - [x] Target-independent protein/substrate feature generation.
 - [x] Feature cache keyed by encoder and fingerprint configuration.
+- [x] Target-specific prediction interface.
 - [x] Preserve source IDs and grouping metadata in feature archives.
 - [x] Target-specific model fitting workflow definition.
 - [ ] Assay-context feature pipeline.
@@ -41,6 +42,7 @@ The agreed sequence is to finish assembling the software before executing traini
 ## Stage 4 — Research workflow and outputs
 - [x] Experiment manifest and environment metadata utilities.
 - [x] Model-card generation.
+- [x] Preliminary software citation metadata.
 - [x] Publication protocol and manuscript outline.
 - [ ] End-to-end experiment runner and artifact store.
 - [ ] Reproducible figure/table/report generation.

@@ -5,6 +5,7 @@ import pytest
 from kinetics_core.applicability import ApplicabilityDomain
 from kinetics_core.context import AssayContextEncoder
 from kinetics_core.uncertainty import conformal_interval, conformal_quantile
+from kinetics_core.quality import audit_observations
 
 
 def test_context_encoder_ignores_unselected_identifier_and_handles_unknown_category():
@@ -55,9 +56,6 @@ def test_applicability_domain_flags_far_query():
     assert bool(near["within_domain"][0])
     assert not bool(far["within_domain"][0])
     assert "not a probability" in near["interpretation"]
-
-
-from kinetics_core.quality import audit_observations
 
 
 def test_quality_audit_flags_conflicting_duplicate_without_dropping_rows():

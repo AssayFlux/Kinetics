@@ -42,3 +42,62 @@ def regression_report(y_true_log10, y_pred_log10, *, target: str) -> dict:
             "median_fold_error": float(np.median(fold_error)),
         },
     }
+
+
+
+def subgroup_regression_report(
+    y_true_log10,
+    y_pred_log10,
+    groups,
+    *,
+    target: str,
+    min_group_size: int = 5,
+    conformal_quantile_log10: float | None = None,
+) -> dict:
+    """Report per-group errors and optional empirical interval coverage.
+
+    Small groups remain visible but are marked insufficient for stable metric
+    interpretation. Coverage is descriptive, not a subgroup guarantee.
+    """
+    truth = np.asarray(y_true_log10, dtype=float).reshape(-1)
+    prediction = np.asarray(y_pred_log10, dtype=float).reshape(-1)
+    labels = np.asarray(groups).astype(str).reshape(-1)
+    if truth.shape != prediction.shape or truth.shape != labels.shape:
+        raise ValueError("truth, prediction, and groups must have equal lengths")
+    if truth.size == 0 or not np.isfinite(truth).all() or not np.isfinite(prediction).all():
+        raise ValueError("truth and prediction must be non-empty and finite")
+    if min_group_size < 1:
+        raise ValueError("min_group_size must be positive")
+    if conformal_quantile_log10 is not None and (
+        not np.isfinite(conformal_quantile_log10) or conformal_quantile_log10 < 0
+    ):
+        raise ValueError("conformal quantile must be finite and non-negative")
+    results = []
+    for label in sorted(np.unique(labels)):
+        mask = labels == label
+        n = int(mask.sum())
+        item = {"group": label, "n": n}
+        if n < min_group_size:
+            item["status"] = "insufficient_group_size"
+        else:
+            item["status"] = "reported"
+            item["metrics"] = regression_report(
+                truth[mask], prediction[mask], target=target
+            )
+        if conformal_quantile_log10 is not None:
+            item["empirical_interval_coverage"] = float(np.mean(
+                np.abs(truth[mask] - prediction[mask]) <= conformal_quantile_log10
+            ))
+            item["interval_width_log10"] = float(2.0 * conformal_quantile_log10)
+        results.append(item)
+    return {
+        "target": target,
+        "min_group_size": int(min_group_size),
+        "n_groups": int(len(results)),
+        "groups": results,
+        "coverage_interpretation": (
+            "Subgroup coverage is descriptive and does not establish a formal "
+            "conditional coverage guarantee."
+            if conformal_quantile_log10 is not None else None
+        ),
+    }

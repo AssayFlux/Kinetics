@@ -26,7 +26,7 @@ The agreed sequence is to finish assembling the software before executing traini
 - [x] Target-specific prediction interface.
 - [x] Preserve source IDs and grouping metadata in feature archives.
 - [x] Target-specific model fitting workflow definition.
-- [ ] Assay-context feature pipeline.
+- [x] Assay-context feature encoder with train-only fitting and missingness handling.\n- [ ] Connect assay-context features to the experiment/model orchestration workflow.
 - [ ] Additional model families and baseline comparison interfaces.
 - [ ] Applicability-domain and out-of-distribution diagnostics.
 - [ ] Prediction-time uncertainty interface.

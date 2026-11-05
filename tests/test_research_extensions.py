@@ -128,3 +128,21 @@ def test_context_pipeline_fits_unknown_categories_safely():
     }))
     assert predicted.shape == (1,)
     assert np.isfinite(predicted).all()
+
+
+
+def test_subgroup_diagnostics_keep_small_groups_visible_and_report_coverage():
+    from kinetics_core.metrics import subgroup_regression_report
+
+    result = subgroup_regression_report(
+        [1.0, 1.1, 2.0, 2.1, 2.2, 3.0],
+        [1.0, 1.0, 2.0, 2.0, 2.0, 3.0],
+        ["a", "a", "b", "b", "b", "small"],
+        target="km",
+        min_group_size=2,
+        conformal_quantile_log10=0.2,
+    )
+    assert result["n_groups"] == 3
+    assert result["groups"][0]["status"] == "reported"
+    assert result["groups"][2]["status"] == "insufficient_group_size"
+    assert result["groups"][0]["empirical_interval_coverage"] == 1.0

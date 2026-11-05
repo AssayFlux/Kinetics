@@ -118,3 +118,15 @@ print(result)
 Seeds default to 42. Preserve raw data provenance, assay metadata, package versions, model identifiers and metrics. Data and model artifacts are git-ignored; publish only artifacts you are permitted to redistribute.
 
 No license is selected yet. Add an OSI-approved license before accepting contributions or redistributing model/data artifacts.
+
+
+## Public datasets
+
+Kinetics uses public enzyme-kinetics resources. Start with the CatPred-DB processed Km and kcat tables and published sequence-cluster test splits:
+
+```bash
+python scripts/download_public_datasets.py --source catpred-db
+python scripts/inspect_public_datasets.py --input-dir data/public/catpred-db
+```
+
+Downloaded data stays local and is excluded from Git. Review [DATASETS.md](DATASETS.md) for source links, attribution/license notes, curation rules, and the planned BRENDA/SABIO-RK extensions. The CatPred-DB Km and kcat tables are separate datasets and must not be merged as if their rows were matched measurements. Inspect source schemas and units before normalizing or training. No data is bundled and no model has yet been trained on these downloads.

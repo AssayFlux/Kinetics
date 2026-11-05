@@ -21,7 +21,8 @@ def normalize_observation_table(
     source: str,
     source_record_id_column: str,
     value_column: str,
-    unit: str,
+    unit: str | None = None,
+    unit_column: str | None = None,
     sequence_column: str | None = None,
     smiles_column: str | None = None,
     accession_column: str | None = None,
@@ -49,6 +50,12 @@ def normalize_observation_table(
     missing = [column for column in required if column not in frame.columns]
     if missing:
         raise ValueError(f"Missing required source columns: {missing}")
+    if unit is None and unit_column is None:
+        raise ValueError("Provide a fixed unit or a source unit_column")
+    if unit is not None and unit_column is not None:
+        raise ValueError("Provide either unit or unit_column, not both")
+    if unit_column is not None and unit_column not in frame.columns:
+        raise ValueError(f"Configured unit column does not exist: {unit_column}")
     for column in optional:
         if column is not None and column not in frame.columns:
             raise ValueError(f"Configured metadata column does not exist: {column}")
@@ -63,10 +70,13 @@ def normalize_observation_table(
             value = float(row[value_column])
             if not math.isfinite(value) or value <= 0:
                 raise ValueError("measurement is non-finite or non-positive")
+            row_unit = str(row[unit_column]).strip() if unit_column else str(unit)
+            if unit_column and (pd.isna(row[unit_column]) or not row_unit):
+                raise ValueError("missing measurement unit")
             observation = KineticObservation(
                 target=target,
                 value=value,
-                unit=unit,
+                unit=row_unit,
                 source=source,
                 source_record_id=record_id,
                 sequence=_optional_text(row, sequence_column),

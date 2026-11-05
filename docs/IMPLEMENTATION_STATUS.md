@@ -25,7 +25,7 @@ Status is updated as code is added. This document separates implementation from 
 - Target-specific model-fitting and inference workflows with grouped cross-validation and multi-axis holdout leakage checks.
 - Independent split-conformal calibration archive workflow with held-out empirical coverage reporting.
 - Training-reference nearest-neighbour applicability-domain warnings (explicitly not calibrated confidence).
-- Train-fitted assay-context archive augmentation with exact source-record ID/order checks.
+- Raw assay-context archive attachment with exact source-record ID/order checks and fold-local preprocessing to prevent CV leakage.
 - Fixed classical model-family comparison with CV-only selection and untouched held-out reporting.
 - Research CLI for dataset quality auditing, baseline comparison, and target-specific fitting.
 - Separate log-scale and original-unit metric reporting.
@@ -34,7 +34,7 @@ Status is updated as code is added. This document separates implementation from 
 - Installable kinetics_core package metadata and CLI entry point.
 - Scientific architecture, data model, split design, publication protocol, paper outline, contribution guidance, and citation metadata.
 - Dependency-free offline assistant protocol and Kinetics research-aware facade, ready for a future Astronaut adapter.
-- Allowlist-based assay-context encoder with train-fitted numeric imputation/scaling, missingness handling, and categorical one-hot encoding.
+- Allowlist-based assay-context preprocessing with fold-local imputation/scaling and categorical encoding inside cross-validation.
 
 ## Integration work still required
 

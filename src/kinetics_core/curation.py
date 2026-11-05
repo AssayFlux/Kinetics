@@ -64,8 +64,11 @@ def normalize_observation_table(
     rejected: list[dict[str, Any]] = []
     for row_number, row in frame.iterrows():
         try:
-            record_id = str(row[source_record_id_column]).strip()
-            if not record_id or record_id.lower() in {"nan", "none"}:
+            raw_record_id = row[source_record_id_column]
+            if pd.isna(raw_record_id):
+                raise ValueError("missing source record identifier")
+            record_id = str(raw_record_id).strip()
+            if not record_id or record_id.lower() in {"nan", "none", "<na>"}:
                 raise ValueError("missing source record identifier")
             value = float(row[value_column])
             if not math.isfinite(value) or value <= 0:

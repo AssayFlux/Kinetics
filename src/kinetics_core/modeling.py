@@ -296,7 +296,7 @@ def fit_target_model(
     bundle = {
         "estimator": estimator,
         "target": target,
-        "feature_dimension": int(X_train.shape[1]),
+        "feature_dimension": base_dimension,
         "feature_model": str(train.get("feature_model", np.asarray(["unknown"])).reshape(-1)[0]),
         "fingerprint_radius": int(train.get("fingerprint_radius", np.asarray([-1])).reshape(-1)[0]),
         "fingerprint_bits": int(train.get("fingerprint_bits", np.asarray([-1])).reshape(-1)[0]),

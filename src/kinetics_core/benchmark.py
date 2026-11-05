@@ -15,7 +15,7 @@ from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
 from .metrics import regression_report
-from .modeling import _load_feature_file
+from .modeling import _load_feature_file, _validate_feature_metadata
 from .provenance import write_json_atomic
 
 
@@ -56,9 +56,7 @@ def compare_regressors(
     X_test, y_test = test["X"], test["y_log10"]
     if X_train.shape[1] != X_test.shape[1]:
         raise ValueError("train/test feature dimensions differ")
-    for name in ("feature_model", "fingerprint_radius", "fingerprint_bits", "context_feature_names"):
-        if name in train and name in test and not np.array_equal(train[name], test[name]):
-            raise ValueError(f"train/test feature metadata differ: {name}")
+    _validate_feature_metadata(train, test, label="training/held-out")
     for name in holdout_group_arrays:
         if name not in train or name not in test:
             raise ValueError(f"Missing required holdout grouping array: {name}")

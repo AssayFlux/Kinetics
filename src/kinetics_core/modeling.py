@@ -6,7 +6,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import joblib
 import numpy as np
 from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
@@ -57,8 +56,9 @@ def fit_target_model(
         raise ValueError("target must be 'km' or 'kcat'")
     try:
         from xgboost import XGBRegressor
+        import joblib
     except ImportError as exc:
-        raise RuntimeError("Model fitting requires xgboost; install the baseline extra") from exc
+        raise RuntimeError("Model fitting requires xgboost and joblib; install the baseline extra") from exc
 
     train = _load_feature_file(train_archive)
     test = _load_feature_file(test_archive)

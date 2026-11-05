@@ -62,3 +62,14 @@ These are supporting annotation sources, not substitutes for measured Km or kcat
 Start with CatPred-DB's published processed CSVs and small sequence-clustered test splits. Inspect their columns and units before writing the canonical adapter. Cache protein embeddings once, use a compact baseline first, and avoid downloading large structure/model artifacts until they are justified.
 
 No dataset is committed to this repository, and no model has been trained from these downloads yet.
+
+
+## Canonical normalization adapter
+
+The research package provides a target-specific adapter. First inspect the upstream CSV columns using the existing inspection script. Then map the exact source identifier and measurement columns explicitly:
+
+```bash
+python -m kinetics_core.catpred --input data/public/catpred-db/km_processed.csv --target km --record-id-column SOURCE_ID --value-column KM_VALUE --unit mM --sequence-column SEQUENCE --output-dir data/processed/catpred-db
+```
+
+Replace the example column names and unit with the exact fields observed in the downloaded file. Do not assume the example names exist upstream. Run the adapter separately for kcat with its own source file and explicit unit. The adapter writes accepted observations, rejected rows with reasons, and a JSON manifest containing the source-file hash and mapping configuration. It does not pair Km and kcat records.

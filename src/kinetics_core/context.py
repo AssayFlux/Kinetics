@@ -127,7 +127,9 @@ def attach_context_archive(
 
     import numpy as np
 
-    archive_path, csv_path, output_path = Path(feature_archive), Path(context_csv), Path(output_archive)
+    archive_path = Path(feature_archive)
+    csv_path = Path(context_csv)
+    output_path = Path(output_archive)
     if not archive_path.is_file() or not csv_path.is_file():
         raise FileNotFoundError("feature archive and context CSV must both exist")
     selected = [*numeric_columns, *categorical_columns]
@@ -158,7 +160,9 @@ def attach_context_archive(
     arrays["context_numeric_columns"] = np.asarray(tuple(numeric_columns), dtype=str)
     arrays["context_categorical_columns"] = np.asarray(tuple(categorical_columns), dtype=str)
     for column in numeric_columns:
-        numeric_values = pd.to_numeric(context_frame[column], errors="coerce").to_numpy(dtype=np.float64)
+        numeric_values = pd.to_numeric(
+            context_frame[column], errors="coerce"
+        ).to_numpy(dtype=np.float64)
         numeric_values[~np.isfinite(numeric_values)] = np.nan
         arrays[f"context_raw__{column}"] = numeric_values
     for column in categorical_columns:
@@ -209,7 +213,7 @@ def make_context_pipeline(estimator, *, numeric_columns, categorical_columns, ba
         transformers.append((
             "numeric",
             Pipeline([
-                ("imputer", SimpleImputer(strategy="median", add_indicator=True)),
+                ("imputer", SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True)),
                 ("scaler", StandardScaler()),
             ]),
             list(numeric_columns),

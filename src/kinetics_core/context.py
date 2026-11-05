@@ -182,3 +182,121 @@ def augment_feature_archive(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(output_path, **arrays)
     return str(output_path)
+
+
+
+def attach_context_archive(
+    feature_archive: str,
+    context_csv: str,
+    output_archive: str,
+    *,
+    numeric_columns: Sequence[str] = ("ph", "temperature_k"),
+    categorical_columns: Sequence[str] = ("organism", "assay_method", "cofactor"),
+    id_column: str = "source_record_id",
+) -> str:
+    """Attach raw assay context for fold-local preprocessing during CV.
+
+    Unlike pre-encoding, this stores raw context arrays. The modeling pipeline
+    fits imputation, scaling, and category vocabularies independently inside
+    each cross-validation fold, preventing validation-fold preprocessing
+    leakage. Source record IDs and row order must match exactly.
+    """
+    from pathlib import Path
+
+    import numpy as np
+
+    archive_path, csv_path, output_path = Path(feature_archive), Path(context_csv), Path(output_archive)
+    if not archive_path.is_file() or not csv_path.is_file():
+        raise FileNotFoundError("feature archive and context CSV must both exist")
+    selected = [*numeric_columns, *categorical_columns]
+    if not selected or len(selected) != len(set(selected)):
+        raise ValueError("context feature columns must be non-empty and unique")
+    context_frame = pd.read_csv(csv_path)
+    required = [id_column, *selected]
+    missing = [column for column in required if column not in context_frame.columns]
+    if missing:
+        raise ValueError(f"context CSV is missing columns: {missing}")
+    with np.load(archive_path, allow_pickle=False) as data:
+        arrays = {key: data[key] for key in data.files}
+    if "source_record_ids" not in arrays or "X" not in arrays:
+        raise ValueError("feature archive requires X and source_record_ids arrays")
+    archive_ids = arrays["source_record_ids"].astype(str).reshape(-1)
+    context_ids = context_frame[id_column].astype(str).to_numpy()
+    if len(archive_ids) != len(context_ids) or not np.array_equal(archive_ids, context_ids):
+        raise ValueError("context IDs must exactly match feature archive IDs and row order")
+    base = np.asarray(arrays["X"], dtype=np.float32)
+    if base.ndim != 2 or len(base) != len(context_frame):
+        raise ValueError("base feature rows do not align with context metadata")
+    arrays["X_base"] = base.copy()
+    arrays["context_numeric_columns"] = np.asarray(tuple(numeric_columns), dtype=str)
+    arrays["context_categorical_columns"] = np.asarray(tuple(categorical_columns), dtype=str)
+    for column in numeric_columns:
+        arrays[f"context_raw__{column}"] = pd.to_numeric(
+            context_frame[column], errors="coerce"
+        ).to_numpy(dtype=np.float64)
+    for column in categorical_columns:
+        values = context_frame[column].where(context_frame[column].notna(), "__MISSING__")
+        arrays[f"context_raw__{column}"] = values.astype(str).to_numpy()
+    # X remains the base representation; fold-local pipeline handles raw context.
+    arrays["X"] = base
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(output_path, **arrays)
+    return str(output_path)
+
+
+def context_design_matrix(payload: dict[str, np.ndarray]) -> pd.DataFrame:
+    """Build a named mixed-type matrix from an archive with attached raw context."""
+    import numpy as np
+
+    base = np.asarray(payload.get("X_base", payload["X"]), dtype=np.float32)
+    frame = pd.DataFrame(
+        base, columns=[f"base_{index}" for index in range(base.shape[1])]
+    )
+    numeric = payload.get("context_numeric_columns", np.asarray([], dtype=str)).astype(str)
+    categorical = payload.get(
+        "context_categorical_columns", np.asarray([], dtype=str)
+    ).astype(str)
+    for column in numeric:
+        key = f"context_raw__{column}"
+        if key not in payload:
+            raise ValueError(f"Missing raw context array: {column}")
+        frame[column] = np.asarray(payload[key], dtype=float)
+    for column in categorical:
+        key = f"context_raw__{column}"
+        if key not in payload:
+            raise ValueError(f"Missing raw context array: {column}")
+        frame[column] = np.asarray(payload[key]).astype(str)
+    return frame
+
+
+def make_context_pipeline(estimator, *, numeric_columns, categorical_columns, base_dimension):
+    """Create a fold-local preprocessing/model pipeline for assay context."""
+    from sklearn.compose import ColumnTransformer
+    from sklearn.impute import SimpleImputer
+    from sklearn.pipeline import Pipeline
+    from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+    base_columns = [f"base_{index}" for index in range(base_dimension)]
+    transformers = [("base", "passthrough", base_columns)]
+    if numeric_columns:
+        transformers.append((
+            "numeric",
+            Pipeline([
+                ("imputer", SimpleImputer(strategy="median", add_indicator=True)),
+                ("scaler", StandardScaler()),
+            ]),
+            list(numeric_columns),
+        ))
+    if categorical_columns:
+        transformers.append((
+            "categorical",
+            Pipeline([
+                ("imputer", SimpleImputer(strategy="constant", fill_value="__MISSING__")),
+                ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
+            ]),
+            list(categorical_columns),
+        ))
+    preprocessing = ColumnTransformer(
+        transformers=transformers, remainder="drop", verbose_feature_names_out=True
+    )
+    return Pipeline([("preprocessing", preprocessing), ("estimator", estimator)])

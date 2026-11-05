@@ -41,6 +41,7 @@ def fit_target_model(
     target: str,
     output_dir: str | Path,
     group_array: str | None = None,
+    holdout_group_arrays: tuple[str, ...] = (),
     random_state: int = 42,
     n_estimators: int = 500,
     max_depth: int = 6,
@@ -70,6 +71,16 @@ def fit_target_model(
         if metadata_key in train and metadata_key in test:
             if not np.array_equal(train[metadata_key], test[metadata_key]):
                 raise ValueError(f"Training and held-out feature metadata differ: {metadata_key}")
+    for group_name in holdout_group_arrays:
+        if group_name not in train or group_name not in test:
+            raise ValueError(f"Holdout grouping array is missing from train/test: {group_name}")
+        train_groups = np.asarray(train[group_name]).reshape(-1)
+        test_groups = np.asarray(test[group_name]).reshape(-1)
+        if len(train_groups) != len(y_train) or len(test_groups) != len(y_test):
+            raise ValueError(f"Holdout grouping array does not align with rows: {group_name}")
+        if set(train_groups.astype(str)).intersection(set(test_groups.astype(str))):
+            raise ValueError(f"Group leakage detected for held-out axis: {group_name}")
+
     if "target" in train and str(train["target"].reshape(-1)[0]) != target:
         raise ValueError("Training archive target does not match requested target")
     if "target" in test and str(test["target"].reshape(-1)[0]) != target:
@@ -218,6 +229,7 @@ def fit_target_model(
             "target": target,
             "cross_validation_strategy": split_strategy,
             "group_array": group_array,
+            "holdout_group_arrays": list(holdout_group_arrays),
             "folds": int(folds),
             "random_state": random_state,
             "model_parameters": report["model_parameters"]

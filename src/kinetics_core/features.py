@@ -133,6 +133,12 @@ class ObservationFeatureBuilder:
         ]
         X = np.stack(rows).astype(np.float32, copy=False)
         y = np.log10(values).astype(np.float32)
+        reserved_names = {"X", "y_log10", "y_raw", "source_record_ids", "sequences",
+                          "smiles", "target", "feature_model", "fingerprint_radius",
+                          "fingerprint_bits"}
+        collisions = reserved_names.intersection(group_columns)
+        if collisions:
+            raise ValueError(f"Grouping column names collide with reserved archive keys: {sorted(collisions)}")
         group_arrays = {}
         for column in group_columns:
             if column not in selected.columns:

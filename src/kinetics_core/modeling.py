@@ -38,9 +38,21 @@ def _load_feature_file(path: str | Path) -> dict[str, np.ndarray]:
     return payload
 
 
-def _validate_feature_metadata(reference: dict[str, np.ndarray], candidate: dict[str, np.ndarray], *, label: str) -> None:
+def _validate_feature_metadata(
+    reference: dict[str, np.ndarray],
+    candidate: dict[str, np.ndarray],
+    *,
+    label: str,
+) -> None:
     """Require matching presence and values for representation metadata."""
-    keys = ("feature_model", "fingerprint_radius", "fingerprint_bits", "context_feature_names", "context_numeric_columns", "context_categorical_columns")
+    keys = (
+        "feature_model",
+        "fingerprint_radius",
+        "fingerprint_bits",
+        "context_feature_names",
+        "context_numeric_columns",
+        "context_categorical_columns",
+    )
     for key in keys:
         if (key in reference) != (key in candidate):
             raise ValueError(f"{label} feature metadata presence differs: {key}")
@@ -303,9 +315,15 @@ def fit_target_model(
         "estimator": estimator,
         "target": target,
         "feature_dimension": base_dimension,
-        "feature_model": str(train.get("feature_model", np.asarray(["unknown"])).reshape(-1)[0]),
-        "fingerprint_radius": int(train.get("fingerprint_radius", np.asarray([-1])).reshape(-1)[0]),
-        "fingerprint_bits": int(train.get("fingerprint_bits", np.asarray([-1])).reshape(-1)[0]),
+        "feature_model": str(
+            train.get("feature_model", np.asarray(["unknown"])).reshape(-1)[0]
+        ),
+        "fingerprint_radius": int(
+            train.get("fingerprint_radius", np.asarray([-1])).reshape(-1)[0]
+        ),
+        "fingerprint_bits": int(
+            train.get("fingerprint_bits", np.asarray([-1])).reshape(-1)[0]
+        ),
         "canonical_unit": "M" if target == "km" else "s^-1",
         "conformal_quantile_log10": conformal_q,
         "conformal_alpha": float(conformal_alpha) if conformal_q is not None else None,

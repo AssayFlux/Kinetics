@@ -39,7 +39,7 @@ The agreed sequence is to finish assembling the software before executing traini
 - [x] Target-specific log-scale and original-scale metrics.
 - [x] Split-conformal interval utilities.
 - [x] Independent calibration archive workflow and held-out empirical coverage reporting.
-- [ ] Residual and subgroup diagnostics.
+- [x] Residual tables and per-group error/interval-coverage diagnostics with small-sample warnings.
 - [ ] Sensitivity and ablation analysis orchestration.
 - [ ] Model comparison and statistical reporting.
 

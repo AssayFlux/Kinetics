@@ -171,3 +171,6 @@ Kinetics now includes a dependency-free assistant adapter contract in `src/kinet
 Install the package with `python -m pip install -e ".[baseline]"` and run `kinetics-research --help`. Use `kinetics-research compare` for fixed classical baselines selected by training-only cross-validation, or `kinetics-research fit` for a target-specific XGBoost model. Supply grouped CV and all relevant holdout grouping arrays for leakage-aware evaluation. Model fitting and benchmarking are final-stage execution tasks and have not been run during implementation.
 
 See [model comparison](docs/MODEL_COMPARISON.md) and [calibration/context workflow](docs/CALIBRATION_AND_CONTEXT_WORKFLOW.md).
+
+
+Normalized tables can be audited without deleting or averaging observations: `kinetics-research audit --input data/processed/observations.csv --output-dir data/quality`. See [the observation quality policy](docs/OBSERVATION_QUALITY.md).

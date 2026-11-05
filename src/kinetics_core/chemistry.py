@@ -32,3 +32,17 @@ def murcko_scaffold_id(smiles: str) -> str:
     scaffold = MurckoScaffold.GetScaffoldForMol(molecule)
     scaffold_smiles = Chem.MolToSmiles(scaffold, canonical=True, isomericSmiles=True)
     return f"MURCKO:{scaffold_smiles}" if scaffold_smiles else f"ACYCLIC:{canonical}"
+
+
+def annotate_scaffolds(
+    frame,
+    *,
+    smiles_column: str = "smiles",
+    output_column: str = "scaffold_id",
+):
+    """Return a copy of a table annotated with deterministic Murcko scaffold IDs."""
+    if smiles_column not in frame.columns:
+        raise ValueError(f"Missing SMILES column: {smiles_column}")
+    result = frame.copy()
+    result[output_column] = result[smiles_column].map(murcko_scaffold_id)
+    return result

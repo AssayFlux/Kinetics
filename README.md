@@ -151,3 +151,6 @@ python -m kinetics_core.catpred --help
 The adapter requires explicit source column names and units. It writes normalized observations, rejected rows, and a curation manifest. See [the scientific architecture](docs/SCIENTIFIC_ARCHITECTURE.md), [the canonical data model](docs/DATA_MODEL.md), [the publication protocol](docs/PUBLICATION_PROTOCOL.md), and [implementation status](docs/IMPLEMENTATION_STATUS.md).
 
 The new research utilities are implementation work, not a claim of completed model training or scientific validation. Training, testing, benchmarking, and validation remain scheduled for the final verification stage.
+
+
+See [the implementation roadmap](docs/ROADMAP.md) for the staged build and final verification sequence.

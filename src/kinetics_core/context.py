@@ -133,6 +133,8 @@ def attach_context_archive(
     selected = [*numeric_columns, *categorical_columns]
     if not selected or len(selected) != len(set(selected)):
         raise ValueError("context feature columns must be non-empty and unique")
+    if id_column in selected:
+        raise ValueError("the record ID column cannot also be a context feature")
     context_frame = pd.read_csv(csv_path)
     required = [id_column, *selected]
     missing = [column for column in required if column not in context_frame.columns]
@@ -147,6 +149,9 @@ def attach_context_archive(
     if len(archive_ids) != len(context_ids) or not np.array_equal(archive_ids, context_ids):
         raise ValueError("context IDs must exactly match feature archive IDs and row order")
     base = np.asarray(arrays["X"], dtype=np.float32)
+    base_names = {f"base_{index}" for index in range(base.shape[1])}
+    if base_names.intersection(selected):
+        raise ValueError("context column names cannot collide with generated base feature names")
     if base.ndim != 2 or len(base) != len(context_frame):
         raise ValueError("base feature rows do not align with context metadata")
     arrays["X_base"] = base.copy()

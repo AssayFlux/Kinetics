@@ -174,3 +174,6 @@ See [model comparison](docs/MODEL_COMPARISON.md) and [calibration/context workfl
 
 
 Normalized tables can be audited without deleting or averaging observations: `kinetics-research audit --input data/processed/observations.csv --output-dir data/quality`. See [the observation quality policy](docs/OBSERVATION_QUALITY.md).
+
+
+Prepare a leakage-resistant train/calibration/test design with `kinetics-research partition --observations data/processed/km_observations_with_groups.csv --output-dir data/partitions/km --target km`. This uses nested double-cold protein-cluster/scaffold splits and retains cross-quadrant exclusions. See [the partition workflow](docs/PARTITION_WORKFLOW.md).

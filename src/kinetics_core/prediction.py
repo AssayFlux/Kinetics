@@ -57,7 +57,16 @@ def predict_one(
             f"base_{index}": float(value)
             for index, value in enumerate(features.reshape(-1))
         }
-        context_row.update({name: assay_context[name] for name in required_context})
+        for name in numeric_columns:
+            raw_value = assay_context[name]
+            try:
+                numeric_value = float(raw_value) if raw_value is not None else np.nan
+            except (TypeError, ValueError):
+                numeric_value = np.nan
+            context_row[name] = numeric_value if np.isfinite(numeric_value) else np.nan
+        for name in categorical_columns:
+            raw_value = assay_context[name]
+            context_row[name] = "__MISSING__" if raw_value is None else str(raw_value)
         model_input = pd.DataFrame([context_row])
         domain_input = bundle["estimator"].named_steps["preprocessing"].transform(model_input)
     else:

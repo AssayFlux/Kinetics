@@ -10,11 +10,11 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
+from .applicability import ApplicabilityDomain
+from .context import context_design_matrix, make_context_pipeline
 from .experiments import build_experiment_manifest, save_experiment_manifest
 from .metrics import regression_report, subgroup_regression_report
 from .uncertainty import conformal_quantile
-from .applicability import ApplicabilityDomain
-from .context import context_design_matrix, make_context_pipeline
 from .model_card import write_model_card
 from .provenance import file_record, write_json_atomic
 
@@ -62,7 +62,6 @@ def fit_target_model(
     n_splits: int = 5,
     calibration_archive: str | Path | None = None,
     conformal_alpha: float = 0.1,
-    context_encoder_path: str | Path | None = None,
     applicability_quantile: float = 0.95,
 ) -> dict[str, Any]:
     """Fit one target model, evaluate a held-out archive, and save full metadata.
@@ -118,9 +117,6 @@ def fit_target_model(
             raise ValueError(f"Holdout grouping array does not align with rows: {group_name}")
         if set(train_groups.astype(str)).intersection(set(test_groups.astype(str))):
             raise ValueError(f"Group leakage detected for held-out axis: {group_name}")
-
-    if context_encoder_path is not None:
-        raise ValueError("context_encoder_path is deprecated; use attach_context_archive for fold-local preprocessing")
 
     if "target" in train and str(train["target"].reshape(-1)[0]) != target:
         raise ValueError("Training archive target does not match requested target")

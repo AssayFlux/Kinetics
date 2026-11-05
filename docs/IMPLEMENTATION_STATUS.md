@@ -1,36 +1,42 @@
 # Implementation status
 
-Status is updated as code is added. This document intentionally separates implementation from verification.
+Status is updated as code is added. This document intentionally separates implementation from execution and verification.
 
 ## Existing baseline observed during repository inspection
 
 - Protein sequence and substrate SMILES feature extraction using ESM-2 and Morgan fingerprints.
-- Separate XGBoost regressors for log10(Km) and log10(kcat).
+- Separate XGBoost regressors for log10(Km) and log10(kcat), currently wired through a legacy paired-row preprocessing archive.
 - A CSV preprocessing script, feature cache, prediction interface, and optional ONNX export.
 - CatPred-DB public download and CSV inspection scripts.
 - Dataset notes describing BRENDA, SABIO-RK, UniProt, PubChem, and Rhea.
 
-## New research infrastructure added
+## Research infrastructure implemented
 
-- Canonical one-target-per-row kinetic observation dataclass.
-- Explicit unit conversion for Km and kcat.
-- Table normalization with caller-supplied column mappings and rejection audit.
-- SHA-256 file provenance and atomic JSON writing.
-- Experiment manifest builder with environment and package metadata.
-- Grouped holdout and strict double-cold partition helpers.
-- Target-specific log-scale and original-scale metric reporting.
-- CatPred-DB normalization adapter that keeps Km and kcat tables separate.
-- Scientific architecture, data model, and publication evidence protocol.
+- Canonical one-target-per-row kinetic observation contract.
+- Explicit conversion of Km to M and kcat to s^-1 while retaining raw values/units.
+- Configurable source-table normalization with row-level rejection reasons.
+- CatPred-DB target-specific normalization adapter; Km and kcat are not implicitly paired.
+- SHA-256 source/artifact provenance and atomic JSON serialization.
+- Experiment manifest builder with runtime and package metadata.
+- Grouped holdout and strict double-cold partition utilities.
+- Target-specific feature archives preserving source record IDs and optional grouping labels.
+- Target-specific model-fitting workflow with grouped CV support.
+- Separate log-scale and original-unit metric reporting.
+- Split-conformal interval utilities for calibrated regression intervals.
+- Model-card generation and publication-oriented research documentation.
+- Installable package metadata for the new kinetics_core research package.
 
-## Known integration work still required
+## Integration work still required
 
-- Connect the new canonical observation schema to the existing preprocessing/feature/training/prediction pipeline.
-- Resolve the current two-target-per-row assumption in the baseline so target-specific public tables can be used without fabricated pairing.
-- Add sequence-cluster, scaffold, and double-cold evaluation workflows to the model pipeline.
-- Add assay-context features and explicit applicability-domain/uncertainty reporting.
-- Add versioned model metadata, prediction provenance, and publication report generation.
-- Finalize packaging and user-facing CLI consistency.
+- Connect canonical observation outputs to all legacy preprocessing, prediction, and export paths.
+- Retire or clearly isolate the legacy two-target-per-row assumption.
+- Add automated protein sequence clustering and chemical scaffold assignment workflows with versioned outputs.
+- Add assay-context feature engineering and explicit applicability-domain diagnostics.
+- Add calibration workflow and prediction-time uncertainty outputs to the inference API.
+- Add dataset-specific BRENDA and SABIO-RK adapters after confirming current schemas and terms.
+- Add complete report generation for figures, tables, and manuscript methods.
+- Finalize CLI ergonomics, packaging compatibility, and user documentation.
 
 ## Verification status
 
-The dedicated training, test execution, numerical validation, benchmarking, and scientific evaluation stages have not been run as part of this implementation-first phase. No performance or validation claims are made.
+No model training, test execution, numerical validation, benchmark run, or scientific evaluation has been performed during this implementation-first phase. The newly added workflows are code, not evidence that the workflows have passed verification. No performance, generalization, or publication-readiness claims are made.

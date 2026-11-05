@@ -110,7 +110,8 @@ class ObservationFeatureBuilder:
         return features
 
     def transform_frame(self, frame: pd.DataFrame, *, target: str,
-                        output_path: str | Path) -> Path:
+                        output_path: str | Path,
+                        group_columns: tuple[str, ...] = ()) -> Path:
         """Write an NPZ with X, log10 y, raw y, record IDs, and feature metadata."""
         required = {"sequence", "smiles", "canonical_value", "target", "source_record_id"}
         missing = required - set(frame.columns)
@@ -132,6 +133,14 @@ class ObservationFeatureBuilder:
         ]
         X = np.stack(rows).astype(np.float32, copy=False)
         y = np.log10(values).astype(np.float32)
+        group_arrays = {}
+        for column in group_columns:
+            if column not in selected.columns:
+                raise ValueError(f"Requested grouping column is missing: {column}")
+            if selected[column].isna().any():
+                raise ValueError(f"Grouping column {column} contains missing values")
+            group_arrays[column] = selected[column].astype(str).to_numpy()
+
         output = Path(output_path)
         output.parent.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(
@@ -143,6 +152,7 @@ class ObservationFeatureBuilder:
             feature_model=np.asarray([self.encoder.model_name]),
             fingerprint_radius=np.asarray([self.radius]),
             fingerprint_bits=np.asarray([self.n_bits]),
+            **group_arrays,
         )
         LOG.info("Saved %d %s feature rows to %s", len(selected), target, output)
         return output

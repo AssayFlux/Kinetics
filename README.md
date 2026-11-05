@@ -130,3 +130,24 @@ python scripts/inspect_public_datasets.py --input-dir data/public/catpred-db
 ```
 
 Downloaded data stays local and is excluded from Git. Review [DATASETS.md](DATASETS.md) for source links, attribution/license notes, curation rules, and the planned BRENDA/SABIO-RK extensions. The CatPred-DB Km and kcat tables are separate datasets and must not be merged as if their rows were matched measurements. Inspect source schemas and units before normalizing or training. No data is bundled and no model has yet been trained on these downloads.
+
+
+## Research infrastructure layer
+
+The repository also contains a modular research layer under `src/kinetics_core/`. It introduces a canonical one-observation-per-target schema, explicit Km/kcat unit conversion, source-table normalization with rejection audits, SHA-256 provenance, experiment manifests, target-specific metrics, and grouped/double-cold split helpers.
+
+Install the research package and its core dependencies:
+
+```bash
+python -m pip install -e .
+```
+
+Normalize one target-specific public table after inspecting its source columns. Km and kcat must be processed separately; do not join them unless the source explicitly establishes a matched experiment:
+
+```bash
+python -m kinetics_core.catpred --help
+```
+
+The adapter requires explicit source column names and units. It writes normalized observations, rejected rows, and a curation manifest. See [the scientific architecture](docs/SCIENTIFIC_ARCHITECTURE.md), [the canonical data model](docs/DATA_MODEL.md), [the publication protocol](docs/PUBLICATION_PROTOCOL.md), and [implementation status](docs/IMPLEMENTATION_STATUS.md).
+
+The new research utilities are implementation work, not a claim of completed model training or scientific validation. Training, testing, benchmarking, and validation remain scheduled for the final verification stage.

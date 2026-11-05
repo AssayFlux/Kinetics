@@ -37,6 +37,16 @@ def _load_feature_file(path: str | Path) -> dict[str, np.ndarray]:
     return payload
 
 
+def _validate_feature_metadata(reference: dict[str, np.ndarray], candidate: dict[str, np.ndarray], *, label: str) -> None:
+    """Require matching presence and values for representation metadata."""
+    keys = ("feature_model", "fingerprint_radius", "fingerprint_bits", "context_feature_names")
+    for key in keys:
+        if (key in reference) != (key in candidate):
+            raise ValueError(f"{label} feature metadata presence differs: {key}")
+        if key in reference and not np.array_equal(reference[key], candidate[key]):
+            raise ValueError(f"{label} feature metadata differ: {key}")
+
+
 def fit_target_model(
     train_archive: str | Path,
     test_archive: str | Path,
@@ -76,10 +86,7 @@ def fit_target_model(
     X_test, y_test = test["X"], test["y_log10"]
     if X_test.shape[1] != X_train.shape[1] or len(y_test) == 0:
         raise ValueError("Held-out archive dimensions do not match training features")
-    for metadata_key in ("feature_model", "fingerprint_radius", "fingerprint_bits", "context_feature_names"):
-        if metadata_key in train and metadata_key in test:
-            if not np.array_equal(train[metadata_key], test[metadata_key]):
-                raise ValueError(f"Training and held-out feature metadata differ: {metadata_key}")
+    _validate_feature_metadata(train, test, label="training/held-out")
     for group_name in holdout_group_arrays:
         if group_name not in train or group_name not in test:
             raise ValueError(f"Holdout grouping array is missing from train/test: {group_name}")
@@ -153,10 +160,7 @@ def fit_target_model(
             raise ValueError("Calibration feature dimension does not match training features")
         if "target" in calibration and str(calibration["target"].reshape(-1)[0]) != target:
             raise ValueError("Calibration archive target does not match requested target")
-        for metadata_key in ("feature_model", "fingerprint_radius", "fingerprint_bits"):
-            if metadata_key in train and metadata_key in calibration:
-                if not np.array_equal(train[metadata_key], calibration[metadata_key]):
-                    raise ValueError(f"Calibration feature metadata differ: {metadata_key}")
+        _validate_feature_metadata(train, calibration, label="training/calibration")
         for group_name in holdout_group_arrays:
             if group_name not in calibration:
                 raise ValueError(f"Calibration archive missing leakage-check array: {group_name}")
@@ -170,10 +174,6 @@ def fit_target_model(
                 raise ValueError(f"Group leakage between training and calibration: {group_name}")
             if train_groups.intersection(test_groups) or calibration_groups.intersection(test_groups):
                 raise ValueError(f"Group leakage across train/calibration/test: {group_name}")
-        for metadata_key in ("feature_model", "fingerprint_radius", "fingerprint_bits", "context_feature_names"):
-            if metadata_key in train and metadata_key in calibration:
-                if not np.array_equal(train[metadata_key], calibration[metadata_key]):
-                    raise ValueError(f"Calibration feature metadata differ: {metadata_key}")
         calibration_predictions = estimator.predict(X_cal)
         conformal_q = conformal_quantile(
             y_cal, calibration_predictions, alpha=conformal_alpha

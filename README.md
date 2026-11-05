@@ -164,3 +164,10 @@ For a documented end-to-end workflow from public dataset acquisition through tar
 ## Offline research assistant
 
 Kinetics now includes a dependency-free assistant adapter contract in `src/kinetics_core/assistant.py`. It is designed for a future local integration with [AssayFlux/Astronaut](https://github.com/AssayFlux/Astronaut), which remains a separate project under development. No hosted model, network fallback, model download, or autonomous tool execution is enabled. See [the Astronaut integration plan](docs/ASTRONAUT_INTEGRATION.md). The assistant is not operational until an Astronaut adapter is implemented and verified.
+
+
+## Research CLI
+
+Install the package with `python -m pip install -e ".[baseline]"` and run `kinetics-research --help`. Use `kinetics-research compare` for fixed classical baselines selected by training-only cross-validation, or `kinetics-research fit` for a target-specific XGBoost model. Supply grouped CV and all relevant holdout grouping arrays for leakage-aware evaluation. Model fitting and benchmarking are final-stage execution tasks and have not been run during implementation.
+
+See [model comparison](docs/MODEL_COMPARISON.md) and [calibration/context workflow](docs/CALIBRATION_AND_CONTEXT_WORKFLOW.md).

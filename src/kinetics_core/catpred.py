@@ -25,7 +25,8 @@ def normalize_catpred_csv(
     target: str,
     record_id_column: str,
     value_column: str,
-    unit: str,
+    unit: str | None = None,
+    unit_column: str | None = None,
     sequence_column: str | None = None,
     smiles_column: str | None = None,
     accession_column: str | None = None,
@@ -45,6 +46,7 @@ def normalize_catpred_csv(
         source_record_id_column=record_id_column,
         value_column=value_column,
         unit=unit,
+        unit_column=unit_column,
         sequence_column=sequence_column,
         smiles_column=smiles_column,
         accession_column=accession_column,
@@ -73,6 +75,7 @@ def normalize_catpred_csv(
             "record_id": record_id_column,
             "value": value_column,
             "unit": unit,
+            "unit_column": unit_column,
             "sequence": sequence_column,
             "smiles": smiles_column,
             "accession": accession_column,
@@ -97,7 +100,8 @@ def main() -> None:
     parser.add_argument("--target", choices=["km", "kcat"], required=True)
     parser.add_argument("--record-id-column", required=True)
     parser.add_argument("--value-column", required=True)
-    parser.add_argument("--unit", required=True)
+    parser.add_argument("--unit")
+    parser.add_argument("--unit-column")
     parser.add_argument("--sequence-column")
     parser.add_argument("--smiles-column")
     parser.add_argument("--accession-column")
@@ -109,7 +113,8 @@ def main() -> None:
     outputs = normalize_catpred_csv(
         args.input, args.output_dir, target=args.target,
         record_id_column=args.record_id_column, value_column=args.value_column,
-        unit=args.unit, sequence_column=args.sequence_column,
+        unit=args.unit, unit_column=args.unit_column,
+        sequence_column=args.sequence_column,
         smiles_column=args.smiles_column, accession_column=args.accession_column,
         organism_column=args.organism_column, doi_column=args.doi_column,
         source_version=args.source_version, license_id=args.license_id,

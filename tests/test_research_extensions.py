@@ -4,8 +4,8 @@ import pytest
 
 from kinetics_core.applicability import ApplicabilityDomain
 from kinetics_core.context import AssayContextEncoder
-from kinetics_core.uncertainty import conformal_interval, conformal_quantile
 from kinetics_core.quality import audit_observations
+from kinetics_core.uncertainty import conformal_interval, conformal_quantile
 
 
 def test_context_encoder_ignores_unselected_identifier_and_handles_unknown_category():

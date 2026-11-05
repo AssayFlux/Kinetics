@@ -6,10 +6,12 @@ scored after selection and must never be used to choose a model or tune settings
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import numpy as np
+import pandas as pd
 from sklearn.ensemble import (
     ExtraTreesRegressor,
     HistGradientBoostingRegressor,
@@ -20,6 +22,7 @@ from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
 from .metrics import regression_report
 from .modeling import _load_feature_file, _validate_feature_metadata
+from .context import context_design_matrix, make_context_pipeline
 from .experiments import build_experiment_manifest, save_experiment_manifest
 from .model_card import write_model_card
 from .provenance import file_record, write_json_atomic
@@ -58,8 +61,23 @@ def compare_regressors(
     if target not in ("km", "kcat"):
         raise ValueError("target must be 'km' or 'kcat'")
     train, test = _load_feature_file(train_archive), _load_feature_file(test_archive)
-    X_train, y_train = train["X"], train["y_log10"]
-    X_test, y_test = test["X"], test["y_log10"]
+    context_enabled = "X_base" in train
+    if context_enabled != ("X_base" in test):
+        raise ValueError("Training and held-out archives differ in assay-context availability")
+    if context_enabled:
+        X_train, X_test = context_design_matrix(train), context_design_matrix(test)
+        numeric_columns = tuple(train["context_numeric_columns"].astype(str))
+        categorical_columns = tuple(train["context_categorical_columns"].astype(str))
+        if tuple(test["context_numeric_columns"].astype(str)) != numeric_columns:
+            raise ValueError("Training and held-out numeric context columns differ")
+        if tuple(test["context_categorical_columns"].astype(str)) != categorical_columns:
+            raise ValueError("Training and held-out categorical context columns differ")
+        base_dimension = int(train["X_base"].shape[1])
+    else:
+        X_train, X_test = train["X"], test["X"]
+        numeric_columns, categorical_columns = (), ()
+        base_dimension = int(X_train.shape[1])
+    y_train, y_test = train["y_log10"], test["y_log10"]
     if X_train.shape[1] != X_test.shape[1]:
         raise ValueError("train/test feature dimensions differ")
     _validate_feature_metadata(train, test, label="training/held-out")
@@ -99,11 +117,20 @@ def compare_regressors(
     results = []
     fitted = {}
     for name, estimator in _candidates(random_state).items():
+        candidate = (
+            make_context_pipeline(
+                estimator,
+                numeric_columns=numeric_columns,
+                categorical_columns=categorical_columns,
+                base_dimension=base_dimension,
+            )
+            if context_enabled else estimator
+        )
         scores = -cross_val_score(
-            estimator, X_train, y_train, cv=splitter, groups=cv_groups,
+            candidate, X_train, y_train, cv=splitter, groups=cv_groups,
             scoring="neg_root_mean_squared_error", n_jobs=1,
         )
-        fitted[name] = estimator
+        fitted[name] = candidate
         results.append({
             "model": name,
             "cv_rmse_mean_log10": float(np.mean(scores)),
@@ -141,8 +168,11 @@ def compare_regressors(
     joblib.dump({
         "estimator": selected,
         "target": target,
-        "feature_dimension": int(X_train.shape[1]),
+        "feature_dimension": base_dimension,
         "selected_model": selected_name,
+        "context_enabled": context_enabled,
+        "context_numeric_columns": list(numeric_columns),
+        "context_categorical_columns": list(categorical_columns),
         "selection_rule": report["selection_rule"],
     }, model_path, compress=3)
     prediction_table = pd.DataFrame({
@@ -157,10 +187,11 @@ def compare_regressors(
     prediction_table.to_csv(predictions_path, index=False)
     write_json_atomic(report, report_path)
     write_model_card({
+        "target": target,
         "model_name": f"Kinetics {target} baseline comparison",
         "model_version": "0.1.0",
         "software_version": "0.2.0",
-        "created_at": None,
+        "created_at": datetime.now(timezone.utc).isoformat(),
         "intended_use": ["Research baseline comparison and hypothesis generation."],
         "out_of_scope_use": ["Treating predictions as experimental measurements."],
         "dataset": {
@@ -182,6 +213,7 @@ def compare_regressors(
             "Held-out results are not used for candidate selection.",
             "No uncertainty calibration is performed by this comparison workflow.",
         ],
+        "experiment_manifest": f"{target}_baseline_experiment_manifest.json",
         "feature_encoder": str(train.get("feature_model", np.asarray(["unknown"])).reshape(-1)[0]),
         "model_sha256": file_record(model_path)["sha256"],
         "random_seed": random_state,

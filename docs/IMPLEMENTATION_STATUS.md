@@ -26,18 +26,21 @@ Status is updated as code is added. This document separates implementation from 
 - Split-conformal interval utilities.
 - Model-card generation, target-specific prediction interface, experiment report generation, and parity/residual plotting utilities.
 - Installable kinetics_core package metadata and CLI entry point.
-- Scientific architecture, data model, split design, publication protocol, paper outline, contribution guidance, and citation metadata.\n- Dependency-free offline assistant protocol and Kinetics research-aware facade, ready for a future Astronaut adapter.\n- Allowlist-based assay-context encoder with train-fitted numeric imputation/scaling, missingness handling, and categorical one-hot encoding.
+- Scientific architecture, data model, split design, publication protocol, paper outline, contribution guidance, and citation metadata.
+- Dependency-free offline assistant protocol and Kinetics research-aware facade, ready for a future Astronaut adapter.
+- Allowlist-based assay-context encoder with train-fitted numeric imputation/scaling, missingness handling, and categorical one-hot encoding.
 
 ## Integration work still required
 
 - Connect canonical observation outputs to the legacy preprocessing, prediction, and ONNX paths.
 - Retire or isolate the legacy two-target-per-row assumption without breaking documented compatibility.
 - Add end-to-end sequence-cluster and scaffold generation to the dataset workflow.
-- Connect the assay-context encoder to the model-fitting orchestrator and add applicability-domain diagnostics.
-- Add calibration-data workflow and prediction-time uncertainty outputs to the inference interface.
+- Complete end-to-end CLI orchestration, model-family comparison, and residual/subgroup analysis.
+- Expand calibration evaluation to subgroup/shift analyses and add coverage-versus-width reporting.
 - Add BRENDA and SABIO-RK adapters after verifying current source schemas and terms.
-- Integrate the report/figure utilities into a complete end-to-end experiment orchestrator.
-- Complete CLI ergonomics, packaging compatibility, and user documentation.\n- Implement and verify the Astronaut adapter only after the project owner confirms Astronaut is ready; no Astronaut code has been changed.
+- Integrate report/figure utilities into a single reproducible experiment orchestrator.
+- Complete CLI ergonomics, packaging compatibility, and user documentation.
+- Implement and verify the Astronaut adapter only after the project owner confirms Astronaut is ready; no Astronaut code has been changed.
 
 ## Verification status
 

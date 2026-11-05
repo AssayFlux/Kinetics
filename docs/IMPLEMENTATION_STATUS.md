@@ -18,7 +18,7 @@ Status is updated as code is added. This document separates implementation from 
 - Non-destructive duplicate/conflict audit keyed by exact source record identity, plus metadata completeness summary.
 - CatPred-DB adapter that processes Km and kcat tables separately.
 - SHA-256 provenance, atomic JSON writing, and experiment manifests.
-- Grouped holdout and strict double-cold partition utilities.
+- Grouped holdout, strict double-cold split utilities, and nested protein/scaffold train/calibration/test partition orchestration with explicit excluded cross-quadrant rows.
 - MMseqs2 sequence-clustering wrapper with version/command manifest.
 - RDKit canonical SMILES and Bemis-Murcko scaffold utilities.
 - Target-specific protein/substrate feature archives with optional grouping arrays.
@@ -28,7 +28,7 @@ Status is updated as code is added. This document separates implementation from 
 - Training-reference nearest-neighbour applicability-domain warnings (explicitly not calibrated confidence).
 - Raw assay-context archive attachment with exact source-record ID/order checks and fold-local preprocessing to prevent CV leakage.
 - Fixed classical model-family comparison with CV-only selection and untouched held-out reporting.
-- Research CLI for dataset quality auditing, baseline comparison, and target-specific fitting.
+- Research CLI for dataset quality auditing, nested partitions, baseline comparison, and target-specific fitting.
 - Separate log-scale and original-unit metric reporting.
 - Split-conformal interval utilities.
 - Model-card generation, target-specific prediction interface, experiment report generation, and parity/residual plotting utilities.

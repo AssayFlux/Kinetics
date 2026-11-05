@@ -22,7 +22,7 @@ from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
 from .context import context_design_matrix, make_context_pipeline
 from .experiments import build_experiment_manifest, save_experiment_manifest
-from .metrics import regression_report
+from .metrics import regression_report, subgroup_regression_report
 from .modeling import _load_feature_file, _validate_feature_metadata
 from .model_card import write_model_card
 from .provenance import file_record, write_json_atomic
@@ -162,6 +162,13 @@ def compare_regressors(
         "held_out": regression_report(y_test, test_prediction, target=target),
         "n_train": int(len(y_train)),
         "n_held_out": int(len(y_test)),
+        "subgroup_diagnostics": {
+            name: subgroup_regression_report(
+                y_test, test_prediction, np.asarray(test[name]).reshape(-1),
+                target=target, min_group_size=5,
+            )
+            for name in holdout_group_arrays
+        },
         "warning": (
             "Random row CV is diagnostic only and does not establish cold-start "
             "generalization."

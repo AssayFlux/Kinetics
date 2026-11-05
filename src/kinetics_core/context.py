@@ -149,11 +149,11 @@ def attach_context_archive(
     if len(archive_ids) != len(context_ids) or not np.array_equal(archive_ids, context_ids):
         raise ValueError("context IDs must exactly match feature archive IDs and row order")
     base = np.asarray(arrays["X"], dtype=np.float32)
+    if base.ndim != 2 or len(base) != len(context_frame):
+        raise ValueError("base feature rows do not align with context metadata")
     base_names = {f"base_{index}" for index in range(base.shape[1])}
     if base_names.intersection(selected):
         raise ValueError("context column names cannot collide with generated base feature names")
-    if base.ndim != 2 or len(base) != len(context_frame):
-        raise ValueError("base feature rows do not align with context metadata")
     arrays["X_base"] = base.copy()
     arrays["context_numeric_columns"] = np.asarray(tuple(numeric_columns), dtype=str)
     arrays["context_categorical_columns"] = np.asarray(tuple(categorical_columns), dtype=str)

@@ -281,6 +281,8 @@ def fit_target_model(
             "alpha": float(conformal_alpha),
             "quantile_log10": float(conformal_q),
             "n_calibration": int(len(calibration["y_log10"])),
+            "group_independence_checked": bool(holdout_group_arrays),
+            "group_axes_checked": list(holdout_group_arrays),
             "test_empirical_coverage": float(np.mean(
                 np.abs(y_test - predictions) <= conformal_q
             )),

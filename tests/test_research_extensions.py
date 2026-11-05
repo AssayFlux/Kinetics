@@ -76,3 +76,55 @@ def test_quality_audit_flags_conflicting_duplicate_without_dropping_rows():
     assert report["n_conflicting_groups"] == 1
     assert annotated.loc[0, "duplicate_status"] == "conflicting_duplicate"
     assert annotated.loc[2, "duplicate_status"] == "unique"
+
+
+
+def test_raw_context_archive_alignment_and_design_matrix(tmp_path):
+    from kinetics_core.context import attach_context_archive, context_design_matrix
+    from kinetics_core.modeling import _load_feature_file
+
+    archive = tmp_path / "features.npz"
+    context_csv = tmp_path / "context.csv"
+    output = tmp_path / "features_context.npz"
+    np.savez_compressed(
+        archive,
+        X=np.asarray([[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]], dtype=np.float32),
+        y_log10=np.asarray([-3.0, -2.0, -1.0], dtype=np.float32),
+        source_record_ids=np.asarray(["a", "b", "c"]),
+        target=np.asarray(["km"]),
+    )
+    pd.DataFrame({
+        "source_record_id": ["a", "b", "c"],
+        "ph": [6.0, None, 8.0],
+        "organism": ["x", "y", "x"],
+    }).to_csv(context_csv, index=False)
+    attach_context_archive(
+        str(archive), str(context_csv), str(output),
+        numeric_columns=("ph",), categorical_columns=("organism",),
+    )
+    payload = _load_feature_file(output)
+    design = context_design_matrix(payload)
+    assert list(design.columns) == ["base_0", "base_1", "ph", "organism"]
+    assert design.shape == (3, 4)
+    assert np.isnan(design.loc[1, "ph"])
+
+
+def test_context_pipeline_fits_unknown_categories_safely():
+    from sklearn.linear_model import Ridge
+    from kinetics_core.context import make_context_pipeline
+
+    train = pd.DataFrame({
+        "base_0": [0.0, 1.0, 2.0, 3.0],
+        "ph": [6.0, 7.0, None, 8.0],
+        "organism": ["a", "b", "a", "b"],
+    })
+    pipeline = make_context_pipeline(
+        Ridge(), numeric_columns=("ph",), categorical_columns=("organism",),
+        base_dimension=1,
+    )
+    pipeline.fit(train, np.asarray([0.0, 1.0, 2.0, 3.0]))
+    predicted = pipeline.predict(pd.DataFrame({
+        "base_0": [4.0], "ph": [7.5], "organism": ["unseen"]
+    }))
+    assert predicted.shape == (1,)
+    assert np.isfinite(predicted).all()

@@ -33,11 +33,17 @@ from kinetics_core.sequence_clustering import cluster_sequences
 from kinetics_core.chemistry import annotate_scaffolds
 
 observations = pd.read_csv("data/processed/catpred-db/km_observations.csv")
-cluster_sequences(
+mapping_path, cluster_manifest = cluster_sequences(
     observations,
     output_dir="data/processed/sequence_clusters",
     min_sequence_identity=0.4,
     coverage=0.8,
+)
+mapping = pd.read_csv(mapping_path).rename(
+    columns={"cluster_representative_record_id": "protein_cluster_id"}
+)
+observations = observations.merge(
+    mapping, on="source_record_id", how="left", validate="one_to_one"
 )
 observations = annotate_scaffolds(observations, smiles_column="smiles")
 ```

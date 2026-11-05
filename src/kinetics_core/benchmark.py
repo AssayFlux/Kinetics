@@ -10,7 +10,11 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from sklearn.ensemble import ExtraTreesRegressor, HistGradientBoostingRegressor, RandomForestRegressor
+from sklearn.ensemble import (
+    ExtraTreesRegressor,
+    HistGradientBoostingRegressor,
+    RandomForestRegressor,
+)
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 

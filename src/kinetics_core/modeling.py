@@ -14,6 +14,7 @@ from .experiments import build_experiment_manifest, save_experiment_manifest
 from .metrics import regression_report
 from .uncertainty import conformal_quantile
 from .applicability import ApplicabilityDomain
+from .context import context_design_matrix, make_context_pipeline
 from .model_card import write_model_card
 from .provenance import file_record, write_json_atomic
 
@@ -39,7 +40,7 @@ def _load_feature_file(path: str | Path) -> dict[str, np.ndarray]:
 
 def _validate_feature_metadata(reference: dict[str, np.ndarray], candidate: dict[str, np.ndarray], *, label: str) -> None:
     """Require matching presence and values for representation metadata."""
-    keys = ("feature_model", "fingerprint_radius", "fingerprint_bits", "context_feature_names")
+    keys = ("feature_model", "fingerprint_radius", "fingerprint_bits", "context_feature_names", "context_numeric_columns", "context_categorical_columns")
     for key in keys:
         if (key in reference) != (key in candidate):
             raise ValueError(f"{label} feature metadata presence differs: {key}")
@@ -82,9 +83,30 @@ def fit_target_model(
     test = _load_feature_file(test_archive)
     if len(train["y_log10"]) < 3:
         raise ValueError("At least three training rows are required for applicability diagnostics")
-    X_train, y_train = train["X"], train["y_log10"]
-    X_test, y_test = test["X"], test["y_log10"]
-    if X_test.shape[1] != X_train.shape[1] or len(y_test) == 0:
+    context_enabled = "X_base" in train
+    if context_enabled != ("X_base" in test):
+        raise ValueError("Training and held-out archives differ in assay-context availability")
+    if context_enabled:
+        X_train = context_design_matrix(train)
+        X_test = context_design_matrix(test)
+        numeric_columns = tuple(train.get("context_numeric_columns", np.asarray([], dtype=str)).astype(str))
+        categorical_columns = tuple(train.get("context_categorical_columns", np.asarray([], dtype=str)).astype(str))
+        if tuple(test.get("context_numeric_columns", np.asarray([], dtype=str)).astype(str)) != numeric_columns:
+            raise ValueError("Training and held-out numeric context columns differ")
+        if tuple(test.get("context_categorical_columns", np.asarray([], dtype=str)).astype(str)) != categorical_columns:
+            raise ValueError("Training and held-out categorical context columns differ")
+        base_dimension = int(train["X_base"].shape[1])
+    else:
+        if "context_feature_names" in train or "context_feature_names" in test:
+            raise ValueError(
+                "Pre-encoded assay context is not accepted for CV; use attach_context_archive "
+                "so preprocessing is fitted inside each fold"
+            )
+        X_train, X_test = train["X"], test["X"]
+        numeric_columns, categorical_columns = (), ()
+        base_dimension = int(X_train.shape[1])
+    y_train, y_test = train["y_log10"], test["y_log10"]
+    if (X_test.shape[1] != X_train.shape[1]) or len(y_test) == 0:
         raise ValueError("Held-out archive dimensions do not match training features")
     _validate_feature_metadata(train, test, label="training/held-out")
     for group_name in holdout_group_arrays:
@@ -97,10 +119,28 @@ def fit_target_model(
         if set(train_groups.astype(str)).intersection(set(test_groups.astype(str))):
             raise ValueError(f"Group leakage detected for held-out axis: {group_name}")
 
+    if context_encoder_path is not None:
+        raise ValueError("context_encoder_path is deprecated; use attach_context_archive for fold-local preprocessing")
+
     if "target" in train and str(train["target"].reshape(-1)[0]) != target:
         raise ValueError("Training archive target does not match requested target")
     if "target" in test and str(test["target"].reshape(-1)[0]) != target:
         raise ValueError("Held-out archive target does not match requested target")
+
+    def make_estimator():
+        base_estimator = XGBRegressor(
+            n_estimators=n_estimators, max_depth=max_depth, learning_rate=0.05,
+            subsample=0.85, colsample_bytree=0.85, objective="reg:squarederror",
+            n_jobs=-1, random_state=random_state, tree_method="hist",
+        )
+        if context_enabled:
+            return make_context_pipeline(
+                base_estimator,
+                numeric_columns=numeric_columns,
+                categorical_columns=categorical_columns,
+                base_dimension=base_dimension,
+            )
+        return base_estimator
 
     if group_array:
         if group_array not in train:
@@ -120,11 +160,7 @@ def fit_target_model(
             raise ValueError("At least two unique groups are required for grouped CV")
         cv = GroupKFold(n_splits=folds)
         cv_scores = -cross_val_score(
-            XGBRegressor(
-                n_estimators=n_estimators, max_depth=max_depth, learning_rate=0.05,
-                subsample=0.85, colsample_bytree=0.85, objective="reg:squarederror",
-                n_jobs=-1, random_state=random_state, tree_method="hist",
-            ),
+            make_estimator(),
             X_train, y_train, cv=cv, groups=groups,
             scoring="neg_root_mean_squared_error", n_jobs=1,
         )
@@ -135,27 +171,29 @@ def fit_target_model(
             raise ValueError("At least two training rows are required")
         cv = KFold(n_splits=folds, shuffle=True, random_state=random_state)
         cv_scores = -cross_val_score(
-            XGBRegressor(
-                n_estimators=n_estimators, max_depth=max_depth, learning_rate=0.05,
-                subsample=0.85, colsample_bytree=0.85, objective="reg:squarederror",
-                n_jobs=-1, random_state=random_state, tree_method="hist",
-            ),
+            make_estimator(),
             X_train, y_train, cv=cv,
             scoring="neg_root_mean_squared_error", n_jobs=1,
         )
         split_strategy = "row_random_k_fold_diagnostic_only"
 
-    estimator = XGBRegressor(
-        n_estimators=n_estimators, max_depth=max_depth, learning_rate=0.05,
-        subsample=0.85, colsample_bytree=0.85, objective="reg:squarederror",
-        n_jobs=-1, random_state=random_state, tree_method="hist",
-    )
+    estimator = make_estimator()
     estimator.fit(X_train, y_train)
     predictions = estimator.predict(X_test)
     calibration = _load_feature_file(calibration_archive) if calibration_archive else None
     conformal_q = None
     if calibration is not None:
-        X_cal, y_cal = calibration["X"], calibration["y_log10"]
+        if context_enabled != ("X_base" in calibration):
+            raise ValueError("Calibration archive differs in assay-context availability")
+        if context_enabled:
+            X_cal = context_design_matrix(calibration)
+            if tuple(calibration.get("context_numeric_columns", np.asarray([], dtype=str)).astype(str)) != numeric_columns:
+                raise ValueError("Calibration numeric context columns differ")
+            if tuple(calibration.get("context_categorical_columns", np.asarray([], dtype=str)).astype(str)) != categorical_columns:
+                raise ValueError("Calibration categorical context columns differ")
+        else:
+            X_cal = calibration["X"]
+        y_cal = calibration["y_log10"]
         if X_cal.shape[1] != X_train.shape[1]:
             raise ValueError("Calibration feature dimension does not match training features")
         if "target" in calibration and str(calibration["target"].reshape(-1)[0]) != target:
@@ -179,8 +217,13 @@ def fit_target_model(
             y_cal, calibration_predictions, alpha=conformal_alpha
         )
 
-    domain = ApplicabilityDomain(quantile=applicability_quantile).fit(X_train)
-    domain_test = domain.score(X_test)
+    if context_enabled:
+        X_train_domain = estimator.named_steps["preprocessing"].transform(X_train)
+        X_test_domain = estimator.named_steps["preprocessing"].transform(X_test)
+    else:
+        X_train_domain, X_test_domain = X_train, X_test
+    domain = ApplicabilityDomain(quantile=applicability_quantile).fit(X_train_domain)
+    domain_test = domain.score(X_test_domain)
     applicability_summary = {
         "method": domain_test["method"],
         "threshold": float(domain_test["threshold"]),
@@ -213,7 +256,7 @@ def fit_target_model(
         "held_out": regression_report(y_test, predictions, target=target),
         "n_train": int(len(y_train)),
         "n_held_out": int(len(y_test)),
-        "feature_dimension": int(X_train.shape[1]),
+        "feature_dimension": base_dimension,
         "random_state": random_state,
         "model_parameters": {
             "n_estimators": n_estimators,
@@ -261,21 +304,14 @@ def fit_target_model(
         "conformal_quantile_log10": conformal_q,
         "conformal_alpha": float(conformal_alpha) if conformal_q is not None else None,
         "applicability_domain": domain,
-        "context_encoder": None,
+        "context_enabled": context_enabled,
+        "context_numeric_columns": list(numeric_columns),
+        "context_categorical_columns": list(categorical_columns),
     }
-    if context_encoder_path is not None:
-        context_encoder = joblib.load(context_encoder_path)
-        expected_context_names = np.asarray(
-            context_encoder.get_feature_names_out()
-        ).astype(str)
-        if "context_feature_names" not in train or not np.array_equal(
-            train["context_feature_names"].astype(str), expected_context_names
-        ):
-            raise ValueError("Training archive context features do not match fitted encoder")
-        bundle["context_encoder"] = context_encoder
 
     joblib.dump(bundle, output / f"{target}_model.joblib", compress=3)
-    estimator.save_model(output / f"{target}_model.json")
+    model_to_export = estimator.named_steps["estimator"] if context_enabled else estimator
+    model_to_export.save_model(output / f"{target}_model.json")
     metrics_path = output / f"{target}_metrics.json"
     write_json_atomic(report, metrics_path)
     predictions_path = output / f"{target}_predictions.csv"

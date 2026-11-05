@@ -70,11 +70,13 @@ def fit_target_model(
 
     train = _load_feature_file(train_archive)
     test = _load_feature_file(test_archive)
+    if len(train["y_log10"]) < 3:
+        raise ValueError("At least three training rows are required for applicability diagnostics")
     X_train, y_train = train["X"], train["y_log10"]
     X_test, y_test = test["X"], test["y_log10"]
     if X_test.shape[1] != X_train.shape[1] or len(y_test) == 0:
         raise ValueError("Held-out archive dimensions do not match training features")
-    for metadata_key in ("feature_model", "fingerprint_radius", "fingerprint_bits"):
+    for metadata_key in ("feature_model", "fingerprint_radius", "fingerprint_bits", "context_feature_names"):
         if metadata_key in train and metadata_key in test:
             if not np.array_equal(train[metadata_key], test[metadata_key]):
                 raise ValueError(f"Training and held-out feature metadata differ: {metadata_key}")
@@ -255,7 +257,15 @@ def fit_target_model(
         "context_encoder": None,
     }
     if context_encoder_path is not None:
-        bundle["context_encoder"] = joblib.load(context_encoder_path)
+        context_encoder = joblib.load(context_encoder_path)
+        expected_context_names = np.asarray(
+            context_encoder.get_feature_names_out()
+        ).astype(str)
+        if "context_feature_names" not in train or not np.array_equal(
+            train["context_feature_names"].astype(str), expected_context_names
+        ):
+            raise ValueError("Training archive context features do not match fitted encoder")
+        bundle["context_encoder"] = context_encoder
 
     joblib.dump(bundle, output / f"{target}_model.joblib", compress=3)
     estimator.save_model(output / f"{target}_model.json")

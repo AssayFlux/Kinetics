@@ -30,7 +30,7 @@ def audit_observations(
         raise ValueError(f"Observation table is missing required columns: {sorted(missing)}")
     if log10_tolerance < 0 or not np.isfinite(log10_tolerance):
         raise ValueError("log10_tolerance must be finite and non-negative")
-    result = frame.copy()
+    result = frame.copy().reset_index(drop=True)
     values = pd.to_numeric(result["canonical_value"], errors="coerce").to_numpy(float)
     if not np.isfinite(values).all() or np.any(values <= 0):
         raise ValueError("canonical_value must be finite and strictly positive")
@@ -40,6 +40,9 @@ def audit_observations(
     group_columns = ["source", "source_record_id", "target"]
     if result[group_columns].isna().any().any():
         raise ValueError("source, source_record_id, and target cannot be missing")
+    for column in group_columns:
+        if result[column].astype(str).str.strip().eq("").any():
+            raise ValueError(f"{column} cannot contain empty identifiers")
     result["duplicate_group_id"] = [
         hashlib.sha256(
             "|".join(map(str, (source, record_id, target))).encode("utf-8")
@@ -79,6 +82,11 @@ def audit_observations(
         "n_conflicting_groups": int(
             (audit["status"] == "conflicting_duplicate").sum()
         ) if not audit.empty else 0,
+        "optional_metadata_missing_fraction": {
+            column: float(result[column].isna().mean())
+            for column in ("sequence", "smiles", "protein_accession", "organism", "ph", "temperature_k", "assay_id", "publication_doi")
+            if column in result
+        },
         "duplicate_status_counts": {str(key): int(value) for key, value in counts.items()},
         "policy": (
             "No observations were removed or averaged. Review conflicts and decide "

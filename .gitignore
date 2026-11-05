@@ -229,3 +229,8 @@ models/*
 .env
 .pytest_cache/
 .mypy_cache/
+
+# Downloaded public datasets and generated data manifests
+data/public/
+data/raw/
+data/processed/

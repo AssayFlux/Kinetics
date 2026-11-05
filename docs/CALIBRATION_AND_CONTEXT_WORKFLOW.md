@@ -2,9 +2,7 @@
 
 ## Fit assay context without leakage
 
-The context encoder is fitted only on the training archive's metadata table.
-The helper checks exact source-record ID order before appending context features.
-Apply the saved encoder unchanged to calibration and test rows:
+Attach raw assay metadata after verifying exact source-record ID order. The modeling pipeline fits imputation, scaling, and categorical vocabularies independently inside each cross-validation fold, then refits on the full training partition.
 
 ```python
 from kinetics_core.context import attach_context_archive
@@ -17,11 +15,13 @@ attach_context_archive(
 attach_context_archive(
     "data/features/km_calibration.npz",
     "data/metadata/km_calibration.csv",
-    "data/features/km_calibration_context.npz")
+    "data/features/km_calibration_context.npz",
+)
 attach_context_archive(
     "data/features/km_test.npz",
     "data/metadata/km_test.csv",
-    "data/features/km_test_context.npz")
+    "data/features/km_test_context.npz",
+)
 ```
 
 Each metadata CSV must contain `source_record_id` and the configured assay

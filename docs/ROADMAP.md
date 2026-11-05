@@ -19,6 +19,7 @@ The agreed sequence is to finish assembling the software before executing traini
 - [x] SHA-256 source file provenance and curation manifests.
 - [x] CatPred-DB target-specific normalization adapter.
 - [x] Grouped and double-cold partition utilities.
+- [x] Nested protein/scaffold double-cold train/calibration/test partition workflow with excluded cross-quadrant audit.
 - [x] MMseqs2 sequence-clustering wrapper with versioned mapping manifest.
 - [x] RDKit canonical SMILES and Bemis-Murcko scaffold assignment utilities.
 - [ ] BRENDA and SABIO-RK adapters after source schema/license verification.

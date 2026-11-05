@@ -26,7 +26,7 @@ Status is updated as code is added. This document separates implementation from 
 - Split-conformal interval utilities.
 - Model-card generation, target-specific prediction interface, experiment report generation, and parity/residual plotting utilities.
 - Installable kinetics_core package metadata and CLI entry point.
-- Scientific architecture, data model, split design, publication protocol, paper outline, contribution guidance, and citation metadata.
+- Scientific architecture, data model, split design, publication protocol, paper outline, contribution guidance, and citation metadata.\n- Dependency-free offline assistant protocol and Kinetics research-aware facade, ready for a future Astronaut adapter.
 
 ## Integration work still required
 
@@ -37,7 +37,7 @@ Status is updated as code is added. This document separates implementation from 
 - Add calibration-data workflow and prediction-time uncertainty outputs to the inference interface.
 - Add BRENDA and SABIO-RK adapters after verifying current source schemas and terms.
 - Integrate the report/figure utilities into a complete end-to-end experiment orchestrator.
-- Complete CLI ergonomics, packaging compatibility, and user documentation.
+- Complete CLI ergonomics, packaging compatibility, and user documentation.\n- Implement and verify the Astronaut adapter only after the project owner confirms Astronaut is ready; no Astronaut code has been changed.
 
 ## Verification status
 

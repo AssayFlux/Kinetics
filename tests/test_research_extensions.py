@@ -55,3 +55,24 @@ def test_applicability_domain_flags_far_query():
     assert bool(near["within_domain"][0])
     assert not bool(far["within_domain"][0])
     assert "not a probability" in near["interpretation"]
+
+
+from kinetics_core.quality import audit_observations
+
+
+def test_quality_audit_flags_conflicting_duplicate_without_dropping_rows():
+    frame = pd.DataFrame({
+        "target": ["km", "km", "kcat"],
+        "source": ["db", "db", "db"],
+        "source_record_id": ["r1", "r1", "r1"],
+        "canonical_value": [1e-3, 2e-3, 2.0],
+        "canonical_unit": ["M", "M", "s^-1"],
+        "sequence": ["AAAA", "AAAA", None],
+    })
+    annotated, audit, report = audit_observations(frame)
+    assert len(annotated) == 3
+    assert len(audit) == 1
+    assert audit.iloc[0]["status"] == "conflicting_duplicate"
+    assert report["n_conflicting_groups"] == 1
+    assert annotated.loc[0, "duplicate_status"] == "conflicting_duplicate"
+    assert annotated.loc[2, "duplicate_status"] == "unique"

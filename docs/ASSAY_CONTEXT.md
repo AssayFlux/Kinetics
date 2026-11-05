@@ -1,7 +1,6 @@
 # Assay-context feature pipeline
 
-`kinetics_core.context.AssayContextEncoder` provides an optional, leakage-aware
-preprocessor for assay metadata.
+`kinetics_core.context.attach_context_archive` attaches raw assay metadata to feature archives with exact source-record ID alignment. The model-fitting pipeline then performs fold-local preprocessing. `AssayContextEncoder` remains available as a standalone utility for non-CV exploratory workflows.
 
 ## Supported behavior
 

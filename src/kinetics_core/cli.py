@@ -31,7 +31,6 @@ def build_parser() -> argparse.ArgumentParser:
         if command == "fit":
             sub.add_argument("--calibration-archive")
             sub.add_argument("--conformal-alpha", type=float, default=0.1)
-            sub.add_argument("--context-encoder-path")
             sub.add_argument("--n-estimators", type=int, default=500)
             sub.add_argument("--max-depth", type=int, default=6)
     return parser
@@ -74,7 +73,6 @@ def main(argv: list[str] | None = None) -> int:
             random_state=args.random_state, n_splits=args.n_splits,
             calibration_archive=args.calibration_archive,
             conformal_alpha=args.conformal_alpha,
-            context_encoder_path=args.context_encoder_path,
             n_estimators=args.n_estimators, max_depth=args.max_depth,
         )
     print(json.dumps(result, indent=2, sort_keys=True))

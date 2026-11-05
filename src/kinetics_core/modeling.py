@@ -160,13 +160,20 @@ def fit_target_model(
         for group_name in holdout_group_arrays:
             if group_name not in calibration:
                 raise ValueError(f"Calibration archive missing leakage-check array: {group_name}")
+            calibration_groups_array = np.asarray(calibration[group_name]).astype(str).reshape(-1)
+            if len(calibration_groups_array) != len(y_cal):
+                raise ValueError(f"Calibration grouping array does not align with rows: {group_name}")
             train_groups = set(np.asarray(train[group_name]).astype(str).reshape(-1))
-            calibration_groups = set(np.asarray(calibration[group_name]).astype(str).reshape(-1))
+            calibration_groups = set(calibration_groups_array)
             test_groups = set(np.asarray(test[group_name]).astype(str).reshape(-1))
             if train_groups.intersection(calibration_groups):
                 raise ValueError(f"Group leakage between training and calibration: {group_name}")
             if train_groups.intersection(test_groups) or calibration_groups.intersection(test_groups):
                 raise ValueError(f"Group leakage across train/calibration/test: {group_name}")
+        for metadata_key in ("feature_model", "fingerprint_radius", "fingerprint_bits", "context_feature_names"):
+            if metadata_key in train and metadata_key in calibration:
+                if not np.array_equal(train[metadata_key], calibration[metadata_key]):
+                    raise ValueError(f"Calibration feature metadata differ: {metadata_key}")
         calibration_predictions = estimator.predict(X_cal)
         conformal_q = conformal_quantile(
             y_cal, calibration_predictions, alpha=conformal_alpha

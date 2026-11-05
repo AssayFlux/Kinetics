@@ -218,3 +218,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Kinetics generated artifacts
+data/*.csv
+data/*.npz
+data/cache/
+models/*
+!models/.gitkeep
+.env
+.pytest_cache/
+.mypy_cache/

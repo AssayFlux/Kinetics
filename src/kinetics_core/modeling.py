@@ -309,12 +309,12 @@ def fit_target_model(
             "split_strategy": split_strategy,
             "n_test": int(len(y_test)),
             "metrics": report["held_out"],
-            "uncertainty_method": "not calibrated by this fitting function"
+            "uncertainty_method": (f"split_conformal_absolute_residual(alpha={conformal_alpha})" if conformal_q is not None else "not calibrated")
         },
         "limitations": [
             "Performance depends on dataset coverage, assay context, and distribution shift.",
             "A held-out score does not establish external validity unless the split is genuinely independent.",
-            "No uncertainty interval is produced by this fitting function."
+            "Conformal intervals are unavailable unless an independent calibration archive was supplied; applicability warnings are feature-space diagnostics, not calibrated confidence."
         ],
         "experiment_manifest": f"{target}_experiment_manifest.json",
         "feature_encoder": bundle["feature_model"],
@@ -325,7 +325,7 @@ def fit_target_model(
     manifest = build_experiment_manifest(
         experiment_id=f"{target}-{run_stamp}",
         research_question=f"Estimate enzyme {target} from protein sequence and substrate representation",
-        inputs=[train_archive, test_archive],
+        inputs=[train_archive, test_archive] + ([calibration_archive] if calibration_archive else []) + ([context_encoder_path] if context_encoder_path else []),
         outputs=[model_path, output / f"{target}_model.json", metrics_path,
                  predictions_path, model_card_path],
         configuration={
@@ -339,7 +339,9 @@ def fit_target_model(
         },
         notes=[
             "This manifest is generated when the fitting function is run.",
-            "Predictions are computational estimates, not experimental measurements."
+            "Predictions are computational estimates, not experimental measurements.",
+            "Applicability warnings are descriptive feature-space diagnostics, not probabilities.",
+            "Conformal intervals depend on calibration-set exchangeability assumptions."
         ]
     )
     save_experiment_manifest(manifest, output / f"{target}_experiment_manifest.json")

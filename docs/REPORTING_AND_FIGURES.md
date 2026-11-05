@@ -1,0 +1,22 @@
+# Research reporting and figure conventions
+
+The reporting utilities generate Markdown experiment summaries and target-specific diagnostic figures. They do not create publication claims automatically.
+
+## Minimum report content
+
+- Research question and experiment ID.
+- Input artifact hashes and source provenance manifest.
+- Target-specific split strategy and sample counts.
+- Cross-validation and held-out metrics, clearly separated.
+- Log10 and original-unit errors.
+- Runtime/dependency metadata.
+- Dataset/method citations.
+- Limitations and interpretation cautions.
+
+## Figure conventions
+
+Generate parity and residual figures independently for Km and kcat. Axes must identify the target and scale. Save high-resolution output and retain the exact prediction table and plotting inputs. Do not combine metrics for different targets into a single score without a scientifically justified definition.
+
+## Reproducibility
+
+Every figure and table must be regenerable from saved row-level predictions, metrics, and experiment manifests. If an input artifact or citation is unavailable, report that limitation rather than reconstructing it from memory.

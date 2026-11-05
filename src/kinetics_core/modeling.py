@@ -1,8 +1,8 @@
 """Target-specific model fitting workflow; definitions only, not executed during build."""
 from __future__ import annotations
 
-import json
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -10,8 +10,10 @@ import joblib
 import numpy as np
 from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
+from .experiments import build_experiment_manifest, save_experiment_manifest
 from .metrics import regression_report
-from .provenance import write_json_atomic
+from .model_card import write_model_card
+from .provenance import file_record, write_json_atomic
 
 LOG = logging.getLogger("kinetics_core.modeling")
 
@@ -152,6 +154,68 @@ def fit_target_model(
     }
     joblib.dump(bundle, output / f"{target}_model.joblib", compress=3)
     estimator.save_model(output / f"{target}_model.json")
-    write_json_atomic(report, output / f"{target}_metrics.json")
-    LOG.info("Saved %s model and report under %s", target, output)
+    metrics_path = output / f"{target}_metrics.json"
+    write_json_atomic(report, metrics_path)
+
+    model_path = output / f"{target}_model.joblib"
+    model_card_path = output / f"{target}_MODEL_CARD.md"
+    run_stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    write_model_card({
+        "model_name": f"Kinetics {target} predictor",
+        "model_version": "0.1.0",
+        "software_version": "0.2.0",
+        "created_at": run_stamp,
+        "intended_use": [
+            "Research analysis and hypothesis generation under documented applicability limits.",
+            "Prioritization of candidates for subsequent experimental measurement."
+        ],
+        "out_of_scope_use": [
+            "Treating predictions as experimental measurements.",
+            "Clinical, regulatory, or safety-critical decisions without independent validation."
+        ],
+        "dataset": {
+            "name": "Training feature archive",
+            "version": "see experiment manifest",
+            "source_url": "see source dataset provenance",
+            "license": "see source dataset provenance",
+            "n_observations": int(len(y_train)),
+            "manifest": f"{target}_experiment_manifest.json"
+        },
+        "evaluation": {
+            "split_strategy": split_strategy,
+            "n_test": int(len(y_test)),
+            "metrics": report["held_out"],
+            "uncertainty_method": "not calibrated by this fitting function"
+        },
+        "limitations": [
+            "Performance depends on dataset coverage, assay context, and distribution shift.",
+            "A held-out score does not establish external validity unless the split is genuinely independent.",
+            "No uncertainty interval is produced by this fitting function."
+        ],
+        "experiment_manifest": f"{target}_experiment_manifest.json",
+        "feature_encoder": bundle["feature_model"],
+        "model_sha256": file_record(model_path)["sha256"],
+        "random_seed": random_state
+    }, model_card_path)
+
+    manifest = build_experiment_manifest(
+        experiment_id=f"{target}-{run_stamp}",
+        research_question=f"Estimate enzyme {target} from protein sequence and substrate representation",
+        inputs=[train_archive, test_archive],
+        outputs=[model_path, output / f"{target}_model.json", metrics_path, model_card_path],
+        configuration={
+            "target": target,
+            "cross_validation_strategy": split_strategy,
+            "group_array": group_array,
+            "folds": int(folds),
+            "random_state": random_state,
+            "model_parameters": report["model_parameters"]
+        },
+        notes=[
+            "This manifest is generated when the fitting function is run.",
+            "Predictions are computational estimates, not experimental measurements."
+        ]
+    )
+    save_experiment_manifest(manifest, output / f"{target}_experiment_manifest.json")
+    LOG.info("Saved %s model, model card, metrics, and experiment manifest under %s", target, output)
     return report

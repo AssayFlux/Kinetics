@@ -66,7 +66,7 @@ def predict_one(
             context_row[name] = numeric_value if np.isfinite(numeric_value) else np.nan
         for name in categorical_columns:
             raw_value = assay_context[name]
-            context_row[name] = "__MISSING__" if raw_value is None else str(raw_value)
+            context_row[name] = "__MISSING__" if raw_value is None or pd.isna(raw_value) else str(raw_value)
         model_input = pd.DataFrame([context_row])
         domain_input = bundle["estimator"].named_steps["preprocessing"].transform(model_input)
     else:

@@ -15,6 +15,7 @@ Status is updated as code is added. This document separates implementation from 
 - Canonical one-target-per-row kinetic observation contract.
 - Explicit Km-to-M and kcat-to-s^-1 conversion, including configurable per-record unit columns.
 - Source-table normalization with explicit mappings and row-level rejection audit.
+- Non-destructive duplicate/conflict audit keyed by exact source record identity, plus metadata completeness summary.
 - CatPred-DB adapter that processes Km and kcat tables separately.
 - SHA-256 provenance, atomic JSON writing, and experiment manifests.
 - Grouped holdout and strict double-cold partition utilities.
@@ -26,7 +27,7 @@ Status is updated as code is added. This document separates implementation from 
 - Training-reference nearest-neighbour applicability-domain warnings (explicitly not calibrated confidence).
 - Train-fitted assay-context archive augmentation with exact source-record ID/order checks.
 - Fixed classical model-family comparison with CV-only selection and untouched held-out reporting.
-- Research CLI for baseline comparison and target-specific fitting.
+- Research CLI for dataset quality auditing, baseline comparison, and target-specific fitting.
 - Separate log-scale and original-unit metric reporting.
 - Split-conformal interval utilities.
 - Model-card generation, target-specific prediction interface, experiment report generation, and parity/residual plotting utilities.

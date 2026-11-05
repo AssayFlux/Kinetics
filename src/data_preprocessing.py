@@ -8,13 +8,8 @@ from __future__ import annotations
 import argparse
 import logging
 from pathlib import Path
-from typing import Iterable
-
 import numpy as np
 import pandas as pd
-from Bio.SeqUtils.ProtParamData import (  # noqa: F401 - Biopython dependency sanity check
-    kd,
-)
 from rdkit import Chem
 from sklearn.model_selection import train_test_split
 

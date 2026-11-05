@@ -37,14 +37,14 @@ def prepare_target_partitions(
     if not source.is_file():
         raise FileNotFoundError(source)
     frame = pd.read_csv(source)
-    required = {"target", "source_record_id", "canonical_value", protein_group_column, substrate_group_column}
+    required = {"target", "source", "source_record_id", "canonical_value", protein_group_column, substrate_group_column}
     missing = required - set(frame.columns)
     if missing:
         raise ValueError(f"Normalized observations are missing columns: {sorted(missing)}")
     selected = frame.loc[frame["target"] == target].copy().reset_index(drop=True)
     if selected.empty:
         raise ValueError(f"No normalized observations for target {target}")
-    if selected["source_record_id"].astype(str).duplicated().any():
+    if selected.duplicated(subset=["source", "source_record_id"]).any():
         raise ValueError(
             "Duplicate source_record_id values remain; review the quality audit and "
             "resolve replicate/conflict policy before partitioning"

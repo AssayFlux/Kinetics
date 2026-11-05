@@ -19,6 +19,7 @@ def predict_one(
     cache_dir: str | Path = "data/cache",
     device: str | None = None,
     conformal_q: float | None = None,
+    assay_context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Predict one target and optionally attach a pre-calibrated conformal interval."""
     if target not in ("km", "kcat"):
@@ -41,6 +42,18 @@ def predict_one(
         device=device,
     )
     features = builder.transform_one(sequence, smiles).reshape(1, -1)
+    context_encoder = bundle.get("context_encoder")
+    if context_encoder is not None:
+        if assay_context is None:
+            raise ValueError("This model requires assay_context values for prediction")
+        import pandas as pd
+        context_frame = pd.DataFrame([assay_context])
+        encoded_context = context_encoder.transform(context_frame)
+        features = np.concatenate(
+            [features, np.asarray(encoded_context, dtype=np.float32)], axis=1
+        )
+    elif assay_context:
+        raise ValueError("Model was not trained with an assay-context encoder")
     if features.shape[1] != int(bundle["feature_dimension"]):
         raise ValueError("Generated feature dimension does not match the model artifact")
     prediction_log10 = float(bundle["estimator"].predict(features)[0])
@@ -52,13 +65,28 @@ def predict_one(
         "canonical_unit": unit,
         "interpretation": "computational estimate; not an experimental measurement",
     }
-    if conformal_q is not None:
-        interval = conformal_interval(np.asarray([prediction_log10]), conformal_q, target=target)
+    effective_q = conformal_q
+    if effective_q is None:
+        effective_q = bundle.get("conformal_quantile_log10")
+    if effective_q is not None:
+        interval = conformal_interval(np.asarray([prediction_log10]), effective_q, target=target)
         result["interval"] = {
             "method": interval["method"],
             "quantile_log10": interval["quantile"],
             "lower": float(interval["lower"][0]),
             "upper": float(interval["upper"][0]),
             "canonical_unit": unit,
+        }
+    domain = bundle.get("applicability_domain")
+    if domain is not None:
+        domain_result = domain.score(features)
+        result["applicability_domain"] = {
+            "within_domain": bool(domain_result["within_domain"][0]),
+            "nearest_reference_distance": float(
+                domain_result["nearest_reference_distance"][0]
+            ),
+            "threshold": float(domain_result["threshold"]),
+            "method": domain_result["method"],
+            "interpretation": domain_result["interpretation"],
         }
     return result

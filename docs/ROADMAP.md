@@ -30,7 +30,7 @@ The agreed sequence is to finish assembling the software before executing traini
 - [x] Target-specific model fitting workflow definition.
 - [x] Assay-context feature encoder with train-only fitting and missingness handling.
 - [x] Connect assay-context features to target-specific modeling and inference artifacts.
-- [ ] Additional model families and baseline comparison interfaces.
+- [x] Fixed classical baseline comparison interface with training-only CV selection.
 - [x] Training-reference applicability-domain warning with explicit non-probabilistic interpretation.
 - [x] Prediction-time conformal interval and applicability warning interface.
 
@@ -47,9 +47,10 @@ The agreed sequence is to finish assembling the software before executing traini
 - [x] Model-card generation.
 - [x] Preliminary software citation metadata.
 - [x] Publication protocol and manuscript outline.
-- [ ] End-to-end experiment runner and artifact store.
+- [ ] Unified multi-stage experiment runner and artifact store.
 - [ ] Reproducible figure/table/report generation.
-- [ ] Stable user-facing CLI and Python API.
+- [x] Stable command-line entry point for model comparison and target-specific fitting.
+- [ ] Complete unified Python API and tutorial examples.
 - [ ] Tutorials and complete example project.
 
 ## Stage 5 — Integration and implementation completion

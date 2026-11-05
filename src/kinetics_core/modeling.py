@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
 from .experiments import build_experiment_manifest, save_experiment_manifest
@@ -136,6 +137,17 @@ def fit_target_model(
     )
     estimator.fit(X_train, y_train)
     predictions = estimator.predict(X_test)
+    if "source_record_ids" in test:
+        record_ids = np.asarray(test["source_record_ids"]).astype(str)
+    else:
+        record_ids = np.arange(len(y_test)).astype(str)
+    prediction_table = pd.DataFrame({
+        "source_record_id": record_ids,
+        "y_true_log10": y_test.astype(float),
+        "y_pred_log10": predictions.astype(float),
+        "y_true_canonical": np.power(10.0, y_test.astype(float)),
+        "y_pred_canonical": np.power(10.0, predictions.astype(float)),
+    })
     report = {
         "target": target,
         "cross_validation": {
@@ -178,6 +190,8 @@ def fit_target_model(
     estimator.save_model(output / f"{target}_model.json")
     metrics_path = output / f"{target}_metrics.json"
     write_json_atomic(report, metrics_path)
+    predictions_path = output / f"{target}_predictions.csv"
+    prediction_table.to_csv(predictions_path, index=False)
 
     model_path = output / f"{target}_model.joblib"
     model_card_path = output / f"{target}_MODEL_CARD.md"
@@ -224,7 +238,8 @@ def fit_target_model(
         experiment_id=f"{target}-{run_stamp}",
         research_question=f"Estimate enzyme {target} from protein sequence and substrate representation",
         inputs=[train_archive, test_archive],
-        outputs=[model_path, output / f"{target}_model.json", metrics_path, model_card_path],
+        outputs=[model_path, output / f"{target}_model.json", metrics_path,
+                 predictions_path, model_card_path],
         configuration={
             "target": target,
             "cross_validation_strategy": split_strategy,

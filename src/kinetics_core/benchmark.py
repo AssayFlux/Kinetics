@@ -20,10 +20,10 @@ from sklearn.ensemble import (
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
-from .metrics import regression_report
-from .modeling import _load_feature_file, _validate_feature_metadata
 from .context import context_design_matrix, make_context_pipeline
 from .experiments import build_experiment_manifest, save_experiment_manifest
+from .metrics import regression_report
+from .modeling import _load_feature_file, _validate_feature_metadata
 from .model_card import write_model_card
 from .provenance import file_record, write_json_atomic
 
@@ -84,8 +84,12 @@ def compare_regressors(
     for name in holdout_group_arrays:
         if name not in train or name not in test:
             raise ValueError(f"Missing required holdout grouping array: {name}")
-        left = set(np.asarray(train[name]).astype(str).reshape(-1))
-        right = set(np.asarray(test[name]).astype(str).reshape(-1))
+        left_values = np.asarray(train[name]).astype(str).reshape(-1)
+        right_values = np.asarray(test[name]).astype(str).reshape(-1)
+        if len(left_values) != len(y_train) or len(right_values) != len(y_test):
+            raise ValueError(f"Holdout grouping array does not align with rows: {name}")
+        left = set(left_values)
+        right = set(right_values)
         if left.intersection(right):
             raise ValueError(f"Group leakage detected on holdout axis {name}")
     if "target" in train and str(train["target"].reshape(-1)[0]) != target:
@@ -98,8 +102,12 @@ def compare_regressors(
             raise ValueError(f"Missing grouped CV array: {group_array}")
         groups = np.asarray(train[group_array]).astype(str).reshape(-1)
         test_groups = np.asarray(test[group_array]).astype(str).reshape(-1)
-        if len(groups) != len(y_train) or len(np.unique(groups)) < 2:
-            raise ValueError("group array must align with training rows and contain >=2 groups")
+        if (
+            len(groups) != len(y_train)
+            or len(test_groups) != len(y_test)
+            or len(np.unique(groups)) < 2
+        ):
+            raise ValueError("group arrays must align with train/test rows and train contain >=2 groups")
         if set(groups).intersection(set(test_groups)):
             raise ValueError("Group leakage between training and held-out archive")
         folds = min(n_splits, len(np.unique(groups)))
@@ -148,6 +156,8 @@ def compare_regressors(
         "cv_strategy": split_label,
         "folds": int(folds),
         "selected_model": selected_name,
+        "context_features_enabled": context_enabled,
+        "feature_dimension": base_dimension,
         "candidates": results,
         "held_out": regression_report(y_test, test_prediction, target=target),
         "n_train": int(len(y_train)),

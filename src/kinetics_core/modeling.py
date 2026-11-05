@@ -11,7 +11,7 @@ import pandas as pd
 from sklearn.model_selection import GroupKFold, KFold, cross_val_score
 
 from .experiments import build_experiment_manifest, save_experiment_manifest
-from .metrics import regression_report
+from .metrics import regression_report, subgroup_regression_report
 from .uncertainty import conformal_quantile
 from .applicability import ApplicabilityDomain
 from .context import context_design_matrix, make_context_pipeline
@@ -243,6 +243,8 @@ def fit_target_model(
         "y_pred_log10": predictions.astype(float),
         "y_true_canonical": np.power(10.0, y_test.astype(float)),
         "y_pred_canonical": np.power(10.0, predictions.astype(float)),
+        "residual_log10": (predictions - y_test).astype(float),
+        "absolute_error_log10": np.abs(predictions - y_test).astype(float),
     })
     report = {
         "target": target,
@@ -290,6 +292,14 @@ def fit_target_model(
             "chemical cold-start generalization."
             if not group_array else None
         ),
+    }
+    report["subgroup_diagnostics"] = {
+        group_name: subgroup_regression_report(
+            y_test, predictions, np.asarray(test[group_name]).reshape(-1),
+            target=target, min_group_size=5,
+            conformal_quantile_log10=conformal_q,
+        )
+        for group_name in holdout_group_arrays
     }
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)

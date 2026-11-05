@@ -66,6 +66,10 @@ def fit_target_model(
     X_test, y_test = test["X"], test["y_log10"]
     if X_test.shape[1] != X_train.shape[1] or len(y_test) == 0:
         raise ValueError("Held-out archive dimensions do not match training features")
+    for metadata_key in ("feature_model", "fingerprint_radius", "fingerprint_bits"):
+        if metadata_key in train and metadata_key in test:
+            if not np.array_equal(train[metadata_key], test[metadata_key]):
+                raise ValueError(f"Training and held-out feature metadata differ: {metadata_key}")
     if "target" in train and str(train["target"].reshape(-1)[0]) != target:
         raise ValueError("Training archive target does not match requested target")
     if "target" in test and str(test["target"].reshape(-1)[0]) != target:
@@ -74,9 +78,16 @@ def fit_target_model(
     if group_array:
         if group_array not in train:
             raise ValueError(f"Requested group array {group_array!r} is absent")
+        if group_array not in test:
+            raise ValueError(f"Held-out archive is missing grouping array {group_array!r}")
         groups = np.asarray(train[group_array]).reshape(-1)
+        held_out_groups = np.asarray(test[group_array]).reshape(-1)
         if len(groups) != len(y_train) or len(np.unique(groups)) < 2:
             raise ValueError("Group array must align with training rows and contain >=2 groups")
+        if len(held_out_groups) != len(y_test):
+            raise ValueError("Held-out group array does not align with held-out rows")
+        if set(groups.astype(str)).intersection(set(held_out_groups.astype(str))):
+            raise ValueError("Group leakage detected between training and held-out archives")
         folds = min(n_splits, len(np.unique(groups)))
         if folds < 2:
             raise ValueError("At least two unique groups are required for grouped CV")

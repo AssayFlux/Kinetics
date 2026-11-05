@@ -144,3 +144,39 @@ def test_subgroup_diagnostics_keep_small_groups_visible_and_report_coverage():
     assert result["groups"][0]["status"] == "reported"
     assert result["groups"][2]["status"] == "insufficient_group_size"
     assert result["groups"][0]["empirical_interval_coverage"] == 1.0
+
+
+
+def test_nested_partition_is_disjoint_on_protein_and_scaffold_axes(tmp_path):
+    from kinetics_core.partition import prepare_target_partitions
+
+    rows = []
+    for protein in range(10):
+        for scaffold in range(10):
+            rows.append({
+                "target": "km",
+                "source": "public-db",
+                "source_record_id": f"r-{protein}-{scaffold}",
+                "canonical_value": 10 ** (-3 + protein * 0.01 + scaffold * 0.01),
+                "canonical_unit": "M",
+                "protein_cluster_id": f"p{protein}",
+                "scaffold_id": f"s{scaffold}",
+            })
+    source = tmp_path / "observations.csv"
+    pd.DataFrame(rows).to_csv(source, index=False)
+    result = prepare_target_partitions(
+        source, tmp_path / "parts", target="km",
+        test_fraction=0.2, calibration_fraction=0.2, random_state=42,
+    )
+    partitions = {
+        name: pd.read_csv(result[name])
+        for name in ("train", "calibration", "test")
+    }
+    for axis in ("protein_cluster_id", "scaffold_id"):
+        sets = {
+            name: set(frame[axis])
+            for name, frame in partitions.items()
+        }
+        assert not sets["train"].intersection(sets["calibration"])
+        assert not sets["train"].intersection(sets["test"])
+        assert not sets["calibration"].intersection(sets["test"])

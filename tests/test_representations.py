@@ -94,6 +94,7 @@ def test_feature_archive_has_aligned_rows_and_manifest(tmp_path):
         batch_size=1,
     )
     with np.load(archive, allow_pickle=False) as data:
+        assert all(not data[name].dtype.hasobject for name in data.files)
         assert data["X"].shape == (2, 2050)
         assert data["source_record_ids"].tolist() == ["001", "002"]
         assert data["protein_cluster_id"].tolist() == ["p1", "p2"]

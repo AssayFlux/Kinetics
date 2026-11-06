@@ -211,7 +211,8 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
         "output", "output_dir", "target", "sequence_column", "smiles_column",
         "record_id_column", "source_column", "min_sequence_identity", "coverage",
         "threads", "cache_dir", "model_name", "model_revision", "tokenizer_revision",
-        "device", "max_residues", "radius", "n_bits", "batch_size", "group_column",\n        "group_array", "holdout_group_array", "no_chirality", "overwrite",
+        "device", "max_residues", "radius", "n_bits", "batch_size", "group_column",
+        "group_array", "holdout_group_array", "no_chirality", "overwrite",
         "protein_group_column", "substrate_group_column", "test_fraction",
         "calibration_fraction", "random_state", "n_splits", "calibration_archive",
         "conformal_alpha", "n_estimators", "max_depth", "hidden_layers", "alpha",
@@ -312,7 +313,9 @@ def create_app(
             return JSONResponse(status_code=400, content={"detail": "Local workbench only"})
         if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
             if request.headers.get("sec-fetch-site") == "cross-site":
-                return JSONResponse(status_code=403, content={"detail": "Cross-site request blocked"})
+                return JSONResponse(
+                    status_code=403, content={"detail": "Cross-site request blocked"}
+                )
             origin = request.headers.get("origin")
             if origin:
                 parsed = urlsplit(origin)
@@ -322,7 +325,9 @@ def create_app(
                     or origin_host != host
                     or parsed.port != request.url.port
                 ):
-                    return JSONResponse(status_code=403, content={"detail": "Cross-origin request blocked"})
+                    return JSONResponse(
+                        status_code=403, content={"detail": "Cross-origin request blocked"}
+                    )
         return await call_next(request)
 
     def project_record(project_id: str) -> dict[str, Any]:

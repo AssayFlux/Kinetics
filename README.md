@@ -1,6 +1,6 @@
 # KINETICS
 
-<p align="center"><img src="Assets/Brand%20Logo.svg" alt="Kinetics brand logo" width="220"></p>
+<p align="center"><img src="Assets/Brand%20Logo.svg" alt="Kinetics brand logo" width="500"></p>
 <p align="center"><strong>A long-horizon biomedical research, molecular discovery and therapeutic-translation platform.</strong></p>
 
 <p align="center">[Vision](VISION.md) · [Master roadmap](ROADMAP.md) · [Architecture](ARCHITECTURE.md) · [Engineering stack](ENGINEERING_STACK.md) · [Clinical translation](CLINICAL_TRANSLATION.md)</p>

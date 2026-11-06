@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Download public CatPred-DB tables without modifying upstream data."""
+"""Download pinned CatPred-DB tables without modifying upstream data."""
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import os
 import re
 import time
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -36,8 +38,16 @@ CATPRED_BASE_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/re
 CATPRED_GITHUB_RAW = "https://raw.githubusercontent.com/maranasgroup/CatPred-DB"
 
 
-def download(url: str, destination: Path) -> dict:
-    request = urllib.request.Request(url, headers={"User-Agent": "AssayFlux-Kinetics/0.1"})
+def request_headers(url: str, token: str | None = None) -> dict[str, str]:
+    """Attach credentials only to the Hugging Face dataset host."""
+    headers = {"User-Agent": "AssayFlux-Kinetics/0.1"}
+    if token and url.startswith("https://huggingface.co/datasets/RosettaCommons/CatPred-DB/"):
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
+def download(url: str, destination: Path, token: str | None = None) -> dict:
+    request = urllib.request.Request(url, headers=request_headers(url, token))
     digest = hashlib.sha256()
     size = 0
     temporary = destination.with_suffix(destination.suffix + ".part")
@@ -57,6 +67,21 @@ def download(url: str, destination: Path) -> dict:
         if size == 0:
             raise RuntimeError("Downloaded an empty file")
         temporary.replace(destination)
+    except urllib.error.HTTPError as exc:
+        temporary.unlink(missing_ok=True)
+        if (
+            exc.code in (401, 403)
+            and url.startswith("https://huggingface.co/datasets/RosettaCommons/CatPred-DB/")
+        ):
+            raise RuntimeError(
+                "CatPred-DB rejected this download (HTTP "
+                f"{exc.code}). Open the dataset page in a browser, sign in, "
+                "review and accept its access conditions, and obtain access. "
+                "Then set HF_TOKEN to a read token for that same account and retry. "
+                "The token is sent only to the Hugging Face dataset host and is "
+                "never written to the manifest."
+            ) from exc
+        raise
     except Exception:
         temporary.unlink(missing_ok=True)
         raise
@@ -78,12 +103,18 @@ def main() -> None:
         help="Pinned Hugging Face dataset revision",
     )
     parser.add_argument("--processing-revision", default=CATPRED_PROCESSING_REVISION)
+    parser.add_argument(
+        "--hf-token-env",
+        default="HF_TOKEN",
+        help="Environment variable containing a Hugging Face read token (default: HF_TOKEN)",
+    )
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
     if not re.fullmatch(r"[0-9a-fA-F]{7,40}", args.revision):
         raise ValueError("--revision must be an immutable Git commit SHA, not a branch name")
     if not re.fullmatch(r"[0-9a-fA-F]{7,40}", args.processing_revision):
         raise ValueError("--processing-revision must be an immutable Git commit SHA")
+    token = os.environ.get(args.hf_token_env)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = output_dir / "manifest.json"
@@ -103,8 +134,13 @@ def main() -> None:
         ),
         "license_note": (
             "Pinned Hugging Face dataset card declares CC-BY-4.0; verify exact "
-            "revision and redistribution terms."
+            "revision and underlying-source terms before redistribution."
         ),
+        "authentication": {
+            "required_if_gated": True,
+            "token_environment_variable": args.hf_token_env if token else None,
+            "token_value_recorded": False,
+        },
         "files": [],
     }
     file_specs = [
@@ -140,7 +176,7 @@ def main() -> None:
             print(f"Keeping existing {destination}")
             continue
         print(f"Downloading {filename} ...", flush=True)
-        record = download(url, destination)
+        record = download(url, destination, token=token)
         record["file"] = filename
         record["source"] = spec["source"]
         manifest["files"].append(record)

@@ -88,7 +88,7 @@ def test_import_legacy_cli_writes_canonical_csv_and_provenance_manifest(tmp_path
     source = tmp_path / "legacy.csv"
     output = tmp_path / "canonical" / "observations.csv"
     pd.DataFrame({
-        "source_id": ["row-1", "row-2"],
+        "source_id": ["001", "002"],
         "sequence": ["ACDEFG", "MKWVTF"],
         "smiles": ["CCO", "CCN"],
         "km": [100.0, None],
@@ -111,6 +111,7 @@ def test_import_legacy_cli_writes_canonical_csv_and_provenance_manifest(tmp_path
     canonical = pd.read_csv(output)
     assert canonical["target"].tolist() == ["km", "kcat", "kcat"]
     assert canonical["canonical_unit"].tolist() == ["M", "s^-1", "s^-1"]
+    assert canonical["source_record_id"].tolist() == ["001", "001", "002"]
     manifest = json.loads(output.with_suffix(".csv.manifest.json").read_text())
     assert manifest["n_input_rows"] == 2
     assert manifest["n_observations"] == 3

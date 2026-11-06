@@ -48,9 +48,14 @@ def build_parser() -> argparse.ArgumentParser:
     persist.add_argument("--license-id", help="Verified source license identifier")
     persist.add_argument("--citation", help="Dataset citation or DOI")
 
-    release = subparsers.add_parser("release", help="Create an immutable, license-gated dataset release")
+    release = subparsers.add_parser(
+        "release", help="Create an immutable, license-gated dataset release"
+    )
     release.add_argument("--observations", required=True)
-    release.add_argument("--rejected", action="append", required=True, help="Rejection audit CSV; repeat to combine audits")
+    release.add_argument(
+        "--rejected", action="append", required=True,
+        help="Rejection audit CSV; repeat to combine audits",
+    )
     release.add_argument("--output-dir", required=True)
     release.add_argument("--dataset-id", required=True)
     release.add_argument("--dataset-name", required=True)
@@ -59,9 +64,14 @@ def build_parser() -> argparse.ArgumentParser:
     release.add_argument("--license-id", required=True)
     release.add_argument("--citation", required=True)
     release.add_argument("--source-url")
-    release.add_argument("--source-manifest", action="append", default=[], help="Source acquisition/curation manifest; repeat as needed")
+    release.add_argument(
+        "--source-manifest", action="append", default=[],
+        help="Source acquisition/curation manifest; repeat as needed",
+    )
 
-    verify = subparsers.add_parser("verify-release", help="Verify all dataset release artifact hashes")
+    verify = subparsers.add_parser(
+        "verify-release", help="Verify all dataset release artifact hashes"
+    )
     verify.add_argument("--release-dir", required=True)
 
     identities = subparsers.add_parser(

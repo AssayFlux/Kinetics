@@ -217,7 +217,7 @@ def test_mmseqs_wrapper_rejects_invalid_or_unassigned_sequences(tmp_path, monkey
         "source_record_id": ["r1", "r2"],
         "sequence": ["ACDE", "ACDF"],
     })
-    with pytest.raises(RuntimeError, match="does not cover each input"):
+    with pytest.raises(RuntimeError, match="does not cover every unique protein entity"):
         cluster_sequences(frame, output_dir=tmp_path / "incomplete")
     invalid = frame.copy()
     invalid.loc[0, "sequence"] = "ACD*"

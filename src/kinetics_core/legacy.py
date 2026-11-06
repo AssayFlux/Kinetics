@@ -34,6 +34,8 @@ def paired_frame_to_observations(
     """
     if not isinstance(source, str) or not source.strip():
         raise ValueError("source must be a non-empty string")
+    if frame.empty:
+        raise ValueError("Legacy frame contains no rows")
     required = {
         source_record_id_column, "km", "kcat",
         sequence_column, smiles_column,

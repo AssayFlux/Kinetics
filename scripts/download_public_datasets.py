@@ -26,6 +26,7 @@ def download(url: str, destination: Path) -> dict:
     digest = hashlib.sha256()
     size = 0
     temporary = destination.with_suffix(destination.suffix + ".part")
+    temporary.unlink(missing_ok=True)
     try:
         with urllib.request.urlopen(request, timeout=60) as response, temporary.open("wb") as output:
             while True:
@@ -56,9 +57,13 @@ def main() -> None:
     parser.add_argument("--revision", default=CATPRED_REVISION, help="Pinned Hugging Face dataset revision")
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
+    if not re.fullmatch(r"[0-9a-fA-F]{7,40}", args.revision):
+        raise ValueError("--revision must be an immutable Git commit SHA, not a branch name")
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = output_dir / "manifest.json"
+    if manifest_path.exists() and not args.overwrite:
+        raise FileExistsError(f"Download manifest exists: {manifest_path}; pass --overwrite or use a new directory")
     manifest = {
         "dataset": "CatPred-DB",
         "repository": "https://github.com/maranasgroup/CatPred-DB",
@@ -85,7 +90,9 @@ def main() -> None:
         print(f"Saved {destination} ({record['bytes']:,} bytes)")
         time.sleep(0.2)
     manifest["manifest_created_at"] = datetime.now(timezone.utc).isoformat()
-    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    temporary_manifest = manifest_path.with_suffix(".json.tmp")
+    temporary_manifest.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_manifest.replace(manifest_path)
     print(f"Manifest: {manifest_path}")
 
 if __name__ == "__main__":

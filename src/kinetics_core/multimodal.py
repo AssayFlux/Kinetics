@@ -309,16 +309,17 @@ def fit_multimodal_model(
         score_kwargs = {}
     if folds < 2:
         raise ValueError("At least two CV folds are required")
-    estimator_factory = lambda: _make_estimator(
-        random_state=random_state,
-        hidden_layer_sizes=hidden_layer_sizes,
-        alpha=alpha,
-        max_iter=max_iter,
-        context_enabled=context_enabled,
-        numeric_columns=numeric_columns,
-        categorical_columns=categorical_columns,
-        base_dimension=base_dimension,
-    )
+    def estimator_factory():
+        return _make_estimator(
+            random_state=random_state,
+            hidden_layer_sizes=hidden_layer_sizes,
+            alpha=alpha,
+            max_iter=max_iter,
+            context_enabled=context_enabled,
+            numeric_columns=numeric_columns,
+            categorical_columns=categorical_columns,
+            base_dimension=base_dimension,
+        )
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always", ConvergenceWarning)
         scores = -cross_val_score(
@@ -559,6 +560,7 @@ def fit_multimodal_model(
         notes=report["limitations"],
     )
     save_experiment_manifest(manifest, output / f"{run_id}_experiment_manifest.json")
+    LOG.info("Saved Kinetics-Multi %s model artifacts under %s", target, output)
     report["artifacts"] = {
         "model": str(model_path),
         "metrics": str(metrics_path),

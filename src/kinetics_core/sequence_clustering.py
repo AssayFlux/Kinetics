@@ -1,8 +1,6 @@
 """Reproducible MMseqs2 sequence-cluster assignment wrapper."""
 from __future__ import annotations
 
-import hashlib
-import re
 from pathlib import Path
 import shutil
 import subprocess

@@ -2,12 +2,11 @@
 from __future__ import annotations
 
 import os
-import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
 from kinetics_core.native_molecule import inspect_structure
 
+ROOT = Path(__file__).resolve().parents[1]
 
 if os.name == "nt":
     executable = ROOT / "build" / "native" / "Release" / "kinetics-molecule-inspect.exe"

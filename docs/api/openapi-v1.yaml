@@ -1,0 +1,198 @@
+openapi: 3.1.0
+info:
+  title: Kinetics Infrastructure API
+  version: v1
+  description: >
+    Versioned contract for project-scoped job and artifact operations.
+    The Rust crate supplies contract types and policy primitives; a deployed
+    adapter must enforce the security requirements described in
+    STEP7_RUST_INFRASTRUCTURE.md.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /jobs:
+    post:
+      operationId: submitJob
+      summary: Submit an idempotent, resource-bounded job
+      description: >
+        Tenant identity is derived from verified authentication claims, never
+        from the request body. Require jobs:write scope.
+      parameters:
+        - in: header
+          name: Idempotency-Key
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 200
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitJobRequest'
+      responses:
+        '202':
+          description: Job accepted or existing idempotent job returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Idempotency key reused with different parameters
+        '429':
+          description: Tenant or service resource quota exceeded
+  /jobs/{job_id}:
+    get:
+      operationId: getJob
+      summary: Read a job belonging to the authenticated tenant
+      parameters:
+        - $ref: '#/components/parameters/JobId'
+      responses:
+        '200':
+          description: Job state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      operationId: cancelJob
+      summary: Request cancellation of a queued or running job
+      parameters:
+        - $ref: '#/components/parameters/JobId'
+      responses:
+        '202':
+          description: Cancellation accepted
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /artifacts:
+    post:
+      operationId: uploadArtifact
+      summary: Upload an artifact into the authenticated tenant's namespace
+      description: Require artifacts:write; stream with size limits and verify SHA-256 before publication.
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '201':
+          description: Immutable artifact stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactResponse'
+        '413':
+          description: Artifact exceeds tenant quota
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /artifacts/{sha256}:
+    get:
+      operationId: downloadArtifact
+      summary: Download an authorized artifact by content digest
+      parameters:
+        - in: path
+          name: sha256
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-f]{64}$'
+      responses:
+        '200':
+          description: Verified artifact bytes
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    JobId:
+      in: path
+      name: job_id
+      required: true
+      schema:
+        type: string
+        minLength: 1
+  schemas:
+    SubmitJobRequest:
+      type: object
+      additionalProperties: false
+      required: [idempotency_key, resource_limits]
+      properties:
+        idempotency_key:
+          type: string
+          minLength: 1
+          maxLength: 200
+        resource_limits:
+          $ref: '#/components/schemas/ResourceLimits'
+    ResourceLimits:
+      type: object
+      additionalProperties: false
+      required: [max_runtime_seconds, max_memory_bytes, max_cpu_millis]
+      properties:
+        max_runtime_seconds:
+          type: integer
+          minimum: 1
+        max_memory_bytes:
+          type: integer
+          minimum: 1
+        max_cpu_millis:
+          type: integer
+          minimum: 1
+    JobResponse:
+      type: object
+      required: [api_version, job]
+      properties:
+        api_version:
+          type: string
+          const: v1
+        job:
+          type: object
+          required: [id, tenant_id, state, limits, attempt]
+          properties:
+            id: { type: string }
+            tenant_id: { type: string }
+            state:
+              type: string
+              enum: [queued, running, succeeded, failed, cancelled]
+            limits:
+              $ref: '#/components/schemas/ResourceLimits'
+            attempt: { type: integer, minimum: 1 }
+    ArtifactResponse:
+      type: object
+      required: [api_version, sha256, size_bytes]
+      properties:
+        api_version: { type: string, const: v1 }
+        sha256: { type: string, pattern: '^[0-9a-f]{64}$' }
+        size_bytes: { type: integer, minimum: 0 }
+  responses:
+    BadRequest:
+      description: Invalid request
+    Unauthorized:
+      description: Authentication required
+    Forbidden:
+      description: Scope is not granted
+    NotFound:
+      description: Resource does not exist in the authenticated tenant

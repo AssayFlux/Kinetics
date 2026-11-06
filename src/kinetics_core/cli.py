@@ -371,7 +371,7 @@ def main(argv: list[str] | None = None) -> int:
 
         import pandas as pd
 
-        from .provenance import file_record
+        from .provenance import file_record, write_json_atomic
         from .sequence_clustering import cluster_sequences
 
         input_path = Path(args.input).resolve()
@@ -393,9 +393,56 @@ def main(argv: list[str] | None = None) -> int:
             coverage=args.coverage,
             threads=args.threads,
         )
+        mapping = pd.read_csv(
+            mapping_path,
+            dtype={
+                "source_record_id": "string",
+                "cluster_representative_record_id": "string",
+            },
+        )
+        if "protein_cluster_id" in frame.columns:
+            raise ValueError("Input already contains protein_cluster_id")
+        join_columns = [args.record_id_column]
+        if (
+            args.source_column
+            and args.source_column in frame.columns
+            and args.source_column in mapping.columns
+        ):
+            join_columns.insert(0, args.source_column)
+        clustered = frame.merge(
+            mapping,
+            left_on=join_columns,
+            right_on=join_columns,
+            how="left",
+            validate="one_to_one",
+        )
+        if clustered["cluster_representative_record_id"].isna().any():
+            raise RuntimeError("Cluster mapping failed to assign every source record")
+        if "cluster_representative_source" in clustered.columns:
+            clustered["protein_cluster_id"] = [
+                json.dumps([source, record_id], separators=(",", ":"))
+                for source, record_id in zip(
+                    clustered["cluster_representative_source"],
+                    clustered["cluster_representative_record_id"],
+                    strict=True,
+                )
+            ]
+        else:
+            clustered["protein_cluster_id"] = (
+                clustered["cluster_representative_record_id"].astype(str)
+            )
+        clustered_path = output / "observations_with_protein_clusters.csv"
+        clustered.to_csv(clustered_path, index=False)
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["clustered_observations"] = file_record(clustered_path)
+        manifest["clustered_observations_all_assigned"] = (
+            len(clustered) == len(frame)
+        )
+        write_json_atomic(manifest, manifest_path)
         result = {
             "input": file_record(input_path),
             "mapping": file_record(mapping_path),
+            "clustered_observations": file_record(clustered_path),
             "manifest": str(manifest_path),
         }
     elif args.command == "build-features":

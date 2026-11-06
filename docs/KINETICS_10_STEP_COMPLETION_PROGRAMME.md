@@ -133,12 +133,12 @@ Step 4 is being implemented as a software engine, not validated as a scientific 
 - C++17/CMake native molecular structure and scene-data library with a command-line PDB inspector.
 - Deterministic first-model PDB parsing; preservation of atom serial/name, alternate location, residue/chain identity, insertion code, element, occupancy, temperature factor and original Cartesian coordinates in angstrom.
 - Explicit CONECT-only bonds; strict failure for truncated records, duplicate atom serials, non-finite coordinates and dangling/self bond references. No guessed bonds, inferred elements, implicit coordinate transforms or silent atom renumbering.
-- Versioned JSON molecular-scene contract with validated selection/highlight serial sets and reference atom-distance calculation.
+- Versioned JSON molecular-scene contract with validated selection/highlight serial sets, reference atom-distance calculation and a deterministic CPU XY PPM preview renderer with element colors and selection/highlight overlays.
 - Narrow Python bridge that invokes the explicitly selected native executable without a shell, validates returned atom/bond references and coordinates, and adds source SHA-256 provenance.
 - Parameter-validated OpenMM/GROMACS simulation-plan schema that records engine/version, input hash, force field, water model, integrator, timestep, steps, temperature, pressure, random seed and outputs. Plans are explicitly marked planned-not-executed.
 - Native CMake/CTest CI matrix declared for Ubuntu, macOS and Windows; Python interoperability and simulation-plan tests.
 
-**Scope boundaries:** This first parser supports PDB only. It is not a GPU renderer, desktop viewer, molecular surface engine, mmCIF/biological assembly reader, or molecular dynamics execution backend. No performance claim is made.
+**Scope boundaries:** This first parser supports PDB only. The CPU XY preview is not a GPU-accelerated 3D renderer or interactive desktop viewer. Molecular surfaces, mmCIF/biological assembly support and molecular dynamics execution are not implemented. No performance claim is made.
 
 **Remaining acceptance work:**
 - Pass the native build and test matrix on all declared operating systems.

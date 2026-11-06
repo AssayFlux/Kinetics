@@ -25,6 +25,12 @@ async fn isolated_database() -> Option<(PgPool, String)> {
         .execute(&pool)
         .await
         .ok()?;
+    sqlx::raw_sql(include_str!(
+        "../migrations/0002_attempt_count_semantics.sql"
+    ))
+    .execute(&pool)
+    .await
+    .ok()?;
     Some((pool, database))
 }
 

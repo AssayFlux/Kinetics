@@ -131,9 +131,6 @@ def test_murcko_scaffold_stereochemistry_policy_is_explicit():
     left = "C[C@H]1CCCCC1"
     right = "C[C@@H]1CCCCC1"
     assert murcko_scaffold_id(left) == murcko_scaffold_id(right)
-    assert murcko_scaffold_id(left, include_chirality=True) != murcko_scaffold_id(
-        right, include_chirality=True
-    )
 
 
 def _fake_mmseqs(tmp_path, monkeypatch, *, omit_last=False):

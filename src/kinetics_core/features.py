@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import platform
+import re
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -53,13 +54,15 @@ class ESM2Encoder:
         model_revision: str = DEFAULT_ESM_REVISION,
         tokenizer_revision: str | None = None,
     ):
-        if not model_revision or model_revision in {"main", "master"}:
-            raise ValueError("model_revision must be an immutable model commit")
+        if not re.fullmatch(r"[0-9a-fA-F]{40}", model_revision):
+            raise ValueError("model_revision must be a full immutable 40-character commit SHA")
         self.model_name = model_name
         self.model_revision = model_revision
         self.tokenizer_revision = tokenizer_revision or model_revision
-        if self.tokenizer_revision in {"main", "master"}:
-            raise ValueError("tokenizer_revision must be an immutable tokenizer commit")
+        if not re.fullmatch(r"[0-9a-fA-F]{40}", self.tokenizer_revision):
+            raise ValueError(
+                "tokenizer_revision must be a full immutable 40-character commit SHA"
+            )
         if not 1 <= max_residues <= 1022:
             raise ValueError("max_residues must be between 1 and 1022 for this ESM-2 model")
         self.device = device
@@ -140,8 +143,11 @@ class ESM2Encoder:
         return {
             "encoder": "ESM-2",
             "model_name": self.model_name,
-            "model_source_url": "https://huggingface.co/facebook/esm2_t6_8M_UR50D",
-            "model_license": "MIT",
+            "model_source_url": (
+                "https://huggingface.co/facebook/esm2_t6_8M_UR50D"
+                if self.model_name == DEFAULT_ESM_MODEL else None
+            ),
+            "model_license": "MIT" if self.model_name == DEFAULT_ESM_MODEL else None,
             "model_revision": self.model_revision,
             "tokenizer_revision": self.tokenizer_revision,
             "pooling": "mean over residue tokens; BOS/EOS/padding excluded",

@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import re
 import warnings
 from pathlib import Path
 from typing import Any
@@ -33,6 +35,52 @@ from .uncertainty import conformal_quantile
 LOG = logging.getLogger("kinetics_core.multimodal")
 GRAPH_SUMMARY_SCHEMA = "1.0"
 
+
+
+def _verified_feature_manifest(
+    archive_path: str | Path,
+    *,
+    expected_target: str | None = None,
+    expected_rows: int | None = None,
+) -> tuple[Path, dict[str, Any]]:
+    """Require a source/license manifest and verify it describes this exact NPZ."""
+    archive = Path(archive_path)
+    manifest_path = archive.with_suffix(archive.suffix + ".manifest.json")
+    if not archive.is_file() or not manifest_path.is_file():
+        raise ValueError(
+            f"Feature archive and adjacent provenance manifest are required: {archive}"
+        )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    actual = file_record(archive)
+    recorded = manifest.get("archive", {})
+    if (
+        recorded.get("sha256") != actual["sha256"]
+        or recorded.get("size_bytes") != actual["size_bytes"]
+    ):
+        raise ValueError(f"Feature archive checksum/size does not match manifest: {archive}")
+    if expected_target and manifest.get("target") != expected_target:
+        raise ValueError(f"Feature manifest target does not match: {archive}")
+    if expected_rows is not None and manifest.get("rows") != expected_rows:
+        raise ValueError(f"Feature manifest row count does not match: {archive}")
+    for field in ("sources", "source_versions", "license_ids"):
+        values = manifest.get(field)
+        if not isinstance(values, list) or not values or any(
+            not isinstance(value, str) or not value.strip() for value in values
+        ):
+            raise ValueError(f"Feature manifest requires non-empty {field}: {archive}")
+    return manifest_path, manifest
+
+
+def _archive_source_provenance(manifests: list[dict[str, Any]]) -> dict[str, list[str]]:
+    """Require train/calibration/test partitions to share one released data basis."""
+    fields = ("sources", "source_versions", "license_ids")
+    result: dict[str, list[str]] = {}
+    for field in fields:
+        sets = {tuple(sorted(manifest[field])) for manifest in manifests}
+        if len(sets) != 1:
+            raise ValueError(f"Training/calibration/test {field} metadata differ")
+        result[field] = list(next(iter(sets)))
+    return result
 
 def _graph_summary(payload: dict[str, np.ndarray]) -> np.ndarray:
     """Create fixed-width per-molecule summaries from packed graph arrays."""
@@ -83,6 +131,11 @@ def _graph_summary(payload: dict[str, np.ndarray]) -> np.ndarray:
 
 def _multimodal_design(payload: dict[str, np.ndarray]) -> tuple[np.ndarray | pd.DataFrame, bool]:
     """Join base ESM/Morgan features, graph summaries and optional raw context."""
+    _verified_feature_manifest(
+        feature_archive,
+        expected_target=str(payload["target"].reshape(-1)[0]),
+        expected_rows=len(payload["X"]),
+    )
     X = np.asarray(payload["X"], dtype=np.float32)
     if X.ndim != 2 or not np.isfinite(X).all():
         raise ValueError("Base protein/chemical feature matrix must be finite and two-dimensional")
@@ -184,6 +237,7 @@ def fit_multimodal_model(
     alpha: float = 1e-4,
     max_iter: int = 500,
     conformal_alpha: float = 0.1,
+    git_revision: str | None = None,
 ) -> dict[str, Any]:
     """Train one independent Km or kcat feature-fusion model and retain artifacts."""
     if target not in ("km", "kcat"):
@@ -192,8 +246,21 @@ def fit_multimodal_model(
         raise ValueError("hidden_layer_sizes must contain positive widths")
     if alpha < 0 or max_iter < 1 or n_splits < 2:
         raise ValueError("alpha must be >= 0, max_iter >= 1 and n_splits >= 2")
+    git_revision = git_revision or os.environ.get("GITHUB_SHA")
+    if not isinstance(git_revision, str) or not re.fullmatch(r"[0-9a-fA-F]{40}", git_revision):
+        raise ValueError(
+            "A full 40-character code revision is required; pass --git-revision "
+            "or set GITHUB_SHA"
+        )
     train = _load_feature_file(train_archive)
     test = _load_feature_file(test_archive)
+    train_manifest_path, train_manifest = _verified_feature_manifest(
+        train_archive, expected_target=target, expected_rows=len(train["y_log10"])
+    )
+    test_manifest_path, test_manifest = _verified_feature_manifest(
+        test_archive, expected_target=target, expected_rows=len(test["y_log10"])
+    )
+    feature_manifests = [train_manifest, test_manifest]
     if len(train["y_log10"]) < 4:
         raise ValueError("At least four training rows are required for grouped model selection")
     if "target" in train and str(train["target"].reshape(-1)[0]) != target:
@@ -271,6 +338,14 @@ def fit_multimodal_model(
         raise RuntimeError("Cross-validation produced non-finite RMSE values")
     predictions = estimator.predict(X_test)
     calibration = _load_feature_file(calibration_archive) if calibration_archive else None
+    calibration_manifest_path = None
+    if calibration is not None:
+        calibration_manifest_path, calibration_manifest = _verified_feature_manifest(
+            calibration_archive, expected_target=target,
+            expected_rows=len(calibration["y_log10"]),
+        )
+        feature_manifests.append(calibration_manifest)
+    source_provenance = _archive_source_provenance(feature_manifests)
     conformal_q = None
     if calibration is not None:
         _validate_archives(
@@ -325,6 +400,8 @@ def fit_multimodal_model(
         ],
         "graph_summary_schema": GRAPH_SUMMARY_SCHEMA,
         "graph_summary_dimension": 24,
+        "dataset_provenance": source_provenance,
+        "code_revision": git_revision,
         "cross_validation": {
             "strategy": split_strategy,
             "folds": int(folds),
@@ -395,6 +472,8 @@ def fit_multimodal_model(
         "context_enabled": context_enabled,
         "context_numeric_columns": list(numeric_columns),
         "context_categorical_columns": list(categorical_columns),
+        "dataset_provenance": source_provenance,
+        "code_revision": git_revision,
         "conformal_quantile_log10": conformal_q,
         "conformal_alpha": float(conformal_alpha) if conformal_q is not None else None,
     }
@@ -415,8 +494,11 @@ def fit_multimodal_model(
         ],
         "dataset": {
             "name": "Training feature archive",
-            "version": "See experiment manifest and feature manifest.",
+            "version": ", ".join(source_provenance["source_versions"]),
+            "source_url": ", ".join(source_provenance["sources"]),
+            "license": ", ".join(source_provenance["license_ids"]),
             "n_observations": int(len(y_train)),
+            "manifest": str(train_manifest_path),
         },
         "evaluation": {
             "split_strategy": split_strategy,
@@ -438,8 +520,12 @@ def fit_multimodal_model(
     manifest = build_experiment_manifest(
         experiment_id=run_id,
         research_question=f"Estimate enzyme {target} with multimodal feature fusion",
-        inputs=[train_archive, test_archive] + ([calibration_archive] if calibration_archive else []),
+        inputs=[
+            train_archive, train_manifest_path, test_archive, test_manifest_path,
+            *([calibration_archive, calibration_manifest_path] if calibration_archive else []),
+        ],
         outputs=[model_path, metrics_path, predictions_path, card_path],
+        git_revision=git_revision,
         configuration={
             "model_family": report["model_family"],
             "target": target,

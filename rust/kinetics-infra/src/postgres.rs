@@ -102,7 +102,9 @@ impl PostgresRuntimeStore {
              (id, tenant_id, idempotency_key, payload, state, max_runtime_seconds, max_memory_bytes, max_cpu_millis)
              VALUES ($1,$2,$3,$4,'queued',$5,$6,$7) RETURNING *"
         ).bind(id).bind(tenant).bind(idempotency_key).bind(payload)
-         .bind(max_runtime_seconds).bind(max_memory_bytes).bind(max_cpu_millis)
+         .bind(limits.max_runtime_seconds)
+        .bind(limits.max_memory_bytes)
+        .bind(limits.max_cpu_millis)
          .fetch_one(&mut *tx).await?;
         tx.commit().await?;
         Ok(row_to_job(&row))

@@ -2,7 +2,7 @@
 
 ## Scope and supported platforms
 
-The first native module is a dependency-free C++17 molecular-structure and scene-data core, built with CMake. The declared initial build matrix is Ubuntu, macOS and Windows using each CI runner's default C++ compiler. This is not yet a GPU renderer or desktop viewer: it produces a versioned, render-ready scene contract for a later VTK/Qt or other renderer decision.
+The first native module is a dependency-free C++17 molecular-structure and scene-data core, built with CMake. The declared initial build matrix is Ubuntu, macOS and Windows using each CI runner's default C++ compiler. It includes a deterministic CPU XY orthographic preview renderer that writes PPM, plus a versioned scene contract. It is not yet a GPU-accelerated 3D renderer or interactive desktop viewer; a VTK/Qt or other maintained renderer must be selected through a separate platform prototype.
 
 ## Structure contract
 
@@ -15,7 +15,7 @@ The first native module is a dependency-free C++17 molecular-structure and scene
 
 ## Scene and interoperability
 
-The C++ MolecularScene exposes the parsed structure plus validated atom-serial selection and highlight sets. The C++ inspector writes the versioned kinetics.molecular-scene/1.0 JSON contract. The Python bridge launches the explicitly supplied executable without a shell, validates atom/bond references and coordinates, and adds the source file SHA-256 and engine version. The scene schema records coordinate units; callers must not treat coordinates as unitless.
+The C++ MolecularScene exposes the parsed structure plus validated atom-serial selection and highlight sets. The C++ inspector writes the versioned kinetics.molecular-scene/1.0 JSON contract and can write a deterministic XY projection preview through its render-xy mode. The Python bridge launches the explicitly supplied executable without a shell, validates atom/bond references and coordinates, and adds the source file SHA-256 and engine version. The scene schema records coordinate units; callers must not treat coordinates as unitless.
 
 ## Measurements
 
@@ -31,7 +31,7 @@ The build_simulation_plan function validates and records engine/version, input s
     cmake --build build/native --config Release
     ctest --test-dir build/native --build-config Release --output-on-failure
 
-The CTest fixture checks atom and bond identity, coordinate preservation, known-distance calculation, unit-bearing scene JSON, selection/highlight serialization and invalid selection rejection. Python tests cover the cross-language JSON contract, source hashing and simulation-plan validation.
+The CTest fixture checks atom and bond identity, coordinate preservation, known-distance calculation, unit-bearing scene JSON, selection/highlight serialization, invalid selection rejection, first-model handling with global CONECT records, duplicate serial rejection and XY rendering with selection overlay. Python tests cover the cross-language JSON contract, source hashing and simulation-plan validation.
 
 ## Performance policy
 

@@ -33,9 +33,8 @@ SEQUENCE_CLUSTER_TESTS = {
 CATPRED_REVISION = "44409e6"
 CATPRED_PROCESSING_REVISION = "931583821ff875e873002730fbbdf1047acfde77"
 CATPRED_BASE_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve"
-CATPRED_GITHUB_RAW = "https://raw.githubusercontent.com/maranasgroup/CatPred-DB"CATPRED_REVISION = "44409e6"
-CATPRED_PROCESSING_REVISION = "931583821ff875e873002730fbbdf1047acfde77"
-CATPRED_BASE_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve"
+CATPRED_GITHUB_RAW = "https://raw.githubusercontent.com/maranasgroup/CatPred-DB"
+
 
 def download(url: str, destination: Path) -> dict:
     request = urllib.request.Request(url, headers={"User-Agent": "AssayFlux-Kinetics/0.1"})
@@ -68,6 +67,7 @@ def download(url: str, destination: Path) -> dict:
         "sha256": digest.hexdigest(),
         "retrieved_at": datetime.now(timezone.utc).isoformat(),
     }
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -149,6 +149,7 @@ def main() -> None:
     )
     temporary_manifest.replace(manifest_path)
     print(f"Manifest: {manifest_path}")
+
 
 if __name__ == "__main__":
     main()

@@ -427,7 +427,10 @@ class ObservationFeatureBuilder:
             raise ValueError(
                 "Feature generation requires sequence and SMILES for every selected row"
             )
-        if selected["source_record_id"].astype(str).str.strip().eq("").any():
+        if (
+            selected["source_record_id"].isna().any()
+            or selected["source_record_id"].astype(str).str.strip().eq("").any()
+        ):
             raise ValueError("source_record_id must be non-empty for every feature row")
 
         reserved_names = {

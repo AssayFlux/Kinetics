@@ -14,11 +14,18 @@ def canonicalize_smiles(smiles: str) -> str:
     return Chem.MolToSmiles(molecule, canonical=True, isomericSmiles=True)
 
 
-def murcko_scaffold_id(smiles: str) -> str:
-    """Return a Bemis-Murcko scaffold key; keep acyclic compounds distinct.
+def murcko_scaffold_id(
+    smiles: str,
+    *,
+    include_chirality: bool = False,
+) -> str:
+    """Return a Bemis-Murcko scaffold key under an explicit stereochemistry policy.
 
-    This is a reproducible grouping convention, not a claim that scaffold identity
-    captures all chemical similarity. Record RDKit version with benchmark metadata.
+    By default stereochemistry is removed from the grouping key so stereoisomers
+    remain in the same scaffold partition. This does not remove stereochemistry
+    from the molecular representation used for feature generation. Acyclic
+    molecules use their canonical molecular graph as a fallback because their
+    Bemis-Murcko scaffold is empty. Salt and tautomer normalization are not applied.
     """
     try:
         from rdkit import Chem
@@ -28,10 +35,16 @@ def murcko_scaffold_id(smiles: str) -> str:
     molecule = Chem.MolFromSmiles(str(smiles))
     if molecule is None:
         raise ValueError(f"Invalid SMILES: {smiles!r}")
-    canonical = Chem.MolToSmiles(molecule, canonical=True, isomericSmiles=True)
     scaffold = MurckoScaffold.GetScaffoldForMol(molecule)
-    scaffold_smiles = Chem.MolToSmiles(scaffold, canonical=True, isomericSmiles=True)
-    return f"MURCKO:{scaffold_smiles}" if scaffold_smiles else f"ACYCLIC:{canonical}"
+    scaffold_smiles = Chem.MolToSmiles(
+        scaffold, canonical=True, isomericSmiles=include_chirality
+    )
+    if scaffold_smiles:
+        return f"MURCKO:{scaffold_smiles}"
+    canonical = Chem.MolToSmiles(
+        molecule, canonical=True, isomericSmiles=include_chirality
+    )
+    return f"ACYCLIC:{canonical}"
 
 
 def annotate_scaffolds(
@@ -39,10 +52,15 @@ def annotate_scaffolds(
     *,
     smiles_column: str = "smiles",
     output_column: str = "scaffold_id",
+    include_chirality: bool = False,
 ):
-    """Return a copy of a table annotated with deterministic Murcko scaffold IDs."""
+    """Return a copy with deterministic Murcko IDs and an explicit stereo policy."""
     if smiles_column not in frame.columns:
         raise ValueError(f"Missing SMILES column: {smiles_column}")
     result = frame.copy()
-    result[output_column] = result[smiles_column].map(murcko_scaffold_id)
+    result[output_column] = result[smiles_column].map(
+        lambda value: murcko_scaffold_id(
+            value, include_chirality=include_chirality
+        )
+    )
     return result

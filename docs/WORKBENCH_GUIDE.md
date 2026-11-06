@@ -33,7 +33,10 @@ Equivalent environment variables are `KINETICS_WORKSPACE` and `KINETICS_DATABASE
 
 ## Supported workbench actions
 
+- `import-legacy`: convert legacy paired-target CSV rows into canonical observations with explicit source record IDs and units.
 - `audit`: non-destructive source-record duplicate and quality audit.
+- `persist`: validate and persist canonical observations into the shared SQLite dataset registry.
+- `release` / `verify-release`: create and verify immutable, checksum-backed dataset releases.
 - `normalize-identities`: validate protein sequence and canonicalize substrate identity.
 - `annotate-scaffolds`: add chemical scaffold group IDs and rejected-row audit.
 - `cluster-sequences`: run MMseqs2 and map cluster assignments back to observations.
@@ -64,7 +67,7 @@ A feature-building task expects a canonical observations file with valid sequenc
 - Job inputs and outputs are project-relative and resolved after symlink normalization. Symlink escapes are rejected.
 - Artifact downloads are project-scoped and hash-verified.
 - A single local worker is the default to avoid competing heavy model loads. This is not a distributed queue or multi-tenant service.
-- The metadata database contains paths, job parameters, checksums and scientific provenance. Protect the workspace and database with OS-level access controls and encrypted backups as appropriate.
+- The metadata database contains dataset records, paths, job parameters, checksums, experiment metrics and scientific provenance. Protect the workspace and database with OS-level access controls and encrypted backups as appropriate.
 - Dataset upload does not grant data rights. Review license, gate, privacy and retention conditions before use.
 
 ## Accessibility and usability notes

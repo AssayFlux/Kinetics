@@ -16,6 +16,13 @@ STRUCTURE_SCHEMA = "kinetics.protein-structure/1.0"
 MAPPING_SCHEMA = "kinetics.residue-mapping/1.0"
 FEATURE_SCHEMA = "kinetics.structure-feature/1.0"
 _AMINO_ACIDS = frozenset("ACDEFGHIKLMNPQRSTVWYBXZJUO")
+_RESIDUE_CODES = {
+    "ALA": "A", "ARG": "R", "ASN": "N", "ASP": "D", "CYS": "C",
+    "GLN": "Q", "GLU": "E", "GLY": "G", "HIS": "H", "ILE": "I",
+    "LEU": "L", "LYS": "K", "MET": "M", "PHE": "F", "PRO": "P",
+    "SER": "S", "THR": "T", "TRP": "W", "TYR": "Y", "VAL": "V",
+    "MSE": "U", "SEC": "U", "PYL": "O", "ASX": "B", "GLX": "Z",
+}
 
 
 def sequence_sha256(sequence: str) -> str:
@@ -144,6 +151,11 @@ class ResidueMapping:
             raise ValueError("mapping structure ID does not match structure record")
         if self.chain_id not in structure.chain_ids:
             raise ValueError("mapping chain is absent from structure record")
+        residue_code = _RESIDUE_CODES.get(self.residue_name.upper())
+        if residue_code and sequence.sequence[self.sequence_position - 1] not in {
+            residue_code, "X"
+        }:
+            raise ValueError("mapped residue identity does not match the protein sequence")
 
     def as_dict(self) -> dict:
         return {"schema_version": MAPPING_SCHEMA, **asdict(self)}

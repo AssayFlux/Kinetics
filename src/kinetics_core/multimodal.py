@@ -136,6 +136,13 @@ def _multimodal_design(payload: dict[str, np.ndarray]) -> tuple[np.ndarray | pd.
     X = np.asarray(payload["X"], dtype=np.float32)
     if X.ndim != 2 or not np.isfinite(X).all():
         raise ValueError("Base protein/chemical feature matrix must be finite and two-dimensional")
+    if "fingerprint_bits" not in payload or len(payload["fingerprint_bits"]) != 1:
+        raise ValueError("Feature archive must declare one Morgan fingerprint dimension")
+    fingerprint_bits = int(payload["fingerprint_bits"].reshape(-1)[0])
+    if fingerprint_bits < 1 or X.shape[1] <= fingerprint_bits:
+        raise ValueError("Feature matrix does not contain separate protein and Morgan modalities")
+    if not np.isin(X[:, -fingerprint_bits:], (0.0, 1.0)).all():
+        raise ValueError("Morgan fingerprint columns must contain binary values")
     graph = _graph_summary(payload)
     base = np.concatenate((X, graph), axis=1).astype(np.float32, copy=False)
     numeric = tuple(
@@ -451,6 +458,10 @@ def fit_multimodal_model(
         "n_train": int(len(y_train)),
         "n_held_out": int(len(y_test)),
         "base_feature_dimension": int(train["X"].shape[1]),
+        "protein_embedding_dimension": int(
+            train["X"].shape[1] - int(train["fingerprint_bits"].reshape(-1)[0])
+        ),
+        "morgan_fingerprint_dimension": int(train["fingerprint_bits"].reshape(-1)[0]),
         "fused_feature_dimension": int(base_dimension),
         "model_parameters": {
             "hidden_layer_sizes": list(hidden_layer_sizes),
@@ -500,6 +511,10 @@ def fit_multimodal_model(
         "target": target,
         "canonical_unit": "M" if target == "km" else "s^-1",
         "base_feature_dimension": int(train["X"].shape[1]),
+        "protein_embedding_dimension": int(
+            train["X"].shape[1] - int(train["fingerprint_bits"].reshape(-1)[0])
+        ),
+        "morgan_fingerprint_dimension": int(train["fingerprint_bits"].reshape(-1)[0]),
         "graph_summary_schema": GRAPH_SUMMARY_SCHEMA,
         "feature_schema_version": str(
             train.get("feature_schema_version", np.asarray(["unknown"])).reshape(-1)[0]

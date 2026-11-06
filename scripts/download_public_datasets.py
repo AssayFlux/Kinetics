@@ -5,10 +5,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import time
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+import time
+import urllib.request
 
 CATPRED_FILES = {
     "km/km_train.csv": "km/km_train.csv",

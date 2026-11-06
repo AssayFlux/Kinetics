@@ -14,7 +14,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from .chemistry import canonicalize_smiles
+from .chemistry import canonicalize_smiles, molecular_graph_features
 from .provenance import file_record, write_json_atomic
 
 LOG = logging.getLogger("kinetics_core.features")
@@ -221,6 +221,18 @@ class ObservationFeatureBuilder:
         return {
             "feature_schema_version": FEATURE_SCHEMA_VERSION,
             "protein": encoder_metadata,
+            "molecular_graph": {
+                "schema_version": "1.0",
+                "atom_features": [
+                    "atomic_number", "degree", "formal_charge", "total_hydrogens",
+                    "is_aromatic", "cip_stereochemistry", "hybridization", "isotope",
+                    "atomic_mass",
+                ],
+                "bond_features": [
+                    "bond_type", "is_conjugated", "in_ring", "bond_stereo",
+                ],
+                "edge_policy": "bidirectional directed edges; edge_index uses global archive atom offsets",
+            },
             "chemical": {
                 "fingerprint": "Morgan",
                 "radius": self.radius,
@@ -432,6 +444,33 @@ class ObservationFeatureBuilder:
                 )
             )
         X = np.concatenate(feature_batches, axis=0).astype(np.float32, copy=False)
+        molecular_graphs = [
+            molecular_graph_features(smiles) for smiles in canonical_smiles
+        ]
+        graph_atom_offsets = [0]
+        graph_edge_offsets = [0]
+        atom_feature_parts = []
+        edge_index_parts = []
+        bond_feature_parts = []
+        atom_offset = 0
+        edge_offset = 0
+        for graph in molecular_graphs:
+            atom_feature_parts.append(graph["atom_features"])
+            edge_index_parts.append(graph["edge_index"] + atom_offset)
+            bond_feature_parts.append(graph["bond_features"])
+            atom_offset += graph["num_atoms"]
+            edge_offset += graph["edge_index"].shape[1]
+            graph_atom_offsets.append(atom_offset)
+            graph_edge_offsets.append(edge_offset)
+        graph_atom_features = np.concatenate(atom_feature_parts, axis=0).astype(
+            np.float32, copy=False
+        )
+        graph_edge_index = np.concatenate(edge_index_parts, axis=1).astype(
+            np.int64, copy=False
+        )
+        graph_bond_features = np.concatenate(bond_feature_parts, axis=0).astype(
+            np.float32, copy=False
+        )
         metadata = self._representation_metadata()
         metadata["batch_size"] = batch_size
         metadata["row_alignment"] = "source_record_ids, sequences, smiles, y_raw, y_log10 align by row"
@@ -467,6 +506,11 @@ class ObservationFeatureBuilder:
                     fingerprint_radius=np.asarray([self.radius]),
                     fingerprint_bits=np.asarray([self.n_bits]),
                     fingerprint_include_chirality=np.asarray([self.include_chirality]),
+                    graph_atom_features=graph_atom_features,
+                    graph_edge_index=graph_edge_index,
+                    graph_bond_features=graph_bond_features,
+                    graph_atom_offsets=np.asarray(graph_atom_offsets, dtype=np.int64),
+                    graph_edge_offsets=np.asarray(graph_edge_offsets, dtype=np.int64),
                     **(
                         {"sources": selected["source"].astype(str).to_numpy()}
                         if "source" in selected.columns else {}
@@ -499,6 +543,14 @@ class ObservationFeatureBuilder:
             "rows": len(selected),
             "feature_shape": list(X.shape),
             "feature_dtype": str(X.dtype),
+            "molecular_graph": {
+                "molecule_count": len(molecular_graphs),
+                "total_atoms": int(graph_atom_features.shape[0]),
+                "total_directed_edges": int(graph_edge_index.shape[1]),
+                "total_bond_feature_rows": int(graph_bond_features.shape[0]),
+                "atom_offsets": graph_atom_offsets,
+                "edge_offsets": graph_edge_offsets,
+            },
             "row_identity_sha256": row_identity_sha256,
             "source_record_ids_sha256": hashlib.sha256(
                 "\n".join(selected["source_record_id"].astype(str)).encode()

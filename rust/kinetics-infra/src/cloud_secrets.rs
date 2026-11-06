@@ -19,12 +19,22 @@ pub struct AwsSecretProvider {
 impl AwsSecretProvider {
     pub async fn from_default_identity() -> Self {
         let config = aws_config::load_defaults(aws_config::BehaviorVersion::latest()).await;
-        Self { client: Client::new(&config) }
+        Self {
+            client: Client::new(&config),
+        }
     }
 
     pub async fn get(&self, secret_id: &str) -> Result<String, ManagedSecretError> {
-        let output = self.client.get_secret_value().secret_id(secret_id).send().await
+        let output = self
+            .client
+            .get_secret_value()
+            .secret_id(secret_id)
+            .send()
+            .await
             .map_err(|_| ManagedSecretError::Unavailable)?;
-        output.secret_string().map(str::to_owned).ok_or(ManagedSecretError::InvalidValue)
+        output
+            .secret_string()
+            .map(str::to_owned)
+            .ok_or(ManagedSecretError::InvalidValue)
     }
 }

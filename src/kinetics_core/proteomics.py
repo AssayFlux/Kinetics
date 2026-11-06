@@ -16,6 +16,13 @@ STRUCTURE_SCHEMA = "kinetics.protein-structure/1.0"
 MAPPING_SCHEMA = "kinetics.residue-mapping/1.0"
 FEATURE_SCHEMA = "kinetics.structure-feature/1.0"
 _AMINO_ACIDS = frozenset("ACDEFGHIKLMNPQRSTVWYBXZJUO")
+_RESIDUE_CODES = {
+    "ALA": "A", "ARG": "R", "ASN": "N", "ASP": "D", "CYS": "C",
+    "GLN": "Q", "GLU": "E", "GLY": "G", "HIS": "H", "ILE": "I",
+    "LEU": "L", "LYS": "K", "MET": "M", "PHE": "F", "PRO": "P",
+    "SER": "S", "THR": "T", "TRP": "W", "TYR": "Y", "VAL": "V",
+    "MSE": "U", "SEC": "U", "PYL": "O", "ASX": "B", "GLX": "Z",
+}
 
 
 def sequence_sha256(sequence: str) -> str:
@@ -124,9 +131,13 @@ class ResidueMapping:
         for name in ("sequence_accession", "structure_id", "chain_id", "residue_name",
                      "mapping_method", "evidence_id"):
             _required(getattr(self, name), name)
-        if isinstance(self.sequence_position, bool) or self.sequence_position < 1:
-            raise ValueError("sequence_position must be a positive 1-based position")
-        if isinstance(self.residue_number, bool):
+        if (
+            isinstance(self.sequence_position, bool)
+            or not isinstance(self.sequence_position, int)
+            or self.sequence_position < 1
+        ):
+            raise ValueError("sequence_position must be a positive 1-based integer")
+        if isinstance(self.residue_number, bool) or not isinstance(self.residue_number, int):
             raise ValueError("residue_number must be an integer")
         if self.numbering_scheme not in ("author", "label"):
             raise ValueError("numbering_scheme must be author or label")
@@ -144,6 +155,11 @@ class ResidueMapping:
             raise ValueError("mapping structure ID does not match structure record")
         if self.chain_id not in structure.chain_ids:
             raise ValueError("mapping chain is absent from structure record")
+        residue_code = _RESIDUE_CODES.get(self.residue_name.upper())
+        if residue_code and sequence.sequence[self.sequence_position - 1] not in {
+            residue_code, "X"
+        }:
+            raise ValueError("mapped residue identity does not match the protein sequence")
 
     def as_dict(self) -> dict:
         return {"schema_version": MAPPING_SCHEMA, **asdict(self)}
@@ -167,10 +183,16 @@ class StructureFeature:
         for name in ("feature_id", "structure_id", "feature_name", "unit", "tool_name",
                      "tool_version", "coordinate_frame"):
             _required(getattr(self, name), name)
-        if isinstance(self.value, bool) or not isinstance(self.value, (int, float)) or not math.isfinite(self.value):
+        if (
+            isinstance(self.value, bool)
+            or not isinstance(self.value, (int, float))
+            or not math.isfinite(self.value)
+        ):
             raise ValueError("feature value must be finite")
         _sha256(self.parameter_sha256, "parameter_sha256")
-        evidence = tuple(_required(item, "mapping_evidence_id") for item in self.mapping_evidence_ids)
+        evidence = tuple(
+            _required(item, "mapping_evidence_id") for item in self.mapping_evidence_ids
+        )
         if not evidence:
             raise ValueError("derived structure features require mapping evidence IDs")
         object.__setattr__(self, "mapping_evidence_ids", evidence)

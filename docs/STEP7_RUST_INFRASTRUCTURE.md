@@ -37,3 +37,9 @@ Secrets must be injected at runtime from a secret manager or protected environme
 
 ## Validation
 Run `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, and `cargo test` from `rust/kinetics-infra`. Python CI remains unchanged; a separate Rust CI job runs these checks. Production acceptance additionally requires API contract tests against a deployed adapter, unauthorized/cross-tenant integration tests, secret scanning, artifact upload/download tests, and a documented backup/restore drill.
+
+## Production-runtime implementation increment (2026-11-06)
+
+The mainline now also contains a deployable candidate API/worker crate: RS256 OIDC/JWKS validation, exact scope checks, managed AWS Secrets Manager integration, tenant-prefixed KMS-encrypted S3 artifacts, PostgreSQL job leases/heartbeats/retries/cancellation, and hash-chained append-only audit records. The current AWS ECS/RDS/S3/KMS deployment definitions and PostgreSQL integration CI are tracked in `docs/STEP7_PRODUCTION_ACCEPTANCE.md`.
+
+This does not supersede the security boundaries above. The candidate worker currently registers only a no-op health-check task. Per-job CPU/memory isolation is not implemented by recording requested limits or by sizing a shared Fargate worker task. Production deployment, live cross-tenant tests, managed identity configuration, and recovery drills remain unverified.

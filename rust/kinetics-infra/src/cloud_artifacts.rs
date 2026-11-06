@@ -22,7 +22,12 @@ pub struct S3ArtifactStore {
 
 impl S3ArtifactStore {
     pub fn new(client: Client, bucket: String, kms_key_id: String, max_bytes: usize) -> Self {
-        Self { client, bucket, kms_key_id, max_bytes }
+        Self {
+            client,
+            bucket,
+            kms_key_id,
+            max_bytes,
+        }
     }
 
     fn tenant_prefix(tenant_id: &str) -> String {
@@ -36,7 +41,12 @@ impl S3ArtifactStore {
     }
 
     fn key(tenant_id: &str, digest: &str) -> String {
-        format!("tenants/{}/artifacts/{}/{}", Self::tenant_prefix(tenant_id), &digest[..2], digest)
+        format!(
+            "tenants/{}/artifacts/{}/{}",
+            Self::tenant_prefix(tenant_id),
+            &digest[..2],
+            digest
+        )
     }
 
     pub async fn put(&self, tenant_id: &str, bytes: Vec<u8>) -> Result<String, CloudArtifactError> {
@@ -44,26 +54,43 @@ impl S3ArtifactStore {
             return Err(CloudArtifactError::TooLarge);
         }
         let digest = Self::digest(&bytes);
-        self.client.put_object()
+        self.client
+            .put_object()
             .bucket(&self.bucket)
             .key(Self::key(tenant_id, &digest))
             .body(ByteStream::from(bytes))
             .server_side_encryption(ServerSideEncryption::AwsKms)
             .ssekms_key_id(&self.kms_key_id)
             .metadata("sha256", digest.clone())
-            .send().await.map_err(|_| CloudArtifactError::Storage)?;
+            .send()
+            .await
+            .map_err(|_| CloudArtifactError::Storage)?;
         Ok(digest)
     }
 
     pub async fn get(&self, tenant_id: &str, digest: &str) -> Result<Vec<u8>, CloudArtifactError> {
-        if digest.len() != 64 || !digest.bytes().all(|b| b.is_ascii_hexdigit() && !b.is_ascii_uppercase()) {
+        if digest.len() != 64
+            || !digest
+                .bytes()
+                .all(|b| b.is_ascii_hexdigit() && !b.is_ascii_uppercase())
+        {
             return Err(CloudArtifactError::Integrity);
         }
-        let output = self.client.get_object()
+        let output = self
+            .client
+            .get_object()
             .bucket(&self.bucket)
             .key(Self::key(tenant_id, digest))
-            .send().await.map_err(|_| CloudArtifactError::Storage)?;
-        let bytes = output.body.collect().await.map_err(|_| CloudArtifactError::Storage)?.into_bytes().to_vec();
+            .send()
+            .await
+            .map_err(|_| CloudArtifactError::Storage)?;
+        let bytes = output
+            .body
+            .collect()
+            .await
+            .map_err(|_| CloudArtifactError::Storage)?
+            .into_bytes()
+            .to_vec();
         if bytes.len() > self.max_bytes || Self::digest(&bytes) != digest {
             return Err(CloudArtifactError::Integrity);
         }

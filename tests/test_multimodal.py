@@ -102,12 +102,15 @@ def test_multimodal_train_and_inference_round_trip(tmp_path):
     assert result["model_family"] == "Kinetics-Multi feature-fusion MLP"
     assert result["cross_validation"]["strategy"] == "group_k_fold:protein_cluster_id"
     assert result["n_held_out"] == 4
+    assert "applicability_domain" in result
     assert "raw assay context with fold-local preprocessing" in result["input_modalities"]
     model = tmp_path / "model" / "km_kinetics_multi.joblib"
     output = tmp_path / "inference.csv"
     predicted = predict_multimodal_model(model, test, output)
     assert predicted["n_predictions"] == 4
     assert output.is_file()
+    predictions = __import__("pandas").read_csv(output)
+    assert "within_applicability_domain" in predictions.columns
     metrics = json.loads(
         (tmp_path / "model" / "km_kinetics_multi_metrics.json").read_text()
     )

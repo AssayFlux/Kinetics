@@ -43,3 +43,27 @@ jobs:
 
       - name: Run test suite
         run: python -m pytest -q
+
+  rust-infrastructure:
+    name: Rust infrastructure
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rust/kinetics-infra
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust/kinetics-infra
+      - name: Format check
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Tests
+        run: cargo test --all-targets

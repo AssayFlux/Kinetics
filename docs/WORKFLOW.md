@@ -4,16 +4,18 @@ This guide describes the intended order of operations. It is documentation for t
 
 ## 1. Acquire and inspect public data
 
-CatPred-DB file access currently requires a signed-in Hugging Face account and acceptance of the dataset's contact-sharing gate. Review and accept those conditions yourself in the browser; then provide your own read-only `HF_TOKEN` locally. The downloader scopes the token to the Hugging Face dataset host and never records its value. Do not bypass access controls.\n\nDownload the pinned CatPred-DB tables using the existing downloader, then inspect the source columns before selecting mappings:
+CatPred-DB file access currently requires a signed-in Hugging Face account and acceptance of the dataset's contact-sharing gate. Review and accept those conditions yourself in the browser; then provide your own read-only `HF_TOKEN` locally. The downloader sends the token only to the exact Hugging Face dataset origin, strips it on cross-origin redirects, and never records its value. Do not bypass access controls.
 
-\`\`\`bash
+Download the pinned CatPred-DB tables using the downloader, then inspect the source columns before selecting mappings:
+
+```bash
 # In bash: enter the token without echoing it or putting it in shell history.
 read -rsp "Hugging Face read token: " HF_TOKEN; echo
 export HF_TOKEN
 python scripts/download_public_datasets.py --source catpred-db
 python scripts/inspect_public_datasets.py --input-dir data/public/catpred-db
 unset HF_TOKEN
-\`\`\`
+```
 
 Review the current dataset card and upstream repository terms. Keep raw files unchanged.
 

@@ -10,6 +10,7 @@ import math
 from typing import Literal
 
 Target = Literal["km", "kcat"]
+MeasurementKind = Literal["individual_measurement", "source_aggregated"]
 
 _KM_TO_M = {"M": 1.0, "mM": 1e-3, "uM": 1e-6, "µM": 1e-6, "nM": 1e-9}
 _KCAT_TO_S = {"s^-1": 1.0, "s-1": 1.0, "min^-1": 1.0 / 60.0, "h^-1": 1.0 / 3600.0}
@@ -34,10 +35,18 @@ class KineticObservation:
     publication_doi: str | None = None
     source_version: str | None = None
     license_id: str | None = None
+    measurement_kind: MeasurementKind = "individual_measurement"
+    aggregation_method: str | None = None
 
     def __post_init__(self) -> None:
         if self.target not in ("km", "kcat"):
             raise ValueError("target must be 'km' or 'kcat'")
+        if self.measurement_kind not in ("individual_measurement", "source_aggregated"):
+            raise ValueError("unsupported measurement_kind")
+        if self.measurement_kind == "source_aggregated" and not self.aggregation_method:
+            raise ValueError("source_aggregated observations require aggregation_method")
+        if self.measurement_kind == "individual_measurement" and self.aggregation_method:
+            raise ValueError("individual measurements cannot declare an aggregation_method")
         if not math.isfinite(float(self.value)) or float(self.value) <= 0:
             raise ValueError("kinetic measurement must be finite and strictly positive")
         if not self.source.strip() or not self.source_record_id.strip():

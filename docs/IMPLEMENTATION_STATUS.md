@@ -71,13 +71,15 @@ This file distinguishes repository contents from execution, verification and sci
 
 The genomics, transcriptomics, proteomics, structural biology, chemistry, pharmacology, molecular simulation, multi-omics, biomedical imaging, desktop workbench, clinical translation and Android capabilities are roadmap programmes unless explicitly listed above as present code. No clinical capability is claimed.
 
-## Step 8 — Research workbench (ENGINEERING IMPLEMENTATION IN PROGRESS)
+## Step 8 — Research workbench (ENGINEERING FOUNDATION MERGED; ACCEPTANCE IN PROGRESS)
 
 - Added optional `kinetics-workbench` package extra and launcher. It binds to `127.0.0.1` only and uses the existing Python scientific CLI through a versioned HTTP API.
 - Added project workspace management, browser-based bounded dataset upload, SQLite schema v2 for projects/jobs/artifacts, fixed allow-listed job dispatch, project-relative/symlink-safe paths, single-worker execution, cancellation, timeouts, durable state/logs, artifact checksums, verified downloads and Markdown report generation.
 - Workbench actions cover legacy import, audit, dataset persistence/release/verification, identity/scaffold/sequence processing, feature generation, partitioning, baseline comparison, target-specific and multimodal training, and multimodal inference.
 - UI includes dataset registry, job monitor, logs, artifact browser, report creation and keyboard-accessible controls. See `docs/WORKBENCH_GUIDE.md`.
-- Integration tests exercise schema migration, command allow-list/path confinement, dataset upload, actual audit subprocess execution, artifact integrity/download and report creation. Dedicated CI installs the optional workbench dependencies and runs these tests.
+- Integration tests exercise schema-v1 to v2 migration with data preservation, command allow-list/path confinement, dataset upload, cross-site request rejection, actual audit subprocess execution, artifact tampering detection, report and machine-readable reproducibility-manifest downloads. Dedicated CI builds and installs a wheel and verifies the launcher and bundled UI.
+
+**CI evidence:** PR [#42](https://github.com/AssayFlux/Kinetics/pull/42) merged after the full GitHub Actions matrix passed: Python 3.10/3.11/3.12 suites, dedicated workbench integration/lint/wheel-install checks, Linux/macOS/Windows native C++ jobs, and Rust checks. The run was [#42209064389](https://github.com/AssayFlux/Kinetics/actions/runs/42209064389). This is engineering verification, not scientific or researcher acceptance.
 
 **Not yet accepted as complete:** researcher usability and screen-reader testing; built-wheel installation and upgrade/rollback on supported desktop environments; real reviewed-dataset end-to-end workflow; measured ESM-2/MMseqs2 runtime/memory/cancellation/recovery; and validated uncertainty display. The workbench is local single-user software, not a remote multi-tenant service. These are release gates, not implied by code presence.
 

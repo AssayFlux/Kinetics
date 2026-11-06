@@ -207,7 +207,7 @@ def verify_dataset_release(release_dir: str | Path) -> dict[str, Any]:
         if relative_path.is_absolute() or ".." in relative_path.parts:
             raise ValueError(f"Unsafe release artifact path: {name}")
         path = root / relative_path
-        if path.resolve().parent != (root / relative_path.parent).resolve():
+        if not path.resolve().is_relative_to(root.resolve()):
             raise ValueError(f"Release artifact escapes release directory: {name}")
         if not path.is_file():
             raise ValueError(f"Release artifact is missing: {name}")

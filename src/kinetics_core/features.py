@@ -26,6 +26,11 @@ CACHE_SCHEMA_VERSION = "2"
 _VALID_AA = set("ACDEFGHIKLMNPQRSTVWYXBZUO")
 
 
+def _string_array(values) -> np.ndarray:
+    """Return a non-object Unicode array safe for allow_pickle=False archives."""
+    return np.asarray([str(value) for value in values], dtype=np.str_)
+
+
 def _version(distribution: str) -> str | None:
     try:
         return importlib.metadata.version(distribution)
@@ -452,7 +457,7 @@ class ObservationFeatureBuilder:
                 raise ValueError(f"Requested grouping column is missing: {column}")
             if selected[column].isna().any():
                 raise ValueError(f"Grouping column {column} contains missing values")
-            group_arrays[column] = selected[column].astype(str).to_numpy()
+            group_arrays[column] = _string_array(selected[column].tolist())
 
         normalized_sequences = [
             _normalize_sequence(value, self.encoder.max_residues)
@@ -524,10 +529,12 @@ class ObservationFeatureBuilder:
                     X=X,
                     y_log10=np.log10(values).astype(np.float32),
                     y_raw=values.astype(np.float64),
-                    source_record_ids=selected["source_record_id"].astype(str).to_numpy(),
-                    sequences=np.asarray(normalized_sequences),
-                    smiles=selected["smiles"].astype(str).to_numpy(),
-                    canonical_smiles=np.asarray(canonical_smiles),
+                    source_record_ids=_string_array(
+                        selected["source_record_id"].tolist()
+                    ),
+                    sequences=_string_array(normalized_sequences),
+                    smiles=_string_array(selected["smiles"].tolist()),
+                    canonical_smiles=_string_array(canonical_smiles),
                     target=np.asarray([target]),
                     feature_schema_version=np.asarray([FEATURE_SCHEMA_VERSION]),
                     feature_metadata_json=np.asarray([
@@ -550,7 +557,7 @@ class ObservationFeatureBuilder:
                         dtype=np.int64,
                     ),
                     **(
-                        {"sources": selected["source"].astype(str).to_numpy()}
+                        {"sources": _string_array(selected["source"].tolist())}
                         if "source" in selected.columns else {}
                     ),
                     **group_arrays,

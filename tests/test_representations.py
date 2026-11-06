@@ -61,7 +61,7 @@ def test_feature_cache_is_reused_and_revision_invalidates(tmp_path):
 
     second_encoder = FakeEncoder("rev-a")
     second = ObservationFeatureBuilder(cache_dir=cache, encoder=second_encoder)
-    two = second.transform_many(["ACDE"], ["OC(C)C(=O)O"])
+    two = second.transform_many(["ACDE"], ["O=C(O)[C@@H](O)C"])
     assert np.array_equal(one[0], two[0])
     assert second_encoder.calls == []
 

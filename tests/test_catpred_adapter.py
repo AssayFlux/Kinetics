@@ -35,7 +35,7 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
         temperature_k_column="temp_k",
         temperature_c_column=None,
         assay_id_column="assay",
-        source_version="fixture-v1",
+        source_version="abcdef1",
         license_id="CC-BY-4.0",
     )
 
@@ -91,7 +91,7 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
     }).to_csv(source, index=False)
     accepted_path, rejected_path, manifest_path = normalize_catpred_csv(
         source, tmp_path / "normalized", target="km", unit="mM",
-        source_version="hf-main-fixture", license_id="CC-BY-4.0",
+        source_version="abcdef1", license_id="CC-BY-4.0",
         doi_column=None, assay_id_column=None,
     )
     accepted = pd.read_csv(accepted_path, dtype={"source_record_id": "string"})
@@ -119,7 +119,7 @@ def test_catpred_rejects_ki_and_missing_aggregate_column(tmp_path):
     with pytest.raises(ValueError, match="only km and kcat"):
         normalize_catpred_csv(
             source, tmp_path / "ki", target="ki", unit="mM",
-            source_version="fixture", license_id="CC-BY-4.0",
+            source_version="abcdef1", license_id="CC-BY-4.0",
         )
     with pytest.raises(ValueError, match="Missing CatPred aggregate target column"):
         normalize_catpred_csv(

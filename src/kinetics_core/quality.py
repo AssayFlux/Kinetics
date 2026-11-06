@@ -84,7 +84,10 @@ def audit_observations(
         ) if not audit.empty else 0,
         "optional_metadata_missing_fraction": {
             column: float(result[column].isna().mean())
-            for column in ("sequence", "smiles", "protein_accession", "organism", "ph", "temperature_k", "assay_id", "publication_doi")
+            for column in (
+                "sequence", "smiles", "protein_accession", "organism", "ph",
+                "temperature_k", "assay_id", "publication_doi",
+            )
             if column in result
         },
         "duplicate_status_counts": {str(key): int(value) for key, value in counts.items()},

@@ -66,7 +66,7 @@ def test_release_manifest_verifies_and_detects_tampering(tmp_path):
     manifest = json.loads((release / "release_manifest.json").read_text())
     assert manifest["counts"]["observations"] == 3
     assert manifest["counts"]["duplicate_groups"] >= 1
-    assert manifest["source_quality_warnings"] == ["fixture unit warning"]
+    assert manifest["source_quality_warnings"] == ["Unit quality warning: fixture unit warning"]
     assert "fixture unit warning" in (release / "DATA_CARD.md").read_text()
     assert manifest["source_manifests"][0]["sha256"]
     assert "source_manifests/source_manifest_1.json" in result["artifacts_verified"]

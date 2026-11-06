@@ -9,9 +9,11 @@ from __future__ import annotations
 
 import argparse
 import pathlib
+import re
 import shutil
 import tempfile
 
+import numpy as np
 import pandas as pd
 
 from .curation import normalize_observation_table
@@ -20,6 +22,7 @@ from .provenance import file_record, write_json_atomic
 
 CATPRED_SOURCE = "CatPred-DB"
 CATPRED_DATASET_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB"
+CATPRED_PROCESSING_REVISION = "931583821ff875e873002730fbbdf1047acfde77"
 
 
 def normalize_catpred_csv(
@@ -27,9 +30,8 @@ def normalize_catpred_csv(
     output_dir: str | pathlib.Path,
     *,
     target: str,
-    value_column: str = "value",
-    unit: str | None = None,
-    unit_column: str | None = None,
+    aggregate_log10_column: str | None = None,
+    unit: str,
     record_id_column: str | None = None,
     sequence_column: str | None = "sequence",
     smiles_column: str | None = None,
@@ -42,21 +44,37 @@ def normalize_catpred_csv(
     assay_id_column: str | None = None,
     source_version: str,
     license_id: str,
+    processing_revision: str = CATPRED_PROCESSING_REVISION,
 ) -> tuple[pathlib.Path, pathlib.Path, pathlib.Path]:
     if target not in ("km", "kcat"):
         raise ValueError("CatPred-DB adapter supports only km and kcat; Ki is not Km or kcat")
-    if not source_version.strip() or not license_id.strip():
-        raise ValueError("CatPred imports require non-empty source_version and license_id")
+    if not re.fullmatch(r"[0-9a-fA-F]{7,40}", source_version):
+        raise ValueError("source_version must be the pinned Hugging Face commit SHA")
+    if not re.fullmatch(r"[0-9a-fA-F]{7,40}", processing_revision):
+        raise ValueError("processing_revision must be the pinned GitHub commit SHA")
+    if not license_id.strip():
+        raise ValueError("CatPred imports require a non-empty license_id")
     source_path = pathlib.Path(input_csv)
     if not source_path.is_file():
         raise FileNotFoundError(source_path)
-    if unit is None and unit_column is None:
-        raise ValueError("CatPred-DB raw value units must be verified and supplied explicitly")
-    if unit is not None and unit_column is not None:
-        raise ValueError("Provide either unit or unit_column, not both")
+    expected_unit = "mM" if target == "km" else "s^-1"
+    if unit != expected_unit:
+        raise ValueError(
+            f"CatPred {target} aggregate values must use the published "
+            f"{expected_unit} convention"
+        )
+    if aggregate_log10_column is None:
+        aggregate_log10_column = "log10km_mean" if target == "km" else "log10kcat_max"
     raw = pd.read_csv(
         source_path,
         dtype={column: "string" for column in (record_id_column, accession_column) if column},
+    )
+    if aggregate_log10_column not in raw.columns:
+        raise ValueError(
+            f"Missing CatPred aggregate target column: {aggregate_log10_column}"
+        )
+    raw["__kinetics_aggregate_linear_value"] = np.power(
+        10.0, pd.to_numeric(raw[aggregate_log10_column], errors="coerce")
     )
     if smiles_column is None:
         if target == "km" and "substrate_smiles" in raw.columns:
@@ -95,9 +113,9 @@ def normalize_catpred_csv(
         target=target,
         source=CATPRED_SOURCE,
         source_record_id_column=record_id_column,
-        value_column=value_column,
+        value_column="__kinetics_aggregate_linear_value",
         unit=unit,
-        unit_column=unit_column,
+        unit_column=None,
         sequence_column=sequence_column,
         smiles_column=smiles_column,
         accession_column=accession_column,
@@ -142,6 +160,36 @@ def normalize_catpred_csv(
         "dataset_url": CATPRED_DATASET_URL,
         "target": target,
         "canonical_unit": "M" if target == "km" else "s^-1",
+        "source_aggregate_log10_column": aggregate_log10_column,
+        "source_aggregate_unit": unit,
+        "source_value_semantics": (
+            "As-published representative row value; it is not the aggregate target "
+            "and reflects upstream clipping."
+        ),
+        "source_clipping_policy": (
+            {"lower": 1e-8, "upper": 1e4, "unit": "mM"}
+            if target == "km"
+            else {"lower": 1e-6, "upper": 1e6, "unit": "s^-1"}
+        ),
+        "source_unit_basis": (
+            "CatPred processing convention: Km in mM and kcat in s^-1; per-row "
+            "underlying source units are not retained in the aggregate table."
+        ),
+        "unit_quality_warning": (
+            "BRENDA num_value values are carried through the upstream merge without "
+            "per-row unit metadata. SABIO kcat conversion multiplies min^-1 by 60, "
+            "which appears opposite to the standard min^-1 to s^-1 conversion. "
+            "Audit original source records before treating kcat as an absolute reference."
+            if target == "kcat"
+            else "BRENDA num_value values are carried through the upstream merge without "
+            "per-row unit metadata; the aggregate table does not permit independent "
+            "record-level unit verification."
+        ),
+        "source_processing_revision": processing_revision,
+        "source_processing_refs": [
+            f"https://github.com/maranasgroup/CatPred-DB/blob/{processing_revision}/scripts/processing/process_sabio.py",
+            f"https://github.com/maranasgroup/CatPred-DB/blob/{processing_revision}/scripts/processing/merge.py",
+        ],
         "measurement_kind": "source_aggregated",
         "aggregation_method": (
             "geometric_mean_over_source_measurements_for_sequence_substrate_pair"
@@ -154,7 +202,11 @@ def normalize_catpred_csv(
         "record_id_origin": record_id_origin,
         "record_id_column": record_id_column,
         "mapping": {
-            "value": value_column, "unit": unit, "unit_column": unit_column,
+            "source_row_value": "value",
+            "source_row_log10_value": "log10_value",
+            "aggregate_log10": aggregate_log10_column,
+            "aggregate_linearized_value": "__kinetics_aggregate_linear_value",
+            "unit": unit,
             "sequence": sequence_column, "substrate_smiles": smiles_column,
             "accession": accession_column, "organism": organism_column,
             "doi": doi_column, "ph": ph_column,
@@ -202,9 +254,8 @@ def main() -> None:
     parser.add_argument("--output-dir", default="data/processed/catpred-db")
     parser.add_argument("--target", choices=["km", "kcat"], required=True)
     parser.add_argument("--record-id-column")
-    parser.add_argument("--value-column", default="value")
-    parser.add_argument("--unit")
-    parser.add_argument("--unit-column")
+    parser.add_argument("--aggregate-log10-column")
+    parser.add_argument("--unit", choices=["mM", "s^-1"], required=True)
     parser.add_argument("--sequence-column", default="sequence")
     parser.add_argument("--smiles-column")
     parser.add_argument("--accession-column", default="uniprot")
@@ -216,11 +267,12 @@ def main() -> None:
     parser.add_argument("--assay-id-column")
     parser.add_argument("--source-version", required=True)
     parser.add_argument("--license-id", required=True)
+    parser.add_argument("--processing-revision", default=CATPRED_PROCESSING_REVISION)
     args = parser.parse_args()
     outputs = normalize_catpred_csv(
         args.input, args.output_dir, target=args.target,
-        record_id_column=args.record_id_column, value_column=args.value_column,
-        unit=args.unit, unit_column=args.unit_column,
+        record_id_column=args.record_id_column,
+        aggregate_log10_column=args.aggregate_log10_column, unit=args.unit,
         sequence_column=args.sequence_column, smiles_column=args.smiles_column,
         accession_column=args.accession_column, organism_column=args.organism_column,
         doi_column=args.doi_column, ph_column=args.ph_column,
@@ -228,6 +280,7 @@ def main() -> None:
         temperature_c_column=args.temperature_c_column,
         assay_id_column=args.assay_id_column,
         source_version=args.source_version, license_id=args.license_id,
+        processing_revision=args.processing_revision,
     )
     for path in outputs:
         print(path)

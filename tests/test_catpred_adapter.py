@@ -1,6 +1,8 @@
 import json
+import math
 
 import pandas as pd
+import pytest
 
 from kinetics_core.catpred import normalize_catpred_csv
 
@@ -9,8 +11,8 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
     source = tmp_path / "km.csv"
     pd.DataFrame({
         "record_id": ["0007", "0008", "0009"],
-        "measurement": [2.5, 4.0, 1.0],
-        "unit": ["uM", "uM", "uM"],
+        "value": [2.5, 4.0, 1.0],
+        "log10km_mean": [math.log10(0.0025), math.log10(0.004), math.log10(0.001)],
         "sequence": ["AAAA", "BBBB", "CCCC"],
         "uniprot": [None, None, None],
         "smiles": ["CCO", "CCN", "CCC"],
@@ -25,8 +27,7 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
         tmp_path / "normalized",
         target="km",
         record_id_column="record_id",
-        value_column="measurement",
-        unit_column="unit",
+        unit="mM",
         sequence_column="sequence",
         smiles_column="smiles",
         doi_column="doi",
@@ -34,7 +35,7 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
         temperature_k_column="temp_k",
         temperature_c_column=None,
         assay_id_column="assay",
-        source_version="fixture-v1",
+        source_version="abcdef1",
         license_id="CC-BY-4.0",
     )
 
@@ -43,7 +44,9 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
     manifest = json.loads(manifest_path.read_text())
 
     assert accepted["source_record_id"].tolist() == ["0007", "0008"]
-    assert accepted["canonical_value"].tolist() == [2.5e-6, 4.0e-6]
+    assert accepted["canonical_value"].tolist() == pytest.approx([2.5e-6, 4.0e-6])
+    assert accepted["source_value"].tolist() == [2.5, 4.0]
+    assert accepted["original_unit"].eq("mM").all()
     assert accepted["measurement_kind"].tolist() == ["source_aggregated", "source_aggregated"]
     assert accepted["aggregation_method"].iloc[0].startswith("geometric_mean")
     assert accepted["ph"].tolist() == [7.0, 6.5]
@@ -54,6 +57,12 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
     ]
     assert len(rejected) == 1
     assert "ph is not numeric" in rejected.loc[0, "reason"]
+    assert manifest["mapping"]["aggregate_log10"] == "log10km_mean"
+    assert manifest["source_aggregate_unit"] == "mM"
+    assert manifest["source_processing_revision"] == "931583821ff875e873002730fbbdf1047acfde77"
+    assert "931583821ff875e873002730fbbdf1047acfde77" in manifest["source_processing_refs"][0]
+    assert manifest["source_clipping_policy"]["lower"] == 1e-8
+    assert "BRENDA num_value" in manifest["unit_quality_warning"]
     assert manifest["mapping"]["ph"] == "ph"
     assert manifest["mapping"]["temperature_k"] == "temp_k"
     assert manifest["mapping"]["assay_id"] == "assay"
@@ -72,6 +81,7 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
         "substrate_smiles": ["CCO", "CCN"],
         "value": [0.003, 0.02],
         "log10_value": [-2.5229, -1.6990],
+        "log10km_mean": [-2.5229, -1.6990],
         "temperature": [25.0, 37.0],
         "ph": [7.0, 6.5],
         "ec": ["1.1.1.1", "2.7.1.1"],
@@ -81,7 +91,7 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
     }).to_csv(source, index=False)
     accepted_path, rejected_path, manifest_path = normalize_catpred_csv(
         source, tmp_path / "normalized", target="km", unit="mM",
-        source_version="hf-main-fixture", license_id="CC-BY-4.0",
+        source_version="abcdef1", license_id="CC-BY-4.0",
         doi_column=None, assay_id_column=None,
     )
     accepted = pd.read_csv(accepted_path, dtype={"source_record_id": "string"})
@@ -90,6 +100,7 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
     assert accepted["measurement_kind"].eq("source_aggregated").all()
     assert accepted["aggregation_method"].iloc[0].startswith("geometric_mean")
     assert accepted["temperature_k"].tolist() == [298.15, 310.15]
+    assert accepted["canonical_value"].tolist() == pytest.approx([3e-6, 2e-5])
     assert accepted["protein_accession"].tolist() == ["Q12345", "P01234"]
     assert accepted["smiles"].tolist() == ["CCO", "CCN"]
     assert manifest["mapping"]["substrate_smiles"] == "substrate_smiles"
@@ -102,19 +113,17 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
     assert len(pd.read_csv(rejected_path)) == 0
 
 
-def test_catpred_rejects_ki_and_missing_unit_declaration(tmp_path):
+def test_catpred_rejects_ki_and_missing_aggregate_column(tmp_path):
     source = tmp_path / "source.csv"
     pd.DataFrame({"value": [1.0]}).to_csv(source, index=False)
-    import pytest
-
     with pytest.raises(ValueError, match="only km and kcat"):
         normalize_catpred_csv(
             source, tmp_path / "ki", target="ki", unit="mM",
-            source_version="fixture", license_id="CC-BY-4.0",
+            source_version="abcdef1", license_id="CC-BY-4.0",
         )
-    with pytest.raises(ValueError, match="units must be verified"):
+    with pytest.raises(ValueError, match="Missing CatPred aggregate target column"):
         normalize_catpred_csv(
-            source, tmp_path / "km", target="km",
+            source, tmp_path / "km", target="km", unit="mM",
             source_version="fixture", license_id="CC-BY-4.0",
         )
 
@@ -127,6 +136,7 @@ def test_catpred_kcat_uses_maximum_aggregate_and_reactant_smiles(tmp_path):
         "uniprot": ["Q12345"],
         "reactant_smiles": ["CCO.O"],
         "value": [0.0036],
+        "log10kcat_max": [math.log10(0.02)],
         "temperature": [30.0],
         "ph": [7.2],
         "ec": ["1.1.1.1"],
@@ -140,5 +150,8 @@ def test_catpred_kcat_uses_maximum_aggregate_and_reactant_smiles(tmp_path):
     manifest = json.loads(manifest_path.read_text())
     assert accepted.loc[0, "smiles"] == "CCO.O"
     assert accepted.loc[0, "canonical_unit"] == "s^-1"
+    assert accepted.loc[0, "canonical_value"] == pytest.approx(0.02)
+    assert accepted.loc[0, "source_value"] == 0.0036
     assert accepted.loc[0, "aggregation_method"].startswith("maximum")
     assert manifest["aggregation_method"].startswith("maximum")
+    assert "multiplies min^-1 by 60" in manifest["unit_quality_warning"]

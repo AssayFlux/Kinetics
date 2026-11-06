@@ -15,18 +15,19 @@ Review the current dataset card and upstream repository terms. Keep raw files un
 
 ## 2. Normalize each target independently
 
-The CatPred paper reports that each published kcat value is a maximum across measurements for an enzyme-sequence/substrate pair and each Km value is a geometric mean. These are source-aggregated benchmark statistics, not individual assay measurements. The canonical record stores `measurement_kind=source_aggregated` and the target-specific aggregation method. Underlying replicate measurements are not recoverable from this table.
+The CatPred merge script groups by sequence and substrate, stores the maximum log10 kcat as `log10kcat_max`, and stores the mean log10 Km as `log10km_mean` (a geometric mean on the linear scale). The representative `value` field is not the aggregate target. The upstream merge script clips Km values to [1e-8, 1e4] mM and kcat values to [1e-6, 1e6] s^-1 before aggregation; these bounds are recorded in the curation manifest. These are source-aggregated benchmark statistics, not individual assay measurements. The canonical record stores `measurement_kind=source_aggregated` and the target-specific aggregation method. Underlying replicate measurements are not recoverable from this table.
 
-The documented CatPred-DB schema does not define a native source row identifier, DOI, or assay ID. When no native ID exists in the pinned snapshot, the adapter creates a deterministic file-hash/target/row locator and labels it as an import locator, not an upstream experimental ID. It maps the published fields by default: `value`, `sequence`, `uniprot`, `ph`, and Celsius `temperature`. Km tables use `substrate_smiles`; kcat tables use `reactant_smiles`. Celsius is converted to kelvin. Verify raw `value` units for the exact snapshot and supply `--unit` or `--unit-column`; no unit is guessed.
+The documented CatPred-DB schema does not define a native source row identifier, DOI, or assay ID. When no native ID exists in the pinned snapshot, the adapter creates a deterministic file-hash/target/row locator and labels it as an import locator, not an upstream experimental ID. Km uses the aggregate target `log10km_mean`; kcat uses `log10kcat_max`. The adapter exponentiates the aggregate target to recover its linear value in the CatPred convention (Km in mM; kcat in s^-1), then normalizes Km to M. The separate `value` and `log10_value` fields are preserved as published representative-row fields; they are not substituted for the aggregate target. Km tables use `substrate_smiles`; kcat tables use `reactant_smiles`. Celsius `temperature` is converted to kelvin.
 
 ```bash
 python -m kinetics_core.catpred \
   --input data/public/catpred-db/km/km_train.csv --target km \
-  --unit VERIFIED_UNIT --source-version 44409e6 --license-id CC-BY-4.0 \
+  --unit mM --source-version 44409e6 --processing-revision 931583821ff875e873002730fbbdf1047acfde77 \
+  --license-id CC-BY-4.0 \
   --output-dir data/processed/catpred-db/km
 ```
 
-Repeat separately for kcat using its own file and independently verified unit. Preserve the source train/validation/test partitions; do not concatenate them into one split. The adapter preserves every source column, including accession, taxonomy, sequence provenance, reaction fields, and published cluster labels. Missing DOI, assay IDs, and organism names remain missing.
+Repeat separately for kcat using its own file, `--unit s^-1`, and the same pinned revision. The upstream CatPred processing code has a kcat conversion caveat: its SABIO-RK `min^-1` conversion multiplies by 60, whereas conversion to `s^-1` ordinarily divides by 60. BRENDA row units are also not retained in the aggregate table. The adapter records this warning in the curation manifest; do not treat CatPred kcat as an independently validated absolute reference until the original source records are audited. Preserve the source train/validation/test partitions; do not concatenate them into one split. The adapter preserves every source column, including accession, taxonomy, sequence provenance, reaction fields, and published cluster labels. Missing DOI, assay IDs, and organism names remain missing.
 
 ### Legacy paired-row CSV migration (only when the source really contains paired measurements)
 

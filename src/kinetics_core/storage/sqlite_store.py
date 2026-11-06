@@ -199,9 +199,9 @@ class KineticsSQLite:
                 )
             try:
                 connection.executescript(
-                    "BEGIN IMMEDIATE;\\n"
+                    "BEGIN IMMEDIATE;\n"
                     + _SCHEMA
-                    + f"\\nPRAGMA user_version = {SCHEMA_VERSION};\\nCOMMIT;"
+                    + f"\nPRAGMA user_version = {SCHEMA_VERSION};\nCOMMIT;"
                 )
             except Exception:
                 if connection.in_transaction:

@@ -135,3 +135,23 @@ jobs:
         run: ctest --test-dir build/native --build-config Release --output-on-failure
       - name: Verify Python/C++ scene interoperability
         run: python scripts/verify_native_bridge.py
+
+  terraform:
+    name: Terraform validation
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: deploy/aws
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+      - name: Check formatting
+        run: terraform fmt -check -recursive
+      - name: Initialize providers
+        run: terraform init -backend=false
+      - name: Validate deployment configuration
+        run: terraform validate

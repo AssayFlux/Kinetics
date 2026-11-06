@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import tempfile
 
 import pandas as pd
 
@@ -121,13 +122,16 @@ def normalize_catpred_csv(
             accepted[f"source_{column}"] = [
                 raw.iloc[int(index)][column] for index in accepted["source_row_number"]
             ]
-    output = Path(output_dir)
-    output.mkdir(parents=True, exist_ok=True)
-    normalized_path = output / f"{target}_observations.csv"
-    rejected_path = output / f"{target}_rejected_rows.csv"
-    manifest_path = output / f"{target}_curation_manifest.json"
-    if any(path.exists() for path in (normalized_path, rejected_path, manifest_path)):
-        raise FileExistsError("CatPred output exists; choose a new output directory")
+    output = Path(output_dir).resolve()
+    if output.exists():
+        raise FileExistsError("CatPred output directory exists; choose a new output directory")
+    if output == source_path.resolve().parent or output in source_path.resolve().parents:
+        raise ValueError("CatPred output directory must not contain the raw source file")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix=f".{output.name}.staging-", dir=output.parent))
+    normalized_path = staging / f"{target}_observations.csv"
+    rejected_path = staging / f"{target}_rejected_rows.csv"
+    manifest_path = staging / f"{target}_curation_manifest.json"
     accepted.to_csv(normalized_path, index=False)
     rejected.to_csv(rejected_path, index=False)
     manifest = {
@@ -169,8 +173,26 @@ def normalize_catpred_csv(
             "values and source columns are retained; no DOI, organism, or assay ID inferred."
         ),
     }
-    write_json_atomic(manifest, manifest_path)
-    return normalized_path, rejected_path, manifest_path
+    manifest["outputs"] = {
+        path.name: {
+            "sha256": file_record(path)["sha256"],
+            "size_bytes": path.stat().st_size,
+        }
+        for path in (normalized_path, rejected_path)
+    }
+    try:
+        write_json_atomic(manifest, manifest_path)
+        staging.rename(output)
+    except Exception:
+        import shutil
+
+        shutil.rmtree(staging, ignore_errors=True)
+        raise
+    return (
+        output / normalized_path.name,
+        output / rejected_path.name,
+        output / manifest_path.name,
+    )
 
 
 def main() -> None:

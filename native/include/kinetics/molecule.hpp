@@ -58,5 +58,6 @@ private:
 Structure load_pdb(const std::filesystem::path& path);
 double distance_angstrom(const Atom& first, const Atom& second);
 std::string scene_to_json(const MolecularScene& scene);
+std::string render_xy_ppm(const MolecularScene& scene, int width = 512, int height = 512);
 
 }  // namespace kinetics

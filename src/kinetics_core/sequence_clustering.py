@@ -58,10 +58,12 @@ def cluster_sequences(
         raise ValueError("Record IDs must be non-empty")
     use_source = source_column is not None and source_column in frame.columns
     if use_source:
+        if frame[source_column].isna().any():
+            raise ValueError("Source IDs must not be missing")
         source_ids = frame[source_column].astype(str)
         if source_ids.str.strip().eq("").any():
             raise ValueError("Source IDs must be non-empty")
-        identity_keys = source_ids + "\\0" + record_ids
+        identity_keys = source_ids.str.cat(record_ids, sep="\\x1f")
     else:
         source_ids = None
         identity_keys = record_ids

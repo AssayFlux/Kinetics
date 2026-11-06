@@ -1,10 +1,92 @@
 # Kinetics
 
-**Open-source baseline for enzyme kinetic parameter prediction from protein sequence and substrate SMILES.**
+**Open-source research platform for enzyme kinetics, molecular intelligence, and a long-term vision of evidence-based precision molecular medicine.**
 
-Predicts `log10(Km)` (Km in mM) and `log10(kcat)` (kcat in s⁻¹) using ESM-2 embeddings, 2048-bit radius-2 Morgan fingerprints, and two XGBoost regressors.
+The current baseline predicts `log10(Km)` (Km in mM) and `log10(kcat)` (kcat in s⁻¹) from protein sequence and substrate SMILES using ESM-2 embeddings, 2048-bit radius-2 Morgan fingerprints, and two XGBoost regressors.
 
-> Research-use software. Predictions are computational estimates, not experimental measurements. Generalization depends on dataset quality, assay conditions, and leakage-resistant evaluation.
+> **Research-use software.** Kinetics is being developed as a scientific research and decision-support platform. Computational predictions are hypotheses, not experimental measurements or clinical conclusions. The current enzyme-kinetics baseline does not diagnose disease, select medication, or generate validated patient treatment plans.
+
+## Grand vision: molecularly informed, person-specific medicine
+
+The long-term ambition is to investigate how an individual's molecular biology can inform more precise therapeutic research. People differ in their genomes and in other biological and clinical factors; the same intervention may therefore have different benefits, risks, metabolism, or response across individuals.
+
+Kinetics aims to grow toward a platform that can help researchers study these differences and organize evidence for **personalized, genetics-informed treatment research**. The goal is not to assume that genes alone determine a person's treatment. Any future patient-specific research workflow must consider the broader biological and clinical context, including:
+
+- **Genomics and variant interpretation:** quality-controlled variants, gene annotations, variant effects, inheritance where relevant, and well-supported gene–drug or gene–disease evidence.
+- **Pharmacogenomics:** genetic variation that may influence drug metabolism, transport, targets, efficacy, or adverse-effect risk.
+- **Protein and molecular function:** sequence variation, protein structure, stability, expression, enzyme activity, binding, and molecular mechanisms.
+- **Chemical and drug properties:** molecular structures, target interactions, metabolism-related evidence, and compound-level predictions.
+- **Multi-omics, where available:** transcriptomic, proteomic, metabolomic, and other molecular measurements to complement genomic information.
+- **Clinical context:** confirmed diagnosis, age, relevant history, current medicines, allergies, organ function, laboratory findings, contraindications, and patient preferences—only where lawful, consented, and clinically appropriate.
+- **Evidence and uncertainty:** source traceability, evidence strength, population applicability, conflicting findings, model uncertainty, and explicit reasons why a result may not generalize.
+
+A future research workflow could organize evidence and generate **clinician-reviewable research summaries or candidate options**, with explanations, supporting sources, limitations, and uncertainty. It must not autonomously prescribe, diagnose, recommend a dose, or tell a person to start, stop, or change treatment. Clinical decisions belong to qualified healthcare professionals and the patient, using validated evidence and applicable standards of care.
+
+### Important scientific and clinical boundary
+
+This is a long-term research direction, not a capability of the current release. Enzyme Km/kcat prediction is a focused molecular-engineering task; it is not, by itself, a pharmacogenomics system or a clinical treatment recommender. Reaching the broader vision will require separate validated components, suitable consented datasets, clinical and domain-expert collaboration, prospective evaluation, regulatory and ethics review where applicable, and independent clinical validation before any clinical use is considered.
+
+Kinetics must not infer a person's treatment from a single variant or model score. Genetic associations can be population-dependent, incompletely penetrant, uncertain, or contradicted by other clinical factors. A lack of evidence must be reported as a lack of evidence—not converted into a confident recommendation.
+
+## Research domains and planned capabilities
+
+The platform is intended to bring together complementary disciplines:
+
+1. **Bioinformatics and sequence analysis** — DNA/RNA/protein sequence parsing, translation, annotation, motif analysis, sequence similarity, alignment, and quality checks.
+2. **Structural bioinformatics** — PDB/mmCIF parsing, residue-level features, contacts, solvent accessibility, secondary structure, structural comparison, and structure-derived descriptors.
+3. **Protein engineering** — mutation analysis, sequence/property prediction, stability and function hypotheses, enzyme–substrate relationships, and candidate sequence research.
+4. **Enzyme kinetics** — Km, kcat, catalytic efficiency, assay-context normalization, and enzyme–substrate evidence.
+5. **Cheminformatics** — molecular parsing, descriptors, fingerprints, similarity, compound curation, and ligand-related feature generation.
+6. **Molecular interaction research** — protein–ligand and protein–protein interaction hypotheses, binding-related features, and affinity prediction where suitable data supports it.
+7. **Genomics and pharmacogenomics (future research expansion)** — variant annotation, gene–drug evidence, genotype-to-phenotype interpretation, and population-aware uncertainty.
+8. **Personalized molecular research (future research expansion)** — carefully governed integration of molecular and clinical context into traceable, clinician-reviewable evidence summaries.
+9. **Machine learning and research reporting** — task-specific models, calibrated uncertainty, applicability-domain checks, leakage-resistant evaluation, model cards, and reproducible experiment records.
+10. **Offline research assistance** — a future local assistant integration through the separate Astronaut project, subject to explicit integration and safety boundaries.
+
+## BioPython integration
+
+Kinetics will use the relevant BioPython ecosystem broadly across sequence, alignment, structural biology, annotation, and biological data workflows. The aim is to integrate the modules that serve the research tasks—not to import every BioPython module indiscriminately or rely on deprecated APIs.
+
+The planned integration inventory is documented in [BioPython integration](docs/BIOPYTHON_INTEGRATION.md). Core areas include:
+
+- `Bio.Seq`, `Bio.SeqRecord`, `Bio.SeqIO`, `Bio.SeqUtils`, `Bio.SeqUtils.ProtParam`, `Bio.SeqUtils.IsoelectricPoint`, and `Bio.Data` for sequence handling, translation, parsing, and protein descriptors.
+- `Bio.Align`, `Bio.AlignIO`, substitution matrices, `Bio.motifs`, `Bio.SearchIO`, and `Bio.Blast` for alignment, motifs, and search-result workflows.
+- `Bio.PDB` and its relevant parsers, writers, residue utilities, SASA, DSSP integration, neighbor search, superposition, and internal-coordinate tools for structural analysis.
+- `Bio.Entrez` for controlled NCBI retrieval, with caching, rate-limit compliance, and provenance.
+- `Bio.SeqFeature`, `Bio.Phylo`, `Bio.Cluster`, `Bio.Restriction`, `Bio.SVDSuperimposer`, and optional `Bio.Graphics` for appropriate annotation, evolutionary, clustering, construct, structural, and visualization tasks.
+
+External programs such as BLAST+, MMseqs2, MAFFT, HMMER, DSSP, Foldseek, PyMOL, and molecular-simulation tools will be optional integrations, not assumed to be Python modules supplied by BioPython. Deprecated interfaces will be avoided in favor of supported modern APIs. See [the integration guide](docs/BIOPYTHON_INTEGRATION.md).
+
+## Data and storage architecture
+
+Kinetics includes a SQLite research store for structured records, metadata, provenance, and experiment bookkeeping. It is designed for reliable local research workflows, not as a claim that SQLite can store or accelerate every training tensor.
+
+The planned hybrid storage design is:
+
+| Data type | Preferred storage |
+|---|---|
+| Dataset catalogues, entities, compounds, assays, measurements, provenance, features metadata, predictions, experiment manifests | SQLite |
+| Large normalized tabular datasets | Parquet / Arrow |
+| Dense numeric arrays and reusable embeddings | NumPy with memory mapping |
+| Chunked scientific arrays and larger feature collections | HDF5 or Zarr |
+| Model weights and checkpoints | Safetensors or framework-native checkpoint formats |
+| Raw sequences and structures | Versioned FASTA, GenBank, PDB, and mmCIF files |
+
+SQLite uses WAL mode, foreign-key enforcement, bounded cache settings, batch writes, short transactions, and explicit maintenance/checkpoint operations. WAL supports concurrent readers while a writer is active, but SQLite still has a single-writer model. A write queue and batched transactions are preferred for ingestion. Large binary arrays, model weights, and raw scientific files remain outside the database; SQLite stores their metadata, paths, hashes, and provenance.
+
+See [database architecture](docs/DATABASE_ARCHITECTURE.md) and the storage implementation under `src/kinetics_core/storage/`.
+
+## Research principles, privacy, and governance
+
+- **Traceability:** retain source accession/identifier, dataset version, retrieval date, license, checksum, transformation history, and citations.
+- **Reproducibility:** record code and package versions, model identifiers, random seeds, data splits, configuration, and experiment manifests.
+- **Data quality:** preserve raw observations, audit exclusions, distinguish unmatched measurements, document units and assay conditions, and never silently overwrite conflicting evidence.
+- **Leakage control:** use sequence-cluster, scaffold, temporal, external, and other task-appropriate splits; do not rely on random splits alone for publication claims.
+- **Uncertainty:** report calibration, applicability limits, missingness, and out-of-distribution warnings. A model score is not proof of a mechanism or clinical effect.
+- **Fairness and generalizability:** assess performance across relevant populations and ancestry groups where ethically and scientifically appropriate; do not assume one cohort represents everyone.
+- **Privacy and consent:** genetic and health data are highly sensitive. Future person-level workflows require informed consent, data minimization, secure access controls, encryption where appropriate, de-identification/pseudonymization, retention policies, and compliance with applicable law and institutional ethics requirements. Do not commit identifiable patient data or private genomic files to this repository.
+- **Human oversight:** future clinical-facing research outputs must be explainable, source-linked, reviewable by qualified professionals, and explicitly non-autonomous.
+- **Publication integrity:** distinguish implemented software from planned features, computational results from experimental findings, and retrospective evaluation from prospective clinical validation.
 
 ## Project layout
 
@@ -16,7 +98,9 @@ Kinetics/
 │   ├── feature_extraction.py   # ESM-2 + RDKit fingerprints and disk cache
 │   ├── train_model.py          # 5-fold CV, holdout metrics, XGBoost
 │   ├── optimize_mobile.py      # ONNX export, optional INT8 / FP16
-│   └── predict.py              # CLI and Python inference API
+│   ├── predict.py              # CLI and Python inference API
+│   └── kinetics_core/          # Modular research, provenance, storage and assistant layer
+├── docs/                       # Architecture, protocols, roadmap and research notes
 ├── models/                     # Local model artifacts (git-ignored)
 ├── requirements.txt
 └── README.md
@@ -119,7 +203,6 @@ Seeds default to 42. Preserve raw data provenance, assay metadata, package versi
 
 No license is selected yet. Add an OSI-approved license before accepting contributions or redistributing model/data artifacts.
 
-
 ## Public datasets
 
 Kinetics uses public enzyme-kinetics resources. Start with the CatPred-DB processed Km and kcat tables and published sequence-cluster test splits:
@@ -130,7 +213,6 @@ python scripts/inspect_public_datasets.py --input-dir data/public/catpred-db
 ```
 
 Downloaded data stays local and is excluded from Git. Review [DATASETS.md](DATASETS.md) for source links, attribution/license notes, curation rules, and the planned BRENDA/SABIO-RK extensions. The CatPred-DB Km and kcat tables are separate datasets and must not be merged as if their rows were matched measurements. Inspect source schemas and units before normalizing or training. No data is bundled and no model has yet been trained on these downloads.
-
 
 ## Research infrastructure layer
 
@@ -152,19 +234,17 @@ The adapter requires explicit source column names and units. It writes normalize
 
 The new research utilities are implementation work, not a claim of completed model training or scientific validation. Training, testing, benchmarking, and validation remain scheduled for the final verification stage.
 
-
 See [the implementation roadmap](docs/ROADMAP.md) for the staged build and final verification sequence.
 
 Additional implementation references: [sequence and chemical splits](docs/SEQUENCE_AND_CHEMICAL_SPLITS.md), [modeling and uncertainty](docs/MODELING_AND_UNCERTAINTY.md), [research paper outline](docs/RESEARCH_PAPER_OUTLINE.md), and [contribution guide](docs/CONTRIBUTING.md).
 
-The new research package also includes model-card and experiment-report generators, publication-oriented parity/residual plots, fold-local assay-context preprocessing, independent split-conformal calibration, and training-reference applicability warnings. See [assay-context features](docs/ASSAY_CONTEXT.md), [calibration workflow](docs/CALIBRATION_AND_CONTEXT_WORKFLOW.md), and [applicability diagnostics](docs/APPLICABILITY_DOMAIN.md). See [assay-context features](docs/ASSAY_CONTEXT.md). Install plotting support with `python -m pip install -e ".[plots]"`; see [reporting and figures](docs/REPORTING_AND_FIGURES.md).
+The new research package also includes model-card and experiment-report generators, publication-oriented parity/residual plots, fold-local assay-context preprocessing, independent split-conformal calibration, and training-reference applicability warnings. See [assay-context features](docs/ASSAY_CONTEXT.md), [calibration workflow](docs/CALIBRATION_AND_CONTEXT_WORKFLOW.md), and [applicability diagnostics](docs/APPLICABILITY_DOMAIN.md). Install plotting support with `python -m pip install -e ".[plots]"`; see [reporting and figures](docs/REPORTING_AND_FIGURES.md).
 
 For a documented end-to-end workflow from public dataset acquisition through target-specific curation, grouping, feature generation, and the deferred final model execution stage, see [docs/WORKFLOW.md](docs/WORKFLOW.md).
 
 ## Offline research assistant
 
-Kinetics now includes a dependency-free assistant adapter contract in `src/kinetics_core/assistant.py`. It is designed for a future local integration with [AssayFlux/Astronaut](https://github.com/AssayFlux/Astronaut), which remains a separate project under development. No hosted model, network fallback, model download, or autonomous tool execution is enabled. See [the Astronaut integration plan](docs/ASTRONAUT_INTEGRATION.md). The assistant is not operational until an Astronaut adapter is implemented and verified.
-
+Kinetics includes a dependency-free assistant adapter contract in `src/kinetics_core/assistant.py`. It is designed for a future local integration with [AssayFlux/Astronaut](https://github.com/AssayFlux/Astronaut), which remains a separate project under development. No hosted model, network fallback, model download, or autonomous tool execution is enabled. See [the Astronaut integration plan](docs/ASTRONAUT_INTEGRATION.md). The assistant is not operational until an Astronaut adapter is implemented and verified.
 
 ## Research CLI
 
@@ -172,8 +252,10 @@ Install the package with `python -m pip install -e ".[baseline]"` and run `kinet
 
 See [model comparison](docs/MODEL_COMPARISON.md) and [calibration/context workflow](docs/CALIBRATION_AND_CONTEXT_WORKFLOW.md).
 
-
 Normalized tables can be audited without deleting or averaging observations: `kinetics-research audit --input data/processed/observations.csv --output-dir data/quality`. See [the observation quality policy](docs/OBSERVATION_QUALITY.md).
 
-
 Prepare a leakage-resistant train/calibration/test design with `kinetics-research partition --observations data/processed/km_observations_with_groups.csv --output-dir data/partitions/km --target km`. This uses nested double-cold protein-cluster/scaffold splits and retains cross-quadrant exclusions. See [the partition workflow](docs/PARTITION_WORKFLOW.md).
+
+## Development sequence
+
+The current priority is to complete the software architecture, data models, ingestion adapters, storage, provenance, and interfaces first. Training, testing, benchmarking, and scientific validation are reserved for the final verification stage in accordance with the project plan. The broader genomics and personalized molecular research direction will be developed as a separate, carefully governed expansion rather than being represented as an existing feature.

@@ -107,9 +107,15 @@ def test_catpred_rejects_ki_and_missing_unit_declaration(tmp_path):
     import pytest
 
     with pytest.raises(ValueError, match="only km and kcat"):
-        normalize_catpred_csv(source, tmp_path / "ki", target="ki", unit="mM")
+        normalize_catpred_csv(
+            source, tmp_path / "ki", target="ki", unit="mM",
+            source_version="fixture", license_id="CC-BY-4.0",
+        )
     with pytest.raises(ValueError, match="units must be verified"):
-        normalize_catpred_csv(source, tmp_path / "km", target="km")
+        normalize_catpred_csv(
+            source, tmp_path / "km", target="km",
+            source_version="fixture", license_id="CC-BY-4.0",
+        )
 
 
 

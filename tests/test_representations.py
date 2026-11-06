@@ -194,6 +194,19 @@ def test_mmseqs_wrapper_records_hashes_and_checks_complete_mapping(tmp_path, mon
     assert manifest["version"] == "MMseqs2 fixture 1.0"
 
 
+def test_mmseqs_mapping_qualifies_nonunique_record_ids_by_source(tmp_path, monkeypatch):
+    _fake_mmseqs(tmp_path, monkeypatch)
+    frame = pd.DataFrame({
+        "source": ["source-a", "source-b"],
+        "source_record_id": ["same-id", "same-id"],
+        "sequence": ["ACDE", "ACDF"],
+    })
+    mapping, _ = cluster_sequences(frame, output_dir=tmp_path / "qualified")
+    result = pd.read_csv(mapping)
+    assert result["source"].tolist() == ["source-a", "source-b"]
+    assert result["source_record_id"].tolist() == ["same-id", "same-id"]
+
+
 def test_mmseqs_wrapper_rejects_invalid_or_unassigned_sequences(tmp_path, monkeypatch):
     _fake_mmseqs(tmp_path, monkeypatch, omit_last=True)
     frame = pd.DataFrame({

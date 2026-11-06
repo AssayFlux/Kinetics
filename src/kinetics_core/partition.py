@@ -36,8 +36,13 @@ def prepare_target_partitions(
     source = Path(observations_csv)
     if not source.is_file():
         raise FileNotFoundError(source)
-    frame = pd.read_csv(source)
-    required = {"target", "source", "source_record_id", "canonical_value", protein_group_column, substrate_group_column}
+    frame = pd.read_csv(
+        source, dtype={"source_record_id": "string", "source": "string"}
+    )
+    required = {
+        "target", "source", "source_record_id", "canonical_value",
+        protein_group_column, substrate_group_column,
+    }
     missing = required - set(frame.columns)
     if missing:
         raise ValueError(f"Normalized observations are missing columns: {sorted(missing)}")
@@ -134,4 +139,8 @@ def prepare_target_partitions(
     }
     manifest_path = output / f"{target}_split_manifest.json"
     write_json_atomic(manifest, manifest_path)
-    return {"manifest": manifest, "manifest_path": str(manifest_path), **{k: str(v) for k, v in paths.items()}}
+    return {
+        "manifest": manifest,
+        "manifest_path": str(manifest_path),
+        **{key: str(value) for key, value in paths.items()},
+    }

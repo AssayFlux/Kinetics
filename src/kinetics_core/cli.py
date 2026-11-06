@@ -82,6 +82,48 @@ def build_parser() -> argparse.ArgumentParser:
     identities.add_argument("--sequence-column", default="sequence")
     identities.add_argument("--smiles-column", default="smiles")
 
+    scaffolds = subparsers.add_parser(
+        "annotate-scaffolds",
+        help="Assign stereo-agnostic Bemis-Murcko scaffold IDs with row-level rejection audit",
+    )
+    scaffolds.add_argument("--input", required=True)
+    scaffolds.add_argument("--output-dir", required=True)
+    scaffolds.add_argument("--smiles-column", default="smiles_canonical")
+
+    clusters = subparsers.add_parser(
+        "cluster-sequences", help="Cluster validated protein sequences with MMseqs2"
+    )
+    clusters.add_argument("--input", required=True)
+    clusters.add_argument("--output-dir", required=True)
+    clusters.add_argument("--sequence-column", default="sequence")
+    clusters.add_argument("--record-id-column", default="source_record_id")
+    clusters.add_argument("--source-column", default="source")
+    clusters.add_argument("--min-sequence-identity", type=float, default=0.4)
+    clusters.add_argument("--coverage", type=float, default=0.8)
+    clusters.add_argument("--threads", type=int, default=1)
+
+    features = subparsers.add_parser(
+        "build-features", help="Build versioned ESM-2, Morgan and molecular-graph features"
+    )
+    features.add_argument("--input", required=True)
+    features.add_argument("--output", required=True)
+    features.add_argument("--target", choices=("km", "kcat"), required=True)
+    features.add_argument("--cache-dir", default="data/cache")
+    features.add_argument("--model-name", default="facebook/esm2_t6_8M_UR50D")
+    features.add_argument(
+        "--model-revision",
+        default="8c576d2aba1b27317e9321c8491d72f00d1b110a",
+    )
+    features.add_argument("--tokenizer-revision")
+    features.add_argument("--device")
+    features.add_argument("--max-residues", type=int, default=1022)
+    features.add_argument("--radius", type=int, default=2)
+    features.add_argument("--n-bits", type=int, default=2048)
+    features.add_argument("--no-chirality", action="store_true")
+    features.add_argument("--batch-size", type=int, default=16)
+    features.add_argument("--group-column", action="append", default=[])
+    features.add_argument("--overwrite", action="store_true")
+
     audit = subparsers.add_parser("audit")
     audit.add_argument("--input", required=True, help="Normalized observations CSV")
     audit.add_argument("--output-dir", required=True)
@@ -264,6 +306,215 @@ def main(argv: list[str] | None = None) -> int:
             "output_dir": str(output),
             "accepted_rows": int(len(accepted)),
             "rejected_rows": int(len(rejected)),
+        }
+    elif args.command == "annotate-scaffolds":
+        import shutil
+        import tempfile
+        from pathlib import Path
+
+        import pandas as pd
+        from rdkit import rdBase
+
+        from .chemistry import annotate_scaffolds_audited
+        from .provenance import environment_record, file_record, write_json_atomic
+
+        input_path = Path(args.input).resolve()
+        output = Path(args.output_dir).resolve()
+        if not input_path.is_file():
+            raise FileNotFoundError(input_path)
+        if output.exists():
+            raise FileExistsError("Scaffold output directory already exists")
+        if output == input_path.parent or output in input_path.parents:
+            raise ValueError("Scaffold output directory must not contain the input file")
+        frame = pd.read_csv(
+            input_path,
+            dtype={"source_record_id": "string", "source": "string"},
+        )
+        accepted, rejected = annotate_scaffolds_audited(
+            frame, smiles_column=args.smiles_column
+        )
+        output.parent.mkdir(parents=True, exist_ok=True)
+        staging = Path(tempfile.mkdtemp(
+            prefix=f".{output.name}.staging-", dir=output.parent
+        ))
+        try:
+            accepted_path = staging / "observations_with_scaffolds.csv"
+            rejected_path = staging / "scaffold_rejected_rows.csv"
+            accepted.to_csv(accepted_path, index=False)
+            rejected.to_csv(rejected_path, index=False)
+            manifest = {
+                "workflow": "murcko_scaffold_annotation",
+                "input": file_record(input_path),
+                "outputs": {
+                    item.name: {
+                        "size_bytes": item.stat().st_size,
+                        "sha256": file_record(item)["sha256"],
+                    }
+                    for item in (accepted_path, rejected_path)
+                },
+                "input_rows": len(frame),
+                "accepted_rows": len(accepted),
+                "rejected_rows": len(rejected),
+                "rdkit_version": rdBase.rdkitVersion,
+                "stereochemistry_policy": (
+                    "Scaffold grouping ignores stereochemistry; molecular features "
+                    "retain stereochemistry. No salt or tautomer normalization."
+                ),
+                "environment": environment_record(),
+            }
+            write_json_atomic(manifest, staging / "scaffold_manifest.json")
+            staging.rename(output)
+        except Exception:
+            shutil.rmtree(staging, ignore_errors=True)
+            raise
+        result = {
+            "output_dir": str(output),
+            "accepted_rows": len(accepted),
+            "rejected_rows": len(rejected),
+        }
+    elif args.command == "cluster-sequences":
+        from pathlib import Path
+
+        import pandas as pd
+
+        from .provenance import file_record, write_json_atomic
+        from .sequence_clustering import cluster_sequences
+
+        input_path = Path(args.input).resolve()
+        output = Path(args.output_dir).resolve()
+        if not input_path.is_file():
+            raise FileNotFoundError(input_path)
+        if output.exists():
+            raise FileExistsError("Sequence-cluster output directory already exists")
+        if output == input_path.parent or output in input_path.parents:
+            raise ValueError("Sequence-cluster output directory must not contain the input file")
+        csv_dtypes = {args.record_id_column: "string"}
+        if args.source_column:
+            csv_dtypes[args.source_column] = "string"
+        frame = pd.read_csv(input_path, dtype=csv_dtypes)
+        if "protein_cluster_id" in frame.columns:
+            raise ValueError("Input already contains protein_cluster_id")
+        mapping_path, manifest_path = cluster_sequences(
+            frame,
+            sequence_column=args.sequence_column,
+            record_id_column=args.record_id_column,
+            source_column=args.source_column or None,
+            output_dir=output,
+            min_sequence_identity=args.min_sequence_identity,
+            coverage=args.coverage,
+            threads=args.threads,
+        )
+        mapping_dtypes = {
+            "source_record_id": "string",
+            "cluster_representative_record_id": "string",
+            "source": "string",
+            "cluster_representative_source": "string",
+        }
+        mapping = pd.read_csv(mapping_path, dtype=mapping_dtypes)
+        left_join_columns = [args.record_id_column]
+        right_join_columns = ["source_record_id"]
+        if (
+            args.source_column
+            and args.source_column in frame.columns
+            and "source" in mapping.columns
+        ):
+            left_join_columns.insert(0, args.source_column)
+            right_join_columns.insert(0, "source")
+        clustered = frame.merge(
+            mapping,
+            left_on=left_join_columns,
+            right_on=right_join_columns,
+            how="left",
+            validate="many_to_one",
+        )
+        if clustered["cluster_representative_record_id"].isna().any():
+            raise RuntimeError("Cluster mapping failed to assign every source record")
+        if "cluster_representative_source" in clustered.columns:
+            clustered["protein_cluster_id"] = [
+                json.dumps([source, record_id], separators=(",", ":"))
+                for source, record_id in zip(
+                    clustered["cluster_representative_source"],
+                    clustered["cluster_representative_record_id"],
+                    strict=True,
+                )
+            ]
+        else:
+            clustered["protein_cluster_id"] = (
+                clustered["cluster_representative_record_id"].astype(str)
+            )
+        clustered_path = output / "observations_with_protein_clusters.csv"
+        clustered.to_csv(clustered_path, index=False)
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["source_observations"] = file_record(input_path)
+        manifest["clustered_observations"] = file_record(clustered_path)
+        manifest["clustered_observations_all_assigned"] = (
+            len(clustered) == len(frame)
+        )
+        write_json_atomic(manifest, manifest_path)
+        result = {
+            "input": file_record(input_path),
+            "mapping": file_record(mapping_path),
+            "clustered_observations": file_record(clustered_path),
+            "manifest": str(manifest_path),
+        }
+    elif args.command == "build-features":
+        from pathlib import Path
+
+        import pandas as pd
+
+        from .features import ObservationFeatureBuilder
+        from .provenance import file_record, write_json_atomic
+
+        input_path = Path(args.input).resolve()
+        output_path = Path(args.output).resolve()
+        manifest_path = output_path.with_suffix(
+            output_path.suffix + ".manifest.json"
+        )
+        if not input_path.is_file():
+            raise FileNotFoundError(input_path)
+        if input_path in {output_path, manifest_path}:
+            raise ValueError("Feature outputs must differ from the input file")
+        if not args.overwrite and (
+            output_path.exists() or manifest_path.exists()
+        ):
+            raise FileExistsError(
+                "Feature archive or manifest exists; pass --overwrite to replace"
+            )
+        frame = pd.read_csv(
+            input_path,
+            dtype={
+                "source_record_id": "string",
+                "source": "string",
+                "source_version": "string",
+                "license_id": "string",
+            },
+        )
+        builder = ObservationFeatureBuilder(
+            model_name=args.model_name,
+            model_revision=args.model_revision,
+            tokenizer_revision=args.tokenizer_revision,
+            device=args.device,
+            max_residues=args.max_residues,
+            cache_dir=args.cache_dir,
+            radius=args.radius,
+            n_bits=args.n_bits,
+            include_chirality=not args.no_chirality,
+        )
+        archive = builder.transform_frame(
+            frame,
+            target=args.target,
+            output_path=output_path,
+            group_columns=tuple(args.group_column),
+            batch_size=args.batch_size,
+        )
+        feature_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        feature_manifest["source_input"] = file_record(input_path)
+        write_json_atomic(feature_manifest, manifest_path)
+        result = {
+            "input": file_record(input_path),
+            "archive": file_record(archive),
+            "manifest": str(manifest_path),
+            "target": args.target,
         }
     elif args.command == "partition":
         from .partition import prepare_target_partitions

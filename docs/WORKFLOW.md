@@ -207,3 +207,66 @@ result = predict_one(
 ```
 
 Predictions are computational estimates, not experimental measurements. Record the model version, source context, and applicability limitations with downstream use.
+
+
+## Protein and chemical representations (Step 3)
+
+Feature archives are generated from the canonical one-observation-per-row table after identity normalization. The default protein encoder is `facebook/esm2_t6_8M_UR50D` (see the [representation card](ESM2_REPRESENTATION_CARD.md); the Hugging Face model page lists an MIT license), pinned to model and tokenizer revision `8c576d2aba1b27317e9321c8491d72f00d1b110a`. Custom model names require the caller to verify and record their license; the adapter does not assume MIT for other models. The encoder uses residue mean pooling and excludes BOS, EOS, and padding tokens. It rejects empty, over-length, or unsupported sequences rather than silently truncating them. The baseline extra (PyTorch and Transformers) is required for new ESM inference.
+
+The chemical vector is a 2,048-bit Morgan fingerprint (radius 2) with chirality included by default. The feature archive also carries a packed molecular graph: atom features include atomic number, degree, charge, hydrogens, aromaticity, CIP stereochemistry, hybridization, isotope and mass; bond features include bond type, conjugation, ring membership and stereo. Bonds are stored as two directed edges, with per-molecule atom/edge offsets. RDKit canonical isomeric SMILES are used for cache identity; the pipeline does not silently strip salts, normalize tautomers, or collapse stereoisomers. The scaffold grouping convention is deliberately different: Bemis-Murcko scaffold IDs ignore stereochemistry so stereoisomers are assigned to the same scaffold group. The current Murcko helper does not offer a stereochemistry-sensitive scaffold mode; use a separately specified chemical grouping method if that is the declared benchmark question.
+
+Feature cache keys include the feature schema, protein model/tokenizer revisions and settings, chemical fingerprint parameters, RDKit/Python/scientific-library versions, normalized sequence, and canonical isomeric SMILES. Cache files use non-pickle NPZ arrays and atomic replacement. Feature generation is batched with a configurable bounded batch size.
+
+Each feature archive has an adjacent `.manifest.json` containing the feature schema and configuration, source/source-version/license identifiers when present, aligned row-identity hashes, archive SHA-256, and runtime metadata. The NPZ archive retains source record IDs, source labels (when supplied), normalized sequences, original and canonical SMILES, target values, packed molecular graph tensors and offsets, and requested grouping arrays. Inference mode and immutable model revisions improve reproducibility; bitwise identity across different hardware or library builds is not promised.
+
+MMseqs2 clustering validates sequence alphabets and unique non-empty record IDs before execution. The resulting manifest records the MMseqs2 version, command and thresholds, input FASTA hash, cluster mapping hash, and a check that every input record was assigned exactly once. The MMseqs2 executable is an external dependency and is not installed by the Python package.
+
+Example feature generation is available through the Python API:
+
+```python
+import pandas as pd
+from kinetics_core.features import ObservationFeatureBuilder
+
+observations = pd.read_csv("data/curated/observations.csv")
+builder = ObservationFeatureBuilder(cache_dir="data/cache/esm2-morgan")
+builder.transform_frame(
+    observations,
+    target="km",
+    output_path="data/features/km_features.npz",
+    group_columns=("protein_cluster_id", "scaffold_id"),
+    batch_size=16,
+)
+```
+
+Do not generate train/test-specific transforms from combined data if those transforms learn parameters. ESM-2 and Morgan representations are fixed pretrained/algorithmic transforms; any learned dimensionality reduction, feature selection, normalization, or imputation must be fitted on the training partition only. Retain the cluster/scaffold split manifest alongside every feature/model artifact.
+
+
+The CLI exposes the complete representation-preparation sequence. Start with the identity-normalized observations, then annotate scaffolds and cluster sequences. The clustering command writes both a source/record-to-cluster mapping and an observations CSV with `protein_cluster_id` attached. Repeated Km/kcat rows from the same source record share one sequence-cluster mapping when their normalized sequences agree; conflicting sequences for the same source/record key are rejected.
+
+```bash
+kinetics-research normalize-identities \
+  --input data/curated/observations.csv \
+  --output-dir data/curated/identities
+
+kinetics-research annotate-scaffolds \
+  --input data/curated/identities/observations_with_identities.csv \
+  --output-dir data/curated/scaffolds
+
+kinetics-research cluster-sequences \
+  --input data/curated/scaffolds/observations_with_scaffolds.csv \
+  --output-dir data/curated/protein-clusters \
+  --sequence-column sequence_normalized \
+  --min-sequence-identity 0.4 --coverage 0.8 --threads 4
+
+kinetics-research partition \
+  --observations data/curated/protein-clusters/observations_with_protein_clusters.csv \
+  --output-dir data/partitions/km --target km
+
+kinetics-research build-features \
+  --input data/partitions/km/km_train.csv \
+  --output data/features/km_train.npz --target km \
+  --group-column protein_cluster_id --group-column scaffold_id \
+  --batch-size 16
+```
+
+Repeat partitioning and feature generation independently for kcat. Use the same frozen split manifest for all model comparisons; do not regenerate or tune partitions based on model results. The feature CLI requires the baseline extra (PyTorch, Transformers and RDKit); sequence clustering additionally requires a separately installed MMseqs2 executable. The command records the exact model revision and all representation parameters in the feature manifest.

@@ -31,9 +31,13 @@ This file distinguishes repository contents from execution, verification and sci
 - Duplicate/conflict audits and metadata completeness summaries.
 - Dataset provenance manifests and experiment metadata.
 - Grouped holdout, protein-cluster and chemical-scaffold split utilities.
-- MMseqs2 sequence-clustering wrapper.
-- RDKit canonical SMILES and Bemis-Murcko scaffold utilities.
-- Target-specific feature archives and model workflows.
+- MMseqs2 wrapper with validated protein sequences, source-qualified record keys, repeated-observation collapse only when sequence identity agrees, complete unique-entity coverage checks, and hashes for the input FASTA, raw cluster output, and mapping.
+- RDKit canonical isomeric SMILES, stereo-agnostic Bemis-Murcko scaffold grouping, and row-level scaffold rejection audits.
+- Pinned ESM-2 model/tokenizer revisions, residue-only mean pooling, strict sequence validation, no silent truncation, and bounded batch inference.
+- Morgan fingerprints (radius 2, 2,048 bits, chirality enabled by default) and stereochemistry-aware molecular graph tensors with atom/bond features and packed offsets.
+- Versioned feature NPZ archives with source IDs/labels, normalized sequences, original/canonical SMILES, target values, split-group arrays, molecular graphs, and non-object Unicode arrays safe for `allow_pickle=False`.
+- Dependency/configuration-aware atomic feature caches; feature manifests record model/tokenizer revisions, representation parameters, runtime/software versions, source input hashes, source versions/licenses, row-identity hashes and archive SHA-256.
+- CLI workflows for `annotate-scaffolds`, `cluster-sequences`, and `build-features`; clustering attaches source-qualified `protein_cluster_id` values back to canonical observations.
 - Split-conformal interval utilities and held-out coverage reporting.
 - Applicability-domain warnings, explicitly not calibrated confidence.
 - Assay-context preprocessing designed to avoid cross-validation leakage.
@@ -50,7 +54,7 @@ This file distinguishes repository contents from execution, verification and sci
 
 - Connect canonical observation outputs to legacy preprocessing, prediction and ONNX paths.
 - Retire or isolate the legacy two-target-per-row assumption without breaking supported workflows.
-- Add end-to-end sequence-cluster/scaffold generation to dataset workflows.
+- Execute real ESM-2 inference and MMseqs2 clustering on a reviewed, licensed dataset; establish hardware-specific repeat-run numerical tolerances and generate a real feature reproducibility report.
 - Complete reproducible orchestration from source acquisition through curation, partitioning, features, calibration, model selection and reporting.
 - Expand shift-stratified diagnostics, uncertainty coverage-versus-width analysis and statistical comparisons.
 - Add BRENDA and SABIO-RK adapters only after current schemas, licenses and access terms are verified.
@@ -66,9 +70,9 @@ The genomics, transcriptomics, proteomics, structural biology, chemistry, pharma
 
 ## Verification status
 
-The Step 2 software tests exercise aggregate target selection, source-unit declarations, aggregation semantics, source-row identifiers, identity normalization, duplicate candidates, release manifests, warning propagation, and checksum verification. Passing these tests verifies the tooling, not the scientific validity of a real CatPred data release.
+Step 2 fixture tests cover CatPred aggregate target selection, source-unit declarations, aggregation semantics, source-row locators, identity normalization, duplicate candidates, release manifests, warning propagation and checksums. Step 3 fixture tests cover pinned ESM configuration, cache invalidation, non-pickle feature archives, molecular graph alignment/stereochemistry, scaffold rejection audits, source-qualified MMseqs mapping, repeated target observations, incomplete-cluster rejection, CLI workflows and source/artifact hashes.
 
-GitHub Actions run [#42178564530](https://github.com/AssayFlux/Kinetics/actions/runs/42178564530) passed on Python 3.10, 3.11, and 3.12: 48 tests passed on each version, source compilation passed, and scoped Ruff checks passed for the KDB adapters, curation, identity, release, quality, scripts, CLI, and associated tests. This is software verification only: no real public CatPred snapshot has been imported or released, no model training or benchmark run has been performed, and no scientific generalization claim is made here. Code presence and passing software tests do not establish predictive validity.
+GitHub Actions run [#42182250301](https://github.com/AssayFlux/Kinetics/actions/runs/42182250301) passed on Python 3.10, 3.11 and 3.12: **61 tests passed on each version**, source compilation passed, and scoped Ruff checks passed. This verifies software and fixture-driven workflows only. The pinned ESM checkpoint has not been downloaded or executed; MMseqs2 has not been run on a real dataset; no real CatPred snapshot has been imported or released; no real feature archive, model training or benchmark run has been performed. Hardware-specific embedding repeatability tolerances and scientific generalization remain unvalidated.
 
 ## Project direction
 

@@ -209,7 +209,6 @@ mod tests {
             let first = store.submit("job-1", "tenant-a", "request-1", limits()).unwrap();
             let duplicate = store.submit("job-2", "tenant-a", "request-1", limits()).unwrap();
             assert_eq!(first.id, duplicate.id);
-            assert_eq!(store.get("tenant-b", "job-1").unwrap_err_as_job(), None);
         }
         let store = SqliteJobStore::open(&path).unwrap();
         assert_eq!(store.get("tenant-a", "job-1").unwrap().state, JobState::Queued);

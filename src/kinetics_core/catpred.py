@@ -75,7 +75,9 @@ def normalize_catpred_csv(
         raise ValueError("Map temperature in either Celsius or kelvin, not both")
     if temperature_c_column:
         if temperature_c_column not in raw.columns:
-            raise ValueError(f"Configured temperature Celsius column does not exist: {temperature_c_column}")
+            raise ValueError(
+                f"Configured temperature Celsius column does not exist: {temperature_c_column}"
+            )
         def to_kelvin(value):
             if pd.isna(value) or str(value).strip() == "":
                 return None
@@ -164,7 +166,8 @@ def normalize_catpred_csv(
         "normalized_file": normalized_path.name,
         "rejected_file": rejected_path.name,
         "policy": (
-            "CatPred values are source aggregates (Km geometric mean; kcat maximum), not individual assays. "
+            "CatPred values are source aggregates (Km geometric mean; kcat maximum), "
+            "not individual assays. "
             "Generated row locators are not upstream "
             "record IDs. CatPred temperature Celsius is converted to kelvin. Raw source "
             "values and source columns are retained; no DOI, organism, or assay ID inferred."

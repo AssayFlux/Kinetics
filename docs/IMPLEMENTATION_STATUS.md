@@ -70,9 +70,9 @@ The genomics, transcriptomics, proteomics, structural biology, chemistry, pharma
 
 ## Verification status
 
-The Step 2 software tests exercise aggregate target selection, source-unit declarations, aggregation semantics, source-row identifiers, identity normalization, duplicate candidates, release manifests, warning propagation, and checksum verification. Passing these tests verifies the tooling, not the scientific validity of a real CatPred data release.
+Step 2 fixture tests cover CatPred aggregate target selection, source-unit declarations, aggregation semantics, source-row locators, identity normalization, duplicate candidates, release manifests, warning propagation and checksums. Step 3 fixture tests cover pinned ESM configuration, cache invalidation, non-pickle feature archives, molecular graph alignment/stereochemistry, scaffold rejection audits, source-qualified MMseqs mapping, repeated target observations, incomplete-cluster rejection, CLI workflows and source/artifact hashes.
 
-GitHub Actions run [#42178564530](https://github.com/AssayFlux/Kinetics/actions/runs/42178564530) passed on Python 3.10, 3.11, and 3.12: 48 tests passed on each version, source compilation passed, and scoped Ruff checks passed for the KDB adapters, curation, identity, release, quality, scripts, CLI, and associated tests. This is software verification only: no real public CatPred snapshot has been imported or released, no model training or benchmark run has been performed, and no scientific generalization claim is made here. Code presence and passing software tests do not establish predictive validity.
+GitHub Actions run [#42182250301](https://github.com/AssayFlux/Kinetics/actions/runs/42182250301) passed on Python 3.10, 3.11 and 3.12: **61 tests passed on each version**, source compilation passed, and scoped Ruff checks passed. This verifies software and fixture-driven workflows only. The pinned ESM checkpoint has not been downloaded or executed; MMseqs2 has not been run on a real dataset; no real CatPred snapshot has been imported or released; no real feature archive, model training or benchmark run has been performed. Hardware-specific embedding repeatability tolerances and scientific generalization remain unvalidated.
 
 ## Project direction
 

@@ -43,8 +43,10 @@ def test_esm_encoder_requires_immutable_revision_and_pins_default():
     encoder = ESM2Encoder()
     assert encoder.model_revision == DEFAULT_ESM_REVISION
     assert encoder.tokenizer_revision == DEFAULT_ESM_REVISION
-    with pytest.raises(ValueError, match="immutable"):
+    with pytest.raises(ValueError, match="full immutable"):
         ESM2Encoder(model_revision="main")
+    with pytest.raises(ValueError, match="tokenizer_revision"):
+        ESM2Encoder(tokenizer_revision="123abc")
     with pytest.raises(ValueError, match="max_residues"):
         ESM2Encoder(max_residues=1023)
 

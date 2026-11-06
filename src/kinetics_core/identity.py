@@ -63,7 +63,14 @@ def normalize_biomolecular_identities(
                 "source_record_id": str(row.get("source_record_id", "")),
                 "reason": str(exc),
             })
-    return pd.DataFrame(accepted), pd.DataFrame(rejected)
+    accepted_columns = list(frame.columns) + [
+        "sequence_normalized", "protein_content_id", "smiles_canonical", "compound_content_id"
+    ]
+    rejected_columns = ["source_row_number", "source_record_id", "reason"]
+    return (
+        pd.DataFrame(accepted, columns=accepted_columns),
+        pd.DataFrame(rejected, columns=rejected_columns),
+    )
 
 
 def _optional_text(value: Any) -> str | None:

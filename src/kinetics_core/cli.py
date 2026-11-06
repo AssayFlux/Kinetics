@@ -82,6 +82,48 @@ def build_parser() -> argparse.ArgumentParser:
     identities.add_argument("--sequence-column", default="sequence")
     identities.add_argument("--smiles-column", default="smiles")
 
+    scaffolds = subparsers.add_parser(
+        "annotate-scaffolds",
+        help="Assign stereo-agnostic Bemis-Murcko scaffold IDs with row-level rejection audit",
+    )
+    scaffolds.add_argument("--input", required=True)
+    scaffolds.add_argument("--output-dir", required=True)
+    scaffolds.add_argument("--smiles-column", default="smiles_canonical")
+
+    clusters = subparsers.add_parser(
+        "cluster-sequences", help="Cluster validated protein sequences with MMseqs2"
+    )
+    clusters.add_argument("--input", required=True)
+    clusters.add_argument("--output-dir", required=True)
+    clusters.add_argument("--sequence-column", default="sequence")
+    clusters.add_argument("--record-id-column", default="source_record_id")
+    clusters.add_argument("--source-column", default="source")
+    clusters.add_argument("--min-sequence-identity", type=float, default=0.4)
+    clusters.add_argument("--coverage", type=float, default=0.8)
+    clusters.add_argument("--threads", type=int, default=1)
+
+    features = subparsers.add_parser(
+        "build-features", help="Build versioned ESM-2, Morgan and molecular-graph features"
+    )
+    features.add_argument("--input", required=True)
+    features.add_argument("--output", required=True)
+    features.add_argument("--target", choices=("km", "kcat"), required=True)
+    features.add_argument("--cache-dir", default="data/cache")
+    features.add_argument("--model-name", default="facebook/esm2_t6_8M_UR50D")
+    features.add_argument(
+        "--model-revision",
+        default="8c576d2aba1b27317e9321c8491d72f00d1b110a",
+    )
+    features.add_argument("--tokenizer-revision")
+    features.add_argument("--device")
+    features.add_argument("--max-residues", type=int, default=1022)
+    features.add_argument("--radius", type=int, default=2)
+    features.add_argument("--n-bits", type=int, default=2048)
+    features.add_argument("--no-chirality", action="store_true")
+    features.add_argument("--batch-size", type=int, default=16)
+    features.add_argument("--group-column", action="append", default=[])
+    features.add_argument("--overwrite", action="store_true")
+
     audit = subparsers.add_parser("audit")
     audit.add_argument("--input", required=True, help="Normalized observations CSV")
     audit.add_argument("--output-dir", required=True)

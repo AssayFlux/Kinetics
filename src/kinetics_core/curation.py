@@ -5,7 +5,6 @@ named columns from unrelated sources have identical scientific meaning.
 """
 from __future__ import annotations
 
-from dataclasses import asdict
 import math
 from typing import Any
 
@@ -106,7 +105,17 @@ def normalize_observation_table(
                 "source_record_id": str(row.get(source_record_id_column, "")),
                 "reason": str(exc),
             })
-    return pd.DataFrame(accepted), pd.DataFrame(rejected)
+    accepted_columns = [
+        *KineticObservation.__dataclass_fields__,
+        "canonical_value",
+        "canonical_unit",
+        "source_row_number",
+    ]
+    rejected_columns = ["source_row_number", "source_record_id", "reason"]
+    return (
+        pd.DataFrame(accepted, columns=accepted_columns),
+        pd.DataFrame(rejected, columns=rejected_columns),
+    )
 
 
 def _optional_text(row: pd.Series, column: str | None) -> str | None:

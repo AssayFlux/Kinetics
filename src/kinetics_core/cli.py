@@ -343,7 +343,10 @@ def main(argv: list[str] | None = None) -> int:
                 "workflow": "murcko_scaffold_annotation",
                 "input": file_record(input_path),
                 "outputs": {
-                    item.name: file_record(item)
+                    item.name: {
+                        "size_bytes": item.stat().st_size,
+                        "sha256": file_record(item)["sha256"],
+                    }
                     for item in (accepted_path, rejected_path)
                 },
                 "input_rows": len(frame),

@@ -126,7 +126,7 @@ def test_multimodal_rejects_target_mismatch(tmp_path):
         fit_multimodal_model(
             train, test, target="km", output_dir=tmp_path / "model",
             group_array="protein_cluster_id", n_splits=2,
-            hidden_layer_sizes=(8,), max_iter=2,
+            hidden_layer_sizes=(8,), max_iter=2, git_revision="a" * 40,
         )
 
 

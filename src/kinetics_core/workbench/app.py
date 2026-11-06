@@ -12,7 +12,7 @@ import threading
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 from urllib.parse import urlsplit
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
@@ -258,10 +258,6 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
     return result
 
 
-def _row_dict(row: Any) -> dict[str, Any]:
-    return dict(row) if row is not None else {}
-
-
 def create_app(
     *,
     workspace_root: str | Path | None = None,
@@ -282,6 +278,9 @@ def create_app(
     store = KineticsSQLite(database)
     store.initialize()
     executor = ThreadPoolExecutor(max_workers=max(1, max_workers))
+    allowed_hosts = {"127.0.0.1", "localhost"}
+    if workspace_root is not None:
+        allowed_hosts.add("testserver")
     process_lock = threading.RLock()
     processes: dict[str, subprocess.Popen[str]] = {}
 
@@ -309,7 +308,7 @@ def create_app(
     @app.middleware("http")
     async def local_origin_guard(request: Any, call_next: Any) -> Any:
         host = (request.url.hostname or "").lower()
-        if host not in {"127.0.0.1", "localhost", "testserver"}:
+        if host not in allowed_hosts:
             return JSONResponse(status_code=400, content={"detail": "Local workbench only"})
         if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
             if request.headers.get("sec-fetch-site") == "cross-site":
@@ -558,7 +557,7 @@ def create_app(
 
     @app.post("/api/v1/projects/{project_id}/uploads", status_code=201)
     async def upload_project_file(
-        project_id: str, file: UploadFile = File(...)
+        project_id: str, file: Annotated[UploadFile, File()]
     ) -> dict[str, Any]:
         project = project_record(project_id)
         root = (workspace / project["root_path"]).resolve()

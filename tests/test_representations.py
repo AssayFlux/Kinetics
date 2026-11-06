@@ -219,3 +219,82 @@ def test_mmseqs_wrapper_rejects_invalid_or_unassigned_sequences(tmp_path, monkey
     invalid.loc[0, "sequence"] = "ACD*"
     with pytest.raises(ValueError, match="Invalid amino-acid"):
         cluster_sequences(invalid, output_dir=tmp_path / "invalid")
+
+
+
+def test_scaffold_cli_writes_accepted_and_rejected_rows(tmp_path):
+    from kinetics_core.cli import main
+
+    source = tmp_path / "observations.csv"
+    pd.DataFrame({
+        "source_record_id": ["001", "002"],
+        "smiles_canonical": ["CCO", "not-a-smiles"],
+    }).to_csv(source, index=False)
+    output = tmp_path / "scaffold-output"
+    assert main([
+        "annotate-scaffolds", "--input", str(source),
+        "--output-dir", str(output),
+    ]) == 0
+    accepted = pd.read_csv(output / "observations_with_scaffolds.csv")
+    rejected = pd.read_csv(output / "scaffold_rejected_rows.csv")
+    assert accepted["source_record_id"].tolist() == ["001"]
+    assert len(rejected) == 1
+    assert (output / "scaffold_manifest.json").is_file()
+
+
+def test_cluster_cli_uses_source_qualified_ids(tmp_path, monkeypatch):
+    from kinetics_core.cli import main
+
+    _fake_mmseqs(tmp_path, monkeypatch)
+    source = tmp_path / "observations.csv"
+    pd.DataFrame({
+        "source": ["a", "b"],
+        "source_record_id": ["same", "same"],
+        "sequence": ["ACDE", "ACDF"],
+    }).to_csv(source, index=False)
+    output = tmp_path / "cluster-output"
+    assert main([
+        "cluster-sequences", "--input", str(source),
+        "--output-dir", str(output),
+    ]) == 0
+    mapping = pd.read_csv(output / "sequence_clusters.csv")
+    assert mapping["source"].tolist() == ["a", "b"]
+
+
+def test_build_features_cli_calls_versioned_builder(tmp_path, monkeypatch):
+    from kinetics_core import features
+    from kinetics_core.cli import main
+
+    calls = {}
+
+    class StubBuilder:
+        def __init__(self, **kwargs):
+            calls["init"] = kwargs
+
+        def transform_frame(self, frame, **kwargs):
+            calls["frame_rows"] = len(frame)
+            calls["transform"] = kwargs
+            output = Path(kwargs["output_path"])
+            output.parent.mkdir(parents=True, exist_ok=True)
+            with output.open("wb") as handle:
+                np.savez_compressed(handle, X=np.ones((1, 2)))
+            Path(str(output) + ".manifest.json").write_text("{}")
+            return output
+
+    monkeypatch.setattr(features, "ObservationFeatureBuilder", StubBuilder)
+    source = tmp_path / "observations.csv"
+    pd.DataFrame({
+        "source_record_id": ["001"],
+        "target": ["km"],
+        "canonical_value": [1e-3],
+        "sequence": ["ACDE"],
+        "smiles": ["CCO"],
+    }).to_csv(source, index=False)
+    output = tmp_path / "features.npz"
+    assert main([
+        "build-features", "--input", str(source), "--output", str(output),
+        "--target", "km", "--group-column", "protein_cluster_id",
+    ]) == 0
+    assert calls["init"]["model_revision"] == DEFAULT_ESM_REVISION
+    assert calls["transform"]["group_columns"] == ("protein_cluster_id",)
+    assert calls["frame_rows"] == 1

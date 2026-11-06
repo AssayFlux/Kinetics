@@ -140,6 +140,10 @@ def test_morgan_fingerprint_preserves_stereochemistry_by_default():
 def test_molecular_graph_preserves_atom_stereochemistry_and_bidirectional_edges():
     left = molecular_graph_features("N[C@@H](C)C(=O)O")
     right = molecular_graph_features("N[C@H](C)C(=O)O")
+    equivalent = molecular_graph_features("O=C(O)[C@H](C)N")
+    assert left["canonical_smiles"] == equivalent["canonical_smiles"]
+    assert np.array_equal(left["atom_features"], equivalent["atom_features"])
+    assert np.array_equal(left["edge_index"], equivalent["edge_index"])
     assert left["atom_features"].shape[1] == 9
     assert left["edge_index"].shape[0] == 2
     assert left["edge_index"].shape[1] == left["bond_features"].shape[0]

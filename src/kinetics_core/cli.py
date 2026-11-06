@@ -93,7 +93,10 @@ def main(argv: list[str] | None = None) -> int:
                 "Output or manifest already exists; pass --overwrite to replace it."
             )
 
-        source_frame = pd.read_csv(input_path)
+        # Preserve opaque identifiers (including leading zeroes) as text.
+        source_frame = pd.read_csv(
+            input_path, dtype={args.source_record_id_column: "string"}
+        )
         records = paired_frame_to_records(
             source_frame,
             source=args.source,

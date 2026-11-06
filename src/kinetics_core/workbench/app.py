@@ -790,7 +790,7 @@ def create_app(
             candidate = (root / artifact["relative_path"]).resolve()
             if candidate.is_file() and candidate.is_relative_to(root):
                 outputs.append(candidate)
-        from ..experiments import build_experiment_manifest
+        from ..experiments import build_experiment_manifest, save_experiment_manifest
         from ..reporting import write_experiment_report
 
         manifest = build_experiment_manifest(
@@ -806,6 +806,8 @@ def create_app(
             ],
         )
         report_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path = report_path.with_suffix(".manifest.json")
+        save_experiment_manifest(manifest, manifest_path)
         write_experiment_report(
             experiment_manifest=manifest,
             metrics=result,
@@ -817,22 +819,38 @@ def create_app(
             ],
             destination=report_path,
         )
-        digest = KineticsSQLite.sha256_file(report_path)
-        relative = report_path.relative_to(root).as_posix()
-        artifact_id = str(uuid.uuid5(uuid.NAMESPACE_URL, f"{project_id}:{relative}:{digest}"))
-        with store.transaction() as connection:
-            connection.execute(
-                """INSERT OR IGNORE INTO workbench_artifacts
-                   (artifact_id, project_id, job_id, relative_path, artifact_type,
-                    checksum_sha256, byte_size, media_type)
-                   VALUES (?, ?, ?, ?, 'experiment-report', ?, ?, 'text/markdown')""",
-                (artifact_id, project_id, job_id, relative, digest, report_path.stat().st_size),
+        with report_path.open("a", encoding="utf-8") as stream:
+            stream.write(
+                "\n## Reproducibility manifest\n\n"
+                f"Machine-readable manifest: `{manifest_path.relative_to(root).as_posix()}`\n"
             )
-        return {
-            "artifact_id": artifact_id,
-            "relative_path": relative,
-            "checksum_sha256": digest,
-        }
+        report_records = []
+        for path, artifact_type, media_type in (
+            (report_path, "experiment-report", "text/markdown"),
+            (manifest_path, "experiment-manifest", "application/json"),
+        ):
+            digest = KineticsSQLite.sha256_file(path)
+            relative = path.relative_to(root).as_posix()
+            artifact_id = str(uuid.uuid5(
+                uuid.NAMESPACE_URL, f"{project_id}:{relative}:{digest}"
+            ))
+            with store.transaction() as connection:
+                connection.execute(
+                    """INSERT OR IGNORE INTO workbench_artifacts
+                       (artifact_id, project_id, job_id, relative_path, artifact_type,
+                        checksum_sha256, byte_size, media_type)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (
+                        artifact_id, project_id, job_id, relative, artifact_type,
+                        digest, path.stat().st_size, media_type,
+                    ),
+                )
+            report_records.append({
+                "artifact_id": artifact_id,
+                "relative_path": relative,
+                "checksum_sha256": digest,
+            })
+        return {"report": report_records[0], "manifest": report_records[1]}
 
     @app.on_event("shutdown")
     def shutdown() -> None:

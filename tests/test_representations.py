@@ -167,7 +167,7 @@ def _fake_mmseqs(tmp_path, monkeypatch, *, omit_last=False):
         " rows = [(ids[0], ids[0])] + ([(ids[0], ids[1])] if len(ids) > 1 else [])\n"
         + (" rows = rows[:1]\n" if omit_last else "")
         + " pathlib.Path(str(prefix) + '_cluster.tsv').write_text(\n"
-        + "  ''.join(f'{a}\t{b}\n' for a, b in rows))\n",
+        + "  ''.join(f'{a}\\t{b}\\n' for a, b in rows))\n",
         encoding="utf-8",
     )
     executable.chmod(0o755)

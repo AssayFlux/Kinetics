@@ -77,7 +77,6 @@ def test_command_builder_maps_repeated_paths_and_boolean_options(tmp_path):
     assert release_args.count("--source-manifest") == 1
     assert "--output-dir" in release_args
 
-    (tmp_path / "features.npz").write_text("fixture", encoding="utf-8")
     feature_args = build_cli_arguments(
         "build-features",
         {

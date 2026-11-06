@@ -48,6 +48,40 @@ def build_parser() -> argparse.ArgumentParser:
     persist.add_argument("--license-id", help="Verified source license identifier")
     persist.add_argument("--citation", help="Dataset citation or DOI")
 
+    release = subparsers.add_parser(
+        "release", help="Create an immutable, license-gated dataset release"
+    )
+    release.add_argument("--observations", required=True)
+    release.add_argument(
+        "--rejected", action="append", required=True,
+        help="Rejection audit CSV; repeat to combine audits",
+    )
+    release.add_argument("--output-dir", required=True)
+    release.add_argument("--dataset-id", required=True)
+    release.add_argument("--dataset-name", required=True)
+    release.add_argument("--source", required=True)
+    release.add_argument("--source-version", required=True)
+    release.add_argument("--license-id", required=True)
+    release.add_argument("--citation", required=True)
+    release.add_argument("--source-url")
+    release.add_argument(
+        "--source-manifest", action="append", default=[],
+        help="Source acquisition/curation manifest; repeat as needed",
+    )
+
+    verify = subparsers.add_parser(
+        "verify-release", help="Verify all dataset release artifact hashes"
+    )
+    verify.add_argument("--release-dir", required=True)
+
+    identities = subparsers.add_parser(
+        "normalize-identities", help="Validate sequences and canonicalize substrate SMILES"
+    )
+    identities.add_argument("--input", required=True)
+    identities.add_argument("--output-dir", required=True)
+    identities.add_argument("--sequence-column", default="sequence")
+    identities.add_argument("--smiles-column", default="smiles")
+
     audit = subparsers.add_parser("audit")
     audit.add_argument("--input", required=True, help="Normalized observations CSV")
     audit.add_argument("--output-dir", required=True)
@@ -159,6 +193,78 @@ def main(argv: list[str] | None = None) -> int:
             dataset_id=args.dataset_id, name=args.name, source=args.source,
             version=args.version, license_id=args.license_id, citation=args.citation,
         )
+    elif args.command == "release":
+        from .release import create_dataset_release
+
+        result = create_dataset_release(
+            args.observations, args.rejected, args.output_dir,
+            dataset_id=args.dataset_id, dataset_name=args.dataset_name,
+            source=args.source, source_version=args.source_version,
+            license_id=args.license_id, citation=args.citation,
+            source_url=args.source_url, source_manifests=args.source_manifest,
+        )
+    elif args.command == "verify-release":
+        from .release import verify_dataset_release
+
+        result = verify_dataset_release(args.release_dir)
+    elif args.command == "normalize-identities":
+        import shutil
+        import tempfile
+        from pathlib import Path
+
+        import pandas as pd
+
+        from .identity import normalize_biomolecular_identities
+        from .provenance import environment_record, file_record, write_json_atomic
+
+        input_path = Path(args.input).resolve()
+        output = Path(args.output_dir).resolve()
+        if not input_path.is_file():
+            raise FileNotFoundError(input_path)
+        if output.exists():
+            raise FileExistsError("Identity output directory exists; choose a new directory")
+        if output == input_path.parent or output in input_path.parents:
+            raise ValueError("Identity output directory must not contain the source file")
+        frame = pd.read_csv(input_path, dtype={"source_record_id": "string"})
+        accepted, rejected = normalize_biomolecular_identities(
+            frame, sequence_column=args.sequence_column, smiles_column=args.smiles_column
+        )
+        output.parent.mkdir(parents=True, exist_ok=True)
+        staging = Path(tempfile.mkdtemp(prefix=f".{output.name}.staging-", dir=output.parent))
+        try:
+            accepted_path = staging / "observations_with_identities.csv"
+            rejected_path = staging / "identity_rejected_rows.csv"
+            accepted.to_csv(accepted_path, index=False)
+            rejected.to_csv(rejected_path, index=False)
+            manifest = {
+                "workflow": "biomolecular_identity_normalization",
+                "input": file_record(input_path),
+                "outputs": {
+                    path.name: {
+                        "sha256": file_record(path)["sha256"],
+                        "size_bytes": path.stat().st_size,
+                    }
+                    for path in (accepted_path, rejected_path)
+                },
+                "input_rows": int(len(frame)),
+                "accepted_rows": int(len(accepted)),
+                "rejected_rows": int(len(rejected)),
+                "identity_policy": (
+                    "Sequence and stereochemistry-preserving canonical SMILES content hashes "
+                    "are internal identities, not external database accessions."
+                ),
+                "environment": environment_record(),
+            }
+            write_json_atomic(manifest, staging / "identity_manifest.json")
+            staging.rename(output)
+        except Exception:
+            shutil.rmtree(staging, ignore_errors=True)
+            raise
+        result = {
+            "output_dir": str(output),
+            "accepted_rows": int(len(accepted)),
+            "rejected_rows": int(len(rejected)),
+        }
     elif args.command == "partition":
         from .partition import prepare_target_partitions
 

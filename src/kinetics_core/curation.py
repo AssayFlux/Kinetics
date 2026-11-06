@@ -5,7 +5,6 @@ named columns from unrelated sources have identical scientific meaning.
 """
 from __future__ import annotations
 
-from dataclasses import asdict
 import math
 from typing import Any
 
@@ -33,6 +32,8 @@ def normalize_observation_table(
     doi_column: str | None = None,
     source_version: str | None = None,
     license_id: str | None = None,
+    measurement_kind: str = "individual_measurement",
+    aggregation_method: str | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Return accepted canonical observations and a row-level rejection audit.
 
@@ -92,17 +93,33 @@ def normalize_observation_table(
                 publication_doi=_optional_text(row, doi_column),
                 source_version=source_version,
                 license_id=license_id,
+                measurement_kind=measurement_kind,
+                aggregation_method=aggregation_method,
             )
             item = observation.as_dict()
-            item["source_row_number"] = int(row_number) if isinstance(row_number, int) else str(row_number)
+            item["source_row_number"] = (
+                int(row_number) if isinstance(row_number, int) else str(row_number)
+            )
             accepted.append(item)
         except (TypeError, ValueError, OverflowError) as exc:
             rejected.append({
-                "source_row_number": int(row_number) if isinstance(row_number, int) else str(row_number),
+                "source_row_number": (
+                    int(row_number) if isinstance(row_number, int) else str(row_number)
+                ),
                 "source_record_id": str(row.get(source_record_id_column, "")),
                 "reason": str(exc),
             })
-    return pd.DataFrame(accepted), pd.DataFrame(rejected)
+    accepted_columns = [
+        *KineticObservation.__dataclass_fields__,
+        "canonical_value",
+        "canonical_unit",
+        "source_row_number",
+    ]
+    rejected_columns = ["source_row_number", "source_record_id", "reason"]
+    return (
+        pd.DataFrame(accepted, columns=accepted_columns),
+        pd.DataFrame(rejected, columns=rejected_columns),
+    )
 
 
 def _optional_text(row: pd.Series, column: str | None) -> str | None:
@@ -115,7 +132,10 @@ def _optional_text(row: pd.Series, column: str | None) -> str | None:
 def _optional_float(row: pd.Series, column: str | None) -> float | None:
     if column is None or pd.isna(row[column]):
         return None
-    value = float(row[column])
+    try:
+        value = float(row[column])
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{column} is not numeric") from exc
     if not math.isfinite(value):
         raise ValueError(f"{column} is non-finite")
     return value

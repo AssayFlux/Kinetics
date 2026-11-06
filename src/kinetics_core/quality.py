@@ -84,7 +84,10 @@ def audit_observations(
         ) if not audit.empty else 0,
         "optional_metadata_missing_fraction": {
             column: float(result[column].isna().mean())
-            for column in ("sequence", "smiles", "protein_accession", "organism", "ph", "temperature_k", "assay_id", "publication_doi")
+            for column in (
+                "sequence", "smiles", "protein_accession", "organism", "ph",
+                "temperature_k", "assay_id", "publication_doi",
+            )
             if column in result
         },
         "duplicate_status_counts": {str(key): int(value) for key, value in counts.items()},
@@ -94,3 +97,101 @@ def audit_observations(
         ),
     }
     return result, audit, report
+
+
+
+def review_potential_duplicate_observations(
+    frame: pd.DataFrame,
+    *,
+    log10_precision: int = 8,
+) -> pd.DataFrame:
+    """Report cross-record exact-context candidates without removing or merging rows.
+
+    Candidate matching requires at least one protein, substrate, accession, or DOI
+    identity. Source is deliberately excluded so cross-source matches can be reviewed.
+    """
+    required = {"target", "canonical_value", "source_record_id"}
+    missing = required - set(frame.columns)
+    if missing:
+        raise ValueError(f"Observation table is missing required columns: {sorted(missing)}")
+    if log10_precision < 0:
+        raise ValueError("log10_precision must be non-negative")
+    candidates = frame.copy().reset_index(drop=True)
+    identity_columns = []
+    for alternatives in (
+        ("sequence_normalized", "sequence", "protein_accession"),
+        ("smiles_canonical", "smiles"),
+        ("publication_doi",),
+    ):
+        selected = next(
+            (column for column in alternatives if column in candidates.columns), None
+        )
+        if selected is not None:
+            identity_columns.append(selected)
+    if not identity_columns:
+        return pd.DataFrame()
+    rows = []
+    for index, row in candidates.iterrows():
+        identities = {
+            column: _identity_text(row[column])
+            for column in identity_columns
+        }
+        if not any(identities.values()):
+            continue
+        value = float(row["canonical_value"])
+        if not np.isfinite(value) or value <= 0:
+            continue
+        context = {
+            "target": str(row["target"]),
+            "measurement_kind": str(row.get("measurement_kind", "individual_measurement")),
+            "aggregation_method": _identity_text(row.get("aggregation_method")),
+            "log10_value": round(float(np.log10(value)), log10_precision),
+            "ph": _rounded_optional(row.get("ph"), 3),
+            "temperature_k": _rounded_optional(row.get("temperature_k"), 2),
+            "organism": _identity_text(row.get("organism")),
+            **identities,
+        }
+        fingerprint = hashlib.sha256(
+            json.dumps(context, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        rows.append({
+            "fingerprint": fingerprint,
+            "source_record_id": str(row["source_record_id"]),
+            "source": str(row.get("source", "")),
+            "target": str(row["target"]),
+            "canonical_value": value,
+            "row_index": index,
+        })
+    if not rows:
+        return pd.DataFrame()
+    indexed = pd.DataFrame(rows)
+    groups = []
+    for fingerprint, group in indexed.groupby("fingerprint", sort=False):
+        if len(group) < 2:
+            continue
+        groups.append({
+            "candidate_group_id": fingerprint,
+            "n_rows": int(len(group)),
+            "sources": json.dumps(sorted(set(group["source"]))),
+            "source_record_ids": json.dumps(group["source_record_id"].tolist()),
+            "targets": json.dumps(group["target"].tolist()),
+            "canonical_values": json.dumps(group["canonical_value"].tolist()),
+            "row_indices": json.dumps(group["row_index"].tolist()),
+            "review_required": True,
+            "policy": "Candidate only; retain all observations pending curator review.",
+        })
+    return pd.DataFrame(groups)
+
+
+def _identity_text(value: Any) -> str | None:
+    if value is None or pd.isna(value):
+        return None
+    text = str(value).strip()
+    return text or None
+
+
+def _rounded_optional(value: Any, digits: int) -> float | None:
+    if value is None or pd.isna(value):
+        return None
+    numeric = float(value)
+    return round(numeric, digits) if np.isfinite(numeric) else None

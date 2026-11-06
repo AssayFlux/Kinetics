@@ -8,7 +8,7 @@ Kinetics will use public datasets first. Raw downloads are intentionally kept ou
 - Dataset card: https://huggingface.co/datasets/RosettaCommons/CatPred-DB
 - Published framework: CatPred, Nature Communications (2025), https://doi.org/10.1038/s41467-025-57215-9
 - Public processed tables include separate Km and kcat datasets, plus random and sequence-clustered splits.
-- The Hugging Face dataset card identifies the dataset as CC BY 4.0. Retain attribution and verify the source repository's current data terms before redistribution.
+- The official Hugging Face dataset card declares CC-BY-4.0 for the dataset files. The journal article separately carries a CC-BY-NC-ND rights statement; do not confuse the article's license with the dataset card's data license. Inspect the exact pinned dataset revision and underlying BRENDA/SABIO source terms before redistribution.
 - Dataset card reports 41,174 Km records and 23,197 kcat records. These are separate parameter-specific datasets; do not assume that a Km record and a kcat record are paired observations.
 
 For the first reproducible baseline, download the processed Km and kcat tables and their published sequence-cluster test splits. Use the published split files only for benchmark comparison; create separate, documented training/validation partitions for model development. Avoid treating random-split scores as evidence of generalization.
@@ -66,11 +66,17 @@ No dataset is committed to this repository, and no model has been trained from t
 
 ## Canonical normalization adapter
 
-The research package provides a target-specific adapter. First inspect the upstream CSV columns using the existing inspection script. Then map the exact source identifier and measurement columns explicitly:
+The adapter follows the documented CatPred-DB fields where available: `sequence`, `uniprot`, `reactant_smiles`, `value`, `temperature`, `ph`, `ec`, `taxonomy_id`, `sequence_source`, and published split/cluster columns. The published table schema does not define a native per-row source record ID, DOI, or assay ID. If no source ID column is documented for the pinned snapshot, the adapter generates a deterministic file-hash/target/row locator and explicitly labels it as an import locator, not an upstream experimental record ID.
+
+The dataset card documents `temperature` in degrees Celsius; the adapter converts it to kelvin. The CatPred paper also states that the published `kcat` value is the maximum across source measurements for an enzyme-sequence/substrate pair, while `Km` is a geometric mean. These are therefore source-aggregated benchmark values, not individual assay-level observations. The canonical record now labels the measurement kind and aggregation method explicitly; underlying replicate values and full assay provenance are not reconstructed from the aggregate. The unit of raw `value` must be checked for the exact dataset revision and supplied explicitly. The adapter preserves `log10_value` as source metadata but normalizes raw `value`; it does not assume the log-transformed value is a physical measurement. Ki is excluded from Km/kcat imports.
+
+Example (replace unit, revision and license with verified metadata for the exact snapshot):
 
 ```bash
-python -m kinetics_core.catpred --input data/public/catpred-db/km_processed.csv --target km --record-id-column SOURCE_ID --value-column KM_VALUE --unit mM --sequence-column SEQUENCE --ph-column PH --temperature-k-column TEMPERATURE_K \
-  --assay-id-column ASSAY_ID --doi-column DOI --output-dir data/processed/catpred-db
+python -m kinetics_core.catpred \
+  --input data/public/catpred-db/km_train.csv --target km --unit VERIFIED_UNIT \
+  --source-version REVISION_SHA --license-id VERIFIED_LICENSE \
+  --output-dir data/processed/catpred-db/km
 ```
 
-Replace the example column names and unit with the exact fields observed in the downloaded file. Do not assume the example names exist upstream. Run the adapter separately for kcat with its own source file and explicit unit. The adapter writes accepted observations, rejected rows with reasons, and a JSON manifest containing the source-file hash and mapping configuration. It does not pair Km and kcat records.
+Run kcat separately with its own source table and independently verified unit. The adapter retains source accessions, sequences, substrate SMILES, EC/taxonomy annotations, sequence source, and published split/cluster labels. Missing DOI, assay IDs, or organism names remain missing. Do not treat published split labels as newly generated clusters or merge published test partitions into training.

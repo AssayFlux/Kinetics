@@ -270,3 +270,6 @@ kinetics-research build-features \
 ```
 
 Repeat partitioning and feature generation independently for kcat. Use the same frozen split manifest for all model comparisons; do not regenerate or tune partitions based on model results. The feature CLI requires the baseline extra (PyTorch, Transformers and RDKit); sequence clustering additionally requires a separately installed MMseqs2 executable. The command records the exact model revision and all representation parameters in the feature manifest.
+
+
+See [Kinetics-Multi model workflow](KINETICS_MULTI.md) for the feature-fusion MLP training and inference commands, model artifacts, validation boundaries and security notes.

@@ -54,7 +54,7 @@ def test_sqlite_store_versions_schema_and_initialization_is_idempotent(tmp_path)
     # Reinitialization must not destroy data or change the schema version.
     store.initialize()
     with store.session() as connection:
-        assert connection.execute("PRAGMA user_version").fetchone()[0] == 1
+        assert connection.execute("PRAGMA user_version").fetchone()[0] == 2
     assert store.fetch_all(
         "SELECT dataset_id, name FROM datasets WHERE dataset_id = ?", ("preserved",)
     ) == [{"dataset_id": "preserved", "name": "Preserve me"}]
@@ -137,4 +137,4 @@ def test_sqlite_store_upgrades_pre_versioned_database_without_losing_data(tmp_pa
         "source": "legacy-import",
     }]
     with store.session() as connection:
-        assert connection.execute("PRAGMA user_version").fetchone()[0] == 1
+        assert connection.execute("PRAGMA user_version").fetchone()[0] == 2

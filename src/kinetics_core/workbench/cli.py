@@ -25,7 +25,6 @@ def main(argv: list[str] | None = None) -> int:
     if args.workspace:
         os.environ["KINETICS_WORKSPACE"] = args.workspace
     if args.database:
-        import os
         os.environ["KINETICS_DATABASE"] = args.database
     from .app import create_app
 

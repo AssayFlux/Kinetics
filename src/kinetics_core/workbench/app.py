@@ -443,12 +443,12 @@ def create_app(
                     processes[job_id] = process
                 try:
                     process.wait(timeout=_JOB_TIMEOUT_SECONDS)
-                except subprocess.TimeoutExpired:
+                except subprocess.TimeoutExpired as exc:
                     process.kill()
                     process.wait()
                     raise TimeoutError(
                         f"Research job exceeded {_JOB_TIMEOUT_SECONDS} seconds"
-                    )
+                    ) from exc
                 finally:
                     with process_lock:
                         processes.pop(job_id, None)

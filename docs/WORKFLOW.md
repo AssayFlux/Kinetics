@@ -22,7 +22,8 @@ The documented CatPred-DB schema does not define a native source row identifier,
 ```bash
 python -m kinetics_core.catpred \
   --input data/public/catpred-db/km/km_train.csv --target km \
-  --unit mM --source-version 44409e6 --processing-revision 931583821ff875e873002730fbbdf1047acfde77 \\n  --license-id CC-BY-4.0 \
+  --unit mM --source-version 44409e6 --processing-revision 931583821ff875e873002730fbbdf1047acfde77 \
+  --license-id CC-BY-4.0 \
   --output-dir data/processed/catpred-db/km
 ```
 

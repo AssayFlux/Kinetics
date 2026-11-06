@@ -293,6 +293,7 @@ def test_build_features_cli_calls_versioned_builder(tmp_path, monkeypatch):
         "canonical_value": [1e-3],
         "sequence": ["ACDE"],
         "smiles": ["CCO"],
+        "protein_cluster_id": ["p1"],
     }).to_csv(source, index=False)
     output = tmp_path / "features.npz"
     assert main([

@@ -15,7 +15,7 @@ Review the current dataset card and upstream repository terms. Keep raw files un
 
 ## 2. Normalize each target independently
 
-Use the exact source record ID and measurement column names returned by the inspection step. If all rows use one explicit unit, pass --unit. If units vary by row, pass --unit-column instead.
+The documented CatPred-DB schema does not define a native source row identifier, DOI, or assay ID. If no native ID exists in the pinned snapshot, the adapter creates a deterministic file-hash/target/row locator and labels it as an import locator, not an upstream experimental ID. It maps published fields by default (`value`, `sequence`, `reactant_smiles`, `uniprot`, `ph`, and Celsius `temperature`); Celsius is converted to kelvin. Verify the raw `value` unit for the exact snapshot and supply it explicitly using `--unit` or `--unit-column`. No unit is guessed.
 
 ```bash
 python -m kinetics_core.catpred --input data/public/catpred-db/km_processed.csv --target km --record-id-column SOURCE_ID --value-column KM_VALUE --unit mM --sequence-column SEQUENCE --smiles-column SMILES \
@@ -24,7 +24,7 @@ python -m kinetics_core.catpred --input data/public/catpred-db/km_processed.csv 
   --output-dir data/processed/catpred-db
 ```
 
-The column names and unit above are examples only; replace them with the actual upstream schema. Optional --ph-column, --temperature-k-column, --assay-id-column, and --doi-column mappings preserve verified assay and publication context. The source record ID column is read as text so leading zeroes remain intact. Repeat for kcat with the kcat source table and its own unit mapping. Do not join the two tables unless the upstream source proves the records represent the same experiment and assay context.
+Repeat for kcat with its own source file and independently verified unit. Supply `--record-id-column` only if the exact source snapshot documents a native stable row identifier. DOI and assay IDs are not fabricated. Raw inputs remain unchanged; use distinct output directories for Km and kcat.
 
 ### Legacy paired-row CSV migration (only when the source really contains paired measurements)
 
@@ -45,7 +45,32 @@ kinetics-research import-legacy \
 Replace the example source, ID column, units, version, and license with verified metadata. The adapter preserves Km and kcat independently and will reject missing source IDs or invalid measurements. It does not create synthetic record IDs. If your source stores Km and kcat in separate tables, continue to normalize them independently in Step 2 instead.
 
 
-## 2b. Audit and persist a canonical snapshot
+## 2b. Normalize identities and review duplicates
+
+Run `normalize_biomolecular_identities` on the canonical table to validate sequence symbols, canonicalize SMILES with RDKit (preserving stereochemistry), and create deterministic content hashes. These hashes are internal content identities, not UniProt or PubChem accessions. Invalid supplied identities are returned in a row-level rejection table; missing identities remain missing. Keep source accession and raw source strings.
+
+Run `kinetics-research audit`. Exact repeats and conflicting duplicate source IDs are annotated and retained; no averaging or silent overwrite occurs. Review conflict groups against assay context before release. Similar enzyme/substrate pairs across distinct source records are not automatically duplicate experiments.
+
+## 2c. Create and verify an immutable release
+
+After curator review and verification of the exact source version, license, and citation, create a release. This command requires explicit license and citation metadata, refuses to overwrite an existing release directory, records SHA-256 hashes for each release artifact, and writes a data card and quality report.
+
+```bash
+kinetics-research release \
+  --observations data/processed/catpred-db/km/km_observations.csv \
+  --rejected data/processed/catpred-db/km/km_rejected_rows.csv \
+  --output-dir data/releases/catpred-km-v1 \
+  --dataset-id catpred-km-v1 --dataset-name "CatPred Km" \
+  --source CatPred-DB --source-version REVISION_SHA \
+  --license-id VERIFIED_LICENSE \
+  --citation "Boorla and Maranas, Nat Commun (2025), doi:10.1038/s41467-025-57215-9"
+
+kinetics-research verify-release --release-dir data/releases/catpred-km-v1
+```
+
+Do not treat a release as license-cleared unless the operator has inspected the exact source revision's terms. A generated row locator is not a source-level experimental citation.
+
+## 2d. Audit and persist a canonical snapshot
 
 After normalization or the legacy migration above, audit the canonical table and persist the audited rows to SQLite. Assign a new dataset ID to each immutable source snapshot. The persistence command rechecks the canonical schema, positive finite values, duplicate status, and target-specific canonical units before writing.
 

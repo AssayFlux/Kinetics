@@ -70,8 +70,10 @@ def _project_path(root: Path, value: Any, *, must_exist: bool, kind: str) -> Pat
     resolved = (root / candidate).resolve()
     if not resolved.is_relative_to(root.resolve()):
         raise ValueError(f"{kind} resolves outside the project workspace")
-    if must_exist and not resolved.is_file():
-        raise FileNotFoundError(f"{kind} does not exist as a file: {value}")
+    if must_exist:
+        exists = resolved.is_dir() if kind == "output_dir" else resolved.is_file()
+        if not exists:
+            raise FileNotFoundError(f"{kind} does not exist: {value}")
     if not must_exist and resolved.exists() and kind in {"output", "output_dir"}:
         raise FileExistsError(f"{kind} already exists: {value}")
     return resolved
@@ -277,8 +279,9 @@ def create_app(
         if not candidate:
             return []
         try:
+            output_kind = "output_dir" if parameters.get("output_dir") else "output"
             output_path = _project_path(
-                root, candidate, must_exist=True, kind="output"
+                root, candidate, must_exist=True, kind=output_kind
             )
         except (ValueError, FileNotFoundError):
             return []

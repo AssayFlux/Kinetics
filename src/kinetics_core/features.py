@@ -437,6 +437,8 @@ class ObservationFeatureBuilder:
             or selected["source_record_id"].astype(str).str.strip().eq("").any()
         ):
             raise ValueError("source_record_id must be non-empty for every feature row")
+        if "source" in selected.columns and selected["source"].isna().any():
+            raise ValueError("source labels must not be missing in feature rows")
 
         reserved_names = {
             "X", "y_log10", "y_raw", "source_record_ids", "sequences",

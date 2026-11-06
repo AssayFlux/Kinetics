@@ -113,7 +113,7 @@ Step 3's representation software is implemented and CI-verified, but execution-l
 Step 4 is being implemented as a software engine, not validated as a scientific predictor. Do not claim model superiority, external validity or calibrated uncertainty until the real-data validation gates are passed. Joblib bundles are pickle-based and must only be loaded from trusted sources.
 
 
-## Step 5 — Scientific validation and benchmarking (IN PROGRESS — PROTOCOL AND BOOTSTRAP REPORTING IMPLEMENTED)
+## Step 5 — Scientific validation and benchmarking (IN PROGRESS — PROTOCOL, ROW/CLUSTER BOOTSTRAP REPORTING IMPLEMENTED)
 
 **Purpose:** Test generalization beyond familiar proteins, chemicals, and assay settings.
 
@@ -121,7 +121,7 @@ Step 4 is being implemented as a software engine, not validated as a scientific 
 
 **Acceptance:** Frozen split assignments and dataset versions; test sets never used for selection; versioned evaluation code; uncertainty claims supported by empirical coverage evidence; reports disclose sample sizes, missingness, subgroup limitations, and confidence intervals; independent reproduction of reports.
 
-**Initial software evidence:** Pre-execution protocol in `docs/STEP5_VALIDATION_PROTOCOL.md`; deterministic paired-row percentile-bootstrap intervals for held-out log10 MAE/RMSE are emitted by the baseline comparison workflow; tests cover reproducibility and input validation. This is descriptive sample-level uncertainty, not cluster-aware inference or calibrated predictive uncertainty. Real-data reports, matched model ablations, external evaluations and independent reproduction remain outstanding because the reviewed Step 2 dataset release and Step 3 execution evidence are not yet available.
+**Initial software evidence:** Pre-execution protocol in `docs/STEP5_VALIDATION_PROTOCOL.md`; deterministic paired-row and (when group arrays are provided) paired cluster-bootstrap intervals for held-out log10 MAE/RMSE are emitted by the baseline comparison workflow. Tests cover reproducibility and invalid input. These are descriptive intervals and do not establish calibrated predictive uncertainty. Real-data reports, matched model ablations, external evaluations and independent reproduction remain outstanding because the reviewed Step 2 dataset release and Step 3 execution evidence are not yet available.
 
 **Evidence required for completion:** Benchmark cards, frozen split manifests, real evaluation reports, ablations, contamination/leakage audits, cluster-aware or independent uncertainty evidence, and independent reproduction run.
 

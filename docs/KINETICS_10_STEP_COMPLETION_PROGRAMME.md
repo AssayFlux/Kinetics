@@ -45,7 +45,7 @@ Every scientific result must be traceable to versioned inputs, code, configurati
 
 **Acceptance:** Every accepted observation traces to a source row and immutable source version; rejected rows have machine-readable reasons; target-specific unit conversions are tested and source values retained; duplicate/conflict candidates remain visible; release manifests and all artifacts verify; license and source-quality caveats are visible before export.
 
-**Evidence:** CatPred schema/adapter tests, aggregate target and clipping semantics tests, source revision and unit-warning assertions, identity CLI tests, duplicate-candidate tests, immutable release/checksum tests, and Python 3.10–3.12 CI. See `DATASETS.md`, `docs/WORKFLOW.md`, and `docs/IMPLEMENTATION_STATUS.md`.
+**Evidence:** CatPred schema/adapter tests, aggregate target and clipping semantics tests, source revision and unit-warning assertions, identity CLI tests, duplicate-candidate tests, immutable release/checksum tests, and [CI run #42178564530](https://github.com/AssayFlux/Kinetics/actions/runs/42178564530), with 48 tests passing on each of Python 3.10, 3.11, and 3.12 plus compilation and Ruff checks. See `DATASETS.md`, `docs/WORKFLOW.md`, and `docs/IMPLEMENTATION_STATUS.md`.
 
 **Remaining blockers before Step 2 can be declared complete:**
 - No real public CatPred snapshot has yet been downloaded, normalized, and released in this repository; current tests use fixtures.

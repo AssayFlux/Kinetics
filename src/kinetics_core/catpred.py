@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import pathlib
+import re
 import shutil
 import tempfile
 
@@ -47,8 +48,12 @@ def normalize_catpred_csv(
 ) -> tuple[pathlib.Path, pathlib.Path, pathlib.Path]:
     if target not in ("km", "kcat"):
         raise ValueError("CatPred-DB adapter supports only km and kcat; Ki is not Km or kcat")
-    if not source_version.strip() or not license_id.strip():
-        raise ValueError("CatPred imports require non-empty source_version and license_id")
+    if not re.fullmatch(r"[0-9a-fA-F]{7,40}", source_version):
+        raise ValueError("source_version must be the pinned Hugging Face commit SHA")
+    if not re.fullmatch(r"[0-9a-fA-F]{7,40}", processing_revision):
+        raise ValueError("processing_revision must be the pinned GitHub commit SHA")
+    if not license_id.strip():
+        raise ValueError("CatPred imports require a non-empty license_id")
     source_path = pathlib.Path(input_csv)
     if not source_path.is_file():
         raise FileNotFoundError(source_path)

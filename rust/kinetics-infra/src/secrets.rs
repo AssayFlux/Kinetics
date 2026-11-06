@@ -47,6 +47,9 @@ mod tests {
 
     #[test]
     fn blank_environment_variable_names_are_rejected() {
-        assert_eq!(SecretString::from_env("  ").err(), Some(SecretError::InvalidName));
+        assert_eq!(
+            SecretString::from_env("  ").err(),
+            Some(SecretError::InvalidName)
+        );
     }
 }

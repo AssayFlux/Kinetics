@@ -193,6 +193,7 @@ class ObservationFeatureBuilder:
         model_revision: str = DEFAULT_ESM_REVISION,
         tokenizer_revision: str | None = None,
         include_chirality: bool = True,
+        max_residues: int = 1022,
         encoder: ESM2Encoder | None = None,
     ):
         if radius < 0 or n_bits < 1:
@@ -202,6 +203,7 @@ class ObservationFeatureBuilder:
             device=device,
             model_revision=model_revision,
             tokenizer_revision=tokenizer_revision,
+            max_residues=max_residues,
         )
         self.cache_dir = Path(cache_dir) if cache_dir else None
         self.radius, self.n_bits = radius, n_bits

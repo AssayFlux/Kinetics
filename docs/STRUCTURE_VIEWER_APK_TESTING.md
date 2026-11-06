@@ -7,7 +7,11 @@
 - Polymer residue contact search using Biopython NeighborSearch and an explicit heavy-atom distance cutoff.
 - C-alpha structural superposition/RMSD using explicit author-numbered residue pairs and Biopython Superimposer.
 - Protein sequence alignment using Bio.Align.PairwiseAligner and BLOSUM62.
-- A mobile-responsive 3Dmol.js viewer served at `/structure-viewer` and linked from the workbench home page.\n- Loopback workbench APIs for bounded structure summary/SASA/contact analysis (`POST /api/v1/structures/analyze`), explicit-pair C-alpha superposition (`POST /api/v1/structures/superimpose`), and sequence alignment (`POST /api/v1/sequences/align`).
+- Alignment-derived reference-sequence-to-chain residue mapping, with mismatches, unmapped residues and alignment ambiguity explicitly reported.
+- Ligand-to-protein geometric contact analysis.
+- Conservative N-H...O hydrogen-bond detection only when explicit hydrogen coordinates are present; no hydrogen placement or protonation inference.
+- A mobile-responsive 3Dmol.js viewer served at `/structure-viewer` and linked from the workbench home page.
+- Loopback workbench APIs for bounded structure summary/SASA/contact/ligand-contact/explicit-hydrogen-bond analysis (`POST /api/v1/structures/analyze`), alignment-derived sequence mapping (`POST /api/v1/structures/map-sequence`), explicit-pair C-alpha superposition (`POST /api/v1/structures/superimpose`), and sequence alignment (`POST /api/v1/sequences/align`).
 - Viewer controls for cartoon/ribbon, stick, sphere, line and cross representations; optional molecular surface; ligand/non-polymer visibility; residue highlighting; geometric residue contacts; and PNG export.
 
 These functions are computational tools, not independent biological validation. Contact proximity is not proof of binding or functional interaction. SASA depends on the selected model and calculation settings. RMSD is meaningful only when the supplied residue correspondence is valid. No missing residues are reconstructed and no sequence alignment is silently treated as an authoritative structure mapping.
@@ -63,8 +67,8 @@ The APK's WebView can then open `http://127.0.0.1:8765/structure-viewer` on the 
 
 - The 3D viewer is browser/WebView-based and requires the upstream 3Dmol.js CDN at present; offline bundling and APK integration testing are still outstanding.
 - The current browser contact calculation is exploratory and quadratic in atom count. It should be moved to a bounded worker/server-side spatial index for large structures.
-- The viewer has no verified automatic sequence-to-structure alignment workflow yet. Residue highlighting is based on structure-file chain and author residue identifiers.
-- Ligand display is present, but automated hydrogen-bond, salt-bridge, covalent-link and binding-site interpretation is not claimed.
+- Sequence-to-structure mapping now uses Biopython PairwiseAligner and is surfaced in the viewer. It remains an alignment-derived mapping that requires researcher review, especially for low-identity, repetitive or ambiguous chains.
+- Ligand display and ligand-to-protein contact reporting are implemented. Hydrogen bonds are reported and overlaid only when explicit N-H...O coordinates satisfy distance/angle criteria; salt bridges, covalent-link interpretation and binding-site claims are not included.
 - Structural superposition requires explicit residue pairs; automated alignment, insertion-code-aware correspondence, alternate-conformation policy and independent reference validation remain follow-up work.
 - No PyMOL renderer, molecular dynamics, docking, or de novo structure prediction is included in this increment.
 - APK compatibility, offline operation, accessibility, large-structure performance and scientific acceptance must be tested on actual target devices before release.

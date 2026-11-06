@@ -287,7 +287,7 @@ def test_structure_analysis_api_returns_provenance_and_features(tmp_path):
         return (
             f"ATOM  {serial:5d} {name:>4s} {residue:>3s} A{number:4d}    "
             f"{x:8.3f}{y:8.3f}{z:8.3f}{1.0:6.2f}{20.0:6.2f}"
-            f"          {element:>2s}\\n"
+            f"          {element:>2s}\n"
         )
     lines = []
     serial = 1
@@ -299,7 +299,7 @@ def test_structure_analysis_api_returns_provenance_and_features(tmp_path):
         for name, dx, element in [("N", -0.8, "N"), ("CA", 0.0, "C"), ("C", 0.8, "C")]:
             lines.append(atom(serial, name, residue, number, x + dx, y, z, element))
             serial += 1
-    pdb = ("".join(lines) + "TER\\nEND\\n").encode("ascii")
+    pdb = ("".join(lines) + "TER\nEND\n").encode("ascii")
     with TestClient(app) as client:
         response = client.post(
             "/api/v1/structures/analyze",
@@ -310,6 +310,8 @@ def test_structure_analysis_api_returns_provenance_and_features(tmp_path):
         assert len(result["summary"]["source_sha256"]) == 64
         assert result["sasa"]["feature"] == "residue_sasa"
         assert result["contacts"]["feature"] == "residue_contacts"
+        assert result["ligand_contacts"]["feature"] == "ligand_residue_contacts"
+        assert result["hydrogen_bonds"]["status"] == "not_computed_no_explicit_hydrogens"
         assert len(result["sasa"]["residues"]) == 3
 
 
@@ -358,13 +360,13 @@ def test_structure_superposition_api_requires_explicit_residue_pairs(tmp_path):
         return (
             f"ATOM  {serial:5d} {'CA':>4s} {residue:>3s} A{number:4d}    "
             f"{x:8.3f}{y:8.3f}{z:8.3f}{1.0:6.2f}{20.0:6.2f}"
-            "           C\\n"
+            "           C\n"
         )
     pdb = (
         atom(1, "ALA", 1, 0, 0, 0)
         + atom(2, "CYS", 2, 4, 0, 0)
         + atom(3, "ASP", 3, 0, 4, 0)
-        + "TER\\nEND\\n"
+        + "TER\nEND\n"
     ).encode("ascii")
     with TestClient(app) as client:
         response = client.post(
@@ -378,3 +380,35 @@ def test_structure_superposition_api_requires_explicit_residue_pairs(tmp_path):
         assert response.status_code == 200, response.text
         assert response.json()["rmsd_angstrom"] == pytest.approx(0.0, abs=1e-6)
         assert response.json()["atom_count"] == 3
+
+
+def test_sequence_to_structure_mapping_api_returns_author_residue_ids(tmp_path):
+    pytest.importorskip("Bio")
+    TestClient, _, create_app = workbench_imports()
+    app = create_app(
+        workspace_root=tmp_path / "workspace",
+        database_path=tmp_path / "metadata.sqlite3",
+    )
+    lines = []
+    for serial, residue, number, x, y in [
+        (1, "ALA", 1, 0.0, 0.0),
+        (2, "CYS", 2, 4.0, 0.0),
+        (3, "ASP", 3, 0.0, 4.0),
+    ]:
+        lines.append(
+            f"ATOM  {serial:5d} {'CA':>4s} {residue:>3s} A{number:4d}    "
+            f"{x:8.3f}{y:8.3f}{0.0:8.3f}{1.0:6.2f}{20.0:6.2f}"
+            "           C\n"
+        )
+    pdb = ("".join(lines) + "TER\nEND\n").encode("ascii")
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/structures/map-sequence",
+            data={"reference_sequence": "ACD", "chain_id": "A"},
+            files={"file": ("fixture.pdb", pdb, "chemical/x-pdb")},
+        )
+        assert response.status_code == 200, response.text
+        result = response.json()
+        assert result["mapped_residue_count"] == 3
+        assert result["mismatch_count"] == 0
+        assert [item["structure_residue_number"] for item in result["mapping"]] == [1, 2, 3]

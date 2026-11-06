@@ -78,3 +78,6 @@ The following capabilities are now implemented in `kinetics_core.biopython_tools
 The browser-based 3Dmol.js viewer is served from the workbench at `/structure-viewer`. It supports PDB/mmCIF file selection, multiple molecular representations, surface visibility, ligand visibility, residue highlighting, geometric contacts and PNG export. See `docs/STRUCTURE_VIEWER_APK_TESTING.md` for installation and Android USB testing instructions.
 
 This increment does not mean every BioPython module in the table above is integrated. BLAST/Entrez adapters, multiple-sequence alignment workflows, phylogenetics, DSSP, automated residue correspondence, and external-tool orchestration still need separate implementation and validation.
+
+
+The structural-analysis module `kinetics_core.biopython_tools` additionally provides alignment-derived sequence-to-chain mapping, ligand-to-protein geometric contacts, and conservative N-H...O hydrogen-bond detection. Hydrogen bonds are reported only when explicit hydrogen coordinates exist and satisfy distance/angle criteria; no hydrogens or protonation states are inferred. The local workbench exposes these through its structure-analysis and mapping APIs. See `docs/STRUCTURE_VIEWER_APK_TESTING.md` for the exact scope and limitations.

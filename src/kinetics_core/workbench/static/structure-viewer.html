@@ -38,19 +38,28 @@ small{color:GrayText}.notice{font-size:.85rem;color:GrayText}
 </section>
 <aside class="panel">
 <h2>Structure details</h2><div id="summary" class="notice">No structure loaded.</div>
-<h3>Sequence / residues</h3><p class="notice">Select a residue to highlight it in the 3D model. Residue numbers use the file's author numbering.</p>
+<h3>Structure residues</h3><p class="notice">Select a residue to highlight it. Structure residue numbers use the file author numbering.</p>
 <div id="sequence" class="sequence scroll"></div>
+<h3>Map a protein sequence to this chain</h3>
+<label for="reference-sequence">Reference amino-acid sequence</label>
+<textarea id="reference-sequence" rows="4" placeholder="Paste protein sequence (one-letter amino-acid codes)"></textarea>
+<label for="chain-id">Structure chain ID</label><input id="chain-id" value="A" maxlength="8">
+<div class="controls"><button id="map-sequence" type="button" disabled>Align and map residues</button></div>
+<div id="mapping-results" class="scroll notice">Load a structure and provide a reference sequence to map.</div>
 <h3>Residue contacts</h3>
 <label>Heavy-atom cutoff (Å) <input id="cutoff" type="number" min="2" max="10" step=".5" value="4"></label>
 <div class="controls"><button id="contacts" type="button" disabled>Calculate contacts</button></div>
 <div id="contact-results" class="scroll notice">Load a structure to calculate contacts.</div>
+<h3>Biopython structure analysis</h3>
+<div class="controls"><button id="analyze" type="button" disabled>Analyze structure evidence</button></div>
+<div id="analysis-results" class="notice">Run analysis to calculate residue SASA, protein contacts, ligand contacts and any geometrically supported hydrogen bonds.</div>
 <h3>Evidence notes</h3><p class="notice">The viewer displays coordinates from the selected file. It does not determine whether a structure is experimental or predicted, validate its biological relevance, or infer a binding interaction. Contact calculations are geometric proximity only.</p>
 </aside>
 </main>
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-let viewer=null,model=null,sourceName="",sourceText="",format="";
+let viewer=null,model=null,sourceName="",sourceText="",format="",sourceFile=null;
 function status(message){$("status").textContent=message}
 function initViewer(){if(!window.$3Dmol){status("3Dmol.js could not load. Check network access or bundle the viewer library in your APK.");return false}if(!viewer)viewer=$3Dmol.createViewer($("viewer"),{backgroundColor:"#101820",antialias:true});return true}
 function atomSelection(atom){return {chain:atom.chain,resi:atom.resi}}
@@ -76,7 +85,7 @@ function loadSequence(){
  const root=$("sequence");root.replaceChildren();
  for(const residue of residues){const b=document.createElement("button");b.className="residue";b.type="button";b.textContent=residue.resn+residue.resi;b.title="Chain "+residue.chain+" residue "+residue.resi;b.addEventListener("click",()=>{render();viewer.addStyle({chain:residue.chain,resi:residue.resi},{stick:{color:"#ffcc00",radius:.28}});viewer.zoomTo({chain:residue.chain,resi:residue.resi},700);viewer.render()});root.appendChild(b);}
  $("summary").textContent=sourceName+" · "+format.toUpperCase()+" · "+residues.length+" polymer residues · "+atoms.length+" atoms";
- $("contacts").disabled=false;
+ $("contacts").disabled=false;$("map-sequence").disabled=false;$("analyze").disabled=false;
 }
 function loadFile(file){
  if(!initViewer())return;
@@ -84,7 +93,7 @@ function loadFile(file){
  reader.onerror=()=>status("Could not read the selected file.");
  reader.onload=()=>{
   try{
-   sourceText=String(reader.result);sourceName=file.name;format=/\.(cif|mmcif)$/i.test(file.name)?"cif":"pdb";
+   sourceText=String(reader.result);sourceName=file.name;sourceFile=file;format=/\.(cif|mmcif)$/i.test(file.name)?"cif":"pdb";
    viewer.clear();model=viewer.addModel(sourceText,format);
    render();loadSequence();status("Loaded "+sourceName+". Coordinates are displayed as supplied by the file.");
   }catch(error){model=null;status("Structure could not be rendered: "+error.message)}
@@ -95,6 +104,66 @@ $("file").addEventListener("change",e=>{const file=e.target.files&&e.target.file
 $("style").addEventListener("change",render);$("surface").addEventListener("change",render);$("ligands").addEventListener("change",render);
 $("reset").addEventListener("click",()=>{if(model){render();viewer.zoomTo();viewer.render()}});
 $("png").addEventListener("click",()=>{if(!viewer)return;const a=document.createElement("a");a.href=viewer.pngURI();a.download="kinetics-structure.png";a.click()});
+$("analyze").addEventListener("click",async()=>{
+ if(!sourceFile||!model){status("Load a structure first.");return}
+ const form=new FormData();form.append("file",sourceFile);
+ status("Running bounded Biopython structural analysis…");
+ try{
+  const response=await fetch("/api/v1/structures/analyze",{method:"POST",body:form});
+  const result=await response.json();if(!response.ok)throw new Error(result.detail||response.statusText);
+  const root=$("analysis-results");root.replaceChildren();
+  const lines=[
+   "Source SHA-256: "+result.summary.source_sha256,
+   "Residue SASA values: "+result.sasa.residues.length,
+   "Protein residue contacts: "+result.contacts.contacts.length,
+   "Ligand-to-protein contacts: "+result.ligand_contacts.contacts.length,
+   "Hydrogen bonds: "+result.hydrogen_bonds.status+" ("+result.hydrogen_bonds.hydrogen_bonds.length+")"
+  ];
+  for(const line of lines){const p=document.createElement("p");p.textContent=line;root.appendChild(p)}
+  viewer.removeAllShapes();
+  for(const bond of result.hydrogen_bonds.hydrogen_bonds){
+   const start=bond.donor.xyz_angstrom,end=bond.acceptor.xyz_angstrom;
+   viewer.addCylinder({
+    start:{x:start[0],y:start[1],z:start[2]},
+    end:{x:end[0],y:end[1],z:end[2]},
+    radius:.07,color:"#00d6ff",dashed:true
+   });
+  }
+  viewer.render();
+  if(result.hydrogen_bonds.status==="not_computed_no_explicit_hydrogens"){
+   const note=document.createElement("p");note.textContent="No explicit hydrogen atoms were present; hydrogen bonds were not inferred.";root.appendChild(note);
+  }
+  status("Structural analysis complete. H-bond overlays are shown only when explicit hydrogen geometry supports them.");
+ }catch(error){status("Structural analysis failed: "+error.message)}
+});
+$("map-sequence").addEventListener("click",async()=>{
+ if(!sourceFile||!model){status("Load a structure first.");return}
+ const sequence=$("reference-sequence").value.trim(),chain=$("chain-id").value.trim();
+ if(!sequence||!chain){status("Enter a reference sequence and chain ID.");return}
+ const form=new FormData();form.append("file",sourceFile);form.append("reference_sequence",sequence);form.append("chain_id",chain);
+ status("Aligning sequence to structure chain…");
+ try{
+  const response=await fetch("/api/v1/structures/map-sequence",{method:"POST",body:form});
+  const result=await response.json();if(!response.ok)throw new Error(result.detail||response.statusText);
+  const root=$("mapping-results");root.replaceChildren();
+  const summary=document.createElement("p");
+  summary.textContent=result.mapped_residue_count+" aligned positions · "+result.mismatch_count+" identity mismatches · "+(result.alignment_is_unique?"unique best alignment":"multiple equally scoring alignments");
+  root.appendChild(summary);
+  const note=document.createElement("p");note.textContent="Alignment-derived mapping; review mismatches and unmapped positions before scientific use.";root.appendChild(note);
+  const list=document.createElement("div");list.className="sequence";
+  for(const item of result.mapping){
+   const button=document.createElement("button");button.className="residue";button.type="button";
+   button.textContent=item.sequence_position+":"+item.sequence_residue+" → "+item.chain_id+":"+item.structure_residue_name+item.structure_residue_number+(item.insertion_code||"");
+   button.addEventListener("click",()=>{
+    render();viewer.addStyle({chain:item.chain_id,resi:item.structure_residue_number},{stick:{color:"#ffcc00",radius:.3}});
+    viewer.zoomTo({chain:item.chain_id,resi:item.structure_residue_number},700);viewer.render();
+   });
+   list.appendChild(button);
+  }
+  root.appendChild(list);
+  status("Sequence mapping complete. SHA-256: "+result.source_sha256);
+ }catch(error){status("Sequence mapping failed: "+error.message)}
+});
 $("contacts").addEventListener("click",()=>{
  if(!model)return;
  const cutoff=Number($("cutoff").value);if(!Number.isFinite(cutoff)||cutoff<2||cutoff>10){$("contact-results").textContent="Choose a cutoff between 2 and 10 Å.";return}

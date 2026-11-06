@@ -34,6 +34,11 @@ int main() {
             throw std::runtime_error("selection missing from scene contract");
         if (json.find("\"highlights\":[2]") == std::string::npos)
             throw std::runtime_error("highlight missing from scene contract");
+        const auto ppm = kinetics::render_xy_ppm(scene, 128, 128);
+        if (ppm.rfind("P3\\n128 128\\n255\\n", 0) != 0)
+            throw std::runtime_error("XY renderer emitted an invalid PPM header");
+        if (ppm.find("20 190 75") == std::string::npos)
+            throw std::runtime_error("selection overlay was not rendered");
 
         bool rejected = false;
         try { scene.set_selection({999}); }

@@ -179,3 +179,18 @@ def test_multimodal_uses_independent_calibration_archive(tmp_path):
     )
     assert result["calibration"]["method"] == "split_conformal_absolute_residual"
     assert result["calibration"]["n_calibration"] == 4
+
+
+def test_multimodal_rejects_calibration_test_group_overlap(tmp_path):
+    train = _archive(tmp_path / "train.npz", start=0, count=8)
+    test = _archive(tmp_path / "test.npz", start=8, count=4)
+    calibration = _archive(tmp_path / "calibration.npz", start=10, count=4)
+    with pytest.raises(ValueError, match="calibration and held-out test"):
+        fit_multimodal_model(
+            train, test, target="km", output_dir=tmp_path / "model",
+            calibration_archive=calibration,
+            group_array="protein_cluster_id",
+            holdout_group_arrays=("protein_cluster_id", "scaffold_id"),
+            n_splits=2, hidden_layer_sizes=(8,), max_iter=2,
+            git_revision="a" * 40,
+        )

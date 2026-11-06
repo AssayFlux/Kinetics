@@ -54,7 +54,10 @@ def normalize_catpred_csv(
         raise FileNotFoundError(source_path)
     expected_unit = "mM" if target == "km" else "s^-1"
     if unit != expected_unit:
-        raise ValueError(f"CatPred {target} aggregate values must use the published {expected_unit} convention")
+        raise ValueError(
+            f"CatPred {target} aggregate values must use the published "
+            f"{expected_unit} convention"
+        )
     if aggregate_log10_column is None:
         aggregate_log10_column = "log10km_mean" if target == "km" else "log10kcat_max"
     raw = pd.read_csv(

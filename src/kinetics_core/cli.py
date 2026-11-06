@@ -59,6 +59,7 @@ def build_parser() -> argparse.ArgumentParser:
     release.add_argument("--license-id", required=True)
     release.add_argument("--citation", required=True)
     release.add_argument("--source-url")
+    release.add_argument("--source-manifest", action="append", default=[], help="Source acquisition/curation manifest; repeat as needed")
 
     verify = subparsers.add_parser("verify-release", help="Verify all dataset release artifact hashes")
     verify.add_argument("--release-dir", required=True)
@@ -190,7 +191,7 @@ def main(argv: list[str] | None = None) -> int:
             dataset_id=args.dataset_id, dataset_name=args.dataset_name,
             source=args.source, source_version=args.source_version,
             license_id=args.license_id, citation=args.citation,
-            source_url=args.source_url,
+            source_url=args.source_url, source_manifests=args.source_manifest,
         )
     elif args.command == "verify-release":
         from .release import verify_dataset_release

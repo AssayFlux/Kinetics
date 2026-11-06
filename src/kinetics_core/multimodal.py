@@ -84,6 +84,11 @@ def _archive_source_provenance(manifests: list[dict[str, Any]]) -> dict[str, lis
         result[field] = list(next(iter(sets)))
     return result
 
+def _string_tuple(values) -> tuple[str, ...]:
+    """Normalize NumPy scalar labels to built-in Python strings for sklearn."""
+    return tuple(str(value) for value in values)
+
+
 def _graph_summary(payload: dict[str, np.ndarray]) -> np.ndarray:
     """Create fixed-width per-molecule summaries from packed graph arrays."""
     required = {
@@ -145,13 +150,11 @@ def _multimodal_design(payload: dict[str, np.ndarray]) -> tuple[np.ndarray | pd.
         raise ValueError("Morgan fingerprint columns must contain binary values")
     graph = _graph_summary(payload)
     base = np.concatenate((X, graph), axis=1).astype(np.float32, copy=False)
-    numeric = tuple(
-        np.asarray(payload.get("context_numeric_columns", np.asarray([], dtype=str))).astype(str)
+    numeric = _string_tuple(
+        payload.get("context_numeric_columns", np.asarray([], dtype=str))
     )
-    categorical = tuple(
-        np.asarray(
-            payload.get("context_categorical_columns", np.asarray([], dtype=str))
-        ).astype(str)
+    categorical = _string_tuple(
+        payload.get("context_categorical_columns", np.asarray([], dtype=str))
     )
     context_enabled = bool(numeric or categorical)
     if context_enabled:
@@ -283,21 +286,17 @@ def fit_multimodal_model(
     if context_enabled != test_context:
         raise ValueError("Training and held-out assay-context availability differs")
     if context_enabled:
-        numeric_columns = tuple(train.get(
-            "context_numeric_columns", np.asarray([], dtype=str)
-        ).astype(str))
-        categorical_columns = tuple(train.get(
-            "context_categorical_columns", np.asarray([], dtype=str)
-        ).astype(str))
-        test_numeric = tuple(
-            np.asarray(
-                test.get("context_numeric_columns", np.asarray([], dtype=str))
-            ).astype(str)
+        numeric_columns = _string_tuple(
+            train.get("context_numeric_columns", np.asarray([], dtype=str))
         )
-        test_categorical = tuple(
-            np.asarray(
-                test.get("context_categorical_columns", np.asarray([], dtype=str))
-            ).astype(str)
+        categorical_columns = _string_tuple(
+            train.get("context_categorical_columns", np.asarray([], dtype=str))
+        )
+        test_numeric = _string_tuple(
+            test.get("context_numeric_columns", np.asarray([], dtype=str))
+        )
+        test_categorical = _string_tuple(
+            test.get("context_categorical_columns", np.asarray([], dtype=str))
         )
         if test_numeric != numeric_columns:
             raise ValueError("Training and held-out numeric context columns differ")
@@ -400,9 +399,9 @@ def fit_multimodal_model(
         if calibration_context != context_enabled:
             raise ValueError("Calibration archive assay-context availability differs")
         if context_enabled:
-            if tuple(calibration["context_numeric_columns"].astype(str)) != numeric_columns:
+            if _string_tuple(calibration["context_numeric_columns"]) != numeric_columns:
                 raise ValueError("Calibration numeric context columns differ")
-            if tuple(calibration["context_categorical_columns"].astype(str)) != categorical_columns:
+            if _string_tuple(calibration["context_categorical_columns"]) != categorical_columns:
                 raise ValueError("Calibration categorical context columns differ")
         conformal_q = conformal_quantile(
             calibration["y_log10"], estimator.predict(X_cal), alpha=conformal_alpha
@@ -653,15 +652,11 @@ def predict_multimodal_model(
     if context_enabled != bundle["context_enabled"]:
         raise ValueError("Inference assay-context availability differs from training")
     if context_enabled:
-        numeric = tuple(
-            np.asarray(
-                payload.get("context_numeric_columns", np.asarray([], dtype=str))
-            ).astype(str)
+        numeric = _string_tuple(
+            payload.get("context_numeric_columns", np.asarray([], dtype=str))
         )
-        categorical = tuple(
-            np.asarray(
-                payload.get("context_categorical_columns", np.asarray([], dtype=str))
-            ).astype(str)
+        categorical = _string_tuple(
+            payload.get("context_categorical_columns", np.asarray([], dtype=str))
         )
         if list(numeric) != bundle["context_numeric_columns"]:
             raise ValueError("Inference numeric context schema differs from training")

@@ -123,7 +123,8 @@ impl PostgresRuntimeStore {
             "WITH candidate AS (
                SELECT id FROM kinetics_jobs
                WHERE cancel_requested = false
-                 AND ((state='queued' AND (next_attempt_at IS NULL OR next_attempt_at <= now()))
+                 AND ((state='queued' AND attempt < max_attempts
+                       AND (next_attempt_at IS NULL OR next_attempt_at <= now()))
                       OR (state='running' AND lease_expires_at < now() AND attempt < max_attempts))
                ORDER BY created_at
                FOR UPDATE SKIP LOCKED LIMIT 1

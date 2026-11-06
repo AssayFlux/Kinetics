@@ -135,3 +135,37 @@ def molecular_graph_features(smiles: str) -> dict:
             "bond_type", "is_conjugated", "in_ring", "bond_stereo",
         ],
     }
+
+
+
+def annotate_scaffolds_audited(
+    frame,
+    *,
+    smiles_column: str = "smiles",
+    output_column: str = "scaffold_id",
+):
+    """Annotate valid structures and return row-level rejections for invalid SMILES."""
+    import pandas as pd
+
+    if smiles_column not in frame.columns:
+        raise ValueError(f"Missing SMILES column: {smiles_column}")
+    accepted = []
+    rejected = []
+    for index, row in frame.iterrows():
+        item = row.to_dict()
+        try:
+            item[output_column] = murcko_scaffold_id(row[smiles_column])
+            accepted.append(item)
+        except (TypeError, ValueError) as exc:
+            rejected.append({
+                "source_row_number": int(index) if isinstance(index, int) else str(index),
+                "source_record_id": str(row.get("source_record_id", "")),
+                "reason": str(exc),
+            })
+    return (
+        pd.DataFrame(accepted, columns=list(frame.columns) + [output_column]),
+        pd.DataFrame(
+            rejected,
+            columns=["source_row_number", "source_record_id", "reason"],
+        ),
+    )

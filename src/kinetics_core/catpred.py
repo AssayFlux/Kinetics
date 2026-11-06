@@ -7,7 +7,6 @@ locator when the published table has no native record identifier.
 from __future__ import annotations
 
 import argparse
-import hashlib
 from pathlib import Path
 
 import pandas as pd

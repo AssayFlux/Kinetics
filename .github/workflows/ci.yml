@@ -36,7 +36,7 @@ jobs:
           python -m pip install "rdkit>=2023.9"
 
       - name: Lint new foundation modules
-        run: python -m ruff check src/kinetics_core/legacy.py src/kinetics_core/cli.py src/kinetics_core/__init__.py src/kinetics_core/persistence.py src/kinetics_core/catpred.py src/kinetics_core/curation.py src/kinetics_core/records.py src/kinetics_core/identity.py src/kinetics_core/release.py src/kinetics_core/quality.py src/kinetics_core/features.py src/kinetics_core/chemistry.py src/kinetics_core/sequence_clustering.py scripts/download_public_datasets.py scripts/inspect_public_datasets.py tests/test_legacy_adapter.py tests/test_persistence.py tests/test_catpred_adapter.py tests/test_kdb_release.py tests/test_measurement_semantics.py tests/test_representations.py
+        run: python -m ruff check src/kinetics_core/legacy.py src/kinetics_core/cli.py src/kinetics_core/__init__.py src/kinetics_core/persistence.py src/kinetics_core/catpred.py src/kinetics_core/curation.py src/kinetics_core/records.py src/kinetics_core/identity.py src/kinetics_core/release.py src/kinetics_core/quality.py src/kinetics_core/features.py src/kinetics_core/chemistry.py src/kinetics_core/sequence_clustering.py src/kinetics_core/partition.py scripts/download_public_datasets.py scripts/inspect_public_datasets.py tests/test_legacy_adapter.py tests/test_persistence.py tests/test_catpred_adapter.py tests/test_kdb_release.py tests/test_measurement_semantics.py tests/test_representations.py
 
       - name: Compile Python sources
         run: python -m compileall -q src scripts tests

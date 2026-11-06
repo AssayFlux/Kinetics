@@ -38,6 +38,7 @@ This file distinguishes repository contents from execution, verification and sci
 - Versioned feature NPZ archives with source IDs/labels, normalized sequences, original/canonical SMILES, target values, split-group arrays, molecular graphs, and non-object Unicode arrays safe for `allow_pickle=False`.
 - Dependency/configuration-aware atomic feature caches; feature manifests record model/tokenizer revisions, representation parameters, runtime/software versions, source input hashes, source versions/licenses, row-identity hashes and archive SHA-256.
 - CLI workflows for `annotate-scaffolds`, `cluster-sequences`, and `build-features`; clustering attaches source-qualified `protein_cluster_id` values back to canonical observations.
+- Merged Step 3 representation implementation: [PR #21](https://github.com/AssayFlux/Kinetics/pull/21), with CI matrix [#42182490997](https://github.com/AssayFlux/Kinetics/actions/runs/42182490997) successful on Python 3.10, 3.11 and 3.12 (61 tests per version at that revision).
 - Split-conformal interval utilities and held-out coverage reporting.
 - Applicability-domain warnings, explicitly not calibrated confidence.
 - Assay-context preprocessing designed to avoid cross-validation leakage.
@@ -56,6 +57,8 @@ This file distinguishes repository contents from execution, verification and sci
 - Retire or isolate the legacy two-target-per-row assumption without breaking supported workflows.
 - Execute real ESM-2 inference and MMseqs2 clustering on a reviewed, licensed dataset; establish hardware-specific repeat-run numerical tolerances and generate a real feature reproducibility report.
 - Complete reproducible orchestration from source acquisition through curation, partitioning, features, calibration, model selection and reporting.
+- Execute the pinned ESM-2 checkpoint and MMseqs2 on a reviewed real dataset; record repeatability and runtime evidence (Step 3 execution validation).
+- Run classical and Kinetics-Multi fusion models on the same reviewed real dataset and frozen cold-start partitions; complete external validation (Step 4 scientific validation).
 - Expand shift-stratified diagnostics, uncertainty coverage-versus-width analysis and statistical comparisons.
 - Add BRENDA and SABIO-RK adapters only after current schemas, licenses and access terms are verified.
 - Integrate report/figure utilities into a single reproducible experiment workflow.
@@ -77,3 +80,8 @@ GitHub Actions run [#42182250301](https://github.com/AssayFlux/Kinetics/actions/
 ## Project direction
 
 The authoritative long-term direction is in [VISION.md](../VISION.md), [ROADMAP.md](../ROADMAP.md), [ARCHITECTURE.md](../ARCHITECTURE.md), [ENGINEERING_STACK.md](../ENGINEERING_STACK.md) and [CLINICAL_TRANSLATION.md](../CLINICAL_TRANSLATION.md). Kinetics Ecosystem is a separate project; this repository provides interfaces, not a bundled assistant runtime.
+
+
+## Kinetics-Multi implementation branch
+
+The current development branch adds a feature-fusion MLP training/inference engine, CLI commands, provenance checks, model cards and experiment manifests. The architecture combines precomputed ESM-2 and Morgan vectors, 24 pooled RDKit graph descriptors and optional raw assay context with fold-local preprocessing. It is not a message-passing GNN. Synthetic tests are not evidence of scientific validity. Real-data execution is blocked by the still-open Step 2 source release and Step 3 checkpoint/MMseqs2 execution requirements. See [KINETICS_MULTI.md](KINETICS_MULTI.md).

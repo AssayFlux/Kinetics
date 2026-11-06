@@ -83,15 +83,35 @@ Do not treat the CatPred aggregate as individually replicated assay data or clai
 Step 3's representation software is implemented and CI-verified, but execution-level reproducibility and real-data evidence remain outstanding. Do not advance to Step 4's multimodal model claims until the pinned model and MMseqs2 have been exercised on a reviewed dataset and the numerical reproducibility report is retained.
 
 
-## Step 4 — Kinetics-Multi prediction engine
+## Step 4 — Kinetics-Multi prediction engine (SOFTWARE IMPLEMENTATION ADDED; SCIENTIFIC VALIDATION PENDING)
 
 **Purpose:** Build the multimodal enzyme–substrate prediction system described in the research blueprint.
 
-**Work:** Establish leakage-aware baselines; protein and molecular encoders; interaction/fusion architecture; assay-context conditioning; distinct Km and kcat target handling; reproducible training configuration and checkpoints; experiment manifests; inference validation, batch prediction, and model packaging.
+**Implemented engineering scope on this branch:**
+- Retain the existing target-specific XGBoost fit path and classical model-family comparison as baselines.
+- Add `fit-multi` and `predict-multi` CLI commands and a target-specific feature-fusion MLP.
+- Fuse ESM-2 sequence vectors, Morgan fingerprints, fixed-width summaries of RDKit atom/bond graph tensors, and optional raw assay context.
+- Fit assay-context imputation, scaling and category encoding inside each CV fold; do not prefit context transforms on held-out folds.
+- Validate feature schema/metadata, target identity, graph tensor dimensions and packed offsets, train/test group boundaries, and calibration group boundaries.
+- Keep Km and kcat as independent training/inference jobs with their own units, artifacts and metrics.
+- Support grouped CV, diagnostic-only row-random CV, untouched held-out scoring and optional split-conformal calibration on a separate archive.
+- Require adjacent feature provenance manifests with verified archive hashes, source/version/license declarations, and a full immutable code commit SHA.
+- Save a trusted-local joblib model bundle, held-out/inference predictions, metrics JSON, model card and experiment manifest. Model metadata records target, feature contract, code revision, data source/version/license and configuration.
+- Inference rejects mismatched target, feature dimension/schema, representation metadata, graph layout and assay-context schema.
 
-**Acceptance:** End-to-end training and inference run from a versioned dataset; artifacts identify code revision, dataset release, feature configuration, dependencies, target, and training settings; baseline and advanced models use identical declared splits; incompatible metadata and malformed inputs are rejected; no superiority claim without held-out and external evidence.
+**Architecture boundary:** This first MLP performs nonlinear fusion of precomputed modalities plus 24 pooled graph descriptors. It is not a message-passing GNN, cross-attention model, residue–atom interaction model or molecular simulation. No such capability is claimed.
 
-**Evidence:** Training recipes, model artifacts, model cards, inference tests, experiment manifests.
+**Software acceptance evidence in progress:** Synthetic tests cover graph summary alignment and corruption rejection, grouped split leakage checks, fold-local assay-context preprocessing, source-manifest hash/metadata validation, immutable code revision, calibration, model artifact generation and inference round-trip. CI for this branch is pending; see PR once opened.
+
+**Still required before Step 4 can be scientifically closed:**
+- A reviewed, licensed, immutable real dataset release from Step 2; this is not yet present.
+- Actual execution of pinned ESM-2 and MMseqs2 on that dataset, with repeatability/runtime evidence from Step 3.
+- Classical and MLP training on the same real frozen partitions; no result can be reported from synthetic tests.
+- External source/organism/assay/time validation where available, predeclared subgroup analysis and uncertainty coverage/width analysis.
+- Explicit model-selection protocol, independent reproduction and an artifact/installation test on the real workflow.
+
+Step 4 is being implemented as a software engine, not validated as a scientific predictor. Do not claim model superiority, external validity or calibrated uncertainty until the real-data validation gates are passed. Joblib bundles are pickle-based and must only be loaded from trusted sources.
+
 
 ## Step 5 — Scientific validation and benchmarking
 

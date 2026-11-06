@@ -157,6 +157,33 @@ def build_parser() -> argparse.ArgumentParser:
             sub.add_argument("--conformal-alpha", type=float, default=0.1)
             sub.add_argument("--n-estimators", type=int, default=500)
             sub.add_argument("--max-depth", type=int, default=6)
+    multi = subparsers.add_parser(
+        "fit-multi",
+        help="Train a multimodal ESM/Morgan/graph/assay-context fusion model",
+    )
+    multi.add_argument("--train", required=True)
+    multi.add_argument("--test", required=True)
+    multi.add_argument("--target", choices=("km", "kcat"), required=True)
+    multi.add_argument("--output-dir", required=True)
+    multi.add_argument("--calibration-archive")
+    multi.add_argument("--group-array")
+    multi.add_argument("--holdout-group-array", action="append", default=[])
+    multi.add_argument("--random-state", type=int, default=42)
+    multi.add_argument("--n-splits", type=int, default=5)
+    multi.add_argument("--hidden-layers", default="256,128")
+    multi.add_argument("--alpha", type=float, default=1e-4)
+    multi.add_argument("--max-iter", type=int, default=500)
+    multi.add_argument("--conformal-alpha", type=float, default=0.1)
+    multi.add_argument("--git-revision", help="Full 40-character source commit SHA (defaults to GITHUB_SHA)")
+
+    predict_multi = subparsers.add_parser(
+        "predict-multi",
+        help="Run inference using a trusted Kinetics-Multi model bundle",
+    )
+    predict_multi.add_argument("--model", required=True)
+    predict_multi.add_argument("--features", required=True)
+    predict_multi.add_argument("--output", required=True)
+
     return parser
 
 
@@ -545,6 +572,32 @@ def main(argv: list[str] | None = None) -> int:
         duplicates.to_csv(output / "duplicate_audit.csv", index=False)
         write_json_atomic(report, output / "quality_report.json")
         result = report
+    elif args.command == "fit-multi":
+        from .multimodal import fit_multimodal_model
+
+        try:
+            hidden_layers = tuple(
+                int(value.strip()) for value in args.hidden_layers.split(",")
+                if value.strip()
+            )
+        except ValueError as exc:
+            raise ValueError("--hidden-layers must be comma-separated positive integers") from exc
+        if not hidden_layers or any(width < 1 for width in hidden_layers):
+            raise ValueError("--hidden-layers must be comma-separated positive integers")
+        result = fit_multimodal_model(
+            args.train, args.test, target=args.target, output_dir=args.output_dir,
+            calibration_archive=args.calibration_archive,
+            group_array=args.group_array,
+            holdout_group_arrays=tuple(args.holdout_group_array),
+            random_state=args.random_state, n_splits=args.n_splits,
+            hidden_layer_sizes=hidden_layers, alpha=args.alpha,
+            max_iter=args.max_iter, conformal_alpha=args.conformal_alpha,
+            git_revision=args.git_revision,
+        )
+    elif args.command == "predict-multi":
+        from .multimodal import predict_multimodal_model
+
+        result = predict_multimodal_model(args.model, args.features, args.output)
     elif args.command == "compare":
         from .benchmark import compare_regressors
 

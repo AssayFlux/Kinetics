@@ -34,6 +34,22 @@ Use a hybrid layout:
 - **Optional vector index:** add only when semantic embedding retrieval is
   actually required; do not overload SQLite tables with high-dimensional blobs.
 
+## Schema versioning and upgrades
+
+The database uses SQLite's `PRAGMA user_version` as its schema version.
+Version 1 is the initial schema bootstrap and is safe to re-run against
+databases created by the pre-versioned implementation: tables and indexes are
+created with `IF NOT EXISTS`, existing records are retained, and the version
+is written in the same schema transaction. Opening a database whose schema
+version is newer than the installed Kinetics code supports fails explicitly;
+it must not be silently downgraded.
+
+Every future schema change must add a numbered, ordered migration, increment
+`SCHEMA_VERSION`, and include tests for both a fresh database and an upgrade
+from the previous supported version. Back up production/user databases before
+upgrades. Schema migrations must never discard scientific observations or
+provenance without an explicit reviewed migration plan.
+
 ## SQLite performance defaults
 
 - Write-Ahead Logging (WAL), `synchronous=NORMAL`, foreign keys enabled.

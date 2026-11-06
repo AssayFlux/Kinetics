@@ -18,6 +18,8 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator, Mapping, Sequence
 
+SCHEMA_VERSION = 1
+
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS datasets (
     dataset_id TEXT PRIMARY KEY,
@@ -180,9 +182,31 @@ class KineticsSQLite:
             connection.close()
 
     def initialize(self) -> None:
+        """Create or upgrade the metadata schema to the current version.
+
+        Databases created before schema versioning have user_version=0. The
+        initial migration is additive and idempotent, preserving their data.
+        Future schema changes must add an explicit migration before bumping
+        SCHEMA_VERSION.
+        """
         with self.session() as connection:
             connection.execute("PRAGMA journal_mode=WAL")
-            connection.executescript(_SCHEMA)
+            current_version = int(connection.execute("PRAGMA user_version").fetchone()[0])
+            if current_version > SCHEMA_VERSION:
+                raise RuntimeError(
+                    f"Database schema version {current_version} is newer than "
+                    f"this Kinetics version supports ({SCHEMA_VERSION})."
+                )
+            try:
+                connection.executescript(
+                    "BEGIN IMMEDIATE;\n"
+                    + _SCHEMA
+                    + f"\nPRAGMA user_version = {SCHEMA_VERSION};\nCOMMIT;"
+                )
+            except Exception:
+                if connection.in_transaction:
+                    connection.rollback()
+                raise
 
     @contextmanager
     def transaction(self, *, immediate: bool = True) -> Iterator[sqlite3.Connection]:
@@ -235,7 +259,11 @@ class KineticsSQLite:
 
     def backup(self, destination: str | Path) -> None:
         """Create a consistent SQLite backup while the database is in use."""
-        target = sqlite3.connect(str(destination))
+        destination_path = Path(destination)
+        if destination_path.resolve() == self.path.resolve():
+            raise ValueError("Backup destination must differ from the source database.")
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        target = sqlite3.connect(str(destination_path))
         try:
             with self.session() as source:
                 source.backup(target)

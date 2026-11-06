@@ -1,102 +1,82 @@
-# Kinetics
+# KINETICS
 
-**An open-source molecular research platform for understanding biological differences and advancing personalized, genetics-informed medicine.**
+<p align="center"><img src="Assets/Brand%20Logo.svg" alt="Kinetics brand logo" width="220"></p>
+<p align="center"><strong>A long-horizon biomedical research, molecular discovery and therapeutic-translation platform.</strong></p>
 
-Kinetics brings together bioinformatics, structural biology, protein engineering, enzyme kinetics, cheminformatics, and machine learning. Its long-term purpose is to help researchers investigate how each person's genetic and molecular characteristics may influence disease biology, drug response, and treatment outcomes.
+<p align="center">[Vision](VISION.md) · [Master roadmap](ROADMAP.md) · [Architecture](ARCHITECTURE.md) · [Engineering stack](ENGINEERING_STACK.md) · [Clinical translation](CLINICAL_TRANSLATION.md)</p>
 
-> **Research software — not a clinical system.** Kinetics does not diagnose, prescribe, or produce validated treatment plans. All predictions are computational hypotheses and require appropriate scientific and clinical validation.
+## The ambition
 
-## Vision
+Kinetics aims to connect biology across scales—from genes, variants, proteins and molecular interactions to cells, tissues, disease mechanisms, therapeutic candidates, imaging and treatment-response evidence—in one reproducible scientific environment.
 
-People are biologically different. Genetic variants and other molecular, physiological, and environmental factors can influence how diseases develop and how individuals respond to medicines.
+The long-term goal is to accelerate discovery and the research that may enable more precise, effective and safer treatment. This is a multi-year ambition, not a claim that a universal treatment engine exists today.
 
-Kinetics aims to support research into these differences and, over time, help organize evidence for **person-specific, genetics-informed treatment research**.
+**Current status and safety:** Kinetics is research software. It does not diagnose, prescribe, select treatment or replace clinicians. Computational predictions and simulations are hypotheses, not medical instructions. Any future clinical function requires a defined intended use, independent clinical validation, appropriate governance and regulatory authorization.
 
-The long-term research direction includes:
+## Planned scientific domains
 
-- **Genomics and pharmacogenomics** — variant interpretation and evidence about gene–drug relationships.
-- **Protein and structural biology** — sequence, structure, mutations, function, stability, and molecular interactions.
-- **Enzyme and molecular kinetics** — enzyme activity, substrate relationships, Km, kcat, and catalytic efficiency.
-- **Cheminformatics and drug research** — molecular representations, compound properties, and target interactions.
-- **Multi-omics integration** — genomic, transcriptomic, proteomic, and metabolomic evidence where available.
-- **Personalized evidence research** — combining molecular findings with relevant clinical context to produce transparent, source-supported research summaries for qualified professional review.
+- Genomics, variant interpretation and pharmacogenomics
+- Transcriptomics, epigenomics, single-cell and spatial biology
+- Proteomics, protein engineering and structural biology
+- Enzyme kinetics and biochemical reaction systems
+- Cheminformatics, target–ligand research and therapeutic discovery
+- Molecular simulation, docking and physical modelling
+- Disease mechanisms, pathways and systems biology
+- Multi-omics integration and biological individuality
+- Biomedical imaging, microscopy, 3D/4D visualization and image analysis
+- Pharmacology, PK/PD and treatment-response research
+- Experimental study design, evidence synthesis and reproducible reporting
 
-Genes alone do not determine treatment. Any future person-level workflow must account for clinical context, evidence quality, uncertainty, population applicability, contraindications, and patient preferences. It must not autonomously diagnose, prescribe, or recommend medication changes. Clinical decisions remain with qualified healthcare professionals and the patient.
+These are roadmap areas, not claims of completed functionality. See [ROADMAP.md](ROADMAP.md) for phased plans and exit criteria.
 
-## Current foundation
+## Engineering: Python + C++ + Rust
 
-The repository currently includes an enzyme-kinetics baseline that estimates:
-
-- `log10(Km)` — Michaelis constant, expressed in mM.
-- `log10(kcat)` — catalytic turnover, expressed in s⁻¹.
-
-The baseline uses ESM-2 protein embeddings, RDKit Morgan fingerprints, and XGBoost regressors. The repository also contains research infrastructure for data curation, provenance, assay context, experiment records, leakage-aware data partitioning, uncertainty and reporting workflows.
-
-These capabilities are a foundation—not a completed personalized-medicine platform. The broader genomics, pharmacogenomics, multi-omics, and person-specific research capabilities are future development goals.
-
-## Scientific technology
-
-- **BioPython:** sequence handling, translation, annotation, alignments, motifs, database retrieval, and structural-biology workflows.
-- **RDKit:** chemical parsing, molecular descriptors, fingerprints, and similarity analysis.
-- **PyTorch and protein language models:** representation learning and future task-specific molecular models.
-- **Structural and molecular tools:** planned integrations may include BLAST+, MMseqs2, MAFFT, HMMER, DSSP, Foldseek, PyMOL, and molecular-simulation software.
-- **Research assistant:** a future offline integration with the separate Astronaut project, when that project is ready.
-
-Only tools relevant to a defined research task will be integrated; deprecated APIs and unnecessary dependencies will be avoided.
-
-## Data and storage
-
-Kinetics uses a hybrid research-data architecture:
-
-| Data | Storage |
+| Technology | Responsibility |
 |---|---|
-| Metadata, assays, measurements, provenance, experiments | SQLite |
-| Large tabular datasets | Parquet / Arrow |
-| Numeric arrays and embeddings | NumPy / memory mapping |
-| Chunked scientific data | HDF5 / Zarr |
-| Model checkpoints | Safetensors or framework-native formats |
-| Sequences and structures | FASTA, GenBank, PDB, mmCIF |
+| **Python** | Scientific methods, bioinformatics, data engineering, machine learning, APIs, workflows and research orchestration |
+| **C++** | Native 3D rendering, molecular visualization, volume rendering, geometry and performance-critical image analysis |
+| **Rust** | Secure systems services, concurrency, workflow runtime, data integrity, resource management and portable components |
 
-SQLite is intended for structured records and metadata, not large tensors or unrestricted concurrent writes. Large scientific files and model artifacts remain in appropriate file formats, with their metadata, hashes, and provenance recorded in the database.
+Stable, versioned interfaces connect the layers. We will prototype before committing to major frameworks and use established scientific libraries where they reduce risk. The first full product is a desktop research workbench; Android is a later client built on stable APIs and portable components.
 
-## Research principles
+## Independent AI: Kinetics Ecosystem
 
-- Reproducible methods, versioned data, and traceable sources.
-- Transparent curation, units, assay conditions, and exclusion records.
-- Leakage-resistant evaluation and independent validation.
-- Calibrated uncertainty and explicit applicability limits.
-- Population-aware assessment and responsible interpretation.
-- Informed consent, data minimization, privacy, and secure handling of genetic and health data.
-- Clear separation of implemented capabilities, research hypotheses, and future plans.
+Kinetics Ecosystem is a separate AI project with its own repository and release cycle. It is not Astronaut and does not depend on Astronaut. Kinetics will eventually expose documented, permission-scoped interfaces for evidence retrieval and approved research-tool orchestration. Read-only access is the default; consequential actions require user authorization. AI must distinguish evidence, measurements, predictions and speculation.
 
-Identifiable patient data and private genomic information must never be committed to this repository. Any future person-level research must follow applicable legal, ethical, institutional, and consent requirements.
+## Existing foundation
 
-## Development status
+The current repository is an enzyme-kinetics research foundation. It includes workflows and utilities for protein embeddings, RDKit molecular fingerprints, Km/kcat baselines, data normalization, provenance, assay context, leakage-aware sequence/scaffold splits, uncertainty/applicability analysis, SQLite experiment metadata and reporting. Existing modules and compatibility paths will be reconciled and migrated deliberately; code presence is not proof of execution, benchmarking or scientific validation.
 
-The immediate objective is to complete the software architecture, data models, scientific integrations, ingestion pipelines, storage, provenance, and interfaces first. Model training, testing, benchmarking, and scientific validation are reserved for the final verification stage.
+## Development sequence
 
-Clinical or treatment-related use would require additional evidence, specialist collaboration, prospective evaluation, independent clinical validation, and any applicable regulatory and ethics approvals. No clinical readiness is claimed.
+1. Establish governance, system contracts and the new architecture.
+2. Strengthen the core platform, data model, provenance, storage and APIs.
+3. Expand scientific domains incrementally, beginning with the existing kinetics foundation.
+4. Build the C++ visualization/imaging engine and Rust systems services behind stable interfaces.
+5. Develop the desktop research workbench.
+6. Connect the separate Kinetics Ecosystem AI through permission-scoped APIs.
+7. Assemble end-to-end research workflows.
+8. Run comprehensive software verification, training, benchmarking and scientific validation after the implementation programme is assembled.
+9. Pursue clinical translation only through independent evidence, ethics, quality systems and regulatory gates.
+10. Deliver Android after desktop contracts and shared components are stable.
 
-## Installation
+## Scientific principles
 
-Python 3.10–3.12 is recommended.
-
-```bash
-git clone https://github.com/AssayFlux/Kinetics.git
-cd Kinetics
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
+- Preserve raw source data and distinguish it from normalized data and predictions.
+- Record provenance, licenses, versions, units, assay conditions and transformations.
+- Make uncertainty, applicability limits, missing evidence and population bias visible.
+- Use leakage-resistant evaluation and independent external validation.
+- Protect sensitive health/genetic data through consent, minimization, access controls, encryption and retention policies.
+- Never infer treatment benefit from a model score alone.
 
 ## Repository guide
 
-- `src/` — baseline models and Kinetics research package.
-- `src/kinetics_core/` — modular research infrastructure and storage.
-- `docs/` — architecture, data model, BioPython integration, database design, research protocols, and roadmap.
-- `data/` and `models/` — local datasets and model artifacts; keep private or restricted data out of version control.
+- `Assets/` — brand assets, including [Brand Logo](Assets/Brand%20Logo.svg)
+- `src/` — current Python implementation
+- `docs/` — scientific methods and implementation notes
+- `scripts/` — explicit data acquisition and inspection tools
+- `tests/` — software tests
+- `data/`, `models/` — local workspaces; do not commit private data or large generated artifacts
+- `VISION.md`, `ROADMAP.md`, `ARCHITECTURE.md`, `ENGINEERING_STACK.md` — long-term direction
 
-## Research status
-
-Kinetics is an evolving research project. Predictions are not experimental findings, and software implementation is not evidence of biological or clinical validity. Contributions should preserve scientific transparency, reproducibility, privacy, and responsible use.
+**Build for scientific truth. Engineer for scale. Translate to healthcare only when evidence earns that responsibility.**

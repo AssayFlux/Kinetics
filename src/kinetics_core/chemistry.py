@@ -73,9 +73,13 @@ def molecular_graph_features(smiles: str) -> dict:
         from rdkit import Chem
     except ImportError as exc:
         raise RuntimeError("Molecular graph generation requires RDKit") from exc
-    molecule = Chem.MolFromSmiles(str(smiles), sanitize=True)
-    if molecule is None:
+    parsed = Chem.MolFromSmiles(str(smiles), sanitize=True)
+    if parsed is None:
         raise ValueError(f"Invalid SMILES: {smiles!r}")
+    canonical_smiles = Chem.MolToSmiles(
+        parsed, canonical=True, isomericSmiles=True
+    )
+    molecule = Chem.MolFromSmiles(canonical_smiles, sanitize=True)
     Chem.AssignStereochemistry(molecule, cleanIt=True, force=True)
 
     atom_rows = []
@@ -117,9 +121,7 @@ def molecular_graph_features(smiles: str) -> dict:
     )
     atom_features = np.asarray(atom_rows, dtype=np.float32)
     return {
-        "canonical_smiles": Chem.MolToSmiles(
-            molecule, canonical=True, isomericSmiles=True
-        ),
+        "canonical_smiles": canonical_smiles,
         "atom_features": atom_features,
         "edge_index": edge_index,
         "bond_features": bond_features,

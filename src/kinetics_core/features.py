@@ -102,7 +102,6 @@ class ESM2Encoder:
         tokens = self._tokenizer(
             normalized, return_tensors="pt", padding=True, truncation=False
         )
-        token_lengths = tokens["attention_mask"].sum(dim=1)
         if int(tokens["input_ids"].shape[1]) > int(
             getattr(self._model.config, "max_position_embeddings", 1026)
         ):

@@ -7,7 +7,7 @@
 - Polymer residue contact search using Biopython NeighborSearch and an explicit heavy-atom distance cutoff.
 - C-alpha structural superposition/RMSD using explicit author-numbered residue pairs and Biopython Superimposer.
 - Protein sequence alignment using Bio.Align.PairwiseAligner and BLOSUM62.
-- A mobile-responsive 3Dmol.js viewer served at `/structure-viewer` and linked from the workbench home page.
+- A mobile-responsive 3Dmol.js viewer served at `/structure-viewer` and linked from the workbench home page.\n- Loopback workbench APIs for bounded structure summary/SASA/contact analysis (`POST /api/v1/structures/analyze`), explicit-pair C-alpha superposition (`POST /api/v1/structures/superimpose`), and sequence alignment (`POST /api/v1/sequences/align`).
 - Viewer controls for cartoon/ribbon, stick, sphere, line and cross representations; optional molecular surface; ligand/non-polymer visibility; residue highlighting; geometric residue contacts; and PNG export.
 
 These functions are computational tools, not independent biological validation. Contact proximity is not proof of binding or functional interaction. SASA depends on the selected model and calculation settings. RMSD is meaningful only when the supplied residue correspondence is valid. No missing residues are reconstructed and no sequence alignment is silently treated as an authoritative structure mapping.

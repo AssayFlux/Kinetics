@@ -526,6 +526,43 @@ def create_app(
     def home() -> FileResponse:
         return FileResponse(Path(__file__).parent / "static" / "index.html")
 
+    @app.post("/api/v1/structures/analyze")
+    def analyze_structure(
+        file: Annotated[UploadFile, File()],
+        contact_cutoff_angstrom: float = 8.0,
+    ) -> dict[str, Any]:
+        """Run bounded local Biopython structure summary, SASA and contact analysis."""
+        filename = Path(file.filename or "").name
+        suffix = Path(filename).suffix.lower()
+        file_format = "mmcif" if suffix in {".cif", ".mmcif"} else "pdb" if suffix in {".pdb", ".ent"} else None
+        if file_format is None:
+            raise HTTPException(status_code=422, detail="Upload a PDB or mmCIF file")
+        if not 0 < contact_cutoff_angstrom <= 30:
+            raise HTTPException(status_code=422, detail="Contact cutoff must be in (0, 30] angstrom")
+        content = file.file.read(50 * 1024 * 1024 + 1)
+        if len(content) > 50 * 1024 * 1024:
+            raise HTTPException(status_code=413, detail="Structure file exceeds 50 MiB")
+        if not content:
+            raise HTTPException(status_code=422, detail="Structure file is empty")
+        try:
+            from ..biopython_tools import (
+                calculate_residue_contacts,
+                calculate_residue_sasa,
+                structure_summary,
+            )
+            return {
+                "summary": structure_summary(content, file_format=file_format),
+                "sasa": calculate_residue_sasa(content, file_format=file_format),
+                "contacts": calculate_residue_contacts(
+                    content, file_format=file_format,
+                    cutoff_angstrom=contact_cutoff_angstrom,
+                ),
+            }
+        except (ValueError, RuntimeError) as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        finally:
+            file.file.close()
+
     @app.get("/api/v1/health")
     def health() -> dict[str, Any]:
         return {

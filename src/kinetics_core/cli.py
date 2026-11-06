@@ -401,13 +401,13 @@ def main(argv: list[str] | None = None) -> int:
             coverage=args.coverage,
             threads=args.threads,
         )
-        mapping = pd.read_csv(
-            mapping_path,
-            dtype={
-                "source_record_id": "string",
-                "cluster_representative_record_id": "string",
-            },
-        )
+        mapping_dtypes = {
+            "source_record_id": "string",
+            "cluster_representative_record_id": "string",
+            "source": "string",
+            "cluster_representative_source": "string",
+        }
+        mapping = pd.read_csv(mapping_path, dtype=mapping_dtypes)
         left_join_columns = [args.record_id_column]
         right_join_columns = ["source_record_id"]
         if (

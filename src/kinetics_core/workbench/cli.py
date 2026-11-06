@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 
 import uvicorn
 
@@ -22,7 +23,6 @@ def main(argv: list[str] | None = None) -> int:
     if not 1024 <= args.port <= 65535:
         parser.error("--port must be between 1024 and 65535")
     if args.workspace:
-        import os
         os.environ["KINETICS_WORKSPACE"] = args.workspace
     if args.database:
         import os

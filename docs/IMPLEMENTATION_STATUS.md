@@ -109,3 +109,8 @@ The feature-fusion MLP training/inference engine was merged in [PR #22](https://
 - In progress on feature branch `kinetics/step7-rust-infrastructure`: versioned Rust crate; typed principal/scope and tenant-boundary checks; job lifecycle state machine with explicit runtime/memory/CPU limits and tenant-scoped idempotency; content-addressed SHA-256 artifact storage with integrity checks; structured audit-event validation; negative unit tests; and dedicated Rust CI format, Clippy and test gates.
 - Security boundary is explicit: these are infrastructure primitives, not a deployed API or production identity provider. Durable queue/leases/retries, verified OIDC/JWT integration, managed secrets/keys, tenant-aware network upload/download, append-only audit backend, backup/restore drill, deployment isolation, and integration penetration tests remain required before production acceptance.
 - Threat model and deployment controls are documented in `docs/STEP7_RUST_INFRASTRUCTURE.md`.
+
+
+## Step 6 — Native molecular visualization and simulation
+
+The initial C++17/CMake molecular structure and scene-data foundation is implemented and CI-verified. See [Native molecular engine](NATIVE_MOLECULAR_ENGINE.md) and [Step 6 implementation status](STEP6_IMPLEMENTATION_STATUS.md). Do not mark Step 6 complete until reviewed reference structures validate the parser/scene contract, a production 3D renderer is delivered, and real OpenMM/GROMACS adapters produce fully parameterized, traceable execution artifacts with reference-system checks. No simulation execution or performance claim is currently asserted.

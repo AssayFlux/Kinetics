@@ -76,8 +76,6 @@ def clean_dataframe(
     data["log10_kcat"] = np.log10(data["kcat"].astype(float))
     data = data.reset_index(drop=True)
     stats["kept_rows"] = int(len(data))
-    if len(data) < 2:
-        raise ValueError("Fewer than two valid rows remain; cannot create a train/test split.")
     return data, stats
 
 
@@ -99,6 +97,8 @@ def preprocess_csv(
     cleaned, stats = clean_dataframe(
         pd.read_csv(input_path), km_unit=km_unit, kcat_unit=kcat_unit
     )
+    if len(cleaned) < 2:
+        raise ValueError("At least two valid rows are required to create a train/test split.")
     train, test = train_test_split(
         cleaned, test_size=test_size, random_state=random_state, shuffle=True
     )

@@ -167,7 +167,7 @@ def attach_context_archive(
         arrays[f"context_raw__{column}"] = numeric_values
     for column in categorical_columns:
         values = context_frame[column].where(context_frame[column].notna(), "__MISSING__")
-        arrays[f"context_raw__{column}"] = values.astype(str).to_numpy()
+        arrays[f"context_raw__{column}"] = values.astype(str).to_numpy(dtype=str)
     # X remains the base representation; fold-local pipeline handles raw context.
     arrays["X"] = base
     output_path.parent.mkdir(parents=True, exist_ok=True)

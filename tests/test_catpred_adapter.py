@@ -66,7 +66,7 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
         "sequence": ["ACDEFG", "ACDEFGH"],
         "sequence_source": ["brenda", "sabio"],
         "uniprot": ["Q12345", "P01234"],
-        "reactant_smiles": ["CCO", "CCN"],
+        "substrate_smiles": ["CCO", "CCN"],
         "value": [0.003, 0.02],
         "log10_value": [-2.5229, -1.6990],
         "temperature": [25.0, 37.0],
@@ -86,6 +86,8 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
     assert len(accepted) == 2
     assert accepted["temperature_k"].tolist() == [298.15, 310.15]
     assert accepted["protein_accession"].tolist() == ["Q12345", "P01234"]
+    assert accepted["smiles"].tolist() == ["CCO", "CCN"]
+    assert manifest["mapping"]["substrate_smiles"] == "substrate_smiles"
     assert accepted["source_ec"].tolist() == ["1.1.1.1", "2.7.1.1"]
     assert accepted["source_sequence_40cluster"].tolist() == [11, 12]
     assert accepted["source_record_id"].str.startswith("catpred:").all()

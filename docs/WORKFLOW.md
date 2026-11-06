@@ -15,7 +15,7 @@ Review the current dataset card and upstream repository terms. Keep raw files un
 
 ## 2. Normalize each target independently
 
-The documented CatPred-DB schema does not define a native source row identifier, DOI, or assay ID. If no native ID exists in the pinned snapshot, the adapter creates a deterministic file-hash/target/row locator and labels it as an import locator, not an upstream experimental ID. It maps published fields by default (`value`, `sequence`, `reactant_smiles`, `uniprot`, `ph`, and Celsius `temperature`); Celsius is converted to kelvin. Verify the raw `value` unit for the exact snapshot and supply it explicitly using `--unit` or `--unit-column`. No unit is guessed.
+The CatPred paper reports that each published kcat value is a maximum across measurements for an enzyme-sequence/substrate pair and each Km value is a geometric mean. These are source-aggregated benchmark statistics, not individual assay measurements. The canonical record stores `measurement_kind=source_aggregated` and the target-specific aggregation method. Underlying replicate measurements are not recoverable from this table. The documented CatPred-DB schema does not define a native source row identifier, DOI, or assay ID. If no native ID exists in the pinned snapshot, the adapter creates a deterministic file-hash/target/row locator and labels it as an import locator, not an upstream experimental ID. It maps published fields by default (`value`, `sequence`, `reactant_smiles`, `uniprot`, `ph`, and Celsius `temperature`); Celsius is converted to kelvin. Verify the raw `value` unit for the exact snapshot and supply it explicitly using `--unit` or `--unit-column`. No unit is guessed.
 
 ```bash
 python -m kinetics_core.catpred --input data/public/catpred-db/km_processed.csv --target km --record-id-column SOURCE_ID --value-column KM_VALUE --unit mM --sequence-column SEQUENCE --smiles-column SMILES \
@@ -53,7 +53,7 @@ Run `kinetics-research audit`. Exact repeats and conflicting duplicate source ID
 
 ## 2c. Create and verify an immutable release
 
-After curator review and verification of the exact source version, license, and citation, create a release. This command requires explicit license and citation metadata, refuses to overwrite an existing release directory, records SHA-256 hashes for each release artifact, and writes a data card and quality report.
+After curator review and verification of the exact source version, license, and citation, create a release. The release manifest lists measurement kinds and aggregation methods, and the quality report keeps duplicate/conflict candidates visible without collapsing rows. This command requires explicit license and citation metadata, refuses to overwrite an existing release directory, records SHA-256 hashes for each release artifact, and writes a data card and quality report.
 
 ```bash
 kinetics-research release \

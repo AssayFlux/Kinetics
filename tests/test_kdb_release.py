@@ -90,3 +90,26 @@ def test_cross_source_duplicate_candidates_are_reported_not_removed():
     assert candidates.iloc[0]["sources"] == '["source-a", "source-b"]'
     assert bool(candidates.iloc[0]["review_required"])
     assert len(frame) == 3
+
+
+
+def test_identity_cli_writes_manifest_and_row_level_rejections(tmp_path):
+    from kinetics_core.cli import main
+
+    source = tmp_path / "observations.csv"
+    pd.DataFrame({
+        "source_record_id": ["valid", "invalid"],
+        "sequence": ["ACDEFG", "ACD*"],
+        "smiles": ["CCO", "CCN"],
+    }).to_csv(source, index=False)
+    output = tmp_path / "identities"
+    assert main([
+        "normalize-identities", "--input", str(source), "--output-dir", str(output)
+    ]) == 0
+    accepted = pd.read_csv(output / "observations_with_identities.csv")
+    rejected = pd.read_csv(output / "identity_rejected_rows.csv")
+    manifest = json.loads((output / "identity_manifest.json").read_text())
+    assert len(accepted) == 1
+    assert len(rejected) == 1
+    assert manifest["input_rows"] == 2
+    assert len(manifest["outputs"]["observations_with_identities.csv"]["sha256"]) == 64

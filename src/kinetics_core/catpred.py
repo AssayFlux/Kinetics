@@ -170,9 +170,10 @@ def normalize_catpred_csv(
             "per-row unit metadata; the aggregate table does not permit independent "
             "record-level unit verification."
         ),
+        "source_processing_revision": source_version,
         "source_processing_refs": [
-            "https://github.com/maranasgroup/CatPred-DB/blob/main/scripts/processing/process_sabio.py",
-            "https://github.com/maranasgroup/CatPred-DB/blob/main/scripts/processing/merge.py",
+            f"https://github.com/maranasgroup/CatPred-DB/blob/{source_version}/scripts/processing/process_sabio.py",
+            f"https://github.com/maranasgroup/CatPred-DB/blob/{source_version}/scripts/processing/merge.py",
         ],
         "measurement_kind": "source_aggregated",
         "aggregation_method": (

@@ -35,7 +35,7 @@ def cluster_sequences(
     coverage: float = 0.8,
     threads: int = 1,
 ) -> tuple[Path, Path]:
-    """Cluster protein entities and map each source/record key to exactly one cluster.
+    """Cluster protein entities and map each unique source/record key to one cluster.
 
     Repeated observations with the same source/record key are collapsed only when
     their normalized sequences agree; conflicting sequences for one key are rejected.

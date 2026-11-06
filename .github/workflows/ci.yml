@@ -82,6 +82,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install Kinetics package without scientific extras
+        run: python -m pip install -e . --no-deps
       - name: Configure native engine
         run: cmake -S native -B build/native -DKINETICS_BUILD_TESTS=ON
       - name: Build native engine

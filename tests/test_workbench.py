@@ -6,11 +6,15 @@ from pathlib import Path
 
 import pytest
 
-pytest.importorskip("fastapi")
-from fastapi.testclient import TestClient
-
 from kinetics_core.storage import KineticsSQLite
-from kinetics_core.workbench.app import build_cli_arguments, create_app
+
+
+def workbench_imports():
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+    from kinetics_core.workbench.app import build_cli_arguments, create_app
+
+    return TestClient, build_cli_arguments, create_app
 
 
 def test_workbench_schema_migrates_to_version_two(tmp_path):
@@ -30,6 +34,7 @@ def test_workbench_schema_migrates_to_version_two(tmp_path):
 
 
 def test_command_builder_is_allowlisted_and_confines_paths(tmp_path):
+    _, build_cli_arguments, _ = workbench_imports()
     (tmp_path / "input.csv").write_text("target\n", encoding="utf-8")
     args = build_cli_arguments(
         "audit",
@@ -55,6 +60,7 @@ def test_command_builder_is_allowlisted_and_confines_paths(tmp_path):
 
 
 def test_command_builder_maps_repeated_paths_and_boolean_options(tmp_path):
+    _, build_cli_arguments, _ = workbench_imports()
     for name in ("observations.csv", "rejected.csv", "source.json"):
         (tmp_path / name).write_text("fixture", encoding="utf-8")
     release_args = build_cli_arguments(
@@ -95,6 +101,7 @@ def test_command_builder_maps_repeated_paths_and_boolean_options(tmp_path):
 
 
 def test_workbench_uploads_runs_audits_registers_artifacts_and_builds_report(tmp_path):
+    TestClient, _, create_app = workbench_imports()
     workspace = tmp_path / "workspace"
     app = create_app(
         workspace_root=workspace,
@@ -178,6 +185,7 @@ def test_workbench_uploads_runs_audits_registers_artifacts_and_builds_report(tmp
 
 
 def test_workbench_rejects_path_escape_and_upload_overwrite(tmp_path):
+    TestClient, _, create_app = workbench_imports()
     app = create_app(
         workspace_root=tmp_path / "workspace",
         database_path=tmp_path / "metadata.sqlite3",

@@ -58,3 +58,33 @@ def test_bad_source_commit_is_rejected():
     candidate["source_commit"] = "main"
     with pytest.raises(ValueError, match="commit SHA"):
         evaluate_release(candidate)
+
+
+def test_evidence_must_be_a_list_of_unique_nonempty_references():
+    candidate = manifest()
+    candidate["gates"][0]["evidence"] = "not-a-list"
+    with pytest.raises(ValueError, match="list of non-empty"):
+        evaluate_release(candidate)
+    candidate = manifest()
+    candidate["gates"][0]["evidence"] = ["evidence:build", "evidence:build"]
+    with pytest.raises(ValueError, match="unique"):
+        evaluate_release(candidate)
+
+
+def test_waiver_expiry_must_be_iso_date():
+    candidate = manifest()
+    candidate["gates"][0] = {
+        "gate_id": REQUIRED_GATES[0], "state": "waived",
+        "severity": "non_critical", "approver": "reviewer",
+        "rationale": "temporary limitation", "expires_on": "next month",
+        "compensating_control": "manual review",
+    }
+    with pytest.raises(ValueError, match="ISO date"):
+        evaluate_release(candidate)
+
+
+def test_gate_id_must_be_nonempty_text():
+    candidate = manifest()
+    candidate["gates"][0]["gate_id"] = None
+    with pytest.raises(ValueError, match="gate_id"):
+        evaluate_release(candidate)

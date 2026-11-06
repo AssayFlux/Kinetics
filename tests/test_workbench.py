@@ -11,7 +11,9 @@ from kinetics_core.storage import KineticsSQLite
 
 def workbench_imports():
     pytest.importorskip("fastapi")
+
     from fastapi.testclient import TestClient
+
     from kinetics_core.workbench.app import build_cli_arguments, create_app
 
     return TestClient, build_cli_arguments, create_app

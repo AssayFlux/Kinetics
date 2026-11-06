@@ -98,3 +98,43 @@ def test_sqlite_store_rejects_backup_over_source(tmp_path):
     store.initialize()
     with pytest.raises(ValueError, match="must differ from the source"):
         store.backup(store.path)
+
+
+def test_sqlite_store_upgrades_pre_versioned_database_without_losing_data(tmp_path):
+    database = tmp_path / "legacy.sqlite3"
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            """
+            CREATE TABLE datasets (
+                dataset_id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                source TEXT,
+                version TEXT,
+                license TEXT,
+                citation TEXT,
+                checksum_sha256 TEXT,
+                local_path TEXT,
+                metadata_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        connection.execute(
+            "INSERT INTO datasets(dataset_id, name, source) VALUES (?, ?, ?)",
+            ("legacy-dataset", "Existing dataset", "legacy-import"),
+        )
+        assert connection.execute("PRAGMA user_version").fetchone()[0] == 0
+
+    store = KineticsSQLite(database)
+    store.initialize()
+
+    assert store.fetch_all(
+        "SELECT dataset_id, name, source FROM datasets WHERE dataset_id = ?",
+        ("legacy-dataset",),
+    ) == [{
+        "dataset_id": "legacy-dataset",
+        "name": "Existing dataset",
+        "source": "legacy-import",
+    }]
+    with store.session() as connection:
+        assert connection.execute("PRAGMA user_version").fetchone()[0] == 1

@@ -33,6 +33,14 @@ pub struct RuntimeJob {
     pub lease_expires_at: Option<DateTime<Utc>>,
 }
 
+#[derive(Clone, Copy, Debug)]
+pub struct JobSubmissionLimits {
+    pub max_runtime_seconds: i64,
+    pub max_memory_bytes: i64,
+    pub max_cpu_millis: i32,
+    pub max_active_jobs: i64,
+}
+
 #[derive(Clone)]
 pub struct PostgresRuntimeStore {
     pool: PgPool,
@@ -48,16 +56,14 @@ impl PostgresRuntimeStore {
         tenant: &str,
         idempotency_key: &str,
         payload: serde_json::Value,
-        max_runtime_seconds: i64,
-        max_memory_bytes: i64,
-        max_cpu_millis: i32,
-        max_active_jobs: i64,
+        limits: JobSubmissionLimits,
     ) -> Result<RuntimeJob, RuntimeStoreError> {
         if tenant.trim().is_empty()
             || idempotency_key.trim().is_empty()
-            || max_runtime_seconds <= 0
-            || max_memory_bytes <= 0
-            || max_cpu_millis <= 0
+            || limits.max_runtime_seconds <= 0
+            || limits.max_memory_bytes <= 0
+            || limits.max_cpu_millis <= 0
+            || limits.max_active_jobs <= 0
         {
             return Err(RuntimeStoreError::Conflict);
         }
@@ -75,9 +81,9 @@ impl PostgresRuntimeStore {
         if let Some(row) = existing {
             let job = row_to_job(&row);
             if job.payload != payload
-                || job.max_runtime_seconds != max_runtime_seconds
-                || job.max_memory_bytes != max_memory_bytes
-                || job.max_cpu_millis != max_cpu_millis
+                || job.max_runtime_seconds != limits.max_runtime_seconds
+                || job.max_memory_bytes != limits.max_memory_bytes
+                || job.max_cpu_millis != limits.max_cpu_millis
             {
                 return Err(RuntimeStoreError::Conflict);
             }
@@ -87,7 +93,7 @@ impl PostgresRuntimeStore {
         let active: i64 = sqlx::query_scalar(
             "SELECT count(*) FROM kinetics_jobs WHERE tenant_id=$1 AND state IN ('queued','running')"
         ).bind(tenant).fetch_one(&mut *tx).await?;
-        if active >= max_active_jobs {
+        if active >= limits.max_active_jobs {
             return Err(RuntimeStoreError::QuotaExceeded);
         }
         let id = Uuid::new_v4();

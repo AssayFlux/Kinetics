@@ -239,7 +239,10 @@ def test_scaffold_cli_writes_accepted_and_rejected_rows(tmp_path):
         "annotate-scaffolds", "--input", str(source),
         "--output-dir", str(output),
     ]) == 0
-    accepted = pd.read_csv(output / "observations_with_scaffolds.csv")
+    accepted = pd.read_csv(
+        output / "observations_with_scaffolds.csv",
+        dtype={"source_record_id": "string"},
+    )
     rejected = pd.read_csv(output / "scaffold_rejected_rows.csv")
     assert accepted["source_record_id"].tolist() == ["001"]
     assert len(rejected) == 1

@@ -15,7 +15,7 @@ def _observations(path):
         "canonical_value": [2e-6, 2e-6, 4.0],
         "canonical_unit": ["M", "M", "s^-1"],
         "source": ["fixture"] * 3,
-        "source_record_id": ["a", "b", "c"],
+        "source_record_id": ["a", "a", "c"],
     }).to_csv(path, index=False)
 
 

@@ -21,6 +21,8 @@ def paired_frame_to_observations(
     source_record_id_column: str,
     km_unit: str = "mM",
     kcat_unit: str = "s^-1",
+    source_version: str | None = None,
+    license_id: str | None = None,
     sequence_column: str = "sequence",
     smiles_column: str = "smiles",
 ) -> list[KineticObservation]:
@@ -66,6 +68,8 @@ def paired_frame_to_observations(
                     source_record_id=record_id,
                     sequence=sequence,
                     smiles=smiles,
+                    source_version=source_version,
+                    license_id=license_id,
                 )
             except (TypeError, ValueError) as exc:
                 raise ValueError(

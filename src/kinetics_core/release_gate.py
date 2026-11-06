@@ -5,8 +5,8 @@ A valid manifest is a review aid, not a deployment, security certification, or s
 from __future__ import annotations
 
 import re
-from datetime import date
 from dataclasses import dataclass
+from datetime import date
 from typing import Any, Literal
 
 EvidenceState = Literal["not_run", "blocked", "passed", "failed", "waived"]

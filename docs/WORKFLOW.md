@@ -77,8 +77,6 @@ kinetics-research release \
   --source-manifest data/public/catpred-db/manifest.json \
   --source-manifest data/processed/catpred-db/km/km_curation_manifest.json \
   --source-manifest data/processed/catpred-db/km/identities/identity_manifest.json
-  --source-manifest data/public/catpred-db/manifest.json \
-  --source-manifest data/processed/catpred-db/km/km_curation_manifest.json
 
 kinetics-research verify-release --release-dir data/releases/catpred-km-train-v1
 ```

@@ -379,6 +379,15 @@ def fit_multimodal_model(
             train, calibration, label="calibration", target=target,
             holdout_group_arrays=leakage_axes,
         )
+        for name in leakage_axes:
+            calibration_groups = set(
+                np.asarray(calibration[name]).astype(str).reshape(-1)
+            )
+            test_groups = set(np.asarray(test[name]).astype(str).reshape(-1))
+            if calibration_groups.intersection(test_groups):
+                raise ValueError(
+                    f"Group leakage between calibration and held-out test: {name}"
+                )
         X_cal, calibration_context = _multimodal_design(calibration)
         if calibration_context != context_enabled:
             raise ValueError("Calibration archive assay-context availability differs")
@@ -663,6 +672,13 @@ def predict_multimodal_model(
         table["lower_canonical"] = np.power(10.0, predictions - float(q))
         table["upper_canonical"] = np.power(10.0, predictions + float(q))
     output = Path(output_path)
+    protected_paths = {
+        Path(model_path).resolve(),
+        Path(feature_archive).resolve(),
+        Path(str(feature_archive) + ".manifest.json").resolve(),
+    }
+    if output.resolve() in protected_paths:
+        raise ValueError("Prediction output path must differ from model and input artifacts")
     output.parent.mkdir(parents=True, exist_ok=True)
     table.to_csv(output, index=False)
     return {

@@ -54,6 +54,47 @@ def test_command_builder_is_allowlisted_and_confines_paths(tmp_path):
         build_cli_arguments("arbitrary-shell", {}, tmp_path)
 
 
+def test_command_builder_maps_repeated_paths_and_boolean_options(tmp_path):
+    for name in ("observations.csv", "rejected.csv", "source.json"):
+        (tmp_path / name).write_text("fixture", encoding="utf-8")
+    release_args = build_cli_arguments(
+        "release",
+        {
+            "observations": "observations.csv",
+            "rejected": ["rejected.csv"],
+            "output_dir": "releases/v1",
+            "dataset_id": "fixture-v1",
+            "dataset_name": "Fixture",
+            "source": "fixture",
+            "source_version": "1",
+            "license_id": "CC0-1.0",
+            "citation": "fixture citation",
+            "source_manifest": ["source.json"],
+        },
+        tmp_path,
+    )
+    assert release_args.count("--rejected") == 1
+    assert release_args.count("--source-manifest") == 1
+    assert "--output-dir" in release_args
+
+    (tmp_path / "features.npz").write_text("fixture", encoding="utf-8")
+    feature_args = build_cli_arguments(
+        "build-features",
+        {
+            "input": "observations.csv",
+            "output": "features.npz",
+            "target": "km",
+            "cache_dir": "cache/new",
+            "group_column": ["protein_cluster_id", "scaffold_id"],
+            "no_chirality": True,
+        },
+        tmp_path,
+    )
+    assert feature_args.count("--group-column") == 2
+    assert "--no-chirality" in feature_args
+    assert "--cache-dir" in feature_args
+
+
 def test_workbench_uploads_runs_audits_registers_artifacts_and_builds_report(tmp_path):
     workspace = tmp_path / "workspace"
     app = create_app(

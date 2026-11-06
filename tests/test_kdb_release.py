@@ -5,6 +5,7 @@ import pytest
 
 from kinetics_core.identity import normalize_biomolecular_identities
 from kinetics_core.release import create_dataset_release, verify_dataset_release
+from kinetics_core.quality import review_potential_duplicate_observations
 
 
 def _observations(path):
@@ -69,3 +70,23 @@ def test_release_manifest_verifies_and_detects_tampering(tmp_path):
     (release / "observations.csv").write_text("tampered")
     with pytest.raises(ValueError, match="checksum mismatch"):
         verify_dataset_release(release)
+
+
+
+def test_cross_source_duplicate_candidates_are_reported_not_removed():
+    frame = pd.DataFrame({
+        "target": ["km", "km", "km"],
+        "source": ["source-a", "source-b", "source-c"],
+        "source_record_id": ["a-1", "b-9", "c-2"],
+        "canonical_value": [1e-3, 1e-3, 2e-3],
+        "canonical_unit": ["M", "M", "M"],
+        "sequence_normalized": ["ACDEFG", "ACDEFG", "ACDEFG"],
+        "smiles_canonical": ["CCO", "CCO", "CCN"],
+        "ph": [7.0, 7.0, 7.0],
+        "temperature_k": [298.15, 298.15, 298.15],
+    })
+    candidates = review_potential_duplicate_observations(frame)
+    assert len(candidates) == 1
+    assert candidates.iloc[0]["sources"] == '["source-a", "source-b"]'
+    assert bool(candidates.iloc[0]["review_required"])
+    assert len(frame) == 3

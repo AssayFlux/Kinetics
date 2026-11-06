@@ -67,7 +67,11 @@
       <h2>Research workflow</h2>
       <label for="command">Workflow action</label>
       <select id="command">
+        <option value="import-legacy">Import legacy paired observations</option>
         <option value="audit">Quality audit</option>
+        <option value="persist">Persist curated dataset</option>
+        <option value="release">Create immutable dataset release</option>
+        <option value="verify-release">Verify immutable dataset release</option>
         <option value="normalize-identities">Normalize protein / compound identities</option>
         <option value="annotate-scaffolds">Annotate chemical scaffolds</option>
         <option value="cluster-sequences">Cluster protein sequences (MMseqs2)</option>

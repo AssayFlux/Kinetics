@@ -4,8 +4,8 @@ import pandas as pd
 import pytest
 
 from kinetics_core.identity import normalize_biomolecular_identities
-from kinetics_core.release import create_dataset_release, verify_dataset_release
 from kinetics_core.quality import review_potential_duplicate_observations
+from kinetics_core.release import create_dataset_release, verify_dataset_release
 
 
 def _observations(path):

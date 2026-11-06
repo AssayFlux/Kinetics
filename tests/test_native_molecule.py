@@ -83,7 +83,7 @@ def test_native_bridge_checks_scene_and_records_source_hash(tmp_path: Path) -> N
     executable.write_text(
         "#!/usr/bin/env python3\n"
         "import json, pathlib, sys\n"
-        f"scene = {json.dumps(scene)!r}\n"
+        f"scene = json.loads({json.dumps(json.dumps(scene))!r})\n"
         "pathlib.Path(sys.argv[2]).write_text(json.dumps(scene), encoding='utf-8')\n",
         encoding="utf-8",
     )

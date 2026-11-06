@@ -30,10 +30,13 @@ kinetics-research fit-multi \
   --holdout-group-array scaffold_id \
   --n-splits 5 \
   --hidden-layers 256,128 \
-  --max-iter 500
+  --max-iter 500 \
+  --git-revision "$(git rev-parse HEAD)"
 ```
 
 Repeat with the kcat archives and `--target kcat`. Do not select models or tune settings against the final held-out archive. Candidate model selection uses training-only grouped cross-validation when `--group-array` is provided. Without a group array, row-random CV is explicitly diagnostic-only and cannot support cold-start claims.
+
+Each input archive must have its adjacent `.npz.manifest.json` provenance file, with matching archive SHA-256/size, target and row count, and non-empty source, source-version and license declarations. Training/calibration/test partitions must agree on those source/version/license sets. Supply a full 40-character code commit with `--git-revision` (or run in CI with `GITHUB_SHA` set).
 
 The training command validates target identity, representation metadata, graph tensor offsets, row alignment, and all declared train/test group boundaries. If a calibration archive is supplied, it is checked against the training/test group axes and used only for split-conformal residual calibration. The calibration archive must be independent and must not be used for model selection.
 

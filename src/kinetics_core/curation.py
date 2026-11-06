@@ -97,11 +97,15 @@ def normalize_observation_table(
                 aggregation_method=aggregation_method,
             )
             item = observation.as_dict()
-            item["source_row_number"] = int(row_number) if isinstance(row_number, int) else str(row_number)
+            item["source_row_number"] = (
+                int(row_number) if isinstance(row_number, int) else str(row_number)
+            )
             accepted.append(item)
         except (TypeError, ValueError, OverflowError) as exc:
             rejected.append({
-                "source_row_number": int(row_number) if isinstance(row_number, int) else str(row_number),
+                "source_row_number": (
+                    int(row_number) if isinstance(row_number, int) else str(row_number)
+                ),
                 "source_record_id": str(row.get(source_record_id_column, "")),
                 "reason": str(exc),
             })

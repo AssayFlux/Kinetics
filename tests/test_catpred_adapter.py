@@ -59,6 +59,8 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
     assert "ph is not numeric" in rejected.loc[0, "reason"]
     assert manifest["mapping"]["aggregate_log10"] == "log10km_mean"
     assert manifest["source_aggregate_unit"] == "mM"
+    assert manifest["source_clipping_policy"]["lower"] == 1e-8
+    assert "BRENDA num_value" in manifest["unit_quality_warning"]
     assert manifest["mapping"]["ph"] == "ph"
     assert manifest["mapping"]["temperature_k"] == "temp_k"
     assert manifest["mapping"]["assay_id"] == "assay"
@@ -150,3 +152,4 @@ def test_catpred_kcat_uses_maximum_aggregate_and_reactant_smiles(tmp_path):
     assert accepted.loc[0, "source_value"] == 0.0036
     assert accepted.loc[0, "aggregation_method"].startswith("maximum")
     assert manifest["aggregation_method"].startswith("maximum")
+    assert "multiplies min^-1 by 60" in manifest["unit_quality_warning"]

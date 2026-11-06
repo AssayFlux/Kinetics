@@ -21,6 +21,7 @@ from .provenance import file_record, write_json_atomic
 
 CATPRED_SOURCE = "CatPred-DB"
 CATPRED_DATASET_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB"
+CATPRED_PROCESSING_REVISION = "931583821ff875e873002730fbbdf1047acfde77"
 
 
 def normalize_catpred_csv(
@@ -42,6 +43,7 @@ def normalize_catpred_csv(
     assay_id_column: str | None = None,
     source_version: str,
     license_id: str,
+    processing_revision: str = CATPRED_PROCESSING_REVISION,
 ) -> tuple[pathlib.Path, pathlib.Path, pathlib.Path]:
     if target not in ("km", "kcat"):
         raise ValueError("CatPred-DB adapter supports only km and kcat; Ki is not Km or kcat")
@@ -175,10 +177,10 @@ def normalize_catpred_csv(
             "per-row unit metadata; the aggregate table does not permit independent "
             "record-level unit verification."
         ),
-        "source_processing_revision": source_version,
+        "source_processing_revision": processing_revision,
         "source_processing_refs": [
-            f"https://github.com/maranasgroup/CatPred-DB/blob/{source_version}/scripts/processing/process_sabio.py",
-            f"https://github.com/maranasgroup/CatPred-DB/blob/{source_version}/scripts/processing/merge.py",
+            f"https://github.com/maranasgroup/CatPred-DB/blob/{processing_revision}/scripts/processing/process_sabio.py",
+            f"https://github.com/maranasgroup/CatPred-DB/blob/{processing_revision}/scripts/processing/merge.py",
         ],
         "measurement_kind": "source_aggregated",
         "aggregation_method": (
@@ -257,6 +259,7 @@ def main() -> None:
     parser.add_argument("--assay-id-column")
     parser.add_argument("--source-version", required=True)
     parser.add_argument("--license-id", required=True)
+    parser.add_argument("--processing-revision", default=CATPRED_PROCESSING_REVISION)
     args = parser.parse_args()
     outputs = normalize_catpred_csv(
         args.input, args.output_dir, target=args.target,
@@ -269,6 +272,7 @@ def main() -> None:
         temperature_c_column=args.temperature_c_column,
         assay_id_column=args.assay_id_column,
         source_version=args.source_version, license_id=args.license_id,
+        processing_revision=args.processing_revision,
     )
     for path in outputs:
         print(path)

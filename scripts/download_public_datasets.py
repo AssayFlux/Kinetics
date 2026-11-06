@@ -11,13 +11,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 CATPRED_FILES = {
-    "km_processed.csv": "https://raw.githubusercontent.com/maranasgroup/CatPred-DB/main/datasets/processed/km_mean_wt_singleSeqs_wpdbs.csv",
-    "kcat_processed.csv": "https://raw.githubusercontent.com/maranasgroup/CatPred-DB/main/datasets/processed/kcat_max_wt_singleSeqs_wpdbs.csv",
-    "km_sequence_cluster_40_test.csv": "https://raw.githubusercontent.com/maranasgroup/CatPred-DB/main/datasets/splits/km-seq_test_sequence_40cluster.csv",
-    "km_sequence_cluster_80_test.csv": "https://raw.githubusercontent.com/maranasgroup/CatPred-DB/main/datasets/splits/km-seq_test_sequence_80cluster.csv",
-    "kcat_sequence_cluster_40_test.csv": "https://raw.githubusercontent.com/maranasgroup/CatPred-DB/main/datasets/splits/kcat-seq_test_sequence_40cluster.csv",
-    "kcat_sequence_cluster_80_test.csv": "https://raw.githubusercontent.com/maranasgroup/CatPred-DB/main/datasets/splits/kcat-seq_test_sequence_80cluster.csv",
+    "km/km_train.csv": "km/km_train.csv",
+    "km/km_val.csv": "km/km_val.csv",
+    "km/km_test.csv": "km/km_test.csv",
+    "kcat/kcat_train.csv": "kcat/kcat_train.csv",
+    "kcat/kcat_val.csv": "kcat/kcat_val.csv",
+    "kcat/kcat_test.csv": "kcat/kcat_test.csv",
 }
+CATPRED_REVISION = "44409e6"
+CATPRED_BASE_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve"
 
 def download(url: str, destination: Path) -> dict:
     request = urllib.request.Request(url, headers={"User-Agent": "AssayFlux-Kinetics/0.1"})
@@ -51,6 +53,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", choices=["catpred-db"], default="catpred-db")
     parser.add_argument("--output-dir", default="data/public/catpred-db")
+    parser.add_argument("--revision", default=CATPRED_REVISION, help="Pinned Hugging Face dataset revision")
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
     output_dir = Path(args.output_dir)
@@ -59,12 +62,15 @@ def main() -> None:
     manifest = {
         "dataset": "CatPred-DB",
         "repository": "https://github.com/maranasgroup/CatPred-DB",
+        "source_revision": args.revision,
         "dataset_card": "https://huggingface.co/datasets/RosettaCommons/CatPred-DB",
-        "license_note": "Dataset card identifies CC BY 4.0; retain attribution and verify source terms before redistribution.",
+        "license_note": "Pinned Hugging Face dataset card declares CC-BY-4.0; verify exact revision and redistribution terms.",
         "files": [],
     }
-    for filename, url in CATPRED_FILES.items():
+    for filename, relative_path in CATPRED_FILES.items():
         destination = output_dir / filename
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        url = f"{CATPRED_BASE_URL}/{args.revision}/{relative_path}"
         if destination.exists() and not args.overwrite:
             digest = hashlib.sha256(destination.read_bytes()).hexdigest()
             manifest["files"].append({

@@ -18,7 +18,7 @@ from .provenance import file_record, write_json_atomic
 CATPRED_SOURCE = "CatPred-DB"
 CATPRED_DATASET_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB"
 _SOURCE_CONTEXT_COLUMNS = (
-    "sequence_source", "ec", "taxonomy_id", "group", "sequence_20cluster",
+    "sequence_source", "ec", "taxonomy_id", "group", "substrate_smiles", "sequence_20cluster",
     "sequence_40cluster", "sequence_60cluster", "sequence_80cluster",
     "sequence_99cluster", "reactant_smiles", "reaction_smiles", "product_smiles",
     "log10_value", "log10km_mean", "pdbpath",
@@ -35,7 +35,7 @@ def normalize_catpred_csv(
     unit_column: str | None = None,
     record_id_column: str | None = None,
     sequence_column: str | None = "sequence",
-    smiles_column: str | None = "reactant_smiles",
+    smiles_column: str | None = None,
     accession_column: str | None = "uniprot",
     organism_column: str | None = None,
     doi_column: str | None = None,
@@ -59,6 +59,13 @@ def normalize_catpred_csv(
         source_path,
         dtype={column: "string" for column in (record_id_column, accession_column) if column},
     )
+    if smiles_column is None:
+        if target == "km" and "substrate_smiles" in raw.columns:
+            smiles_column = "substrate_smiles"
+        elif "reactant_smiles" in raw.columns:
+            smiles_column = "reactant_smiles"
+        elif "substrate_smiles" in raw.columns:
+            smiles_column = "substrate_smiles"
     input_hash = file_record(source_path, CATPRED_DATASET_URL)["sha256"]
     if record_id_column is None:
         raw["__kinetics_source_row_locator"] = [
@@ -163,7 +170,7 @@ def main() -> None:
     parser.add_argument("--unit")
     parser.add_argument("--unit-column")
     parser.add_argument("--sequence-column", default="sequence")
-    parser.add_argument("--smiles-column", default="reactant_smiles")
+    parser.add_argument("--smiles-column")
     parser.add_argument("--accession-column", default="uniprot")
     parser.add_argument("--organism-column")
     parser.add_argument("--doi-column")

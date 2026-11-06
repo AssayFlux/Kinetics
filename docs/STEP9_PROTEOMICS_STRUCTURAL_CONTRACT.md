@@ -95,3 +95,9 @@ Until these gates pass, this is a proposed contract, not an implemented Step 9 c
 ## Implemented validation layer (2026-11-06)
 
 The `kinetics_core.proteomics` module now implements versioned protein-sequence, structure, residue-mapping, and derived-feature records with deterministic sequence hashing and explicit provenance. Residue mappings are validated against sequence accession/length and structure ID/chain. This does not yet parse coordinate files, generate mappings, compute features, or validate scientific accuracy; those remain acceptance work.
+
+## Coordinate adapter increment (2026-11-06)
+
+A strict fixed-column PDB adapter now verifies the exact coordinate-file SHA-256 before parsing ATOM/HETATM records. It retains model, chain, author residue number, insertion code, alternate location, occupancy, B-factor, and coordinates. The C-alpha distance utility requires two explicit sequence-to-structure mappings, validates their sequence identity and chain/residue identity, selects alternate locations deterministically, and records coordinate digest, model frame, parameter digest, tool version, and mapping evidence IDs.
+
+The adapter intentionally does not parse mmCIF, infer residue alignments, expand biological assemblies, reconstruct missing residues, or estimate coordinate uncertainty. Experimental/predicted status remains supplied explicitly in the structure record. Tests use a small deterministic PDB fixture; this is parser/contract validation, not biological validation or a real-data benchmark.

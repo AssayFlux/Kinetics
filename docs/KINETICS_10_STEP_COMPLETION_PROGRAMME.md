@@ -55,15 +55,33 @@ Every scientific result must be traceable to versioned inputs, code, configurati
 
 Do not treat the CatPred aggregate as individually replicated assay data or claim its kcat scale is independently validated. Step 2 remains open until a real, reviewed source snapshot and release pass the acceptance checks.
 
-## Step 3 — Protein and chemical representation
+## Step 3 — Protein and chemical representation (IMPLEMENTED; EXECUTION VALIDATION PENDING)
 
 **Purpose:** Produce reproducible validated representations of enzymes and substrates.
 
-**Work:** Sequence validation and clustering; versioned ESM-family embeddings with pinned model/tokenizer revisions and inference settings; chemical parsing, sanitization, stereochemistry policy, canonicalization, fingerprints and molecular graphs; feature archive schema and provenance; deterministic cache keys; bounded batch processing and invalid-input handling.
+**Implemented engineering scope:**
+- ESM-2 model and tokenizer pinned to full immutable Hugging Face commit `8c576d2aba1b27317e9321c8491d72f00d1b110a`; evaluation/inference mode, residue-only mean pooling, explicit 1,022-residue default limit, strict residue validation, and no silent truncation.
+- Representation card documenting model identity/license, intended use, limitations, source revision, pooling, reproducibility and non-clinical scope (`docs/ESM2_REPRESENTATION_CARD.md`).
+- Morgan radius-2, 2,048-bit fingerprints with chirality enabled by default; RDKit canonical isomeric SMILES; explicit no-salt/no-tautomer-normalization policy.
+- Bemis-Murcko scaffold IDs that ignore stereochemistry so stereoisomers stay in the same scaffold split; acyclic compounds use a canonical non-isomeric molecular-graph fallback. Invalid SMILES receive row-level rejection reasons.
+- Stereochemistry-aware molecular graph arrays: atom atomic number/degree/charge/hydrogen/aromaticity/CIP/hybridization/isotope/mass; bond type/conjugation/ring/stereo; canonical atom ordering; bidirectional edges and packed per-molecule offsets/cardinalities.
+- Feature NPZ schema 2.0 containing ESM+Morgan vectors, graph tensors, target values, source/record identifiers, original and canonical SMILES, normalized sequences and requested grouping arrays. All string arrays use non-object Unicode dtypes and load with `allow_pickle=False`.
+- Atomic cache files and deterministic cache keys incorporating model/tokenizer revisions, feature schema, fingerprint/graph settings, runtime dependency versions, device policy, normalized sequence and canonical isomeric SMILES.
+- Adjacent JSON feature manifests with row/source hashes, source input file hash, source versions/licenses, model/tokenizer settings, runtime/software versions and archive SHA-256.
+- MMseqs2 clustering validates sequences and source/record keys, collapses repeated target observations only when the same source record has the same normalized sequence, rejects conflicting sequence identities, verifies every unique protein entity is assigned exactly once, and records tool version, parameters, FASTA/cluster-output/mapping hashes.
+- CLI workflow: `normalize-identities` → `annotate-scaffolds` → `cluster-sequences` (writes `protein_cluster_id` back to observations) → double-cold `partition` → per-partition `build-features`. Source/record IDs remain text through partitioning.
 
-**Acceptance:** Every feature artifact records source IDs, representation code, model revision, parameters, and environment; repeat runs meet documented determinism tolerances; invalid inputs are auditable; transforms do not leak across partitions; cache invalidation follows all relevant dependency changes.
+**Acceptance evidence achieved:** Fixture-driven tests cover immutable revision validation, cache reuse/invalidation, chirality policy, graph tensor packing and row alignment, non-pickle archive safety, scaffold rejection audits, source-qualified MMseqs mappings, repeated Km/kcat source rows, incomplete cluster rejection, CLI workflows and provenance hashes. GitHub Actions run [#42182250301](https://github.com/AssayFlux/Kinetics/actions/runs/42182250301) passed: 61 tests on each of Python 3.10, 3.11 and 3.12; compilation and scoped Ruff checks passed. See `docs/WORKFLOW.md` and `docs/IMPLEMENTATION_STATUS.md`.
 
-**Evidence:** Feature schema, model cards, cache tests, edge-case tests, reproducibility report.
+**Still required before Step 3 can be scientifically closed:**
+- The pinned ESM-2 checkpoint has not yet been downloaded or executed; automated tests use a deterministic fixture encoder.
+- MMseqs2 has not yet been run on a real reviewed dataset; automated tests use a fake executable to exercise mapping and failure handling.
+- No real dataset feature archive has been built. Step 2's real CatPred snapshot/release is still pending.
+- Numerical repeat-run tolerances have not been measured on a pinned CPU/GPU environment. The manifest explicitly does not promise bitwise identity across hardware/library builds.
+- No graph neural network is claimed; graph tensors are a representation artifact for later model work.
+
+Step 3's representation software is implemented and CI-verified, but execution-level reproducibility and real-data evidence remain outstanding. Do not advance to Step 4's multimodal model claims until the pinned model and MMseqs2 have been exercised on a reviewed dataset and the numerical reproducibility report is retained.
+
 
 ## Step 4 — Kinetics-Multi prediction engine
 

@@ -27,7 +27,8 @@ This file distinguishes repository contents from execution, verification and sci
 - Assay-context preprocessing designed to avoid cross-validation leakage.
 - Classical model-family comparison and held-out reporting utilities.
 - Research CLI, metrics, model cards, prediction/reporting and visualization helpers.
-- SQLite experiment storage and package/CLI metadata.
+- SQLite experiment storage with schema version 1, transactional/idempotent bootstrap, forward-version protection, and consistent backup support.
+- Package/CLI metadata and CI verification across Python 3.10–3.12; Ruff lint is currently scoped to the new legacy adapter.
 - Domain documentation, publication protocol, paper outline and contribution guidance.
 - Dependency-free research-assistant protocol/facade that can later be exposed through documented, permission-scoped interfaces to the separate Kinetics Ecosystem project.
 
@@ -51,7 +52,7 @@ The genomics, transcriptomics, proteomics, structural biology, chemistry, pharma
 
 ## Verification status
 
-No model training, test execution, numerical validation, benchmark run or scientific evaluation is claimed by this status document. Code presence is not proof that a workflow executes correctly or generalizes. Record actual commands, environments, outputs and commit identifiers when verification is performed.
+GitHub Actions run [#42171306137](https://github.com/AssayFlux/Kinetics/actions/runs/42171306137) passed on Python 3.10, 3.11, and 3.12. It ran source compilation, the pytest suite, and Ruff checks for the new legacy adapter module and its tests. This is software verification only: no model training, numerical validation, benchmark run, or scientific generalization claim is made here. Code presence and passing software tests do not establish predictive validity.
 
 ## Project direction
 

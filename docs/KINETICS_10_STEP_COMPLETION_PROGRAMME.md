@@ -133,6 +133,8 @@ Every step must pass all applicable gates:
 
 ## Current execution baseline
 
-The first foundation increment was merged through PR #1. It added a Python 3.10–3.12 CI matrix and fixed test-discovered preprocessing and NumPy archive issues. The initial CI run recorded 20 passing tests on each Python version. This is partial Step 1 progress, not completion of Step 1 or of the platform.
+The initial foundation fixes were merged through PR #1. SQLite schema versioning, transactional/idempotent initialization, forward-version protection, and safer backups were merged through PR #3. The explicit legacy paired-row to canonical-observation adapter and scoped Ruff CI check were merged through PR #4. PR #5 added a regression test proving that initialization preserves records in a pre-versioned database.
 
-**Next Step 1 work:** reconcile legacy and canonical data paths; establish migration and interface contracts; extend CI with lint/type checks and broader integration tests. No later step is complete based on plans or stubs alone.
+The latest verification run [#42171306137](https://github.com/AssayFlux/Kinetics/actions/runs/42171306137) passed on Python 3.10, 3.11, and 3.12, including source compilation, pytest, and Ruff checks for the new adapter module and its tests. This is meaningful but partial Step 1 progress, not completion of Step 1 or of the platform.
+
+**Next Step 1 work:** connect canonical observation outputs to the supported legacy training/prediction interfaces; define package and CLI compatibility contracts; broaden static checks carefully; add an end-to-end fixture from legacy import through canonical audit and persistence. No later step is complete based on plans or stubs alone.

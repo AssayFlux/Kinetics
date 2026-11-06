@@ -56,6 +56,7 @@ def _graph_summary(payload: dict[str, np.ndarray]) -> np.ndarray:
         or atom_offsets[0] != 0 or edge_offsets[0] != 0
         or atom_offsets[-1] != len(atoms) or edge_offsets[-1] != len(bonds)
         or np.any(np.diff(atom_offsets) <= 0) or np.any(np.diff(edge_offsets) < 0)
+        or np.any(np.diff(edge_offsets) % 2 != 0)
     ):
         raise ValueError("Molecular graph arrays have invalid dimensions or offsets")
     if not np.isfinite(atoms).all() or not np.isfinite(bonds).all():

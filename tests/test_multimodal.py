@@ -134,6 +134,7 @@ def test_multimodal_cli_commands_are_exposed():
     fit_args = parser.parse_args([
         "fit-multi", "--train", "train.npz", "--test", "test.npz",
         "--target", "km", "--output-dir", "out", "--hidden-layers", "64,32",
+        "--git-revision", "a" * 40,
     ])
     assert fit_args.command == "fit-multi"
     assert fit_args.hidden_layers == "64,32"
@@ -142,3 +143,36 @@ def test_multimodal_cli_commands_are_exposed():
         "--features", "features.npz", "--output", "predictions.csv",
     ])
     assert predict_args.command == "predict-multi"
+
+
+def test_multimodal_rejects_feature_manifest_checksum_mismatch(tmp_path):
+    train = _archive(tmp_path / "train.npz", start=0, count=8)
+    test = _archive(tmp_path / "test.npz", start=8, count=4)
+    manifest_path = test.with_suffix(test.suffix + ".manifest.json")
+    manifest = json.loads(manifest_path.read_text())
+    manifest["archive"]["sha256"] = "0" * 64
+    manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="checksum/size"):
+        fit_multimodal_model(
+            train, test, target="km", output_dir=tmp_path / "model",
+            group_array="protein_cluster_id",
+            holdout_group_arrays=("protein_cluster_id", "scaffold_id"),
+            n_splits=2, hidden_layer_sizes=(8,), max_iter=2,
+            git_revision="a" * 40,
+        )
+
+
+def test_multimodal_uses_independent_calibration_archive(tmp_path):
+    train = _archive(tmp_path / "train.npz", start=0, count=8)
+    test = _archive(tmp_path / "test.npz", start=8, count=4)
+    calibration = _archive(tmp_path / "calibration.npz", start=12, count=4)
+    result = fit_multimodal_model(
+        train, test, target="km", output_dir=tmp_path / "model",
+        calibration_archive=calibration,
+        group_array="protein_cluster_id",
+        holdout_group_arrays=("protein_cluster_id", "scaffold_id"),
+        n_splits=2, hidden_layer_sizes=(8,), max_iter=4,
+        git_revision="a" * 40,
+    )
+    assert result["calibration"]["method"] == "split_conformal_absolute_residual"
+    assert result["calibration"]["n_calibration"] == 4

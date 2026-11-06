@@ -66,11 +66,24 @@ def create_dataset_release(
         audited.to_csv(staging / "observations_audited.csv", index=False)
         duplicates.to_csv(staging / "duplicate_audit.csv", index=False)
         write_json_atomic(quality, staging / "quality_report.json")
+        (staging / "DATA_CARD.md").write_text(
+            f"# {dataset_name}\\n\\n"
+            f"- Dataset ID: {dataset_id}\\n- Source: {source}\\n"
+            f"- Source version: {source_version}\\n- License (operator supplied): {license_id}\\n"
+            f"- Citation: {citation}\\n- Observations: {len(audited)}\\n"
+            f"- Rejected rows: {int(len(pd.read_csv(rejected)))}\\n"
+            f"- Duplicate groups: {int(quality.get('n_duplicate_groups', 0))}\\n"
+            f"- Conflicting groups: {int(quality.get('n_conflicting_groups', 0))}\\n\\n"
+            "This release contains in-vitro enzyme kinetic observations. "
+            "Conflicts are disclosed, not averaged. License terms require manual review "
+            "against the exact upstream snapshot. Verify the manifest before use.\\n",
+            encoding="utf-8",
+        )
         artifacts = {
             name: {"sha256": sha256_file(staging / name), "size_bytes": (staging / name).stat().st_size}
             for name in (
                 "observations.csv", "rejected_rows.csv", "observations_audited.csv",
-                "duplicate_audit.csv", "quality_report.json",
+                "duplicate_audit.csv", "quality_report.json", "DATA_CARD.md",
             )
         }
         manifest = {
@@ -80,7 +93,10 @@ def create_dataset_release(
             "source": source,
             "source_url": source_url,
             "source_version": source_version,
-            "license": {"identifier": license_id, "verified_by_release_operator": True},
+            "license": {
+                "identifier": license_id,
+                "status": "operator_supplied_requires_manual_source_terms_review",
+            },
             "citation": citation,
             "created_at": datetime.now(timezone.utc).isoformat(),
             "environment": environment_record(),

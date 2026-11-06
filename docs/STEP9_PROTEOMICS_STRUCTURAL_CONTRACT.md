@@ -91,3 +91,7 @@ A first release is eligible for review only after all of the following evidence 
 - researcher review of reports and warnings.
 
 Until these gates pass, this is a proposed contract, not an implemented Step 9 capability.
+
+## Implemented validation layer (2026-11-06)
+
+The `kinetics_core.proteomics` module now implements versioned protein-sequence, structure, residue-mapping, and derived-feature records with deterministic sequence hashing and explicit provenance. Residue mappings are validated against sequence accession/length and structure ID/chain. This does not yet parse coordinate files, generate mappings, compute features, or validate scientific accuracy; those remain acceptance work.

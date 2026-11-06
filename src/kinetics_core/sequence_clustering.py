@@ -1,9 +1,9 @@
 """Reproducible MMseqs2 sequence-cluster assignment wrapper."""
 from __future__ import annotations
 
-from pathlib import Path
 import shutil
 import subprocess
+from pathlib import Path
 
 import pandas as pd
 

@@ -239,3 +239,34 @@ builder.transform_frame(
 ```
 
 Do not generate train/test-specific transforms from combined data if those transforms learn parameters. ESM-2 and Morgan representations are fixed pretrained/algorithmic transforms; any learned dimensionality reduction, feature selection, normalization, or imputation must be fitted on the training partition only. Retain the cluster/scaffold split manifest alongside every feature/model artifact.
+
+
+The CLI exposes the complete representation-preparation sequence. Start with the identity-normalized observations, then annotate scaffolds and cluster sequences. The clustering command writes both a source/record-to-cluster mapping and an observations CSV with `protein_cluster_id` attached. Repeated Km/kcat rows from the same source record share one sequence-cluster mapping when their normalized sequences agree; conflicting sequences for the same source/record key are rejected.
+
+```bash
+kinetics-research normalize-identities \
+  --input data/curated/observations.csv \
+  --output-dir data/curated/identities
+
+kinetics-research annotate-scaffolds \
+  --input data/curated/identities/observations_with_identities.csv \
+  --output-dir data/curated/scaffolds
+
+kinetics-research cluster-sequences \
+  --input data/curated/scaffolds/observations_with_scaffolds.csv \
+  --output-dir data/curated/protein-clusters \
+  --sequence-column sequence_normalized \
+  --min-sequence-identity 0.4 --coverage 0.8 --threads 4
+
+kinetics-research partition \
+  --observations data/curated/protein-clusters/observations_with_protein_clusters.csv \
+  --output-dir data/partitions/km --target km
+
+kinetics-research build-features \
+  --input data/partitions/km/km_train.csv \
+  --output data/features/km_train.npz --target km \
+  --group-column protein_cluster_id --group-column scaffold_id \
+  --batch-size 16
+```
+
+Repeat partitioning and feature generation independently for kcat. Use the same frozen split manifest for all model comparisons; do not regenerate or tune partitions based on model results. The feature CLI requires the baseline extra (PyTorch, Transformers and RDKit); sequence clustering additionally requires a separately installed MMseqs2 executable. The command records the exact model revision and all representation parameters in the feature manifest.

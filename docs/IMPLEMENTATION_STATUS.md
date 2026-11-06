@@ -93,3 +93,7 @@ The feature-fusion MLP training/inference engine was merged in [PR #22](https://
 - Added deterministic paired-row percentile-bootstrap intervals for held-out log10 MAE/RMSE in `kinetics_core.validation`; baseline benchmark reports now include 95% intervals (2,000 resamples by default).
 - Tests cover reproducibility, interval structure and invalid input/configuration. These intervals are descriptive row-sampling uncertainty only; they do not account for cluster dependence or establish calibrated predictive uncertainty.
 - Step 5 real-data execution remains blocked by Step 2's reviewed immutable dataset release and Step 3's actual pinned ESM-2/MMseqs2 execution and repeatability evidence. No scientific performance claim is made.
+
+
+- Step 5 implementation PR [#24](https://github.com/AssayFlux/Kinetics/pull/24) merged as `89146f74174a89b11f0b065fa77b0b1bd7d98163`; its three-Python-version CI matrix passed. It adds the pre-execution protocol and paired-row bootstrap reporting, not empirical scientific validation.
+- Step 5 follow-on cluster-aware bootstrap implementation is being added in a separate change. It resamples whole held-out protein/scaffold groups and reports intervals by declared holdout axis; real-data scientific acceptance remains blocked by Step 2/3 execution prerequisites.

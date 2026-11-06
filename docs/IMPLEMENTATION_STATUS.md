@@ -148,6 +148,22 @@ The initial C++17/CMake molecular structure and scene-data foundation is impleme
 - Added focused unit tests and included both modules/tests in the CI lint command.
 - These increments are contract/data-integrity foundations only. Structure parsing, source adapters, actual mapping/feature computation, scientific validation, live CI/evidence verification, deployment, backup restore, and human release sign-off remain open.
 
-## Step 7 production reconciliation note (2026-11-06)
+## Step 7 production reconciliation (2026-11-06)
 
-The separate `kinetics/step7-production-runtime` branch contains OIDC, AWS Secrets Manager/S3, PostgreSQL job/audit, worker, backup/restore and deployment candidates, but it is 47 commits ahead and 50 behind the then-current mainline. Its latest recorded CI run (#42202295559) failed Terraform formatting and Rust formatting; Clippy and Rust tests were skipped. It has not been merged or accepted as production-ready. Do not deploy or claim Step 7 completion from that branch. Port only after reconciliation against current contracts, formatting, compile/test, live PostgreSQL integration, tenant-isolation and recovery evidence.
+- PR #46 merged the reconciled Rust OIDC/JWT API, AWS Secrets Manager and S3/KMS adapters, PostgreSQL durable job/audit store, worker lease runtime, migration, container, encrypted backup/restore scripts, and AWS ECS/RDS/S3/KMS Terraform candidate.
+- Terraform validation was added to CI; the API ingress requires an explicit CIDR allowlist rather than defaulting to the public internet.
+- Follow-up hardening on `kinetics/step7-runtime-reconciliation` fixes typed job-limit SQL bindings, retry attempt accounting, maximum-attempt claim filtering, and adds retry/success integration coverage. It also adds PostgreSQL integration-test formatting and current CI diagnostics.
+- Production is not deployed. The worker currently registers only `kinetics.noop_healthcheck`; scientific task handlers and per-job CPU/memory sandbox isolation are not yet implemented. Cloud account/VPC/ACM/ECR/OIDC configuration, live cross-tenant security tests, IAM review and database/artifact restore drill remain outstanding.
+- CI failures encountered during this follow-up exposed real Rust binding and formatting defects; fixes have been pushed and the newest workflow is pending. Do not treat earlier failed runs as passing evidence.
+
+## Step 8 research workbench
+
+The local-first FastAPI workbench is merged and has a documented end-to-end fixture integration for upload → audit job → artifact verification/download → report generation. It exposes the curation, feature, partition, compare, fit and inference CLI workflows through a strict allowlist. It binds to loopback only and is not a remote multi-user service. Researcher/screen-reader UAT, the full real-data workflow, ESM-2/MMseqs2 hardware benchmarks, and install/upgrade/rollback evidence remain open; see `docs/WORKBENCH_GUIDE.md`.
+
+## Step 9 scientific expansion
+
+The versioned sequence, structure, residue-mapping and derived-feature contracts are implemented. A fixed-column PDB adapter verifies source SHA-256, preserves model/chain/author residue/insertion/alternate-location metadata, and calculates C-alpha distances only from explicit validated mappings with evidence IDs. Tests use deterministic fixtures. mmCIF, source adapters, automated sequence alignment, independent structural reference checks and real-data benchmarks remain open; no broad scientific validation is claimed.
+
+## Step 10 release readiness
+
+The executable release evaluator validates required gates, source commit, evidence references and non-critical waiver metadata. It always reports `release_signoff: false`; it does not inspect evidence files or replace human approvals. Release manifest, SBOM, security/recovery/UAT evidence, signed reviews and production release remain outstanding.

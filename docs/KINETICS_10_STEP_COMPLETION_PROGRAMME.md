@@ -219,3 +219,8 @@ The initial foundation fixes were merged through PR #1. SQLite schema versioning
 The latest verification run [#42173358868](https://github.com/AssayFlux/Kinetics/actions/runs/42173358868) passed on Python 3.10, 3.11, and 3.12: 36 tests passed on each version, source compilation passed, and scoped Ruff checks passed. This is meaningful but partial Step 1 progress, not completion of Step 1 or of the platform.
 
 **Next Step 1 work:** establish and test the supported package/CLI compatibility contract; verify clean installation from the built wheel in CI; broaden static checks carefully; then complete the remaining security/dependency review. Do not force canonical independent target observations back into the legacy paired-target trainer, as that would reintroduce scientifically unsafe pairing. No later step is complete based on plans or stubs alone.
+
+
+## Step 9 and Step 10 implementation contracts
+
+The first proposed Step 9 domain contract is [Proteomics and structural biology](STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md). It deliberately starts with protein sequence/structure evidence and explicit source/chain mapping; it is not an implementation or scientific acceptance claim. The Step 10 release control specification is [Release readiness gates](STEP10_RELEASE_READINESS_GATES.md); a checklist does not substitute for passing and retaining the required release evidence.

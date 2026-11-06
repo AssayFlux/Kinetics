@@ -127,6 +127,15 @@ class ESM2Encoder:
     def encode(self, sequence: str) -> np.ndarray:
         return self.encode_many([sequence])[0]
 
+    def cache_device(self) -> str | None:
+        if self.device:
+            return self.device
+        try:
+            import torch
+        except ImportError:
+            return None
+        return "cuda" if torch.cuda.is_available() else "cpu"
+
     def metadata(self) -> dict[str, Any]:
         return {
             "encoder": "ESM-2",
@@ -137,7 +146,7 @@ class ESM2Encoder:
             "max_residues": self.max_residues,
             "accepted_amino_acids": "".join(sorted(_VALID_AA)),
             "device_policy": self.device or "auto",
-            "resolved_device": self.device,
+            "resolved_device": self.device or self.cache_device(),
             "output_dtype": "float32",
         }
 
@@ -388,8 +397,9 @@ class ObservationFeatureBuilder:
 
         reserved_names = {
             "X", "y_log10", "y_raw", "source_record_ids", "sequences",
-            "smiles", "target", "feature_metadata_json", "feature_schema_version",
-            "fingerprint_radius", "fingerprint_bits", "fingerprint_include_chirality",
+            "smiles", "canonical_smiles", "sources", "target", "feature_metadata_json",
+            "feature_schema_version", "fingerprint_radius", "fingerprint_bits",
+            "fingerprint_include_chirality",
         }
         collisions = reserved_names.intersection(group_columns)
         if collisions:
@@ -404,13 +414,20 @@ class ObservationFeatureBuilder:
                 raise ValueError(f"Grouping column {column} contains missing values")
             group_arrays[column] = selected[column].astype(str).to_numpy()
 
+        normalized_sequences = [
+            _normalize_sequence(value, self.encoder.max_residues)
+            for value in selected["sequence"].astype(str)
+        ]
+        canonical_smiles = [
+            canonicalize_smiles(value) for value in selected["smiles"].astype(str)
+        ]
         feature_batches = []
         for start in range(0, len(selected), batch_size):
-            batch = selected.iloc[start : start + batch_size]
+            stop = start + batch_size
             feature_batches.append(
                 self.transform_many(
-                    batch["sequence"].astype(str).tolist(),
-                    batch["smiles"].astype(str).tolist(),
+                    normalized_sequences[start:stop],
+                    canonical_smiles[start:stop],
                     batch_size=batch_size,
                 )
             )
@@ -439,8 +456,9 @@ class ObservationFeatureBuilder:
                     y_log10=np.log10(values).astype(np.float32),
                     y_raw=values.astype(np.float64),
                     source_record_ids=selected["source_record_id"].astype(str).to_numpy(),
-                    sequences=selected["sequence"].astype(str).to_numpy(),
+                    sequences=np.asarray(normalized_sequences),
                     smiles=selected["smiles"].astype(str).to_numpy(),
+                    canonical_smiles=np.asarray(canonical_smiles),
                     target=np.asarray([target]),
                     feature_schema_version=np.asarray([FEATURE_SCHEMA_VERSION]),
                     feature_metadata_json=np.asarray([
@@ -449,6 +467,10 @@ class ObservationFeatureBuilder:
                     fingerprint_radius=np.asarray([self.radius]),
                     fingerprint_bits=np.asarray([self.n_bits]),
                     fingerprint_include_chirality=np.asarray([self.include_chirality]),
+                    **(
+                        {"sources": selected["source"].astype(str).to_numpy()}
+                        if "source" in selected.columns else {}
+                    ),
                     **group_arrays,
                 )
                 handle.flush()
@@ -462,8 +484,8 @@ class ObservationFeatureBuilder:
             {
                 "source": str(row.get("source", "")),
                 "source_record_id": str(row["source_record_id"]),
-                "sequence": _normalize_sequence(row["sequence"], self.encoder.max_residues),
-                "smiles": canonicalize_smiles(row["smiles"]),
+                "sequence": normalized_sequences[index],
+                "smiles": canonical_smiles[index],
                 "canonical_value": float(value),
             }
             for (_, row), value in zip(selected.iterrows(), values)
@@ -481,6 +503,22 @@ class ObservationFeatureBuilder:
             "source_record_ids_sha256": hashlib.sha256(
                 "\n".join(selected["source_record_id"].astype(str)).encode()
             ).hexdigest(),
+            "source_keys_sha256": hashlib.sha256(
+                "\n".join(
+                    (selected["source"].astype(str) + ":" +
+                     selected["source_record_id"].astype(str)).tolist()
+                    if "source" in selected.columns
+                    else selected["source_record_id"].astype(str).tolist()
+                ).encode()
+            ).hexdigest(),
+            "sources": sorted(selected["source"].astype(str).unique().tolist())
+            if "source" in selected.columns else [],
+            "source_versions": sorted(
+                selected["source_version"].dropna().astype(str).unique().tolist()
+            ) if "source_version" in selected.columns else [],
+            "license_ids": sorted(
+                selected["license_id"].dropna().astype(str).unique().tolist()
+            ) if "license_id" in selected.columns else [],
             "feature_metadata": metadata,
             "archive": file_record(output),
         }

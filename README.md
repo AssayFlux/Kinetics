@@ -1,9 +1,54 @@
 # KINETICS
 
-<p align="center"><img src="Assets/Brand%20Logo.svg" alt="Kinetics brand logo" width="300"></p>
-<p align="center"><strong>A long-horizon biomedical research, molecular discovery and therapeutic-translation platform.</strong></p>
+<p align="center">
+  <img src="Assets/Brand%20Logo.svg" alt="Kinetics brand logo" width="300">
+</p>
 
-<p align="center">[Vision](VISION.md) · [Master roadmap](ROADMAP.md) · [Architecture](ARCHITECTURE.md) · [Engineering stack](ENGINEERING_STACK.md) · [Clinical translation](CLINICAL_TRANSLATION.md)</p>
+<p align="center"><strong>A long-horizon biomedical research, molecular discovery and therapeutic-translation platform.</strong></p>
+<p align="center">
+  <a href="VISION.md">Vision</a> ·
+  <a href="ROADMAP.md">Master roadmap</a> ·
+  <a href="ARCHITECTURE.md">Architecture</a> ·
+  <a href="ENGINEERING_STACK.md">Engineering stack</a> ·
+  <a href="CLINICAL_TRANSLATION.md">Clinical translation</a>
+</p>
+
+---
+
+## Explore Kinetics
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🧬 Molecular intelligence</h3>
+      Connect genes, variants, transcripts, proteins, structures, reactions and molecular interactions to investigate biological mechanisms.
+    </td>
+    <td width="50%" valign="top">
+      <h3>🧪 Therapeutic discovery</h3>
+      Build evidence-driven workflows for enzyme kinetics, chemical research, target–ligand analysis and therapeutic candidate exploration.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🧠 Multi-omics & systems biology</h3>
+      Integrate genomic, transcriptomic, proteomic, metabolomic and cellular evidence to study biological variation and disease.
+    </td>
+    <td width="50%" valign="top">
+      <h3>🖥️ 3D & biomedical imaging</h3>
+      Plan a native engine for molecular structures, microscopy, medical volumes, spatial analysis and interactive visualization.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>🤖 Kinetics Ecosystem</h3>
+      A separate AI project planned to assist research through cited evidence, permission-scoped tools and reproducible workflows.
+    </td>
+    <td width="50%" valign="top">
+      <h3>📱 Desktop first, Android later</h3>
+      Establish a powerful desktop research workbench and stable APIs before developing a secure mobile companion.
+    </td>
+  </tr>
+</table>
 
 ## The ambition
 
@@ -11,58 +56,96 @@ Kinetics aims to connect biology across scales—from genes, variants, proteins 
 
 The long-term goal is to accelerate discovery and the research that may enable more precise, effective and safer treatment. This is a multi-year ambition, not a claim that a universal treatment engine exists today.
 
-**Current status and safety:** Kinetics is research software. It does not diagnose, prescribe, select treatment or replace clinicians. Computational predictions and simulations are hypotheses, not medical instructions. Any future clinical function requires a defined intended use, independent clinical validation, appropriate governance and regulatory authorization.
+> **Research and safety boundary:** Kinetics is research software. It does not diagnose, prescribe, select treatment or replace clinicians. Computational predictions and simulations are hypotheses, not medical instructions. Any future clinical function requires a defined intended use, independent clinical validation, appropriate governance and regulatory authorization.
 
-## Planned scientific domains
+## Scientific domains
 
-- Genomics, variant interpretation and pharmacogenomics
-- Transcriptomics, epigenomics, single-cell and spatial biology
-- Proteomics, protein engineering and structural biology
-- Enzyme kinetics and biochemical reaction systems
-- Cheminformatics, target–ligand research and therapeutic discovery
-- Molecular simulation, docking and physical modelling
-- Disease mechanisms, pathways and systems biology
-- Multi-omics integration and biological individuality
-- Biomedical imaging, microscopy, 3D/4D visualization and image analysis
-- Pharmacology, PK/PD and treatment-response research
-- Experimental study design, evidence synthesis and reproducible reporting
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <h3>01 · Genomics</h3>
+      Variants · Pharmacogenomics · Regulation
+    </td>
+    <td align="center" width="33%">
+      <h3>02 · Proteins</h3>
+      Sequences · Structures · Engineering
+    </td>
+    <td align="center" width="33%">
+      <h3>03 · Kinetics</h3>
+      Enzymes · Reactions · Assays
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <h3>04 · Chemistry</h3>
+      Compounds · Docking · ADMET research
+    </td>
+    <td align="center">
+      <h3>05 · Systems biology</h3>
+      Pathways · Networks · Multi-omics
+    </td>
+    <td align="center">
+      <h3>06 · Imaging</h3>
+      Microscopy · Medical images · 3D/4D
+    </td>
+  </tr>
+</table>
 
-These are roadmap areas, not claims of completed functionality. See [ROADMAP.md](ROADMAP.md) for phased plans and exit criteria.
+These are planned scientific domains, not claims of completed functionality. See the [master roadmap](ROADMAP.md) for phases, dependencies and exit criteria.
 
-## Engineering: Python + C++ + Rust
+## Engineering architecture
 
-| Technology | Responsibility |
-|---|---|
-| **Python** | Scientific methods, bioinformatics, data engineering, machine learning, APIs, workflows and research orchestration |
-| **C++** | Native 3D rendering, molecular visualization, volume rendering, geometry and performance-critical image analysis |
-| **Rust** | Secure systems services, concurrency, workflow runtime, data integrity, resource management and portable components |
+<table>
+  <tr>
+    <th align="center">🐍 Python</th>
+    <th align="center">⚙️ C++</th>
+    <th align="center">🦀 Rust</th>
+  </tr>
+  <tr>
+    <td valign="top">Scientific computing, bioinformatics, cheminformatics, machine learning, data engineering, APIs and research workflows.</td>
+    <td valign="top">Native 3D rendering, molecular visualization, volume rendering, geometry and performance-critical image processing.</td>
+    <td valign="top">Secure systems services, concurrency, workflow runtime, data integrity, resource management and portable components.</td>
+  </tr>
+</table>
 
-Stable, versioned interfaces connect the layers. We will prototype before committing to major frameworks and use established scientific libraries where they reduce risk. The first full product is a desktop research workbench; Android is a later client built on stable APIs and portable components.
+Stable, versioned interfaces will connect these layers. Framework choices will be validated through prototypes, licensing review and performance measurements before they become core dependencies.
 
-## Independent AI: Kinetics Ecosystem
+## The development journey
 
-Kinetics Ecosystem is a separate AI project with its own repository and release cycle. It is not Astronaut and does not depend on Astronaut. Kinetics will eventually expose documented, permission-scoped interfaces for evidence retrieval and approved research-tool orchestration. Read-only access is the default; consequential actions require user authorization. AI must distinguish evidence, measurements, predictions and speculation.
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <h3>Ⅰ · Foundation</h3>
+      Architecture, data model, provenance, storage and APIs
+    </td>
+    <td align="center" width="25%">
+      <h3>Ⅱ · Science</h3>
+      Omics, proteins, kinetics, chemistry and simulation
+    </td>
+    <td align="center" width="25%">
+      <h3>Ⅲ · Experience</h3>
+      C++ visualization, Rust services and desktop workbench
+    </td>
+    <td align="center" width="25%">
+      <h3>Ⅳ · Translation</h3>
+      Validation, clinical research pathways and Android
+    </td>
+  </tr>
+</table>
+
+The roadmap is intentionally multi-year. Architecture and functional modules are assembled first; comprehensive training, testing, benchmarking and scientific evaluation follow the planned implementation stages. Security, correctness and safety checks remain continuous throughout development.
+
+## Independent AI — Kinetics Ecosystem
+
+Kinetics Ecosystem is a separate project with its own repository and release cycle. It is not Astronaut and does not depend on Astronaut. Kinetics will eventually expose documented, permission-scoped interfaces for evidence retrieval and approved research-tool orchestration. Read-only access is the default; consequential actions require user authorization. AI must distinguish evidence, measurements, predictions and speculation.
 
 ## Existing foundation
 
 The current repository is an enzyme-kinetics research foundation. It includes workflows and utilities for protein embeddings, RDKit molecular fingerprints, Km/kcat baselines, data normalization, provenance, assay context, leakage-aware sequence/scaffold splits, uncertainty/applicability analysis, SQLite experiment metadata and reporting. Existing modules and compatibility paths will be reconciled and migrated deliberately; code presence is not proof of execution, benchmarking or scientific validation.
 
-## Development sequence
-
-1. Establish governance, system contracts and the new architecture.
-2. Strengthen the core platform, data model, provenance, storage and APIs.
-3. Expand scientific domains incrementally, beginning with the existing kinetics foundation.
-4. Build the C++ visualization/imaging engine and Rust systems services behind stable interfaces.
-5. Develop the desktop research workbench.
-6. Connect the separate Kinetics Ecosystem AI through permission-scoped APIs.
-7. Assemble end-to-end research workflows.
-8. Run comprehensive software verification, training, benchmarking and scientific validation after the implementation programme is assembled.
-9. Pursue clinical translation only through independent evidence, ethics, quality systems and regulatory gates.
-10. Deliver Android after desktop contracts and shared components are stable.
-
 ## Scientific principles
 
-- Preserve raw source data and distinguish it from normalized data and predictions.
+- Preserve raw source data and distinguish it from normalized data, simulations and predictions.
 - Record provenance, licenses, versions, units, assay conditions and transformations.
 - Make uncertainty, applicability limits, missing evidence and population bias visible.
 - Use leakage-resistant evaluation and independent external validation.
@@ -71,12 +154,18 @@ The current repository is an enzyme-kinetics research foundation. It includes wo
 
 ## Repository guide
 
-- `Assets/` — brand assets, including [Brand Logo](Assets/Brand%20Logo.svg)
-- `src/` — current Python implementation
-- `docs/` — scientific methods and implementation notes
-- `scripts/` — explicit data acquisition and inspection tools
-- `tests/` — software tests
-- `data/`, `models/` — local workspaces; do not commit private data or large generated artifacts
-- `VISION.md`, `ROADMAP.md`, `ARCHITECTURE.md`, `ENGINEERING_STACK.md` — long-term direction
+| Location | Purpose |
+|---|---|
+| `Assets/` | Brand assets, including the [Brand Logo](Assets/Brand%20Logo.svg) |
+| `src/` | Current Python implementation |
+| `docs/` | Scientific methods and implementation notes |
+| `scripts/` | Explicit data acquisition and inspection tools |
+| `tests/` | Software tests |
+| `data/`, `models/` | Local workspaces; do not commit private data or large generated artifacts |
+| `VISION.md`, `ROADMAP.md` | Long-term direction and phased programme |
+| `ARCHITECTURE.md`, `ENGINEERING_STACK.md` | System design and language responsibilities |
+| `CLINICAL_TRANSLATION.md` | Evidence, privacy and clinical safety gates |
 
-**Build for scientific truth. Engineer for scale. Translate to healthcare only when evidence earns that responsibility.**
+---
+
+<p align="center"><strong>Build for scientific truth. Engineer for scale. Translate to healthcare only when evidence earns that responsibility.</strong></p>

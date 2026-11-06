@@ -116,6 +116,15 @@ Structure load_pdb(const std::filesystem::path& path) {
             }
             continue;
         }
+        if (record == "CONECT") {
+            const int source = parse_int(field(line, 6, 5), "CONECT source");
+            for (std::size_t offset = 11; offset + 5 <= line.size(); offset += 5) {
+                const auto target_text = trim(field(line, offset, 5));
+                if (!target_text.empty())
+                    conect[source].push_back(parse_int(target_text, "CONECT target"));
+            }
+            continue;
+        }
         if (finished_first_model) continue;
 
         if (record == "ATOM" || record == "HETATM") {
@@ -138,13 +147,6 @@ Structure load_pdb(const std::filesystem::path& path) {
             atom.temperature_factor = parse_double(field(line, 60, 6), "temperature factor", true);
             atom.element = trim(field(line, 76, 2));
             structure.atoms.push_back(std::move(atom));
-        } else if (record == "CONECT" && in_first_model) {
-            const int source = parse_int(field(line, 6, 5), "CONECT source");
-            for (std::size_t offset = 11; offset + 5 <= line.size(); offset += 5) {
-                const auto target_text = trim(field(line, offset, 5));
-                if (!target_text.empty())
-                    conect[source].push_back(parse_int(target_text, "CONECT target"));
-            }
         }
     }
     if (structure.atoms.empty()) throw std::runtime_error("PDB contains no atoms in first model");

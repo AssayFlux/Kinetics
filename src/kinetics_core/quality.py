@@ -190,7 +190,7 @@ def _identity_text(value: typing.Any) -> str | None:
     return text or None
 
 
-def _rounded_optional(value: Any, digits: int) -> float | None:
+def _rounded_optional(value: typing.Any, digits: int) -> float | None:
     if value is None or pd.isna(value):
         return None
     numeric = float(value)

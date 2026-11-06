@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Kinetics · 3D Structure Viewer</title>
+<script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+<style>
+:root{font-family:system-ui,sans-serif;color-scheme:light dark}*{box-sizing:border-box}
+body{margin:0;background:Canvas;color:CanvasText}header{padding:1rem 1.25rem;border-bottom:1px solid GrayText}
+main{max-width:1500px;margin:auto;padding:1rem;display:grid;grid-template-columns:minmax(0,2fr) minmax(270px,1fr);gap:1rem}
+.panel{border:1px solid GrayText;border-radius:12px;padding:1rem;min-width:0}
+#viewer{height:min(70vh,720px);min-height:380px;background:#101820;border-radius:8px;overflow:hidden}
+.controls{display:flex;gap:.65rem;flex-wrap:wrap;align-items:center;margin:.75rem 0}
+label{font-size:.9rem}button,select,input{font:inherit;padding:.5rem;border-radius:6px;border:1px solid GrayText;background:Canvas;color:CanvasText}
+button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid Highlight;outline-offset:2px}
+.status{min-height:1.5rem;color:GrayText}.scroll{max-height:320px;overflow:auto}table{width:100%;border-collapse:collapse;font-size:.85rem}td,th{text-align:left;padding:.4rem;border-bottom:1px solid GrayText}
+.sequence{display:flex;flex-wrap:wrap;gap:3px}.residue{font-family:monospace;padding:3px;border:1px solid GrayText;border-radius:4px;background:ButtonFace;color:ButtonText}
+small{color:GrayText}.notice{font-size:.85rem;color:GrayText}
+@media(max-width:850px){main{grid-template-columns:1fr}#viewer{height:55vh;min-height:340px}}
+</style>
+</head>
+<body>
+<header><h1>Kinetics 3D Structure Viewer</h1><p class="notice">Local PDB/mmCIF viewing and exploratory analysis. Coordinates are not modified. Experimental/predicted status must come from verified source metadata.</p></header>
+<main>
+<section class="panel">
+<div class="controls">
+<label>Structure file <input id="file" type="file" accept=".pdb,.ent,.cif,.mmcif"></label>
+<label>Representation <select id="style"><option value="cartoon">Cartoon / ribbon</option><option value="stick">Sticks</option><option value="sphere">Spheres</option><option value="line">Lines</option><option value="cross">Crosses</option></select></label>
+<label><input id="surface" type="checkbox"> Surface</label>
+<label><input id="ligands" type="checkbox" checked> Show non-polymer atoms</label>
+<button id="reset" type="button">Reset view</button>
+<button id="png" type="button">Export PNG</button>
+</div>
+<div id="viewer" role="img" aria-label="Interactive three-dimensional molecular structure"></div>
+<p id="status" class="status" role="status" aria-live="polite">Choose a local PDB or mmCIF file to begin.</p>
+</section>
+<aside class="panel">
+<h2>Structure details</h2><div id="summary" class="notice">No structure loaded.</div>
+<h3>Sequence / residues</h3><p class="notice">Select a residue to highlight it in the 3D model. Residue numbers use the file's author numbering.</p>
+<div id="sequence" class="sequence scroll"></div>
+<h3>Residue contacts</h3>
+<label>Heavy-atom cutoff (Å) <input id="cutoff" type="number" min="2" max="10" step=".5" value="4"></label>
+<div class="controls"><button id="contacts" type="button" disabled>Calculate contacts</button></div>
+<div id="contact-results" class="scroll notice">Load a structure to calculate contacts.</div>
+<h3>Evidence notes</h3><p class="notice">The viewer displays coordinates from the selected file. It does not determine whether a structure is experimental or predicted, validate its biological relevance, or infer a binding interaction. Contact calculations are geometric proximity only.</p>
+</aside>
+</main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+let viewer=null,model=null,sourceName="",sourceText="",format="";
+function status(message){$("status").textContent=message}
+function initViewer(){if(!window.$3Dmol){status("3Dmol.js could not load. Check network access or bundle the viewer library in your APK.");return false}if(!viewer)viewer=$3Dmol.createViewer($("viewer"),{backgroundColor:"#101820",antialias:true});return true}
+function atomSelection(atom){return {chain:atom.chain,resi:atom.resi}}
+function render(){
+ if(!model)return;
+ const style=$("style").value;
+ viewer.setStyle({},{}); 
+ const polymer={};
+ if(style==="cartoon")polymer.cartoon={color:"spectrum"};
+ else if(style==="stick")polymer.stick={radius:.18};
+ else if(style==="sphere")polymer.sphere={scale:.32};
+ else if(style==="line")polymer.line={};
+ else polymer.cross={};
+ viewer.setStyle({hetflag:false},polymer);
+ if($("ligands").checked)viewer.setStyle({hetflag:true},{stick:{radius:.2,colorscheme:"Jmol"}});
+ if($("surface").checked)viewer.addSurface($3Dmol.SurfaceType.VDW,{opacity:.72, color:"white"},{hetflag:false});
+ viewer.zoomTo();viewer.render();
+}
+function residueKey(atom){return String(atom.chain)+"|"+String(atom.resi)+"|"+String(atom.resn)}
+function loadSequence(){
+ const atoms=model.selectedAtoms({}),seen=new Set(),residues=[];
+ for(const atom of atoms){if(atom.hetflag)continue;const key=residueKey(atom);if(seen.has(key))continue;seen.add(key);residues.push({key,chain:atom.chain,resi:atom.resi,resn:atom.resn});}
+ const root=$("sequence");root.replaceChildren();
+ for(const residue of residues){const b=document.createElement("button");b.className="residue";b.type="button";b.textContent=residue.resn+residue.resi;b.title="Chain "+residue.chain+" residue "+residue.resi;b.addEventListener("click",()=>{render();viewer.addStyle({chain:residue.chain,resi:residue.resi},{stick:{color:"#ffcc00",radius:.28}});viewer.zoomTo({chain:residue.chain,resi:residue.resi},700);viewer.render()});root.appendChild(b);}
+ $("summary").textContent=sourceName+" · "+format.toUpperCase()+" · "+residues.length+" polymer residues · "+atoms.length+" atoms";
+ $("contacts").disabled=false;
+}
+function loadFile(file){
+ if(!initViewer())return;
+ const reader=new FileReader();
+ reader.onerror=()=>status("Could not read the selected file.");
+ reader.onload=()=>{
+  try{
+   sourceText=String(reader.result);sourceName=file.name;format=/\.(cif|mmcif)$/i.test(file.name)?"cif":"pdb";
+   viewer.clear();model=viewer.addModel(sourceText,format);
+   render();loadSequence();status("Loaded "+sourceName+". Coordinates are displayed as supplied by the file.");
+  }catch(error){model=null;status("Structure could not be rendered: "+error.message)}
+ };
+ reader.readAsText(file);
+}
+$("file").addEventListener("change",e=>{const file=e.target.files&&e.target.files[0];if(file)loadFile(file)});
+$("style").addEventListener("change",render);$("surface").addEventListener("change",render);$("ligands").addEventListener("change",render);
+$("reset").addEventListener("click",()=>{if(model){render();viewer.zoomTo();viewer.render()}});
+$("png").addEventListener("click",()=>{if(!viewer)return;const a=document.createElement("a");a.href=viewer.pngURI();a.download="kinetics-structure.png";a.click()});
+$("contacts").addEventListener("click",()=>{
+ if(!model)return;
+ const cutoff=Number($("cutoff").value);if(!Number.isFinite(cutoff)||cutoff<2||cutoff>10){$("contact-results").textContent="Choose a cutoff between 2 and 10 Å.";return}
+ const atoms=model.selectedAtoms({}),groups=new Map();
+ for(const atom of atoms){if(atom.hetflag||["H","D"].includes(String(atom.elem).toUpperCase()))continue;const key=residueKey(atom);if(!groups.has(key))groups.set(key,{chain:atom.chain,resi:atom.resi,resn:atom.resn,atoms:[]});groups.get(key).atoms.push(atom)}
+ const residues=[...groups.values()],contacts=[];
+ for(let i=0;i<residues.length;i++)for(let j=i+1;j<residues.length;j++){
+  let min=Infinity;for(const a of residues[i].atoms)for(const b of residues[j].atoms){const d=Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);if(d<min)min=d}
+  if(min<=cutoff)contacts.push({a:residues[i],b:residues[j],d:min});
+ }
+ contacts.sort((a,b)=>a.d-b.d);const root=$("contact-results");root.replaceChildren();
+ const p=document.createElement("p");p.textContent=contacts.length+" residue pairs within "+cutoff+" Å (minimum heavy-atom distance).";root.appendChild(p);
+ const table=document.createElement("table"),head=document.createElement("tr");for(const label of ["Residue 1","Residue 2","Min distance (Å)"]){const th=document.createElement("th");th.textContent=label;head.appendChild(th)}table.appendChild(head);
+ for(const c of contacts.slice(0,500)){const tr=document.createElement("tr");for(const value of [c.a.chain+":"+c.a.resn+c.a.resi,c.b.chain+":"+c.b.resn+c.b.resi,c.d.toFixed(2)]){const td=document.createElement("td");td.textContent=value;tr.appendChild(td)}table.appendChild(tr)}root.appendChild(table);
+});
+</script>
+</body></html>

@@ -11,7 +11,7 @@ import hashlib
 import io
 import math
 
-from .pdb_adapter import PdbAtom, ParsedPdb
+from .pdb_adapter import ParsedPdb, PdbAtom
 from .proteomics import StructureRecord
 
 

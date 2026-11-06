@@ -36,7 +36,9 @@ def prepare_target_partitions(
     source = Path(observations_csv)
     if not source.is_file():
         raise FileNotFoundError(source)
-    frame = pd.read_csv(source)
+    frame = pd.read_csv(
+        source, dtype={"source_record_id": "string", "source": "string"}
+    )
     required = {"target", "source", "source_record_id", "canonical_value", protein_group_column, substrate_group_column}
     missing = required - set(frame.columns)
     if missing:

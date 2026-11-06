@@ -43,6 +43,8 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
 
     assert accepted["source_record_id"].tolist() == ["0007", "0008"]
     assert accepted["canonical_value"].tolist() == [2.5e-6, 4.0e-6]
+    assert accepted["measurement_kind"].tolist() == ["source_aggregated", "source_aggregated"]
+    assert accepted["aggregation_method"].iloc[0].startswith("geometric_mean")
     assert accepted["ph"].tolist() == [7.0, 6.5]
     assert accepted["temperature_k"].tolist() == [298.15, 310.0]
     assert accepted["assay_id"].tolist() == ["assay-a", "assay-b"]
@@ -84,6 +86,8 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
     accepted = pd.read_csv(accepted_path, dtype={"source_record_id": "string"})
     manifest = json.loads(manifest_path.read_text())
     assert len(accepted) == 2
+    assert accepted["measurement_kind"].eq("source_aggregated").all()
+    assert accepted["aggregation_method"].iloc[0].startswith("geometric_mean")
     assert accepted["temperature_k"].tolist() == [298.15, 310.15]
     assert accepted["protein_accession"].tolist() == ["Q12345", "P01234"]
     assert accepted["smiles"].tolist() == ["CCO", "CCN"]

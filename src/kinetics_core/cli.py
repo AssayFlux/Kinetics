@@ -197,9 +197,9 @@ def main(argv: list[str] | None = None) -> int:
 
         result = verify_dataset_release(args.release_dir)
     elif args.command == "normalize-identities":
-        from pathlib import Path
-        import tempfile
         import shutil
+        import tempfile
+        from pathlib import Path
 
         import pandas as pd
 
@@ -229,8 +229,11 @@ def main(argv: list[str] | None = None) -> int:
                 "workflow": "biomolecular_identity_normalization",
                 "input": file_record(input_path),
                 "outputs": {
-                    accepted_path.name: file_record(accepted_path),
-                    rejected_path.name: file_record(rejected_path),
+                    path.name: {
+                        "sha256": file_record(path)["sha256"],
+                        "size_bytes": path.stat().st_size,
+                    }
+                    for path in (accepted_path, rejected_path)
                 },
                 "input_rows": int(len(frame)),
                 "accepted_rows": int(len(accepted)),

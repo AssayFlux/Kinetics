@@ -1,6 +1,6 @@
 use chrono::Utc;
 use kinetics_infra::postgres::{
-    AppendAuditEvent, AppendOnlyAuditStore, PostgresRuntimeStore, RuntimeStoreError,
+    AppendAuditEvent, AppendOnlyAuditStore, JobSubmissionLimits, PostgresRuntimeStore, RuntimeStoreError,
 };
 use sqlx::{postgres::PgPoolOptions, PgPool};
 use uuid::Uuid;
@@ -61,7 +61,7 @@ async fn postgres_enforces_tenant_quotas_leases_cancellation_and_append_only_aud
         .await
         .unwrap();
     let repeated = jobs
-        .submit("tenant-a", "key-1", payload.clone(), 60, 1024, 500, 1)
+        .submit("tenant-a", "key-1", payload.clone(), limits)
         .await
         .unwrap();
     assert_eq!(job.id, repeated.id);

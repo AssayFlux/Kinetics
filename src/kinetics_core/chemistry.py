@@ -149,6 +149,8 @@ def annotate_scaffolds_audited(
 
     if smiles_column not in frame.columns:
         raise ValueError(f"Missing SMILES column: {smiles_column}")
+    if output_column in frame.columns:
+        raise ValueError(f"Output scaffold column already exists: {output_column}")
     accepted = []
     rejected = []
     for index, row in frame.iterrows():

@@ -42,7 +42,7 @@ def render_model_card(metadata: dict[str, Any]) -> str:
 
 - Dataset: {dataset.get('name', 'not documented')}
 - Version: {dataset.get('version', 'not documented')}
-- Source: {dataset.get('source_url', 'not documented')}
+- Source: {dataset.get('source', dataset.get('source_url', 'not documented'))}
 - License: {dataset.get('license', 'not documented')}
 - Number of observations: {dataset.get('n_observations', 'not documented')}
 - Curation manifest: {dataset.get('manifest', 'not documented')}

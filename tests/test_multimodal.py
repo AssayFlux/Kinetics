@@ -13,9 +13,14 @@ from kinetics_core.multimodal import (
 
 def _archive(path, *, start, count, target="km"):
     rows = np.arange(start, start + count)
-    x = np.stack([
-        np.linspace(0.0, 1.0, 6) + index * 0.03 for index in rows
+    protein = np.stack([
+        np.linspace(0.0, 1.0, 4) + index * 0.03 for index in rows
     ]).astype(np.float32)
+    morgan = np.asarray(
+        [[index % 2, (index // 2) % 2] for index in rows],
+        dtype=np.float32,
+    )
+    x = np.concatenate((protein, morgan), axis=1)
     atom_rows = np.tile(
         np.asarray([[6, 3, 0, 1, 0, 0, 3, 0, 12.0],
                     [8, 1, 0, 0, 0, 0, 3, 0, 16.0]], dtype=np.float32),
@@ -34,7 +39,7 @@ def _archive(path, *, start, count, target="km"):
         "feature_metadata_json": np.asarray(['{"fixture":"v1"}']),
         "feature_model": np.asarray(["ESM-2"]),
         "fingerprint_radius": np.asarray([2]),
-        "fingerprint_bits": np.asarray([2048]),
+        "fingerprint_bits": np.asarray([2]),
         "graph_atom_features": atom_rows,
         "graph_bond_features": bond_rows,
         "graph_atom_offsets": np.arange(0, 2 * count + 1, 2, dtype=np.int64),
@@ -126,7 +131,7 @@ def test_multimodal_rejects_target_mismatch(tmp_path):
         fit_multimodal_model(
             train, test, target="km", output_dir=tmp_path / "model",
             group_array="protein_cluster_id", n_splits=2,
-            hidden_layer_sizes=(8,), max_iter=2,
+            hidden_layer_sizes=(8,), max_iter=2, git_revision="a" * 40,
         )
 
 
@@ -179,3 +184,18 @@ def test_multimodal_uses_independent_calibration_archive(tmp_path):
     )
     assert result["calibration"]["method"] == "split_conformal_absolute_residual"
     assert result["calibration"]["n_calibration"] == 4
+
+
+def test_multimodal_rejects_calibration_test_group_overlap(tmp_path):
+    train = _archive(tmp_path / "train.npz", start=0, count=8)
+    test = _archive(tmp_path / "test.npz", start=8, count=4)
+    calibration = _archive(tmp_path / "calibration.npz", start=10, count=4)
+    with pytest.raises(ValueError, match="calibration and held-out test"):
+        fit_multimodal_model(
+            train, test, target="km", output_dir=tmp_path / "model",
+            calibration_archive=calibration,
+            group_array="protein_cluster_id",
+            holdout_group_arrays=("protein_cluster_id", "scaffold_id"),
+            n_splits=2, hidden_layer_sizes=(8,), max_iter=2,
+            git_revision="a" * 40,
+        )

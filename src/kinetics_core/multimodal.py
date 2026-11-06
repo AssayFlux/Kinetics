@@ -11,6 +11,7 @@ import json
 import logging
 import os
 import re
+import tempfile
 import warnings
 from pathlib import Path
 from typing import Any
@@ -83,6 +84,11 @@ def _archive_source_provenance(manifests: list[dict[str, Any]]) -> dict[str, lis
         result[field] = list(next(iter(sets)))
     return result
 
+def _string_tuple(values) -> tuple[str, ...]:
+    """Normalize NumPy scalar labels to built-in Python strings for sklearn."""
+    return tuple(str(value) for value in values)
+
+
 def _graph_summary(payload: dict[str, np.ndarray]) -> np.ndarray:
     """Create fixed-width per-molecule summaries from packed graph arrays."""
     required = {
@@ -135,13 +141,20 @@ def _multimodal_design(payload: dict[str, np.ndarray]) -> tuple[np.ndarray | pd.
     X = np.asarray(payload["X"], dtype=np.float32)
     if X.ndim != 2 or not np.isfinite(X).all():
         raise ValueError("Base protein/chemical feature matrix must be finite and two-dimensional")
+    if "fingerprint_bits" not in payload or len(payload["fingerprint_bits"]) != 1:
+        raise ValueError("Feature archive must declare one Morgan fingerprint dimension")
+    fingerprint_bits = int(payload["fingerprint_bits"].reshape(-1)[0])
+    if fingerprint_bits < 1 or X.shape[1] <= fingerprint_bits:
+        raise ValueError("Feature matrix does not contain separate protein and Morgan modalities")
+    if not np.isin(X[:, -fingerprint_bits:], (0.0, 1.0)).all():
+        raise ValueError("Morgan fingerprint columns must contain binary values")
     graph = _graph_summary(payload)
     base = np.concatenate((X, graph), axis=1).astype(np.float32, copy=False)
-    numeric = tuple(
-        np.asarray(payload.get("context_numeric_columns", np.asarray([], dtype=str))).astype(str)
+    numeric = _string_tuple(
+        payload.get("context_numeric_columns", np.asarray([], dtype=str))
     )
-    categorical = tuple(
-        np.asarray(payload.get("context_categorical_columns", np.asarray([], dtype=str))).astype(str)
+    categorical = _string_tuple(
+        payload.get("context_categorical_columns", np.asarray([], dtype=str))
     )
     context_enabled = bool(numeric or categorical)
     if context_enabled:
@@ -273,15 +286,21 @@ def fit_multimodal_model(
     if context_enabled != test_context:
         raise ValueError("Training and held-out assay-context availability differs")
     if context_enabled:
-        numeric_columns = tuple(train.get(
-            "context_numeric_columns", np.asarray([], dtype=str)
-        ).astype(str))
-        categorical_columns = tuple(train.get(
-            "context_categorical_columns", np.asarray([], dtype=str)
-        ).astype(str))
-        if tuple(test.get("context_numeric_columns", np.asarray([], dtype=str)).astype(str)) != numeric_columns:
+        numeric_columns = _string_tuple(
+            train.get("context_numeric_columns", np.asarray([], dtype=str))
+        )
+        categorical_columns = _string_tuple(
+            train.get("context_categorical_columns", np.asarray([], dtype=str))
+        )
+        test_numeric = _string_tuple(
+            test.get("context_numeric_columns", np.asarray([], dtype=str))
+        )
+        test_categorical = _string_tuple(
+            test.get("context_categorical_columns", np.asarray([], dtype=str))
+        )
+        if test_numeric != numeric_columns:
             raise ValueError("Training and held-out numeric context columns differ")
-        if tuple(test.get("context_categorical_columns", np.asarray([], dtype=str)).astype(str)) != categorical_columns:
+        if test_categorical != categorical_columns:
             raise ValueError("Training and held-out categorical context columns differ")
     else:
         numeric_columns, categorical_columns = (), ()
@@ -367,13 +386,22 @@ def fit_multimodal_model(
             train, calibration, label="calibration", target=target,
             holdout_group_arrays=leakage_axes,
         )
+        for name in leakage_axes:
+            calibration_groups = set(
+                np.asarray(calibration[name]).astype(str).reshape(-1)
+            )
+            test_groups = set(np.asarray(test[name]).astype(str).reshape(-1))
+            if calibration_groups.intersection(test_groups):
+                raise ValueError(
+                    f"Group leakage between calibration and held-out test: {name}"
+                )
         X_cal, calibration_context = _multimodal_design(calibration)
         if calibration_context != context_enabled:
             raise ValueError("Calibration archive assay-context availability differs")
         if context_enabled:
-            if tuple(calibration["context_numeric_columns"].astype(str)) != numeric_columns:
+            if _string_tuple(calibration["context_numeric_columns"]) != numeric_columns:
                 raise ValueError("Calibration numeric context columns differ")
-            if tuple(calibration["context_categorical_columns"].astype(str)) != categorical_columns:
+            if _string_tuple(calibration["context_categorical_columns"]) != categorical_columns:
                 raise ValueError("Calibration categorical context columns differ")
         conformal_q = conformal_quantile(
             calibration["y_log10"], estimator.predict(X_cal), alpha=conformal_alpha
@@ -429,6 +457,10 @@ def fit_multimodal_model(
         "n_train": int(len(y_train)),
         "n_held_out": int(len(y_test)),
         "base_feature_dimension": int(train["X"].shape[1]),
+        "protein_embedding_dimension": int(
+            train["X"].shape[1] - int(train["fingerprint_bits"].reshape(-1)[0])
+        ),
+        "morgan_fingerprint_dimension": int(train["fingerprint_bits"].reshape(-1)[0]),
         "fused_feature_dimension": int(base_dimension),
         "model_parameters": {
             "hidden_layer_sizes": list(hidden_layer_sizes),
@@ -478,6 +510,10 @@ def fit_multimodal_model(
         "target": target,
         "canonical_unit": "M" if target == "km" else "s^-1",
         "base_feature_dimension": int(train["X"].shape[1]),
+        "protein_embedding_dimension": int(
+            train["X"].shape[1] - int(train["fingerprint_bits"].reshape(-1)[0])
+        ),
+        "morgan_fingerprint_dimension": int(train["fingerprint_bits"].reshape(-1)[0]),
         "graph_summary_schema": GRAPH_SUMMARY_SCHEMA,
         "feature_schema_version": str(
             train.get("feature_schema_version", np.asarray(["unknown"])).reshape(-1)[0]
@@ -494,10 +530,20 @@ def fit_multimodal_model(
         "conformal_alpha": float(conformal_alpha) if conformal_q is not None else None,
         "applicability_domain": domain,
     }
-    joblib.dump(bundle, model_path, compress=3)
+    descriptor, temporary_model = tempfile.mkstemp(
+        prefix=f".{model_path.name}.", suffix=".tmp", dir=output
+    )
+    os.close(descriptor)
+    try:
+        joblib.dump(bundle, temporary_model, compress=3)
+        os.replace(temporary_model, model_path)
+    except Exception:
+        Path(temporary_model).unlink(missing_ok=True)
+        raise
     write_json_atomic(report, metrics_path)
     prediction_frame.to_csv(predictions_path, index=False)
     write_model_card({
+        "target": target,
         "model_name": f"Kinetics-Multi {target} feature-fusion MLP",
         "model_version": "0.1.0",
         "software_version": "0.2.0",
@@ -512,7 +558,7 @@ def fit_multimodal_model(
         "dataset": {
             "name": "Training feature archive",
             "version": ", ".join(source_provenance["source_versions"]),
-            "source_url": ", ".join(source_provenance["sources"]),
+            "source": ", ".join(source_provenance["sources"]),
             "license": ", ".join(source_provenance["license_ids"]),
             "n_observations": int(len(y_train)),
             "manifest": str(train_manifest_path),
@@ -607,8 +653,12 @@ def predict_multimodal_model(
     if context_enabled != bundle["context_enabled"]:
         raise ValueError("Inference assay-context availability differs from training")
     if context_enabled:
-        numeric = tuple(payload.get("context_numeric_columns", np.asarray([], dtype=str)).astype(str))
-        categorical = tuple(payload.get("context_categorical_columns", np.asarray([], dtype=str)).astype(str))
+        numeric = _string_tuple(
+            payload.get("context_numeric_columns", np.asarray([], dtype=str))
+        )
+        categorical = _string_tuple(
+            payload.get("context_categorical_columns", np.asarray([], dtype=str))
+        )
         if list(numeric) != bundle["context_numeric_columns"]:
             raise ValueError("Inference numeric context schema differs from training")
         if list(categorical) != bundle["context_categorical_columns"]:
@@ -643,6 +693,13 @@ def predict_multimodal_model(
         table["lower_canonical"] = np.power(10.0, predictions - float(q))
         table["upper_canonical"] = np.power(10.0, predictions + float(q))
     output = Path(output_path)
+    protected_paths = {
+        Path(model_path).resolve(),
+        Path(feature_archive).resolve(),
+        Path(str(feature_archive) + ".manifest.json").resolve(),
+    }
+    if output.resolve() in protected_paths:
+        raise ValueError("Prediction output path must differ from model and input artifacts")
     output.parent.mkdir(parents=True, exist_ok=True)
     table.to_csv(output, index=False)
     return {

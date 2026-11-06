@@ -7,8 +7,9 @@ Do not include record IDs, publication IDs, or other target-leaking identifiers.
 
 from __future__ import annotations
 
-from typing import Sequence
+from collections.abc import Sequence
 
+import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.compose import ColumnTransformer
@@ -59,7 +60,7 @@ class AssayContextEncoder(BaseEstimator, TransformerMixin):
             frame[column] = frame[column].where(frame[column].notna(), None)
         return frame
 
-    def fit(self, X: pd.DataFrame, y: object = None) -> "AssayContextEncoder":
+    def fit(self, X: pd.DataFrame, y: object = None) -> AssayContextEncoder:
         """Learn imputers, scaling statistics, and categories from training data."""
         frame = self._validate_frame(X)
         transformers: list[tuple[str, Pipeline, list[str]]] = []
@@ -67,7 +68,14 @@ class AssayContextEncoder(BaseEstimator, TransformerMixin):
         if self.numeric_columns:
             numeric_pipeline = Pipeline(
                 steps=[
-                    ("imputer", SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True)),
+                    (
+                        "imputer",
+                        SimpleImputer(
+                            strategy="median",
+                            add_indicator=True,
+                            keep_empty_features=True,
+                        ),
+                    ),
                     ("scaler", StandardScaler()),
                 ]
             )
@@ -177,16 +185,21 @@ def attach_context_archive(
 
 def context_design_matrix(payload: dict[str, np.ndarray]) -> pd.DataFrame:
     """Build a named mixed-type matrix from an archive with attached raw context."""
-    import numpy as np
 
     base = np.asarray(payload.get("X_base", payload["X"]), dtype=np.float32)
     frame = pd.DataFrame(
         base, columns=[f"base_{index}" for index in range(base.shape[1])]
     )
-    numeric = payload.get("context_numeric_columns", np.asarray([], dtype=str)).astype(str)
-    categorical = payload.get(
-        "context_categorical_columns", np.asarray([], dtype=str)
-    ).astype(str)
+    numeric = [
+        str(value) for value in payload.get(
+            "context_numeric_columns", np.asarray([], dtype=str)
+        )
+    ]
+    categorical = [
+        str(value) for value in payload.get(
+            "context_categorical_columns", np.asarray([], dtype=str)
+        )
+    ]
     for column in numeric:
         key = f"context_raw__{column}"
         if key not in payload:
@@ -197,6 +210,8 @@ def context_design_matrix(payload: dict[str, np.ndarray]) -> pd.DataFrame:
         if key not in payload:
             raise ValueError(f"Missing raw context array: {column}")
         frame[column] = np.asarray(payload[key]).astype(str)
+    # Normalize pandas labels to plain strings for sklearn across NumPy versions.
+    frame.columns = [str(column) for column in frame.columns]
     return frame
 
 
@@ -213,7 +228,14 @@ def make_context_pipeline(estimator, *, numeric_columns, categorical_columns, ba
         transformers.append((
             "numeric",
             Pipeline([
-                ("imputer", SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True)),
+                (
+                    "imputer",
+                    SimpleImputer(
+                        strategy="median",
+                        add_indicator=True,
+                        keep_empty_features=True,
+                    ),
+                ),
                 ("scaler", StandardScaler()),
             ]),
             list(numeric_columns),

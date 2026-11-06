@@ -8,7 +8,7 @@ use uuid::Uuid;
 
 async fn isolated_database() -> Option<(PgPool, String)> {
     let admin_url = std::env::var("KINETICS_TEST_DATABASE_URL").ok()?;
-    let mut admin = PgPool::connect(&admin_url).await.ok()?;
+    let admin = PgPool::connect(&admin_url).await.ok()?;
     let database = format!("kinetics_test_{}", Uuid::new_v4().simple());
     sqlx::query(&format!("CREATE DATABASE \"{database}\""))
         .execute(&admin)
@@ -150,7 +150,7 @@ async fn postgres_enforces_tenant_quotas_leases_cancellation_and_append_only_aud
         occurred_at: Utc::now(),
     };
     let first_hash = audit.append(&event).await.unwrap();
-    let mut next = event.clone();
+    let next = event.clone();
     next.event_id = Uuid::new_v4();
     next.action = "artifact.upload".into();
     let second_hash = audit.append(&next).await.unwrap();

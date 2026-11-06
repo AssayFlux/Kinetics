@@ -543,6 +543,7 @@ def fit_multimodal_model(
     write_json_atomic(report, metrics_path)
     prediction_frame.to_csv(predictions_path, index=False)
     write_model_card({
+        "target": target,
         "model_name": f"Kinetics-Multi {target} feature-fusion MLP",
         "model_version": "0.1.0",
         "software_version": "0.2.0",
@@ -557,7 +558,7 @@ def fit_multimodal_model(
         "dataset": {
             "name": "Training feature archive",
             "version": ", ".join(source_provenance["source_versions"]),
-            "source_url": ", ".join(source_provenance["sources"]),
+            "source": ", ".join(source_provenance["sources"]),
             "license": ", ".join(source_provenance["license_ids"]),
             "n_observations": int(len(y_train)),
             "manifest": str(train_manifest_path),

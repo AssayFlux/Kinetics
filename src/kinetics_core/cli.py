@@ -402,19 +402,21 @@ def main(argv: list[str] | None = None) -> int:
         )
         if "protein_cluster_id" in frame.columns:
             raise ValueError("Input already contains protein_cluster_id")
-        join_columns = [args.record_id_column]
+        left_join_columns = [args.record_id_column]
+        right_join_columns = ["source_record_id"]
         if (
             args.source_column
             and args.source_column in frame.columns
-            and args.source_column in mapping.columns
+            and "source" in mapping.columns
         ):
-            join_columns.insert(0, args.source_column)
+            left_join_columns.insert(0, args.source_column)
+            right_join_columns.insert(0, "source")
         clustered = frame.merge(
             mapping,
-            left_on=join_columns,
-            right_on=join_columns,
+            left_on=left_join_columns,
+            right_on=right_join_columns,
             how="left",
-            validate="one_to_one",
+            validate="many_to_one",
         )
         if clustered["cluster_representative_record_id"].isna().any():
             raise RuntimeError("Cluster mapping failed to assign every source record")

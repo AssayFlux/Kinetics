@@ -477,7 +477,15 @@ def main(argv: list[str] | None = None) -> int:
             raise FileExistsError(
                 "Feature archive or manifest exists; pass --overwrite to replace"
             )
-        frame = pd.read_csv(input_path, dtype={"source_record_id": "string"})
+        frame = pd.read_csv(
+            input_path,
+            dtype={
+                "source_record_id": "string",
+                "source": "string",
+                "source_version": "string",
+                "license_id": "string",
+            },
+        )
         builder = ObservationFeatureBuilder(
             model_name=args.model_name,
             model_revision=args.model_revision,

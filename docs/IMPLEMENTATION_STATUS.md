@@ -71,6 +71,16 @@ This file distinguishes repository contents from execution, verification and sci
 
 The genomics, transcriptomics, proteomics, structural biology, chemistry, pharmacology, molecular simulation, multi-omics, biomedical imaging, desktop workbench, clinical translation and Android capabilities are roadmap programmes unless explicitly listed above as present code. No clinical capability is claimed.
 
+## Step 8 — Research workbench (ENGINEERING IMPLEMENTATION IN PROGRESS)
+
+- Added optional `kinetics-workbench` package extra and launcher. It binds to `127.0.0.1` only and uses the existing Python scientific CLI through a versioned HTTP API.
+- Added project workspace management, browser-based bounded dataset upload, SQLite schema v2 for projects/jobs/artifacts, fixed allow-listed job dispatch, project-relative/symlink-safe paths, single-worker execution, cancellation, timeouts, durable state/logs, artifact checksums, verified downloads and Markdown report generation.
+- Workbench actions cover legacy import, audit, dataset persistence/release/verification, identity/scaffold/sequence processing, feature generation, partitioning, baseline comparison, target-specific and multimodal training, and multimodal inference.
+- UI includes dataset registry, job monitor, logs, artifact browser, report creation and keyboard-accessible controls. See `docs/WORKBENCH_GUIDE.md`.
+- Integration tests exercise schema migration, command allow-list/path confinement, dataset upload, actual audit subprocess execution, artifact integrity/download and report creation. Dedicated CI installs the optional workbench dependencies and runs these tests.
+
+**Not yet accepted as complete:** researcher usability and screen-reader testing; built-wheel installation and upgrade/rollback on supported desktop environments; real reviewed-dataset end-to-end workflow; measured ESM-2/MMseqs2 runtime/memory/cancellation/recovery; and validated uncertainty display. The workbench is local single-user software, not a remote multi-tenant service. These are release gates, not implied by code presence.
+
 ## Verification status
 
 Step 2 fixture tests cover CatPred aggregate target selection, source-unit declarations, aggregation semantics, source-row locators, identity normalization, duplicate candidates, release manifests, warning propagation and checksums. Step 3 fixture tests cover pinned ESM configuration, cache invalidation, non-pickle feature archives, molecular graph alignment/stereochemistry, scaffold rejection audits, source-qualified MMseqs mapping, repeated target observations, incomplete-cluster rejection, CLI workflows and source/artifact hashes.

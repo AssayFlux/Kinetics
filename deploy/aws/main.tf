@@ -136,8 +136,8 @@ resource "aws_iam_role_policy" "artifact_replication" {
         Resource = "${aws_s3_bucket.artifacts.arn}/tenants/*"
       },
       {
-        Effect = "Allow"
-        Action = ["s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicateTags"]
+        Effect   = "Allow"
+        Action   = ["s3:ReplicateObject", "s3:ReplicateDelete", "s3:ReplicateTags"]
         Resource = "${aws_s3_bucket.artifact_backup.arn}/*"
       },
       {
@@ -175,8 +175,8 @@ resource "aws_s3_bucket_replication_configuration" "artifacts" {
       }
     }
     destination {
-      bucket             = aws_s3_bucket.artifact_backup.arn
-      storage_class      = "STANDARD"
+      bucket        = aws_s3_bucket.artifact_backup.arn
+      storage_class = "STANDARD"
       encryption_configuration {
         replica_kms_key_id = aws_kms_key.backup.arn
       }
@@ -188,7 +188,7 @@ resource "aws_s3_bucket_replication_configuration" "artifacts" {
 }
 
 resource "aws_s3_bucket_policy" "artifacts_tls" {
-  bucket = aws_s3_bucket.artifacts.id
+  bucket     = aws_s3_bucket.artifacts.id
   depends_on = [aws_s3_bucket_public_access_block.artifacts]
   policy = jsonencode({
     Version = "2012-10-17"
@@ -325,8 +325,8 @@ resource "aws_iam_role_policy" "api_task" {
         Resource = aws_kms_key.artifacts.arn
       },
       {
-        Effect   = "Allow"
-        Action   = ["secretsmanager:GetSecretValue"]
+        Effect = "Allow"
+        Action = ["secretsmanager:GetSecretValue"]
         Resource = [
           aws_db_instance.database.master_user_secret[0].secret_arn,
           aws_secretsmanager_secret.app_database.arn

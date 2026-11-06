@@ -73,6 +73,10 @@ kinetics-research release \
   --source CatPred-DB --source-version 44409e6 \
   --license-id CC-BY-4.0 \
   --citation "Boorla and Maranas, Nat Commun (2025), doi:10.1038/s41467-025-57215-9" \
+  --source-url https://huggingface.co/datasets/RosettaCommons/CatPred-DB \
+  --source-manifest data/public/catpred-db/manifest.json \
+  --source-manifest data/processed/catpred-db/km/km_curation_manifest.json \
+  --source-manifest data/processed/catpred-db/km/identities/identity_manifest.json
   --source-manifest data/public/catpred-db/manifest.json \
   --source-manifest data/processed/catpred-db/km/km_curation_manifest.json
 

@@ -25,7 +25,7 @@ baseline = [
   "torch>=2.1",
   "transformers>=4.38,<5"
 ]
-plots = ["matplotlib>=3.7"]
+plots = ["matplotlib>=3.7"]\nstructures = ["biopython>=1.81,<2"]
 
 onnx = [
   "onnx>=1.15",

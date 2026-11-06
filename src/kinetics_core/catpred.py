@@ -43,8 +43,8 @@ def normalize_catpred_csv(
     temperature_k_column: str | None = None,
     temperature_c_column: str | None = "temperature",
     assay_id_column: str | None = None,
-    source_version: str | None = None,
-    license_id: str | None = None,
+    source_version: str,
+    license_id: str,
 ) -> tuple[Path, Path, Path]:
     if target not in ("km", "kcat"):
         raise ValueError("CatPred-DB adapter supports only km and kcat; Ki is not Km or kcat")

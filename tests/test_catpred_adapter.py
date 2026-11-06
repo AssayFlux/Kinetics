@@ -31,6 +31,7 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
         doi_column="doi",
         ph_column="ph",
         temperature_k_column="temp_k",
+        temperature_c_column=None,
         assay_id_column="assay",
         source_version="fixture-v1",
         license_id="CC-BY-4.0",
@@ -56,3 +57,50 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
     assert manifest["input_rows"] == 3
     assert manifest["accepted_rows"] == 2
     assert manifest["rejected_rows"] == 1
+
+
+
+def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator(tmp_path):
+    source = tmp_path / "catpred-km.csv"
+    pd.DataFrame({
+        "sequence": ["ACDEFG", "ACDEFGH"],
+        "sequence_source": ["brenda", "sabio"],
+        "uniprot": ["Q12345", "P01234"],
+        "reactant_smiles": ["CCO", "CCN"],
+        "value": [0.003, 0.02],
+        "log10_value": [-2.5229, -1.6990],
+        "temperature": [25.0, 37.0],
+        "ph": [7.0, 6.5],
+        "ec": ["1.1.1.1", "2.7.1.1"],
+        "taxonomy_id": [9606, 562],
+        "group": ["train", "test"],
+        "sequence_40cluster": [11, 12],
+    }).to_csv(source, index=False)
+    accepted_path, rejected_path, manifest_path = normalize_catpred_csv(
+        source, tmp_path / "normalized", target="km", unit="mM",
+        source_version="hf-main-fixture", license_id="CC-BY-4.0",
+        doi_column=None, assay_id_column=None,
+    )
+    accepted = pd.read_csv(accepted_path, dtype={"source_record_id": "string"})
+    manifest = json.loads(manifest_path.read_text())
+    assert len(accepted) == 2
+    assert accepted["temperature_k"].tolist() == [298.15, 310.15]
+    assert accepted["protein_accession"].tolist() == ["Q12345", "P01234"]
+    assert accepted["source_ec"].tolist() == ["1.1.1.1", "2.7.1.1"]
+    assert accepted["source_sequence_40cluster"].tolist() == [11, 12]
+    assert accepted["source_record_id"].str.startswith("catpred:").all()
+    assert manifest["record_id_origin"] == "generated_content_addressed_file_row_locator"
+    assert manifest["mapping"]["temperature_c"] == "temperature"
+    assert manifest["mapping"]["doi"] is None
+    assert len(pd.read_csv(rejected_path)) == 0
+
+
+def test_catpred_rejects_ki_and_missing_unit_declaration(tmp_path):
+    source = tmp_path / "source.csv"
+    pd.DataFrame({"value": [1.0]}).to_csv(source, index=False)
+    import pytest
+
+    with pytest.raises(ValueError, match="only km and kcat"):
+        normalize_catpred_csv(source, tmp_path / "ki", target="ki", unit="mM")
+    with pytest.raises(ValueError, match="units must be verified"):
+        normalize_catpred_csv(source, tmp_path / "km", target="km")

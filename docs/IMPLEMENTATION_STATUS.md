@@ -1,55 +1,57 @@
 # Implementation status
 
-Status is updated as code is added. This document separates implementation from execution and verification.
+This file distinguishes repository contents from execution, verification and scientific evidence. The expanded Kinetics platform is a long-term plan; it is not implemented merely because it appears in the roadmap.
 
-## Existing baseline observed during repository inspection
+## Existing repository foundation observed
 
 - Protein sequence and substrate SMILES feature extraction using ESM-2 and Morgan fingerprints.
-- Separate XGBoost regressors for log10(Km) and log10(kcat), wired through a legacy paired-row preprocessing archive.
-- CSV preprocessing, feature caching, prediction interface, and optional ONNX export.
+- XGBoost baselines for log10(Km) and log10(kcat), including legacy paired-row preprocessing.
+- CSV preprocessing, feature caching, prediction interface and optional ONNX export.
 - CatPred-DB public download and CSV inspection scripts.
-- Dataset notes describing BRENDA, SABIO-RK, UniProt, PubChem, and Rhea.
+- Dataset notes for public biochemical/biological resources.
 
-## Research infrastructure implemented
+## Research infrastructure present in the codebase
 
 - Canonical one-target-per-row kinetic observation contract.
-- Explicit Km-to-M and kcat-to-s^-1 conversion, including configurable per-record unit columns.
-- Source-table normalization with explicit mappings and row-level rejection audit.
-- Non-destructive duplicate/conflict audit keyed by exact source record identity, plus metadata completeness summary.
-- CatPred-DB adapter that processes Km and kcat tables separately.
-- SHA-256 provenance, atomic JSON writing, and experiment manifests.
-- Grouped holdout, strict double-cold split utilities, and nested protein/scaffold train/calibration/test partition orchestration with explicit excluded cross-quadrant rows.
-- MMseqs2 sequence-clustering wrapper with version/command manifest.
+- Explicit Km-to-M and kcat-to-s^-1 conversion.
+- Source-table normalization and row-level rejection audits.
+- Duplicate/conflict audits and metadata completeness summaries.
+- Dataset provenance manifests and experiment metadata.
+- Grouped holdout, protein-cluster and chemical-scaffold split utilities.
+- MMseqs2 sequence-clustering wrapper.
 - RDKit canonical SMILES and Bemis-Murcko scaffold utilities.
-- Target-specific protein/substrate feature archives with optional grouping arrays.
-- Target-specific model-fitting and inference workflows with grouped cross-validation and multi-axis holdout leakage checks.
-- Independent split-conformal calibration archive workflow with held-out empirical coverage reporting.
-- Residual-level prediction exports and per-group error/interval coverage reports with minimum subgroup-size warnings.
-- Training-reference nearest-neighbour applicability-domain warnings (explicitly not calibrated confidence).
-- Raw assay-context archive attachment with exact source-record ID/order checks and fold-local preprocessing to prevent CV leakage.
-- Fixed classical model-family comparison with CV-only selection and untouched held-out reporting.
-- Research CLI for dataset quality auditing, nested partitions, baseline comparison, and target-specific fitting.
-- Separate log-scale and original-unit metric reporting.
-- Split-conformal interval utilities.
-- Model-card generation, target-specific prediction interface, experiment report generation, and parity/residual plotting utilities.
-- Installable kinetics_core package metadata and CLI entry point.
-- Scientific architecture, data model, split design, publication protocol, paper outline, contribution guidance, and citation metadata.
-- Dependency-free offline assistant protocol and Kinetics research-aware facade, ready for a future Astronaut adapter.
-- Allowlist-based assay-context preprocessing with fold-local imputation/scaling and categorical encoding inside cross-validation.
+- Target-specific feature archives and model workflows.
+- Split-conformal interval utilities and held-out coverage reporting.
+- Applicability-domain warnings, explicitly not calibrated confidence.
+- Assay-context preprocessing designed to avoid cross-validation leakage.
+- Classical model-family comparison and held-out reporting utilities.
+- Research CLI, metrics, model cards, prediction/reporting and visualization helpers.
+- SQLite experiment storage and package/CLI metadata.
+- Domain documentation, publication protocol, paper outline and contribution guidance.
+- Dependency-free research-assistant protocol/facade that can later be exposed through documented, permission-scoped interfaces to the separate Kinetics Ecosystem project.
 
-## Integration work still required
+## Current engineering gaps
 
-- Connect canonical observation outputs to the legacy preprocessing, prediction, and ONNX paths.
-- Retire or isolate the legacy two-target-per-row assumption without breaking documented compatibility.
-- Add end-to-end sequence-cluster and scaffold generation to the dataset workflow.
-- Complete multi-stage orchestration from public-source acquisition and curation through split, features, calibration, model selection, and reporting.
-- Expand shift-stratified diagnostics, uncertainty coverage-versus-width curves, and statistical comparisons.
-- Add coverage-versus-width curves and external shift-specific calibration analyses.
-- Add BRENDA and SABIO-RK adapters after verifying current source schemas and terms.
-- Integrate report/figure utilities into a single reproducible experiment orchestrator.
-- Complete CLI ergonomics, packaging compatibility, and user documentation.
-- Implement and verify the Astronaut adapter only after the project owner confirms Astronaut is ready; no Astronaut code has been changed.
+- Connect canonical observation outputs to legacy preprocessing, prediction and ONNX paths.
+- Retire or isolate the legacy two-target-per-row assumption without breaking supported workflows.
+- Add end-to-end sequence-cluster/scaffold generation to dataset workflows.
+- Complete reproducible orchestration from source acquisition through curation, partitioning, features, calibration, model selection and reporting.
+- Expand shift-stratified diagnostics, uncertainty coverage-versus-width analysis and statistical comparisons.
+- Add BRENDA and SABIO-RK adapters only after current schemas, licenses and access terms are verified.
+- Integrate report/figure utilities into a single reproducible experiment workflow.
+- Complete CLI ergonomics, packaging compatibility, migration and user documentation.
+- Define the cross-language contracts before introducing C++ and Rust components.
+- Prototype and validate the native 3D/imaging engine; no such engine is claimed as implemented.
+- Define secure project/data boundaries and threat model before handling sensitive data.
+
+## Platform roadmap status
+
+The genomics, transcriptomics, proteomics, structural biology, chemistry, pharmacology, molecular simulation, multi-omics, biomedical imaging, desktop workbench, clinical translation and Android capabilities are roadmap programmes unless explicitly listed above as present code. No clinical capability is claimed.
 
 ## Verification status
 
-No model training, test execution, numerical validation, benchmark run, or scientific evaluation has been performed during this implementation-first phase. The newly added workflows are code, not evidence that they have passed verification. No performance, generalization, or publication-readiness claims are made.
+No model training, test execution, numerical validation, benchmark run or scientific evaluation is claimed by this status document. Code presence is not proof that a workflow executes correctly or generalizes. Record actual commands, environments, outputs and commit identifiers when verification is performed.
+
+## Project direction
+
+The authoritative long-term direction is in [VISION.md](../VISION.md), [ROADMAP.md](../ROADMAP.md), [ARCHITECTURE.md](../ARCHITECTURE.md), [ENGINEERING_STACK.md](../ENGINEERING_STACK.md) and [CLINICAL_TRANSLATION.md](../CLINICAL_TRANSLATION.md). Kinetics Ecosystem is a separate project; this repository provides interfaces, not a bundled assistant runtime.

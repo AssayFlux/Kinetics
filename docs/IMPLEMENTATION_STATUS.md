@@ -31,9 +31,13 @@ This file distinguishes repository contents from execution, verification and sci
 - Duplicate/conflict audits and metadata completeness summaries.
 - Dataset provenance manifests and experiment metadata.
 - Grouped holdout, protein-cluster and chemical-scaffold split utilities.
-- MMseqs2 sequence-clustering wrapper.
-- RDKit canonical SMILES and Bemis-Murcko scaffold utilities.
-- Target-specific feature archives and model workflows.
+- MMseqs2 wrapper with validated protein sequences, source-qualified record keys, repeated-observation collapse only when sequence identity agrees, complete unique-entity coverage checks, and hashes for the input FASTA, raw cluster output, and mapping.
+- RDKit canonical isomeric SMILES, stereo-agnostic Bemis-Murcko scaffold grouping, and row-level scaffold rejection audits.
+- Pinned ESM-2 model/tokenizer revisions, residue-only mean pooling, strict sequence validation, no silent truncation, and bounded batch inference.
+- Morgan fingerprints (radius 2, 2,048 bits, chirality enabled by default) and stereochemistry-aware molecular graph tensors with atom/bond features and packed offsets.
+- Versioned feature NPZ archives with source IDs/labels, normalized sequences, original/canonical SMILES, target values, split-group arrays, molecular graphs, and non-object Unicode arrays safe for `allow_pickle=False`.
+- Dependency/configuration-aware atomic feature caches; feature manifests record model/tokenizer revisions, representation parameters, runtime/software versions, source input hashes, source versions/licenses, row-identity hashes and archive SHA-256.
+- CLI workflows for `annotate-scaffolds`, `cluster-sequences`, and `build-features`; clustering attaches source-qualified `protein_cluster_id` values back to canonical observations.
 - Split-conformal interval utilities and held-out coverage reporting.
 - Applicability-domain warnings, explicitly not calibrated confidence.
 - Assay-context preprocessing designed to avoid cross-validation leakage.

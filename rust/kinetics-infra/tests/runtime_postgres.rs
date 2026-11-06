@@ -106,6 +106,34 @@ async fn postgres_enforces_tenant_quotas_leases_cancellation_and_append_only_aud
         "cancelled"
     );
 
+    let retry_job = jobs
+        .submit("tenant-a", "retry-key", payload.clone(), limits)
+        .await
+        .unwrap();
+    let first_attempt = jobs.claim("worker-retry-a", 30).await.unwrap().unwrap();
+    assert_eq!(first_attempt.id, retry_job.id);
+    assert_eq!(first_attempt.attempt, 1);
+    jobs.finish(retry_job.id, "worker-retry-a", false)
+        .await
+        .unwrap();
+    let requeued = jobs.get("tenant-a", retry_job.id).await.unwrap();
+    assert_eq!(requeued.state, "queued");
+    assert_eq!(requeued.attempt, 1);
+    sqlx::query("UPDATE kinetics_jobs SET next_attempt_at=now() WHERE id=$1")
+        .bind(retry_job.id)
+        .execute(&pool)
+        .await
+        .unwrap();
+    let second_attempt = jobs.claim("worker-retry-b", 30).await.unwrap().unwrap();
+    assert_eq!(second_attempt.id, retry_job.id);
+    assert_eq!(second_attempt.attempt, 2);
+    jobs.finish(retry_job.id, "worker-retry-b", true)
+        .await
+        .unwrap();
+    let completed = jobs.get("tenant-a", retry_job.id).await.unwrap();
+    assert_eq!(completed.state, "succeeded");
+    assert_eq!(completed.attempt, 2);
+
     let audit = AppendOnlyAuditStore::new(pool.clone());
     let event = AppendAuditEvent {
         event_id: Uuid::new_v4(),

@@ -49,13 +49,20 @@ impl<E: JobExecutor> WorkerRuntime<E> {
         };
         let cancellation = CancellationToken::new();
         let heartbeat = self.start_heartbeat(job.id, cancellation.clone());
+        // API cancellation must reach a running executor, not merely change
+        // the database state after the scientific computation has completed.
+        let monitor_stop = CancellationToken::new();
+        let cancellation_monitor =
+            self.start_cancellation_monitor(job.id, cancellation.clone(), monitor_stop.clone());
         let execution = timeout(
             Duration::from_secs(job.max_runtime_seconds.max(1) as u64),
             self.executor.execute(&job, cancellation.clone()),
         )
         .await;
         cancellation.cancel();
+        monitor_stop.cancel();
         heartbeat.abort();
+        cancellation_monitor.abort();
 
         if self
             .store
@@ -87,6 +94,43 @@ impl<E: JobExecutor> WorkerRuntime<E> {
                         match store.heartbeat(job_id, &worker_id, lease).await {
                             Ok(true) => {},
                             _ => { cancellation.cancel(); break; }
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    fn start_cancellation_monitor(
+        &self,
+        job_id: Uuid,
+        cancellation: CancellationToken,
+        stop: CancellationToken,
+    ) -> JoinHandle<()> {
+        let store = self.store.clone();
+        let worker_id = self.worker_id.clone();
+        tokio::spawn(async move {
+            loop {
+                tokio::select! {
+                    _ = stop.cancelled() => break,
+                    _ = sleep(Duration::from_secs(1)) => {
+                        match store.cancellation_requested(job_id, &worker_id).await {
+                            Ok(true) => {
+                                cancellation.cancel();
+                                break;
+                            }
+                            Ok(false) => {}
+                            Err(error) => {
+                                // Fail closed: if cancellation state cannot be
+                                // checked, do not let expensive work continue.
+                                tracing::warn!(
+                                    job_id = %job_id,
+                                    error = %error,
+                                    "cancellation monitor failed; stopping job execution"
+                                );
+                                cancellation.cancel();
+                                break;
+                            }
                         }
                     }
                 }

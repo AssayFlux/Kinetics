@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
@@ -165,15 +164,24 @@ class KineticsSQLite:
         connection.row_factory = sqlite3.Row
         connection.execute("PRAGMA foreign_keys=ON")
         connection.execute(f"PRAGMA busy_timeout={int(self.timeout_seconds * 1000)}")
-        connection.execute("PRAGMA journal_mode=WAL")
         connection.execute("PRAGMA synchronous=NORMAL")
         connection.execute(f"PRAGMA cache_size=-{self.cache_size_mb * 1024}")
         connection.execute("PRAGMA temp_store=MEMORY")
         connection.execute(f"PRAGMA mmap_size={self.mmap_size_mb * 1024 * 1024}")
         return connection
 
+    @contextmanager
+    def session(self) -> Iterator[sqlite3.Connection]:
+        """Yield a configured connection and always close it on exit."""
+        connection = self.connect()
+        try:
+            yield connection
+        finally:
+            connection.close()
+
     def initialize(self) -> None:
-        with self.connect() as connection:
+        with self.session() as connection:
+            connection.execute("PRAGMA journal_mode=WAL")
             connection.executescript(_SCHEMA)
 
     @contextmanager
@@ -199,7 +207,7 @@ class KineticsSQLite:
             return connection.total_changes
 
     def fetch_all(self, sql: str, parameters: Sequence[Any] = ()) -> list[dict[str, Any]]:
-        with self.connect() as connection:
+        with self.session() as connection:
             return [dict(row) for row in connection.execute(sql, parameters).fetchall()]
 
     @staticmethod
@@ -229,7 +237,7 @@ class KineticsSQLite:
         """Create a consistent SQLite backup while the database is in use."""
         target = sqlite3.connect(str(destination))
         try:
-            with self.connect() as source:
+            with self.session() as source:
                 source.backup(target)
         finally:
             target.close()

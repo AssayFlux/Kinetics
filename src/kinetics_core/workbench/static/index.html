@@ -2,43 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="theme-color" content="#07111f">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="dark">
   <title>Kinetics Research Workbench</title>
   <style>
-    :root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color-scheme: light dark; }
-    body { margin: 0; background: Canvas; color: CanvasText; line-height: 1.5; }
-    header { padding: 1.25rem clamp(1rem, 4vw, 3rem); border-bottom: 1px solid GrayText; }
-    main { max-width: 1440px; margin: auto; padding: 1.5rem clamp(1rem, 4vw, 3rem) 4rem; }
-    h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.25rem); }
-    h2 { font-size: 1.15rem; margin-top: 0; }
-    .muted { color: GrayText; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1rem; }
-    section { border: 1px solid GrayText; border-radius: 12px; padding: 1rem; min-width: 0; }
-    label { display: block; font-weight: 650; margin: .75rem 0 .25rem; }
-    input, select, textarea, button { font: inherit; }
-    input, select, textarea { box-sizing: border-box; width: 100%; padding: .65rem; border: 1px solid GrayText; border-radius: 7px; background: Canvas; color: CanvasText; }
-    textarea { min-height: 190px; font-family: ui-monospace, monospace; font-size: .88rem; }
-    button, .link-button { border: 1px solid GrayText; border-radius: 7px; padding: .55rem .85rem; background: ButtonFace; color: ButtonText; cursor: pointer; }
-    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid Highlight; outline-offset: 2px; }
-    button.primary { background: Highlight; color: HighlightText; border-color: Highlight; }
-    button:disabled { opacity: .6; cursor: not-allowed; }
-    .actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .8rem; }
-    .status { min-height: 1.5rem; padding: .5rem 0; }
-    .scroll { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-    th, td { text-align: left; vertical-align: top; padding: .55rem; border-bottom: 1px solid GrayText; overflow-wrap: anywhere; }
-    th { font-weight: 700; }
-    pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 22rem; overflow: auto; background: color-mix(in srgb, CanvasText 7%, Canvas); padding: .75rem; border-radius: 7px; }
-    a { color: LinkText; }
-    .wide { grid-column: 1 / -1; }
-    @media (max-width: 600px) { main { padding-top: 1rem; } section { padding: .8rem; } }
-  </style>
+:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color-scheme:dark;--bg:#07111f;--panel:#101e30;--line:#263b55;--text:#e8f0fb;--muted:#9aacc2;--accent:#59d6c5;--blue:#7aa8ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 15% -10%,#173452 0,transparent 42%),var(--bg);color:var(--text);line-height:1.6}
+header{position:relative;padding:clamp(1.5rem,4vw,3.25rem) clamp(1rem,5vw,4.5rem) 2rem;background:linear-gradient(115deg,#10253b,#091727);border-bottom:1px solid var(--line);overflow:hidden}
+header:after{content:"";position:absolute;width:320px;height:320px;right:4%;top:-220px;border:1px solid #59d6c533;border-radius:50%;box-shadow:0 0 0 32px #59d6c509,0 0 0 72px #59d6c506;pointer-events:none}
+header h1{position:relative;margin:.15rem 0 .35rem;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.045em;line-height:1.15}header p{position:relative;max-width:760px;margin:.55rem 0;color:var(--muted)}header p:first-child{font-size:.72rem;font-weight:800;letter-spacing:.18em;color:var(--accent)}
+header a{display:inline-flex;padding:.62rem .95rem;border:1px solid #59d6c574;border-radius:999px;background:#59d6c514;color:#9af2e5;text-decoration:none;font-weight:700}
+main{max-width:1540px;margin:auto;padding:1.5rem clamp(1rem,4vw,3.5rem) 4rem}h2{margin:0 0 1rem;font-size:1.08rem}.muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:1rem}section{grid-column:span 4;min-width:0;padding:1.25rem;border:1px solid var(--line);border-radius:17px;background:linear-gradient(150deg,#14243a,#0d1b2c);box-shadow:0 12px 32px #0003}
+section:nth-child(1){border-top:2px solid var(--blue)}section:nth-child(2){border-top:2px solid var(--accent)}section:nth-child(3){border-top:2px solid #b49bff}section.wide{grid-column:1/-1}
+label{display:block;margin:.85rem 0 .35rem;font-size:.86rem;font-weight:700;color:#c8d7e9}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:.72rem .8rem;border:1px solid #344b67;border-radius:10px;background:#091727;color:var(--text);color-scheme:dark}textarea{min-height:190px;font-family:ui-monospace,monospace;font-size:.84rem;line-height:1.55}
+button,.link-button{padding:.62rem .9rem;border:1px solid #3b526e;border-radius:10px;background:#1a2c43;color:var(--text);font-weight:700;cursor:pointer;transition:background .15s,border-color .15s}button:hover{border-color:var(--accent);background:#223b58}button.primary{border-color:transparent;background:linear-gradient(110deg,#2a9d91,#4b82d9);color:white}button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.actions{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:1rem}
+.status{position:sticky;top:.5rem;z-index:3;min-height:2.6rem;margin:0 0 1rem;padding:.65rem .9rem;border:1px solid #59d6c538;border-radius:12px;background:#0b1f2ff0;color:#a9eee3;backdrop-filter:blur(12px)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:11px}table{width:100%;border-collapse:collapse;font-size:.86rem}th,td{text-align:left;vertical-align:top;padding:.72rem .8rem;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{position:sticky;top:0;background:#172b43;color:#b9cce2;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase}tbody tr:hover{background:#7aa8ff0e}tbody tr:last-child td{border-bottom:0}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:24rem;overflow:auto;padding:1rem;border:1px solid var(--line);border-radius:12px;background:#081523;color:#b9d6ef;font-size:.84rem}a{color:#8fded5}
+@media(max-width:1050px){section{grid-column:span 6}}@media(max-width:680px){header{padding:1.5rem 1rem 1.35rem}header:after{right:-210px}main{padding:1rem .8rem 2.5rem}.grid{grid-template-columns:1fr;gap:.8rem}section,section.wide{grid-column:1/-1;padding:1rem;border-radius:14px}.status{position:static;font-size:.88rem}th,td{padding:.62rem;min-width:110px}textarea{min-height:165px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
 </head>
 <body>
 <header>
+  <p>ASSAYFLUX · SCIENTIFIC COMPUTING</p>
   <h1>Kinetics Research Workbench</h1>
-  <p><a href="/structure-viewer">Open interactive 3D protein structure viewer</a></p>
+  <p><a href="/structure-viewer">Explore the interactive 3D structure viewer ↗</a></p>
   <p class="muted">Local-first workspace for reproducible enzyme-kinetics research. Scientific computation runs through the Kinetics Python interfaces.</p>
 </header>
 <main>

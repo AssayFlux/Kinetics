@@ -130,7 +130,7 @@ def persist_observation_csv(
                 measurement_rows,
             )
             event_id = hashlib.sha256(
-                f"dataset-import|{dataset_id}|{checksum}".encode("utf-8")
+                f"dataset-import|{dataset_id}|{checksum}".encode()
             ).hexdigest()
             connection.execute(
                 "INSERT INTO provenance_events(event_id, event_type, subject_id, "

@@ -559,8 +559,15 @@ def create_app(
                 calculate_residue_sasa,
                 structure_summary,
             )
+            summary = structure_summary(content, file_format=file_format)
+            atom_count = sum(model["atom_count"] for model in summary["models"])
+            if atom_count > 100000:
+                raise HTTPException(
+                    status_code=413,
+                    detail="Structure analysis is limited to 100,000 atoms per request",
+                )
             return {
-                "summary": structure_summary(content, file_format=file_format),
+                "summary": summary,
                 "sasa": calculate_residue_sasa(content, file_format=file_format),
                 "contacts": calculate_residue_contacts(
                     content, file_format=file_format,

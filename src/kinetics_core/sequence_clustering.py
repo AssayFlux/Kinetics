@@ -35,10 +35,12 @@ def cluster_sequences(
     coverage: float = 0.8,
     threads: int = 1,
 ) -> tuple[Path, Path]:
-    """Cluster validated sequences and prove every input maps to exactly one cluster.
+    """Cluster protein entities and map each source/record key to exactly one cluster.
 
-    MMseqs2 is an external executable. The manifest records its version, exact
-    command/parameters, input FASTA hash, output mapping hash and input cardinality.
+    Repeated observations with the same source/record key are collapsed only when
+    their normalized sequences agree; conflicting sequences for one key are rejected.
+    This supports canonical one-target-per-row tables where one source record may
+    yield separate Km and kcat observations.
     """
     if not 0.0 < min_sequence_identity <= 1.0:
         raise ValueError("min_sequence_identity must be in (0, 1]")
@@ -53,22 +55,44 @@ def cluster_sequences(
         raise ValueError("At least one sequence record is required")
     if frame[sequence_column].isna().any() or frame[record_id_column].isna().any():
         raise ValueError("Sequence and record ID columns must not contain missing values")
-    record_ids = frame[record_id_column].astype(str)
-    if record_ids.str.strip().eq("").any():
+
+    record_ids = frame[record_id_column].astype(str).tolist()
+    if any(not value.strip() for value in record_ids):
         raise ValueError("Record IDs must be non-empty")
     use_source = source_column is not None and source_column in frame.columns
     if use_source:
         if frame[source_column].isna().any():
             raise ValueError("Source IDs must not be missing")
-        source_ids = frame[source_column].astype(str)
-        if source_ids.str.strip().eq("").any():
+        source_ids = frame[source_column].astype(str).tolist()
+        if any(not value.strip() for value in source_ids):
             raise ValueError("Source IDs must be non-empty")
-        identity_keys = source_ids.str.len().astype(str) + ":" + source_ids + record_ids
+        identity_keys = [
+            f"{len(source)}:{source}{record_id}"
+            for source, record_id in zip(source_ids, record_ids, strict=True)
+        ]
     else:
-        source_ids = None
+        source_ids = []
         identity_keys = record_ids
-    if identity_keys.duplicated().any():
-        raise ValueError("Source/record identity keys must be unique for cluster mapping")
+
+    normalized_sequences = [
+        _normalize_sequence(sequence, record_id)
+        for sequence, record_id in zip(
+            frame[sequence_column].tolist(), record_ids, strict=True
+        )
+    ]
+    identity_sequence: dict[str, str] = {}
+    unique_indices = []
+    for index, (key, sequence) in enumerate(
+        zip(identity_keys, normalized_sequences, strict=True)
+    ):
+        previous = identity_sequence.get(key)
+        if previous is not None and previous != sequence:
+            raise ValueError(
+                "A source/record identity maps to conflicting protein sequences"
+            )
+        if previous is None:
+            identity_sequence[key] = sequence
+            unique_indices.append(index)
 
     executable = shutil.which("mmseqs")
     if executable is None:
@@ -79,14 +103,12 @@ def cluster_sequences(
     token_to_record: dict[str, str] = {}
     token_to_source: dict[str, str] = {}
     with fasta.open("w", encoding="utf-8", newline="\n") as handle:
-        for index, (_, row) in enumerate(frame.iterrows()):
-            token = f"kinetics_seq_{index:09d}"
-            record_id = str(row[record_id_column])
-            sequence = _normalize_sequence(row[sequence_column], record_id)
-            token_to_record[token] = record_id
-            if use_source and source_ids is not None:
-                token_to_source[token] = str(source_ids.iloc[index])
-            handle.write(f">{token}\n{sequence}\n")
+        for token_index, row_index in enumerate(unique_indices):
+            token = f"kinetics_seq_{token_index:09d}"
+            token_to_record[token] = record_ids[row_index]
+            if use_source:
+                token_to_source[token] = source_ids[row_index]
+            handle.write(f">{token}\n{normalized_sequences[row_index]}\n")
 
     prefix = output / "mmseqs_clusters"
     temporary = output / "mmseqs_tmp"
@@ -103,7 +125,10 @@ def cluster_sequences(
     if not cluster_file.is_file():
         raise RuntimeError(f"MMseqs2 completed but cluster file is missing: {cluster_file}")
     clusters = pd.read_csv(
-        cluster_file, sep="\t", header=None, names=["representative", "member"],
+        cluster_file,
+        sep="\t",
+        header=None,
+        names=["representative", "member"],
         dtype=str,
     )
     if clusters.empty or clusters["member"].duplicated().any():
@@ -123,12 +148,12 @@ def cluster_sequences(
     ):
         raise RuntimeError("MMseqs2 output contains identifiers absent from the input mapping")
     mapped_tokens = set(clusters["member"])
-    missing_tokens = set(token_to_record) - mapped_tokens
-    extra_tokens = mapped_tokens - set(token_to_record)
-    if missing_tokens or extra_tokens:
+    expected_tokens = set(token_to_record)
+    if mapped_tokens != expected_tokens:
         raise RuntimeError(
-            "MMseqs2 cluster output does not cover each input exactly once "
-            f"(missing={len(missing_tokens)}, extra={len(extra_tokens)})"
+            "MMseqs2 output does not cover every unique protein entity exactly once "
+            f"(missing={len(expected_tokens - mapped_tokens)}, "
+            f"extra={len(mapped_tokens - expected_tokens)})"
         )
 
     mapping_path = output / "sequence_clusters.csv"
@@ -149,7 +174,9 @@ def cluster_sequences(
         "coverage": coverage,
         "coverage_mode": 0,
         "threads": threads,
-        "input_records": len(frame),
+        "input_observation_rows": len(frame),
+        "unique_protein_entities": len(unique_indices),
+        "repeated_observation_rows_collapsed": len(frame) - len(unique_indices),
         "record_identity_columns": (
             [source_column, record_id_column] if use_source else [record_id_column]
         ),
@@ -157,7 +184,8 @@ def cluster_sequences(
         "input_fasta": file_record(fasta),
         "mapping": file_record(mapping_path),
         "mapping_rows": len(clusters),
-        "input_records_all_assigned_once": len(clusters) == len(frame),
+        "unique_entities_all_assigned_once": len(clusters) == len(unique_indices),
+        "observation_rows_resolvable_by_identity_key": True,
         "stdout": completed.stdout[-4000:],
         "stderr": completed.stderr[-4000:],
     }, manifest_path)

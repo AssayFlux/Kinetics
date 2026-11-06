@@ -29,6 +29,7 @@ def cluster_sequences(
     *,
     sequence_column: str = "sequence",
     record_id_column: str = "source_record_id",
+    source_column: str | None = "source",
     output_dir: str | Path,
     min_sequence_identity: float = 0.4,
     coverage: float = 0.8,
@@ -55,8 +56,17 @@ def cluster_sequences(
     record_ids = frame[record_id_column].astype(str)
     if record_ids.str.strip().eq("").any():
         raise ValueError("Record IDs must be non-empty")
-    if record_ids.duplicated().any():
-        raise ValueError("Record IDs must be unique for unambiguous cluster mapping")
+    use_source = source_column is not None and source_column in frame.columns
+    if use_source:
+        source_ids = frame[source_column].astype(str)
+        if source_ids.str.strip().eq("").any():
+            raise ValueError("Source IDs must be non-empty")
+        identity_keys = source_ids + "\\0" + record_ids
+    else:
+        source_ids = None
+        identity_keys = record_ids
+    if identity_keys.duplicated().any():
+        raise ValueError("Source/record identity keys must be unique for cluster mapping")
 
     executable = shutil.which("mmseqs")
     if executable is None:
@@ -65,12 +75,15 @@ def cluster_sequences(
     output.mkdir(parents=True, exist_ok=True)
     fasta = output / "sequences.fasta"
     token_to_record: dict[str, str] = {}
+    token_to_source: dict[str, str] = {}
     with fasta.open("w", encoding="utf-8", newline="\n") as handle:
         for index, (_, row) in enumerate(frame.iterrows()):
             token = f"kinetics_seq_{index:09d}"
             record_id = str(row[record_id_column])
             sequence = _normalize_sequence(row[sequence_column], record_id)
             token_to_record[token] = record_id
+            if use_source and source_ids is not None:
+                token_to_source[token] = str(source_ids.iloc[index])
             handle.write(f">{token}\n{sequence}\n")
 
     prefix = output / "mmseqs_clusters"
@@ -97,6 +110,11 @@ def cluster_sequences(
     clusters["cluster_representative_record_id"] = clusters["representative"].map(
         token_to_record
     )
+    if use_source:
+        clusters["source"] = clusters["member"].map(token_to_source)
+        clusters["cluster_representative_source"] = clusters["representative"].map(
+            token_to_source
+        )
     if (
         clusters["source_record_id"].isna().any()
         or clusters["cluster_representative_record_id"].isna().any()
@@ -112,9 +130,13 @@ def cluster_sequences(
         )
 
     mapping_path = output / "sequence_clusters.csv"
-    clusters[["source_record_id", "cluster_representative_record_id"]].to_csv(
-        mapping_path, index=False
-    )
+    mapping_columns = ["source_record_id", "cluster_representative_record_id"]
+    if use_source:
+        mapping_columns = [
+            "source", "source_record_id",
+            "cluster_representative_source", "cluster_representative_record_id",
+        ]
+    clusters[mapping_columns].to_csv(mapping_path, index=False)
     manifest_path = output / "sequence_cluster_manifest.json"
     write_json_atomic({
         "schema_version": "1.0",
@@ -126,6 +148,9 @@ def cluster_sequences(
         "coverage_mode": 0,
         "threads": threads,
         "input_records": len(frame),
+        "record_identity_columns": (
+            [source_column, record_id_column] if use_source else [record_id_column]
+        ),
         "cluster_count": int(clusters["cluster_representative_record_id"].nunique()),
         "input_fasta": file_record(fasta),
         "mapping": file_record(mapping_path),

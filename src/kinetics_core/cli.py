@@ -50,7 +50,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     release = subparsers.add_parser("release", help="Create an immutable, license-gated dataset release")
     release.add_argument("--observations", required=True)
-    release.add_argument("--rejected", required=True)
+    release.add_argument("--rejected", action="append", required=True, help="Rejection audit CSV; repeat to combine audits")
     release.add_argument("--output-dir", required=True)
     release.add_argument("--dataset-id", required=True)
     release.add_argument("--dataset-name", required=True)

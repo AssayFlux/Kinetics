@@ -156,17 +156,18 @@ def _fake_mmseqs(tmp_path, monkeypatch, *, omit_last=False):
     executable_dir.mkdir()
     executable = executable_dir / "mmseqs"
     executable.write_text(
-        "#!/usr/bin/env python3\n"
-        "import pathlib, sys\n"
-        "if sys.argv[1] == 'version':\n"
-        " print('MMseqs2 fixture 1.0')\n"
-        "else:\n"
-        " fasta = pathlib.Path(sys.argv[2])\n"
-        " prefix = pathlib.Path(sys.argv[3])\n"
-        " ids = [line[1:] for line in fasta.read_text().splitlines() if line.startswith('>')]\n"
-        " rows = [(ids[0], ids[0])] + ([(ids[0], ids[1])] if len(ids) > 1 else [])\n"
-        + (" rows = rows[:1]\n" if omit_last else "")
-        + " pathlib.Path(str(prefix) + '_cluster.tsv').write_text(''.join(a+'\\t'+b+'\\n' for a,b in rows))\n",
+        "#!/usr/bin/env python3\\n"
+        "import pathlib, sys\\n"
+        "if sys.argv[1] == 'version':\\n"
+        " print('MMseqs2 fixture 1.0')\\n"
+        "else:\\n"
+        " fasta = pathlib.Path(sys.argv[2])\\n"
+        " prefix = pathlib.Path(sys.argv[3])\\n"
+        " ids = [line[1:] for line in fasta.read_text().splitlines() if line.startswith('>')]\\n"
+        " rows = [(ids[0], ids[0])] + ([(ids[0], ids[1])] if len(ids) > 1 else [])\\n"
+        + (" rows = rows[:1]\\n" if omit_last else "")
+        + " pathlib.Path(str(prefix) + '_cluster.tsv').write_text(\\n"
+        + "  ''.join(f'{a}\\\\t{b}\\\\n' for a, b in rows))\\n",
         encoding="utf-8",
     )
     executable.chmod(0o755)

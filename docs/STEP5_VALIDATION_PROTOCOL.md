@@ -41,10 +41,11 @@ a new benchmark version.
 ## Uncertainty and statistical interpretation
 
 The benchmark implementation reports deterministic paired-row percentile
-bootstrap intervals for held-out log10 MAE/RMSE. These are descriptive
-sample-level intervals and do not account for dependence among related
-proteins/scaffolds. Cluster-aware resampling or independent external replication
-is required before making broader population claims.
+bootstrap intervals for held-out log10 MAE/RMSE and, when group arrays are
+provided, separate paired cluster-bootstrap intervals for each declared held-out
+axis. Cluster bootstrap resamples unique groups and retains all rows within each
+sampled group. These intervals are still limited by the number and representativeness
+of held-out groups and do not address dataset shift or model-selection bias.
 
 Conformal intervals must use a separate calibration partition, report empirical
 coverage and width, and never use the final test partition for calibration.
@@ -74,7 +75,8 @@ Each benchmark run must retain:
 
 ## Current blockers
 
-Execution is blocked until Step 2 supplies a reviewed immutable real-data
+Scientific execution is blocked until Step 2 supplies a reviewed immutable real-data
 release and Step 3 supplies actual pinned ESM-2/MMseqs2 execution plus numerical
-repeatability evidence. Synthetic fixtures may test software behavior but are
+repeatability evidence. The software can be exercised on synthetic fixtures, but
+those fixtures cannot satisfy scientific acceptance. Synthetic fixtures may test software behavior but are
 not scientific validation data.

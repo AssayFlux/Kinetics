@@ -24,7 +24,10 @@ from .context import context_design_matrix, make_context_pipeline
 from .experiments import build_experiment_manifest, save_experiment_manifest
 from .metrics import regression_report, subgroup_regression_report
 from .modeling import _load_feature_file, _validate_feature_metadata
-from .validation import bootstrap_regression_intervals
+from .validation import (
+    bootstrap_cluster_regression_intervals,
+    bootstrap_regression_intervals,
+)
 from .model_card import write_model_card
 from .provenance import file_record, write_json_atomic
 
@@ -164,6 +167,13 @@ def compare_regressors(
         "held_out_confidence_intervals": bootstrap_regression_intervals(
             y_test, test_prediction, target=target, random_state=random_state,
         ),
+        "held_out_cluster_confidence_intervals": {
+            name: bootstrap_cluster_regression_intervals(
+                y_test, test_prediction, np.asarray(test[name]).reshape(-1),
+                target=target, random_state=random_state,
+            )
+            for name in holdout_group_arrays
+        },
         "n_train": int(len(y_train)),
         "n_held_out": int(len(y_test)),
         "subgroup_diagnostics": {

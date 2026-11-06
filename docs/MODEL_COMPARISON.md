@@ -21,13 +21,14 @@ report = compare_regressors(
 )
 ```
 
-The held-out report now includes deterministic paired-row percentile-bootstrap
-95% intervals for log10 MAE and RMSE (2,000 resamples by default). These quantify
-sampling uncertainty for the particular held-out rows only. They do not account
-for dependence among related proteins/scaffolds, dataset shift, model-selection
-bias, or establish calibrated predictive uncertainty. Cluster-level resampling
-and external-source replication remain required where the benchmark design
-contains clustered observations.
+The held-out report includes deterministic paired-row percentile-bootstrap
+95% intervals for log10 MAE and RMSE (2,000 resamples by default). When
+`holdout_group_arrays` are supplied, it also reports paired cluster-bootstrap
+intervals for each declared held-out axis, resampling unique groups while retaining
+all rows within each sampled group. Cluster intervals are unstable with few
+independent groups and do not address dataset shift, model-selection bias, or
+establish calibrated predictive uncertainty. External-source replication remains
+necessary for broader generalization claims.
 
 This is a fixed baseline comparison, not an exhaustive hyperparameter search.
 Do not tune candidates against the final test set. Repeat independently for Km

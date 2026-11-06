@@ -68,7 +68,7 @@ The genomics, transcriptomics, proteomics, structural biology, chemistry, pharma
 
 The Step 2 software tests exercise aggregate target selection, source-unit declarations, aggregation semantics, source-row identifiers, identity normalization, duplicate candidates, release manifests, warning propagation, and checksum verification. Passing these tests verifies the tooling, not the scientific validity of a real CatPred data release.
 
-GitHub Actions run [#42173358868](https://github.com/AssayFlux/Kinetics/actions/runs/42173358868) passed on Python 3.10, 3.11, and 3.12: 36 tests passed on each version, source compilation passed, and Ruff checks passed for the legacy adapter, CLI, package metadata, persistence service, and relevant tests. This is software verification only: no model training, numerical validation, benchmark run, or scientific generalization claim is made here. Code presence and passing software tests do not establish predictive validity.
+GitHub Actions run [#42178564530](https://github.com/AssayFlux/Kinetics/actions/runs/42178564530) passed on Python 3.10, 3.11, and 3.12: 48 tests passed on each version, source compilation passed, and scoped Ruff checks passed for the KDB adapters, curation, identity, release, quality, scripts, CLI, and associated tests. This is software verification only: no real public CatPred snapshot has been imported or released, no model training or benchmark run has been performed, and no scientific generalization claim is made here. Code presence and passing software tests do not establish predictive validity.
 
 ## Project direction
 

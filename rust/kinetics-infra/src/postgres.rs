@@ -131,7 +131,7 @@ impl PostgresRuntimeStore {
              UPDATE kinetics_jobs j
              SET state='running', lease_owner=$1,
                  lease_expires_at=now() + ($2 * interval '1 second'),
-                 attempt=CASE WHEN j.state='running' THEN j.attempt+1 ELSE j.attempt END,
+                 attempt=j.attempt+1,
                  started_at=COALESCE(j.started_at, now()), updated_at=now()
              FROM candidate c WHERE j.id=c.id RETURNING j.*",
         )
@@ -194,7 +194,6 @@ impl PostgresRuntimeStore {
         worker: &str,
         success: bool,
     ) -> Result<(), RuntimeStoreError> {
-        let state = if success { "succeeded" } else { "failed" };
         let result = sqlx::query(
             "UPDATE kinetics_jobs
              SET state=CASE
@@ -203,14 +202,12 @@ impl PostgresRuntimeStore {
                    WHEN attempt < max_attempts THEN 'queued'
                    ELSE 'failed'
                  END,
-                 attempt=CASE WHEN NOT $3 AND NOT cancel_requested AND attempt < max_attempts
-                              THEN attempt + 1 ELSE attempt END,
                  next_attempt_at=CASE WHEN NOT $3 AND NOT cancel_requested AND attempt < max_attempts
                                       THEN now() + (LEAST(300::double precision, (5 * power(2, GREATEST(attempt - 1, 0)))::double precision) * interval '1 second')
                                       ELSE NULL END,
                  lease_owner=NULL, lease_expires_at=NULL, updated_at=now()
              WHERE id=$1 AND lease_owner=$2 AND state='running'"
-        ).bind(id).bind(worker).bind(state).execute(&self.pool).await?;
+        ).bind(id).bind(worker).bind(success).execute(&self.pool).await?;
         if result.rows_affected() == 0 {
             return Err(RuntimeStoreError::Conflict);
         }

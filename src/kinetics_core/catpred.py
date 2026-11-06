@@ -154,7 +154,12 @@ def normalize_catpred_csv(
         "source_aggregate_unit": unit,
         "source_value_semantics": (
             "As-published representative row value; it is not the aggregate target "
-            "and may reflect upstream clipping."
+            "and reflects upstream clipping."
+        ),
+        "source_clipping_policy": (
+            {"lower": 1e-8, "upper": 1e4, "unit": "mM"}
+            if target == "km"
+            else {"lower": 1e-6, "upper": 1e6, "unit": "s^-1"}
         ),
         "source_unit_basis": (
             "CatPred processing convention: Km in mM and kcat in s^-1; per-row "

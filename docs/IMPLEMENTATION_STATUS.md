@@ -14,6 +14,8 @@ This file distinguishes repository contents from execution, verification and sci
 
 - Canonical one-target-per-row kinetic observation contract.
 - Explicit legacy paired-row adapter to canonical observations, requiring source record IDs and preserving independently available Km/kcat values.
+- Provenance-aware `kinetics-research import-legacy` CLI, including input/output hashes, source version/license metadata, and protection against raw-input overwrite.
+- Text-preserving source-record ID ingestion so opaque IDs and leading zeroes survive CSV import.
 - Explicit Km-to-M and kcat-to-s^-1 conversion.
 - Source-table normalization and row-level rejection audits.
 - Duplicate/conflict audits and metadata completeness summaries.
@@ -52,7 +54,7 @@ The genomics, transcriptomics, proteomics, structural biology, chemistry, pharma
 
 ## Verification status
 
-GitHub Actions run [#42171306137](https://github.com/AssayFlux/Kinetics/actions/runs/42171306137) passed on Python 3.10, 3.11, and 3.12. It ran source compilation, the pytest suite, and Ruff checks for the new legacy adapter module and its tests. This is software verification only: no model training, numerical validation, benchmark run, or scientific generalization claim is made here. Code presence and passing software tests do not establish predictive validity.
+GitHub Actions run [#42172305487](https://github.com/AssayFlux/Kinetics/actions/runs/42172305487) passed on Python 3.10, 3.11, and 3.12: 34 tests passed on each version, source compilation passed, and Ruff checks passed for the updated adapter, CLI, package metadata, and tests. This is software verification only: no model training, numerical validation, benchmark run, or scientific generalization claim is made here. Code presence and passing software tests do not establish predictive validity.
 
 ## Project direction
 

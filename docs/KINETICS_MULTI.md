@@ -49,7 +49,7 @@ kinetics-research predict-multi \
   --output artifacts/km/kinetics-multi/new_predictions.csv
 ```
 
-Inference requires a target-labelled feature archive built with the same feature schema, model/tokenizer metadata, chemical fingerprint settings, graph tensor schema and assay-context columns as the trained model. Mismatches are rejected. The output reports predictions in log10 space and canonical units (M for Km; s^-1 for kcat), plus conformal intervals only when an independent calibration archive was used during training.
+Inference requires a target-labelled feature archive built with the same feature schema, model/tokenizer metadata, chemical fingerprint settings, graph tensor schema and assay-context columns as the trained model. Mismatches are rejected. The output reports predictions in log10 space and canonical units (M for Km; s^-1 for kcat), a nearest-reference applicability-domain warning, plus conformal intervals only when an independent calibration archive was used during training. The applicability warning is a feature-space diagnostic, not a probability of correctness.
 
 **Security:** the model bundle is a joblib artifact, which uses Python pickle serialization. Only load model files produced by a trusted local training run or obtained through a verified trusted artifact channel. Never load untrusted joblib/pickle files.
 

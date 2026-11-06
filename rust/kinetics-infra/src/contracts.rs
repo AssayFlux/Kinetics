@@ -71,6 +71,9 @@ mod tests {
                 max_cpu_millis: 1,
             },
         };
-        assert_eq!(request.validate(), Err(ContractError::InvalidIdempotencyKey));
+        assert_eq!(
+            request.validate(),
+            Err(ContractError::InvalidIdempotencyKey)
+        );
     }
 }

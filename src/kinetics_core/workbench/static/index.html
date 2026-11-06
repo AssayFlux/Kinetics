@@ -57,6 +57,13 @@
       </form>
     </section>
     <section>
+      <h2>Dataset intake</h2>
+      <label for="dataset-file">Upload a dataset into the active project</label>
+      <input id="dataset-file" type="file" accept=".csv,.tsv,.parquet,.json,.jsonl,.npz,.safetensors,.fasta,.fa">
+      <p class="muted">Uploads are limited to 500 MiB, stored under the project datasets folder, and hashed. Source terms and licenses still need review before use.</p>
+      <div class="actions"><button id="upload-file" type="button">Upload dataset</button></div>
+    </section>
+    <section>
       <h2>Research workflow</h2>
       <label for="command">Workflow action</label>
       <select id="command">
@@ -227,6 +234,23 @@ $("new-project").addEventListener("submit", async event => {
     $("project-description").value = "";
     await loadProjects();
     announce("Project created.");
+  } catch (error) { announce(error.message); }
+});
+$("upload-file").addEventListener("click", async () => {
+  if (!activeProject) { announce("Create or select a project first."); return; }
+  const file = $("dataset-file").files[0];
+  if (!file) { announce("Choose a dataset file first."); return; }
+  const form = new FormData();
+  form.append("file", file);
+  try {
+    const response = await fetch("/api/v1/projects/" + activeProject + "/uploads", {
+      method: "POST", body: form
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.detail || response.statusText);
+    $("dataset-file").value = "";
+    announce("Uploaded " + result.relative_path + " · SHA-256 " + result.checksum_sha256);
+    await refresh();
   } catch (error) { announce(error.message); }
 });
 $("submit-job").addEventListener("click", async () => {

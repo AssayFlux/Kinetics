@@ -1,3 +1,5 @@
+import sqlite3
+
 from kinetics_core.storage import KineticsSQLite
 
 

@@ -23,6 +23,24 @@ python -m kinetics_core.catpred --input data/public/catpred-db/km_processed.csv 
 
 The column names and unit above are examples only; replace them with the actual upstream schema. Repeat for kcat with the kcat source table and its own unit mapping. Do not join the two tables unless the upstream source proves the records represent the same experiment and assay context.
 
+### Legacy paired-row CSV migration (only when the source really contains paired measurements)
+
+If an existing local dataset stores Km and kcat in the same row, convert it explicitly rather than joining independently sourced target tables. Supply the real source record ID column and the units used by that file. The raw file is left untouched; the command refuses to overwrite it and writes a SHA-256 provenance manifest beside the canonical CSV.
+
+```bash
+kinetics-research import-legacy \
+  --input data/legacy/paired.csv \
+  --output data/processed/legacy/observations.csv \
+  --source legacy-dataset \
+  --source-record-id-column SOURCE_RECORD_ID \
+  --km-unit uM \
+  --kcat-unit min^-1 \
+  --source-version v1 \
+  --license-id CC-BY-4.0
+```
+
+Replace the example source, ID column, units, version, and license with verified metadata. The adapter preserves Km and kcat independently and will reject missing source IDs or invalid measurements. It does not create synthetic record IDs. If your source stores Km and kcat in separate tables, continue to normalize them independently in Step 2 instead.
+
 ## 3. Add grouping metadata
 
 Use MMseqs2 to produce sequence-cluster assignments and RDKit to derive chemical scaffold identifiers. Merge these mappings back by stable source record ID. Preserve the tool versions and parameters.

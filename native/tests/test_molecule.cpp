@@ -39,6 +39,20 @@ int main() {
         try { scene.set_selection({999}); }
         catch (const std::invalid_argument&) { rejected = true; }
         if (!rejected) throw std::runtime_error("unknown atom selection was accepted");
+        const auto ensemble = kinetics::load_pdb(
+            std::string(KINETICS_FIXTURE_DIR) + "/multi_model.pdb");
+        if (ensemble.model_number != 1 || ensemble.atoms.size() != 2 ||
+            ensemble.bonds.size() != 1)
+            throw std::runtime_error("first-model selection or global CONECT handling failed");
+        if (std::abs(ensemble.atoms[1].position[0] - 1.25) > 1e-12)
+            throw std::runtime_error("second model coordinates leaked into first model");
+
+        rejected = false;
+        try {
+            (void)kinetics::load_pdb(
+                std::string(KINETICS_FIXTURE_DIR) + "/duplicate_serial.pdb");
+        } catch (const std::runtime_error&) { rejected = true; }
+        if (!rejected) throw std::runtime_error("duplicate atom serial was accepted");
         std::cout << "native molecular reference tests passed\n";
         return 0;
     } catch (const std::exception& error) {

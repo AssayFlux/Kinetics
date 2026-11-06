@@ -518,6 +518,10 @@ def create_app(
                     ),
                 )
 
+    @app.get("/structure-viewer", include_in_schema=False)
+    def structure_viewer() -> FileResponse:
+        return FileResponse(Path(__file__).parent / "static" / "structure-viewer.html")
+
     @app.get("/", include_in_schema=False)
     def home() -> FileResponse:
         return FileResponse(Path(__file__).parent / "static" / "index.html")

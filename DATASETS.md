@@ -75,7 +75,8 @@ Example for the pinned CatPred train split (the unit conventions and upstream ca
 ```bash
 python -m kinetics_core.catpred \
   --input data/public/catpred-db/km/km_train.csv --target km --unit mM \
-  --source-version 44409e6 --license-id CC-BY-4.0 \
+  --source-version 44409e6 --processing-revision 931583821ff875e873002730fbbdf1047acfde77 \\
+  --license-id CC-BY-4.0 \
   --output-dir data/processed/catpred-db/km
 ```
 

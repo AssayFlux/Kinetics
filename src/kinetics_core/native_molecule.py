@@ -56,6 +56,8 @@ def inspect_structure(
         except (OSError, json.JSONDecodeError) as exc:
             raise ValueError("native inspector did not produce valid scene JSON") from exc
 
+    if not isinstance(scene, dict):
+        raise ValueError("native inspector output must be a JSON object")
     if scene.get("schema_version") != SCENE_SCHEMA:
         raise ValueError("unsupported native molecular scene schema")
     if scene.get("coordinate_unit") != "angstrom":

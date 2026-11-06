@@ -5,10 +5,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-from datetime import datetime, timezone
-from pathlib import Path
+import re
 import time
 import urllib.request
+from datetime import datetime, timezone
+from pathlib import Path
 
 CATPRED_FILES = {
     "km/km_train.csv": "km/km_train.csv",
@@ -28,7 +29,10 @@ def download(url: str, destination: Path) -> dict:
     temporary = destination.with_suffix(destination.suffix + ".part")
     temporary.unlink(missing_ok=True)
     try:
-        with urllib.request.urlopen(request, timeout=60) as response, temporary.open("wb") as output:
+        with (
+            urllib.request.urlopen(request, timeout=60) as response,
+            temporary.open("wb") as output,
+        ):
             while True:
                 chunk = response.read(1024 * 1024)
                 if not chunk:
@@ -54,7 +58,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", choices=["catpred-db"], default="catpred-db")
     parser.add_argument("--output-dir", default="data/public/catpred-db")
-    parser.add_argument("--revision", default=CATPRED_REVISION, help="Pinned Hugging Face dataset revision")
+    parser.add_argument(
+        "--revision", default=CATPRED_REVISION,
+        help="Pinned Hugging Face dataset revision",
+    )
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
     if not re.fullmatch(r"[0-9a-fA-F]{7,40}", args.revision):
@@ -63,13 +70,18 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = output_dir / "manifest.json"
     if manifest_path.exists() and not args.overwrite:
-        raise FileExistsError(f"Download manifest exists: {manifest_path}; pass --overwrite or use a new directory")
+        raise FileExistsError(
+            f"Download manifest exists: {manifest_path}; pass --overwrite or use a new directory"
+        )
     manifest = {
         "dataset": "CatPred-DB",
         "repository": "https://github.com/maranasgroup/CatPred-DB",
         "source_revision": args.revision,
         "dataset_card": "https://huggingface.co/datasets/RosettaCommons/CatPred-DB",
-        "license_note": "Pinned Hugging Face dataset card declares CC-BY-4.0; verify exact revision and redistribution terms.",
+        "license_note": (
+            "Pinned Hugging Face dataset card declares CC-BY-4.0; verify exact "
+            "revision and redistribution terms."
+        ),
         "files": [],
     }
     for filename, relative_path in CATPRED_FILES.items():
@@ -91,7 +103,9 @@ def main() -> None:
         time.sleep(0.2)
     manifest["manifest_created_at"] = datetime.now(timezone.utc).isoformat()
     temporary_manifest = manifest_path.with_suffix(".json.tmp")
-    temporary_manifest.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    temporary_manifest.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     temporary_manifest.replace(manifest_path)
     print(f"Manifest: {manifest_path}")
 

@@ -18,15 +18,27 @@ impl Principal {
         if subject.trim().is_empty() || tenant_id.trim().is_empty() {
             return Err(AuthError::InvalidPrincipal);
         }
-        Ok(Self { subject, tenant_id, scopes: scopes.into_iter().collect() })
+        Ok(Self {
+            subject,
+            tenant_id,
+            scopes: scopes.into_iter().collect(),
+        })
     }
 
     pub fn require_scope(&self, required: &str) -> Result<(), AuthError> {
-        if self.scopes.contains(required) { Ok(()) } else { Err(AuthError::Forbidden) }
+        if self.scopes.contains(required) {
+            Ok(())
+        } else {
+            Err(AuthError::Forbidden)
+        }
     }
 
     pub fn require_tenant(&self, tenant_id: &str) -> Result<(), AuthError> {
-        if self.tenant_id == tenant_id { Ok(()) } else { Err(AuthError::NotFound) }
+        if self.tenant_id == tenant_id {
+            Ok(())
+        } else {
+            Err(AuthError::NotFound)
+        }
     }
 }
 

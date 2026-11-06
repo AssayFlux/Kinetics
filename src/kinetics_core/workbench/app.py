@@ -22,6 +22,10 @@ from ..storage import KineticsSQLite
 
 _ALLOWED_COMMANDS = {
     "audit",
+    "import-legacy",
+    "persist",
+    "release",
+    "verify-release",
     "normalize-identities",
     "annotate-scaffolds",
     "cluster-sequences",
@@ -48,6 +52,10 @@ class JobCreate(BaseModel):
 
     command: Literal[
         "audit",
+        "import-legacy",
+        "persist",
+        "release",
+        "verify-release",
         "normalize-identities",
         "annotate-scaffolds",
         "cluster-sequences",
@@ -71,7 +79,7 @@ def _project_path(root: Path, value: Any, *, must_exist: bool, kind: str) -> Pat
     if not resolved.is_relative_to(root.resolve()):
         raise ValueError(f"{kind} resolves outside the project workspace")
     if must_exist:
-        exists = resolved.is_dir() if kind == "output_dir" else resolved.is_file()
+        exists = resolved.is_dir() if kind in {"output_dir", "release_dir"} else resolved.is_file()
         if not exists:
             raise FileNotFoundError(f"{kind} does not exist: {value}")
     if not must_exist and resolved.exists() and kind in {"output", "output_dir"}:
@@ -90,6 +98,28 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
 
     schemas: dict[str, tuple[set[str], set[str], set[str]]] = {
         "audit": ({"input", "output_dir"}, {"log10_tolerance"}, {"input", "output_dir"}),
+        "import-legacy": (
+            {"input", "output", "source", "source_record_id_column"},
+            {"km_unit", "kcat_unit", "source_version", "license_id",
+             "sequence_column", "smiles_column", "overwrite"},
+            {"input", "output"},
+        ),
+        "persist": (
+            {"input", "dataset_id", "name", "source"},
+            {"version", "license_id", "citation"},
+            {"input"},
+        ),
+        "release": (
+            {"observations", "rejected", "output_dir", "dataset_id", "dataset_name",
+             "source", "source_version", "license_id", "citation"},
+            {"source_url", "source_manifest"},
+            {"observations", "output_dir"},
+        ),
+        "verify-release": (
+            {"release_dir"},
+            set(),
+            {"release_dir"},
+        ),
         "normalize-identities": (
             {"input", "output_dir"},
             {"sequence_column", "smiles_column"},
@@ -154,18 +184,29 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
 
     values = dict(parameters)
     path_values: dict[str, str] = {}
+    path_list_values: dict[str, list[str]] = {}
     for field in path_fields:
         if field not in values or values[field] is None:
             continue
-        is_output = field in {"output", "output_dir"}
+        must_exist = field not in {"output", "output_dir", "cache_dir"}
         resolved = _project_path(
-            root, values[field], must_exist=not is_output, kind=field
+            root, values[field], must_exist=must_exist, kind=field
         )
         path_values[field] = resolved.relative_to(root.resolve()).as_posix()
+    for field in ("rejected", "source_manifest"):
+        if field in values:
+            items = values[field]
+            if not isinstance(items, list) or not items:
+                raise ValueError(f"{field} must be a non-empty list of project-relative paths")
+            resolved_items = []
+            for item in items:
+                resolved = _project_path(root, item, must_exist=True, kind=field)
+                resolved_items.append(resolved.relative_to(root.resolve()).as_posix())
+            path_list_values[field] = resolved_items
 
     result = [command]
     ordered_fields = [
-        "input", "observations", "train", "test", "model", "features",
+        "input", "observations", "train", "test", "model", "features", "release_dir",
         "output", "output_dir", "target", "sequence_column", "smiles_column",
         "record_id_column", "source_column", "min_sequence_identity", "coverage",
         "threads", "cache_dir", "model_name", "model_revision", "tokenizer_revision",
@@ -173,10 +214,16 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
         "protein_group_column", "substrate_group_column", "test_fraction",
         "calibration_fraction", "random_state", "n_splits", "calibration_archive",
         "conformal_alpha", "n_estimators", "max_depth", "hidden_layers", "alpha",
-        "max_iter", "git_revision", "log10_tolerance",
+        "max_iter", "git_revision", "log10_tolerance", "source", "source_record_id_column",
+        "km_unit", "kcat_unit", "version", "license_id", "citation", "dataset_id",
+        "name", "dataset_name", "source_version", "source_url",
     ]
-    list_fields = {"group_column": "--group-column",
-                   "holdout_group_array": "--holdout-group-array"}
+    list_fields = {
+        "group_column": "--group-column",
+        "holdout_group_array": "--holdout-group-array",
+        "rejected": "--rejected",
+        "source_manifest": "--source-manifest",
+    }
     bool_flags = {"no_chirality": "--no-chirality", "overwrite": "--overwrite"}
     for field in ordered_fields:
         if field not in values or values[field] is None:
@@ -185,6 +232,9 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
         value = values[field]
         if field in path_values:
             result.extend([option, path_values[field]])
+        elif field in path_list_values:
+            for item in path_list_values[field]:
+                result.extend([list_fields[field], item])
         elif field in list_fields:
             if not isinstance(value, list) or not all(
                 isinstance(item, str) and item.strip() for item in value
@@ -275,11 +325,13 @@ def create_app(
         parameters: dict[str, Any],
         root: Path,
     ) -> list[dict[str, Any]]:
-        candidate = parameters.get("output_dir") or parameters.get("output")
+        candidate = (parameters.get("output_dir") or parameters.get("output")
+                     or parameters.get("release_dir"))
         if not candidate:
             return []
         try:
-            output_kind = "output_dir" if parameters.get("output_dir") else "output"
+            output_kind = ("release_dir" if parameters.get("release_dir") else
+                           "output_dir" if parameters.get("output_dir") else "output")
             output_path = _project_path(
                 root, candidate, must_exist=True, kind=output_kind
             )
@@ -350,6 +402,8 @@ def create_app(
 
         try:
             arguments = build_cli_arguments(command, parameters, root)
+            if command == "persist":
+                arguments.extend(["--database", str(database)])
             process = subprocess.Popen(
                 [sys.executable, "-m", "kinetics_core.cli", *arguments],
                 cwd=root,
@@ -657,7 +711,7 @@ def create_app(
         result = json.loads(job["result_json"])
         report_path = root / "reports" / f"{job_id}.md"
         inputs = []
-        for field in ("input", "observations", "train", "test", "model", "features"):
+        for field in ("input", "observations", "train", "test", "model", "features", "release_dir"):
             value = parameters.get(field)
             if isinstance(value, str):
                 candidate = (root / value).resolve()

@@ -12,6 +12,7 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
         "measurement": [2.5, 4.0, 1.0],
         "unit": ["uM", "uM", "uM"],
         "sequence": ["AAAA", "BBBB", "CCCC"],
+        "uniprot": [None, None, None],
         "smiles": ["CCO", "CCN", "CCC"],
         "ph": [7.0, 6.5, "not-reported"],
         "temp_k": [298.15, 310.0, 300.0],

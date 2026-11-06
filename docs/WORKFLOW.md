@@ -68,7 +68,7 @@ kinetics-research release \
 kinetics-research verify-release --release-dir data/releases/catpred-km-v1
 ```
 
-Do not treat a release as license-cleared unless the operator has inspected the exact source revision's terms. A generated row locator is not a source-level experimental citation.
+The Hugging Face CatPred-DB dataset card declares CC-BY-4.0 for the dataset. The journal article's rights statement is CC-BY-NC-ND and is not interchangeable with the dataset card's data license; underlying source databases may carry additional conditions. Do not treat a release as license-cleared unless the operator has inspected the exact dataset revision and source terms. A generated row locator is not a source-level experimental citation.
 
 ## 2d. Audit and persist a canonical snapshot
 

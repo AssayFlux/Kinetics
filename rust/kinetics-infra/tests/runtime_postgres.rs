@@ -90,7 +90,9 @@ async fn postgres_enforces_tenant_quotas_leases_cancellation_and_append_only_aud
         jobs.get("tenant-b", job.id).await,
         Err(RuntimeStoreError::NotFound)
     ));
-    jobs.request_cancel("tenant-b", other_tenant.id).await.unwrap();
+    jobs.request_cancel("tenant-b", other_tenant.id)
+        .await
+        .unwrap();
 
     let claimed = jobs.claim("worker-a", 30).await.unwrap().unwrap();
     assert_eq!(claimed.id, job.id);

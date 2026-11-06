@@ -20,7 +20,14 @@ This file distinguishes repository contents from execution, verification and sci
 - End-to-end fixture covering legacy import → quality audit → SQLite persistence, including independent Km/kcat rows, original values/units, source IDs, license, and checksums.
 - Text-preserving source-record ID ingestion so opaque IDs and leading zeroes survive CSV import.
 - Explicit Km-to-M and kcat-to-s^-1 conversion.
-- Source-table normalization and row-level rejection audits.
+- CatPred-DB acquisition with pinned Hugging Face data revision and separately pinned GitHub processing-code revision; downloads include Km/kcat train/validation/test tables and published sequence-cluster test files, each with SHA-256 hashes.
+- CatPred source adapter using the target-specific aggregate fields `log10km_mean` (Km geometric mean) and `log10kcat_max` (kcat maximum), exponentiating to linear values and normalizing Km to M.
+- Explicit `source_aggregated` measurement semantics; representative row-level `value` and `log10_value` are retained separately from the aggregate target.
+- Source clipping policy, source revision, processing-code revision, source-row locator, dataset citation/license metadata, pH/temperature/taxonomy/accession context, and all original source columns recorded in curation manifests.
+- Celsius-to-kelvin conversion; required target-specific source units (Km mM, kcat s^-1); explicit warnings for missing BRENDA per-row unit metadata and the upstream SABIO kcat min^-1 conversion.
+- Sequence/SMILES identity normalization CLI, stereochemistry-preserving RDKit canonicalization, content hashes, and row-level identity rejection reports.
+- Same-source duplicate/conflict review plus non-destructive cross-source duplicate candidates.
+- Immutable KDB release and verify-release commands, combined rejection logs, source manifest retention, data cards, SHA-256 artifact verification, and propagation of source-quality warnings.
 - Duplicate/conflict audits and metadata completeness summaries.
 - Dataset provenance manifests and experiment metadata.
 - Grouped holdout, protein-cluster and chemical-scaffold split utilities.
@@ -33,11 +40,13 @@ This file distinguishes repository contents from execution, verification and sci
 - Classical model-family comparison and held-out reporting utilities.
 - Research CLI, metrics, model cards, prediction/reporting and visualization helpers.
 - SQLite experiment storage with schema version 1, transactional/idempotent bootstrap, forward-version protection, and consistent backup support.
-- Package/CLI metadata and CI verification across Python 3.10–3.12; Ruff lint is currently scoped to the new legacy adapter.
+- Package/CLI metadata and CI verification across Python 3.10–3.12; Ruff checks cover the KDB adapters, curation, identity, release, quality, scripts, and associated tests.
 - Domain documentation, publication protocol, paper outline and contribution guidance.
 - Dependency-free research-assistant protocol/facade that can later be exposed through documented, permission-scoped interfaces to the separate Kinetics Ecosystem project.
 
 ## Current engineering gaps
+
+- Step 2 tooling is implemented, but no real CatPred snapshot has yet been downloaded, curated, or released in this repository. The upstream kcat unit caveat must be resolved against source-level BRENDA/SABIO records before treating its absolute scale as validated. Direct BRENDA and SABIO adapters remain pending current schema, access, and license verification.
 
 - Connect canonical observation outputs to legacy preprocessing, prediction and ONNX paths.
 - Retire or isolate the legacy two-target-per-row assumption without breaking supported workflows.
@@ -56,6 +65,8 @@ This file distinguishes repository contents from execution, verification and sci
 The genomics, transcriptomics, proteomics, structural biology, chemistry, pharmacology, molecular simulation, multi-omics, biomedical imaging, desktop workbench, clinical translation and Android capabilities are roadmap programmes unless explicitly listed above as present code. No clinical capability is claimed.
 
 ## Verification status
+
+The Step 2 software tests exercise aggregate target selection, source-unit declarations, aggregation semantics, source-row identifiers, identity normalization, duplicate candidates, release manifests, warning propagation, and checksum verification. Passing these tests verifies the tooling, not the scientific validity of a real CatPred data release.
 
 GitHub Actions run [#42173358868](https://github.com/AssayFlux/Kinetics/actions/runs/42173358868) passed on Python 3.10, 3.11, and 3.12: 36 tests passed on each version, source compilation passed, and Ruff checks passed for the legacy adapter, CLI, package metadata, persistence service, and relevant tests. This is software verification only: no model training, numerical validation, benchmark run, or scientific generalization claim is made here. Code presence and passing software tests do not establish predictive validity.
 

@@ -125,15 +125,29 @@ Step 4 is being implemented as a software engine, not validated as a scientific 
 
 **Evidence required for completion:** Benchmark cards, frozen split manifests, real evaluation reports, ablations, contamination/leakage audits, cluster-aware or independent uncertainty evidence, and independent reproduction run.
 
-## Step 6 — Native molecular visualization and simulation
+## Step 6 — Native molecular visualization and simulation (FOUNDATION IMPLEMENTED; FULL STEP IN PROGRESS)
 
 **Purpose:** Deliver scientifically faithful structural inspection and native performance where justified.
 
-**Work:** Define C++ engine scope/build/platform support and Python/Rust interoperability; validated structure loading with provenance; rendering, selection, highlighting, interaction overlays; reference-tested measurements; explicit simulation adapters; record software, force fields, parameters, seeds, and structures; profile before optimizing.
+**Implemented foundation:**
+- C++17/CMake native molecular structure and scene-data library with a command-line PDB inspector.
+- Deterministic first-model PDB parsing; preservation of atom serial/name, alternate location, residue/chain identity, insertion code, element, occupancy, temperature factor and original Cartesian coordinates in angstrom.
+- Explicit CONECT-only bonds; strict failure for truncated records, duplicate atom serials, non-finite coordinates and dangling/self bond references. No guessed bonds, inferred elements, implicit coordinate transforms or silent atom renumbering.
+- Versioned JSON molecular-scene contract with validated selection/highlight serial sets, reference atom-distance calculation and a deterministic CPU XY PPM preview renderer with element colors and selection/highlight overlays.
+- Narrow Python bridge that invokes the explicitly selected native executable without a shell, validates returned atom/bond references and coordinates, and adds source SHA-256 provenance.
+- Parameter-validated OpenMM/GROMACS simulation-plan schema that records engine/version, input hash, force field, water model, integrator, timestep, steps, temperature, pressure, random seed and outputs. Plans are explicitly marked planned-not-executed.
+- Native CMake/CTest CI matrix declared for Ubuntu, macOS and Windows; Python interoperability and simulation-plan tests.
 
-**Acceptance:** Reproducible builds and native tests on declared platforms; reference structures preserve atom/bond identity and coordinate handling; interoperability preserves required metadata; simulation workflows are fully parameterized and traceable; performance claims include reproducible workloads and hardware.
+**Scope boundaries:** This first parser supports PDB only. The CPU XY preview is not a GPU-accelerated 3D renderer or interactive desktop viewer. Molecular surfaces, mmCIF/biological assembly support and molecular dynamics execution are not implemented. No performance claim is made.
 
-**Evidence:** Build matrix, reference fixtures, interoperability tests, benchmarks, API docs.
+**Remaining acceptance work:**
+- Pass the native build and test matrix on all declared operating systems.
+- Expand fixtures to reviewed reference structures and validate coordinate/identity round trips, altlocs, insertion codes, multi-model behavior and malformed-input handling.
+- Add a renderer with camera, picking, visual representations and interaction overlays, selected only after a dependency/platform prototype.
+- Implement real engine-specific OpenMM/GROMACS adapters, generated input decks, controlled execution, restart/cancellation and reference-system stability checks with complete execution provenance.
+- Add representative parser/renderer benchmarks with reproducible structures, compiler flags, hardware and memory/time measurements; optimize only after profiling.
+
+**Evidence:** native/, tests/test_native_molecule.py, docs/NATIVE_MOLECULAR_ENGINE.md, docs/STEP6_IMPLEMENTATION_STATUS.md, CMake/CTest workflow matrix. This is an engineering foundation, not full Step 6 acceptance.
 
 ## Step 7 — Rust infrastructure and security
 

@@ -106,7 +106,9 @@ impl ArtifactStore {
             }
             let prefix = prefix_entry.file_name().to_string_lossy().into_owned();
             if prefix.len() != 2
-                || !prefix.bytes().all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
+                || !prefix
+                    .bytes()
+                    .all(|byte| byte.is_ascii_hexdigit() && !byte.is_ascii_uppercase())
             {
                 return Err(ArtifactError::InvalidDigest);
             }

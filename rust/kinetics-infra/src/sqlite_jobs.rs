@@ -1,8 +1,7 @@
 use std::path::Path;
 
-use rusqlite::{params, Connection, OptionalExtension, Transaction};
-use serde_json;
 use crate::jobs::{Job, JobError, JobState, ResourceLimits};
+use rusqlite::{params, Connection, OptionalExtension};
 
 #[derive(Debug)]
 pub enum SqliteJobError {
@@ -12,13 +11,21 @@ pub enum SqliteJobError {
 }
 
 impl From<rusqlite::Error> for SqliteJobError {
-    fn from(value: rusqlite::Error) -> Self { Self::Sqlite(value) }
+    fn from(value: rusqlite::Error) -> Self {
+        Self::Sqlite(value)
+    }
 }
+
 impl From<serde_json::Error> for SqliteJobError {
-    fn from(value: serde_json::Error) -> Self { Self::Serialization(value) }
+    fn from(value: serde_json::Error) -> Self {
+        Self::Serialization(value)
+    }
 }
+
 impl From<JobError> for SqliteJobError {
-    fn from(value: JobError) -> Self { Self::Job(value) }
+    fn from(value: JobError) -> Self {
+        Self::Job(value)
+    }
 }
 
 pub struct SqliteJobStore {
@@ -43,7 +50,7 @@ impl SqliteJobStore {
                  UNIQUE (tenant_id, idempotency_key)
              );
              CREATE INDEX IF NOT EXISTS idx_jobs_tenant_state
-                 ON jobs (tenant_id, state);"
+                 ON jobs (tenant_id, state);",
         )?;
         Ok(Self { connection })
     }
@@ -61,11 +68,13 @@ impl SqliteJobStore {
         limits.validate()?;
         let limits_json = serde_json::to_string(&limits)?;
         let transaction = self.connection.transaction()?;
-        let existing_id: Option<String> = transaction.query_row(
-            "SELECT id FROM jobs WHERE tenant_id = ?1 AND idempotency_key = ?2",
-            params![tenant, idempotency_key],
-            |row| row.get(0),
-        ).optional()?;
+        let existing_id: Option<String> = transaction
+            .query_row(
+                "SELECT id FROM jobs WHERE tenant_id = ?1 AND idempotency_key = ?2",
+                params![tenant, idempotency_key],
+                |row| row.get(0),
+            )
+            .optional()?;
         if let Some(existing_id) = existing_id {
             let existing = load_job(&transaction, tenant, &existing_id)?;
             if existing.limits != limits {
@@ -88,12 +97,7 @@ impl SqliteJobStore {
         load_job(&self.connection, tenant, id)
     }
 
-    pub fn transition(
-        &mut self,
-        tenant: &str,
-        id: &str,
-        next: JobState,
-    ) -> Result<Job, SqliteJobError> {
+    pub fn transition(&mut self, tenant: &str, id: &str, next: JobState) -> Result<Job, SqliteJobError> {
         let transaction = self.connection.transaction()?;
         let current = load_job(&transaction, tenant, id)?;
         let valid = matches!(
@@ -163,20 +167,25 @@ fn parse_state(value: &str) -> Result<JobState, rusqlite::Error> {
     }
 }
 
-fn load_job(
-    connection: &Connection,
-    tenant: &str,
-    id: &str,
-) -> Result<Job, SqliteJobError> {
-    let row: (String, String, String, String, String, u32) = connection.query_row(
-        "SELECT id, tenant_id, idempotency_key, state, limits_json, attempt
+fn load_job(connection: &Connection, tenant: &str, id: &str) -> Result<Job, SqliteJobError> {
+    let row: (String, String, String, String, String, u32) = connection
+        .query_row(
+            "SELECT id, tenant_id, idempotency_key, state, limits_json, attempt
          FROM jobs WHERE id = ?1 AND tenant_id = ?2",
-        params![id, tenant],
-        |row| Ok((
-            row.get(0)?, row.get(1)?, row.get(2)?,
-            row.get(3)?, row.get(4)?, row.get(5)?,
-        )),
-    ).optional()?.ok_or(JobError::NotFound)?;
+            params![id, tenant],
+            |row| {
+                Ok((
+                    row.get(0)?,
+                    row.get(1)?,
+                    row.get(2)?,
+                    row.get(3)?,
+                    row.get(4)?,
+                    row.get(5)?,
+                ))
+            },
+        )
+        .optional()?
+        .ok_or(JobError::NotFound)?;
     Ok(Job {
         id: row.0,
         tenant_id: row.1,
@@ -206,27 +215,47 @@ mod tests {
         let path = directory.path().join("jobs.sqlite");
         {
             let mut store = SqliteJobStore::open(&path).unwrap();
-            let first = store.submit("job-1", "tenant-a", "request-1", limits()).unwrap();
-            let duplicate = store.submit("job-2", "tenant-a", "request-1", limits()).unwrap();
+            let first = store
+                .submit("job-1", "tenant-a", "request-1", limits())
+                .unwrap();
+            let duplicate = store
+                .submit("job-2", "tenant-a", "request-1", limits())
+                .unwrap();
             assert_eq!(first.id, duplicate.id);
         }
         let store = SqliteJobStore::open(&path).unwrap();
-        assert_eq!(store.get("tenant-a", "job-1").unwrap().state, JobState::Queued);
-        assert!(matches!(store.get("tenant-b", "job-1"), Err(SqliteJobError::Job(JobError::NotFound))));
+        assert_eq!(
+            store.get("tenant-a", "job-1").unwrap().state,
+            JobState::Queued
+        );
+        assert!(matches!(
+            store.get("tenant-b", "job-1"),
+            Err(SqliteJobError::Job(JobError::NotFound))
+        ));
     }
 
     #[test]
     fn lifecycle_and_bounded_retry_are_persisted() {
         let directory = tempdir().unwrap();
         let mut store = SqliteJobStore::open(directory.path().join("jobs.sqlite")).unwrap();
-        store.submit("job-2", "tenant-a", "request-2", limits()).unwrap();
-        store.transition("tenant-a", "job-2", JobState::Running).unwrap();
-        store.transition("tenant-a", "job-2", JobState::Failed).unwrap();
+        store
+            .submit("job-2", "tenant-a", "request-2", limits())
+            .unwrap();
+        store
+            .transition("tenant-a", "job-2", JobState::Running)
+            .unwrap();
+        store
+            .transition("tenant-a", "job-2", JobState::Failed)
+            .unwrap();
         let retried = store.retry_failed("tenant-a", "job-2", 2).unwrap();
         assert_eq!(retried.state, JobState::Queued);
         assert_eq!(retried.attempt, 2);
-        store.transition("tenant-a", "job-2", JobState::Running).unwrap();
-        store.transition("tenant-a", "job-2", JobState::Failed).unwrap();
+        store
+            .transition("tenant-a", "job-2", JobState::Running)
+            .unwrap();
+        store
+            .transition("tenant-a", "job-2", JobState::Failed)
+            .unwrap();
         assert!(matches!(
             store.retry_failed("tenant-a", "job-2", 2),
             Err(SqliteJobError::Job(JobError::InvalidTransition))

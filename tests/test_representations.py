@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from kinetics_core.chemistry import murcko_scaffold_id
+from kinetics_core.chemistry import molecular_graph_features, murcko_scaffold_id
 from kinetics_core.features import (
     DEFAULT_ESM_REVISION,
     ESM2Encoder,
@@ -96,6 +96,11 @@ def test_feature_archive_has_aligned_rows_and_manifest(tmp_path):
         assert data["source_record_ids"].tolist() == ["001", "002"]
         assert data["protein_cluster_id"].tolist() == ["p1", "p2"]
         assert data["feature_schema_version"].tolist() == ["2.0"]
+        assert data["graph_atom_features"].shape == (6, 9)
+        assert data["graph_edge_index"].shape == (2, 8)
+        assert data["graph_bond_features"].shape == (8, 4)
+        assert data["graph_atom_offsets"].tolist() == [0, 3, 6]
+        assert data["graph_edge_offsets"].tolist() == [0, 4, 8]
         metadata = json.loads(data["feature_metadata_json"][0])
         assert metadata["protein"]["model_revision"] == "fixture-revision"
         assert metadata["chemical"]["include_chirality"] is True
@@ -125,6 +130,18 @@ def test_morgan_fingerprint_preserves_stereochemistry_by_default():
     achiral = morgan_fingerprint("N[C@@H](C)C(=O)O", include_chirality=False)
     achiral_other = morgan_fingerprint("N[C@H](C)C(=O)O", include_chirality=False)
     assert np.array_equal(achiral, achiral_other)
+
+
+def test_molecular_graph_preserves_atom_stereochemistry_and_bidirectional_edges():
+    left = molecular_graph_features("N[C@@H](C)C(=O)O")
+    right = molecular_graph_features("N[C@H](C)C(=O)O")
+    assert left["atom_features"].shape[1] == 9
+    assert left["edge_index"].shape[0] == 2
+    assert left["edge_index"].shape[1] == left["bond_features"].shape[0]
+    assert np.array_equal(left["edge_index"][0], left["edge_index"][1][::-1])
+    assert set(left["atom_features"][:, 5]) != set(right["atom_features"][:, 5])
+    with pytest.raises(ValueError, match="Invalid SMILES"):
+        molecular_graph_features("invalid")
 
 
 def test_murcko_scaffold_stereochemistry_policy_is_explicit():

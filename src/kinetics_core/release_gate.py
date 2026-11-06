@@ -19,7 +19,9 @@ REQUIRED_GATES = (
 )
 _STATES = {"not_run", "blocked", "passed", "failed", "waived"}
 _SHA = re.compile(r"^[0-9a-f]{40}$")
-_SEMVER = re.compile(r"^v?(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:[-+][0-9A-Za-z.-]+)?$")
+_SEMVER = re.compile(
+    r"^v?(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:[-+][0-9A-Za-z.-]+)?$"
+)
 
 
 @dataclass(frozen=True, slots=True)

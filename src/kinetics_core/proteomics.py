@@ -167,10 +167,16 @@ class StructureFeature:
         for name in ("feature_id", "structure_id", "feature_name", "unit", "tool_name",
                      "tool_version", "coordinate_frame"):
             _required(getattr(self, name), name)
-        if isinstance(self.value, bool) or not isinstance(self.value, (int, float)) or not math.isfinite(self.value):
+        if (
+            isinstance(self.value, bool)
+            or not isinstance(self.value, (int, float))
+            or not math.isfinite(self.value)
+        ):
             raise ValueError("feature value must be finite")
         _sha256(self.parameter_sha256, "parameter_sha256")
-        evidence = tuple(_required(item, "mapping_evidence_id") for item in self.mapping_evidence_ids)
+        evidence = tuple(
+            _required(item, "mapping_evidence_id") for item in self.mapping_evidence_ids
+        )
         if not evidence:
             raise ValueError("derived structure features require mapping evidence IDs")
         object.__setattr__(self, "mapping_evidence_ids", evidence)

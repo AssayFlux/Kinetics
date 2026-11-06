@@ -39,27 +39,46 @@ pub struct PostgresRuntimeStore {
 }
 
 impl PostgresRuntimeStore {
-    pub fn new(pool: PgPool) -> Self { Self { pool } }
+    pub fn new(pool: PgPool) -> Self {
+        Self { pool }
+    }
 
     pub async fn submit(
-        &self, tenant: &str, idempotency_key: &str, payload: serde_json::Value,
-        max_runtime_seconds: i64, max_memory_bytes: i64, max_cpu_millis: i32,
+        &self,
+        tenant: &str,
+        idempotency_key: &str,
+        payload: serde_json::Value,
+        max_runtime_seconds: i64,
+        max_memory_bytes: i64,
+        max_cpu_millis: i32,
         max_active_jobs: i64,
     ) -> Result<RuntimeJob, RuntimeStoreError> {
-        if tenant.trim().is_empty() || idempotency_key.trim().is_empty()
-            || max_runtime_seconds <= 0 || max_memory_bytes <= 0 || max_cpu_millis <= 0 {
+        if tenant.trim().is_empty()
+            || idempotency_key.trim().is_empty()
+            || max_runtime_seconds <= 0
+            || max_memory_bytes <= 0
+            || max_cpu_millis <= 0
+        {
             return Err(RuntimeStoreError::Conflict);
         }
         let mut tx = self.pool.begin().await?;
         sqlx::query("SELECT pg_advisory_xact_lock(hashtextextended($1, 0))")
-            .bind(tenant).execute(&mut *tx).await?;
-        let existing = sqlx::query(
-            "SELECT * FROM kinetics_jobs WHERE tenant_id=$1 AND idempotency_key=$2"
-        ).bind(tenant).bind(idempotency_key).fetch_optional(&mut *tx).await?;
+            .bind(tenant)
+            .execute(&mut *tx)
+            .await?;
+        let existing =
+            sqlx::query("SELECT * FROM kinetics_jobs WHERE tenant_id=$1 AND idempotency_key=$2")
+                .bind(tenant)
+                .bind(idempotency_key)
+                .fetch_optional(&mut *tx)
+                .await?;
         if let Some(row) = existing {
             let job = row_to_job(&row);
-            if job.payload != payload || job.max_runtime_seconds != max_runtime_seconds
-                || job.max_memory_bytes != max_memory_bytes || job.max_cpu_millis != max_cpu_millis {
+            if job.payload != payload
+                || job.max_runtime_seconds != max_runtime_seconds
+                || job.max_memory_bytes != max_memory_bytes
+                || job.max_cpu_millis != max_cpu_millis
+            {
                 return Err(RuntimeStoreError::Conflict);
             }
             tx.commit().await?;
@@ -85,7 +104,11 @@ impl PostgresRuntimeStore {
 
     /// Atomically claim one queued job or an expired lease. SKIP LOCKED permits
     /// multiple independent workers to compete without double-claiming.
-    pub async fn claim(&self, worker: &str, lease_seconds: i64) -> Result<Option<RuntimeJob>, RuntimeStoreError> {
+    pub async fn claim(
+        &self,
+        worker: &str,
+        lease_seconds: i64,
+    ) -> Result<Option<RuntimeJob>, RuntimeStoreError> {
         sqlx::query(
             "UPDATE kinetics_jobs SET state='failed', lease_owner=NULL, lease_expires_at=NULL, updated_at=now()
              WHERE state='running' AND lease_expires_at < now() AND attempt >= max_attempts"
@@ -104,12 +127,21 @@ impl PostgresRuntimeStore {
                  lease_expires_at=now() + ($2 * interval '1 second'),
                  attempt=CASE WHEN j.state='running' THEN j.attempt+1 ELSE j.attempt END,
                  started_at=COALESCE(j.started_at, now()), updated_at=now()
-             FROM candidate c WHERE j.id=c.id RETURNING j.*"
-        ).bind(worker).bind(lease_seconds.max(5)).fetch_optional(&self.pool).await?;
+             FROM candidate c WHERE j.id=c.id RETURNING j.*",
+        )
+        .bind(worker)
+        .bind(lease_seconds.max(5))
+        .fetch_optional(&self.pool)
+        .await?;
         Ok(row.as_ref().map(row_to_job))
     }
 
-    pub async fn heartbeat(&self, id: Uuid, worker: &str, lease_seconds: i64) -> Result<bool, RuntimeStoreError> {
+    pub async fn heartbeat(
+        &self,
+        id: Uuid,
+        worker: &str,
+        lease_seconds: i64,
+    ) -> Result<bool, RuntimeStoreError> {
         let result = sqlx::query(
             "UPDATE kinetics_jobs SET lease_expires_at=now()+($3 * interval '1 second'), updated_at=now()
              WHERE id=$1 AND lease_owner=$2 AND state='running' AND cancel_requested=false
@@ -119,10 +151,18 @@ impl PostgresRuntimeStore {
         Ok(result.rows_affected() == 1)
     }
 
-    pub async fn cancellation_requested(&self, id: Uuid, worker: &str) -> Result<bool, RuntimeStoreError> {
+    pub async fn cancellation_requested(
+        &self,
+        id: Uuid,
+        worker: &str,
+    ) -> Result<bool, RuntimeStoreError> {
         let value = sqlx::query_scalar(
-            "SELECT cancel_requested FROM kinetics_jobs WHERE id=$1 AND lease_owner=$2"
-        ).bind(id).bind(worker).fetch_optional(&self.pool).await?;
+            "SELECT cancel_requested FROM kinetics_jobs WHERE id=$1 AND lease_owner=$2",
+        )
+        .bind(id)
+        .bind(worker)
+        .fetch_optional(&self.pool)
+        .await?;
         value.ok_or(RuntimeStoreError::NotFound)
     }
 
@@ -130,13 +170,24 @@ impl PostgresRuntimeStore {
         let result = sqlx::query(
             "UPDATE kinetics_jobs SET cancel_requested=true,
              state=CASE WHEN state='queued' THEN 'cancelled' ELSE state END, updated_at=now()
-             WHERE id=$1 AND tenant_id=$2 AND state IN ('queued','running')"
-        ).bind(id).bind(tenant).execute(&self.pool).await?;
-        if result.rows_affected() == 0 { return Err(RuntimeStoreError::NotFound); }
+             WHERE id=$1 AND tenant_id=$2 AND state IN ('queued','running')",
+        )
+        .bind(id)
+        .bind(tenant)
+        .execute(&self.pool)
+        .await?;
+        if result.rows_affected() == 0 {
+            return Err(RuntimeStoreError::NotFound);
+        }
         Ok(())
     }
 
-    pub async fn finish(&self, id: Uuid, worker: &str, success: bool) -> Result<(), RuntimeStoreError> {
+    pub async fn finish(
+        &self,
+        id: Uuid,
+        worker: &str,
+        success: bool,
+    ) -> Result<(), RuntimeStoreError> {
         let state = if success { "succeeded" } else { "failed" };
         let result = sqlx::query(
             "UPDATE kinetics_jobs
@@ -154,7 +205,9 @@ impl PostgresRuntimeStore {
                  lease_owner=NULL, lease_expires_at=NULL, updated_at=now()
              WHERE id=$1 AND lease_owner=$2 AND state='running'"
         ).bind(id).bind(worker).bind(state).execute(&self.pool).await?;
-        if result.rows_affected() == 0 { return Err(RuntimeStoreError::Conflict); }
+        if result.rows_affected() == 0 {
+            return Err(RuntimeStoreError::Conflict);
+        }
         Ok(())
     }
 
@@ -163,13 +216,18 @@ impl PostgresRuntimeStore {
             "UPDATE kinetics_jobs SET state='cancelled', lease_owner=NULL, lease_expires_at=NULL, updated_at=now()
              WHERE id=$1 AND lease_owner=$2 AND state='running' AND cancel_requested=true"
         ).bind(id).bind(worker).execute(&self.pool).await?;
-        if result.rows_affected() == 0 { return Err(RuntimeStoreError::Conflict); }
+        if result.rows_affected() == 0 {
+            return Err(RuntimeStoreError::Conflict);
+        }
         Ok(())
     }
 
     pub async fn get(&self, tenant: &str, id: Uuid) -> Result<RuntimeJob, RuntimeStoreError> {
         let row = sqlx::query("SELECT * FROM kinetics_jobs WHERE id=$1 AND tenant_id=$2")
-            .bind(id).bind(tenant).fetch_optional(&self.pool).await?
+            .bind(id)
+            .bind(tenant)
+            .fetch_optional(&self.pool)
+            .await?
             .ok_or(RuntimeStoreError::NotFound)?;
         Ok(row_to_job(&row))
     }
@@ -177,11 +235,17 @@ impl PostgresRuntimeStore {
 
 fn row_to_job(row: &sqlx::postgres::PgRow) -> RuntimeJob {
     RuntimeJob {
-        id: row.get("id"), tenant_id: row.get("tenant_id"), state: row.get("state"),
-        payload: row.get("payload"), attempt: row.get("attempt"), max_attempts: row.get("max_attempts"),
+        id: row.get("id"),
+        tenant_id: row.get("tenant_id"),
+        state: row.get("state"),
+        payload: row.get("payload"),
+        attempt: row.get("attempt"),
+        max_attempts: row.get("max_attempts"),
         max_runtime_seconds: row.get("max_runtime_seconds"),
-        max_memory_bytes: row.get("max_memory_bytes"), max_cpu_millis: row.get("max_cpu_millis"),
-        cancel_requested: row.get("cancel_requested"), lease_owner: row.get("lease_owner"),
+        max_memory_bytes: row.get("max_memory_bytes"),
+        max_cpu_millis: row.get("max_cpu_millis"),
+        cancel_requested: row.get("cancel_requested"),
+        lease_owner: row.get("lease_owner"),
         lease_expires_at: row.get("lease_expires_at"),
     }
 }
@@ -200,20 +264,31 @@ pub struct AppendAuditEvent {
 }
 
 #[derive(Clone)]
-pub struct AppendOnlyAuditStore { pool: PgPool }
+pub struct AppendOnlyAuditStore {
+    pool: PgPool,
+}
 
 impl AppendOnlyAuditStore {
-    pub fn new(pool: PgPool) -> Self { Self { pool } }
+    pub fn new(pool: PgPool) -> Self {
+        Self { pool }
+    }
 
     pub async fn append(&self, event: &AppendAuditEvent) -> Result<String, RuntimeStoreError> {
         let mut tx = self.pool.begin().await?;
         sqlx::query("SELECT pg_advisory_xact_lock(729104)")
-            .execute(&mut *tx).await?;
+            .execute(&mut *tx)
+            .await?;
         let previous: Option<String> = sqlx::query_scalar(
-            "SELECT event_hash FROM kinetics_audit_events ORDER BY sequence_id DESC LIMIT 1"
-        ).fetch_optional(&mut *tx).await?;
-        let canonical = serde_json::to_vec(&(event, previous.as_deref())).expect("serializable audit event");
-        let hash = Sha256::digest(canonical).iter().map(|b| format!("{b:02x}")).collect::<String>();
+            "SELECT event_hash FROM kinetics_audit_events ORDER BY sequence_id DESC LIMIT 1",
+        )
+        .fetch_optional(&mut *tx)
+        .await?;
+        let canonical =
+            serde_json::to_vec(&(event, previous.as_deref())).expect("serializable audit event");
+        let hash = Sha256::digest(canonical)
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect::<String>();
         sqlx::query(
             "INSERT INTO kinetics_audit_events
              (event_id,tenant_id,actor_subject,action,resource_type,resource_id,outcome,correlation_id,occurred_at,previous_hash,event_hash)

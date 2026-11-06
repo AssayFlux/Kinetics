@@ -1,6 +1,11 @@
-use std::{sync::Arc, time::{Duration, Instant}};
+use std::{
+    sync::Arc,
+    time::{Duration, Instant},
+};
 
-use jsonwebtoken::{decode, decode_header, jwk::JwkSet, Algorithm, DecodingKey, TokenData, Validation};
+use jsonwebtoken::{
+    decode, decode_header, jwk::JwkSet, Algorithm, DecodingKey, TokenData, Validation,
+};
 use serde::Deserialize;
 use thiserror::Error;
 use tokio::sync::RwLock;
@@ -87,18 +92,30 @@ impl OidcVerifier {
                 return Ok(cached.keys.clone());
             }
         }
-        let response = self.http.get(&self.jwks_url).send().await
+        let response = self
+            .http
+            .get(&self.jwks_url)
+            .send()
+            .await
             .map_err(|_| OidcError::ProviderUnavailable)?;
         if !response.status().is_success() {
             return Err(OidcError::ProviderUnavailable);
         }
-        let keys = response.json::<JwkSet>().await
+        let keys = response
+            .json::<JwkSet>()
+            .await
             .map_err(|_| OidcError::ProviderUnavailable)?;
-        *self.cache.write().await = Some(CachedKeys { loaded_at: Instant::now(), keys: keys.clone() });
+        *self.cache.write().await = Some(CachedKeys {
+            loaded_at: Instant::now(),
+            keys: keys.clone(),
+        });
         Ok(keys)
     }
 
-    pub async fn verify_authorization(&self, authorization: Option<&str>) -> Result<AuthenticatedPrincipal, OidcError> {
+    pub async fn verify_authorization(
+        &self,
+        authorization: Option<&str>,
+    ) -> Result<AuthenticatedPrincipal, OidcError> {
         let token = authorization
             .and_then(|value| value.strip_prefix("Bearer "))
             .filter(|value| !value.is_empty())
@@ -109,21 +126,30 @@ impl OidcVerifier {
         }
         let kid = header.kid.ok_or(OidcError::InvalidToken)?;
         let keys = self.keys().await?;
-        let jwk = keys.keys.iter().find(|key| key.common.key_id.as_deref() == Some(&kid))
+        let jwk = keys
+            .keys
+            .iter()
+            .find(|key| key.common.key_id.as_deref() == Some(&kid))
             .ok_or(OidcError::InvalidToken)?;
         let decoding_key = DecodingKey::from_jwk(jwk).map_err(|_| OidcError::InvalidToken)?;
         let mut validation = Validation::new(Algorithm::RS256);
         validation.set_issuer(&[self.issuer.as_str()]);
         validation.set_audience(&[self.audience.as_str()]);
         validation.validate_exp = true;
-        let data: TokenData<VerifiedClaims> = decode(token, &decoding_key, &validation)
-            .map_err(|_| OidcError::InvalidToken)?;
-        if data.claims.sub.trim().is_empty() || data.claims.tenant_id.trim().is_empty()
+        let data: TokenData<VerifiedClaims> =
+            decode(token, &decoding_key, &validation).map_err(|_| OidcError::InvalidToken)?;
+        if data.claims.sub.trim().is_empty()
+            || data.claims.tenant_id.trim().is_empty()
             || data.claims.iss != self.issuer
         {
             return Err(OidcError::InvalidToken);
         }
-        let scopes = data.claims.scope.split_whitespace().map(str::to_owned).collect();
+        let scopes = data
+            .claims
+            .scope
+            .split_whitespace()
+            .map(str::to_owned)
+            .collect();
         Ok(AuthenticatedPrincipal {
             subject: data.claims.sub,
             tenant_id: data.claims.tenant_id,
@@ -144,7 +170,10 @@ mod tests {
             scopes: vec!["artifacts:read".into()],
         };
         assert!(principal.require_scope("artifacts:read").is_ok());
-        assert!(matches!(principal.require_scope("artifacts:write"), Err(OidcError::Forbidden)));
+        assert!(matches!(
+            principal.require_scope("artifacts:write"),
+            Err(OidcError::Forbidden)
+        ));
     }
 
     #[test]

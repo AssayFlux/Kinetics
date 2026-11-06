@@ -63,7 +63,8 @@ fn database_url_from_secret(secret: &str) -> Result<String, Box<dyn std::error::
         value["username"]
             .as_str()
             .ok_or("RDS secret missing username")?,
-    )?;
+    )
+    .map_err(|_| "invalid database username")?;
     url.set_password(Some(
         value["password"]
             .as_str()
@@ -72,7 +73,8 @@ fn database_url_from_secret(secret: &str) -> Result<String, Box<dyn std::error::
     .map_err(|_| "invalid database password")?;
     url.set_host(Some(
         value["host"].as_str().ok_or("RDS secret missing host")?,
-    ))?;
+    ))
+    .map_err(|_| "invalid database password")?;
     if let Some(port) = value["port"].as_u64() {
         url.set_port(Some(port as u16))
             .map_err(|_| "invalid database port")?;

@@ -84,4 +84,12 @@ The authoritative long-term direction is in [VISION.md](../VISION.md), [ROADMAP.
 
 ## Kinetics-Multi implementation branch
 
-The feature-fusion MLP training/inference engine was merged in [PR #22](https://github.com/AssayFlux/Kinetics/pull/22); corrective context/provenance hardening is in draft [PR #23](https://github.com/AssayFlux/Kinetics/pull/23). It combines precomputed ESM-2 and Morgan vectors, 24 pooled RDKit graph descriptors and optional raw assay context with fold-local preprocessing. It is not a message-passing GNN. CI run [#42185425243](https://github.com/AssayFlux/Kinetics/actions/runs/42185425243) passed with 69 tests on each of Python 3.10, 3.11 and 3.12. Synthetic tests are not evidence of scientific validity. Real-data execution is blocked by the still-open Step 2 source release and Step 3 checkpoint/MMseqs2 execution requirements. See [KINETICS_MULTI.md](KINETICS_MULTI.md).
+The feature-fusion MLP training/inference engine was merged in [PR #22](https://github.com/AssayFlux/Kinetics/pull/22); corrective context/provenance hardening was merged in [PR #23](https://github.com/AssayFlux/Kinetics/pull/23). It combines precomputed ESM-2 and Morgan vectors, 24 pooled RDKit graph descriptors and optional raw assay context with fold-local preprocessing. It is not a message-passing GNN. CI run [#42185425243](https://github.com/AssayFlux/Kinetics/actions/runs/42185425243) passed with 69 tests on each of Python 3.10, 3.11 and 3.12. Synthetic tests are not evidence of scientific validity. Real-data execution is blocked by the still-open Step 2 source release and Step 3 checkpoint/MMseqs2 execution requirements. See [KINETICS_MULTI.md](KINETICS_MULTI.md).
+
+
+## Step 5 benchmarking implementation
+
+- Pre-execution scientific validation protocol added at `docs/STEP5_VALIDATION_PROTOCOL.md`, including frozen protein-cold, scaffold-cold, double-cold and supported external-shift regimes; selection/test isolation; subgroup, ablation, contamination and reproducibility requirements.
+- Added deterministic paired-row percentile-bootstrap intervals for held-out log10 MAE/RMSE in `kinetics_core.validation`; baseline benchmark reports now include 95% intervals (2,000 resamples by default).
+- Tests cover reproducibility, interval structure and invalid input/configuration. These intervals are descriptive row-sampling uncertainty only; they do not account for cluster dependence or establish calibrated predictive uncertainty.
+- Step 5 real-data execution remains blocked by Step 2's reviewed immutable dataset release and Step 3's actual pinned ESM-2/MMseqs2 execution and repeatability evidence. No scientific performance claim is made.

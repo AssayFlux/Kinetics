@@ -101,7 +101,7 @@ Step 3's representation software is implemented and CI-verified, but execution-l
 
 **Architecture boundary:** This first MLP performs nonlinear fusion of precomputed modalities plus 24 pooled graph descriptors. It is not a message-passing GNN, cross-attention model, residue–atom interaction model or molecular simulation. No such capability is claimed.
 
-**Software acceptance evidence:** Synthetic tests cover graph summary alignment and corruption rejection, grouped split leakage checks, fold-local assay-context preprocessing, source-manifest hash/metadata validation, immutable code revision, calibration, model artifact generation and inference round-trip. CI run [#42185425243](https://github.com/AssayFlux/Kinetics/actions/runs/42185425243) passed on Python 3.10, 3.11 and 3.12: 69 tests passed on each version, compilation and scoped Ruff checks passed. The initial implementation was merged in [PR #22](https://github.com/AssayFlux/Kinetics/pull/22); corrective hardening is in draft [PR #23](https://github.com/AssayFlux/Kinetics/pull/23).
+**Software acceptance evidence:** Synthetic tests cover graph summary alignment and corruption rejection, grouped split leakage checks, fold-local assay-context preprocessing, source-manifest hash/metadata validation, immutable code revision, calibration, model artifact generation and inference round-trip. CI run [#42185425243](https://github.com/AssayFlux/Kinetics/actions/runs/42185425243) passed on Python 3.10, 3.11 and 3.12: 69 tests passed on each version, compilation and scoped Ruff checks passed. The initial implementation was merged in [PR #22](https://github.com/AssayFlux/Kinetics/pull/22); corrective hardening was merged in [PR #23](https://github.com/AssayFlux/Kinetics/pull/23).
 
 **Still required before Step 4 can be scientifically closed:**
 - A reviewed, licensed, immutable real dataset release from Step 2; this is not yet present.
@@ -113,7 +113,7 @@ Step 3's representation software is implemented and CI-verified, but execution-l
 Step 4 is being implemented as a software engine, not validated as a scientific predictor. Do not claim model superiority, external validity or calibrated uncertainty until the real-data validation gates are passed. Joblib bundles are pickle-based and must only be loaded from trusted sources.
 
 
-## Step 5 — Scientific validation and benchmarking
+## Step 5 — Scientific validation and benchmarking (IN PROGRESS — PROTOCOL AND BOOTSTRAP REPORTING IMPLEMENTED)
 
 **Purpose:** Test generalization beyond familiar proteins, chemicals, and assay settings.
 
@@ -121,7 +121,9 @@ Step 4 is being implemented as a software engine, not validated as a scientific 
 
 **Acceptance:** Frozen split assignments and dataset versions; test sets never used for selection; versioned evaluation code; uncertainty claims supported by empirical coverage evidence; reports disclose sample sizes, missingness, subgroup limitations, and confidence intervals; independent reproduction of reports.
 
-**Evidence:** Benchmark cards, split manifests, evaluation reports, ablations, reproduction run.
+**Initial software evidence:** Pre-execution protocol in `docs/STEP5_VALIDATION_PROTOCOL.md`; deterministic paired-row percentile-bootstrap intervals for held-out log10 MAE/RMSE are emitted by the baseline comparison workflow; tests cover reproducibility and input validation. This is descriptive sample-level uncertainty, not cluster-aware inference or calibrated predictive uncertainty. Real-data reports, matched model ablations, external evaluations and independent reproduction remain outstanding because the reviewed Step 2 dataset release and Step 3 execution evidence are not yet available.
+
+**Evidence required for completion:** Benchmark cards, frozen split manifests, real evaluation reports, ablations, contamination/leakage audits, cluster-aware or independent uncertainty evidence, and independent reproduction run.
 
 ## Step 6 — Native molecular visualization and simulation
 

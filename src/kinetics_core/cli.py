@@ -36,6 +36,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Replace existing output and manifest files (never the input file)",
     )
 
+    persist = subparsers.add_parser(
+        "persist", help="Audit and persist canonical observations into SQLite"
+    )
+    persist.add_argument("--input", required=True, help="Canonical observations CSV")
+    persist.add_argument("--database", required=True, help="SQLite metadata database")
+    persist.add_argument("--dataset-id", required=True, help="Immutable dataset snapshot ID")
+    persist.add_argument("--name", required=True, help="Human-readable dataset name")
+    persist.add_argument("--source", required=True, help="Upstream source identifier")
+    persist.add_argument("--version", help="Source dataset release/version")
+    persist.add_argument("--license-id", help="Verified source license identifier")
+    persist.add_argument("--citation", help="Dataset citation or DOI")
+
     audit = subparsers.add_parser("audit")
     audit.add_argument("--input", required=True, help="Normalized observations CSV")
     audit.add_argument("--output-dir", required=True)
@@ -139,6 +151,14 @@ def main(argv: list[str] | None = None) -> int:
             "environment": environment_record(),
         }
         write_json_atomic(result, manifest_path)
+    elif args.command == "persist":
+        from .persistence import persist_observation_csv
+
+        result = persist_observation_csv(
+            args.input, args.database,
+            dataset_id=args.dataset_id, name=args.name, source=args.source,
+            version=args.version, license_id=args.license_id, citation=args.citation,
+        )
     elif args.command == "partition":
         from .partition import prepare_target_partitions
 
@@ -158,7 +178,7 @@ def main(argv: list[str] | None = None) -> int:
         from .provenance import write_json_atomic
         from .quality import audit_observations
 
-        frame = pd.read_csv(args.input)
+        frame = pd.read_csv(args.input, dtype={"source_record_id": "string"})
         annotated, duplicates, report = audit_observations(
             frame, log10_tolerance=args.log10_tolerance
         )

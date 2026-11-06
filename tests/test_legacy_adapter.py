@@ -16,6 +16,7 @@ def test_legacy_adapter_expands_paired_row_into_independent_targets():
     observations = paired_frame_to_observations(
         frame, source="legacy-csv", source_record_id_column="record_id",
         km_unit="uM", kcat_unit="min^-1",
+        source_version="2026-01", license_id="CC-BY-4.0",
     )
 
     assert [item.target for item in observations] == ["km", "kcat"]
@@ -23,6 +24,8 @@ def test_legacy_adapter_expands_paired_row_into_independent_targets():
         [250e-6, 2.0]
     )
     assert {item.source_record_id for item in observations} == {"source-17"}
+    assert {item.source_version for item in observations} == {"2026-01"}
+    assert {item.license_id for item in observations} == {"CC-BY-4.0"}
     assert all(item.sequence == "ACDEFG" and item.smiles == "CCO" for item in observations)
 
 

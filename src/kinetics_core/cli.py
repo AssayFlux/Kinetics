@@ -76,6 +76,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "import-legacy":
         from pathlib import Path
+
         import pandas as pd
 
         from . import __version__
@@ -146,9 +147,11 @@ def main(argv: list[str] | None = None) -> int:
         )
     elif args.command == "audit":
         from pathlib import Path
+
         import pandas as pd
-        from .quality import audit_observations
+
         from .provenance import write_json_atomic
+        from .quality import audit_observations
 
         frame = pd.read_csv(args.input)
         annotated, duplicates, report = audit_observations(

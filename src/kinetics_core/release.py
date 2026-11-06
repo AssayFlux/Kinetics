@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import shutil
 import tempfile
-from typing import Any
+from typing import Any, Sequence
 
 import pandas as pd
 
@@ -16,7 +16,7 @@ from .quality import audit_observations, review_potential_duplicate_observations
 
 def create_dataset_release(
     observations_csv: str | Path,
-    rejected_csv: str | Path,
+    rejected_csv: str | Path | Sequence[str | Path],
     output_dir: str | Path,
     *,
     dataset_id: str,
@@ -43,14 +43,20 @@ def create_dataset_release(
     if missing:
         raise ValueError(f"Release requires verified non-empty metadata: {missing}")
     observations = Path(observations_csv).resolve()
-    rejected = Path(rejected_csv).resolve()
+    rejected_paths = (
+        [Path(path).resolve() for path in rejected_csv]
+        if isinstance(rejected_csv, (list, tuple))
+        else [Path(rejected_csv).resolve()]
+    )
+    if not rejected_paths or len(set(rejected_paths)) != len(rejected_paths):
+        raise ValueError("Provide one or more distinct rejection audit files")
     destination = Path(output_dir).resolve()
-    for path in (observations, rejected):
+    for path in [observations, *rejected_paths]:
         if not path.is_file():
             raise FileNotFoundError(path)
         if destination == path or destination in path.parents:
             raise ValueError("Release directory must not contain or overwrite source artifacts")
-    if observations == rejected:
+    if observations in rejected_paths:
         raise ValueError("Observations and rejection audit must be separate files")
     if destination.exists():
         raise FileExistsError(f"Immutable release already exists: {destination}")
@@ -66,7 +72,9 @@ def create_dataset_release(
     if "canonical_unit" not in audited or not audited["canonical_unit"].eq(expected).all():
         raise ValueError("Release contains target-incompatible canonical units")
 
-    rejected_count = int(len(pd.read_csv(rejected)))
+    rejection_frames = [pd.read_csv(path) for path in rejected_paths]
+    rejected_frame = pd.concat(rejection_frames, ignore_index=True, sort=False)
+    rejected_count = int(len(rejected_frame))
     aggregation_methods = sorted(
         str(value) for value in audited.get("aggregation_method", pd.Series(dtype=str)).dropna().unique()
     )
@@ -79,7 +87,7 @@ def create_dataset_release(
     )
     try:
         shutil.copy2(observations, staging / "observations.csv")
-        shutil.copy2(rejected, staging / "rejected_rows.csv")
+        rejected_frame.to_csv(staging / "rejected_rows.csv", index=False)
         audited.to_csv(staging / "observations_audited.csv", index=False)
         duplicates.to_csv(staging / "duplicate_audit.csv", index=False)
         potential_duplicates.to_csv(staging / "potential_duplicate_audit.csv", index=False)
@@ -123,6 +131,9 @@ def create_dataset_release(
             "source": source,
             "source_url": source_url,
             "source_version": source_version,
+            "rejection_sources": [
+                {"name": path.name, "sha256": sha256_file(path)} for path in rejected_paths
+            ],
             "license": {
                 "identifier": license_id,
                 "status": "operator_supplied_requires_manual_source_terms_review",

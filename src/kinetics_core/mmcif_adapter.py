@@ -8,6 +8,8 @@ used with the same evidence-linked C-alpha distance routine as the PDB adapter.
 from __future__ import annotations
 
 import hashlib
+import io
+import math
 
 from .pdb_adapter import PdbAtom, ParsedPdb
 from .proteomics import StructureRecord
@@ -35,7 +37,7 @@ def parse_mmcif_coordinates(content: bytes, structure: StructureRecord) -> Parse
             "mmCIF parsing requires the optional Biopython dependency; install the baseline extra"
         ) from exc
     try:
-        data = MMCIF2Dict(content.decode("utf-8"))
+        data = MMCIF2Dict(io.StringIO(content.decode("utf-8")))
     except (UnicodeDecodeError, ValueError, OSError) as exc:
         raise ValueError("invalid UTF-8 mmCIF coordinate document") from exc
 
@@ -83,8 +85,6 @@ def parse_mmcif_coordinates(content: bytes, structure: StructureRecord) -> Parse
             )
         except (TypeError, ValueError) as exc:
             raise ValueError(f"invalid mmCIF atom_site row {i + 1}: {exc}") from exc
-        import math
-
         if atom.model < 1 or not all(
             math.isfinite(value)
             for value in (atom.x, atom.y, atom.z, atom.occupancy, atom.b_factor)

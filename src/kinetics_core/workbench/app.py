@@ -216,7 +216,7 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
         "conformal_alpha", "n_estimators", "max_depth", "hidden_layers", "alpha",
         "max_iter", "git_revision", "log10_tolerance", "source", "source_record_id_column",
         "km_unit", "kcat_unit", "version", "license_id", "citation", "dataset_id",
-        "name", "dataset_name", "source_version", "source_url",
+        "name", "dataset_name", "source_version", "source_url", "rejected", "source_manifest",
     ]
     list_fields = {
         "group_column": "--group-column",

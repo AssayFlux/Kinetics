@@ -19,14 +19,6 @@ paths:
       description: >
         Tenant identity is derived from verified authentication claims, never
         from the request body. Require jobs:write scope.
-      parameters:
-        - in: header
-          name: Idempotency-Key
-          required: true
-          schema:
-            type: string
-            minLength: 1
-            maxLength: 200
       requestBody:
         required: true
         content:

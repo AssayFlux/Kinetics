@@ -1,4 +1,4 @@
-# Model-family comparison
+# Model-family comparison and held-out uncertainty
 
 `kinetics_core.benchmark.compare_regressors` compares fixed classical baselines:
 Ridge, Random Forest, Extra Trees, and HistGradientBoosting. Candidate selection
@@ -20,6 +20,14 @@ report = compare_regressors(
     holdout_group_arrays=("protein_cluster_id", "scaffold_id"),
 )
 ```
+
+The held-out report now includes deterministic paired-row percentile-bootstrap
+95% intervals for log10 MAE and RMSE (2,000 resamples by default). These quantify
+sampling uncertainty for the particular held-out rows only. They do not account
+for dependence among related proteins/scaffolds, dataset shift, model-selection
+bias, or establish calibrated predictive uncertainty. Cluster-level resampling
+and external-source replication remain required where the benchmark design
+contains clustered observations.
 
 This is a fixed baseline comparison, not an exhaustive hyperparameter search.
 Do not tune candidates against the final test set. Repeat independently for Km

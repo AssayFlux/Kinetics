@@ -20,6 +20,7 @@ CATPRED_FILES = {
     "kcat/kcat_test.csv": "kcat/kcat_test.csv",
 }
 CATPRED_REVISION = "44409e6"
+CATPRED_PROCESSING_REVISION = "931583821ff875e873002730fbbdf1047acfde77"
 CATPRED_BASE_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve"
 
 def download(url: str, destination: Path) -> dict:
@@ -77,6 +78,7 @@ def main() -> None:
         "dataset": "CatPred-DB",
         "repository": "https://github.com/maranasgroup/CatPred-DB",
         "source_revision": args.revision,
+        "processing_code_revision": CATPRED_PROCESSING_REVISION,
         "dataset_card": "https://huggingface.co/datasets/RosettaCommons/CatPred-DB",
         "license_note": (
             "Pinned Hugging Face dataset card declares CC-BY-4.0; verify exact "

@@ -264,6 +264,8 @@ def test_cluster_cli_uses_source_qualified_ids(tmp_path, monkeypatch):
     ]) == 0
     mapping = pd.read_csv(output / "sequence_clusters.csv")
     assert mapping["source"].tolist() == ["a", "b"]
+    manifest = json.loads((output / "sequence_cluster_manifest.json").read_text())
+    assert manifest["source_observations"]["sha256"]
     clustered = pd.read_csv(output / "observations_with_protein_clusters.csv")
     assert len(clustered) == 3
     assert clustered.loc[0, "protein_cluster_id"] == clustered.loc[1, "protein_cluster_id"]
@@ -307,3 +309,5 @@ def test_build_features_cli_calls_versioned_builder(tmp_path, monkeypatch):
     assert calls["init"]["model_revision"] == DEFAULT_ESM_REVISION
     assert calls["transform"]["group_columns"] == ("protein_cluster_id",)
     assert calls["frame_rows"] == 1
+    feature_manifest = json.loads(Path(str(output) + ".manifest.json").read_text())
+    assert feature_manifest["source_input"]["sha256"]

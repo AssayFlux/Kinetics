@@ -543,11 +543,19 @@ def create_app(
         """Run bounded local Biopython structure summary, SASA and contact analysis."""
         filename = Path(file.filename or "").name
         suffix = Path(filename).suffix.lower()
-        file_format = "mmcif" if suffix in {".cif", ".mmcif"} else "pdb" if suffix in {".pdb", ".ent"} else None
+        if suffix in {".cif", ".mmcif"}:
+            file_format = "mmcif"
+        elif suffix in {".pdb", ".ent"}:
+            file_format = "pdb"
+        else:
+            file_format = None
         if file_format is None:
             raise HTTPException(status_code=422, detail="Upload a PDB or mmCIF file")
         if not 0 < contact_cutoff_angstrom <= 30:
-            raise HTTPException(status_code=422, detail="Contact cutoff must be in (0, 30] angstrom")
+            raise HTTPException(
+                status_code=422,
+                detail="Contact cutoff must be in (0, 30] angstrom",
+            )
         content = file.file.read(50 * 1024 * 1024 + 1)
         if len(content) > 50 * 1024 * 1024:
             raise HTTPException(status_code=413, detail="Structure file exceeds 50 MiB")
@@ -555,6 +563,8 @@ def create_app(
             raise HTTPException(status_code=422, detail="Structure file is empty")
         try:
             from ..biopython_tools import (
+                calculate_hydrogen_bonds,
+                calculate_ligand_contacts,
                 calculate_residue_contacts,
                 calculate_residue_sasa,
                 structure_summary,
@@ -573,7 +583,55 @@ def create_app(
                     content, file_format=file_format,
                     cutoff_angstrom=contact_cutoff_angstrom,
                 ),
+                "ligand_contacts": calculate_ligand_contacts(
+                    content, file_format=file_format,
+                ),
+                "hydrogen_bonds": calculate_hydrogen_bonds(
+                    content, file_format=file_format,
+                ),
             }
+        except (ValueError, RuntimeError) as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        finally:
+            file.file.close()
+
+    @app.post("/api/v1/structures/map-sequence")
+    def map_sequence_to_structure(
+        file: Annotated[UploadFile, File()],
+        reference_sequence: str = Form(min_length=1, max_length=200000),
+        chain_id: str = Form(min_length=1, max_length=8),
+    ) -> dict[str, Any]:
+        """Align a reference sequence to a chosen structure chain."""
+        try:
+            suffix = Path(file.filename or "").suffix.lower()
+            if suffix in {".cif", ".mmcif"}:
+                file_format = "mmcif"
+            elif suffix in {".pdb", ".ent"}:
+                file_format = "pdb"
+            else:
+                raise HTTPException(status_code=422, detail="Upload a PDB or mmCIF file")
+            content = file.file.read(50 * 1024 * 1024 + 1)
+            if len(content) > 50 * 1024 * 1024:
+                raise HTTPException(status_code=413, detail="Structure file exceeds 50 MiB")
+            if not content:
+                raise HTTPException(status_code=422, detail="Structure file is empty")
+            from ..biopython_tools import (
+                align_sequence_to_structure_chain,
+                structure_summary,
+            )
+            summary = structure_summary(content, file_format=file_format)
+            atom_count = sum(model["atom_count"] for model in summary["models"])
+            if atom_count > 100000:
+                raise HTTPException(
+                    status_code=413,
+                    detail="Sequence mapping is limited to 100,000 atoms per request",
+                )
+            return align_sequence_to_structure_chain(
+                reference_sequence,
+                content,
+                file_format=file_format,
+                chain_id=chain_id,
+            )
         except (ValueError, RuntimeError) as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
         finally:
@@ -589,12 +647,20 @@ def create_app(
         """Compare two structures using caller-supplied author residue correspondences."""
         def read_upload(upload: UploadFile) -> tuple[bytes, str]:
             suffix = Path(upload.filename or "").suffix.lower()
-            file_format = "mmcif" if suffix in {".cif", ".mmcif"} else "pdb" if suffix in {".pdb", ".ent"} else None
+            if suffix in {".cif", ".mmcif"}:
+                file_format = "mmcif"
+            elif suffix in {".pdb", ".ent"}:
+                file_format = "pdb"
+            else:
+                file_format = None
             if file_format is None:
                 raise HTTPException(status_code=422, detail="Both inputs must be PDB or mmCIF")
             payload = upload.file.read(50 * 1024 * 1024 + 1)
             if len(payload) > 50 * 1024 * 1024:
-                raise HTTPException(status_code=413, detail="Each structure file is limited to 50 MiB")
+                raise HTTPException(
+                    status_code=413,
+                    detail="Each structure file is limited to 50 MiB",
+                )
             if not payload:
                 raise HTTPException(status_code=422, detail="Structure files cannot be empty")
             return payload, file_format
@@ -602,20 +668,28 @@ def create_app(
             try:
                 pairs_value = json.loads(residue_pairs_json)
             except json.JSONDecodeError as exc:
-                raise HTTPException(status_code=422, detail="residue_pairs_json must be valid JSON") from exc
+                raise HTTPException(
+                    status_code=422,
+                    detail="residue_pairs_json must be valid JSON",
+                ) from exc
             if (
                 not isinstance(pairs_value, list)
                 or len(pairs_value) < 3
                 or len(pairs_value) > 5000
                 or any(
                     not isinstance(pair, list) or len(pair) != 2
-                    or any(isinstance(number, bool) or not isinstance(number, int) for number in pair)
+                    or any(
+                        isinstance(number, bool) or not isinstance(number, int)
+                        for number in pair
+                    )
                     for pair in pairs_value
                 )
             ):
                 raise HTTPException(
                     status_code=422,
-                    detail="Provide 3 to 5000 explicit [reference_residue, mobile_residue] integer pairs",
+                    detail=(
+                        "Provide 3 to 5000 explicit residue pairs: [reference, mobile] integers"
+                    ),
                 )
             reference, reference_format = read_upload(reference_file)
             mobile, mobile_format = read_upload(mobile_file)

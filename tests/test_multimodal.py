@@ -13,9 +13,14 @@ from kinetics_core.multimodal import (
 
 def _archive(path, *, start, count, target="km"):
     rows = np.arange(start, start + count)
-    x = np.stack([
-        np.linspace(0.0, 1.0, 6) + index * 0.03 for index in rows
+    protein = np.stack([
+        np.linspace(0.0, 1.0, 4) + index * 0.03 for index in rows
     ]).astype(np.float32)
+    morgan = np.asarray(
+        [[index % 2, (index // 2) % 2] for index in rows],
+        dtype=np.float32,
+    )
+    x = np.concatenate((protein, morgan), axis=1)
     atom_rows = np.tile(
         np.asarray([[6, 3, 0, 1, 0, 0, 3, 0, 12.0],
                     [8, 1, 0, 0, 0, 0, 3, 0, 16.0]], dtype=np.float32),
@@ -34,7 +39,7 @@ def _archive(path, *, start, count, target="km"):
         "feature_metadata_json": np.asarray(['{"fixture":"v1"}']),
         "feature_model": np.asarray(["ESM-2"]),
         "fingerprint_radius": np.asarray([2]),
-        "fingerprint_bits": np.asarray([2048]),
+        "fingerprint_bits": np.asarray([2]),
         "graph_atom_features": atom_rows,
         "graph_bond_features": bond_rows,
         "graph_atom_offsets": np.arange(0, 2 * count + 1, 2, dtype=np.int64),

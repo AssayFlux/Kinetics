@@ -107,6 +107,12 @@ def normalize_catpred_csv(
         assay_id_column=assay_id_column,
         source_version=source_version,
         license_id=license_id,
+        measurement_kind="source_aggregated",
+        aggregation_method=(
+            "maximum_over_source_measurements_for_sequence_substrate_pair"
+            if target == "kcat"
+            else "geometric_mean_over_source_measurements_for_sequence_substrate_pair"
+        ),
     )
     # Preserve source-specific fields verbatim; do not reinterpret split labels or
     # cluster IDs as newly calculated identities.
@@ -130,6 +136,12 @@ def normalize_catpred_csv(
         "dataset_url": CATPRED_DATASET_URL,
         "target": target,
         "canonical_unit": "M" if target == "km" else "s^-1",
+        "measurement_kind": "source_aggregated",
+        "aggregation_method": (
+            "geometric_mean_over_source_measurements_for_sequence_substrate_pair"
+            if target == "km"
+            else "maximum_over_source_measurements_for_sequence_substrate_pair"
+        ),
         "source_file": file_record(source_path, CATPRED_DATASET_URL),
         "source_version": source_version,
         "license_note": license_id,
@@ -151,7 +163,8 @@ def normalize_catpred_csv(
         "normalized_file": normalized_path.name,
         "rejected_file": rejected_path.name,
         "policy": (
-            "Km and kcat imported independently. Generated row locators are not upstream "
+            "CatPred values are source aggregates (Km geometric mean; kcat maximum), not individual assays. "
+            "Generated row locators are not upstream "
             "record IDs. CatPred temperature Celsius is converted to kelvin. Raw source "
             "values and source columns are retained; no DOI, organism, or assay ID inferred."
         ),

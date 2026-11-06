@@ -13,6 +13,7 @@ This file distinguishes repository contents from execution, verification and sci
 ## Research infrastructure present in the codebase
 
 - Canonical one-target-per-row kinetic observation contract.
+- Explicit legacy paired-row adapter to canonical observations, requiring source record IDs and preserving independently available Km/kcat values.
 - Explicit Km-to-M and kcat-to-s^-1 conversion.
 - Source-table normalization and row-level rejection audits.
 - Duplicate/conflict audits and metadata completeness summaries.

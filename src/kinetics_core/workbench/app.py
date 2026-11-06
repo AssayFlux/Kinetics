@@ -13,9 +13,10 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Literal
+from urllib.parse import urlsplit
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..storage import KineticsSQLite
@@ -304,6 +305,26 @@ def create_app(
     app.state.store = store
     app.state.workspace_root = workspace
     app.state.executor = executor
+
+    @app.middleware("http")
+    async def local_origin_guard(request: Any, call_next: Any) -> Any:
+        host = (request.url.hostname or "").lower()
+        if host not in {"127.0.0.1", "localhost", "testserver"}:
+            return JSONResponse(status_code=400, content={"detail": "Local workbench only"})
+        if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+            if request.headers.get("sec-fetch-site") == "cross-site":
+                return JSONResponse(status_code=403, content={"detail": "Cross-site request blocked"})
+            origin = request.headers.get("origin")
+            if origin:
+                parsed = urlsplit(origin)
+                origin_host = (parsed.hostname or "").lower()
+                if (
+                    parsed.scheme != request.url.scheme
+                    or origin_host != host
+                    or parsed.port != request.url.port
+                ):
+                    return JSONResponse(status_code=403, content={"detail": "Cross-origin request blocked"})
+        return await call_next(request)
 
     def project_record(project_id: str) -> dict[str, Any]:
         rows = store.fetch_all(

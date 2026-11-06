@@ -47,7 +47,7 @@ Replace the example source, ID column, units, version, and license with verified
 
 ## 2b. Normalize identities and review duplicates
 
-Run `normalize_biomolecular_identities` on the canonical table to validate sequence symbols, canonicalize SMILES with RDKit (preserving stereochemistry), and create deterministic content hashes. These hashes are internal content identities, not UniProt or PubChem accessions. Invalid supplied identities are returned in a row-level rejection table; missing identities remain missing. Keep source accession and raw source strings.
+Run the identity command on the canonical table to validate sequence symbols, canonicalize SMILES with RDKit (preserving stereochemistry), and create deterministic content hashes. These hashes are internal content identities, not UniProt or PubChem accessions. Invalid supplied identities are returned in a row-level rejection table; missing identities remain missing. Keep source accession and raw source strings.\n\n```bash\nkinetics-research normalize-identities \\\n  --input data/processed/catpred-db/km/km_observations.csv \\\n  --output-dir data/processed/catpred-db/km/identities\n```
 
 Run `kinetics-research audit`. Exact repeats and conflicting duplicate source IDs are annotated and retained; no averaging or silent overwrite occurs. Review conflict groups against assay context before release. Similar enzyme/substrate pairs across distinct source records are not automatically duplicate experiments.
 

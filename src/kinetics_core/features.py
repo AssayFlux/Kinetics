@@ -237,7 +237,9 @@ class ObservationFeatureBuilder:
                 "bond_features": [
                     "bond_type", "is_conjugated", "in_ring", "bond_stereo",
                 ],
-                "edge_policy": "bidirectional directed edges; edge_index uses global archive atom offsets",
+                "edge_policy": (
+                    "Bidirectional directed edges; edge_index uses global archive atom offsets"
+                ),
             },
             "chemical": {
                 "fingerprint": "Morgan",

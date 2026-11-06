@@ -24,6 +24,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
+from .applicability import ApplicabilityDomain
 from .context import context_design_matrix, make_context_pipeline
 from .experiments import build_experiment_manifest, save_experiment_manifest
 from .metrics import regression_report, subgroup_regression_report
@@ -332,6 +333,24 @@ def fit_multimodal_model(
     if not np.isfinite(scores).all():
         raise RuntimeError("Cross-validation produced non-finite RMSE values")
     predictions = estimator.predict(X_test)
+    if context_enabled:
+        train_preprocessed = estimator.named_steps["context"].transform(X_train)
+        test_preprocessed = estimator.named_steps["context"].transform(X_test)
+    else:
+        train_preprocessed, test_preprocessed = X_train, X_test
+    train_scaled = estimator.named_steps["scaler"].transform(train_preprocessed)
+    test_scaled = estimator.named_steps["scaler"].transform(test_preprocessed)
+    domain = ApplicabilityDomain(quantile=0.95).fit(train_scaled)
+    domain_test = domain.score(test_scaled)
+    domain_summary = {
+        "method": domain_test["method"],
+        "quantile": float(domain_test["quantile"]),
+        "threshold": float(domain_test["threshold"]),
+        "reference_size": int(domain_test["reference_size"]),
+        "within_domain_fraction": float(np.mean(domain_test["within_domain"])),
+        "n_flagged": int(np.sum(~domain_test["within_domain"])),
+        "interpretation": domain_test["interpretation"],
+    }
     calibration = _load_feature_file(calibration_archive) if calibration_archive else None
     calibration_manifest_path = None
     if calibration is not None:
@@ -405,6 +424,7 @@ def fit_multimodal_model(
             "fold_rmse_log10": scores.tolist(),
         },
         "held_out": regression_report(y_test, predictions, target=target),
+        "applicability_domain": domain_summary,
         "n_train": int(len(y_train)),
         "n_held_out": int(len(y_test)),
         "base_feature_dimension": int(train["X"].shape[1]),
@@ -471,6 +491,7 @@ def fit_multimodal_model(
         "code_revision": git_revision,
         "conformal_quantile_log10": conformal_q,
         "conformal_alpha": float(conformal_alpha) if conformal_q is not None else None,
+        "applicability_domain": domain,
     }
     joblib.dump(bundle, model_path, compress=3)
     write_json_atomic(report, metrics_path)
@@ -604,6 +625,16 @@ def predict_multimodal_model(
         "canonical_unit": bundle["canonical_unit"],
     })
     q = bundle.get("conformal_quantile_log10")
+    if "applicability_domain" in bundle:
+        if bundle["context_enabled"]:
+            transformed = bundle["estimator"].named_steps["context"].transform(design)
+        else:
+            transformed = design
+        scaled = bundle["estimator"].named_steps["scaler"].transform(transformed)
+        domain = bundle["applicability_domain"].score(scaled)
+        table["applicability_nearest_distance"] = domain["nearest_reference_distance"]
+        table["within_applicability_domain"] = domain["within_domain"]
+        table["applicability_threshold"] = float(domain["threshold"])
     if q is not None:
         table["lower_log10"] = predictions - float(q)
         table["upper_log10"] = predictions + float(q)

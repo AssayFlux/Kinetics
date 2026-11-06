@@ -108,3 +108,20 @@ def test_multimodal_rejects_target_mismatch(tmp_path):
             group_array="protein_cluster_id", n_splits=2,
             hidden_layer_sizes=(8,), max_iter=2,
         )
+
+
+def test_multimodal_cli_commands_are_exposed():
+    from kinetics_core.cli import build_parser
+
+    parser = build_parser()
+    fit_args = parser.parse_args([
+        "fit-multi", "--train", "train.npz", "--test", "test.npz",
+        "--target", "km", "--output-dir", "out", "--hidden-layers", "64,32",
+    ])
+    assert fit_args.command == "fit-multi"
+    assert fit_args.hidden_layers == "64,32"
+    predict_args = parser.parse_args([
+        "predict-multi", "--model", "model.joblib",
+        "--features", "features.npz", "--output", "predictions.csv",
+    ])
+    assert predict_args.command == "predict-multi"

@@ -382,7 +382,10 @@ def main(argv: list[str] | None = None) -> int:
             raise FileExistsError("Sequence-cluster output directory already exists")
         if output == input_path.parent or output in input_path.parents:
             raise ValueError("Sequence-cluster output directory must not contain the input file")
-        frame = pd.read_csv(input_path, dtype={args.record_id_column: "string"})
+        csv_dtypes = {args.record_id_column: "string"}
+        if args.source_column:
+            csv_dtypes[args.source_column] = "string"
+        frame = pd.read_csv(input_path, dtype=csv_dtypes)
         mapping_path, manifest_path = cluster_sequences(
             frame,
             sequence_column=args.sequence_column,

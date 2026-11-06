@@ -131,9 +131,13 @@ class ResidueMapping:
         for name in ("sequence_accession", "structure_id", "chain_id", "residue_name",
                      "mapping_method", "evidence_id"):
             _required(getattr(self, name), name)
-        if isinstance(self.sequence_position, bool) or self.sequence_position < 1:
-            raise ValueError("sequence_position must be a positive 1-based position")
-        if isinstance(self.residue_number, bool):
+        if (
+            isinstance(self.sequence_position, bool)
+            or not isinstance(self.sequence_position, int)
+            or self.sequence_position < 1
+        ):
+            raise ValueError("sequence_position must be a positive 1-based integer")
+        if isinstance(self.residue_number, bool) or not isinstance(self.residue_number, int):
             raise ValueError("residue_number must be an integer")
         if self.numbering_scheme not in ("author", "label"):
             raise ValueError("numbering_scheme must be author or label")

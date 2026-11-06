@@ -44,6 +44,8 @@ def normalize_catpred_csv(
 ) -> tuple[pathlib.Path, pathlib.Path, pathlib.Path]:
     if target not in ("km", "kcat"):
         raise ValueError("CatPred-DB adapter supports only km and kcat; Ki is not Km or kcat")
+    if not source_version.strip() or not license_id.strip():
+        raise ValueError("CatPred imports require non-empty source_version and license_id")
     source_path = pathlib.Path(input_csv)
     if not source_path.is_file():
         raise FileNotFoundError(source_path)

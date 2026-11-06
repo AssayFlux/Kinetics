@@ -167,6 +167,8 @@ def verify_dataset_release(release_dir: str | Path) -> dict[str, Any]:
         raise ValueError("Release manifest has no artifact inventory")
     verified = []
     for name, expected in artifacts.items():
+        if Path(name).name != name:
+            raise ValueError(f"Unsafe release artifact path: {name}")
         path = root / name
         if not path.is_file():
             raise ValueError(f"Release artifact is missing: {name}")

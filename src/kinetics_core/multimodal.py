@@ -515,6 +515,7 @@ def fit_multimodal_model(
         ],
         "feature_encoder": "ESM-2 + Morgan + pooled RDKit molecular graph features",
         "random_seed": random_state,
+        "code_revision": git_revision,
         "model_sha256": file_record(model_path)["sha256"],
     }, card_path)
     manifest = build_experiment_manifest(

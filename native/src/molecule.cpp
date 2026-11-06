@@ -8,6 +8,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <tuple>
+#include <vector>
 
 namespace kinetics {
 namespace {
@@ -264,6 +265,86 @@ std::string scene_to_json(const MolecularScene& scene) {
         first = false;
     }
     out << "]}";
+    return out.str();
+}
+
+
+std::string render_xy_ppm(const MolecularScene& scene, int width, int height) {
+    if (width < 64 || height < 64 || width > 4096 || height > 4096)
+        throw std::invalid_argument("render dimensions must be within [64, 4096]");
+    using Pixel = std::array<int, 3>;
+    const Pixel background{250, 250, 250};
+    std::vector<Pixel> pixels(static_cast<std::size_t>(width) *
+                              static_cast<std::size_t>(height), background);
+    const auto& atoms = scene.structure().atoms;
+    double min_x = atoms.front().position[0], max_x = min_x;
+    double min_y = atoms.front().position[1], max_y = min_y;
+    for (const auto& atom : atoms) {
+        min_x = std::min(min_x, atom.position[0]);
+        max_x = std::max(max_x, atom.position[0]);
+        min_y = std::min(min_y, atom.position[1]);
+        max_y = std::max(max_y, atom.position[1]);
+    }
+    const double span_x = std::max(max_x - min_x, 1.0);
+    const double span_y = std::max(max_y - min_y, 1.0);
+    const double scale = std::min((static_cast<double>(width) - 32.0) / span_x,
+                                  (static_cast<double>(height) - 32.0) / span_y);
+    const double center_x = (min_x + max_x) / 2.0;
+    const double center_y = (min_y + max_y) / 2.0;
+    const auto project = [&](const Atom& atom) {
+        const int x = static_cast<int>(std::lround(
+            static_cast<double>(width) / 2.0 +
+            (atom.position[0] - center_x) * scale));
+        const int y = static_cast<int>(std::lround(
+            static_cast<double>(height) / 2.0 -
+            (atom.position[1] - center_y) * scale));
+        return std::pair<int, int>{x, y};
+    };
+    const auto set_pixel = [&](int x, int y, const Pixel& color) {
+        if (x >= 0 && x < width && y >= 0 && y < height)
+            pixels[static_cast<std::size_t>(y) * static_cast<std::size_t>(width) +
+                   static_cast<std::size_t>(x)] = color;
+    };
+    const auto draw_line = [&](int x0, int y0, int x1, int y1, const Pixel& color) {
+        const int dx = std::abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+        const int dy = -std::abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+        int error = dx + dy;
+        while (true) {
+            set_pixel(x0, y0, color);
+            if (x0 == x1 && y0 == y1) break;
+            const int twice = 2 * error;
+            if (twice >= dy) { error += dy; x0 += sx; }
+            if (twice <= dx) { error += dx; y0 += sy; }
+        }
+    };
+    const auto draw_atom = [&](int cx, int cy, int radius, const Pixel& color) {
+        for (int y = -radius; y <= radius; ++y)
+            for (int x = -radius; x <= radius; ++x)
+                if (x * x + y * y <= radius * radius)
+                    set_pixel(cx + x, cy + y, color);
+    };
+    std::map<int, std::pair<int, int>> projected;
+    for (const auto& atom : atoms) projected.emplace(atom.serial, project(atom));
+    for (const auto& bond : scene.structure().bonds) {
+        const auto left = projected.at(bond.atom_serial_a);
+        const auto right = projected.at(bond.atom_serial_b);
+        draw_line(left.first, left.second, right.first, right.second, {125, 125, 125});
+    }
+    for (const auto& atom : atoms) {
+        const auto point = projected.at(atom.serial);
+        Pixel color{90, 90, 90};
+        if (atom.element == "O") color = {210, 55, 55};
+        else if (atom.element == "N") color = {55, 85, 210};
+        else if (atom.element == "S") color = {210, 175, 35};
+        else if (atom.element == "P") color = {230, 130, 30};
+        if (scene.highlights().count(atom.serial) != 0) color = {235, 90, 20};
+        if (scene.selection().count(atom.serial) != 0) color = {20, 190, 75};
+        draw_atom(point.first, point.second, 5, color);
+    }
+    std::ostringstream out;
+    out << "P3\n" << width << ' ' << height << "\n255\n";
+    for (const auto& pixel : pixels)
+        out << pixel[0] << ' ' << pixel[1] << ' ' << pixel[2] << '\n';
     return out.str();
 }
 

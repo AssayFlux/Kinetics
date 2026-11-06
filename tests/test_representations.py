@@ -101,6 +101,8 @@ def test_feature_archive_has_aligned_rows_and_manifest(tmp_path):
         assert data["graph_bond_features"].shape == (8, 4)
         assert data["graph_atom_offsets"].tolist() == [0, 3, 6]
         assert data["graph_edge_offsets"].tolist() == [0, 4, 8]
+        assert data["graph_num_atoms"].tolist() == [3, 3]
+        assert data["graph_num_bonds"].tolist() == [2, 2]
         metadata = json.loads(data["feature_metadata_json"][0])
         assert metadata["protein"]["model_revision"] == "fixture-revision"
         assert metadata["chemical"]["include_chirality"] is True

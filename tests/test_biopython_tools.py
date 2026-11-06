@@ -2,6 +2,9 @@ import pytest
 
 from kinetics_core.biopython_tools import (
     align_protein_sequences,
+    align_sequence_to_structure_chain,
+    calculate_hydrogen_bonds,
+    calculate_ligand_contacts,
     calculate_residue_contacts,
     calculate_residue_sasa,
     structure_summary,
@@ -92,3 +95,27 @@ def test_pairwise_sequence_alignment_uses_biopython():
 def test_invalid_contact_cutoff_is_rejected(pdb_file):
     with pytest.raises(ValueError, match="cutoff"):
         calculate_residue_contacts(pdb_file, file_format="pdb", cutoff_angstrom=0)
+
+
+
+def test_sequence_to_structure_alignment_preserves_author_residue_ids(pdb_file):
+    result = align_sequence_to_structure_chain(
+        "ACD", pdb_file, file_format="pdb", chain_id="A"
+    )
+    assert result["mapped_residue_count"] == 3
+    assert result["mismatch_count"] == 0
+    assert result["alignment_is_unique"]
+    assert [item["sequence_position"] for item in result["mapping"]] == [1, 2, 3]
+    assert [item["structure_residue_number"] for item in result["mapping"]] == [1, 2, 3]
+
+
+def test_hydrogen_bond_detector_does_not_infer_missing_hydrogens(pdb_file):
+    result = calculate_hydrogen_bonds(pdb_file, file_format="pdb")
+    assert result["status"] == "not_computed_no_explicit_hydrogens"
+    assert result["hydrogen_bonds"] == []
+
+
+def test_ligand_contact_detector_reports_absence_without_inference(pdb_file):
+    result = calculate_ligand_contacts(pdb_file, file_format="pdb")
+    assert result["status"] == "no_ligand_contacts_within_cutoff"
+    assert result["contacts"] == []

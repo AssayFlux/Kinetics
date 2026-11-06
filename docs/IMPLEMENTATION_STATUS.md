@@ -127,3 +127,15 @@ The feature-fusion MLP training/inference engine was merged in [PR #22](https://
 ## Step 6 — Native molecular visualization and simulation
 
 The initial C++17/CMake molecular structure and scene-data foundation is implemented and CI-verified. See [Native molecular engine](NATIVE_MOLECULAR_ENGINE.md) and [Step 6 implementation status](STEP6_IMPLEMENTATION_STATUS.md). Do not mark Step 6 complete until reviewed reference structures validate the parser/scene contract, a production 3D renderer is delivered, and real OpenMM/GROMACS adapters produce fully parameterized, traceable execution artifacts with reference-system checks. No simulation execution or performance claim is currently asserted.
+
+
+## Step 9 — Domain expansion (CONTRACT PROPOSED; IMPLEMENTATION NOT STARTED)
+
+- Selected proteomics and structural biology as the first domain expansion because it reuses existing protein-sequence and structure foundations while keeping domain semantics explicit.
+- Added `docs/STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md` defining sequence, structure, residue-mapping and derived-feature contracts; source/license provenance; evidence classes; bounded parsing; and validation gates.
+- No proteomics/structural adapter, real source ingestion, curated structural benchmark or domain acceptance test is claimed yet. Genomics, transcriptomics, multi-omics, imaging and pharmacology remain separate future modules.
+
+## Step 10 — Integration and release readiness (CONTROL SPECIFICATION ADDED; RELEASE NOT SIGNED OFF)
+
+- Added `docs/STEP10_RELEASE_READINESS_GATES.md` with build/compatibility, scientific reproducibility, security/privacy, runtime/recovery and researcher-acceptance gates, a release-candidate manifest, evidence states and GO/CONDITIONAL/NO-GO decision rules.
+- Current release decision is NO-GO for scientific performance claims and remote multi-tenant production because real-data validation and production deployment gates remain unverified. No production release or recovery drill is claimed.

@@ -67,6 +67,12 @@ def create_dataset_release(
         raise ValueError("Release contains target-incompatible canonical units")
 
     rejected_count = int(len(pd.read_csv(rejected)))
+    aggregation_methods = sorted(
+        str(value) for value in audited.get("aggregation_method", pd.Series(dtype=str)).dropna().unique()
+    )
+    measurement_kinds = sorted(
+        str(value) for value in audited.get("measurement_kind", pd.Series(["individual_measurement"])).unique()
+    )
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(
         tempfile.mkdtemp(prefix=f".{destination.name}.staging-", dir=destination.parent)
@@ -122,6 +128,8 @@ def create_dataset_release(
                 "status": "operator_supplied_requires_manual_source_terms_review",
             },
             "citation": citation,
+            "measurement_kinds": measurement_kinds,
+            "aggregation_methods": aggregation_methods,
             "created_at": datetime.now(timezone.utc).isoformat(),
             "environment": environment_record(),
             "counts": {

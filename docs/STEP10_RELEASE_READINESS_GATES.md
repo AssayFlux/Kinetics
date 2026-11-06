@@ -87,3 +87,7 @@ Clinical or regulated use is always outside this general research release decisi
 ## Evidence retention
 
 Store the release manifest, CI URLs, SBOM, vulnerability triage, test reports, benchmark outputs, recovery logs, user-acceptance findings, signed review decisions and release notes under a versioned release-evidence directory. Every report must identify its source commit and must not be edited in place after sign-off; corrections create a superseding evidence record.
+
+## Executable manifest evaluator (2026-11-06)
+
+The `kinetics_core.release_gate` module validates the candidate version, source commit SHA, required gate inventory, evidence references, and waiver metadata. Missing, not-run, blocked, or failed mandatory gates produce NO-GO; a valid non-critical waiver produces CONDITIONAL; all passed gates produce GO. The evaluator always sets `release_signoff: false`. It does not inspect external evidence, deploy software, run security scans, perform recovery, or replace accountable human sign-off.

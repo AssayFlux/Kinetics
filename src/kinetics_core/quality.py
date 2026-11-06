@@ -114,12 +114,17 @@ def review_potential_duplicate_observations(
     if log10_precision < 0:
         raise ValueError("log10_precision must be non-negative")
     candidates = frame.copy().reset_index(drop=True)
-    identity_columns = [
-        column for column in (
-            "sequence_normalized", "sequence", "protein_accession",
-            "smiles_canonical", "smiles", "publication_doi",
-        ) if column in candidates.columns
-    ]
+    identity_columns = []
+    for alternatives in (
+        ("sequence_normalized", "sequence", "protein_accession"),
+        ("smiles_canonical", "smiles"),
+        ("publication_doi",),
+    ):
+        selected = next(
+            (column for column in alternatives if column in candidates.columns), None
+        )
+        if selected is not None:
+            identity_columns.append(selected)
     if not identity_columns:
         return pd.DataFrame()
     rows = []

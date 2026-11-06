@@ -8,7 +8,7 @@ Kinetics will use public datasets first. Raw downloads are intentionally kept ou
 - Dataset card: https://huggingface.co/datasets/RosettaCommons/CatPred-DB
 - Published framework: CatPred, Nature Communications (2025), https://doi.org/10.1038/s41467-025-57215-9
 - Public processed tables include separate Km and kcat datasets, plus random and sequence-clustered splits.
-- License metadata is source- and snapshot-specific. Public mirrors may display different license labels; inspect the exact repository revision and its license file, record the verified terms, and do not assume one mirror's terms apply to another.
+- The official Hugging Face dataset card declares CC-BY-4.0 for the dataset files. The journal article separately carries a CC-BY-NC-ND rights statement; do not confuse the article's license with the dataset card's data license. Inspect the exact pinned dataset revision and underlying BRENDA/SABIO source terms before redistribution.
 - Dataset card reports 41,174 Km records and 23,197 kcat records. These are separate parameter-specific datasets; do not assume that a Km record and a kcat record are paired observations.
 
 For the first reproducible baseline, download the processed Km and kcat tables and their published sequence-cluster test splits. Use the published split files only for benchmark comparison; create separate, documented training/validation partitions for model development. Avoid treating random-split scores as evidence of generalization.

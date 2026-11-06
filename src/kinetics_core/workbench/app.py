@@ -424,29 +424,34 @@ def create_app(
             arguments = build_cli_arguments(command, parameters, root)
             if command == "persist":
                 arguments.extend(["--database", str(database)])
-            process = subprocess.Popen(
-                [sys.executable, "-m", "kinetics_core.cli", *arguments],
-                cwd=root,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-            )
-            with process_lock:
-                processes[job_id] = process
-            try:
-                output, _ = process.communicate(timeout=_JOB_TIMEOUT_SECONDS)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                output, _ = process.communicate()
-                raise TimeoutError(
-                    f"Research job exceeded {_JOB_TIMEOUT_SECONDS} seconds"
+            with log_path.open("w", encoding="utf-8") as log_stream:
+                process = subprocess.Popen(
+                    [sys.executable, "-m", "kinetics_core.cli", *arguments],
+                    cwd=root,
+                    stdout=log_stream,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
                 )
-            finally:
                 with process_lock:
-                    processes.pop(job_id, None)
-            log_path.write_text(output or "", encoding="utf-8")
+                    processes[job_id] = process
+                try:
+                    process.wait(timeout=_JOB_TIMEOUT_SECONDS)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
+                    raise TimeoutError(
+                        f"Research job exceeded {_JOB_TIMEOUT_SECONDS} seconds"
+                    )
+                finally:
+                    with process_lock:
+                        processes.pop(job_id, None)
+            with log_path.open("rb") as log_stream:
+                log_stream.seek(0, os.SEEK_END)
+                log_size = log_stream.tell()
+                log_stream.seek(max(0, log_size - 8 * 1024 * 1024))
+                output = log_stream.read().decode("utf-8", errors="replace")
             current = store.fetch_all(
                 "SELECT cancellation_requested FROM workbench_jobs WHERE job_id=?",
                 (job_id,),

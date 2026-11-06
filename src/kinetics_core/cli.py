@@ -439,6 +439,7 @@ def main(argv: list[str] | None = None) -> int:
         clustered_path = output / "observations_with_protein_clusters.csv"
         clustered.to_csv(clustered_path, index=False)
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["source_observations"] = file_record(input_path)
         manifest["clustered_observations"] = file_record(clustered_path)
         manifest["clustered_observations_all_assigned"] = (
             len(clustered) == len(frame)
@@ -456,7 +457,7 @@ def main(argv: list[str] | None = None) -> int:
         import pandas as pd
 
         from .features import ObservationFeatureBuilder
-        from .provenance import file_record
+        from .provenance import file_record, write_json_atomic
 
         input_path = Path(args.input).resolve()
         output_path = Path(args.output).resolve()
@@ -492,6 +493,9 @@ def main(argv: list[str] | None = None) -> int:
             group_columns=tuple(args.group_column),
             batch_size=args.batch_size,
         )
+        feature_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        feature_manifest["source_input"] = file_record(input_path)
+        write_json_atomic(feature_manifest, manifest_path)
         result = {
             "input": file_record(input_path),
             "archive": file_record(archive),

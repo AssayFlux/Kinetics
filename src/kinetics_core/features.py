@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 from .chemistry import canonicalize_smiles, molecular_graph_features
-from .provenance import file_record, write_json_atomic
+from .provenance import environment_record, file_record, write_json_atomic
 
 LOG = logging.getLogger("kinetics_core.features")
 DEFAULT_ESM_MODEL = "facebook/esm2_t6_8M_UR50D"
@@ -247,6 +247,7 @@ class ObservationFeatureBuilder:
                 "rdkit": rdkit_version,
                 "torch": _version("torch"),
                 "transformers": _version("transformers"),
+                "tokenizers": _version("tokenizers"),
             },
         }
 
@@ -411,7 +412,8 @@ class ObservationFeatureBuilder:
             "X", "y_log10", "y_raw", "source_record_ids", "sequences",
             "smiles", "canonical_smiles", "sources", "target", "feature_metadata_json",
             "feature_schema_version", "fingerprint_radius", "fingerprint_bits",
-            "fingerprint_include_chirality",
+            "fingerprint_include_chirality", "graph_atom_features", "graph_edge_index",
+            "graph_bond_features", "graph_atom_offsets", "graph_edge_offsets",
         }
         collisions = reserved_names.intersection(group_columns)
         if collisions:
@@ -572,6 +574,7 @@ class ObservationFeatureBuilder:
                 selected["license_id"].dropna().astype(str).unique().tolist()
             ) if "license_id" in selected.columns else [],
             "feature_metadata": metadata,
+            "runtime_environment": environment_record(),
             "archive": file_record(output),
         }
         write_json_atomic(manifest, manifest_path)

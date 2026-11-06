@@ -50,7 +50,7 @@ This file distinguishes repository contents from execution, verification and sci
 
 - Connect canonical observation outputs to legacy preprocessing, prediction and ONNX paths.
 - Retire or isolate the legacy two-target-per-row assumption without breaking supported workflows.
-- Add end-to-end sequence-cluster/scaffold generation to dataset workflows.
+- Execute real ESM-2 inference and MMseqs2 clustering on a reviewed, licensed dataset; establish hardware-specific repeat-run numerical tolerances and generate a real feature reproducibility report.
 - Complete reproducible orchestration from source acquisition through curation, partitioning, features, calibration, model selection and reporting.
 - Expand shift-stratified diagnostics, uncertainty coverage-versus-width analysis and statistical comparisons.
 - Add BRENDA and SABIO-RK adapters only after current schemas, licenses and access terms are verified.

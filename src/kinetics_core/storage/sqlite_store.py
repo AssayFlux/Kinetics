@@ -225,12 +225,12 @@ class KineticsSQLite:
     def checkpoint(self, *, truncate: bool = False) -> None:
         """Checkpoint the WAL, e.g. after a large import or before archival."""
         mode = "TRUNCATE" if truncate else "PASSIVE"
-        with self.connect() as connection:
+        with self.session() as connection:
             connection.execute(f"PRAGMA wal_checkpoint({mode})")
 
     def optimize(self) -> None:
         """Refresh planner statistics after bulk loading."""
-        with self.connect() as connection:
+        with self.session() as connection:
             connection.execute("PRAGMA optimize")
 
     def backup(self, destination: str | Path) -> None:

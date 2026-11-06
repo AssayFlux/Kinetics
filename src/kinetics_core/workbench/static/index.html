@@ -238,17 +238,17 @@ const workflowExamples = {
   "import-legacy": { input: "datasets/legacy.csv", output: "runs/canonical-observations.csv", source: "source-name", source_record_id_column: "record_id", km_unit: "mM", kcat_unit: "s^-1" },
   audit: { input: "datasets/observations.csv", output_dir: "runs/audit-001" },
   persist: { input: "runs/observations.csv", dataset_id: "reviewed-source-v1", name: "Reviewed kinetic dataset", source: "source-name", version: "1", license_id: "verified-license-id", citation: "DOI or source citation" },
-  release: { observations: "runs/observations.csv", rejected: ["runs/rejected.csv"], output_dir: "releases/dataset-v1", dataset_id: "dataset-v1", dataset_name: "Reviewed dataset", source: "source-name", source_version: "1", license_id: "verified-license-id", citation: "DOI or source citation" },
+  release: { observations: "runs/observations.csv", rejected: ["runs/audit-001/duplicate_audit.csv"], output_dir: "releases/dataset-v1", dataset_id: "dataset-v1", dataset_name: "Reviewed dataset", source: "source-name", source_version: "1", license_id: "verified-license-id", citation: "DOI or source citation" },
   "verify-release": { release_dir: "releases/dataset-v1" },
   "normalize-identities": { input: "datasets/observations.csv", output_dir: "runs/identities-001" },
   "annotate-scaffolds": { input: "runs/observations_with_identities.csv", output_dir: "runs/scaffolds-001" },
   "cluster-sequences": { input: "runs/observations_with_identities.csv", output_dir: "runs/clusters-001", min_sequence_identity: 0.4, coverage: 0.8, threads: 4 },
-  "build-features": { input: "runs/observations_with_groups.csv", output: "runs/km-features.npz", target: "km", cache_dir: "artifacts/feature-cache", batch_size: 16 },
-  partition: { observations: "runs/observations_with_groups.csv", output_dir: "runs/km-partitions", target: "km", random_state: 42 },
-  compare: { train: "runs/km-partitions/train.npz", test: "runs/km-partitions/test.npz", target: "km", output_dir: "runs/km-comparison", random_state: 42, n_splits: 5 },
+  "build-features": { input: "runs/km-partitions/km_train.csv", output: "runs/km-train.npz", target: "km", cache_dir: "artifacts/feature-cache", batch_size: 16, group_column: ["protein_cluster_id", "scaffold_id"] },
+  partition: { observations: "runs/clusters-001/observations_with_protein_clusters.csv", output_dir: "runs/km-partitions", target: "km", random_state: 42 },
+  compare: { train: "runs/km-train.npz", test: "runs/km-test.npz", target: "km", output_dir: "runs/km-comparison", random_state: 42, n_splits: 5 },
   fit: { train: "runs/km-partitions/train.npz", test: "runs/km-partitions/test.npz", target: "km", output_dir: "runs/km-fit", random_state: 42, n_splits: 5 },
-  "fit-multi": { train: "runs/km-partitions/train.npz", test: "runs/km-partitions/test.npz", target: "km", output_dir: "runs/km-multimodal", random_state: 42, n_splits: 5, hidden_layers: "256,128", max_iter: 500 },
-  "predict-multi": { model: "runs/km-multimodal/model_bundle", features: "runs/km-partitions/prediction.npz", output: "runs/predictions.csv" }
+  "fit-multi": { train: "runs/km-partitions/train.npz", test: "runs/km-partitions/test.npz", target: "km", output_dir: "runs/km-multimodal", calibration_archive: "runs/km-calibration.npz", random_state: 42, n_splits: 5, hidden_layers: "256,128", max_iter: 500 },
+  "predict-multi": { model: "runs/km-multimodal/km_kinetics_multi.joblib", features: "runs/km-test.npz", output: "runs/predictions.csv" }
 };
 $("command").addEventListener("change", event => {
   $("parameters").value = JSON.stringify(

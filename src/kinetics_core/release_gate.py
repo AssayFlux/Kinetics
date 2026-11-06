@@ -5,6 +5,7 @@ A valid manifest is a review aid, not a deployment, security certification, or s
 from __future__ import annotations
 
 import re
+from datetime import date
 from dataclasses import dataclass
 from typing import Any, Literal
 
@@ -51,6 +52,12 @@ class GateResult:
                 value = getattr(self, name)
                 if not isinstance(value, str) or not value.strip():
                     raise ValueError(f"waived gate {self.gate_id} requires {name}")
+            try:
+                date.fromisoformat(self.expires_on)
+            except ValueError as exc:
+                raise ValueError(
+                    f"waived gate {self.gate_id} expires_on must be an ISO date"
+                ) from exc
 
 
 def evaluate_release(manifest: dict[str, Any]) -> dict[str, Any]:
@@ -70,10 +77,20 @@ def evaluate_release(manifest: dict[str, Any]) -> dict[str, Any]:
     for item in gates:
         if not isinstance(item, dict):
             raise ValueError("each gate must be an object")
+        gate_id = item.get("gate_id")
+        evidence = item.get("evidence", [])
+        if not isinstance(gate_id, str) or not gate_id.strip():
+            raise ValueError("gate_id must be non-empty text")
+        if not isinstance(evidence, list) or any(
+            not isinstance(ref, str) or not ref.strip() for ref in evidence
+        ):
+            raise ValueError(f"gate {gate_id} evidence must be a list of non-empty references")
+        if len(set(evidence)) != len(evidence):
+            raise ValueError(f"gate {gate_id} evidence references must be unique")
         gate = GateResult(
-            gate_id=str(item.get("gate_id", "")),
+            gate_id=gate_id,
             state=item.get("state", "not_run"),
-            evidence=tuple(item.get("evidence", ())),
+            evidence=tuple(evidence),
             severity=item.get("severity", "critical"),
             approver=item.get("approver"),
             rationale=item.get("rationale"),

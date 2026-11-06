@@ -1,3 +1,4 @@
+import hashlib
 import json
 
 import numpy as np
@@ -48,6 +49,21 @@ def _archive(path, *, start, count, target="km"):
         ),
     }
     np.savez_compressed(path, **arrays)
+    raw = path.read_bytes()
+    manifest = {
+        "target": target,
+        "rows": count,
+        "archive": {
+            "sha256": hashlib.sha256(raw).hexdigest(),
+            "size_bytes": len(raw),
+        },
+        "sources": ["synthetic-fixture"],
+        "source_versions": ["fixture-v1"],
+        "license_ids": ["CC0-1.0"],
+    }
+    path.with_suffix(path.suffix + ".manifest.json").write_text(
+        json.dumps(manifest), encoding="utf-8"
+    )
     return path
 
 
@@ -81,6 +97,7 @@ def test_multimodal_train_and_inference_round_trip(tmp_path):
         group_array="protein_cluster_id",
         holdout_group_arrays=("protein_cluster_id", "scaffold_id"),
         n_splits=2, hidden_layer_sizes=(8,), max_iter=8, random_state=7,
+        git_revision="a" * 40,
     )
     assert result["model_family"] == "Kinetics-Multi feature-fusion MLP"
     assert result["cross_validation"]["strategy"] == "group_k_fold:protein_cluster_id"

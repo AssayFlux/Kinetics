@@ -26,6 +26,7 @@ def create_dataset_release(
     license_id: str,
     citation: str,
     source_url: str | None = None,
+    source_manifests: Sequence[str | Path] = (),
 ) -> dict[str, Any]:
     """Create a new immutable release; require explicit license and citation metadata."""
     required = {
@@ -50,13 +51,18 @@ def create_dataset_release(
     )
     if not rejected_paths or len(set(rejected_paths)) != len(rejected_paths):
         raise ValueError("Provide one or more distinct rejection audit files")
+    manifest_paths = [Path(path).resolve() for path in source_manifests]
+    if len(set(manifest_paths)) != len(manifest_paths):
+        raise ValueError("Source manifest paths must be distinct")
     destination = Path(output_dir).resolve()
-    for path in [observations, *rejected_paths]:
+    for path in [observations, *rejected_paths, *manifest_paths]:
         if not path.is_file():
             raise FileNotFoundError(path)
         if destination == path or destination in path.parents:
             raise ValueError("Release directory must not contain or overwrite source artifacts")
-    if observations in rejected_paths:
+    if any(not path.is_file() for path in manifest_paths):
+        raise FileNotFoundError("A supplied source manifest does not exist")
+    if observations in rejected_paths or observations in manifest_paths or set(rejected_paths).intersection(manifest_paths):
         raise ValueError("Observations and rejection audit must be separate files")
     if destination.exists():
         raise FileExistsError(f"Immutable release already exists: {destination}")
@@ -92,6 +98,18 @@ def create_dataset_release(
         duplicates.to_csv(staging / "duplicate_audit.csv", index=False)
         potential_duplicates.to_csv(staging / "potential_duplicate_audit.csv", index=False)
         write_json_atomic(quality, staging / "quality_report.json")
+        manifest_artifacts = []
+        if manifest_paths:
+            manifest_dir = staging / "source_manifests"
+            manifest_dir.mkdir()
+            for index, source_manifest in enumerate(manifest_paths, start=1):
+                name = f"source_manifest_{index}.json"
+                destination_manifest = manifest_dir / name
+                shutil.copy2(source_manifest, destination_manifest)
+                manifest_artifacts.append({
+                    "name": f"source_manifests/{name}",
+                    "sha256": sha256_file(destination_manifest),
+                })
         (staging / "DATA_CARD.md").write_text(
             f"# {dataset_name}\n\n"
             f"- Dataset ID: {dataset_id}\n"
@@ -124,6 +142,12 @@ def create_dataset_release(
             }
             for name in artifact_names
         }
+        for source_manifest in manifest_artifacts:
+            manifest_path = staging / source_manifest["name"]
+            artifacts[source_manifest["name"]] = {
+                "sha256": source_manifest["sha256"],
+                "size_bytes": manifest_path.stat().st_size,
+            }
         manifest = {
             "schema_version": "kinetics-kdb-release-v1",
             "dataset_id": dataset_id,
@@ -131,6 +155,7 @@ def create_dataset_release(
             "source": source,
             "source_url": source_url,
             "source_version": source_version,
+            "source_manifests": manifest_artifacts,
             "rejection_sources": [
                 {"name": path.name, "sha256": sha256_file(path)} for path in rejected_paths
             ],
@@ -178,9 +203,12 @@ def verify_dataset_release(release_dir: str | Path) -> dict[str, Any]:
         raise ValueError("Release manifest has no artifact inventory")
     verified = []
     for name, expected in artifacts.items():
-        if Path(name).name != name:
+        relative_path = Path(name)
+        if relative_path.is_absolute() or ".." in relative_path.parts:
             raise ValueError(f"Unsafe release artifact path: {name}")
-        path = root / name
+        path = root / relative_path
+        if path.resolve().parent != (root / relative_path.parent).resolve():
+            raise ValueError(f"Release artifact escapes release directory: {name}")
         if not path.is_file():
             raise ValueError(f"Release artifact is missing: {name}")
         actual = sha256_file(path)

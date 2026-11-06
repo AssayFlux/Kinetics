@@ -78,3 +78,66 @@ def test_legacy_adapter_exports_canonical_records():
     )
     assert records[0]["canonical_unit"] == "M"
     assert records[1]["canonical_unit"] == "s^-1"
+
+
+def test_import_legacy_cli_writes_canonical_csv_and_provenance_manifest(tmp_path):
+    import json
+
+    from kinetics_core.cli import main
+
+    source = tmp_path / "legacy.csv"
+    output = tmp_path / "canonical" / "observations.csv"
+    pd.DataFrame({
+        "source_id": ["row-1", "row-2"],
+        "sequence": ["ACDEFG", "MKWVTF"],
+        "smiles": ["CCO", "CCN"],
+        "km": [100.0, None],
+        "kcat": [60.0, 120.0],
+    }).to_csv(source, index=False)
+
+    exit_code = main([
+        "import-legacy",
+        "--input", str(source),
+        "--output", str(output),
+        "--source", "legacy-dataset",
+        "--source-record-id-column", "source_id",
+        "--km-unit", "uM",
+        "--kcat-unit", "min^-1",
+        "--source-version", "v1",
+        "--license-id", "CC-BY-4.0",
+    ])
+
+    assert exit_code == 0
+    canonical = pd.read_csv(output)
+    assert canonical["target"].tolist() == ["km", "kcat", "kcat"]
+    assert canonical["canonical_unit"].tolist() == ["M", "s^-1", "s^-1"]
+    manifest = json.loads(output.with_suffix(".csv.manifest.json").read_text())
+    assert manifest["n_input_rows"] == 2
+    assert manifest["n_observations"] == 3
+    assert manifest["target_counts"] == {"kcat": 2, "km": 1}
+    assert len(manifest["input"]["sha256"]) == 64
+    assert len(manifest["output"]["sha256"]) == 64
+
+
+def test_import_legacy_cli_refuses_to_overwrite_raw_input(tmp_path):
+    from kinetics_core.cli import main
+
+    source = tmp_path / "legacy.csv"
+    pd.DataFrame({
+        "source_id": ["row-1"], "sequence": ["ACDEFG"], "smiles": ["CCO"],
+        "km": [1.0], "kcat": [2.0],
+    }).to_csv(source, index=False)
+
+    with pytest.raises(ValueError, match="differ from the raw input"):
+        main([
+            "import-legacy", "--input", str(source), "--output", str(source),
+            "--source", "legacy-dataset", "--source-record-id-column", "source_id",
+        ])
+
+
+def test_legacy_adapter_rejects_empty_input():
+    with pytest.raises(ValueError, match="contains no rows"):
+        paired_frame_to_observations(
+            pd.DataFrame(columns=["record_id", "sequence", "smiles", "km", "kcat"]),
+            source="legacy-csv", source_record_id_column="record_id",
+        )

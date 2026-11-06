@@ -6,15 +6,15 @@ import importlib.metadata
 import json
 import logging
 import os
-from pathlib import Path
 import platform
 import tempfile
+from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
 
-from .chemistry import canonicalize_smiles, molecular_graph_features
+from .chemistry import canonicalize_smiles, molecular_graph_features, molecular_graph_features
 from .provenance import environment_record, file_record, write_json_atomic
 
 LOG = logging.getLogger("kinetics_core.features")
@@ -165,7 +165,9 @@ def morgan_fingerprint(
         from rdkit import Chem, DataStructs
         from rdkit.Chem import rdFingerprintGenerator
     except ImportError as exc:
-        raise RuntimeError("Chemical fingerprints require RDKit; install the baseline extra") from exc
+        raise RuntimeError(
+            "Chemical fingerprints require RDKit; install the baseline extra"
+        ) from exc
     molecule = Chem.MolFromSmiles(str(smiles))
     if molecule is None:
         raise ValueError(f"Invalid or empty SMILES: {smiles!r}")
@@ -324,10 +326,14 @@ class ObservationFeatureBuilder:
         sequence_embeddings: dict[str, np.ndarray] = {}
 
         for index, (sequence, smiles) in enumerate(
-            zip(normalized_sequences, canonical_smiles)
+            zip(normalized_sequences, canonical_smiles, strict=True)
         ):
             cache_path, key = self._cache_path(sequence, smiles)
-            cached = self._read_cache(cache_path, key) if cache_path and cache_path.is_file() else None
+            cached = (
+                self._read_cache(cache_path, key)
+                if cache_path and cache_path.is_file()
+                else None
+            )
             if cached is not None:
                 rows[index] = cached
             else:
@@ -343,10 +349,12 @@ class ObservationFeatureBuilder:
                     embeddings = [self.encoder.encode(value) for value in chunk]
                 if len(embeddings) != len(chunk):
                     raise RuntimeError("Protein encoder returned an unexpected batch size")
-                for sequence, embedding in zip(chunk, embeddings):
+                for sequence, embedding in zip(chunk, embeddings, strict=True):
                     vector = np.asarray(embedding, dtype=np.float32)
                     if vector.ndim != 1 or not np.isfinite(vector).all():
-                        raise ValueError("Protein encoder returned a non-finite or non-vector embedding")
+                        raise ValueError(
+                            "Protein encoder returned a non-finite or non-vector embedding"
+                        )
                     sequence_embeddings[sequence] = vector
 
             for index, sequence, smiles, cache_path, key in pending:
@@ -404,7 +412,9 @@ class ObservationFeatureBuilder:
         if not np.isfinite(values).all() or np.any(values <= 0):
             raise ValueError("canonical_value must contain finite positive values")
         if selected["sequence"].isna().any() or selected["smiles"].isna().any():
-            raise ValueError("Feature generation requires sequence and SMILES for every selected row")
+            raise ValueError(
+                "Feature generation requires sequence and SMILES for every selected row"
+            )
         if selected["source_record_id"].astype(str).str.strip().eq("").any():
             raise ValueError("source_record_id must be non-empty for every feature row")
 
@@ -475,7 +485,9 @@ class ObservationFeatureBuilder:
         )
         metadata = self._representation_metadata()
         metadata["batch_size"] = batch_size
-        metadata["row_alignment"] = "source_record_ids, sequences, smiles, y_raw, y_log10 align by row"
+        metadata["row_alignment"] = (
+            "source_record_ids, sequences, smiles, y_raw, and y_log10 align by row"
+        )
         metadata["determinism"] = (
             "Inference mode and explicit model/tokenizer revisions are used. "
             "Bitwise equality across different hardware or library builds is not guaranteed."
@@ -534,7 +546,9 @@ class ObservationFeatureBuilder:
                 "smiles": canonical_smiles[index],
                 "canonical_value": float(value),
             }
-            for (_, row), value in zip(selected.iterrows(), values)
+            for index, ((_, row), value) in enumerate(
+                zip(selected.iterrows(), values, strict=True)
+            )
         ]
         row_identity_sha256 = hashlib.sha256(
             json.dumps(row_identity, sort_keys=True, separators=(",", ":")).encode()

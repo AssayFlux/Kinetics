@@ -140,6 +140,8 @@ def review_potential_duplicate_observations(
             continue
         context = {
             "target": str(row["target"]),
+            "measurement_kind": str(row.get("measurement_kind", "individual_measurement")),
+            "aggregation_method": _identity_text(row.get("aggregation_method")),
             "log10_value": round(float(np.log10(value)), log10_precision),
             "ph": _rounded_optional(row.get("ph"), 3),
             "temperature_k": _rounded_optional(row.get("temperature_k"), 2),

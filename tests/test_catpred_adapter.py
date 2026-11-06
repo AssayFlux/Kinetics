@@ -52,7 +52,7 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
         "10.1/example-a", "10.1/example-b"
     ]
     assert len(rejected) == 1
-    assert "ph is non-finite" in rejected.loc[0, "reason"]
+    assert "ph is not numeric" in rejected.loc[0, "reason"]
     assert manifest["mapping"]["ph"] == "ph"
     assert manifest["mapping"]["temperature_k"] == "temp_k"
     assert manifest["mapping"]["assay_id"] == "assay"

@@ -1,7 +1,7 @@
-"""Domain tools for the Astronaut assistant.
+"""Deterministic research tools exposed through the Kinetics integration boundary.
 
-Astronaut owns chat/model inference. This module exposes deterministic Kinetics
-operations that a future Astronaut tool bridge can call. It does not call an LLM.
+Kinetics Ecosystem is a separate project. This module defines provider-neutral
+operations and schemas; it does not host an LLM or depend on an assistant runtime.
 """
 from __future__ import annotations
 
@@ -88,7 +88,7 @@ def kinetics_predict(
 
 
 def assistant_system_guidance() -> str:
-    """Return domain-specific behavior instructions for Astronaut's local model."""
+    """Return domain-specific behavior guidance for a Kinetics research assistant."""
     return (
         "You are the scientific assistant for Kinetics, an enzyme-kinetics research "
         "software project. Explain Km, kcat, enzyme-substrate data, units, workflows, "
@@ -102,7 +102,7 @@ def assistant_system_guidance() -> str:
 
 
 def tool_schemas() -> list[dict[str, Any]]:
-    """Provider-neutral function schema for a future Astronaut tool-call bridge."""
+    """Provider-neutral function schema for the separate Kinetics Ecosystem API."""
     return [
         {
             "name": "kinetics_predict",

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import hashlib
-import json
 from pathlib import Path
 from typing import Any
 
@@ -71,7 +70,7 @@ def persist_observation_csv(
             (dataset_id, checksum, str(row_index), str(row["source_record_id"]),
              str(row["target"]))
         )
-        measurement_id = hashlib.sha256(identity.encode("utf-8")).hexdigest()
+        measurement_id = hashlib.sha256(identity.encode()).hexdigest()
         metadata = {
             "dataset_id": dataset_id,
             "source": source,

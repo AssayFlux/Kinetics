@@ -7,7 +7,6 @@ scientific predictor.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 import logging
 import warnings
@@ -203,7 +202,7 @@ def fit_multimodal_model(
     ))
     _validate_archives(
         train, test, label="held-out", target=target,
-        holdout_group_arrays=tuple(dict.fromkeys(holdout_group_arrays)),
+        holdout_group_arrays=leakage_axes,
     )
     X_train, context_enabled = _multimodal_design(train)
     X_test, test_context = _multimodal_design(test)
@@ -267,6 +266,8 @@ def fit_multimodal_model(
     convergence_warnings = [
         str(item.message) for item in caught if issubclass(item.category, ConvergenceWarning)
     ]
+    if not np.isfinite(scores).all():
+        raise RuntimeError("Cross-validation produced non-finite RMSE values")
     predictions = estimator.predict(X_test)
     calibration = _load_feature_file(calibration_archive) if calibration_archive else None
     conformal_q = None
@@ -505,6 +506,8 @@ def predict_multimodal_model(
     if len(predictions) != len(X) or not np.isfinite(predictions).all():
         raise RuntimeError("Model returned invalid inference predictions")
     ids = np.asarray(payload.get("source_record_ids", np.arange(len(X)))).astype(str)
+    if len(ids) != len(predictions):
+        raise ValueError("Inference source_record_ids do not align with feature rows")
     table = pd.DataFrame({
         "source_record_id": ids,
         "target": target,

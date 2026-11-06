@@ -260,3 +260,17 @@ def test_workbench_rejects_path_escape_and_upload_overwrite(tmp_path):
             },
         )
         assert escape.status_code == 422
+
+
+def test_structure_viewer_is_served_by_workbench(tmp_path):
+    TestClient, _, create_app = workbench_imports()
+    app = create_app(
+        workspace_root=tmp_path / "workspace",
+        database_path=tmp_path / "metadata.sqlite3",
+    )
+    with TestClient(app) as client:
+        response = client.get("/structure-viewer")
+        assert response.status_code == 200
+        assert "Kinetics 3D Structure Viewer" in response.text
+        assert "Calculate contacts" in response.text
+        assert "Export PNG" in response.text

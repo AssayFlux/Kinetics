@@ -7,8 +7,9 @@ locator when the published table has no native record identifier.
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
+import shutil
 import tempfile
+from pathlib import Path
 
 import pandas as pd
 
@@ -184,8 +185,6 @@ def normalize_catpred_csv(
         write_json_atomic(manifest, manifest_path)
         staging.rename(output)
     except Exception:
-        import shutil
-
         shutil.rmtree(staging, ignore_errors=True)
         raise
     return (

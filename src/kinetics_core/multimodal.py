@@ -11,6 +11,7 @@ import json
 import logging
 import os
 import re
+import tempfile
 import warnings
 from pathlib import Path
 from typing import Any
@@ -515,7 +516,16 @@ def fit_multimodal_model(
         "conformal_alpha": float(conformal_alpha) if conformal_q is not None else None,
         "applicability_domain": domain,
     }
-    joblib.dump(bundle, model_path, compress=3)
+    descriptor, temporary_model = tempfile.mkstemp(
+        prefix=f".{model_path.name}.", suffix=".tmp", dir=output
+    )
+    os.close(descriptor)
+    try:
+        joblib.dump(bundle, temporary_model, compress=3)
+        os.replace(temporary_model, model_path)
+    except Exception:
+        Path(temporary_model).unlink(missing_ok=True)
+        raise
     write_json_atomic(report, metrics_path)
     prediction_frame.to_csv(predictions_path, index=False)
     write_model_card({

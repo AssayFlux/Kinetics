@@ -107,7 +107,7 @@ def test_native_bridge_rejects_bad_bond_reference(tmp_path: Path) -> None:
     executable.write_text(
         "#!/usr/bin/env python3\n"
         "import json, pathlib, sys\n"
-        f"scene = {json.dumps(scene)!r}\n"
+        f"scene = json.loads({json.dumps(scene)!r})\n"
         "pathlib.Path(sys.argv[2]).write_text(json.dumps(scene), encoding='utf-8')\n",
         encoding="utf-8",
     )

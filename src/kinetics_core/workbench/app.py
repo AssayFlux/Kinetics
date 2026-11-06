@@ -14,7 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Literal
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -458,6 +458,65 @@ def create_app(
                 (project_id, name, payload.description.strip(), str(root)),
             )
         return project_record(project_id)
+
+    @app.post("/api/v1/projects/{project_id}/uploads", status_code=201)
+    async def upload_project_file(
+        project_id: str, file: UploadFile = File(...)
+    ) -> dict[str, Any]:
+        project = project_record(project_id)
+        root = (workspace / project["root_path"]).resolve()
+        raw_name = file.filename or ""
+        filename = Path(raw_name).name
+        if (
+            not filename or filename in {".", ".."} or filename.startswith(".")
+            or "\x00" in filename or "/" in filename or "\\" in filename
+        ):
+            raise HTTPException(status_code=422, detail="Invalid upload filename")
+        destination = root / "datasets" / filename
+        if destination.exists():
+            raise HTTPException(status_code=409, detail="A file with that name already exists")
+        staging = destination.with_name(f".{uuid.uuid4().hex}.upload")
+        digest = hashlib.sha256()
+        size = 0
+        maximum_bytes = 500 * 1024 * 1024
+        try:
+            with staging.open("xb") as stream:
+                while chunk := await file.read(1024 * 1024):
+                    size += len(chunk)
+                    if size > maximum_bytes:
+                        raise HTTPException(
+                            status_code=413, detail="Upload exceeds the 500 MiB limit"
+                        )
+                    digest.update(chunk)
+                    stream.write(chunk)
+            if size == 0:
+                raise HTTPException(status_code=422, detail="Empty files are not accepted")
+            staging.rename(destination)
+        except Exception:
+            staging.unlink(missing_ok=True)
+            raise
+        finally:
+            await file.close()
+        checksum = digest.hexdigest()
+        relative = destination.relative_to(root).as_posix()
+        artifact_id = str(uuid.uuid5(
+            uuid.NAMESPACE_URL, f"{project_id}:{relative}:{checksum}"
+        ))
+        media_type = mimetypes.guess_type(destination.name)[0]
+        with store.transaction() as connection:
+            connection.execute(
+                """INSERT OR IGNORE INTO workbench_artifacts
+                   (artifact_id, project_id, relative_path, artifact_type,
+                    checksum_sha256, byte_size, media_type)
+                   VALUES (?, ?, ?, 'uploaded-input', ?, ?, ?)""",
+                (artifact_id, project_id, relative, checksum, size, media_type),
+            )
+        return {
+            "artifact_id": artifact_id,
+            "relative_path": relative,
+            "checksum_sha256": checksum,
+            "byte_size": size,
+        }
 
     @app.get("/api/v1/datasets")
     def list_datasets() -> list[dict[str, Any]]:

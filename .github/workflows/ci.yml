@@ -150,7 +150,7 @@ jobs:
         with:
           terraform_version: 1.9.8
       - name: Check formatting
-        run: terraform fmt -check -recursive
+        run: terraform fmt -check -diff -recursive
       - name: Initialize providers
         run: terraform init -backend=false
       - name: Validate deployment configuration

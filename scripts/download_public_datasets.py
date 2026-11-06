@@ -97,6 +97,7 @@ def main() -> None:
         "source_revision": args.revision,
         "processing_code_revision": args.processing_revision,
         "dataset_card": "https://huggingface.co/datasets/RosettaCommons/CatPred-DB",
+        "citation": "Boorla and Maranas, Nature Communications 16, 2072 (2025), doi:10.1038/s41467-025-57215-9",
         "license_note": (
             "Pinned Hugging Face dataset card declares CC-BY-4.0; verify exact "
             "revision and redistribution terms."

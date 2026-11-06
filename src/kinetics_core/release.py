@@ -94,6 +94,15 @@ def create_dataset_release(
         str(value)
         for value in audited.get("aggregation_method", pd.Series(dtype=str)).dropna().unique()
     )
+    source_quality_warnings = []
+    for source_manifest in manifest_paths:
+        try:
+            source_data = json.loads(source_manifest.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid source manifest JSON: {source_manifest}") from exc
+        warning = source_data.get("unit_quality_warning")
+        if isinstance(warning, str) and warning.strip():
+            source_quality_warnings.append(warning.strip())
     measurement_kinds = sorted(
         str(value)
         for value in audited.get("measurement_kind", pd.Series(["individual_measurement"])).unique()
@@ -134,7 +143,14 @@ def create_dataset_release(
             f"- Conflicting groups: {quality.get('n_conflicting_groups', 0)}\n\n"
             "This release contains in-vitro enzyme kinetic observations. "
             "Conflicts are disclosed, not averaged. License terms require manual review "
-            "against the exact upstream snapshot. Verify the manifest before use.\n",
+            "against the exact upstream snapshot. Verify the manifest before use.\n"
+            + (
+                "\n## Scientific cautions\n\n"
+                + "\n".join(f"- {warning}" for warning in source_quality_warnings)
+                + "\n"
+                if source_quality_warnings
+                else ""
+            ),
             encoding="utf-8",
         )
         artifact_names = (
@@ -167,6 +183,7 @@ def create_dataset_release(
             "source_url": source_url,
             "source_version": source_version,
             "source_manifests": manifest_artifacts,
+            "source_quality_warnings": source_quality_warnings,
             "rejection_sources": [
                 {"name": path.name, "sha256": sha256_file(path)} for path in rejected_paths
             ],

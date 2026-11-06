@@ -46,7 +46,7 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
     assert accepted["source_record_id"].tolist() == ["0007", "0008"]
     assert accepted["canonical_value"].tolist() == pytest.approx([2.5e-6, 4.0e-6])
     assert accepted["source_value"].tolist() == [2.5, 4.0]
-    assert accepted["original_unit"].eq("mM").all()
+    assert accepted["unit"].eq("mM").all()
     assert accepted["measurement_kind"].tolist() == ["source_aggregated", "source_aggregated"]
     assert accepted["aggregation_method"].iloc[0].startswith("geometric_mean")
     assert accepted["ph"].tolist() == [7.0, 6.5]
@@ -81,7 +81,7 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
         "substrate_smiles": ["CCO", "CCN"],
         "value": [0.003, 0.02],
         "log10_value": [-2.5229, -1.6990],
-        "log10km_mean": [-2.5229, -1.6990],
+        "log10km_mean": [math.log10(0.003), math.log10(0.02)],
         "temperature": [25.0, 37.0],
         "ph": [7.0, 6.5],
         "ec": ["1.1.1.1", "2.7.1.1"],
@@ -124,7 +124,7 @@ def test_catpred_rejects_ki_and_missing_aggregate_column(tmp_path):
     with pytest.raises(ValueError, match="Missing CatPred aggregate target column"):
         normalize_catpred_csv(
             source, tmp_path / "km", target="km", unit="mM",
-            source_version="fixture", license_id="CC-BY-4.0",
+            source_version="abcdef1", license_id="CC-BY-4.0",
         )
 
 

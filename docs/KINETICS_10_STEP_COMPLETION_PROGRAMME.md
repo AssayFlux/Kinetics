@@ -30,15 +30,30 @@ Every scientific result must be traceable to versioned inputs, code, configurati
 
 **Evidence:** CI runs, migration tests, installation guide, architecture decisions, dependency inventory, security checklist.
 
-## Step 2 — Kinetics-KDB: scientific data foundation
+## Step 2 — Kinetics-KDB: scientific data foundation (IN PROGRESS)
 
 **Purpose:** Establish an auditable, versioned source of enzyme kinetic observations.
 
-**Work:** Canonical Km/kcat records; units and original values; enzyme/protein and substrate identities; organism and assay context; source record, citation, license, and provenance; source-specific public dataset adapters with explicit mappings; unit validation; row-level rejection audit; duplicate and conflict review; sequence/chemical identity normalization; immutable dataset releases with manifests and checksums.
+**Implemented engineering foundation:**
+- Canonical one-target-per-row Km/kcat observations, original source fields, source-version and license metadata, row-level rejection audits, and SQLite persistence.
+- CatPred-DB downloader pins the Hugging Face dataset revision separately from the GitHub processing-code revision; records hashes for random train/validation/test tables and published sequence-cluster test files.
+- CatPred adapter uses the target-specific aggregate columns `log10km_mean` for Km and `log10kcat_max` for kcat, converts these log10 aggregates to linear values, and normalizes Km from mM to M.
+- The representative `value` and `log10_value` columns are preserved separately; records are explicitly marked `source_aggregated` with geometric-mean or maximum aggregation semantics.
+- Source clipping bounds, source-row locators, processing revisions, dataset citation, license declaration, all upstream columns, pH, temperature, EC, taxonomy and accessions are retained in provenance manifests.
+- Sequence and stereochemistry-preserving SMILES identity normalization, deterministic internal content IDs, row-level identity rejection, same-source conflict audit and cross-source duplicate candidates.
+- Immutable dataset releases combine rejection audits, retain acquisition/curation/identity manifests, emit data cards and quality reports, hash artifacts, propagate source-quality warnings, and support verification.
 
-**Acceptance:** Every accepted observation traces to a source record and version; rejected rows have machine-readable reasons; conversions are dimensionally tested and raw values retained; dataset releases can be verified from documented snapshots; licensing is visible before export; conflicting observations are never silently overwritten or averaged.
+**Acceptance:** Every accepted observation traces to a source row and immutable source version; rejected rows have machine-readable reasons; target-specific unit conversions are tested and source values retained; duplicate/conflict candidates remain visible; release manifests and all artifacts verify; license and source-quality caveats are visible before export.
 
-**Evidence:** Adapter tests, source manifests, curation reports, checksum verification, data cards, release procedure.
+**Evidence:** CatPred schema/adapter tests, aggregate target and clipping semantics tests, source revision and unit-warning assertions, identity CLI tests, duplicate-candidate tests, immutable release/checksum tests, and Python 3.10–3.12 CI. See `DATASETS.md`, `docs/WORKFLOW.md`, and `docs/IMPLEMENTATION_STATUS.md`.
+
+**Remaining blockers before Step 2 can be declared complete:**
+- No real public CatPred snapshot has yet been downloaded, normalized, and released in this repository; current tests use fixtures.
+- CatPred is an aggregate benchmark source, not a collection of individual assay measurements. Its public table does not retain per-row original BRENDA/SABIO record IDs, units, DOI, or assay IDs.
+- The upstream processing code carries BRENDA values without per-row unit metadata, and its SABIO kcat `min^-1` conversion multiplies by 60, opposite to the standard conversion to `s^-1`. CatPred kcat absolute scale must be audited against original source records before scientific use.
+- Direct BRENDA and SABIO adapters require current schema, access, and license review; these are not claimed as implemented.
+
+Do not treat the CatPred aggregate as individually replicated assay data or claim its kcat scale is independently validated. Step 2 remains open until a real, reviewed source snapshot and release pass the acceptance checks.
 
 ## Step 3 — Protein and chemical representation
 

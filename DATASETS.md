@@ -20,7 +20,7 @@ python scripts/download_public_datasets.py --source catpred-db
 python scripts/inspect_public_datasets.py --input-dir data/public/catpred-db
 ```
 
-The download script saves a manifest containing source URLs, retrieval time, byte counts and SHA-256 hashes. It does not modify, merge or relabel the upstream data.
+The download script saves a manifest containing separate pinned dataset/processing revisions, source URLs, retrieval time, byte counts and SHA-256 hashes. It downloads the random train/validation/test files and the published sequence-cluster test files (kcat 20/40/60/80/99%; Km 40/60/80/99%). It does not modify, merge or relabel upstream data.
 
 ## Additional sources
 
@@ -59,14 +59,14 @@ These are supporting annotation sources, not substitutes for measured Km or kcat
 
 ## Compute-conscious plan
 
-Start with CatPred-DB's published processed CSVs and small sequence-clustered test splits. Inspect their columns and units before writing the canonical adapter. Cache protein embeddings once, use a compact baseline first, and avoid downloading large structure/model artifacts until they are justified.
+Start with CatPred-DB's published processed CSVs and sequence-clustered test splits. Inspect the pinned snapshot before running the canonical adapter; its aggregate targets and upstream unit caveats are documented below. Cache protein embeddings once, use a compact baseline first, and avoid downloading large structure/model artifacts until they are justified.
 
 No dataset is committed to this repository, and no model has been trained from these downloads yet.
 
 
 ## Canonical normalization adapter
 
-The adapter follows the documented CatPred-DB fields where available: `sequence`, `uniprot`, `reactant_smiles`, `value`, `temperature`, `ph`, `ec`, `taxonomy_id`, `sequence_source`, and published split/cluster columns. The published table schema does not define a native per-row source record ID, DOI, or assay ID. If no source ID column is documented for the pinned snapshot, the adapter generates a deterministic file-hash/target/row locator and explicitly labels it as an import locator, not an upstream experimental record ID.
+The adapter follows the documented CatPred-DB fields where available: `sequence`, `uniprot`, Km `substrate_smiles`, kcat `reactant_smiles`, `value`, `log10_value`, `log10km_mean`, `log10kcat_max`, `temperature`, `ph`, `ec`, `taxonomy_id`, `sequence_source`, and published split/cluster columns. The published table schema does not define a native per-row source record ID, DOI, or assay ID. If no source ID column is documented for the pinned snapshot, the adapter generates a deterministic file-hash/target/row locator and explicitly labels it as an import locator, not an upstream experimental record ID.
 
 The dataset card documents `temperature` in degrees Celsius; the adapter converts it to kelvin. The upstream merge script creates `log10kcat_max` as the maximum log10 kcat across sequence/substrate groups and `log10km_mean` as the mean log10 Km (a geometric mean on the linear scale). The row-level `value` and `log10_value` fields are not the aggregate target; the adapter exponentiates the target-specific aggregate field and preserves the representative row fields separately. The upstream merge script clips Km to [1e-8, 1e4] mM and kcat to [1e-6, 1e6] s^-1 before calculating the aggregate columns. These are source-aggregated benchmark values, not individual assay-level observations. Underlying replicate values and full assay provenance are not reconstructed. The CatPred pipeline convention is Km in mM and kcat in s^-1. The adapter requires that target-specific unit declaration and normalizes Km to M. However, the upstream processing code does not retain BRENDA per-row units, and its SABIO kcat conversion for min^-1 multiplies by 60 (opposite to the standard conversion to s^-1). The curation manifest records this unit-quality warning; CatPred kcat should not be treated as an independently validated absolute reference until source-level unit provenance is audited. Ki is excluded from Km/kcat imports.
 
@@ -75,7 +75,7 @@ Example for the pinned CatPred train split (the unit conventions and upstream ca
 ```bash
 python -m kinetics_core.catpred \
   --input data/public/catpred-db/km/km_train.csv --target km --unit mM \
-  --source-version 44409e6 --processing-revision 931583821ff875e873002730fbbdf1047acfde77 \\
+  --source-version 44409e6 --processing-revision 931583821ff875e873002730fbbdf1047acfde77 \
   --license-id CC-BY-4.0 \
   --output-dir data/processed/catpred-db/km
 ```

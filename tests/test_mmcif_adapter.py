@@ -34,7 +34,7 @@ _atom_site.pdbx_PDB_model_num
 ATOM 1 C CA . ALA A 1 1 ? 0.0 0.0 0.0 1.0 20.0 1 ALA A CA 1
 ATOM 2 C CA . CYS A 1 2 ? {second_x} 4.0 0.0 1.0 20.0 2 CYS {second_chain} CA 1
 #
-""".encode("utf-8")
+""".encode()
 
 
 def fixture(content):
@@ -69,7 +69,7 @@ def test_mmcif_rejects_digest_mismatch_and_unregistered_chain():
     content = cif_text()
     _, structure, _ = fixture(content)
     with pytest.raises(ValueError, match="digest"):
-        parse_mmcif_coordinates(content + b"# tampered\n", structure)
+        parse_mmcif_coordinates(content + b"# tampered\\n", structure)
 
     bad = cif_text(second_chain="B")
     _, bad_structure, _ = fixture(bad)

@@ -15,16 +15,18 @@ Review the current dataset card and upstream repository terms. Keep raw files un
 
 ## 2. Normalize each target independently
 
-The CatPred paper reports that each published kcat value is a maximum across measurements for an enzyme-sequence/substrate pair and each Km value is a geometric mean. These are source-aggregated benchmark statistics, not individual assay measurements. The canonical record stores `measurement_kind=source_aggregated` and the target-specific aggregation method. Underlying replicate measurements are not recoverable from this table. The documented CatPred-DB schema does not define a native source row identifier, DOI, or assay ID. If no native ID exists in the pinned snapshot, the adapter creates a deterministic file-hash/target/row locator and labels it as an import locator, not an upstream experimental ID. It maps published fields by default (`value`, `sequence`, `reactant_smiles`, `uniprot`, `ph`, and Celsius `temperature`); Celsius is converted to kelvin. Verify the raw `value` unit for the exact snapshot and supply it explicitly using `--unit` or `--unit-column`. No unit is guessed.
+The CatPred paper reports that each published kcat value is a maximum across measurements for an enzyme-sequence/substrate pair and each Km value is a geometric mean. These are source-aggregated benchmark statistics, not individual assay measurements. The canonical record stores `measurement_kind=source_aggregated` and the target-specific aggregation method. Underlying replicate measurements are not recoverable from this table.
+
+The documented CatPred-DB schema does not define a native source row identifier, DOI, or assay ID. When no native ID exists in the pinned snapshot, the adapter creates a deterministic file-hash/target/row locator and labels it as an import locator, not an upstream experimental ID. It maps the published fields by default: `value`, `sequence`, `uniprot`, `ph`, and Celsius `temperature`. Km tables use `substrate_smiles`; kcat tables use `reactant_smiles`. Celsius is converted to kelvin. Verify raw `value` units for the exact snapshot and supply `--unit` or `--unit-column`; no unit is guessed.
 
 ```bash
-python -m kinetics_core.catpred --input data/public/catpred-db/km_processed.csv --target km --record-id-column SOURCE_ID --value-column KM_VALUE --unit mM --sequence-column SEQUENCE --smiles-column SMILES \
-  --ph-column PH --temperature-k-column TEMPERATURE_K \
-  --assay-id-column ASSAY_ID --doi-column DOI \
-  --output-dir data/processed/catpred-db
+python -m kinetics_core.catpred \
+  --input data/public/catpred-db/km/km_train.csv --target km \
+  --unit VERIFIED_UNIT --source-version 44409e6 --license-id CC-BY-4.0 \
+  --output-dir data/processed/catpred-db/km
 ```
 
-Repeat for kcat with its own source file and independently verified unit. Supply `--record-id-column` only if the exact source snapshot documents a native stable row identifier. DOI and assay IDs are not fabricated. Raw inputs remain unchanged; use distinct output directories for Km and kcat.
+Repeat separately for kcat using its own file and independently verified unit. Preserve the source train/validation/test partitions; do not concatenate them into one split. The adapter preserves every source column, including accession, taxonomy, sequence provenance, reaction fields, and published cluster labels. Missing DOI, assay IDs, and organism names remain missing.
 
 ### Legacy paired-row CSV migration (only when the source really contains paired measurements)
 
@@ -47,28 +49,41 @@ Replace the example source, ID column, units, version, and license with verified
 
 ## 2b. Normalize identities and review duplicates
 
-Run the identity command on the canonical table to validate sequence symbols, canonicalize SMILES with RDKit (preserving stereochemistry), and create deterministic content hashes. These hashes are internal content identities, not UniProt or PubChem accessions. Invalid supplied identities are returned in a row-level rejection table; missing identities remain missing. Keep source accession and raw source strings.\n\n```bash\nkinetics-research normalize-identities \\\n  --input data/processed/catpred-db/km/km_observations.csv \\\n  --output-dir data/processed/catpred-db/km/identities\n```
+Validate sequence symbols, canonicalize substrate SMILES with RDKit while preserving stereochemistry, and generate deterministic content hashes. These hashes are internal content identities, not UniProt or PubChem accessions. Invalid supplied identities are returned in a row-level rejection table; missing identities remain missing. Keep source accessions and raw source strings.
 
-Run `kinetics-research audit`. Exact repeats and conflicting duplicate source IDs are annotated and retained; no averaging or silent overwrite occurs. Review conflict groups against assay context before release. Similar enzyme/substrate pairs across distinct source records are not automatically duplicate experiments.
+```bash
+kinetics-research normalize-identities \
+  --input data/processed/catpred-db/km/km_observations.csv \
+  --output-dir data/processed/catpred-db/km/identities
+```
+
+Run `kinetics-research audit`. Exact repeats and conflicting duplicate source IDs are annotated and retained; no averaging or silent overwrite occurs. Cross-source identity/value/context matches are separately reported as potential duplicate candidates. Review candidates against assay context before release; similar enzyme/substrate pairs are not automatically duplicate experiments.
 
 ## 2c. Create and verify an immutable release
 
-After curator review and verification of the exact source version, license, and citation, create a release. The release manifest lists measurement kinds and aggregation methods, and the quality report keeps duplicate/conflict candidates visible without collapsing rows. This command requires explicit license and citation metadata, refuses to overwrite an existing release directory, records SHA-256 hashes for each release artifact, and writes a data card and quality report.
+Create a release only after curator review and verification of the exact source version, dataset license, citation, and units. The release combines all rejection audits, retains the acquisition and curation manifests, writes a data card and quality reports, and hashes each artifact. Existing release directories cannot be overwritten.
 
 ```bash
 kinetics-research release \
-  --observations data/processed/catpred-db/km/km_observations.csv \
+  --observations data/processed/catpred-db/km/identities/observations_with_identities.csv \
   --rejected data/processed/catpred-db/km/km_rejected_rows.csv \
-  --output-dir data/releases/catpred-km-v1 \
-  --dataset-id catpred-km-v1 --dataset-name "CatPred Km" \
-  --source CatPred-DB --source-version REVISION_SHA \
-  --license-id VERIFIED_LICENSE \
-  --citation "Boorla and Maranas, Nat Commun (2025), doi:10.1038/s41467-025-57215-9"
+  --rejected data/processed/catpred-db/km/identities/identity_rejected_rows.csv \
+  --output-dir data/releases/catpred-km-train-v1 \
+  --dataset-id catpred-km-train-v1 --dataset-name "CatPred Km train split" \
+  --source CatPred-DB --source-version 44409e6 \
+  --license-id CC-BY-4.0 \
+  --citation "Boorla and Maranas, Nat Commun (2025), doi:10.1038/s41467-025-57215-9" \
+  --source-url https://huggingface.co/datasets/RosettaCommons/CatPred-DB \
+  --source-manifest data/public/catpred-db/manifest.json \
+  --source-manifest data/processed/catpred-db/km/km_curation_manifest.json \
+  --source-manifest data/processed/catpred-db/km/identities/identity_manifest.json
+  --source-manifest data/public/catpred-db/manifest.json \
+  --source-manifest data/processed/catpred-db/km/km_curation_manifest.json
 
-kinetics-research verify-release --release-dir data/releases/catpred-km-v1
+kinetics-research verify-release --release-dir data/releases/catpred-km-train-v1
 ```
 
-The Hugging Face CatPred-DB dataset card declares CC-BY-4.0 for the dataset. The journal article's rights statement is CC-BY-NC-ND and is not interchangeable with the dataset card's data license; underlying source databases may carry additional conditions. Do not treat a release as license-cleared unless the operator has inspected the exact dataset revision and source terms. A generated row locator is not a source-level experimental citation.
+The Hugging Face dataset card declares CC-BY-4.0 for the dataset. The journal article's rights statement is CC-BY-NC-ND and is not interchangeable with the dataset card's data license; underlying source databases may carry additional conditions. The release manifest records the license as operator-supplied and requiring manual source-term review. A generated row locator is not a source-level experimental citation.
 
 ## 2d. Audit and persist a canonical snapshot
 

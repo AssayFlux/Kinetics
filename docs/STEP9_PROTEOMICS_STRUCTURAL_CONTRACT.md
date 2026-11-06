@@ -1,6 +1,6 @@
 # Step 9 — Proteomics and structural-biology domain contract
 
-**Status: contract proposal; no domain adapter or scientific benchmark is claimed by this document.**
+**Status: first implementation increment delivered for sequence/structure records and fixed-column PDB parsing; broader domain acceptance remains open.**
 
 ## Why this is the first expansion
 
@@ -90,7 +90,7 @@ A first release is eligible for review only after all of the following evidence 
 - benchmark report with coverage, failure modes, runtime and memory;
 - researcher review of reports and warnings.
 
-Until these gates pass, this is a proposed contract, not an implemented Step 9 capability.
+Until these gates pass, the implemented PDB/record subset must not be described as a complete proteomics or structural-biology workbench.
 
 ## Implemented validation layer (2026-11-06)
 

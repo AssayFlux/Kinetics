@@ -54,9 +54,15 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+      - name: Set up Python for interoperability test
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - name: Configure native engine
         run: cmake -S native -B build/native -DKINETICS_BUILD_TESTS=ON
       - name: Build native engine
         run: cmake --build build/native --config Release
       - name: Run native reference tests
         run: ctest --test-dir build/native --build-config Release --output-on-failure
+      - name: Verify Python/C++ scene interoperability
+        run: python scripts/verify_native_bridge.py

@@ -174,7 +174,10 @@ def build_parser() -> argparse.ArgumentParser:
     multi.add_argument("--alpha", type=float, default=1e-4)
     multi.add_argument("--max-iter", type=int, default=500)
     multi.add_argument("--conformal-alpha", type=float, default=0.1)
-    multi.add_argument("--git-revision", help="Full 40-character source commit SHA (defaults to GITHUB_SHA)")
+    multi.add_argument(
+        "--git-revision",
+        help="Full 40-character source commit SHA (defaults to GITHUB_SHA)",
+    )
 
     predict_multi = subparsers.add_parser(
         "predict-multi",

@@ -167,6 +167,18 @@ Step 4 is being implemented as a software engine, not validated as a scientific 
 
 **Acceptance:** A researcher completes a documented workflow without manual script stitching; every result links to inputs, dataset, model, and manifest; errors/job states are visible and recoverable; primary workflows pass user acceptance tests; accessibility and operations documentation exist.
 
+**Engineering implementation in progress:**
+- Optional local-first FastAPI workbench with a semantic, responsive browser UI; loopback-only launcher; project/workspace creation; bounded dataset uploads with atomic writes and SHA-256 checksums.
+- Versioned SQLite schema 2 adds project, durable job-state, and artifact-registry tables through an additive migration from schema 1.
+- Fixed allow-list maps researcher actions to the existing `kinetics-research` CLI without a shell. Supports legacy import, quality audit, identity/scaffold/sequence processing, feature building, partitions, classical and multimodal training/inference, dataset persistence/release and release verification.
+- Project-relative path validation, symlink-escape checks, no-overwrite output policy, bounded worker concurrency, persisted job states, cancellation, timeouts, logs, output artifact hashing, checksum-verified downloads and provenance-aware Markdown reports.
+- Accessible UI primitives: semantic headings/forms/tables, explicit labels, keyboard focus, live status, responsive layout and system color-scheme support. API and UI are separate from scientific computation.
+- Added installation/operations/accessibility guide and integration tests for schema migration, path confinement, upload, a real quality-audit subprocess, artifact download/hash integrity and report generation.
+
+**Current acceptance status:** Software implementation is under CI review. The local API and UI are not a remote multi-user service; the launcher intentionally binds only to loopback. The workbench can queue individual research actions but does not yet claim a complete end-to-end real-data workflow, validated uncertainty visualization, desktop packaging/update/rollback, or researcher usability sign-off.
+
+**Remaining before Step 8 can be declared complete:** all workbench integration and cross-platform packaging checks pass; execute the complete curation → partitions → features → model comparison/training → inference → report flow on a reviewed licensed dataset; measure representative ESM-2/MMseqs2 runtime, memory, cancellation and recovery; perform keyboard/screen-reader and researcher usability sessions; document installation, upgrade and rollback; verify uncertainty/calibration/applicability displays against real model outputs; retain acceptance evidence.
+
 **Evidence:** Workflow tests, usability findings, user guide, release candidate.
 
 ## Step 9 — Multidisciplinary scientific expansion

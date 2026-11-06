@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Kinetics Research Workbench</title>
+  <style>
+    :root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color-scheme: light dark; }
+    body { margin: 0; background: Canvas; color: CanvasText; line-height: 1.5; }
+    header { padding: 1.25rem clamp(1rem, 4vw, 3rem); border-bottom: 1px solid GrayText; }
+    main { max-width: 1440px; margin: auto; padding: 1.5rem clamp(1rem, 4vw, 3rem) 4rem; }
+    h1 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.25rem); }
+    h2 { font-size: 1.15rem; margin-top: 0; }
+    .muted { color: GrayText; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1rem; }
+    section { border: 1px solid GrayText; border-radius: 12px; padding: 1rem; min-width: 0; }
+    label { display: block; font-weight: 650; margin: .75rem 0 .25rem; }
+    input, select, textarea, button { font: inherit; }
+    input, select, textarea { box-sizing: border-box; width: 100%; padding: .65rem; border: 1px solid GrayText; border-radius: 7px; background: Canvas; color: CanvasText; }
+    textarea { min-height: 190px; font-family: ui-monospace, monospace; font-size: .88rem; }
+    button, .link-button { border: 1px solid GrayText; border-radius: 7px; padding: .55rem .85rem; background: ButtonFace; color: ButtonText; cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible { outline: 3px solid Highlight; outline-offset: 2px; }
+    button.primary { background: Highlight; color: HighlightText; border-color: Highlight; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .8rem; }
+    .status { min-height: 1.5rem; padding: .5rem 0; }
+    .scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th, td { text-align: left; vertical-align: top; padding: .55rem; border-bottom: 1px solid GrayText; overflow-wrap: anywhere; }
+    th { font-weight: 700; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 22rem; overflow: auto; background: color-mix(in srgb, CanvasText 7%, Canvas); padding: .75rem; border-radius: 7px; }
+    a { color: LinkText; }
+    .wide { grid-column: 1 / -1; }
+    @media (max-width: 600px) { main { padding-top: 1rem; } section { padding: .8rem; } }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Kinetics Research Workbench</h1>
+  <p class="muted">Local-first workspace for reproducible enzyme-kinetics research. Scientific computation runs through the Kinetics Python interfaces.</p>
+</header>
+<main>
+  <p id="status" class="status" role="status" aria-live="polite">Connecting to local workbench…</p>
+  <div class="grid">
+    <section>
+      <h2>Project workspace</h2>
+      <label for="project">Active project</label>
+      <select id="project" aria-describedby="project-help"></select>
+      <p id="project-help" class="muted">Projects keep inputs, outputs, reports and logs inside a managed workspace directory.</p>
+      <form id="new-project">
+        <label for="project-name">New project name</label>
+        <input id="project-name" name="name" maxlength="80" required>
+        <label for="project-description">Description</label>
+        <input id="project-description" name="description" maxlength="1000">
+        <div class="actions"><button class="primary" type="submit">Create project</button></div>
+      </form>
+    </section>
+    <section>
+      <h2>Dataset intake</h2>
+      <label for="dataset-file">Upload a dataset into the active project</label>
+      <input id="dataset-file" type="file" accept=".csv,.tsv,.parquet,.json,.jsonl,.npz,.safetensors,.fasta,.fa">
+      <p class="muted">Uploads are limited to 500 MiB, stored under the project datasets folder, and hashed. Source terms and licenses still need review before use.</p>
+      <div class="actions"><button id="upload-file" type="button">Upload dataset</button></div>
+    </section>
+    <section>
+      <h2>Research workflow</h2>
+      <label for="command">Workflow action</label>
+      <select id="command">
+        <option value="import-legacy">Import legacy paired observations</option>
+        <option value="audit">Quality audit</option>
+        <option value="persist">Persist curated dataset</option>
+        <option value="release">Create immutable dataset release</option>
+        <option value="verify-release">Verify immutable dataset release</option>
+        <option value="normalize-identities">Normalize protein / compound identities</option>
+        <option value="annotate-scaffolds">Annotate chemical scaffolds</option>
+        <option value="cluster-sequences">Cluster protein sequences (MMseqs2)</option>
+        <option value="build-features">Build ESM-2 / Morgan / graph features</option>
+        <option value="partition">Create leakage-aware partitions</option>
+        <option value="compare">Compare classical models</option>
+        <option value="fit">Fit target-specific model</option>
+        <option value="fit-multi">Fit multimodal model</option>
+        <option value="predict-multi">Run multimodal inference</option>
+      </select>
+      <label for="parameters">Workflow parameters (JSON)</label>
+      <textarea id="parameters" spellcheck="false" aria-describedby="parameter-help">{
+  "input": "datasets/observations.csv",
+  "output_dir": "runs/audit-001"
+}</textarea>
+      <p id="parameter-help" class="muted">Use project-relative paths. Outputs must be new paths. Only allow-listed Kinetics research actions are accepted; shell commands are never run.</p>
+      <div class="actions"><button id="submit-job" class="primary" type="button">Queue workflow</button></div>
+    </section>
+    <section class="wide">
+      <h2>Dataset registry</h2>
+      <p class="muted">Version, license, source and checksum metadata from the local Kinetics registry.</p>
+      <div class="scroll"><table><thead><tr><th>Dataset</th><th>Source / version</th><th>License</th><th>SHA-256</th></tr></thead><tbody id="datasets"></tbody></table></div>
+    </section>
+    <section class="wide">
+      <h2>Experiment registry</h2>
+      <div class="scroll"><table><thead><tr><th>Run</th><th>Model</th><th>Status</th><th>Seed</th><th>Metrics / output</th></tr></thead><tbody id="experiments"></tbody></table></div>
+    </section>
+    <section class="wide">
+      <h2>Jobs and experiment history</h2>
+      <div class="scroll"><table><thead><tr><th>Created</th><th>Action</th><th>Status</th><th>Result</th><th>Actions</th></tr></thead><tbody id="jobs"></tbody></table></div>
+      <h3>Selected job log</h3>
+      <pre id="job-log" aria-label="Selected job log">Select a job to inspect its output.</pre>
+    </section>
+    <section class="wide">
+      <h2>Artifact browser</h2>
+      <div class="scroll"><table><thead><tr><th>Artifact</th><th>Type</th><th>Size</th><th>SHA-256</th><th>Open</th></tr></thead><tbody id="artifacts"></tbody></table></div>
+    </section>
+  </div>
+</main>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+let activeProject = "";
+function announce(message) { $("status").textContent = message; }
+async function api(path, options = {}) {
+  const response = await fetch(path, {
+    ...options,
+    headers: { "Content-Type": "application/json", ...(options.headers || {}) }
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(body.detail || response.statusText);
+  return body;
+}
+function cell(row, value) {
+  const td = document.createElement("td");
+  td.textContent = value == null ? "" : String(value);
+  row.appendChild(td);
+  return td;
+}
+function clear(node) { node.replaceChildren(); }
+async function loadProjects() {
+  const projects = await api("/api/v1/projects");
+  const select = $("project");
+  clear(select);
+  for (const project of projects) {
+    const option = new Option(project.name, project.project_id);
+    select.add(option);
+  }
+  if (!projects.length) {
+    activeProject = "";
+    announce("Create a project to begin.");
+    return;
+  }
+  activeProject = projects.some(p => p.project_id === activeProject)
+    ? activeProject : projects[0].project_id;
+  select.value = activeProject;
+  await refresh();
+}
+async function refresh() {
+  if (!activeProject) return;
+  const [datasets, jobs, artifacts, experiments] = await Promise.all([
+    api("/api/v1/datasets"),
+    api("/api/v1/projects/" + encodeURIComponent(activeProject) + "/jobs"),
+    api("/api/v1/projects/" + encodeURIComponent(activeProject) + "/artifacts"),
+    api("/api/v1/experiments")
+  ]);
+  clear($("datasets"));
+  for (const item of datasets) {
+    const tr = document.createElement("tr");
+    cell(tr, item.name + " (" + item.dataset_id + ")");
+    cell(tr, [item.source, item.version].filter(Boolean).join(" / "));
+    cell(tr, item.license);
+    cell(tr, item.checksum_sha256);
+    $("datasets").appendChild(tr);
+  }
+  clear($("experiments"));
+  for (const item of experiments) {
+    const tr = document.createElement("tr");
+    cell(tr, item.run_id);
+    cell(tr, item.model_name);
+    cell(tr, item.status);
+    cell(tr, item.random_seed);
+    cell(tr, JSON.stringify(item.metrics || {}).slice(0, 900));
+    $("experiments").appendChild(tr);
+  }
+  clear($("jobs"));
+  for (const item of jobs) {
+    const tr = document.createElement("tr");
+    cell(tr, item.created_at);
+    cell(tr, item.command);
+    cell(tr, item.state);
+    cell(tr, JSON.stringify(item.result || {}).slice(0, 700) || item.error || "");
+    const actions = document.createElement("td");
+    const log = document.createElement("button");
+    log.type = "button"; log.textContent = "View log";
+    log.addEventListener("click", () => loadLog(item.job_id));
+    actions.appendChild(log);
+    if (["queued", "running"].includes(item.state)) {
+      const cancel = document.createElement("button");
+      cancel.type = "button"; cancel.textContent = "Cancel";
+      cancel.addEventListener("click", async () => {
+        try { await api("/api/v1/jobs/" + item.job_id + "/cancel", { method: "POST" }); await refresh(); }
+        catch (error) { announce(error.message); }
+      });
+      actions.appendChild(cancel);
+    }
+    if (item.state === "succeeded") {
+      const report = document.createElement("button");
+      report.type = "button"; report.textContent = "Build report";
+      report.addEventListener("click", async () => {
+        try {
+          const result = await api("/api/v1/projects/" + activeProject + "/jobs/" + item.job_id + "/report", { method: "POST" });
+          announce("Report created: " + result.relative_path);
+          await refresh();
+        } catch (error) { announce(error.message); }
+      });
+      actions.appendChild(report);
+    }
+    tr.appendChild(actions);
+    $("jobs").appendChild(tr);
+  }
+  clear($("artifacts"));
+  for (const item of artifacts) {
+    const tr = document.createElement("tr");
+    cell(tr, item.relative_path);
+    cell(tr, item.artifact_type);
+    cell(tr, item.byte_size);
+    cell(tr, item.checksum_sha256);
+    const td = document.createElement("td");
+    const link = document.createElement("a");
+    link.textContent = "Download";
+    link.href = "/api/v1/projects/" + encodeURIComponent(activeProject) + "/artifacts/" + encodeURIComponent(item.artifact_id);
+    td.appendChild(link); tr.appendChild(td); $("artifacts").appendChild(tr);
+  }
+  announce("Workbench ready · " + jobs.length + " jobs · " + artifacts.length + " artifacts");
+}
+async function loadLog(jobId) {
+  try {
+    const result = await api("/api/v1/projects/" + activeProject + "/jobs/" + jobId + "/log");
+    $("job-log").textContent = result.log || "No log output yet.";
+  } catch (error) { announce(error.message); }
+}
+$("project").addEventListener("change", async event => {
+  activeProject = event.target.value;
+  await refresh();
+});
+$("new-project").addEventListener("submit", async event => {
+  event.preventDefault();
+  try {
+    const project = await api("/api/v1/projects", {
+      method: "POST",
+      body: JSON.stringify({
+        name: $("project-name").value,
+        description: $("project-description").value
+      })
+    });
+    activeProject = project.project_id;
+    $("project-name").value = "";
+    $("project-description").value = "";
+    await loadProjects();
+    announce("Project created.");
+  } catch (error) { announce(error.message); }
+});
+$("upload-file").addEventListener("click", async () => {
+  if (!activeProject) { announce("Create or select a project first."); return; }
+  const file = $("dataset-file").files[0];
+  if (!file) { announce("Choose a dataset file first."); return; }
+  const form = new FormData();
+  form.append("file", file);
+  try {
+    const response = await fetch("/api/v1/projects/" + activeProject + "/uploads", {
+      method: "POST", body: form
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.detail || response.statusText);
+    $("dataset-file").value = "";
+    announce("Uploaded " + result.relative_path + " · SHA-256 " + result.checksum_sha256);
+    await refresh();
+  } catch (error) { announce(error.message); }
+});
+$("submit-job").addEventListener("click", async () => {
+  if (!activeProject) { announce("Create or select a project first."); return; }
+  try {
+    const parameters = JSON.parse($("parameters").value);
+    const result = await api("/api/v1/projects/" + activeProject + "/jobs", {
+      method: "POST",
+      body: JSON.stringify({ command: $("command").value, parameters })
+    });
+    announce("Workflow queued: " + result.job_id);
+    await refresh();
+  } catch (error) { announce(error.message); }
+});
+loadProjects().catch(error => announce(error.message));
+window.setInterval(() => refresh().catch(error => announce(error.message)), 5000);
+</script>
+</body>
+</html>

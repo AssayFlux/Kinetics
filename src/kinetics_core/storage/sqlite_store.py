@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator, Mapping, Sequence
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS datasets (
@@ -143,6 +143,48 @@ CREATE TABLE IF NOT EXISTS provenance_events (
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS idx_provenance_subject ON provenance_events(subject_id);
+CREATE TABLE IF NOT EXISTS workbench_projects (
+    project_id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    root_path TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS workbench_jobs (
+    job_id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES workbench_projects(project_id),
+    command TEXT NOT NULL,
+    state TEXT NOT NULL CHECK(state IN
+        ('queued','running','succeeded','failed','cancelled','interrupted')),
+    parameters_json TEXT NOT NULL DEFAULT '{}',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    error TEXT,
+    log_path TEXT,
+    cancellation_requested INTEGER NOT NULL DEFAULT 0
+        CHECK(cancellation_requested IN (0,1)),
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    started_at TEXT,
+    finished_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_workbench_jobs_project
+    ON workbench_jobs(project_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_workbench_jobs_state
+    ON workbench_jobs(state, created_at);
+CREATE TABLE IF NOT EXISTS workbench_artifacts (
+    artifact_id TEXT PRIMARY KEY,
+    project_id TEXT NOT NULL REFERENCES workbench_projects(project_id),
+    job_id TEXT REFERENCES workbench_jobs(job_id),
+    relative_path TEXT NOT NULL,
+    artifact_type TEXT NOT NULL,
+    checksum_sha256 TEXT NOT NULL,
+    byte_size INTEGER NOT NULL,
+    media_type TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(project_id, relative_path, checksum_sha256)
+);
+CREATE INDEX IF NOT EXISTS idx_workbench_artifacts_project
+    ON workbench_artifacts(project_id, created_at DESC);
 """
 
 class KineticsSQLite:

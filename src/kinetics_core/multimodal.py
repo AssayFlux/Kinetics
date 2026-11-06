@@ -131,11 +131,6 @@ def _graph_summary(payload: dict[str, np.ndarray]) -> np.ndarray:
 
 def _multimodal_design(payload: dict[str, np.ndarray]) -> tuple[np.ndarray | pd.DataFrame, bool]:
     """Join base ESM/Morgan features, graph summaries and optional raw context."""
-    _verified_feature_manifest(
-        feature_archive,
-        expected_target=str(payload["target"].reshape(-1)[0]),
-        expected_rows=len(payload["X"]),
-    )
     X = np.asarray(payload["X"], dtype=np.float32)
     if X.ndim != 2 or not np.isfinite(X).all():
         raise ValueError("Base protein/chemical feature matrix must be finite and two-dimensional")
@@ -566,6 +561,11 @@ def predict_multimodal_model(
     missing = required - set(payload)
     if missing:
         raise ValueError(f"Inference archive is missing arrays: {sorted(missing)}")
+    _verified_feature_manifest(
+        feature_archive,
+        expected_target=str(payload["target"].reshape(-1)[0]),
+        expected_rows=len(payload["X"]),
+    )
     X = np.asarray(payload["X"], dtype=np.float32)
     if X.ndim != 2 or not np.isfinite(X).all():
         raise ValueError("Inference base feature matrix must be finite and two-dimensional")

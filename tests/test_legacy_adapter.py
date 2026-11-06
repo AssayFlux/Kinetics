@@ -108,7 +108,7 @@ def test_import_legacy_cli_writes_canonical_csv_and_provenance_manifest(tmp_path
     ])
 
     assert exit_code == 0
-    canonical = pd.read_csv(output)
+    canonical = pd.read_csv(output, dtype={"source_record_id": "string"})
     assert canonical["target"].tolist() == ["km", "kcat", "kcat"]
     assert canonical["canonical_unit"].tolist() == ["M", "s^-1", "s^-1"]
     assert canonical["source_record_id"].tolist() == ["001", "001", "002"]
@@ -129,7 +129,7 @@ def test_import_legacy_cli_refuses_to_overwrite_raw_input(tmp_path):
         "km": [1.0], "kcat": [2.0],
     }).to_csv(source, index=False)
 
-    with pytest.raises(ValueError, match="differ from the raw input"):
+    with pytest.raises(ValueError, match="differ from every generated output path"):
         main([
             "import-legacy", "--input", str(source), "--output", str(source),
             "--source", "legacy-dataset", "--source-record-id-column", "source_id",

@@ -142,3 +142,20 @@ def test_legacy_adapter_rejects_empty_input():
             pd.DataFrame(columns=["record_id", "sequence", "smiles", "km", "kcat"]),
             source="legacy-csv", source_record_id_column="record_id",
         )
+
+
+def test_import_legacy_cli_protects_temporary_output_collision(tmp_path):
+    from kinetics_core.cli import main
+
+    output = tmp_path / "observations.csv"
+    source = tmp_path / ".observations.csv.tmp"
+    pd.DataFrame({
+        "source_id": ["row-1"], "sequence": ["ACDEFG"], "smiles": ["CCO"],
+        "km": [1.0], "kcat": [2.0],
+    }).to_csv(source, index=False)
+
+    with pytest.raises(ValueError, match="every generated output path"):
+        main([
+            "import-legacy", "--input", str(source), "--output", str(output),
+            "--source", "legacy-dataset", "--source-record-id-column", "source_id",
+        ])

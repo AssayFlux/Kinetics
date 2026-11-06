@@ -389,6 +389,8 @@ def main(argv: list[str] | None = None) -> int:
         if args.source_column:
             csv_dtypes[args.source_column] = "string"
         frame = pd.read_csv(input_path, dtype=csv_dtypes)
+        if "protein_cluster_id" in frame.columns:
+            raise ValueError("Input already contains protein_cluster_id")
         mapping_path, manifest_path = cluster_sequences(
             frame,
             sequence_column=args.sequence_column,
@@ -406,8 +408,6 @@ def main(argv: list[str] | None = None) -> int:
                 "cluster_representative_record_id": "string",
             },
         )
-        if "protein_cluster_id" in frame.columns:
-            raise ValueError("Input already contains protein_cluster_id")
         left_join_columns = [args.record_id_column]
         right_join_columns = ["source_record_id"]
         if (

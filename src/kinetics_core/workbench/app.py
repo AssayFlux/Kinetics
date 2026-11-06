@@ -211,7 +211,7 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
         "output", "output_dir", "target", "sequence_column", "smiles_column",
         "record_id_column", "source_column", "min_sequence_identity", "coverage",
         "threads", "cache_dir", "model_name", "model_revision", "tokenizer_revision",
-        "device", "max_residues", "radius", "n_bits", "batch_size", "group_array",
+        "device", "max_residues", "radius", "n_bits", "batch_size", "group_column",\n        "group_array", "holdout_group_array", "no_chirality", "overwrite",
         "protein_group_column", "substrate_group_column", "test_fraction",
         "calibration_fraction", "random_state", "n_splits", "calibration_archive",
         "conformal_alpha", "n_estimators", "max_depth", "hidden_layers", "alpha",

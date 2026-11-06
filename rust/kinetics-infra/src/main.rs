@@ -21,7 +21,10 @@ use kinetics_infra::{
     cloud_artifacts::{CloudArtifactError, S3ArtifactStore},
     cloud_secrets::AwsSecretProvider,
     oidc::{AuthenticatedPrincipal, OidcError, OidcVerifier},
-    postgres::{\n        AppendAuditEvent, AppendOnlyAuditStore, JobSubmissionLimits, PostgresRuntimeStore,\n        RuntimeStoreError,\n    },
+    postgres::{
+        AppendAuditEvent, AppendOnlyAuditStore, JobSubmissionLimits, PostgresRuntimeStore,
+        RuntimeStoreError,
+    },
 };
 
 #[derive(Clone)]

@@ -86,11 +86,14 @@ def main(argv: list[str] | None = None) -> int:
         input_path = Path(args.input)
         output_path = Path(args.output)
         manifest_path = output_path.with_suffix(output_path.suffix + ".manifest.json")
-        if input_path.resolve() == output_path.resolve():
-            raise ValueError("Output path must differ from the raw input path.")
-        if not args.overwrite and (output_path.exists() or manifest_path.exists()):
+        temporary_path = output_path.with_name(f".{output_path.name}.tmp")
+        generated_paths = (output_path, manifest_path, temporary_path)
+        if input_path.resolve() in {path.resolve() for path in generated_paths}:
+            raise ValueError("Input path must differ from every generated output path.")
+        if not args.overwrite and any(path.exists() for path in generated_paths):
             raise FileExistsError(
-                "Output or manifest already exists; pass --overwrite to replace it."
+                "Output, manifest, or temporary file already exists; "
+                "pass --overwrite to replace it."
             )
 
         # Preserve opaque identifiers (including leading zeroes) as text.
@@ -110,7 +113,6 @@ def main(argv: list[str] | None = None) -> int:
         )
         output_frame = pd.DataFrame.from_records(records)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        temporary_path = output_path.with_name(f".{output_path.name}.tmp")
         try:
             output_frame.to_csv(temporary_path, index=False)
             temporary_path.replace(output_path)

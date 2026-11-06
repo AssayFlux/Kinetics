@@ -5,8 +5,8 @@ paired with another target unless the source explicitly establishes that link.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
 import math
+from dataclasses import asdict, dataclass
 from typing import Literal
 
 Target = Literal["km", "kcat"]

@@ -30,8 +30,10 @@ The build_simulation_plan function validates and records engine/version, input s
     cmake -S native -B build/native -DKINETICS_BUILD_TESTS=ON
     cmake --build build/native --config Release
     ctest --test-dir build/native --build-config Release --output-on-failure
+    build/native/kinetics-molecule-inspect input.pdb scene.json
+    build/native/kinetics-molecule-inspect render-xy input.pdb preview.ppm
 
-The CTest fixture checks atom and bond identity, coordinate preservation, known-distance calculation, unit-bearing scene JSON, selection/highlight serialization, invalid selection rejection, first-model handling with global CONECT records, duplicate serial rejection and XY rendering with selection overlay. Python tests cover the cross-language JSON contract, source hashing and simulation-plan validation.
+The CTest fixture checks atom and bond identity, coordinate preservation, known-distance calculation, unit-bearing scene JSON, selection/highlight serialization, invalid selection rejection, first-model handling with global CONECT records, duplicate serial rejection and XY rendering with selection overlay. The native CI also runs the Python bridge against the compiled C++ executable. Python tests cover the cross-language JSON contract, source hashing and simulation-plan validation.
 
 ## Performance policy
 

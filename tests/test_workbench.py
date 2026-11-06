@@ -198,14 +198,29 @@ def test_workbench_uploads_runs_audits_registers_artifacts_and_builds_report(tmp
             f"/api/v1/projects/{project_id}/jobs/{job_id}/report"
         )
         assert report.status_code == 201
-        assert report.json()["relative_path"] == f"reports/{job_id}.md"
+        report_record = report.json()["report"]
+        manifest_record = report.json()["manifest"]
+        assert report_record["relative_path"] == f"reports/{job_id}.md"
+        assert manifest_record["relative_path"] == f"reports/{job_id}.manifest.json"
         report_artifact = client.get(
-            f"/api/v1/projects/{project_id}/artifacts/{report.json()['artifact_id']}"
+            f"/api/v1/projects/{project_id}/artifacts/{report_record['artifact_id']}"
         )
         assert report_artifact.status_code == 200
-        assert b"not independent scientific validation" in report_artifact.content or (
-            b"not reported" in report_artifact.content
+        assert b"not independent scientific validation" in report_artifact.content
+        manifest_artifact = client.get(
+            f"/api/v1/projects/{project_id}/artifacts/{manifest_record['artifact_id']}"
         )
+        assert manifest_artifact.status_code == 200
+        manifest = json.loads(manifest_artifact.content)
+        assert manifest["experiment_id"] == job_id
+        assert manifest["inputs"][0]["sha256"] == uploaded.json()["checksum_sha256"]
+
+        report_path = workspace / "projects" / project_id / report_record["relative_path"]
+        report_path.write_text("tampered", encoding="utf-8")
+        tampered = client.get(
+            f"/api/v1/projects/{project_id}/artifacts/{report_record['artifact_id']}"
+        )
+        assert tampered.status_code == 409
 
 
 def test_workbench_rejects_path_escape_and_upload_overwrite(tmp_path):

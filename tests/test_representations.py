@@ -195,6 +195,7 @@ def test_mmseqs_wrapper_records_hashes_and_checks_complete_mapping(tmp_path, mon
     manifest = json.loads(manifest_path.read_text())
     assert manifest["unique_entities_all_assigned_once"] is True
     assert manifest["input_fasta"]["sha256"]
+    assert manifest["mmseqs_cluster_output"]["sha256"]
     assert manifest["mapping"]["sha256"]
     assert manifest["version"] == "MMseqs2 fixture 1.0"
 

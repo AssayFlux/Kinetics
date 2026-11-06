@@ -128,7 +128,10 @@ def _optional_text(row: pd.Series, column: str | None) -> str | None:
 def _optional_float(row: pd.Series, column: str | None) -> float | None:
     if column is None or pd.isna(row[column]):
         return None
-    value = float(row[column])
+    try:
+        value = float(row[column])
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"{column} is not numeric") from exc
     if not math.isfinite(value):
         raise ValueError(f"{column} is non-finite")
     return value

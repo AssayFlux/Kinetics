@@ -10,9 +10,9 @@ import re
 import time
 import urllib.error
 import urllib.request
-from urllib.parse import urlsplit
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 HF_DATA_FILES = {
     "km/km_train.csv": "km/km_train.csv",
@@ -79,7 +79,9 @@ def download(url: str, destination: Path, token: str | None = None) -> dict:
     temporary.unlink(missing_ok=True)
     try:
         with (
-            urllib.request.build_opener(_SafeRedirectHandler()).open(request, timeout=60) as response,
+            urllib.request.build_opener(_SafeRedirectHandler()).open(
+                request, timeout=60
+            ) as response,
             temporary.open("wb") as output,
         ):
             while True:

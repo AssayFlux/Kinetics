@@ -211,7 +211,8 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
         "output", "output_dir", "target", "sequence_column", "smiles_column",
         "record_id_column", "source_column", "min_sequence_identity", "coverage",
         "threads", "cache_dir", "model_name", "model_revision", "tokenizer_revision",
-        "device", "max_residues", "radius", "n_bits", "batch_size", "group_column",\n        "group_array", "holdout_group_array", "no_chirality", "overwrite",
+        "device", "max_residues", "radius", "n_bits", "batch_size", "group_column",
+        "group_array", "holdout_group_array", "no_chirality", "overwrite",
         "protein_group_column", "substrate_group_column", "test_fraction",
         "calibration_fraction", "random_state", "n_splits", "calibration_archive",
         "conformal_alpha", "n_estimators", "max_depth", "hidden_layers", "alpha",
@@ -312,7 +313,9 @@ def create_app(
             return JSONResponse(status_code=400, content={"detail": "Local workbench only"})
         if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
             if request.headers.get("sec-fetch-site") == "cross-site":
-                return JSONResponse(status_code=403, content={"detail": "Cross-site request blocked"})
+                return JSONResponse(
+                    status_code=403, content={"detail": "Cross-site request blocked"}
+                )
             origin = request.headers.get("origin")
             if origin:
                 parsed = urlsplit(origin)
@@ -322,7 +325,9 @@ def create_app(
                     or origin_host != host
                     or parsed.port != request.url.port
                 ):
-                    return JSONResponse(status_code=403, content={"detail": "Cross-origin request blocked"})
+                    return JSONResponse(
+                        status_code=403, content={"detail": "Cross-origin request blocked"}
+                    )
         return await call_next(request)
 
     def project_record(project_id: str) -> dict[str, Any]:
@@ -424,29 +429,34 @@ def create_app(
             arguments = build_cli_arguments(command, parameters, root)
             if command == "persist":
                 arguments.extend(["--database", str(database)])
-            process = subprocess.Popen(
-                [sys.executable, "-m", "kinetics_core.cli", *arguments],
-                cwd=root,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-            )
-            with process_lock:
-                processes[job_id] = process
-            try:
-                output, _ = process.communicate(timeout=_JOB_TIMEOUT_SECONDS)
-            except subprocess.TimeoutExpired:
-                process.kill()
-                output, _ = process.communicate()
-                raise TimeoutError(
-                    f"Research job exceeded {_JOB_TIMEOUT_SECONDS} seconds"
+            with log_path.open("w", encoding="utf-8") as log_stream:
+                process = subprocess.Popen(
+                    [sys.executable, "-m", "kinetics_core.cli", *arguments],
+                    cwd=root,
+                    stdout=log_stream,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
                 )
-            finally:
                 with process_lock:
-                    processes.pop(job_id, None)
-            log_path.write_text(output or "", encoding="utf-8")
+                    processes[job_id] = process
+                try:
+                    process.wait(timeout=_JOB_TIMEOUT_SECONDS)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
+                    raise TimeoutError(
+                        f"Research job exceeded {_JOB_TIMEOUT_SECONDS} seconds"
+                    )
+                finally:
+                    with process_lock:
+                        processes.pop(job_id, None)
+            with log_path.open("rb") as log_stream:
+                log_stream.seek(0, os.SEEK_END)
+                log_size = log_stream.tell()
+                log_stream.seek(max(0, log_size - 8 * 1024 * 1024))
+                output = log_stream.read().decode("utf-8", errors="replace")
             current = store.fetch_all(
                 "SELECT cancellation_requested FROM workbench_jobs WHERE job_id=?",
                 (job_id,),
@@ -749,7 +759,12 @@ def create_app(
         path = (root / rows[0]["log_path"]).resolve()
         if not path.is_relative_to(root) or not path.is_file():
             return {"log": ""}
-        return {"log": path.read_text(encoding="utf-8", errors="replace")[-20000:]}
+        with path.open("rb") as stream:
+            stream.seek(0, os.SEEK_END)
+            size = stream.tell()
+            stream.seek(max(0, size - 20000))
+            content = stream.read().decode("utf-8", errors="replace")
+        return {"log": content}
 
     @app.post("/api/v1/projects/{project_id}/jobs/{job_id}/report", status_code=201)
     def create_job_report(project_id: str, job_id: str) -> dict[str, Any]:
@@ -780,7 +795,7 @@ def create_app(
             candidate = (root / artifact["relative_path"]).resolve()
             if candidate.is_file() and candidate.is_relative_to(root):
                 outputs.append(candidate)
-        from ..experiments import build_experiment_manifest
+        from ..experiments import build_experiment_manifest, save_experiment_manifest
         from ..reporting import write_experiment_report
 
         manifest = build_experiment_manifest(
@@ -796,6 +811,8 @@ def create_app(
             ],
         )
         report_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path = report_path.with_suffix(".manifest.json")
+        save_experiment_manifest(manifest, manifest_path)
         write_experiment_report(
             experiment_manifest=manifest,
             metrics=result,
@@ -807,22 +824,38 @@ def create_app(
             ],
             destination=report_path,
         )
-        digest = KineticsSQLite.sha256_file(report_path)
-        relative = report_path.relative_to(root).as_posix()
-        artifact_id = str(uuid.uuid5(uuid.NAMESPACE_URL, f"{project_id}:{relative}:{digest}"))
-        with store.transaction() as connection:
-            connection.execute(
-                """INSERT OR IGNORE INTO workbench_artifacts
-                   (artifact_id, project_id, job_id, relative_path, artifact_type,
-                    checksum_sha256, byte_size, media_type)
-                   VALUES (?, ?, ?, ?, 'experiment-report', ?, ?, 'text/markdown')""",
-                (artifact_id, project_id, job_id, relative, digest, report_path.stat().st_size),
+        with report_path.open("a", encoding="utf-8") as stream:
+            stream.write(
+                "\n## Reproducibility manifest\n\n"
+                f"Machine-readable manifest: `{manifest_path.relative_to(root).as_posix()}`\n"
             )
-        return {
-            "artifact_id": artifact_id,
-            "relative_path": relative,
-            "checksum_sha256": digest,
-        }
+        report_records = []
+        for path, artifact_type, media_type in (
+            (report_path, "experiment-report", "text/markdown"),
+            (manifest_path, "experiment-manifest", "application/json"),
+        ):
+            digest = KineticsSQLite.sha256_file(path)
+            relative = path.relative_to(root).as_posix()
+            artifact_id = str(uuid.uuid5(
+                uuid.NAMESPACE_URL, f"{project_id}:{relative}:{digest}"
+            ))
+            with store.transaction() as connection:
+                connection.execute(
+                    """INSERT OR IGNORE INTO workbench_artifacts
+                       (artifact_id, project_id, job_id, relative_path, artifact_type,
+                        checksum_sha256, byte_size, media_type)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (
+                        artifact_id, project_id, job_id, relative, artifact_type,
+                        digest, path.stat().st_size, media_type,
+                    ),
+                )
+            report_records.append({
+                "artifact_id": artifact_id,
+                "relative_path": relative,
+                "checksum_sha256": digest,
+            })
+        return {"report": report_records[0], "manifest": report_records[1]}
 
     @app.on_event("shutdown")
     def shutdown() -> None:
@@ -834,6 +867,3 @@ def create_app(
         executor.shutdown(wait=False, cancel_futures=True)
 
     return app
-
-
-app = create_app()

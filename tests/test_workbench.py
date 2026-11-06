@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import time
-from pathlib import Path
 
 import pytest
 
@@ -11,7 +11,9 @@ from kinetics_core.storage import KineticsSQLite
 
 def workbench_imports():
     pytest.importorskip("fastapi")
+
     from fastapi.testclient import TestClient
+
     from kinetics_core.workbench.app import build_cli_arguments, create_app
 
     return TestClient, build_cli_arguments, create_app
@@ -19,15 +21,39 @@ def workbench_imports():
 
 def test_workbench_schema_migrates_to_version_two(tmp_path):
     database = tmp_path / "metadata.sqlite3"
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            """CREATE TABLE datasets (
+                dataset_id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                source TEXT,
+                version TEXT,
+                license TEXT,
+                citation TEXT,
+                checksum_sha256 TEXT,
+                local_path TEXT,
+                metadata_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )"""
+        )
+        connection.execute(
+            "INSERT INTO datasets(dataset_id, name) VALUES (?, ?)",
+            ("pre-workbench", "Existing dataset"),
+        )
+        connection.execute("PRAGMA user_version = 1")
     store = KineticsSQLite(database)
     store.initialize()
     with store.session() as connection:
         assert connection.execute("PRAGMA user_version").fetchone()[0] == 2
+        preserved = connection.execute(
+            "SELECT name FROM datasets WHERE dataset_id='pre-workbench'"
+        ).fetchone()[0]
         names = {
             row[0] for row in connection.execute(
                 "SELECT name FROM sqlite_master WHERE type='table'"
             )
         }
+    assert preserved == "Existing dataset"
     assert {
         "workbench_projects", "workbench_jobs", "workbench_artifacts"
     } <= names
@@ -174,14 +200,29 @@ def test_workbench_uploads_runs_audits_registers_artifacts_and_builds_report(tmp
             f"/api/v1/projects/{project_id}/jobs/{job_id}/report"
         )
         assert report.status_code == 201
-        assert report.json()["relative_path"] == f"reports/{job_id}.md"
+        report_record = report.json()["report"]
+        manifest_record = report.json()["manifest"]
+        assert report_record["relative_path"] == f"reports/{job_id}.md"
+        assert manifest_record["relative_path"] == f"reports/{job_id}.manifest.json"
         report_artifact = client.get(
-            f"/api/v1/projects/{project_id}/artifacts/{report.json()['artifact_id']}"
+            f"/api/v1/projects/{project_id}/artifacts/{report_record['artifact_id']}"
         )
         assert report_artifact.status_code == 200
-        assert b"not independent scientific validation" in report_artifact.content or (
-            b"not reported" in report_artifact.content
+        assert b"not independent scientific validation" in report_artifact.content
+        manifest_artifact = client.get(
+            f"/api/v1/projects/{project_id}/artifacts/{manifest_record['artifact_id']}"
         )
+        assert manifest_artifact.status_code == 200
+        manifest = json.loads(manifest_artifact.content)
+        assert manifest["experiment_id"] == job_id
+        assert manifest["inputs"][0]["sha256"] == uploaded.json()["checksum_sha256"]
+
+        report_path = workspace / "projects" / project_id / report_record["relative_path"]
+        report_path.write_text("tampered", encoding="utf-8")
+        tampered = client.get(
+            f"/api/v1/projects/{project_id}/artifacts/{report_record['artifact_id']}"
+        )
+        assert tampered.status_code == 409
 
 
 def test_workbench_rejects_path_escape_and_upload_overwrite(tmp_path):

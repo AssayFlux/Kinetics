@@ -150,11 +150,10 @@ The initial C++17/CMake molecular structure and scene-data foundation is impleme
 
 ## Step 7 production reconciliation (2026-11-06)
 
-- PR #46 merged the reconciled Rust OIDC/JWT API, AWS Secrets Manager and S3/KMS adapters, PostgreSQL durable job/audit store, worker lease runtime, migration, container, encrypted backup/restore scripts, and AWS ECS/RDS/S3/KMS Terraform candidate.
-- Terraform validation was added to CI; the API ingress requires an explicit CIDR allowlist rather than defaulting to the public internet.
-- Follow-up hardening on `kinetics/step7-runtime-reconciliation` fixes typed job-limit SQL bindings, retry attempt accounting, maximum-attempt claim filtering, and adds retry/success integration coverage. It also adds PostgreSQL integration-test formatting and current CI diagnostics.
+- PR #46 merged the reconciled Rust OIDC/JWT API, AWS Secrets Manager and S3/KMS adapters, PostgreSQL durable job/audit store, worker lease runtime, migration, container, and encrypted backup/restore scripts.
+- PR #47 added the AWS ECS/RDS/S3/KMS Terraform deployment candidate, required API CIDR allowlist, Terraform validation in CI, typed job-limit SQL bindings, retry accounting/maximum-attempt fixes, and PostgreSQL retry/success integration coverage. PR #48 restored the mutable audit-event fixture needed by the tamper-rejection test.
 - Production is not deployed. The worker currently registers only `kinetics.noop_healthcheck`; scientific task handlers and per-job CPU/memory sandbox isolation are not yet implemented. Cloud account/VPC/ACM/ECR/OIDC configuration, live cross-tenant security tests, IAM review and database/artifact restore drill remain outstanding.
-- CI failures encountered during this follow-up exposed real Rust binding and formatting defects; fixes have been pushed and the newest workflow is pending. Do not treat earlier failed runs as passing evidence.
+- The latest main-branch workflow is still running its Rust integration test job; Python 3.10/3.11/3.12, workbench integration, Terraform validation, and native C++ Linux/macOS/Windows jobs have passed. Earlier failed runs are not passing evidence.
 
 ## Step 8 research workbench
 

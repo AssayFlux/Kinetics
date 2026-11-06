@@ -97,7 +97,12 @@ impl SqliteJobStore {
         load_job(&self.connection, tenant, id)
     }
 
-    pub fn transition(&mut self, tenant: &str, id: &str, next: JobState) -> Result<Job, SqliteJobError> {
+    pub fn transition(
+        &mut self,
+        tenant: &str,
+        id: &str,
+        next: JobState,
+    ) -> Result<Job, SqliteJobError> {
         let transaction = self.connection.transaction()?;
         let current = load_job(&transaction, tenant, id)?;
         let valid = matches!(

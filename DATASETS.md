@@ -1,6 +1,6 @@
 # Public enzyme-kinetics datasets
 
-Kinetics will use public datasets first. Raw downloads are intentionally kept out of Git; download them locally into `data/public/` and preserve the source files unchanged.
+Kinetics will use public datasets first. Raw downloads are intentionally kept out of Git; download them locally into `data/public/` and preserve the source files unchanged. **Access is not necessarily anonymous:** the current CatPred-DB Hugging Face page is gated and requires a signed-in user to agree to share account contact details before file access. Do not bypass the gate or use another person's token.
 
 ## Primary benchmark: CatPred-DB
 
@@ -8,7 +8,7 @@ Kinetics will use public datasets first. Raw downloads are intentionally kept ou
 - Dataset card: https://huggingface.co/datasets/RosettaCommons/CatPred-DB
 - Published framework: CatPred, Nature Communications (2025), https://doi.org/10.1038/s41467-025-57215-9
 - Public processed tables include separate Km and kcat datasets, plus random and sequence-clustered splits.
-- The official Hugging Face dataset card declares CC-BY-4.0 for the dataset files. The journal article separately carries a CC-BY-NC-ND rights statement; do not confuse the article's license with the dataset card's data license. Inspect the exact pinned dataset revision and underlying BRENDA/SABIO source terms before redistribution.
+- The current Hugging Face dataset card declares CC-BY-4.0 for the dataset files, but its file access is gated. A license label is not a substitute for reviewing the exact pinned revision's access conditions and underlying source terms. The journal article separately carries a CC-BY-NC-ND rights statement; do not confuse the article's license with the dataset card's data license. Inspect the exact pinned dataset revision and underlying BRENDA/SABIO source terms before redistribution.
 - Dataset card reports 41,174 Km records and 23,197 kcat records. These are separate parameter-specific datasets; do not assume that a Km record and a kcat record are paired observations.
 
 For the first reproducible baseline, download the processed Km and kcat tables and their published sequence-cluster test splits. Use the published split files only for benchmark comparison; create separate, documented training/validation partitions for model development. Avoid treating random-split scores as evidence of generalization.
@@ -61,7 +61,7 @@ These are supporting annotation sources, not substitutes for measured Km or kcat
 
 Start with CatPred-DB's published processed CSVs and sequence-clustered test splits. Inspect the pinned snapshot before running the canonical adapter; its aggregate targets and upstream unit caveats are documented below. Cache protein embeddings once, use a compact baseline first, and avoid downloading large structure/model artifacts until they are justified.
 
-No dataset is committed to this repository, and no model has been trained from these downloads yet.
+No dataset is committed to this repository, and no model has been trained from these downloads yet. The pinned snapshot must be acquired by an account that has explicitly accepted the current gate; this repository cannot accept those terms or share account details on a researcher's behalf.
 
 
 ## Canonical normalization adapter

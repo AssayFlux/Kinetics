@@ -51,7 +51,7 @@ This file distinguishes repository contents from execution, verification and sci
 
 ## Current engineering gaps
 
-- Step 2 tooling is implemented, but no real CatPred snapshot has yet been downloaded, curated, or released in this repository. The upstream kcat unit caveat must be resolved against source-level BRENDA/SABIO records before treating its absolute scale as validated. Direct BRENDA and SABIO adapters remain pending current schema, access, and license verification.
+- Step 2 tooling is implemented, but no real CatPred snapshot has yet been downloaded, curated, or released in this repository. The current Hugging Face dataset is gated; the downloader now accepts a researcher-supplied `HF_TOKEN` read token and scopes it to the Hugging Face dataset host, but an authorized user must first accept the gate in a browser. The upstream kcat unit caveat must be resolved against source-level BRENDA/SABIO records before treating its absolute scale as validated. Direct BRENDA and SABIO adapters remain pending current schema, access, and license verification.
 
 - Connect canonical observation outputs to legacy preprocessing, prediction and ONNX paths.
 - Retire or isolate the legacy two-target-per-row assumption without breaking supported workflows.

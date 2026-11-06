@@ -100,9 +100,18 @@ def create_dataset_release(
             source_data = json.loads(source_manifest.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             raise ValueError(f"Invalid source manifest JSON: {source_manifest}") from exc
-        warning = source_data.get("unit_quality_warning")
-        if isinstance(warning, str) and warning.strip():
-            source_quality_warnings.append(warning.strip())
+        for key, label in (
+            ("unit_quality_warning", "Unit quality warning"),
+            ("source_value_semantics", "Source value semantics"),
+            ("source_clipping_policy", "Source clipping policy"),
+        ):
+            note = source_data.get(key)
+            if isinstance(note, str) and note.strip():
+                source_quality_warnings.append(f"{label}: {note.strip()}")
+            elif isinstance(note, dict):
+                source_quality_warnings.append(
+                    f"{label}: {json.dumps(note, sort_keys=True)}"
+                )
     measurement_kinds = sorted(
         str(value)
         for value in audited.get("measurement_kind", pd.Series(["individual_measurement"])).unique()

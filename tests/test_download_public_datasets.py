@@ -5,7 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from scripts.download_public_datasets import download, request_headers
+from scripts.download_public_datasets import (
+    _SafeRedirectHandler,
+    download,
+    is_catpred_hf_url,
+    request_headers,
+)
 
 
 def test_hugging_face_token_is_scoped_to_catpred_dataset_host() -> None:
@@ -21,6 +26,51 @@ def test_hugging_face_token_is_scoped_to_catpred_dataset_host() -> None:
     assert "Authorization" not in github_headers
 
 
+
+def test_credentials_reject_lookalike_hosts_and_userinfo() -> None:
+    assert not is_catpred_hf_url(
+        "https://huggingface.co.evil.example/datasets/RosettaCommons/CatPred-DB/file"
+    )
+    assert not is_catpred_hf_url(
+        "https://huggingface.co@evil.example/datasets/RosettaCommons/CatPred-DB/file"
+    )
+    assert not is_catpred_hf_url(
+        "http://huggingface.co/datasets/RosettaCommons/CatPred-DB/file"
+    )
+
+
+def test_cross_origin_redirect_strips_bearer_token() -> None:
+    from urllib.request import Request
+
+    request = Request(
+        "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve/abc/km.csv",
+        headers={"Authorization": "Bearer read-secret"},
+    )
+    redirected = _SafeRedirectHandler().redirect_request(
+        request, None, 302, "Found", {}, "https://cdn.example/file"
+    )
+    assert redirected is not None
+    assert not redirected.has_header("Authorization")
+
+
+def test_same_origin_redirect_keeps_bearer_token() -> None:
+    from urllib.request import Request
+
+    request = Request(
+        "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve/abc/km.csv",
+        headers={"Authorization": "Bearer read-secret"},
+    )
+    redirected = _SafeRedirectHandler().redirect_request(
+        request,
+        None,
+        302,
+        "Found",
+        {},
+        "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve/abc/km.csv?download=true",
+    )
+    assert redirected is not None
+    assert redirected.get_header("Authorization") == "Bearer read-secret"
+
 def test_missing_token_does_not_add_authorization_header() -> None:
     headers = request_headers(
         "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve/abc/km.csv"
@@ -31,16 +81,19 @@ def test_missing_token_does_not_add_authorization_header() -> None:
 def test_gated_dataset_error_is_actionable_and_removes_partial_file(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    def denied(*args, **kwargs):
-        raise urllib.error.HTTPError(
-            "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/file",
-            403,
-            "Forbidden",
-            hdrs=None,
-            fp=None,
-        )
+    class DeniedOpener:
+        def open(self, *args, **kwargs):
+            raise urllib.error.HTTPError(
+                "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/file",
+                403,
+                "Forbidden",
+                hdrs=None,
+                fp=None,
+            )
 
-    monkeypatch.setattr("urllib.request.urlopen", denied)
+    monkeypatch.setattr(
+        "urllib.request.build_opener", lambda *handlers: DeniedOpener()
+    )
     destination = tmp_path / "km.csv"
     with pytest.raises(RuntimeError, match="review and accept its access conditions"):
         download(

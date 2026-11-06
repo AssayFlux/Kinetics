@@ -183,10 +183,16 @@ def context_design_matrix(payload: dict[str, np.ndarray]) -> pd.DataFrame:
     frame = pd.DataFrame(
         base, columns=[f"base_{index}" for index in range(base.shape[1])]
     )
-    numeric = payload.get("context_numeric_columns", np.asarray([], dtype=str)).astype(str)
-    categorical = payload.get(
-        "context_categorical_columns", np.asarray([], dtype=str)
-    ).astype(str)
+    numeric = [
+        str(value) for value in payload.get(
+            "context_numeric_columns", np.asarray([], dtype=str)
+        )
+    ]
+    categorical = [
+        str(value) for value in payload.get(
+            "context_categorical_columns", np.asarray([], dtype=str)
+        )
+    ]
     for column in numeric:
         key = f"context_raw__{column}"
         if key not in payload:
@@ -197,6 +203,8 @@ def context_design_matrix(payload: dict[str, np.ndarray]) -> pd.DataFrame:
         if key not in payload:
             raise ValueError(f"Missing raw context array: {column}")
         frame[column] = np.asarray(payload[key]).astype(str)
+    # Normalize pandas labels to plain strings for sklearn across NumPy versions.
+    frame.columns = [str(column) for column in frame.columns]
     return frame
 
 

@@ -68,7 +68,14 @@ class AssayContextEncoder(BaseEstimator, TransformerMixin):
         if self.numeric_columns:
             numeric_pipeline = Pipeline(
                 steps=[
-                    ("imputer", SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True)),
+                    (
+                        "imputer",
+                        SimpleImputer(
+                            strategy="median",
+                            add_indicator=True,
+                            keep_empty_features=True,
+                        ),
+                    ),
                     ("scaler", StandardScaler()),
                 ]
             )

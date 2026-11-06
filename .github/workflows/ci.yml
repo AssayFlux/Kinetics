@@ -64,6 +64,12 @@ jobs:
         run: python -m ruff check src/kinetics_core/workbench tests/test_workbench.py
       - name: Run workbench integration tests
         run: python -m pytest -q tests/test_workbench.py
+      - name: Build and verify installable wheel
+        run: |
+          python -m build --wheel
+          python -m pip install --force-reinstall --no-deps dist/*.whl
+          kinetics-workbench --help
+          python -c "from importlib.resources import files; assert files('kinetics_core.workbench').joinpath('static/index.html').is_file()"
 
   rust-infrastructure:
     name: Rust infrastructure

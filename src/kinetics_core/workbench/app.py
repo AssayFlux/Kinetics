@@ -862,6 +862,3 @@ def create_app(
         executor.shutdown(wait=False, cancel_futures=True)
 
     return app
-
-
-app = create_app()

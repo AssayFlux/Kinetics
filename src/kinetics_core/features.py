@@ -574,6 +574,18 @@ class ObservationFeatureBuilder:
         row_identity_sha256 = hashlib.sha256(
             json.dumps(row_identity, sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest()
+        source_keys = (
+            list(zip(
+                selected["source"].astype(str).tolist(),
+                selected["source_record_id"].astype(str).tolist(),
+                strict=True,
+            ))
+            if "source" in selected.columns
+            else [(record_id,) for record_id in selected["source_record_id"].astype(str)]
+        )
+        source_keys_sha256 = hashlib.sha256(
+            json.dumps(source_keys, separators=(",", ":")).encode()
+        ).hexdigest()
         manifest = {
             "schema_version": "1.0",
             "target": target,
@@ -595,14 +607,7 @@ class ObservationFeatureBuilder:
             "source_record_ids_sha256": hashlib.sha256(
                 "\n".join(selected["source_record_id"].astype(str)).encode()
             ).hexdigest(),
-            "source_keys_sha256": hashlib.sha256(
-                "\n".join(
-                    (selected["source"].astype(str) + ":" +
-                     selected["source_record_id"].astype(str)).tolist()
-                    if "source" in selected.columns
-                    else selected["source_record_id"].astype(str).tolist()
-                ).encode()
-            ).hexdigest(),
+            "source_keys_sha256": source_keys_sha256,
             "sources": sorted(selected["source"].astype(str).unique().tolist())
             if "source" in selected.columns else [],
             "source_versions": sorted(

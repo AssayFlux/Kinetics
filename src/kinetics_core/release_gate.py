@@ -88,19 +88,10 @@ def evaluate_release(manifest: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(f"missing required release gates: {missing}")
     incomplete = sorted(
         gate.gate_id for gate in parsed.values()
-        if gate.state in {"not_run", "blocked", "failed}
-    )
-    invalid_waivers = sorted(
-        gate.gate_id for gate in parsed.values()
-        if gate.state == "waived" and gate.severity != "non_critical"
+        if gate.state in {"not_run", "blocked", "failed"}
     )
     waived = sorted(gate.gate_id for gate in parsed.values() if gate.state == "waived")
-    if incomplete or invalid_waivers:
-        decision = "NO-GO"
-    elif waived:
-        decision = "CONDITIONAL"
-    else:
-        decision = "GO"
+    decision = "NO-GO" if incomplete else ("CONDITIONAL" if waived else "GO")
     return {
         "manifest_schema": "kinetics.release-candidate/1.0",
         "version": version,

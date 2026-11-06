@@ -11,7 +11,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-CATPRED_FILES = {
+HF_DATA_FILES = {
     "km/km_train.csv": "km/km_train.csv",
     "km/km_val.csv": "km/km_val.csv",
     "km/km_test.csv": "km/km_test.csv",
@@ -19,7 +19,21 @@ CATPRED_FILES = {
     "kcat/kcat_val.csv": "kcat/kcat_val.csv",
     "kcat/kcat_test.csv": "kcat/kcat_test.csv",
 }
+SEQUENCE_CLUSTER_TESTS = {
+    "kcat-seq_test_sequence_20cluster.csv": "kcat-seq_test_sequence_20cluster.csv",
+    "kcat-seq_test_sequence_40cluster.csv": "kcat-seq_test_sequence_40cluster.csv",
+    "kcat-seq_test_sequence_60cluster.csv": "kcat-seq_test_sequence_60cluster.csv",
+    "kcat-seq_test_sequence_80cluster.csv": "kcat-seq_test_sequence_80cluster.csv",
+    "kcat-seq_test_sequence_99cluster.csv": "kcat-seq_test_sequence_99cluster.csv",
+    "km-seq_test_sequence_40cluster.csv": "km-seq_test_sequence_40cluster.csv",
+    "km-seq_test_sequence_60cluster.csv": "km-seq_test_sequence_60cluster.csv",
+    "km-seq_test_sequence_80cluster.csv": "km-seq_test_sequence_80cluster.csv",
+    "km-seq_test_sequence_99cluster.csv": "km-seq_test_sequence_99cluster.csv",
+}
 CATPRED_REVISION = "44409e6"
+CATPRED_PROCESSING_REVISION = "931583821ff875e873002730fbbdf1047acfde77"
+CATPRED_BASE_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve"
+CATPRED_GITHUB_RAW = "https://raw.githubusercontent.com/maranasgroup/CatPred-DB"CATPRED_REVISION = "44409e6"
 CATPRED_PROCESSING_REVISION = "931583821ff875e873002730fbbdf1047acfde77"
 CATPRED_BASE_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/resolve"
 
@@ -63,10 +77,13 @@ def main() -> None:
         "--revision", default=CATPRED_REVISION,
         help="Pinned Hugging Face dataset revision",
     )
+    parser.add_argument("--processing-revision", default=CATPRED_PROCESSING_REVISION)
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
     if not re.fullmatch(r"[0-9a-fA-F]{7,40}", args.revision):
         raise ValueError("--revision must be an immutable Git commit SHA, not a branch name")
+    if not re.fullmatch(r"[0-9a-fA-F]{7,40}", args.processing_revision):
+        raise ValueError("--processing-revision must be an immutable Git commit SHA")
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = output_dir / "manifest.json"
@@ -78,7 +95,7 @@ def main() -> None:
         "dataset": "CatPred-DB",
         "repository": "https://github.com/maranasgroup/CatPred-DB",
         "source_revision": args.revision,
-        "processing_code_revision": CATPRED_PROCESSING_REVISION,
+        "processing_code_revision": args.processing_revision,
         "dataset_card": "https://huggingface.co/datasets/RosettaCommons/CatPred-DB",
         "license_note": (
             "Pinned Hugging Face dataset card declares CC-BY-4.0; verify exact "
@@ -86,20 +103,42 @@ def main() -> None:
         ),
         "files": [],
     }
-    for filename, relative_path in CATPRED_FILES.items():
+    file_specs = [
+        {
+            "file": filename,
+            "url": f"{CATPRED_BASE_URL}/{args.revision}/{relative_path}",
+            "source": "huggingface_dataset",
+        }
+        for filename, relative_path in HF_DATA_FILES.items()
+    ] + [
+        {
+            "file": f"sequence_cluster_tests/{filename}",
+            "url": (
+                f"{CATPRED_GITHUB_RAW}/{args.processing_revision}/"
+                f"datasets/splits/{relative_path}"
+            ),
+            "source": "github_sequence_cluster_test",
+        }
+        for filename, relative_path in SEQUENCE_CLUSTER_TESTS.items()
+    ]
+    for spec in file_specs:
+        filename = spec["file"]
+        url = spec["url"]
         destination = output_dir / filename
         destination.parent.mkdir(parents=True, exist_ok=True)
-        url = f"{CATPRED_BASE_URL}/{args.revision}/{relative_path}"
         if destination.exists() and not args.overwrite:
             digest = hashlib.sha256(destination.read_bytes()).hexdigest()
             manifest["files"].append({
-                "file": filename, "source_url": url, "bytes": destination.stat().st_size,
+                "file": filename, "source": spec["source"],
+                "source_url": url, "bytes": destination.stat().st_size,
                 "sha256": digest, "status": "already_present_not_overwritten",
             })
             print(f"Keeping existing {destination}")
             continue
         print(f"Downloading {filename} ...", flush=True)
         record = download(url, destination)
+        record["file"] = filename
+        record["source"] = spec["source"]
         manifest["files"].append(record)
         print(f"Saved {destination} ({record['bytes']:,} bytes)")
         time.sleep(0.2)

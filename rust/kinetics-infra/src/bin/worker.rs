@@ -54,10 +54,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         let value: serde_json::Value = serde_json::from_str(&secret)?;
         let mut url = url::Url::parse("postgres://localhost/postgres")?;
-        url.set_username(value["username"].as_str().ok_or("missing username")?)?;
+        url.set_username(value["username"].as_str().ok_or("missing username")?)\n            .map_err(|_| "invalid username")?;
         url.set_password(Some(value["password"].as_str().ok_or("missing password")?))
             .map_err(|_| "invalid password")?;
-        url.set_host(Some(value["host"].as_str().ok_or("missing host")?))?;
+        url.set_host(Some(value["host"].as_str().ok_or("missing host")?))\n            .map_err(|_| "invalid host")?;
         if let Some(port) = value["port"].as_u64() {
             url.set_port(Some(port as u16))
                 .map_err(|_| "invalid port")?;

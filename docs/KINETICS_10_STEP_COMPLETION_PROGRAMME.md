@@ -80,7 +80,7 @@ Do not treat the CatPred aggregate as individually replicated assay data or clai
 - Numerical repeat-run tolerances have not been measured on a pinned CPU/GPU environment. The manifest explicitly does not promise bitwise identity across hardware/library builds.
 - No graph neural network is claimed; graph tensors are a representation artifact for later model work.
 
-Step 3's representation software is implemented and CI-verified, but execution-level reproducibility and real-data evidence remain outstanding. Do not advance to Step 4's multimodal model claims until the pinned model and MMseqs2 have been exercised on a reviewed dataset and the numerical reproducibility report is retained.
+Step 3's representation software is implemented and CI-verified, but execution-level reproducibility and real-data evidence remain outstanding. A first Step 4 feature-fusion engine has been built as a software prototype; do not make scientific model claims until the pinned ESM-2 and MMseqs2 have been exercised on a reviewed dataset and the numerical reproducibility report is retained.
 
 
 ## Step 4 — Kinetics-Multi prediction engine (SOFTWARE IMPLEMENTATION ADDED; SCIENTIFIC VALIDATION PENDING)
@@ -101,7 +101,7 @@ Step 3's representation software is implemented and CI-verified, but execution-l
 
 **Architecture boundary:** This first MLP performs nonlinear fusion of precomputed modalities plus 24 pooled graph descriptors. It is not a message-passing GNN, cross-attention model, residue–atom interaction model or molecular simulation. No such capability is claimed.
 
-**Software acceptance evidence in progress:** Synthetic tests cover graph summary alignment and corruption rejection, grouped split leakage checks, fold-local assay-context preprocessing, source-manifest hash/metadata validation, immutable code revision, calibration, model artifact generation and inference round-trip. CI for this branch is pending; see PR once opened.
+**Software acceptance evidence:** Synthetic tests cover graph summary alignment and corruption rejection, grouped split leakage checks, fold-local assay-context preprocessing, source-manifest hash/metadata validation, immutable code revision, calibration, model artifact generation and inference round-trip. CI run [#42185425243](https://github.com/AssayFlux/Kinetics/actions/runs/42185425243) passed on Python 3.10, 3.11 and 3.12: 69 tests passed on each version, compilation and scoped Ruff checks passed. The initial implementation was merged in [PR #22](https://github.com/AssayFlux/Kinetics/pull/22); corrective hardening is in draft [PR #23](https://github.com/AssayFlux/Kinetics/pull/23).
 
 **Still required before Step 4 can be scientifically closed:**
 - A reviewed, licensed, immutable real dataset release from Step 2; this is not yet present.

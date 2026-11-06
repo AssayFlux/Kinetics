@@ -137,4 +137,4 @@ def test_sqlite_store_upgrades_pre_versioned_database_without_losing_data(tmp_pa
         "source": "legacy-import",
     }]
     with store.session() as connection:
-        assert connection.execute("PRAGMA user_version").fetchone()[0] == 1
+        assert connection.execute("PRAGMA user_version").fetchone()[0] == 2

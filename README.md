@@ -1,4 +1,4 @@
-#THE  KINETICS
+# THE  KINETICS
 
 <p align="center">
   <img src="Assets/Brand%20Logo.svg" alt="Kinetics brand logo" width="350">

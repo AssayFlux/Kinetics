@@ -27,11 +27,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.database:
         import os
         os.environ["KINETICS_DATABASE"] = args.database
+    from .app import create_app
+
     uvicorn.run(
-        "kinetics_core.workbench.app:app",
-        host="127.0.0.1",
-        port=args.port,
-        reload=False,
-        access_log=True,
+        create_app(), host="127.0.0.1", port=args.port, reload=False, access_log=True
     )
     return 0

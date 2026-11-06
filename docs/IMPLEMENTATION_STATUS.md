@@ -97,3 +97,15 @@ The feature-fusion MLP training/inference engine was merged in [PR #22](https://
 
 - Step 5 implementation PR [#24](https://github.com/AssayFlux/Kinetics/pull/24) merged as `89146f74174a89b11f0b065fa77b0b1bd7d98163`; its three-Python-version CI matrix passed. It adds the pre-execution protocol and paired-row bootstrap reporting, not empirical scientific validation.
 - Step 5 follow-on cluster-aware bootstrap implementation is being added in a separate change. It resamples whole held-out protein/scaffold groups and reports intervals by declared holdout axis; real-data scientific acceptance remains blocked by Step 2/3 execution prerequisites.
+
+
+## Step 6 — Native molecular visualization and simulation
+
+- In progress on feature branch `kinetics/step6-native-molecular-engine`: initial C++17 molecular structure model, PDB atom/CONECT parser, explicit angstrom coordinates, atom identity preservation, selection/highlight state, JSON scene serialization, and a small reference fixture.
+- Not complete: native build/test evidence, mmCIF and broader format support, Python/Rust interoperability, renderer/GPU integration, simulation adapters, and reproducible performance/physics validation remain outstanding.
+
+## Step 7 — Rust infrastructure and security
+
+- In progress on feature branch `kinetics/step7-rust-infrastructure`: versioned Rust crate; typed principal/scope and tenant-boundary checks; job lifecycle state machine with explicit runtime/memory/CPU limits and tenant-scoped idempotency; content-addressed SHA-256 artifact storage with integrity checks; structured audit-event validation; negative unit tests; and dedicated Rust CI format, Clippy and test gates.
+- Security boundary is explicit: these are infrastructure primitives, not a deployed API or production identity provider. Durable queue/leases/retries, verified OIDC/JWT integration, managed secrets/keys, tenant-aware network upload/download, append-only audit backend, backup/restore drill, deployment isolation, and integration penetration tests remain required before production acceptance.
+- Threat model and deployment controls are documented in `docs/STEP7_RUST_INFRASTRUCTURE.md`.

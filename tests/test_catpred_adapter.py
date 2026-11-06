@@ -110,3 +110,28 @@ def test_catpred_rejects_ki_and_missing_unit_declaration(tmp_path):
         normalize_catpred_csv(source, tmp_path / "ki", target="ki", unit="mM")
     with pytest.raises(ValueError, match="units must be verified"):
         normalize_catpred_csv(source, tmp_path / "km", target="km")
+
+
+
+def test_catpred_kcat_uses_maximum_aggregate_and_reactant_smiles(tmp_path):
+    source = tmp_path / "catpred-kcat.csv"
+    pd.DataFrame({
+        "sequence": ["ACDEFG"],
+        "uniprot": ["Q12345"],
+        "reactant_smiles": ["CCO.O"],
+        "value": [0.0036],
+        "temperature": [30.0],
+        "ph": [7.2],
+        "ec": ["1.1.1.1"],
+        "taxonomy_id": [9606],
+    }).to_csv(source, index=False)
+    accepted_path, _, manifest_path = normalize_catpred_csv(
+        source, tmp_path / "normalized", target="kcat", unit="s^-1",
+        source_version="44409e6", license_id="CC-BY-4.0",
+    )
+    accepted = pd.read_csv(accepted_path)
+    manifest = json.loads(manifest_path.read_text())
+    assert accepted.loc[0, "smiles"] == "CCO.O"
+    assert accepted.loc[0, "canonical_unit"] == "s^-1"
+    assert accepted.loc[0, "aggregation_method"].startswith("maximum")
+    assert manifest["aggregation_method"].startswith("maximum")

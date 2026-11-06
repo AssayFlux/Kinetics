@@ -33,6 +33,8 @@ def normalize_observation_table(
     doi_column: str | None = None,
     source_version: str | None = None,
     license_id: str | None = None,
+    measurement_kind: str = "individual_measurement",
+    aggregation_method: str | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Return accepted canonical observations and a row-level rejection audit.
 
@@ -92,6 +94,8 @@ def normalize_observation_table(
                 publication_doi=_optional_text(row, doi_column),
                 source_version=source_version,
                 license_id=license_id,
+                measurement_kind=measurement_kind,
+                aggregation_method=aggregation_method,
             )
             item = observation.as_dict()
             item["source_row_number"] = int(row_number) if isinstance(row_number, int) else str(row_number)

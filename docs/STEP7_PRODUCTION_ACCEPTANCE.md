@@ -41,7 +41,7 @@ The live deployment, provider-specific claim mapping, cloud IAM review, real art
 
 ## Repository implementation status update (2026-11-06)
 
-The Rust OIDC/API, AWS Secrets Manager and KMS-encrypted S3 adapter, PostgreSQL durable job/audit store, worker lease runtime, PostgreSQL migration, Docker image, backup/restore scripts, and AWS ECS/RDS/S3/KMS Terraform candidate have been ported onto mainline in PR #46. CI now includes a disposable PostgreSQL service and Terraform validation. This is an infrastructure implementation candidate, not a live deployment.
+The Rust OIDC/API, AWS Secrets Manager and KMS-encrypted S3 adapter, PostgreSQL durable job/audit store, worker lease runtime, PostgreSQL migration, Docker image, and backup/restore scripts were merged in PR #46. The AWS ECS/RDS/S3/KMS Terraform candidate, required API CIDR allowlist, and Terraform CI validation were added in PR #47; PR #48 corrected the PostgreSQL tamper-test fixture. This is an infrastructure implementation candidate, not a live deployment.
 
 A code review of the current worker boundary is explicit: the only registered task handler is `kinetics.noop_healthcheck`. Scientific task execution is not yet registered. Job CPU/memory values are admission metadata; shared-worker Fargate task sizing is not per-job isolation. The deployment CIDR allowlist is required rather than defaulting to open internet access. The AWS account, VPC/subnets, ACM certificate, ECR image, OIDC provider and protected Terraform state must be supplied and reviewed before deployment.
 

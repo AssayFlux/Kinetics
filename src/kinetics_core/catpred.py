@@ -32,13 +32,17 @@ def normalize_catpred_csv(
     accession_column: str | None = None,
     organism_column: str | None = None,
     doi_column: str | None = None,
+    ph_column: str | None = None,
+    temperature_k_column: str | None = None,
+    assay_id_column: str | None = None,
     source_version: str | None = None,
     license_id: str = "CC-BY-4.0 (verify current source terms)",
 ) -> tuple[Path, Path, Path]:
     source_path = Path(input_csv)
     if not source_path.is_file():
         raise FileNotFoundError(source_path)
-    raw = pd.read_csv(source_path)
+    # Source identifiers are opaque strings; never coerce values such as 0012 to 12.
+    raw = pd.read_csv(source_path, dtype={record_id_column: "string"})
     accepted, rejected = normalize_observation_table(
         raw,
         target=target,
@@ -52,6 +56,9 @@ def normalize_catpred_csv(
         accession_column=accession_column,
         organism_column=organism_column,
         doi_column=doi_column,
+        ph_column=ph_column,
+        temperature_k_column=temperature_k_column,
+        assay_id_column=assay_id_column,
         source_version=source_version,
         license_id=license_id,
     )
@@ -81,6 +88,9 @@ def normalize_catpred_csv(
             "accession": accession_column,
             "organism": organism_column,
             "doi": doi_column,
+            "ph": ph_column,
+            "temperature_k": temperature_k_column,
+            "assay_id": assay_id_column,
         },
         "input_rows": int(len(raw)),
         "accepted_rows": int(len(accepted)),
@@ -107,6 +117,9 @@ def main() -> None:
     parser.add_argument("--accession-column")
     parser.add_argument("--organism-column")
     parser.add_argument("--doi-column")
+    parser.add_argument("--ph-column")
+    parser.add_argument("--temperature-k-column")
+    parser.add_argument("--assay-id-column")
     parser.add_argument("--source-version")
     parser.add_argument("--license-id", default="CC-BY-4.0 (verify current source terms)")
     args = parser.parse_args()
@@ -117,6 +130,8 @@ def main() -> None:
         sequence_column=args.sequence_column,
         smiles_column=args.smiles_column, accession_column=args.accession_column,
         organism_column=args.organism_column, doi_column=args.doi_column,
+        ph_column=args.ph_column, temperature_k_column=args.temperature_k_column,
+        assay_id_column=args.assay_id_column,
         source_version=args.source_version, license_id=args.license_id,
     )
     for path in outputs:

@@ -18,10 +18,13 @@ Review the current dataset card and upstream repository terms. Keep raw files un
 Use the exact source record ID and measurement column names returned by the inspection step. If all rows use one explicit unit, pass --unit. If units vary by row, pass --unit-column instead.
 
 ```bash
-python -m kinetics_core.catpred --input data/public/catpred-db/km_processed.csv --target km --record-id-column SOURCE_ID --value-column KM_VALUE --unit mM --sequence-column SEQUENCE --smiles-column SMILES --output-dir data/processed/catpred-db
+python -m kinetics_core.catpred --input data/public/catpred-db/km_processed.csv --target km --record-id-column SOURCE_ID --value-column KM_VALUE --unit mM --sequence-column SEQUENCE --smiles-column SMILES \
+  --ph-column PH --temperature-k-column TEMPERATURE_K \
+  --assay-id-column ASSAY_ID --doi-column DOI \
+  --output-dir data/processed/catpred-db
 ```
 
-The column names and unit above are examples only; replace them with the actual upstream schema. Repeat for kcat with the kcat source table and its own unit mapping. Do not join the two tables unless the upstream source proves the records represent the same experiment and assay context.
+The column names and unit above are examples only; replace them with the actual upstream schema. Optional --ph-column, --temperature-k-column, --assay-id-column, and --doi-column mappings preserve verified assay and publication context. The source record ID column is read as text so leading zeroes remain intact. Repeat for kcat with the kcat source table and its own unit mapping. Do not join the two tables unless the upstream source proves the records represent the same experiment and assay context.
 
 ### Legacy paired-row CSV migration (only when the source really contains paired measurements)
 

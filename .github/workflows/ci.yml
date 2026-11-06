@@ -36,7 +36,7 @@ jobs:
           python -m pip install "rdkit>=2023.9"
 
       - name: Lint new foundation modules
-        run: python -m ruff check src/kinetics_core/legacy.py src/kinetics_core/cli.py src/kinetics_core/__init__.py src/kinetics_core/persistence.py tests/test_legacy_adapter.py tests/test_persistence.py
+        run: python -m ruff check src/kinetics_core/legacy.py src/kinetics_core/cli.py src/kinetics_core/__init__.py src/kinetics_core/persistence.py src/kinetics_core/catpred.py tests/test_legacy_adapter.py tests/test_persistence.py tests/test_catpred_adapter.py
 
       - name: Compile Python sources
         run: python -m compileall -q src scripts tests

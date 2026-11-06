@@ -147,6 +147,12 @@ def test_workbench_rejects_path_escape_and_upload_overwrite(tmp_path):
             "/api/v1/projects", json={"name": "Secure workspace"}
         ).json()
         project_id = project["project_id"]
+        cross_site = client.post(
+            f"/api/v1/projects/{project_id}/uploads",
+            headers={"Origin": "https://attacker.example", "Sec-Fetch-Site": "cross-site"},
+            files={"file": ("blocked.csv", b"not accepted", "text/csv")},
+        )
+        assert cross_site.status_code == 403
         first = client.post(
             f"/api/v1/projects/{project_id}/uploads",
             files={"file": ("input.csv", b"content", "text/csv")},

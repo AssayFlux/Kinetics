@@ -53,7 +53,9 @@ def test_release_manifest_verifies_and_detects_tampering(tmp_path):
     pd.DataFrame(columns=["source_row_number", "reason"]).to_csv(rejected, index=False)
     release = tmp_path / "release-v1"
     source_manifest = tmp_path / "source_manifest.json"
-    source_manifest.write_text(json.dumps({"source_revision": "fixture-sha"}))
+    source_manifest.write_text(json.dumps({
+        "source_revision": "fixture-sha", "unit_quality_warning": "fixture unit warning"
+    }))
     result = create_dataset_release(
         observations, rejected, release,
         dataset_id="fixture-v1", dataset_name="Fixture", source="fixture",
@@ -64,6 +66,8 @@ def test_release_manifest_verifies_and_detects_tampering(tmp_path):
     manifest = json.loads((release / "release_manifest.json").read_text())
     assert manifest["counts"]["observations"] == 3
     assert manifest["counts"]["duplicate_groups"] >= 1
+    assert manifest["source_quality_warnings"] == ["fixture unit warning"]
+    assert "fixture unit warning" in (release / "DATA_CARD.md").read_text()
     assert manifest["source_manifests"][0]["sha256"]
     assert "source_manifests/source_manifest_1.json" in result["artifacts_verified"]
     with pytest.raises(FileExistsError):

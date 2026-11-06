@@ -159,6 +159,14 @@ Step 4 is being implemented as a software engine, not validated as a scientific 
 
 **Evidence:** Threat model, API specifications, integration tests, audit samples, recovery drill, security review.
 
+**Implementation delivered in merged PR #46, with follow-up hardening in PR #47:**
+- RS256 OIDC/JWT verification with issuer/audience/key/expiry/tenant/scope checks; managed AWS Secrets Manager access using workload identity.
+- Tenant-bound HTTP artifact and job APIs; S3/KMS content-addressed artifacts; PostgreSQL durable jobs, idempotency, quotas, leases, heartbeats, cancellation and append-only hash-chained audit events.
+- AWS ECS/Fargate, RDS, S3 replication, KMS, ALB/TLS and IAM Terraform candidate; encrypted database backup and isolated restore scripts; explicit API CIDR allowlist and Terraform CI validation.
+- Follow-up SQL binding/retry accounting fixes and PostgreSQL retry/success integration coverage.
+
+**Acceptance remains blocked:** no cloud deployment or OIDC provider configuration; the worker currently has only a no-op health-check handler, no scientific task handlers; per-job CPU/memory isolation is not enforced by the shared worker; live cross-tenant/security tests, IAM/network review and actual database/artifact restore drills have not been performed. Do not expose the candidate as production-ready. See `docs/STEP7_PRODUCTION_ACCEPTANCE.md`.
+
 ## Step 8 — Kinetics research workbench
 
 **Purpose:** Enable complete research workflows through one coherent interface.
@@ -221,6 +229,8 @@ The latest verification run [#42173358868](https://github.com/AssayFlux/Kinetics
 **Next Step 1 work:** establish and test the supported package/CLI compatibility contract; verify clean installation from the built wheel in CI; broaden static checks carefully; then complete the remaining security/dependency review. Do not force canonical independent target observations back into the legacy paired-target trainer, as that would reintroduce scientifically unsafe pairing. No later step is complete based on plans or stubs alone.
 
 
-## Step 9 and Step 10 implementation contracts
+## Step 9 and Step 10 implementation status
 
-The first proposed Step 9 domain contract is [Proteomics and structural biology](STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md). It deliberately starts with protein sequence/structure evidence and explicit source/chain mapping; it is not an implementation or scientific acceptance claim. The Step 10 release control specification is [Release readiness gates](STEP10_RELEASE_READINESS_GATES.md); a checklist does not substitute for passing and retaining the required release evidence.
+The first Step 9 increment implements versioned protein-sequence, structure, residue-mapping and derived-feature records, plus a fixed-column PDB adapter that verifies source-file SHA-256 and computes evidence-linked C-alpha distances only from explicit mappings. Deterministic fixtures cover parsing, insertion codes, sequence identity, coordinate integrity and feature provenance. mmCIF, external structure-source adapters, automatic alignment, independent reference validation and real-data benchmarks remain open. See [Proteomics and structural biology](STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md).
+
+Step 10 includes an executable release-manifest evaluator that validates required gates, source commit, evidence references and waiver metadata and conservatively emits GO/CONDITIONAL/NO-GO without claiming human sign-off. Actual release evidence, SBOM, vulnerability triage, security/recovery/UAT reports, accountable reviews and production sign-off remain open. See [Release readiness gates](STEP10_RELEASE_READINESS_GATES.md).

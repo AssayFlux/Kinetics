@@ -55,3 +55,83 @@ def annotate_scaffolds(
     result = frame.copy()
     result[output_column] = result[smiles_column].map(murcko_scaffold_id)
     return result
+
+
+
+def molecular_graph_features(smiles: str) -> dict:
+    """Build a sanitized, stereochemistry-aware molecular graph as NumPy arrays.
+
+    Atom rows are [atomic number, degree, formal charge, total H, aromatic,
+    CIP stereochemistry (0 none, 1 R, 2 S), hybridization enum, isotope, mass].
+    Each bond is represented by two directed edges. Bond rows are [bond type
+    enum, conjugated, in ring, stereo enum]. Atom order follows the canonical
+    isomeric SMILES parse, and no salt/tautomer normalization is applied.
+    """
+    import numpy as np
+
+    try:
+        from rdkit import Chem
+    except ImportError as exc:
+        raise RuntimeError("Molecular graph generation requires RDKit") from exc
+    molecule = Chem.MolFromSmiles(str(smiles), sanitize=True)
+    if molecule is None:
+        raise ValueError(f"Invalid SMILES: {smiles!r}")
+    Chem.AssignStereochemistry(molecule, cleanIt=True, force=True)
+
+    atom_rows = []
+    for atom in molecule.GetAtoms():
+        cip = atom.GetProp("_CIPCode") if atom.HasProp("_CIPCode") else ""
+        cip_index = {"R": 1, "S": 2}.get(cip, 0)
+        atom_rows.append([
+            atom.GetAtomicNum(),
+            atom.GetDegree(),
+            atom.GetFormalCharge(),
+            atom.GetTotalNumHs(),
+            int(atom.GetIsAromatic()),
+            cip_index,
+            int(atom.GetHybridization()),
+            atom.GetIsotope(),
+            atom.GetMass(),
+        ])
+
+    edge_pairs = []
+    bond_rows = []
+    for bond in molecule.GetBonds():
+        begin, end = bond.GetBeginAtomIdx(), bond.GetEndAtomIdx()
+        feature = [
+            int(bond.GetBondType()),
+            int(bond.GetIsConjugated()),
+            int(bond.IsInRing()),
+            int(bond.GetStereo()),
+        ]
+        edge_pairs.extend(((begin, end), (end, begin)))
+        bond_rows.extend((feature, feature))
+
+    edge_index = (
+        np.asarray(edge_pairs, dtype=np.int64).T
+        if edge_pairs else np.empty((2, 0), dtype=np.int64)
+    )
+    bond_features = (
+        np.asarray(bond_rows, dtype=np.float32)
+        if bond_rows else np.empty((0, 4), dtype=np.float32)
+    )
+    atom_features = np.asarray(atom_rows, dtype=np.float32)
+    return {
+        "canonical_smiles": Chem.MolToSmiles(
+            molecule, canonical=True, isomericSmiles=True
+        ),
+        "atom_features": atom_features,
+        "edge_index": edge_index,
+        "bond_features": bond_features,
+        "num_atoms": int(molecule.GetNumAtoms()),
+        "num_bonds": int(molecule.GetNumBonds()),
+        "schema_version": "1.0",
+        "atom_feature_names": [
+            "atomic_number", "degree", "formal_charge", "total_hydrogens",
+            "is_aromatic", "cip_stereochemistry", "hybridization", "isotope",
+            "atomic_mass",
+        ],
+        "bond_feature_names": [
+            "bond_type", "is_conjugated", "in_ring", "bond_stereo",
+        ],
+    }

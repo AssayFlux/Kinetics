@@ -665,14 +665,14 @@ def create_app(
             build_cli_arguments(payload.command, payload.parameters, root)
         except (ValueError, FileNotFoundError, FileExistsError) as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
-        pending = store.fetch_all(
-            """SELECT COUNT(*) AS n FROM workbench_jobs
-               WHERE state IN ('queued','running')"""
-        )[0]["n"]
-        if pending >= 100:
-            raise HTTPException(status_code=429, detail="Workbench queue is full")
         job_id = str(uuid.uuid4())
         with store.transaction() as connection:
+            pending = connection.execute(
+                """SELECT COUNT(*) FROM workbench_jobs
+                   WHERE state IN ('queued','running')"""
+            ).fetchone()[0]
+            if pending >= 100:
+                raise HTTPException(status_code=429, detail="Workbench queue is full")
             connection.execute(
                 """INSERT INTO workbench_jobs
                    (job_id, project_id, command, state, parameters_json)

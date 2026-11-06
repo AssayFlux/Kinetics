@@ -4,6 +4,8 @@
 Implementation foundation only. This crate is not yet a deployed network service and does not claim production authentication, durable job orchestration, remote artifact transport, or a completed disaster-recovery drill.
 
 ## Contracts
+- OpenAPI 3.1 contract: `docs/api/openapi-v1.yaml`; Rust request/response types live in `contracts.rs` and serialize with explicit API versioning.
+- Runtime environment secret wrapper redacts its `Debug` output and never returns values in error messages; production deployments should use a managed secret provider.
 - API namespace: `/api/v1` (contract version constant `v1`).
 - Job states: `queued → running → succeeded | failed | cancelled`; cancellation is allowed from queued or running; terminal states cannot be reopened.
 - Every job carries tenant identity, idempotency key, and explicit runtime, memory, and CPU limits.

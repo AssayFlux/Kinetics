@@ -150,7 +150,7 @@ async fn postgres_enforces_tenant_quotas_leases_cancellation_and_append_only_aud
         occurred_at: Utc::now(),
     };
     let first_hash = audit.append(&event).await.unwrap();
-    let next = event.clone();
+    let mut next = event.clone();
     next.event_id = Uuid::new_v4();
     next.action = "artifact.upload".into();
     let second_hash = audit.append(&next).await.unwrap();

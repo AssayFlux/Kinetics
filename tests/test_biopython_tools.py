@@ -1,7 +1,5 @@
 import pytest
 
-pytest.importorskip("Bio")
-
 from kinetics_core.biopython_tools import (
     align_protein_sequences,
     calculate_residue_contacts,

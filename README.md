@@ -139,6 +139,10 @@ The roadmap is intentionally multi-year. Architecture and functional modules are
 
 Kinetics Ecosystem is a separate project with its own repository and release cycle. It is not Astronaut and does not depend on Astronaut. Kinetics will eventually expose documented, permission-scoped interfaces for evidence retrieval and approved research-tool orchestration. Read-only access is the default; consequential actions require user authorization. AI must distinguish evidence, measurements, predictions and speculation.
 
+## Research workbench (optional)
+
+A local-first browser workbench is available for project setup, dataset intake, curation, model workflows, job monitoring, reports and artifact review. Install the optional dependencies with `python -m pip install -e ".[workbench]"` and start it using `kinetics-workbench`. It binds only to `127.0.0.1`; it is not a remote multi-user service. See the [workbench guide](docs/WORKBENCH_GUIDE.md) for setup, supported workflows and limitations.
+
 ## Existing foundation
 
 The current repository is an enzyme-kinetics research foundation. It includes workflows and utilities for protein embeddings, RDKit molecular fingerprints, Km/kcat baselines, data normalization, provenance, assay context, leakage-aware sequence/scaffold splits, uncertainty/applicability analysis, SQLite experiment metadata and reporting. Existing modules and compatibility paths will be reconciled and migrated deliberately; code presence is not proof of execution, benchmarking or scientific validation.

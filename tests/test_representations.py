@@ -248,9 +248,10 @@ def test_cluster_cli_uses_source_qualified_ids(tmp_path, monkeypatch):
     _fake_mmseqs(tmp_path, monkeypatch)
     source = tmp_path / "observations.csv"
     pd.DataFrame({
-        "source": ["a", "b"],
-        "source_record_id": ["same", "same"],
-        "sequence": ["ACDE", "ACDF"],
+        "source": ["a", "a", "b"],
+        "source_record_id": ["same", "same", "same"],
+        "sequence": ["ACDE", "ACDE", "ACDF"],
+        "target": ["km", "kcat", "km"],
     }).to_csv(source, index=False)
     output = tmp_path / "cluster-output"
     assert main([
@@ -259,6 +260,9 @@ def test_cluster_cli_uses_source_qualified_ids(tmp_path, monkeypatch):
     ]) == 0
     mapping = pd.read_csv(output / "sequence_clusters.csv")
     assert mapping["source"].tolist() == ["a", "b"]
+    clustered = pd.read_csv(output / "observations_with_protein_clusters.csv")
+    assert len(clustered) == 3
+    assert clustered.loc[0, "protein_cluster_id"] == clustered.loc[1, "protein_cluster_id"]
 
 
 def test_build_features_cli_calls_versioned_builder(tmp_path, monkeypatch):

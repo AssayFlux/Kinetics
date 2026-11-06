@@ -140,6 +140,8 @@ class ESM2Encoder:
         return {
             "encoder": "ESM-2",
             "model_name": self.model_name,
+            "model_source_url": "https://huggingface.co/facebook/esm2_t6_8M_UR50D",
+            "model_license": "MIT",
             "model_revision": self.model_revision,
             "tokenizer_revision": self.tokenizer_revision,
             "pooling": "mean over residue tokens; BOS/EOS/padding excluded",

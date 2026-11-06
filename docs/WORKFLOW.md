@@ -41,6 +41,28 @@ kinetics-research import-legacy \
 
 Replace the example source, ID column, units, version, and license with verified metadata. The adapter preserves Km and kcat independently and will reject missing source IDs or invalid measurements. It does not create synthetic record IDs. If your source stores Km and kcat in separate tables, continue to normalize them independently in Step 2 instead.
 
+
+## 2b. Audit and persist a canonical snapshot
+
+After normalization or the legacy migration above, audit the canonical table and persist the audited rows to SQLite. Assign a new dataset ID to each immutable source snapshot. The persistence command rechecks the canonical schema, positive finite values, duplicate status, and target-specific canonical units before writing.
+
+```bash
+kinetics-research audit \
+  --input data/processed/legacy/observations.csv \
+  --output-dir data/processed/legacy/audit
+
+kinetics-research persist \
+  --input data/processed/legacy/audit/observations_audited.csv \
+  --database data/kinetics.sqlite3 \
+  --dataset-id legacy-release-2026-01 \
+  --name "Legacy kinetics release 2026-01" \
+  --source legacy-dataset \
+  --version 2026-01 \
+  --license-id CC-BY-4.0
+```
+
+Use the actual verified source version, license, citation, and dataset ID. The database stores canonical numeric values and units in the measurement table, while preserving the original value/unit, source record ID, target, and row metadata in each measurement's JSON metadata. Dataset IDs are immutable: replaying the same file and metadata is idempotent; changing content or metadata requires a new dataset ID. Imports are committed atomically, so a failed batch does not leave a partially imported snapshot. SQLite is for metadata and measurement records, not large embeddings or model tensors.
+
 ## 3. Add grouping metadata
 
 Use MMseqs2 to produce sequence-cluster assignments and RDKit to derive chemical scaffold identifiers. Merge these mappings back by stable source record ID. Preserve the tool versions and parameters.

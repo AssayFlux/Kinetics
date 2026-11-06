@@ -110,3 +110,8 @@ The feature-fusion MLP training/inference engine was merged in [PR #22](https://
 - Rust CI now runs `cargo fmt --all -- --check`, `cargo clippy --all-targets -- -D warnings`, and `cargo test --all-targets`. Full repository workflow run [#42194225207](https://github.com/AssayFlux/Kinetics/actions/runs/42194225207) passed Rust gates and Python 3.10, 3.11 and 3.12 suites.
 - This is a verified infrastructure foundation, not a deployed production service. External OIDC/JWT verification, managed secret-provider integration, durable distributed queue/leases/retries and enforced container quotas, authenticated network artifact handlers, append-only audit persistence, encrypted backup/restore drills, deployment isolation, and integration security testing remain required before Step 7 can be called fully complete.
 - Threat model, API contract and deployment requirements are documented in `docs/STEP7_RUST_INFRASTRUCTURE.md` and `docs/api/openapi-v1.yaml`.
+
+
+## Step 6 — Native molecular visualization and simulation
+
+The initial C++17/CMake molecular structure and scene-data foundation is implemented and CI-verified. See [Native molecular engine](NATIVE_MOLECULAR_ENGINE.md) and [Step 6 implementation status](STEP6_IMPLEMENTATION_STATUS.md). Do not mark Step 6 complete until reviewed reference structures validate the parser/scene contract, a production 3D renderer is delivered, and real OpenMM/GROMACS adapters produce fully parameterized, traceable execution artifacts with reference-system checks. No simulation execution or performance claim is currently asserted.

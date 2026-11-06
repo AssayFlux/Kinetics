@@ -21,7 +21,7 @@ use kinetics_infra::{
     cloud_artifacts::{CloudArtifactError, S3ArtifactStore},
     cloud_secrets::AwsSecretProvider,
     oidc::{AuthenticatedPrincipal, OidcError, OidcVerifier},
-    postgres::{AppendAuditEvent, AppendOnlyAuditStore, PostgresRuntimeStore, RuntimeStoreError},
+    postgres::{\n        AppendAuditEvent, AppendOnlyAuditStore, JobSubmissionLimits, PostgresRuntimeStore,\n        RuntimeStoreError,\n    },
 };
 
 #[derive(Clone)]
@@ -251,10 +251,12 @@ async fn submit_job(
             &user.tenant_id,
             &body.idempotency_key,
             body.payload,
-            body.max_runtime_seconds,
-            body.max_memory_bytes,
-            body.max_cpu_millis,
-            state.max_active_jobs,
+            JobSubmissionLimits {
+                max_runtime_seconds: body.max_runtime_seconds,
+                max_memory_bytes: body.max_memory_bytes,
+                max_cpu_millis: body.max_cpu_millis,
+                max_active_jobs: state.max_active_jobs,
+            },
         )
         .await
         .map_err(map_store_error)?;

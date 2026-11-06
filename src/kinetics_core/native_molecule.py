@@ -151,7 +151,8 @@ def build_simulation_plan(
     if not 0 < temperature_kelvin <= 1000:
         raise ValueError("temperature_kelvin must be in (0, 1000]")
     if pressure_bar is not None and (
-        not isinstance(pressure_bar, (int, float))
+        isinstance(pressure_bar, bool)
+        or not isinstance(pressure_bar, (int, float))
         or not math.isfinite(pressure_bar)
         or pressure_bar < 0
     ):

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import time
 
 import pytest
@@ -18,15 +19,39 @@ def workbench_imports():
 
 def test_workbench_schema_migrates_to_version_two(tmp_path):
     database = tmp_path / "metadata.sqlite3"
+    with sqlite3.connect(database) as connection:
+        connection.execute(
+            """CREATE TABLE datasets (
+                dataset_id TEXT PRIMARY KEY,
+                name TEXT NOT NULL,
+                source TEXT,
+                version TEXT,
+                license TEXT,
+                citation TEXT,
+                checksum_sha256 TEXT,
+                local_path TEXT,
+                metadata_json TEXT NOT NULL DEFAULT '{}',
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )"""
+        )
+        connection.execute(
+            "INSERT INTO datasets(dataset_id, name) VALUES (?, ?)",
+            ("pre-workbench", "Existing dataset"),
+        )
+        connection.execute("PRAGMA user_version = 1")
     store = KineticsSQLite(database)
     store.initialize()
     with store.session() as connection:
         assert connection.execute("PRAGMA user_version").fetchone()[0] == 2
+        preserved = connection.execute(
+            "SELECT name FROM datasets WHERE dataset_id='pre-workbench'"
+        ).fetchone()[0]
         names = {
             row[0] for row in connection.execute(
                 "SELECT name FROM sqlite_master WHERE type='table'"
             )
         }
+    assert preserved == "Existing dataset"
     assert {
         "workbench_projects", "workbench_jobs", "workbench_artifacts"
     } <= names

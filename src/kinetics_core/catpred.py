@@ -19,12 +19,6 @@ from .provenance import file_record, write_json_atomic
 
 CATPRED_SOURCE = "CatPred-DB"
 CATPRED_DATASET_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB"
-_SOURCE_CONTEXT_COLUMNS = (
-    "sequence_source", "ec", "taxonomy_id", "group", "substrate_smiles", "sequence_20cluster",
-    "sequence_40cluster", "sequence_60cluster", "sequence_80cluster",
-    "sequence_99cluster", "reactant_smiles", "reaction_smiles", "product_smiles",
-    "log10_value", "log10km_mean", "pdbpath",
-)
 
 
 def normalize_catpred_csv(
@@ -116,13 +110,15 @@ def normalize_catpred_csv(
             else "geometric_mean_over_source_measurements_for_sequence_substrate_pair"
         ),
     )
-    # Preserve source-specific fields verbatim; do not reinterpret split labels or
-    # cluster IDs as newly calculated identities.
-    for column in _SOURCE_CONTEXT_COLUMNS:
-        if column in raw.columns:
-            accepted[f"source_{column}"] = [
-                raw.iloc[int(index)][column] for index in accepted["source_row_number"]
-            ]
+    # Preserve every upstream column verbatim; split/cluster labels remain source
+    # annotations and are never presented as newly calculated identities.
+    preserved_columns = [
+        column for column in raw.columns if not column.startswith("__kinetics_")
+    ]
+    for column in preserved_columns:
+        accepted[f"source_{column}"] = [
+            raw.iloc[int(index)][column] for index in accepted["source_row_number"]
+        ]
     output = Path(output_dir).resolve()
     if output.exists():
         raise FileExistsError("CatPred output directory exists; choose a new output directory")
@@ -160,7 +156,7 @@ def normalize_catpred_csv(
             "temperature_k": temperature_k_column,
             "temperature_c": temperature_c_column,
             "assay_id": assay_id_column,
-            "source_context_preserved": [c for c in _SOURCE_CONTEXT_COLUMNS if c in raw.columns],
+            "source_context_preserved": preserved_columns,
         },
         "input_rows": int(len(raw)),
         "accepted_rows": int(len(accepted)),

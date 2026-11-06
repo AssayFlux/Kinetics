@@ -50,8 +50,14 @@ async fn postgres_enforces_tenant_quotas_leases_cancellation_and_append_only_aud
     };
     let jobs = PostgresRuntimeStore::new(pool.clone());
     let payload = serde_json::json!({"task":"kinetics.noop_healthcheck"});
+    let limits = JobSubmissionLimits {
+        max_runtime_seconds: 60,
+        max_memory_bytes: 1024,
+        max_cpu_millis: 500,
+        max_active_jobs: 1,
+    };
     let job = jobs
-        .submit("tenant-a", "key-1", payload.clone(), 60, 1024, 500, 1)
+        .submit("tenant-a", "key-1", payload.clone(), limits)
         .await
         .unwrap();
     let repeated = jobs
@@ -60,7 +66,7 @@ async fn postgres_enforces_tenant_quotas_leases_cancellation_and_append_only_aud
         .unwrap();
     assert_eq!(job.id, repeated.id);
     assert!(matches!(
-        jobs.submit("tenant-a", "key-2", payload.clone(), 60, 1024, 500, 1)
+        jobs.submit("tenant-a", "key-2", payload.clone(), limits)
             .await,
         Err(RuntimeStoreError::QuotaExceeded)
     ));
@@ -69,16 +75,13 @@ async fn postgres_enforces_tenant_quotas_leases_cancellation_and_append_only_aud
             "tenant-a",
             "key-1",
             serde_json::json!({"task":"changed"}),
-            60,
-            1024,
-            500,
-            1
+            limits
         )
         .await,
         Err(RuntimeStoreError::Conflict)
     ));
     let other_tenant = jobs
-        .submit("tenant-b", "key-1", payload.clone(), 60, 1024, 500, 1)
+        .submit("tenant-b", "key-1", payload.clone(), limits)
         .await
         .unwrap();
     assert_ne!(job.id, other_tenant.id);

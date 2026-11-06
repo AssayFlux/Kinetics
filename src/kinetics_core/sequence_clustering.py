@@ -182,6 +182,7 @@ def cluster_sequences(
         ),
         "cluster_count": int(clusters["cluster_representative_record_id"].nunique()),
         "input_fasta": file_record(fasta),
+        "mmseqs_cluster_output": file_record(cluster_file),
         "mapping": file_record(mapping_path),
         "mapping_rows": len(clusters),
         "unique_entities_all_assigned_once": len(clusters) == len(unique_indices),

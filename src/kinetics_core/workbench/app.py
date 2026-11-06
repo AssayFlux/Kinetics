@@ -465,6 +465,28 @@ def create_app(
                    WHERE job_id=?""",
                 (state, KineticsSQLite.json_dumps(result), error, job_id),
             )
+            if command in {"compare", "fit", "fit-multi"}:
+                target = parameters.get("target", "unspecified")
+                code_revision = result.get("git_revision") or parameters.get("git_revision")
+                connection.execute(
+                    """INSERT INTO training_runs
+                       (run_id, model_name, status, config_json, metrics_json,
+                        random_seed, code_revision, started_at, finished_at)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                       ON CONFLICT(run_id) DO UPDATE SET
+                         status=excluded.status,
+                         metrics_json=excluded.metrics_json,
+                         finished_at=excluded.finished_at""",
+                    (
+                        job_id,
+                        f"{command}:{target}",
+                        state,
+                        KineticsSQLite.json_dumps(parameters),
+                        KineticsSQLite.json_dumps(result),
+                        parameters.get("random_state"),
+                        code_revision,
+                    ),
+                )
 
     @app.get("/", include_in_schema=False)
     def home() -> FileResponse:
@@ -545,7 +567,13 @@ def create_app(
                     stream.write(chunk)
             if size == 0:
                 raise HTTPException(status_code=422, detail="Empty files are not accepted")
-            staging.rename(destination)
+            try:
+                os.link(staging, destination)
+            except FileExistsError as exc:
+                raise HTTPException(
+                    status_code=409, detail="A file with that name already exists"
+                ) from exc
+            staging.unlink()
         except Exception:
             staging.unlink(missing_ok=True)
             raise
@@ -582,12 +610,16 @@ def create_app(
 
     @app.get("/api/v1/experiments")
     def list_experiments() -> list[dict[str, Any]]:
-        return store.fetch_all(
+        rows = store.fetch_all(
             """SELECT run_id, model_name, model_version, status, dataset_id,
                       config_json, metrics_json, random_seed, code_revision,
                       started_at, finished_at, created_at
                FROM training_runs ORDER BY created_at DESC"""
         )
+        for row in rows:
+            row["configuration"] = json.loads(row.pop("config_json"))
+            row["metrics"] = json.loads(row.pop("metrics_json"))
+        return rows
 
     @app.get("/api/v1/projects/{project_id}/jobs")
     def list_jobs(project_id: str) -> list[dict[str, Any]]:
@@ -612,6 +644,12 @@ def create_app(
             build_cli_arguments(payload.command, payload.parameters, root)
         except (ValueError, FileNotFoundError, FileExistsError) as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
+        pending = store.fetch_all(
+            """SELECT COUNT(*) AS n FROM workbench_jobs
+               WHERE state IN ('queued','running')"""
+        )[0]["n"]
+        if pending >= 100:
+            raise HTTPException(status_code=429, detail="Workbench queue is full")
         job_id = str(uuid.uuid4())
         with store.transaction() as connection:
             connection.execute(

@@ -436,6 +436,7 @@ class ObservationFeatureBuilder:
             "feature_schema_version", "fingerprint_radius", "fingerprint_bits",
             "fingerprint_include_chirality", "graph_atom_features", "graph_edge_index",
             "graph_bond_features", "graph_atom_offsets", "graph_edge_offsets",
+            "graph_num_atoms", "graph_num_bonds",
         }
         collisions = reserved_names.intersection(group_columns)
         if collisions:
@@ -537,6 +538,14 @@ class ObservationFeatureBuilder:
                     graph_bond_features=graph_bond_features,
                     graph_atom_offsets=np.asarray(graph_atom_offsets, dtype=np.int64),
                     graph_edge_offsets=np.asarray(graph_edge_offsets, dtype=np.int64),
+                    graph_num_atoms=np.asarray(
+                        [graph["num_atoms"] for graph in molecular_graphs],
+                        dtype=np.int64,
+                    ),
+                    graph_num_bonds=np.asarray(
+                        [graph["num_bonds"] for graph in molecular_graphs],
+                        dtype=np.int64,
+                    ),
                     **(
                         {"sources": selected["source"].astype(str).to_numpy()}
                         if "source" in selected.columns else {}
@@ -574,6 +583,9 @@ class ObservationFeatureBuilder:
             "molecular_graph": {
                 "molecule_count": len(molecular_graphs),
                 "total_atoms": int(graph_atom_features.shape[0]),
+                "total_undirected_bonds": int(sum(
+                    graph["num_bonds"] for graph in molecular_graphs
+                )),
                 "total_directed_edges": int(graph_edge_index.shape[1]),
                 "total_bond_feature_rows": int(graph_bond_features.shape[0]),
                 "atom_offsets": graph_atom_offsets,

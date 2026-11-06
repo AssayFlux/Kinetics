@@ -326,7 +326,10 @@ def main(argv: list[str] | None = None) -> int:
             raise FileExistsError("Scaffold output directory already exists")
         if output == input_path.parent or output in input_path.parents:
             raise ValueError("Scaffold output directory must not contain the input file")
-        frame = pd.read_csv(input_path, dtype={"source_record_id": "string"})
+        frame = pd.read_csv(
+            input_path,
+            dtype={"source_record_id": "string", "source": "string"},
+        )
         accepted, rejected = annotate_scaffolds_audited(
             frame, smiles_column=args.smiles_column
         )

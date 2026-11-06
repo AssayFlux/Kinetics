@@ -11,7 +11,7 @@ from typing import Any
 import pandas as pd
 
 from .provenance import environment_record, sha256_file, write_json_atomic
-from .quality import audit_observations
+from .quality import audit_observations, review_potential_duplicate_observations
 
 
 def create_dataset_release(
@@ -57,6 +57,7 @@ def create_dataset_release(
 
     frame = pd.read_csv(observations, dtype={"source_record_id": "string"})
     audited, duplicates, quality = audit_observations(frame)
+    potential_duplicates = review_potential_duplicate_observations(audited)
     if audited.empty:
         raise ValueError("Cannot release an empty canonical observation dataset")
     if not set(audited["target"]).issubset({"km", "kcat"}):
@@ -75,6 +76,7 @@ def create_dataset_release(
         shutil.copy2(rejected, staging / "rejected_rows.csv")
         audited.to_csv(staging / "observations_audited.csv", index=False)
         duplicates.to_csv(staging / "duplicate_audit.csv", index=False)
+        potential_duplicates.to_csv(staging / "potential_duplicate_audit.csv", index=False)
         write_json_atomic(quality, staging / "quality_report.json")
         (staging / "DATA_CARD.md").write_text(
             f"# {dataset_name}\n\n"
@@ -97,6 +99,7 @@ def create_dataset_release(
             "rejected_rows.csv",
             "observations_audited.csv",
             "duplicate_audit.csv",
+            "potential_duplicate_audit.csv",
             "quality_report.json",
             "DATA_CARD.md",
         )
@@ -126,6 +129,7 @@ def create_dataset_release(
                 "rejected_rows": rejected_count,
                 "duplicate_groups": int(quality.get("n_duplicate_groups", 0)),
                 "conflicting_groups": int(quality.get("n_conflicting_groups", 0)),
+                "potential_duplicate_groups": int(len(potential_duplicates)),
             },
             "artifacts": artifacts,
             "policy": (

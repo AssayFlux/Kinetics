@@ -179,9 +179,9 @@ def calculate_ca_distance(
         feature_name="ca_distance",
         value=distance,
         unit="angstrom",
-        tool_name="kinetics-pdb",
+        tool_name=f"kinetics-{parsed.structure.coordinate_format}",
         tool_version="0.1.0",
         parameter_sha256=parameter_digest,
-        coordinate_frame=f"pdb-model:{model}",
+        coordinate_frame=f"{parsed.structure.coordinate_format}-model:{model}",
         mapping_evidence_ids=(first.evidence_id, second.evidence_id),
     )

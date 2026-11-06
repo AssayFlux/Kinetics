@@ -1,6 +1,6 @@
 # Step 9 — Proteomics and structural-biology domain contract
 
-**Status: first implementation increment delivered for sequence/structure records and fixed-column PDB parsing; broader domain acceptance remains open.**
+**Status: versioned sequence/structure records, provenance-checked PDB and mmCIF coordinate parsing, and evidence-linked C-alpha distances are implemented; broader domain acceptance remains open.**
 
 ## Why this is the first expansion
 

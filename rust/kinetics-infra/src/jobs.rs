@@ -21,10 +21,7 @@ pub struct ResourceLimits {
 
 impl ResourceLimits {
     pub fn validate(&self) -> Result<(), JobError> {
-        if self.max_runtime_seconds == 0
-            || self.max_memory_bytes == 0
-            || self.max_cpu_millis == 0
-        {
+        if self.max_runtime_seconds == 0 || self.max_memory_bytes == 0 || self.max_cpu_millis == 0 {
             return Err(JobError::InvalidLimits);
         }
         Ok(())
@@ -92,12 +89,7 @@ impl JobRegistry {
         Ok(job)
     }
 
-    pub fn transition(
-        &mut self,
-        tenant: &str,
-        id: &str,
-        next: JobState,
-    ) -> Result<Job, JobError> {
+    pub fn transition(&mut self, tenant: &str, id: &str, next: JobState) -> Result<Job, JobError> {
         let job = self.jobs.get_mut(id).ok_or(JobError::NotFound)?;
         if job.tenant_id != tenant {
             return Err(JobError::NotFound);

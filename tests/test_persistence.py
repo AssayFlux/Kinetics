@@ -57,7 +57,8 @@ def test_import_audit_persist_pipeline_preserves_independent_targets_and_provena
     assert len(measurements) == 3
     assert {row[0] for row in measurements} == {"km", "kcat"}
     km = next(row for row in measurements if row[0] == "km")
-    assert km[1:3] == pytest.approx((250e-6, "M"))
+    assert km[1] == pytest.approx(250e-6)
+    assert km[2] == "M"
     metadata = json.loads(km[3])
     assert metadata["source_record_id"] == "00017"
     assert metadata["original_value"] == 250.0

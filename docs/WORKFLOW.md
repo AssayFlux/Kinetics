@@ -207,3 +207,35 @@ result = predict_one(
 ```
 
 Predictions are computational estimates, not experimental measurements. Record the model version, source context, and applicability limitations with downstream use.
+
+
+## Protein and chemical representations (Step 3)
+
+Feature archives are generated from the canonical one-observation-per-row table after identity normalization. The default protein encoder is `facebook/esm2_t6_8M_UR50D`, pinned to model and tokenizer revision `8c576d2aba1b27317e9321c8491d72f00d1b110a`. The encoder uses residue mean pooling and excludes BOS, EOS, and padding tokens. It rejects empty, over-length, or unsupported sequences rather than silently truncating them. The baseline extra (PyTorch and Transformers) is required for new ESM inference.
+
+The chemical vector is a 2,048-bit Morgan fingerprint (radius 2) with chirality included by default. RDKit canonical isomeric SMILES are used for cache identity; the pipeline does not silently strip salts, normalize tautomers, or collapse stereoisomers. The scaffold grouping convention is deliberately different: Bemis-Murcko scaffold IDs ignore stereochemistry by default so stereoisomers are assigned to the same scaffold group. Use `include_chirality=True` only when a stereochemistry-specific grouping is the declared benchmark question.
+
+Feature cache keys include the feature schema, protein model/tokenizer revisions and settings, chemical fingerprint parameters, RDKit/Python/scientific-library versions, normalized sequence, and canonical isomeric SMILES. Cache files use non-pickle NPZ arrays and atomic replacement. Feature generation is batched with a configurable bounded batch size.
+
+Each feature archive has an adjacent `.manifest.json` containing the feature schema and configuration, source/source-version/license identifiers when present, aligned row-identity hashes, archive SHA-256, and runtime metadata. The NPZ archive retains source record IDs, source labels (when supplied), normalized sequences, original and canonical SMILES, target values, and requested grouping arrays. Inference mode and immutable model revisions improve reproducibility; bitwise identity across different hardware or library builds is not promised.
+
+MMseqs2 clustering validates sequence alphabets and unique non-empty record IDs before execution. The resulting manifest records the MMseqs2 version, command and thresholds, input FASTA hash, cluster mapping hash, and a check that every input record was assigned exactly once. The MMseqs2 executable is an external dependency and is not installed by the Python package.
+
+Example feature generation is available through the Python API:
+
+```python
+import pandas as pd
+from kinetics_core.features import ObservationFeatureBuilder
+
+observations = pd.read_csv("data/curated/observations.csv")
+builder = ObservationFeatureBuilder(cache_dir="data/cache/esm2-morgan")
+builder.transform_frame(
+    observations,
+    target="km",
+    output_path="data/features/km_features.npz",
+    group_columns=("protein_cluster_id", "scaffold_id"),
+    batch_size=16,
+)
+```
+
+Do not generate train/test-specific transforms from combined data if those transforms learn parameters. ESM-2 and Morgan representations are fixed pretrained/algorithmic transforms; any learned dimensionality reduction, feature selection, normalization, or imputation must be fitted on the training partition only. Retain the cluster/scaffold split manifest alongside every feature/model artifact.

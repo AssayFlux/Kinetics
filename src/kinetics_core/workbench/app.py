@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Annotated, Any, Literal
 from urllib.parse import urlsplit
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -257,6 +257,15 @@ def build_cli_arguments(command: str, parameters: dict[str, Any], root: Path) ->
             raise ValueError(f"{field} has an unsupported value type")
 
     return result
+
+
+
+class SequenceAlignmentRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    reference_sequence: str = Field(min_length=1, max_length=200000)
+    query_sequence: str = Field(min_length=1, max_length=200000)
+    mode: Literal["global", "local"] = "global"
 
 
 def create_app(
@@ -518,9 +527,122 @@ def create_app(
                     ),
                 )
 
+    @app.get("/structure-viewer", include_in_schema=False)
+    def structure_viewer() -> FileResponse:
+        return FileResponse(Path(__file__).parent / "static" / "structure-viewer.html")
+
     @app.get("/", include_in_schema=False)
     def home() -> FileResponse:
         return FileResponse(Path(__file__).parent / "static" / "index.html")
+
+    @app.post("/api/v1/structures/analyze")
+    def analyze_structure(
+        file: Annotated[UploadFile, File()],
+        contact_cutoff_angstrom: float = 8.0,
+    ) -> dict[str, Any]:
+        """Run bounded local Biopython structure summary, SASA and contact analysis."""
+        filename = Path(file.filename or "").name
+        suffix = Path(filename).suffix.lower()
+        file_format = "mmcif" if suffix in {".cif", ".mmcif"} else "pdb" if suffix in {".pdb", ".ent"} else None
+        if file_format is None:
+            raise HTTPException(status_code=422, detail="Upload a PDB or mmCIF file")
+        if not 0 < contact_cutoff_angstrom <= 30:
+            raise HTTPException(status_code=422, detail="Contact cutoff must be in (0, 30] angstrom")
+        content = file.file.read(50 * 1024 * 1024 + 1)
+        if len(content) > 50 * 1024 * 1024:
+            raise HTTPException(status_code=413, detail="Structure file exceeds 50 MiB")
+        if not content:
+            raise HTTPException(status_code=422, detail="Structure file is empty")
+        try:
+            from ..biopython_tools import (
+                calculate_residue_contacts,
+                calculate_residue_sasa,
+                structure_summary,
+            )
+            summary = structure_summary(content, file_format=file_format)
+            atom_count = sum(model["atom_count"] for model in summary["models"])
+            if atom_count > 100000:
+                raise HTTPException(
+                    status_code=413,
+                    detail="Structure analysis is limited to 100,000 atoms per request",
+                )
+            return {
+                "summary": summary,
+                "sasa": calculate_residue_sasa(content, file_format=file_format),
+                "contacts": calculate_residue_contacts(
+                    content, file_format=file_format,
+                    cutoff_angstrom=contact_cutoff_angstrom,
+                ),
+            }
+        except (ValueError, RuntimeError) as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        finally:
+            file.file.close()
+
+    @app.post("/api/v1/structures/superimpose")
+    def superimpose_structures(
+        reference_file: Annotated[UploadFile, File()],
+        mobile_file: Annotated[UploadFile, File()],
+        chain_id: str = Form(min_length=1, max_length=8),
+        residue_pairs_json: str = Form(min_length=2, max_length=20000),
+    ) -> dict[str, Any]:
+        """Compare two structures using caller-supplied author residue correspondences."""
+        def read_upload(upload: UploadFile) -> tuple[bytes, str]:
+            suffix = Path(upload.filename or "").suffix.lower()
+            file_format = "mmcif" if suffix in {".cif", ".mmcif"} else "pdb" if suffix in {".pdb", ".ent"} else None
+            if file_format is None:
+                raise HTTPException(status_code=422, detail="Both inputs must be PDB or mmCIF")
+            payload = upload.file.read(50 * 1024 * 1024 + 1)
+            if len(payload) > 50 * 1024 * 1024:
+                raise HTTPException(status_code=413, detail="Each structure file is limited to 50 MiB")
+            if not payload:
+                raise HTTPException(status_code=422, detail="Structure files cannot be empty")
+            return payload, file_format
+        try:
+            try:
+                pairs_value = json.loads(residue_pairs_json)
+            except json.JSONDecodeError as exc:
+                raise HTTPException(status_code=422, detail="residue_pairs_json must be valid JSON") from exc
+            if (
+                not isinstance(pairs_value, list)
+                or len(pairs_value) < 3
+                or len(pairs_value) > 5000
+                or any(
+                    not isinstance(pair, list) or len(pair) != 2
+                    or any(isinstance(number, bool) or not isinstance(number, int) for number in pair)
+                    for pair in pairs_value
+                )
+            ):
+                raise HTTPException(
+                    status_code=422,
+                    detail="Provide 3 to 5000 explicit [reference_residue, mobile_residue] integer pairs",
+                )
+            reference, reference_format = read_upload(reference_file)
+            mobile, mobile_format = read_upload(mobile_file)
+            from ..biopython_tools import superimpose_ca_atoms
+            return superimpose_ca_atoms(
+                reference, mobile,
+                reference_format=reference_format,
+                mobile_format=mobile_format,
+                chain_id=chain_id,
+                residue_pairs=[(pair[0], pair[1]) for pair in pairs_value],
+            )
+        except (ValueError, RuntimeError) as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        finally:
+            reference_file.file.close()
+            mobile_file.file.close()
+
+    @app.post("/api/v1/sequences/align")
+    def align_sequences(payload: SequenceAlignmentRequest) -> dict[str, Any]:
+        """Align two supplied protein sequences with Biopython PairwiseAligner."""
+        try:
+            from ..biopython_tools import align_protein_sequences
+            return align_protein_sequences(
+                payload.reference_sequence, payload.query_sequence, mode=payload.mode
+            )
+        except (ValueError, RuntimeError) as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
 
     @app.get("/api/v1/health")
     def health() -> dict[str, Any]:

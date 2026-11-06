@@ -260,3 +260,121 @@ def test_workbench_rejects_path_escape_and_upload_overwrite(tmp_path):
             },
         )
         assert escape.status_code == 422
+
+
+def test_structure_viewer_is_served_by_workbench(tmp_path):
+    TestClient, _, create_app = workbench_imports()
+    app = create_app(
+        workspace_root=tmp_path / "workspace",
+        database_path=tmp_path / "metadata.sqlite3",
+    )
+    with TestClient(app) as client:
+        response = client.get("/structure-viewer")
+        assert response.status_code == 200
+        assert "Kinetics 3D Structure Viewer" in response.text
+        assert "Calculate contacts" in response.text
+        assert "Export PNG" in response.text
+
+
+def test_structure_analysis_api_returns_provenance_and_features(tmp_path):
+    pytest.importorskip("Bio")
+    TestClient, _, create_app = workbench_imports()
+    app = create_app(
+        workspace_root=tmp_path / "workspace",
+        database_path=tmp_path / "metadata.sqlite3",
+    )
+    def atom(serial, name, residue, number, x, y, z, element="C"):
+        return (
+            f"ATOM  {serial:5d} {name:>4s} {residue:>3s} A{number:4d}    "
+            f"{x:8.3f}{y:8.3f}{z:8.3f}{1.0:6.2f}{20.0:6.2f}"
+            f"          {element:>2s}\\n"
+        )
+    lines = []
+    serial = 1
+    for number, residue, x, y, z in [
+        (1, "ALA", 0.0, 0.0, 0.0),
+        (2, "CYS", 4.0, 0.0, 0.0),
+        (3, "ASP", 0.0, 4.0, 0.0),
+    ]:
+        for name, dx, element in [("N", -0.8, "N"), ("CA", 0.0, "C"), ("C", 0.8, "C")]:
+            lines.append(atom(serial, name, residue, number, x + dx, y, z, element))
+            serial += 1
+    pdb = ("".join(lines) + "TER\\nEND\\n").encode("ascii")
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/structures/analyze",
+            files={"file": ("fixture.pdb", pdb, "chemical/x-pdb")},
+        )
+        assert response.status_code == 200, response.text
+        result = response.json()
+        assert len(result["summary"]["source_sha256"]) == 64
+        assert result["sasa"]["feature"] == "residue_sasa"
+        assert result["contacts"]["feature"] == "residue_contacts"
+        assert len(result["sasa"]["residues"]) == 3
+
+
+def test_structure_analysis_api_rejects_unsupported_format(tmp_path):
+    TestClient, _, create_app = workbench_imports()
+    app = create_app(
+        workspace_root=tmp_path / "workspace",
+        database_path=tmp_path / "metadata.sqlite3",
+    )
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/structures/analyze",
+            files={"file": ("notes.txt", b"not a structure", "text/plain")},
+        )
+        assert response.status_code == 422
+
+
+def test_sequence_alignment_api_uses_pairwise_aligner(tmp_path):
+    TestClient, _, create_app = workbench_imports()
+    app = create_app(
+        workspace_root=tmp_path / "workspace",
+        database_path=tmp_path / "metadata.sqlite3",
+    )
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/sequences/align",
+            json={
+                "reference_sequence": "MKTAYIAKQRQISFVKSHFS",
+                "query_sequence": "MKTAYIAKQRQISFVKSHFS",
+                "mode": "global",
+            },
+        )
+        assert response.status_code == 200, response.text
+        assert response.json()["method"] == "Biopython PairwiseAligner"
+        assert response.json()["score"] > 0
+
+
+def test_structure_superposition_api_requires_explicit_residue_pairs(tmp_path):
+    pytest.importorskip("Bio")
+    TestClient, _, create_app = workbench_imports()
+    app = create_app(
+        workspace_root=tmp_path / "workspace",
+        database_path=tmp_path / "metadata.sqlite3",
+    )
+    def atom(serial, residue, number, x, y, z):
+        return (
+            f"ATOM  {serial:5d} {'CA':>4s} {residue:>3s} A{number:4d}    "
+            f"{x:8.3f}{y:8.3f}{z:8.3f}{1.0:6.2f}{20.0:6.2f}"
+            "           C\\n"
+        )
+    pdb = (
+        atom(1, "ALA", 1, 0, 0, 0)
+        + atom(2, "CYS", 2, 4, 0, 0)
+        + atom(3, "ASP", 3, 0, 4, 0)
+        + "TER\\nEND\\n"
+    ).encode("ascii")
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/structures/superimpose",
+            data={"chain_id": "A", "residue_pairs_json": "[[1,1],[2,2],[3,3]]"},
+            files={
+                "reference_file": ("reference.pdb", pdb, "chemical/x-pdb"),
+                "mobile_file": ("mobile.pdb", pdb, "chemical/x-pdb"),
+            },
+        )
+        assert response.status_code == 200, response.text
+        assert response.json()["rmsd_angstrom"] == pytest.approx(0.0, abs=1e-6)
+        assert response.json()["atom_count"] == 3

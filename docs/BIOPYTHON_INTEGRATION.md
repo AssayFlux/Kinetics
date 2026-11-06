@@ -63,3 +63,18 @@ structure-prediction/docking models as separately licensed and validated tools.
 - Store compact metadata and searchable records in SQLite; store large sequence
   collections, coordinates, embeddings, and arrays in appropriate files or
   columnar/chunked stores, with hashes and paths registered in SQLite.
+
+
+## Implemented structural-analysis increment (2026-11-06)
+
+The following capabilities are now implemented in `kinetics_core.biopython_tools` and covered by tests:
+
+- PDB/mmCIF structure summaries with source SHA-256, model, chain, atom and polymer-residue counts.
+- Residue solvent-accessible surface area using `Bio.PDB.SASA.ShrakeRupley`.
+- Heavy-atom residue contacts using `Bio.PDB.NeighborSearch`, with an explicit distance cutoff.
+- C-alpha superposition and RMSD using `Bio.PDB.Superimposer` and caller-supplied author residue-number pairs.
+- Protein sequence alignment using `Bio.Align.PairwiseAligner` and BLOSUM62.
+
+The browser-based 3Dmol.js viewer is served from the workbench at `/structure-viewer`. It supports PDB/mmCIF file selection, multiple molecular representations, surface visibility, ligand visibility, residue highlighting, geometric contacts and PNG export. See `docs/STRUCTURE_VIEWER_APK_TESTING.md` for installation and Android USB testing instructions.
+
+This increment does not mean every BioPython module in the table above is integrated. BLAST/Entrez adapters, multiple-sequence alignment workflows, phylogenetics, DSSP, automated residue correspondence, and external-tool orchestration still need separate implementation and validation.

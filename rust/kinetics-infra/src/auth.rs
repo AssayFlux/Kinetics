@@ -8,8 +8,11 @@ pub struct Principal {
 }
 
 impl Principal {
-    pub fn new(subject: impl Into<String>, tenant_id: impl Into<String>,
-               scopes: impl IntoIterator<Item = String>) -> Result<Self, AuthError> {
+    pub fn new(
+        subject: impl Into<String>,
+        tenant_id: impl Into<String>,
+        scopes: impl IntoIterator<Item = String>,
+    ) -> Result<Self, AuthError> {
         let subject = subject.into();
         let tenant_id = tenant_id.into();
         if subject.trim().is_empty() || tenant_id.trim().is_empty() {
@@ -28,11 +31,16 @@ impl Principal {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum AuthError { InvalidPrincipal, Forbidden, NotFound }
+pub enum AuthError {
+    InvalidPrincipal,
+    Forbidden,
+    NotFound,
+}
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
     fn scopes_and_tenant_boundaries_are_enforced() {
         let user = Principal::new("alice", "tenant-a", ["artifact:read".to_string()]).unwrap();

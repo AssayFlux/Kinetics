@@ -59,6 +59,8 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
     assert "ph is not numeric" in rejected.loc[0, "reason"]
     assert manifest["mapping"]["aggregate_log10"] == "log10km_mean"
     assert manifest["source_aggregate_unit"] == "mM"
+    assert manifest["source_processing_revision"] == "931583821ff875e873002730fbbdf1047acfde77"
+    assert "931583821ff875e873002730fbbdf1047acfde77" in manifest["source_processing_refs"][0]
     assert manifest["source_clipping_policy"]["lower"] == 1e-8
     assert "BRENDA num_value" in manifest["unit_quality_warning"]
     assert manifest["mapping"]["ph"] == "ph"

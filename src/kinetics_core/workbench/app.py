@@ -754,7 +754,12 @@ def create_app(
         path = (root / rows[0]["log_path"]).resolve()
         if not path.is_relative_to(root) or not path.is_file():
             return {"log": ""}
-        return {"log": path.read_text(encoding="utf-8", errors="replace")[-20000:]}
+        with path.open("rb") as stream:
+            stream.seek(0, os.SEEK_END)
+            size = stream.tell()
+            stream.seek(max(0, size - 20000))
+            content = stream.read().decode("utf-8", errors="replace")
+        return {"log": content}
 
     @app.post("/api/v1/projects/{project_id}/jobs/{job_id}/report", status_code=201)
     def create_job_report(project_id: str, job_id: str) -> dict[str, Any]:

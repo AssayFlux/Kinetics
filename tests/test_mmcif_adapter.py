@@ -61,7 +61,7 @@ def test_mmcif_parse_and_evidence_linked_distance():
     parsed = parse_mmcif_coordinates(content, structure)
     feature = calculate_ca_distance(parsed, sequence, *mappings)
     assert feature.value == pytest.approx(5.0)
-    assert feature.coordinate_frame == "pdb-model:1"
+    assert feature.coordinate_frame == "mmcif-model:1"
     assert feature.mapping_evidence_ids == ("map:first", "map:second")
 
 

@@ -38,3 +38,11 @@ The Terraform state contains generated application database credentials and must
 This repository change supplies deployable code and infrastructure definitions. It does not create cloud resources, register an OIDC application, publish an image, apply Terraform, or perform a live disaster-recovery drill. The production worker currently has an allow-listed health-check task only; the Kinetics scientific task handlers must be registered before accepting scientific workloads. Per-job CPU/memory isolation must be moved to one Fargate task per job (or an equivalent cgroup sandbox) before multi-tenant untrusted workloads are enabled.
 
 The live deployment, provider-specific claim mapping, cloud IAM review, real artifact restore, database restore, penetration testing, and scientific executor integration are release gates—not inferred from passing CI.
+
+## Repository implementation status update (2026-11-06)
+
+The Rust OIDC/API, AWS Secrets Manager and KMS-encrypted S3 adapter, PostgreSQL durable job/audit store, worker lease runtime, PostgreSQL migration, Docker image, backup/restore scripts, and AWS ECS/RDS/S3/KMS Terraform candidate have been ported onto mainline in PR #46. CI now includes a disposable PostgreSQL service and Terraform validation. This is an infrastructure implementation candidate, not a live deployment.
+
+A code review of the current worker boundary is explicit: the only registered task handler is `kinetics.noop_healthcheck`. Scientific task execution is not yet registered. Job CPU/memory values are admission metadata; shared-worker Fargate task sizing is not per-job isolation. The deployment CIDR allowlist is required rather than defaulting to open internet access. The AWS account, VPC/subnets, ACM certificate, ECR image, OIDC provider and protected Terraform state must be supplied and reviewed before deployment.
+
+Acceptance remains blocked on successful current CI, deployed OIDC negative tests, live tenant-isolation tests, enforced per-job sandbox isolation, AWS IAM/network review, database and artifact restore drills, and scientific executor integration.

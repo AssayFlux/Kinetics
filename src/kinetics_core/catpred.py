@@ -7,9 +7,9 @@ locator when the published table has no native record identifier.
 from __future__ import annotations
 
 import argparse
+import pathlib
 import shutil
 import tempfile
-from pathlib import Path
 
 import pandas as pd
 
@@ -22,8 +22,8 @@ CATPRED_DATASET_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB
 
 
 def normalize_catpred_csv(
-    input_csv: str | Path,
-    output_dir: str | Path,
+    input_csv: str | pathlib.Path,
+    output_dir: str | pathlib.Path,
     *,
     target: str,
     value_column: str = "value",
@@ -41,10 +41,12 @@ def normalize_catpred_csv(
     assay_id_column: str | None = None,
     source_version: str,
     license_id: str,
-) -> tuple[Path, Path, Path]:
+) -> tuple[pathlib.Path, pathlib.Path, pathlib.Path]:
     if target not in ("km", "kcat"):
         raise ValueError("CatPred-DB adapter supports only km and kcat; Ki is not Km or kcat")
-    source_path = Path(input_csv)
+    if not source_version.strip() or not license_id.strip():
+        raise ValueError("CatPred imports require non-empty source_version and license_id")
+    source_path = pathlib.Path(input_csv)
     if not source_path.is_file():
         raise FileNotFoundError(source_path)
     if unit is None and unit_column is None:
@@ -121,13 +123,13 @@ def normalize_catpred_csv(
         accepted[f"source_{column}"] = [
             raw.iloc[int(index)][column] for index in accepted["source_row_number"]
         ]
-    output = Path(output_dir).resolve()
+    output = pathlib.Path(output_dir).resolve()
     if output.exists():
         raise FileExistsError("CatPred output directory exists; choose a new output directory")
     if output == source_path.resolve().parent or output in source_path.resolve().parents:
         raise ValueError("CatPred output directory must not contain the raw source file")
     output.parent.mkdir(parents=True, exist_ok=True)
-    staging = Path(tempfile.mkdtemp(prefix=f".{output.name}.staging-", dir=output.parent))
+    staging = pathlib.Path(tempfile.mkdtemp(prefix=f".{output.name}.staging-", dir=output.parent))
     normalized_path = staging / f"{target}_observations.csv"
     rejected_path = staging / f"{target}_rejected_rows.csv"
     manifest_path = staging / f"{target}_curation_manifest.json"

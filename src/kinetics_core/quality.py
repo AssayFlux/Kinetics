@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from typing import Any
+import typing
 
 import numpy as np
 import pandas as pd
@@ -183,14 +183,14 @@ def review_potential_duplicate_observations(
     return pd.DataFrame(groups)
 
 
-def _identity_text(value: Any) -> str | None:
+def _identity_text(value: typing.Any) -> str | None:
     if value is None or pd.isna(value):
         return None
     text = str(value).strip()
     return text or None
 
 
-def _rounded_optional(value: Any, digits: int) -> float | None:
+def _rounded_optional(value: typing.Any, digits: int) -> float | None:
     if value is None or pd.isna(value):
         return None
     numeric = float(value)

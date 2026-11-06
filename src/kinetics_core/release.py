@@ -52,7 +52,11 @@ def create_dataset_release(
     )
     if not rejected_paths or len(set(rejected_paths)) != len(rejected_paths):
         raise ValueError("Provide one or more distinct rejection audit files")
-    manifest_paths = [Path(path).resolve() for path in source_manifests]
+    manifest_paths = (
+        [Path(source_manifests).resolve()]
+        if isinstance(source_manifests, (str, Path))
+        else [Path(path).resolve() for path in source_manifests]
+    )
     if len(set(manifest_paths)) != len(manifest_paths):
         raise ValueError("Source manifest paths must be distinct")
     destination = Path(output_dir).resolve()

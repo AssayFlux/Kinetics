@@ -10,6 +10,7 @@ import re
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import urlsplit
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -38,12 +39,36 @@ CATPRED_BASE_URL = "https://huggingface.co/datasets/RosettaCommons/CatPred-DB/re
 CATPRED_GITHUB_RAW = "https://raw.githubusercontent.com/maranasgroup/CatPred-DB"
 
 
+def is_catpred_hf_url(url: str) -> bool:
+    """Return whether a URL is on the exact gated dataset origin and path."""
+    parsed = urlsplit(url)
+    return (
+        parsed.scheme == "https"
+        and parsed.hostname == "huggingface.co"
+        and parsed.port in (None, 443)
+        and parsed.username is None
+        and parsed.password is None
+        and parsed.path.startswith("/datasets/RosettaCommons/CatPred-DB/")
+    )
+
+
 def request_headers(url: str, token: str | None = None) -> dict[str, str]:
-    """Attach credentials only to the Hugging Face dataset host."""
+    """Attach credentials only to the exact Hugging Face dataset origin."""
     headers = {"User-Agent": "AssayFlux-Kinetics/0.1"}
-    if token and url.startswith("https://huggingface.co/datasets/RosettaCommons/CatPred-DB/"):
+    if token and is_catpred_hf_url(url):
         headers["Authorization"] = f"Bearer {token}"
     return headers
+
+
+class _SafeRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Never forward a bearer token to a different redirect origin."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        redirected = super().redirect_request(req, fp, code, msg, headers, newurl)
+        if redirected is not None and req.has_header("Authorization"):
+            if not is_catpred_hf_url(newurl):
+                redirected.remove_header("Authorization")
+        return redirected
 
 
 def download(url: str, destination: Path, token: str | None = None) -> dict:
@@ -54,7 +79,7 @@ def download(url: str, destination: Path, token: str | None = None) -> dict:
     temporary.unlink(missing_ok=True)
     try:
         with (
-            urllib.request.urlopen(request, timeout=60) as response,
+            urllib.request.build_opener(_SafeRedirectHandler()).open(request, timeout=60) as response,
             temporary.open("wb") as output,
         ):
             while True:
@@ -71,7 +96,7 @@ def download(url: str, destination: Path, token: str | None = None) -> dict:
         temporary.unlink(missing_ok=True)
         if (
             exc.code in (401, 403)
-            and url.startswith("https://huggingface.co/datasets/RosettaCommons/CatPred-DB/")
+            and is_catpred_hf_url(url)
         ):
             raise RuntimeError(
                 "CatPred-DB rejected this download (HTTP "

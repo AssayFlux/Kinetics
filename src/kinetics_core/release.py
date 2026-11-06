@@ -1,12 +1,13 @@
 """Immutable, license-gated dataset releases with verifiable artifact hashes."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import json
-from pathlib import Path
 import shutil
 import tempfile
-from typing import Any, Sequence
+from collections.abc import Sequence
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
 
 import pandas as pd
 
@@ -62,7 +63,11 @@ def create_dataset_release(
             raise ValueError("Release directory must not contain or overwrite source artifacts")
     if any(not path.is_file() for path in manifest_paths):
         raise FileNotFoundError("A supplied source manifest does not exist")
-    if observations in rejected_paths or observations in manifest_paths or set(rejected_paths).intersection(manifest_paths):
+    if (
+        observations in rejected_paths
+        or observations in manifest_paths
+        or set(rejected_paths).intersection(manifest_paths)
+    ):
         raise ValueError("Observations and rejection audit must be separate files")
     if destination.exists():
         raise FileExistsError(f"Immutable release already exists: {destination}")
@@ -82,10 +87,12 @@ def create_dataset_release(
     rejected_frame = pd.concat(rejection_frames, ignore_index=True, sort=False)
     rejected_count = int(len(rejected_frame))
     aggregation_methods = sorted(
-        str(value) for value in audited.get("aggregation_method", pd.Series(dtype=str)).dropna().unique()
+        str(value)
+        for value in audited.get("aggregation_method", pd.Series(dtype=str)).dropna().unique()
     )
     measurement_kinds = sorted(
-        str(value) for value in audited.get("measurement_kind", pd.Series(["individual_measurement"])).unique()
+        str(value)
+        for value in audited.get("measurement_kind", pd.Series(["individual_measurement"])).unique()
     )
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(

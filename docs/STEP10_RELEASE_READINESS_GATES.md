@@ -79,10 +79,10 @@ Clinical or regulated use is always outside this general research release decisi
 | Step 2 real data | CatPred gate requires researcher acceptance; no immutable real snapshot/release recorded | NO-GO for scientific benchmark claims |
 | Step 3 execution | Pinned ESM-2 and MMseqs2 not run on reviewed real data | NO-GO for representation reproducibility claims |
 | Step 4/5 science | No real-data model comparison/external validation | NO-GO for predictive performance claims |
-| Step 7 production | Production OIDC/JWT, managed secrets, distributed worker leases/quotas, network artifact service, durable audit and encrypted recovery drill remain open | NO-GO for remote multi-tenant production |
-| Step 8 acceptance | Researcher/screen-reader UAT, desktop upgrade/rollback and real-workload performance/recovery remain open | Local engineering foundation only; not accepted as complete |
-| Step 9 | Domain contracts and validation evidence are not yet implemented/approved | No expanded-domain capability claim |
-| Step 10 | This checklist is a control specification; release evidence and sign-offs have not been assembled | No production release sign-off |
+| Step 7 production | OIDC/JWT, managed secrets, authenticated tenant API, PostgreSQL jobs/audit, S3/KMS artifacts, Terraform and backup/restore tooling are implemented in merged code; live deployment, scientific executor, per-job sandbox isolation, tenant penetration tests and restore drill remain unverified | NO-GO for remote multi-tenant production |
+| Step 8 acceptance | Local-first workbench, workflow dispatch, durable local job/artifact/report handling and fixture integration are implemented; full real-data workflow, researcher/screen-reader UAT, desktop upgrade/rollback and real-workload performance/recovery remain open | Local engineering foundation only; acceptance not signed off |
+| Step 9 | Versioned protein/structure/mapping/feature contracts and a provenance-checked PDB C-alpha adapter with fixture tests are implemented; mmCIF, source adapters, alignment generation, independent structure checks and real-data benchmarks remain open | Limited PDB parsing/feature capability only; no broad proteomics or scientific-validity claim |
+| Step 10 | Executable release-manifest evaluator is implemented; release manifest, SBOM, security/recovery/UAT evidence and accountable sign-offs have not been assembled | NO-GO; no production release sign-off |
 
 ## Evidence retention
 

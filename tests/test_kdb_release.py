@@ -1,0 +1,71 @@
+import json
+
+import pandas as pd
+import pytest
+
+from kinetics_core.identity import normalize_biomolecular_identities
+from kinetics_core.release import create_dataset_release, verify_dataset_release
+
+
+def _observations(path):
+    pd.DataFrame({
+        "target": ["km", "km", "kcat"],
+        "value": [2.0, 2.0, 4.0],
+        "unit": ["uM", "uM", "s^-1"],
+        "canonical_value": [2e-6, 2e-6, 4.0],
+        "canonical_unit": ["M", "M", "s^-1"],
+        "source": ["fixture"] * 3,
+        "source_record_id": ["a", "b", "c"],
+    }).to_csv(path, index=False)
+
+
+def test_identity_normalization_is_deterministic_and_audits_invalid_inputs():
+    frame = pd.DataFrame({
+        "source_record_id": ["one", "two"],
+        "sequence": [" acd ef ", "ACD*"],
+        "smiles": ["CCO", "not-smiles"],
+    })
+    accepted, rejected = normalize_biomolecular_identities(frame)
+    assert len(accepted) == 1
+    assert accepted.iloc[0]["sequence_normalized"] == "ACDEF"
+    assert len(accepted.iloc[0]["protein_content_id"]) == 64
+    assert accepted.iloc[0]["smiles_canonical"] == "CCO"
+    assert len(rejected) == 1
+    assert "invalid amino-acid" in rejected.iloc[0]["reason"]
+
+
+def test_release_requires_license_and_citation(tmp_path):
+    observations, rejected = tmp_path / "observations.csv", tmp_path / "rejected.csv"
+    _observations(observations)
+    pd.DataFrame(columns=["source_row_number", "reason"]).to_csv(rejected, index=False)
+    with pytest.raises(ValueError, match="license_id"):
+        create_dataset_release(
+            observations, rejected, tmp_path / "release",
+            dataset_id="fixture-v1", dataset_name="Fixture", source="fixture",
+            source_version="v1", license_id="", citation="fixture citation",
+        )
+
+
+def test_release_manifest_verifies_and_detects_tampering(tmp_path):
+    observations, rejected = tmp_path / "observations.csv", tmp_path / "rejected.csv"
+    _observations(observations)
+    pd.DataFrame(columns=["source_row_number", "reason"]).to_csv(rejected, index=False)
+    release = tmp_path / "release-v1"
+    result = create_dataset_release(
+        observations, rejected, release,
+        dataset_id="fixture-v1", dataset_name="Fixture", source="fixture",
+        source_version="v1", license_id="MIT", citation="fixture citation",
+    )
+    assert result["verified"] is True
+    manifest = json.loads((release / "release_manifest.json").read_text())
+    assert manifest["counts"]["observations"] == 3
+    assert manifest["counts"]["duplicate_groups"] >= 1
+    with pytest.raises(FileExistsError):
+        create_dataset_release(
+            observations, rejected, release,
+            dataset_id="fixture-v1", dataset_name="Fixture", source="fixture",
+            source_version="v1", license_id="MIT", citation="fixture citation",
+        )
+    (release / "observations.csv").write_text("tampered")
+    with pytest.raises(ValueError, match="checksum mismatch"):
+        verify_dataset_release(release)

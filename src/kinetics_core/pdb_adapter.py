@@ -1,8 +1,8 @@
 """Strict PDB coordinate ingestion and evidence-linked C-alpha distances.
 
-Only fixed-column PDB ATOM/HETATM records are supported here. mmCIF, biological
-assembly expansion, missing-residue reconstruction, and structural alignment are
-deliberately not inferred by this adapter.
+Only fixed-column PDB ATOM/HETATM records are supported. mmCIF, biological
+assembly expansion, missing-residue reconstruction and structural alignment
+are deliberately not inferred by this adapter.
 """
 from __future__ import annotations
 
@@ -77,14 +77,13 @@ def parse_pdb_coordinates(content: bytes, structure: StructureRecord) -> ParsedP
         if len(line) < 54:
             raise ValueError(f"truncated atom record on line {line_number}")
         try:
-            chain_id = line[21:22].strip() or "_"
             atom = PdbAtom(
                 model=model,
                 serial=int(line[6:11].strip()),
                 atom_name=line[12:16].strip().upper(),
                 alternate_location=line[16:17].strip(),
                 residue_name=line[17:20].strip().upper(),
-                chain_id=chain_id,
+                chain_id=line[21:22].strip() or "_",
                 residue_number=int(line[22:26].strip()),
                 insertion_code=line[26:27].strip(),
                 x=float(line[30:38]),
@@ -92,22 +91,25 @@ def parse_pdb_coordinates(content: bytes, structure: StructureRecord) -> ParsedP
                 z=float(line[46:54]),
                 occupancy=float(line[54:60].strip() or "1"),
                 b_factor=float(line[60:66].strip() or "0"),
-                element=(line[76:78].strip().upper() if len(line) >= 78 else ""),
+                element=line[76:78].strip().upper() if len(line) >= 78 else "",
             )
         except ValueError as exc:
             raise ValueError(f"invalid atom fields on line {line_number}") from exc
-        numeric = (atom.x, atom.y, atom.z, atom.occupancy, atom.b_factor)
-        if not all(math.isfinite(value) for value in numeric):
+        if not all(math.isfinite(v) for v in (
+            atom.x, atom.y, atom.z, atom.occupancy, atom.b_factor
+        )):
             raise ValueError(f"non-finite atom values on line {line_number}")
         if atom.chain_id not in structure.chain_ids:
-            raise ValueError(f"atom chain {atom.chain_id!r} is absent from structure metadata")
+            raise ValueError(
+                f"atom chain {atom.chain_id!r} is absent from structure metadata"
+            )
         if not atom.atom_name or not atom.residue_name:
             raise ValueError(f"missing atom or residue name on line {line_number}")
         atoms.append(atom)
 
     if not atoms:
         raise ValueError("PDB file contains no ATOM or HETATM coordinate records")
-    return ParsedPdb(structure=structure, coordinate_sha256=digest, atoms=tuple(atoms))
+    return ParsedPdb(structure, digest, tuple(atoms))
 
 
 def _mapped_ca(
@@ -135,14 +137,12 @@ def _mapped_ca(
     ]
     if not candidates:
         raise ValueError("mapped residue has no C-alpha coordinate in the requested model")
-    candidates.sort(
-        key=lambda atom: (
-            -atom.occupancy,
-            0 if not atom.alternate_location else 1,
-            atom.alternate_location,
-            atom.serial,
-        )
-    )
+    candidates.sort(key=lambda atom: (
+        -atom.occupancy,
+        0 if not atom.alternate_location else 1,
+        atom.alternate_location,
+        atom.serial,
+    ))
     return candidates[0]
 
 

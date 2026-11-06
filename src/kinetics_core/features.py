@@ -14,7 +14,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from .chemistry import canonicalize_smiles, molecular_graph_features, molecular_graph_features
+from .chemistry import canonicalize_smiles, molecular_graph_features
 from .provenance import environment_record, file_record, write_json_atomic
 
 LOG = logging.getLogger("kinetics_core.features")

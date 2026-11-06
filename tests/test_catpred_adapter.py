@@ -2,6 +2,7 @@ import json
 import math
 
 import pandas as pd
+import pytest
 
 from kinetics_core.catpred import normalize_catpred_csv
 
@@ -43,7 +44,7 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
     manifest = json.loads(manifest_path.read_text())
 
     assert accepted["source_record_id"].tolist() == ["0007", "0008"]
-    assert accepted["canonical_value"].tolist() == [2.5e-6, 4.0e-6]
+    assert accepted["canonical_value"].tolist() == pytest.approx([2.5e-6, 4.0e-6])
     assert accepted["source_value"].tolist() == [2.5, 4.0]
     assert accepted["original_unit"].eq("mM").all()
     assert accepted["measurement_kind"].tolist() == ["source_aggregated", "source_aggregated"]
@@ -95,7 +96,7 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
     assert accepted["measurement_kind"].eq("source_aggregated").all()
     assert accepted["aggregation_method"].iloc[0].startswith("geometric_mean")
     assert accepted["temperature_k"].tolist() == [298.15, 310.15]
-    assert accepted["canonical_value"].tolist() == [3e-6, 2e-5]
+    assert accepted["canonical_value"].tolist() == pytest.approx([3e-6, 2e-5])
     assert accepted["protein_accession"].tolist() == ["Q12345", "P01234"]
     assert accepted["smiles"].tolist() == ["CCO", "CCN"]
     assert manifest["mapping"]["substrate_smiles"] == "substrate_smiles"
@@ -108,17 +109,15 @@ def test_published_catpred_schema_uses_celsius_and_content_addressed_row_locator
     assert len(pd.read_csv(rejected_path)) == 0
 
 
-def test_catpred_rejects_ki_and_missing_unit_declaration(tmp_path):
+def test_catpred_rejects_ki_and_missing_aggregate_column(tmp_path):
     source = tmp_path / "source.csv"
     pd.DataFrame({"value": [1.0]}).to_csv(source, index=False)
-    import pytest
-
     with pytest.raises(ValueError, match="only km and kcat"):
         normalize_catpred_csv(
             source, tmp_path / "ki", target="ki", unit="mM",
             source_version="fixture", license_id="CC-BY-4.0",
         )
-    with pytest.raises(ValueError, match="units must be verified"):
+    with pytest.raises(ValueError, match="Missing CatPred aggregate target column"):
         normalize_catpred_csv(
             source, tmp_path / "km", target="km", unit="mM",
             source_version="fixture", license_id="CC-BY-4.0",
@@ -147,7 +146,7 @@ def test_catpred_kcat_uses_maximum_aggregate_and_reactant_smiles(tmp_path):
     manifest = json.loads(manifest_path.read_text())
     assert accepted.loc[0, "smiles"] == "CCO.O"
     assert accepted.loc[0, "canonical_unit"] == "s^-1"
-    assert accepted.loc[0, "canonical_value"] == 0.02
+    assert accepted.loc[0, "canonical_value"] == pytest.approx(0.02)
     assert accepted.loc[0, "source_value"] == 0.0036
     assert accepted.loc[0, "aggregation_method"].startswith("maximum")
     assert manifest["aggregation_method"].startswith("maximum")

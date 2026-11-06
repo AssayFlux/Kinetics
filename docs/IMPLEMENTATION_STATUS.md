@@ -139,3 +139,15 @@ The initial C++17/CMake molecular structure and scene-data foundation is impleme
 
 - Added `docs/STEP10_RELEASE_READINESS_GATES.md` with build/compatibility, scientific reproducibility, security/privacy, runtime/recovery and researcher-acceptance gates, a release-candidate manifest, evidence states and GO/CONDITIONAL/NO-GO decision rules.
 - Current release decision is NO-GO for scientific performance claims and remote multi-tenant production because real-data validation and production deployment gates remain unverified. No production release or recovery drill is claimed.
+
+
+## Step 9/10 executable contract increment (2026-11-06)
+
+- Added `kinetics_core.proteomics`: deterministic sequence normalization and SHA-256 identity, provenance-bearing sequence and structure records, explicit experimental/predicted distinction, explicit residue mapping with sequence/structure/chain checks, and derived-feature provenance requirements.
+- Added `kinetics_core.release_gate`: required release gate inventory, evidence-state validation, passed-evidence requirement, strict critical-gate non-waivability, complete non-critical waiver metadata, and conservative GO/CONDITIONAL/NO-GO evaluation. The evaluator never claims human sign-off.
+- Added focused unit tests and included both modules/tests in the CI lint command.
+- These increments are contract/data-integrity foundations only. Structure parsing, source adapters, actual mapping/feature computation, scientific validation, live CI/evidence verification, deployment, backup restore, and human release sign-off remain open.
+
+## Step 7 production reconciliation note (2026-11-06)
+
+The separate `kinetics/step7-production-runtime` branch contains OIDC, AWS Secrets Manager/S3, PostgreSQL job/audit, worker, backup/restore and deployment candidates, but it is 47 commits ahead and 50 behind the then-current mainline. Its latest recorded CI run (#42202295559) failed Terraform formatting and Rust formatting; Clippy and Rust tests were skipped. It has not been merged or accepted as production-ready. Do not deploy or claim Step 7 completion from that branch. Port only after reconciliation against current contracts, formatting, compile/test, live PostgreSQL integration, tenant-isolation and recovery evidence.

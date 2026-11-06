@@ -48,6 +48,21 @@ def build_parser() -> argparse.ArgumentParser:
     persist.add_argument("--license-id", help="Verified source license identifier")
     persist.add_argument("--citation", help="Dataset citation or DOI")
 
+    release = subparsers.add_parser("release", help="Create an immutable, license-gated dataset release")
+    release.add_argument("--observations", required=True)
+    release.add_argument("--rejected", required=True)
+    release.add_argument("--output-dir", required=True)
+    release.add_argument("--dataset-id", required=True)
+    release.add_argument("--dataset-name", required=True)
+    release.add_argument("--source", required=True)
+    release.add_argument("--source-version", required=True)
+    release.add_argument("--license-id", required=True)
+    release.add_argument("--citation", required=True)
+    release.add_argument("--source-url")
+
+    verify = subparsers.add_parser("verify-release", help="Verify all dataset release artifact hashes")
+    verify.add_argument("--release-dir", required=True)
+
     audit = subparsers.add_parser("audit")
     audit.add_argument("--input", required=True, help="Normalized observations CSV")
     audit.add_argument("--output-dir", required=True)
@@ -159,6 +174,20 @@ def main(argv: list[str] | None = None) -> int:
             dataset_id=args.dataset_id, name=args.name, source=args.source,
             version=args.version, license_id=args.license_id, citation=args.citation,
         )
+    elif args.command == "release":
+        from .release import create_dataset_release
+
+        result = create_dataset_release(
+            args.observations, args.rejected, args.output_dir,
+            dataset_id=args.dataset_id, dataset_name=args.dataset_name,
+            source=args.source, source_version=args.source_version,
+            license_id=args.license_id, citation=args.citation,
+            source_url=args.source_url,
+        )
+    elif args.command == "verify-release":
+        from .release import verify_dataset_release
+
+        result = verify_dataset_release(args.release_dir)
     elif args.command == "partition":
         from .partition import prepare_target_partitions
 

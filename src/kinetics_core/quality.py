@@ -5,6 +5,7 @@ source record IDs with differing measurements are surfaced as conflicts for
 curator review. Similar protein/substrate pairs across sources are not assumed
 to be duplicate experiments.
 """
+# ruff: noqa: I001
 
 from __future__ import annotations
 
@@ -23,7 +24,7 @@ def audit_observations(
     frame: pd.DataFrame,
     *,
     log10_tolerance: float = 1e-8,
-) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
+) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, typing.Any]]:
     """Annotate duplicate source IDs and return row-level and group-level audits."""
     missing = _REQUIRED - set(frame.columns)
     if missing:

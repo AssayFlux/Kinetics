@@ -12,6 +12,7 @@ def test_catpred_adapter_preserves_opaque_ids_and_assay_context(tmp_path):
         "measurement": [2.5, 4.0, 1.0],
         "unit": ["uM", "uM", "uM"],
         "sequence": ["AAAA", "BBBB", "CCCC"],
+        "uniprot": [None, None, None],
         "smiles": ["CCO", "CCN", "CCC"],
         "ph": [7.0, 6.5, "not-reported"],
         "temp_k": [298.15, 310.0, 300.0],
@@ -107,9 +108,15 @@ def test_catpred_rejects_ki_and_missing_unit_declaration(tmp_path):
     import pytest
 
     with pytest.raises(ValueError, match="only km and kcat"):
-        normalize_catpred_csv(source, tmp_path / "ki", target="ki", unit="mM")
+        normalize_catpred_csv(
+            source, tmp_path / "ki", target="ki", unit="mM",
+            source_version="fixture", license_id="CC-BY-4.0",
+        )
     with pytest.raises(ValueError, match="units must be verified"):
-        normalize_catpred_csv(source, tmp_path / "km", target="km")
+        normalize_catpred_csv(
+            source, tmp_path / "km", target="km",
+            source_version="fixture", license_id="CC-BY-4.0",
+        )
 
 
 

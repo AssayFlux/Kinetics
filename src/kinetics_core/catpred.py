@@ -4,6 +4,7 @@ CatPred-DB publishes target-specific Km, kcat and Ki tables. This adapter accept
 only Km and kcat, preserves source metadata, and uses a content-addressed file-row
 locator when the published table has no native record identifier.
 """
+# ruff: noqa: I001
 from __future__ import annotations
 
 import argparse

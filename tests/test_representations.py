@@ -138,7 +138,7 @@ def test_molecular_graph_preserves_atom_stereochemistry_and_bidirectional_edges(
     assert left["atom_features"].shape[1] == 9
     assert left["edge_index"].shape[0] == 2
     assert left["edge_index"].shape[1] == left["bond_features"].shape[0]
-    directed = set(zip(left["edge_index"][0], left["edge_index"][1]))
+    directed = set(zip(left["edge_index"][0], left["edge_index"][1], strict=True))
     assert directed == {(end, start) for start, end in directed}
     assert set(left["atom_features"][:, 5]) != set(right["atom_features"][:, 5])
     with pytest.raises(ValueError, match="Invalid SMILES"):

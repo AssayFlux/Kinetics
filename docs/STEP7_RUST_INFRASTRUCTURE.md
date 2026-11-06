@@ -8,16 +8,16 @@ Implementation foundation only. This crate is not yet a deployed network service
 - Runtime environment secret wrapper redacts its `Debug` output and never returns values in error messages; production deployments should use a managed secret provider.
 - API namespace: `/api/v1` (contract version constant `v1`).
 - Job states: `queued → running → succeeded | failed | cancelled`; cancellation is allowed from queued or running; terminal states cannot be reopened.
-- Every job carries tenant identity, idempotency key, and explicit runtime, memory, and CPU limits.
+- Every job carries tenant identity, idempotency key, and explicit runtime, memory, and CPU limits; the SQLite adapter persists lifecycle state, enforces tenant-scoped uniqueness, and supports bounded failed-job retries.
 - Repeated submission with the same tenant/key and same limits returns the original job; changed limits conflict. A key in another tenant is independent.
 - Cross-tenant reads and transitions return not-found to avoid resource enumeration.
-- Artifact IDs are lowercase SHA-256 digests. The store derives all paths from the digest, writes immutable content-addressed objects, and verifies hashes on reads.
+- Artifact IDs are lowercase SHA-256 digests. The store derives all paths from the digest, writes immutable content-addressed objects, verifies hashes on reads, and supports verified backup/restore copies.
 - Audit events carry actor, tenant, action, resource, outcome, timestamp, and correlation ID. Credential-like values are rejected from event fields.
 
 ## Security boundaries and deployment requirements
 This crate supplies policy primitives, not an identity provider. Production must validate signed identity-provider tokens at the API gateway, map verified claims to a `Principal`, enforce scopes at every handler, and keep signing/encryption keys in a managed secret store. Never accept caller-supplied tenant IDs as authority; derive tenant identity from verified claims.
 
-The in-memory job registry is a deterministic state-machine reference, not a durable queue. A production adapter must persist transitions transactionally, enforce leases/deadlines and worker heartbeats, implement bounded retries with backoff, propagate cancellation, and guarantee idempotent side effects. Do not run untrusted user code in-process.
+The in-memory job registry is a deterministic state-machine reference; the SQLite adapter adds durable local persistence and bounded retry state. It is not a distributed queue. A production adapter must persist transitions transactionally, enforce leases/deadlines and worker heartbeats, implement bounded retries with backoff, propagate cancellation, and guarantee idempotent side effects. Do not run untrusted user code in-process.
 
 The artifact store is a local content-addressed primitive. Production upload/download handlers must authenticate and authorize each request, enforce size/type quotas, stream to a temporary file, fsync, atomically publish, verify hashes, scan/quarantine untrusted content, and use tenant-aware metadata. Backups must include metadata and object data, be encrypted with managed keys, and be restored into an isolated environment with hash verification.
 

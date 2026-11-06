@@ -307,6 +307,145 @@ def main(argv: list[str] | None = None) -> int:
             "accepted_rows": int(len(accepted)),
             "rejected_rows": int(len(rejected)),
         }
+    elif args.command == "annotate-scaffolds":
+        import shutil
+        import tempfile
+        from pathlib import Path
+
+        import pandas as pd
+        from rdkit import rdBase
+
+        from .chemistry import annotate_scaffolds_audited
+        from .provenance import environment_record, file_record, write_json_atomic
+
+        input_path = Path(args.input).resolve()
+        output = Path(args.output_dir).resolve()
+        if not input_path.is_file():
+            raise FileNotFoundError(input_path)
+        if output.exists():
+            raise FileExistsError("Scaffold output directory already exists")
+        if output == input_path.parent or output in input_path.parents:
+            raise ValueError("Scaffold output directory must not contain the input file")
+        frame = pd.read_csv(input_path, dtype={"source_record_id": "string"})
+        accepted, rejected = annotate_scaffolds_audited(
+            frame, smiles_column=args.smiles_column
+        )
+        output.parent.mkdir(parents=True, exist_ok=True)
+        staging = Path(tempfile.mkdtemp(
+            prefix=f".{output.name}.staging-", dir=output.parent
+        ))
+        try:
+            accepted_path = staging / "observations_with_scaffolds.csv"
+            rejected_path = staging / "scaffold_rejected_rows.csv"
+            accepted.to_csv(accepted_path, index=False)
+            rejected.to_csv(rejected_path, index=False)
+            manifest = {
+                "workflow": "murcko_scaffold_annotation",
+                "input": file_record(input_path),
+                "outputs": {
+                    item.name: file_record(item)
+                    for item in (accepted_path, rejected_path)
+                },
+                "input_rows": len(frame),
+                "accepted_rows": len(accepted),
+                "rejected_rows": len(rejected),
+                "rdkit_version": rdBase.rdkitVersion,
+                "stereochemistry_policy": (
+                    "Scaffold grouping ignores stereochemistry; molecular features "
+                    "retain stereochemistry. No salt or tautomer normalization."
+                ),
+                "environment": environment_record(),
+            }
+            write_json_atomic(manifest, staging / "scaffold_manifest.json")
+            staging.rename(output)
+        except Exception:
+            shutil.rmtree(staging, ignore_errors=True)
+            raise
+        result = {
+            "output_dir": str(output),
+            "accepted_rows": len(accepted),
+            "rejected_rows": len(rejected),
+        }
+    elif args.command == "cluster-sequences":
+        from pathlib import Path
+
+        import pandas as pd
+
+        from .provenance import file_record
+        from .sequence_clustering import cluster_sequences
+
+        input_path = Path(args.input).resolve()
+        output = Path(args.output_dir).resolve()
+        if not input_path.is_file():
+            raise FileNotFoundError(input_path)
+        if output.exists():
+            raise FileExistsError("Sequence-cluster output directory already exists")
+        if output == input_path.parent or output in input_path.parents:
+            raise ValueError("Sequence-cluster output directory must not contain the input file")
+        frame = pd.read_csv(input_path, dtype={args.record_id_column: "string"})
+        mapping_path, manifest_path = cluster_sequences(
+            frame,
+            sequence_column=args.sequence_column,
+            record_id_column=args.record_id_column,
+            source_column=args.source_column or None,
+            output_dir=output,
+            min_sequence_identity=args.min_sequence_identity,
+            coverage=args.coverage,
+            threads=args.threads,
+        )
+        result = {
+            "input": file_record(input_path),
+            "mapping": file_record(mapping_path),
+            "manifest": str(manifest_path),
+        }
+    elif args.command == "build-features":
+        from pathlib import Path
+
+        import pandas as pd
+
+        from .features import ObservationFeatureBuilder
+        from .provenance import file_record
+
+        input_path = Path(args.input).resolve()
+        output_path = Path(args.output).resolve()
+        manifest_path = output_path.with_suffix(
+            output_path.suffix + ".manifest.json"
+        )
+        if not input_path.is_file():
+            raise FileNotFoundError(input_path)
+        if input_path in {output_path, manifest_path}:
+            raise ValueError("Feature outputs must differ from the input file")
+        if not args.overwrite and (
+            output_path.exists() or manifest_path.exists()
+        ):
+            raise FileExistsError(
+                "Feature archive or manifest exists; pass --overwrite to replace"
+            )
+        frame = pd.read_csv(input_path, dtype={"source_record_id": "string"})
+        builder = ObservationFeatureBuilder(
+            model_name=args.model_name,
+            model_revision=args.model_revision,
+            tokenizer_revision=args.tokenizer_revision,
+            device=args.device,
+            max_residues=args.max_residues,
+            cache_dir=args.cache_dir,
+            radius=args.radius,
+            n_bits=args.n_bits,
+            include_chirality=not args.no_chirality,
+        )
+        archive = builder.transform_frame(
+            frame,
+            target=args.target,
+            output_path=output_path,
+            group_columns=tuple(args.group_column),
+            batch_size=args.batch_size,
+        )
+        result = {
+            "input": file_record(input_path),
+            "archive": file_record(archive),
+            "manifest": str(manifest_path),
+            "target": args.target,
+        }
     elif args.command == "partition":
         from .partition import prepare_target_partitions
 

@@ -2,6 +2,8 @@
 
 ## North star
 
+The authoritative, expanded project mission is maintained in [KINETICS_MISSION.md](KINETICS_MISSION.md). It governs the long-horizon goal: a globally useful, cross-disciplinary biomedical and precision-health research infrastructure that connects scientific evidence to better prevention and treatment research, without claiming clinical validity before it is demonstrated.
+
 Build a unified biomedical research environment in which scientists can connect molecular mechanisms to disease biology, therapeutic discovery and, through years of rigorous validation, research that may improve future treatment.
 
 Kinetics should make fragmented evidence computationally connected, experimentally traceable and reproducible. It should help researchers ask better questions, generate testable hypotheses, compare explanations, design experiments and understand where knowledge is uncertain.
@@ -55,8 +57,8 @@ A separate, independently developed project will become the research companion t
 - **C++:** native 3D scene engine, rendering, GPU resources, molecular and volumetric visualization, geometry and high-performance image processing.
 - **Rust:** secure project/file services, concurrency, job lifecycle, integrity checks, resource limits and selected portable components.
 - **Interoperability:** versioned schemas, narrow APIs, explicit ownership and tested language bindings.
-- **Desktop first:** a complete research workbench for workstations and institutional environments.
-- **Android later:** secure mobile companion reusing stable APIs and portable components; large training, image volumes and simulations remain on suitable compute.
+- **Foundation first:** complete the scientific data, knowledge, analysis, security and API foundations before polished end-user applications.
+- **Desktop and Android clients:** build both against stable contracts; low-memory Android devices are a first-class performance target from the start. Large training, image volumes and simulations remain on suitable compute.
 
 ## Future treatment impact
 

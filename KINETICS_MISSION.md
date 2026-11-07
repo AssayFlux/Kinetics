@@ -35,7 +35,7 @@ This is an ambitious long-horizon direction, not a claim that Kinetics currently
 - Prevention, screening research, diagnosis-support research, treatment research, rehabilitation and longitudinal outcomes.
 - Lifestyle-related evidence including nutrition, physical activity, sleep, stress, environment and behavioural context.
 
-The domain list is intentionally extensible. New fields should be added through versioned data contracts, source adapters, evidence models and validation plans—not by forcing unlike data into one generic table.
+The domain list is intentionally extensible. The functional capability register is maintained in [docs/SCIENTIFIC_CAPABILITY_MAP.md](docs/SCIENTIFIC_CAPABILITY_MAP.md), while [docs/SCIENCE_DOMAIN_CATALOGUE_100.md](docs/SCIENCE_DOMAIN_CATALOGUE_100.md) is only the 100+60 acquisition taxonomy. New fields should be added through versioned data contracts, source adapters, evidence models and validation plans—not by forcing unlike data into one generic table.
 
 ## 3. The connected intelligence vision
 

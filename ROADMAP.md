@@ -29,16 +29,23 @@
 **Exit:** stable documented contracts, reproducible install, migration policy and automated quality pipeline.
 
 ## Programme 2 — Biomedical data and knowledge foundation (Years 1–3)
-1. Create registry for data sources, publications, licenses and access terms.
-2. Build explicit source adapters; no undocumented scraping.
-3. Resolve canonical identifiers and cross-references with confidence.
-4. Preserve immutable raw snapshots and separate normalized datasets.
-5. Record source IDs, citations, checksums, retrieval time, version and transformation lineage.
-6. Implement validation, duplicate/conflict review, rejected-row audit and ontology mapping.
-7. Build quality dashboards for missingness, bias, provenance and cohort coverage.
-8. Use fit-for-purpose storage: SQLite/PostgreSQL metadata, Parquet/Arrow tables, Zarr/HDF5 arrays, standard biomedical formats and object storage.
-9. Build provenance-aware knowledge graph; every assertion retains evidence and context.
-**Exit:** reproducible ingestion for selected sources, rights review and dataset cards.
+
+**Purpose:** Build the lawful, provenance-preserving scientific knowledge archive and the shared data layer that every domain can use.
+
+1. Maintain a versioned source registry covering scientific domains, publishers, repositories, books, papers, datasets, APIs, licenses, access conditions and rate limits.
+2. Build explicit source adapters; no undocumented scraping, access-control bypass or assumed redistribution rights.
+3. Resolve canonical identifiers and cross-references with recorded confidence and unresolved-match queues.
+4. Preserve immutable raw snapshots and separate normalized, extracted, tokenized, indexed and derived artifacts.
+5. Record source IDs, citations, release/retrieval time, license/access terms, checksums and transformation lineage for every object.
+6. Implement format-aware extraction/OCR, normalization, deduplication, chunking, tokenization, full-text indexing and source-linked retrieval.
+7. Build validation, duplicate/conflict review, rejected-record audits and domain-aware metadata/ontology mapping.
+8. Build quality dashboards for rights, provenance, coverage, missingness, processing state, source health and corpus growth.
+9. Use fit-for-purpose storage: SQLite/PostgreSQL metadata, Parquet/Arrow tables, Zarr/HDF5 arrays and content-addressed object storage.
+10. Build the provenance-aware knowledge graph incrementally; every assertion retains source, context, evidence class and version.
+11. **Minimum first corpus milestone: 10,000 books plus 10,000 research papers.** Maintain separate book/paper counts and separate discovered, rights-reviewed, downloaded, verified, extracted, tokenized, indexed and searchable totals. Publish only manifest-backed counts; transfer ceilings and planned targets are never reported as actual growth.
+12. Support local/offline retrieval first, with optional permissioned remote APIs and federated upstream queries where bulk mirroring is not permitted.
+
+**Exit:** source and license review is reproducible; the archive reaches the 10k-book/10k-paper minimum with verified processing and searchable counts; selected domain datasets have immutable manifests/data cards; retrieval results link back to source evidence; storage, restore and update procedures are tested. The milestone is a minimum, not a cap on future growth.
 
 ## Programme 3 — Genomics, transcriptomics and variant science (Years 1–4)
 1. Support validated FASTA/FASTQ, BAM/CRAM, VCF/BCF and annotation adapters.

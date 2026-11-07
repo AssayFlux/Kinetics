@@ -1,5 +1,7 @@
 # BioPython integration plan
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 BioPython is the foundational sequence, annotation, alignment, and structure
 I/O/analysis toolkit in Kinetics. The project will use the modules below where
 they directly support protein engineering, enzyme analysis, and molecular

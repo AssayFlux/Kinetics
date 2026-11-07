@@ -72,6 +72,13 @@ jobs:
           if old not in source:
               raise SystemExit("Expected Chaquopy SONAME alias line was not found")
           path.write_text(source.replace(old, new, 1))
+          wrapper = path.with_name("compiler-wrapper.py")
+          wrapper_source = wrapper.read_text()
+          safe_old = 'valid_dirs = [abspath(f"{dirname(sys.argv[0])}/../..")]'
+          safe_new = 'valid_dirs = [abspath(f"{dirname(sys.argv[0])}/../.."), abspath(os.environ["GITHUB_WORKSPACE"])]'
+          if safe_old not in wrapper_source:
+              raise SystemExit("Expected Chaquopy compiler-wrapper safe-path line was not found")
+          wrapper.write_text(wrapper_source.replace(safe_old, safe_new, 1))
           PY
           cd "$RUNNER_TEMP/chaquopy"
           target/download-target.sh maven/com/chaquo/python/target/3.11.17-0

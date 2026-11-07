@@ -191,7 +191,7 @@ This document contributes to Kinetics' wider mission: connect scientific knowled
 - Added a resumable, bounded acquisition pipeline for explicitly redistributable Internet Archive and Europe PMC/PMC Open Access material.
 - The fetcher reads the canonical 100-domain catalogue and extends it with 45 cross-disciplinary computing, engineering, mathematics, physics and natural-science scopes.
 - Added a per-item license gate, source/citation provenance, content-addressed storage, SHA-256 verification, source pagination, retry/backoff and per-file/per-batch byte limits.
-- Added PDF/EPUB/XML/HTML/TXT extraction, deterministic tokenization, SQLite FTS5 chunk indexing, exploratory analysis, and source-grounded retrieval scripts.
+- Added PDF/EPUB/XML/NXML/HTML/TXT extraction, deterministic tokenization, SQLite FTS5 chunk indexing, exploratory analysis, source-grounded retrieval scripts, and an installable read-only `KnowledgeStore` API/CLI.
 - Added scheduled/manual GitHub Actions automation. The default durable export is a GitHub Release asset batch with bundled attribution metadata; Git LFS remains an optional alternative.
 - Added checksum-verified release restoration and focused tests. The full 10,000+ corpus has not been acquired yet; collection is incremental and limited by upstream rights, API availability and storage budgets.
 - DOAB, DOAJ and arXiv are registered as future discovery adapters but are not enabled for bulk downloads. Their item-level rights and adapter behaviour require review before activation.

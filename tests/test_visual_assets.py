@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-import re
 
 ROOT = Path(__file__).resolve().parents[1]
 ANIMATION_PATH = "Assets/Future/kinetics-science-quest.gif"
@@ -10,10 +9,11 @@ IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tif", ".ti
 
 def test_readme_embeds_only_the_original_animation() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    image_tags = re.findall(r"<img\\b[^>]*>", readme)
+    image_tags = [line for line in readme.splitlines() if "<img " in line]
     assert len(image_tags) == 1
     assert ANIMATION_PATH in image_tags[0]
     assert "<!-- KINETICS_ANIMATION -->" in readme
+    assert "<!-- /KINETICS_ANIMATION -->" in readme
     assert "KINETICS_GALLERY" not in readme
 
 

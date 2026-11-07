@@ -52,6 +52,8 @@ def main() -> int:
             with tarfile.open(archives[0], "r:gz") as archive:
                 for member in archive.getmembers():
                     member_path = PurePosixPath(member.name)
+                    if member_path.as_posix() == "ATTRIBUTION.json":
+                        continue
                     if (not member.isfile() or member.issym() or member.islnk()
                             or member_path.is_absolute() or ".." in member_path.parts
                             or member_path.parts[:3] != OBJECT_PREFIX.parts):

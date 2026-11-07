@@ -272,7 +272,7 @@ def main():
         label=slug.replace("-"," ").title()
         path=OUT/f"{number:03d}-{slug}.png"
         image=render(number,slug,label)
-        image.save(path,format="PNG",optimize=True)
+        image.save(path,format="PNG",optimize=False,compress_level=2)
         with Image.open(path) as check:
             if check.format!="PNG" or check.size!=(SIZE,SIZE):
                 raise RuntimeError(f"Invalid output: {path}")

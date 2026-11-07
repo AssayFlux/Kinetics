@@ -177,9 +177,6 @@ def persist_record(session: requests.Session, item_id: str, title: str, source: 
         return None, 0
     if extension not in (".pdf", ".epub", ".xml", ".html", ".txt"):
         return None, 0
-    existing = manifest["items"].get(item_id, {})
-    if existing.get("status") == "downloaded":
-        return None, 0
     safe_id = re.sub(r"[^A-Za-z0-9._-]", "_", item_id)[:140]
     category = safe_category(domain)
     staging_path = objects / category / f".{safe_id}{extension}.staging"

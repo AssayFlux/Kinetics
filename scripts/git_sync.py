@@ -47,30 +47,48 @@ def create_release_batch(manifest: dict) -> int:
         print("No new corpus objects to attach to a release")
         return 0
 
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    run_id = os.getenv("GITHUB_RUN_ID", "local")
-    tag = f"corpus-batch-{stamp}-{run_id}"
-    archive_path = ROOT / f"kinetics-corpus-{tag}.tar.gz"
-    try:
-        with tarfile.open(archive_path, "w:gz") as archive:
-            for _, record, path in pending:
-                archive.add(path, arcname=record["path"], recursive=False)
-        if archive_path.stat().st_size > 100 * 1024 * 1024:
-            raise RuntimeError("Release archive exceeds 100 MiB safety ceiling")
-        run(["gh", "release", "create", tag, str(archive_path),
-             "--title", f"Kinetics corpus batch {tag}",
-             "--notes", "Licensed public-domain/Creative Commons corpus batch. "
-                        "See repository data manifest for per-item provenance and rights."])
-        for item_id, record, _ in pending:
-            record["release_uploaded"] = True
-            record["release_tag"] = tag
-            record["release_asset"] = archive_path.name
-        save_manifest(manifest)
-        print(f"Published {len(pending)} objects in https://github.com/{repository}/releases/tag/{tag}")
-        return len(pending)
-    finally:
-        archive_path.unlink(missing_ok=True)
+    # Split multi-cycle workflow output into independently downloadable assets.
+    groups: list[list[tuple[str, dict, Path]]] = []
+    current: list[tuple[str, dict, Path]] = []
+    current_bytes = 0
+    for item in pending:
+        size = item[2].stat().st_size
+        if size > 20 * 1024 * 1024:
+            raise RuntimeError(f"Object exceeds 20 MiB file safety limit: {item[2]}")
+        if current and current_bytes + size > 80 * 1024 * 1024:
+            groups.append(current)
+            current, current_bytes = [], 0
+        current.append(item)
+        current_bytes += size
+    if current:
+        groups.append(current)
 
+    total_uploaded = 0
+    for group_index, group in enumerate(groups, start=1):
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+        run_id = os.getenv("GITHUB_RUN_ID", "local")
+        tag = f"corpus-batch-{stamp}-{run_id}-{group_index}"
+        archive_path = ROOT / f"kinetics-corpus-{tag}.tar.gz"
+        try:
+            with tarfile.open(archive_path, "w:gz") as archive:
+                for _, record, path in group:
+                    archive.add(path, arcname=record["path"], recursive=False)
+            if archive_path.stat().st_size > 100 * 1024 * 1024:
+                raise RuntimeError("Release archive exceeds 100 MiB safety ceiling")
+            run(["gh", "release", "create", tag, str(archive_path),
+                 "--title", f"Kinetics corpus batch {tag}",
+                 "--notes", "Licensed public-domain/Creative Commons corpus batch. "
+                            "See repository data manifest for per-item provenance and rights."])
+            for _, record, _ in group:
+                record["release_uploaded"] = True
+                record["release_tag"] = tag
+                record["release_asset"] = archive_path.name
+            total_uploaded += len(group)
+            print(f"Published {len(group)} objects in https://github.com/{repository}/releases/tag/{tag}")
+        finally:
+            archive_path.unlink(missing_ok=True)
+    save_manifest(manifest)
+    return total_uploaded
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)

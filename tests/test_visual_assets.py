@@ -1,61 +1,36 @@
 from __future__ import annotations
 
-import ast
-import re
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
+ANIMATION_PATH = "Assets/Future/kinetics-science-quest.gif"
+IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".tif", ".tiff", ".svg", ".ico"}
 
 
-def _gallery_categories() -> list[list[str]]:
-    source = (ROOT / "scripts" / "import_science_gallery.py").read_text(encoding="utf-8")
-    module = ast.parse(source)
-    node = next(item for item in module.body if isinstance(item, ast.Assign) and any(
-        isinstance(target, ast.Name) and target.id == "CATEGORIES" for target in item.targets
-    ))
-    return ast.literal_eval(node.value)
-
-
-def test_science_gallery_defines_100_unique_domains() -> None:
-    categories = _gallery_categories()
-    assert len(categories) == 100
-    slugs = [row[0] for row in categories]
-    assert len(set(slugs)) == 100
-    assert all(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug) for slug in slugs)
-
-
-def test_gallery_license_filter_excludes_restricted_commons_licenses() -> None:
-    source = (ROOT / "scripts" / "import_science_gallery.py").read_text(encoding="utf-8")
-    match = re.search(r"LICENSE_OK\s*=\s*re\.compile\(([^,]+)", source)
-    assert match is not None
-    pattern = ast.literal_eval(match.group(1))
-    allowed = re.compile(pattern, re.IGNORECASE)
-    assert allowed.search("CC0 1.0")
-    assert allowed.search("Public domain")
-    assert allowed.search("CC BY 4.0")
-    assert allowed.search("CC BY-SA 4.0")
-    assert not allowed.search("CC BY-NC-SA 4.0")
-    assert not allowed.search("CC BY-ND 4.0")
-
-
-def test_readme_gallery_is_guarded_by_asset_presence() -> None:
+def test_readme_embeds_only_the_original_animation() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    assert "100-domain scientific atlas" in readme
-    assert "<!-- KINETICS_GALLERY_START -->" in readme
-    assert "<!-- KINETICS_GALLERY_END -->" in readme
-    image_refs = re.findall(r'<img[^>]+Assets/Future/PNG/[^>]+>', readme)
-    png_files = list((ROOT / "Assets" / "Future" / "PNG").glob("*.png"))
-    if len(png_files) == 100:
-        assert len(image_refs) == 100
-    else:
-        assert image_refs == []
+    image_tags = re.findall(r"<img\\b[^>]*>", readme)
+    assert len(image_tags) == 1
+    assert ANIMATION_PATH in image_tags[0]
+    assert "<!-- KINETICS_ANIMATION -->" in readme
+    assert "KINETICS_GALLERY" not in readme
 
 
-def test_pixel_animation_builder_and_validator_are_present() -> None:
-    builder = ROOT / "scripts" / "build_pixel_animation.py"
-    validator = ROOT / "scripts" / "validate_visual_assets.py"
-    assert builder.is_file()
-    assert validator.is_file()
-    source = builder.read_text(encoding="utf-8")
-    assert "FRAMES=32" in source
-    assert "loop=0" in source
+def test_repository_contains_no_other_visual_assets() -> None:
+    visual_files = {
+        path.relative_to(ROOT).as_posix()
+        for path in ROOT.rglob("*")
+        if path.is_file() and path.suffix.lower() in IMAGE_SUFFIXES
+    }
+    assert visual_files == {ANIMATION_PATH}
+
+
+def test_animation_builder_and_validator_enforce_single_asset() -> None:
+    builder = (ROOT / "scripts" / "build_pixel_animation.py").read_text(encoding="utf-8")
+    validator = (ROOT / "scripts" / "validate_visual_assets.py").read_text(encoding="utf-8")
+    assert "FRAME_COUNT = 48" in builder
+    assert "loop=0" in builder
+    assert "480, 270" in builder
+    assert "IMAGE_SUFFIXES" in validator
+    assert "no other image assets" in validator

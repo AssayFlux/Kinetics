@@ -41,7 +41,7 @@ FAMILIES = ("helix", "network", "orbital", "cell", "wave", "crystal", "scan", "v
 def load_categories():
     # Keep the gallery filenames and labels aligned with the canonical 100-domain catalogue.
     source = ROOT / "scripts" / "import_science_gallery.py"
-    namespace = {}
+    namespace = {"__name__": "kinetics_gallery_catalogue"}
     exec(compile(source.read_text(encoding="utf-8"), str(source), "exec"), namespace)
     return namespace["CATEGORIES"]
 

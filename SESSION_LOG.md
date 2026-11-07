@@ -470,3 +470,17 @@ R1 remains IN PROGRESS. No R1 go/no-go has been issued and R2 remains blocked.
 - No 16 KB page-size emulator/device runtime test, physical-device matrix, cold-start or peak-memory measurement.
 - SciPy, independent scientific engine, RDKit/alternative, offline viewer, SAF/background/cancellation and license audit remain open.
 - R1 exit gate remains unmet; R2 remains blocked.
+
+
+## 2026-11-07 — Session 18: Prepare physical-device validation handoff
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Make the remaining owner-device tests reproducible and collectable without overstating CI evidence.
+
+### Done
+- Added KineticsR1 Logcat output for native JNI and Python runtime reports, including stack traces on failure.
+- Added a device runbook to docs/android-feasibility.md with install/launch commands, model/API/ABI/page-size capture, logcat and memory commands, expected test outputs, and five-repeat measurement guidance.
+- Recorded that 4 KB Android devices validate the baseline only; a 16 KB runtime test remains separately required.
+
+### Blocked pending device access
+- No Android phone has been connected to ADB in this environment. The APK is build-validated but not device-runtime validated.
+- Owner needs to connect a representative Android 10+ arm64 device and provide its model/SoC/RAM/API/page-size and run logs. A separate 16 KB emulator/device test is also required.

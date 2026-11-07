@@ -140,7 +140,9 @@ The roadmap is intentionally multi-year. Architecture and functional modules are
 
 Kinetics Ecosystem is a separate project with its own repository and release cycle. It is not Astronaut and does not depend on Astronaut. Kinetics will eventually expose documented, permission-scoped interfaces for evidence retrieval and approved research-tool orchestration. Read-only access is the default; consequential actions require user authorization. AI must distinguish evidence, measurements, predictions and speculation.
 
-## Research workbench (optional)
+## Research workbench (optional engineering interface)
+
+The current local-first browser workbench is an operator/developer interface for exercising the existing research pipeline; it is not the final polished Kinetics application or a clinical/patient-facing product. The final application follows the integrated scientific foundation and stable API gates in [KINETICS_MISSION.md](KINETICS_MISSION.md).
 
 A local-first browser workbench is available for project setup, dataset intake, curation, model workflows, job monitoring, reports and artifact review. Install the optional dependencies with `python -m pip install -e ".[workbench]"` and start it using `kinetics-workbench`. It binds only to `127.0.0.1`; it is not a remote multi-user service. See the [workbench guide](docs/WORKBENCH_GUIDE.md) for setup, supported workflows and limitations.
 

@@ -35,8 +35,10 @@ def main() -> int:
             params.append(args.domain)
         sql += " ORDER BY score LIMIT ?"
         params.append(args.limit)
-        rows = db.execute(sql, params).fetchall()
-        print(json.dumps([dict(row) for row in rows], indent=2, ensure_ascii=False))
+        rows = [dict(row) for row in db.execute(sql, params).fetchall()]
+        for row in rows:
+            row["citation_metadata"] = json.loads(row.pop("citation_metadata_json") or "{}")
+        print(json.dumps(rows, indent=2, ensure_ascii=False))
     finally:
         db.close()
     return 0

@@ -71,7 +71,7 @@ The index is added to the existing `data/kinetics.sqlite3` SQLite database. FTS5
 ## GitHub automation
 
 1. Push the subsystem to the repository's `main` branch.
-2. In **Settings → Actions → General**, allow GitHub Actions to create and approve pull requests only if required by other workflows; this workflow needs repository contents write permission to push manifests.
+2. In **Settings → Actions → General → Workflow permissions**, select **Read and write permissions** so the workflow can publish Release assets and push the compact manifest.
 3. No third-party API token is required for the configured public APIs. The workflow uses the short-lived `GITHUB_TOKEN` provided by Actions.
 4. Open **Actions → Kinetics knowledge corpus ingestion → Run workflow**.
 5. Choose 1–3 cycles, up to 30 records per cycle and at most 80 MiB per cycle. The scheduled run executes two bounded cycles per week.

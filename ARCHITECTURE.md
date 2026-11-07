@@ -54,3 +54,10 @@ Models are task-specific and registered with intended use, training data provena
 
 ## Security and deployment
 Use least privilege, encryption, secrets management, signed updates, audit logs, backup/recovery and threat modelling. Sensitive genetic/health data require lawful basis, consent where applicable, minimization, retention and deletion controls. Deployment profiles: local desktop, institutional server, approved cloud/HPC, later Android, and a separate clinical environment only after authorization.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](KINETICS_MISSION.md), expanded [vision](VISION.md), and [emergency and humanitarian resilience requirements](docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

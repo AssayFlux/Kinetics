@@ -92,6 +92,36 @@
       "adapter_status": "implemented"
     },
     {
+      "id": "oapen",
+      "name": "OAPEN Library",
+      "kind": "open_access_academic_books",
+      "endpoint": "https://library.oapen.org/rest/search",
+      "adapter": "scripts/fetch_specialist_sources.py",
+      "enabled": true,
+      "notes": "Book PDFs are acquired only when item-level rights metadata explicitly declares an accepted CC0, CC BY or CC BY-SA license.",
+      "adapter_status": "implemented"
+    },
+    {
+      "id": "figshare",
+      "name": "Figshare",
+      "kind": "open_research_datasets_and_publications",
+      "endpoint": "https://api.figshare.com/v2/articles/search",
+      "adapter": "scripts/fetch_specialist_sources.py",
+      "enabled": true,
+      "notes": "Public article files are acquired only when the individual article declares an accepted CC license; opaque archives are skipped.",
+      "adapter_status": "implemented"
+    },
+    {
+      "id": "dryad",
+      "name": "Dryad",
+      "kind": "open_research_datasets",
+      "endpoint": "https://datadryad.org/api/v2/search",
+      "adapter": "scripts/fetch_specialist_sources.py",
+      "enabled": true,
+      "notes": "Public dataset files are acquired only when dataset metadata declares an accepted CC0, CC BY or CC BY-SA license.",
+      "adapter_status": "implemented"
+    },
+    {
       "id": "doab",
       "name": "Directory of Open Access Books",
       "kind": "academic_books",

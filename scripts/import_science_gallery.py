@@ -580,15 +580,24 @@ def update_readme_gallery():
     for number, (slug, _) in enumerate(CATEGORIES, 1):
         filename = f"{number:03d}-{slug}.png"
         key = f"Assets/Future/PNG/{filename}"
-        if not (OUT / filename).is_file() or key not in attributed:
-            continue
-        label = slug.replace("-", " ").title()
-        cells.append(
-            f'<td align="center"><img src="{key}" '
-            f'width="170" alt="{label}"><br><b>{label}</b></td>'
-        )
+        target = OUT / filename
+        record = next((item for item in manifest if item.get("file") == key), None)
+        # A gallery tile is shown only when both the real PNG and its
+        # attribution/checksum record are present and agree. Missing domains
+        # retain their exact position as an empty table cell.
+        verified = False
+        if target.is_file() and record and record.get("sha256"):
+            verified = hashlib.sha256(target.read_bytes()).hexdigest() == record["sha256"]
+        if verified:
+            label = slug.replace("-", " ").title()
+            cells.append(
+                f'<td align="center"><img src="{key}" '
+                f'width="170" alt="{label}"><br><b>{label}</b></td>'
+            )
+        else:
+            cells.append("<td></td>")
     rows = ["<table>"]
-    for offset in range(0, len(cells), 4):
+    for offset in range(0, 100, 4):
         rows.append("<tr>" + "".join(cells[offset:offset + 4]) + "</tr>")
     rows.append("</table>")
     gallery = chr(10).join(rows)
@@ -644,8 +653,10 @@ def main():
     print(f"\nPNG files present: {present}/100; attributed: {attributed}/100")
     if present == 0 or attributed == 0:
         raise SystemExit("No qualifying, attributed images were acquired.")
-    if args.start == 1 and args.end == 100 and (present < 100 or attributed < 100):
-        print("Gallery is partial; retry missing categories. README remains unchanged until all 100 are ready.")
-        raise SystemExit(2)
+    # Publish a truthful partial gallery on every run: verified downloads are
+    # visible in their fixed domain slots and missing domains remain blank.
     update_readme_gallery()
+    if args.start == 1 and args.end == 100 and (present < 100 or attributed < 100):
+        print("Gallery is partial; verified images are shown and missing domain cells remain blank. Retry missing categories.")
+        raise SystemExit(2)
 if __name__=="__main__": main()

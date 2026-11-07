@@ -1,5 +1,7 @@
 # Scientific architecture: enzyme kinetic prediction
 
+> **Mission authority:** This document is governed by [KINETICS_MISSION.md](../KINETICS_MISSION.md). Kinetics is a cross-disciplinary biomedical and precision-health research platform—not only an enzyme-kinetics project. All domains, datasets, models and applications must align with the mission, preserve provenance and clinical safety, and follow the foundation-first build order. Small Android devices are a first-class performance target.
+
 ## Research objective
 
 Kinetics focuses on computational estimation of enzyme kinetic parameters from protein and substrate information, initially targeting Michaelis constant (Km) and turnover number (kcat). The platform must preserve the distinction between measured kinetic observations and model predictions.

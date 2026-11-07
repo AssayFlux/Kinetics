@@ -9,7 +9,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-002 | 2026-11-07 | Target jurisdictions and applicable privacy/medical-device laws | Approved strategic scope — global, including future clinical use; jurisdiction-specific clearance remains mandatory | Project owner; qualified advisers required for implementation |
 | D-003 | 2026-11-07 | Research-paper framing and venue(s) | Approved — multiple papers over time; owner requests guidance at milestones | Project owner |
 | D-004 | 2026-11-07 | Clinical advisory board/advisers | Approved — defer recruitment until software is more mature; P0 remains blocked pending qualified advisers | Project owner |
-| D-005 | 2026-11-07 | Initial PGx panel breadth | Approved strategic target — 15–20 genes; exact gene list deferred to qualified adviser review | Project owner; qualified advisers required before selection/implementation |
+| D-005 | 2026-11-07 | Initial PGx gene set | Approved provisional research scope — CYP2D6, CYP2C19, CYP2C9, VKORC1, TPMT and DPYD; expert review and validation required before implementation | Project owner; qualified advisers required before PGx implementation |
 | D-006 | 2026-11-07 | Target Android devices/minimum support matrix | Open — no devices selected | Project owner |
 | D-007 | 2026-11-07 | Source-master archival | Resolved operationally — reconstructed from owner's complete chat-supplied master at docs/origin/KINETICS_MASTER.md; not represented as a Git move | Owner instruction |
 
@@ -23,15 +23,16 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 ## Open decisions
 1. Paper framing/venue: multiple papers over time. Start with a platform/software-methods paper only after R1–R3 evidence is adequate and the target venue's current requirements are reviewed; pursue separate domain papers only after the relevant workflows have independent validation. Owner supplies/approves authorship, affiliations, funding and competing interests. Guide the owner through framing, evidence readiness and venue selection at the appropriate milestones.
 2. Clinical advisers: owner chose to defer recruitment until the software is more mature. Revisit after the research-platform maturity milestone (target: R3), and before P0 or any PGx/clinical-scope work. P0 remains blocked until the required qualified expertise is identified and engaged.
-3. PGx panel: owner approved a 15–20-gene initial-panel target. This is a breadth decision only, not selection or approval of individual genes. Select the exact genes with qualified advisers after the D-004 maturity checkpoint and before P0/PGx implementation, using guideline maturity, reference materials, assay/caller reliability, ancestry coverage, and licensing.
+3. PGx panel: owner selected a focused six-gene initial research scope — CYP2D6, CYP2C19, CYP2C9, VKORC1, TPMT and DPYD. Treat this as a provisional scope for planning, not a validated or clinically approved panel. Qualified advisers must review it after the D-004 maturity checkpoint and before P0/PGx implementation; retain or revise genes based on guideline support, reference materials, locus/caller reliability, ancestry coverage, evidence quality, licensing and validation feasibility.
 4. Target devices: owner specifies Android devices and emulator targets before feasibility/support claims.
 
-## D-005 — Initial PGx panel breadth (approved strategic target)
+## D-005 — Initial PGx gene set (approved provisional research scope)
 - Date: 2026-11-07.
-- Context: Set the intended breadth of Kinetics' first PGx panel without prematurely selecting individual genes or bypassing the deferred-adviser decision.
-- Options considered: focused starter set of 6 genes; broader 15–20-gene set; begin with 2 genes; defer panel breadth entirely to advisers.
-- Choice: Target a broader initial panel of approximately 15–20 genes (owner selected option 2).
-- Consequences: This approves panel breadth only. No individual gene is selected, validated, implemented or clinically endorsed by this decision. The exact gene list must be chosen with qualified clinical advisers after the D-004 maturity checkpoint and before P0/PGx implementation. Selection criteria must include current guideline support, reference datasets/materials, caller/assay reliability (including difficult loci and copy-number/structural variation where relevant), ancestry/population coverage, evidence quality, data/software licensing and feasible validation. A 15–20-gene target must not force inclusion of weakly supported genes; a smaller evidence-supported panel or staged release may be recommended for owner approval if the evidence does not justify the breadth. P0 remains blocked; Research Mode remains the only public mode; no patient-data or clinical use is authorized.
+- Context: Choose a manageable initial PGx research scope while respecting the deferred clinical-adviser gate.
+- Options considered: focused six-gene starter set; broader 15–20-gene set; begin with two genes; defer all gene selection.
+- Choice: CYP2D6, CYP2C19, CYP2C9, VKORC1, TPMT and DPYD (owner selected option 1).
+- Consequences: This is an owner-selected provisional research scope for planning, not a clinically approved panel, validated assay, implemented caller or claim of clinical utility. Qualified advisers must review the list after the D-004 maturity checkpoint and before P0/PGx implementation. Review must consider current guideline support, reference datasets/materials, difficult loci and structural/copy-number variation (especially where relevant to CYP2D6), assay/caller reliability, ancestry/population coverage, evidence quality, licensing and feasible independent validation. The list may be revised or staged if evidence or expert review warrants. P0 remains blocked; Research Mode remains the only public mode; no patient-data or clinical use is authorized.
+- Approver: Project owner, explicit selection in chat on 2026-11-07.
 - Approver: Project owner, explicit selection in chat on 2026-11-07.
 
 ## D-004 — Clinical adviser timing (approved)

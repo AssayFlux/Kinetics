@@ -49,13 +49,17 @@ def model_metrics(path: Path) -> dict[str, int]:
     data = json.loads(path.read_text(encoding="utf-8"))
     if data.get("schema_version") != 1 or not isinstance(data.get("models"), list):
         raise ValueError(f"Unsupported model registry format: {path}")
-    entries = [
+    verified = [
         item for item in data["models"]
-        if item.get("status") == "bundled" and item.get("parameter_count_verified") is True
+        if item.get("parameter_count_verified") is True
     ]
+    bundled = [item for item in verified if item.get("status") == "bundled"]
+    external = [item for item in verified if item.get("status") == "configured_external"]
     return {
-        "bundled_model_parameters": sum(max(0, int(item["parameter_count"])) for item in entries),
-        "bundled_model_checkpoints": len(entries),
+        "bundled_model_parameters": sum(max(0, int(item["parameter_count"])) for item in bundled),
+        "bundled_model_checkpoints": len(bundled),
+        "configured_external_model_parameters": sum(max(0, int(item["parameter_count"])) for item in external),
+        "configured_external_models": len(external),
     }
 
 
@@ -84,7 +88,7 @@ def load_history(path: Path) -> dict[str, Any]:
 
 
 def render_svg(history: dict[str, Any], metrics: dict[str, int], generated_at: str) -> str:
-    width, height = 960, 470
+    width, height = 960, 510
     left, right, top, bottom = 92, 38, 92, 145
     plot_w, plot_h = width - left - right, height - top - bottom
     snapshots = history.get("snapshots", [])[-12:]
@@ -148,7 +152,9 @@ def render_svg(history: dict[str, Any], metrics: dict[str, int], generated_at: s
 <text x="510" y="397" class="metric">{metrics['indexed_documents']:,}</text>
 <text x="510" y="416" class="metric-label">documents indexed · {metrics['indexed_chunks']:,} searchable chunks · {metrics['indexed_tokens']:,} tokens</text>
 <text x="55" y="451" class="metric">{metrics['bundled_model_parameters']:,}</text>
-<text x="55" y="466" class="metric-label">verified parameters in bundled model checkpoints · {metrics['bundled_model_checkpoints']} checkpoint(s); external weights excluded</text>
+<text x="55" y="466" class="metric-label">verified parameters in bundled model checkpoints · {metrics['bundled_model_checkpoints']} checkpoint(s)</text>
+<text x="55" y="491" class="metric">{metrics['configured_external_model_parameters']:,}</text>
+<text x="55" y="506" class="metric-label">configured external model parameters (approx.) · {metrics['configured_external_models']} model(s); weights downloaded on first use</text>
 </svg>
 """
 

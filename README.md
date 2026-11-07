@@ -177,6 +177,20 @@ Contributions should include tests, clear documentation and evidence for scienti
 
 ## Knowledge corpus ingestion
 
+### Live corpus growth
+
+The graph below is generated from the ingestion manifest and SQLite index after each successful corpus synchronization. It tracks **cumulative, verified objects published as public GitHub Release assets**—not planned download limits or unverified downloads. The latest-workflow index figures are shown separately so a temporary build index is not mistaken for the entire accumulated archive.
+
+<p align="center">
+  <img src="Assets/corpus-growth.svg" width="100%" alt="Kinetics cumulative public corpus growth and latest workflow indexing metrics">
+</p>
+
+- **Public corpus:** downloadable release-published objects with recorded source, licence, size and checksum.
+- **Latest workflow index:** documents, searchable chunks and tokenizer counts in the SQLite database produced by the latest ingestion workflow. Download the database from that run's **knowledge-ingestion-diagnostics** artifact; artifacts are retained for 30 days.
+- The chart updates automatically during ingestion synchronization. If no verified release assets exist yet, it explicitly shows that the first release is pending.
+
+Open [corpus ingestion runs and artifacts](https://github.com/AssayFlux/Kinetics/actions/workflows/bulk_downloader.yml) to download the latest database and inspect build logs.
+
 Kinetics includes an incremental, license-aware knowledge ingestion pipeline
 covering a unified 160-domain catalogue: 100 foundational biomedical/healthcare domains plus 60 cross-disciplinary extensions. It discovers and acquires
 redistributable books and biomedical papers in bounded batches, preserves

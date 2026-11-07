@@ -1,5 +1,5 @@
 # Kinetics — Roadmap
-**Status:** Owner-approved baseline; R0 done; R1 in progress  
+**Status:** Owner-approved baseline; R0 done; R1 in progress; R1–R3 execution sequence authorized subject to gates  
 **Last updated:** 2026-11-07  
 **Statuses:** not-started | in-progress | blocked | done | dropped  
 **Owners:** Project owner = repository owner; Engineering = implementation contributor. Dates are review/target dates, not completion claims.
@@ -11,7 +11,7 @@ This roadmap operationalises the archived master. A phase is complete only when 
 - The owner-approved direction baseline and reconstructed historical master are present; NORTH_STAR was not changed.
 - Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
 - R0 accepted by the owner when they authorised R1 on 2026-11-07. CI evidence: [R0 workflow run](https://github.com/AssayFlux/Kinetics/actions/runs/42378815901).
-- R1 is now in progress. D-006 target is Android 10+ (API 29), 64-bit ARM, with low-end, mid-range and flagship test tiers; this is a target, not a verified support claim.
+- R1 is in progress. The owner has approved execution of R1, R2 and R3 sequentially (D-008); this is not phase completion or a waiver of exit criteria. R2 remains gated on completed R1 evidence and a documented R1 go/no-go; R3 remains gated on R2 exit evidence and approval. D-006 target is Android 10+ (API 29), 64-bit ARM, with low-end, mid-range and flagship test tiers; this is a target, not a verified support claim.
 - D-005 is approved as a broad strategic direction: build both a comprehensive, expandable PGx gene panel and a broad cross-domain gene catalogue. Treat PGx as a specialised workstream within the wider catalogue, with separate evidence and validation gates. The earlier six-gene list is not a scope limit; exact inventories and rollout waves remain evidence-led. No exhaustive coverage or PGx implementation is claimed. D-004 is approved: defer clinical-adviser recruitment until the research platform is more mature (target review after R3); P0 and all patient/clinical work remain blocked until qualified advisers and all other prerequisites are in place. D-003 (publication strategy) is approved: multiple papers over time, beginning with an evidence-backed platform/software-methods paper after R1–R3 readiness, followed by independently validated domain papers. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. Adding the canonical LICENSE grant file remains a repository task.
 
 ## Track R — Research platform
@@ -19,8 +19,8 @@ This roadmap operationalises the archived master. A phase is complete only when 
 |---|---|---|---|---|---|---|
 | R0 | Skeleton; direction files; owner-selected license (do not choose); CI lint/type/tests/native builds/16 KB/size budgets; pre-commit; registry/checker; reproduce-all stub | Direction approval | Empty-skeleton CI green; registry checks/tests; honest blocked checks; stop | done | Engineering + owner | 2026-11-07 |
 | R1 | Real arm64 + emulator: embedded Python/Biopython, Rust app call, C++ JNI, cross-compiled engine, RDKit/alternative, offline Mol* WebView, 16 KB, APK/AAB size, cold start, memory | R0 approved | docs/android-feasibility.md and go/no-go matrix; owner decision | in-progress | Engineering + owner | Started 2026-11-07 |
-| R2 | Compose, SQLite, SAF, provenance, cancellable/resumable WorkManager, registry, pack manager, Keystore encryption | R1 go | On-device import, cancellable job, provenance inspection | not-started | Engineering | TBD |
-| R3 | v0.1 alpha: sequence tools, protein properties, enzyme kinetics and independent-reference validation | R2 | Offline real-device install and validation records; v0.1 gate | not-started | Engineering + Validation | TBD |
+| R2 | Compose, SQLite, SAF, provenance, cancellable/resumable WorkManager, registry, pack manager, Keystore encryption | R1 evidence complete and documented go/no-go | On-device import, cancellable job, provenance inspection | not-started — owner authorized sequential execution; gate not yet met | Engineering | TBD |
+| R3 | v0.1 alpha: sequence tools, protein properties, enzyme kinetics and independent-reference validation | R2 exit evidence and approval | Offline real-device install and validation records; v0.1 gate | not-started — owner authorized sequential execution; gate not yet met | Engineering + Validation | TBD |
 | R4 | Rust FASTA/FASTQ/SAM/BAM/VCF, QC, trimming, k-mers | R2/Rust feasibility | Reference concordance, bounded memory, device benchmarks | not-started | Engineering + Validation | TBD |
 | R5 | PDB/mmCIF, secondary structure, RMSD, contacts, SASA, H-bonds, salt bridges, disulfides | R2/licensed reference set | Fixed PDB benchmark/tolerances | not-started | Engineering + Validation | TBD |
 | R6 | Chemistry formats/descriptors/fingerprints/similarity/substructure; PCR/plasmid/cloning/CRISPR rules | R1 chemistry feasibility/license review | Tests, benchmarks and license approvals | not-started | Engineering + Validation | TBD |
@@ -96,3 +96,9 @@ Direction baseline; R0 exit (accepted 2026-11-07); R1 go/no-go; Apache-2.0 LICEN
 
 ## Session protocol
 At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase/objective in two lines. Map every task to roadmap; drift-check before tasks/commits. At end update statuses, record decisions, append session log and report evidence/gaps/risks. Never claim unverified work.
+
+
+## Owner authorization D-008 — R1 through R3
+- On 2026-11-07, the owner explicitly approved proceeding with R1, R2 and R3.
+- Execute them in sequence. This authorization does not mark any phase complete and does not waive technical, scientific, licensing, device, security, privacy, clinical or owner exit gates.
+- R1 is still in progress. R2 starts after R1 evidence is complete and its go/no-go is documented; R3 starts after R2's exit evidence and approval.

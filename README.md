@@ -166,3 +166,46 @@ Contributions should include tests, clear documentation and evidence for scienti
 
 <p align="center"><strong>KINETICS</strong><br>
 <sub>Connect knowledge. Preserve evidence. Build responsibly.</sub></p>
+
+
+## Knowledge corpus ingestion
+
+Kinetics includes an incremental, license-aware knowledge ingestion pipeline
+covering the canonical 100-domain catalogue. It discovers and acquires
+redistributable books and biomedical papers in bounded batches, preserves
+source/license/checksum provenance, and builds a local searchable text index.
+
+~~~bash
+python -m pip install -r requirements.txt
+python scripts/fetch_corpus.py --dry-run
+python scripts/fetch_corpus.py --batch-size 30 --max-batch-mb 80
+python scripts/tokenize_corpus.py --max-documents 50
+python scripts/analyze_corpus.py
+python scripts/query_knowledge.py "cardiac AND imaging" --limit 10
+~~~
+
+Raw files are stored locally under **data/corpus/objects/**; the resumable,
+versioned source manifest is **data/corpus-manifests/metadata_index.json**.
+The metadata/chunk index is stored in the existing local **data/kinetics.sqlite3**
+database. The corpus is not committed as ordinary Git blobs.
+
+The GitHub Actions workflow **.github/workflows/knowledge_ingestion.yml** runs
+two bounded cycles per week and can also be started from **Actions → Kinetics
+knowledge corpus ingestion → Run workflow**. It publishes licensed corpus
+batches as GitHub Release assets by default and commits compact manifests.
+Restore the release assets into a local checkout before indexing the complete
+remote corpus:
+
+~~~bash
+gh auth login
+python scripts/restore_corpus_releases.py
+python scripts/tokenize_corpus.py --max-documents 10000
+python scripts/analyze_corpus.py
+~~~
+
+Git LFS is also supported with **python scripts/git_sync.py --mode lfs --push**,
+but it has separate storage and bandwidth quotas. Use it only after checking
+your account limits. Review **docs/KNOWLEDGE_INGESTION.md** for source rights,
+privacy rules, restore procedures, workflow settings and limitations. Unknown,
+non-commercial, no-derivatives and all-rights-reserved content is not mirrored.
+Never put patient data, secrets or restricted documents in this public repo.

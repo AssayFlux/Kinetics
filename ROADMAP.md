@@ -12,7 +12,7 @@ This roadmap operationalises the archived master. A phase is complete only when 
 - Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
 - R0 accepted by the owner when they authorised R1 on 2026-11-07. CI evidence: [R0 workflow run](https://github.com/AssayFlux/Kinetics/actions/runs/42378815901).
 - R1 is now in progress. D-006 target devices remains open; no Android feasibility or device verification is yet claimed.
-- Four owner decisions remain open: paper framing/venue, clinical advisers, first PGx gene set and target Android devices. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. Adding the canonical LICENSE grant file remains a repository task.
+- Three owner decisions remain open: clinical advisers, first PGx gene set and target Android devices. D-003 (publication strategy) is approved: multiple papers over time, beginning with an evidence-backed platform/software-methods paper after R1–R3 readiness, followed by independently validated domain papers. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. Adding the canonical LICENSE grant file remains a repository task.
 
 ## Track R — Research platform
 | ID | Scope | Dependencies | Exit gate | Status | Owner | Date |
@@ -72,8 +72,14 @@ Further disease areas only after P7 evidence, one at a time.
 | G4 | Bias and ancestry coverage | Relevant P/I capabilities and datasets | Coverage/limitations in reports and outputs | not-started | Validation + advisers | TBD |
 | G5 | Paper evidence pipeline | R/S/I/P evidence | Manuscript tables/figures generated from validation/benchmarks | not-started | Research + Validation | TBD |
 
+## Publication strategy (D-003)
+- Plan multiple papers over time, not one broad paper claiming every planned domain.
+- First candidate: platform/software-methods paper after R1–R3 evidence is complete enough to support reproducible methods, validation and benchmark claims.
+- Later domain papers require domain-specific independent validation and reference comparisons.
+- Venue fit/requirements, authorship, affiliations, funding, competing interests and all claims require owner review at the relevant milestone. No publication or acceptance is implied.
+
 ## Mandatory gates
-Direction baseline; R0 exit (accepted 2026-11-07); R1 go/no-go; Apache-2.0 LICENSE grant file; P0; GPL/AGPL bundling; new language; engine-tier change; restrictive license; jurisdiction-specific legal/regulatory/ethics review; real patient data/human participants; paper framing/venue/authorship; NORTH_STAR change; Clinical Mode. Stop at each gate.
+Direction baseline; R0 exit (accepted 2026-11-07); R1 go/no-go; Apache-2.0 LICENSE grant file; P0; GPL/AGPL bundling; new language; engine-tier change; restrictive license; jurisdiction-specific legal/regulatory/ethics review; real patient data/human participants; paper venue/authorship and evidence-backed claims; NORTH_STAR change; Clinical Mode. Stop at each gate.
 
 ## Session protocol
 At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase/objective in two lines. Map every task to roadmap; drift-check before tasks/commits. At end update statuses, record decisions, append session log and report evidence/gaps/risks. Never claim unverified work.

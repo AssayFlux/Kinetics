@@ -1,4 +1,4 @@
-# Kinetics scientific and healthcare catalogue — 160 acquisition domains
+# Kinetics scientific and healthcare acquisition taxonomy — 100 foundational + 60 extension domains
 
 **Purpose:** define the foundational 100 biomedical/healthcare domains and link them to 60 cross-disciplinary extension domains, for a unified 160-domain acquisition scope spanning biological science, medicine, computing, engineering, chemistry, physics, Earth systems and human resilience.
 
@@ -156,7 +156,7 @@
 | 99 | Artificial intelligence in medicine | Validated AI methods for medical research and decision support. |
 | 100 | Humanitarian and disaster health | Health resilience in disasters, conflict, displacement and infrastructure failure. |
 
-The 100 numbered domains below remain the foundational biomedical and healthcare taxonomy. The additional 60 domains are maintained in `database/domains/extended_domains.json`; the downloader merges both sources, deduplicates them, and uses `database/domains/domain_synonyms.json` to broaden source discovery. Total: **160 unique acquisition domains**.
+This file retains its historical `SCIENCE_DOMAIN_CATALOGUE_100.md` path for link stability. The 100 numbered domains below are the foundational biomedical and healthcare taxonomy; 60 extension domains are maintained in `database/domains/extended_domains.json`. Together they provide 160 acquisition scopes. This is a source-discovery taxonomy, not an implementation checklist. The additional 60 domains are maintained in `database/domains/extended_domains.json`; the downloader merges both sources, deduplicates them, and uses `database/domains/domain_synonyms.json` to broaden source discovery. Total: **160 unique acquisition domains**.
 
 ## Integration requirements
 

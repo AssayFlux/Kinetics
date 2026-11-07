@@ -35,7 +35,7 @@ This is an ambitious long-horizon direction, not a claim that Kinetics currently
 - Prevention, screening research, diagnosis-support research, treatment research, rehabilitation and longitudinal outcomes.
 - Lifestyle-related evidence including nutrition, physical activity, sleep, stress, environment and behavioural context.
 
-The domain list is intentionally extensible. New fields should be added through versioned data contracts, source adapters, evidence models and validation plans—not by forcing unlike data into one generic table.
+The domain list is intentionally extensible. The functional capability register is maintained in [docs/SCIENTIFIC_CAPABILITY_MAP.md](docs/SCIENTIFIC_CAPABILITY_MAP.md), while [docs/SCIENCE_DOMAIN_CATALOGUE_100.md](docs/SCIENCE_DOMAIN_CATALOGUE_100.md) is only the 100+60 acquisition taxonomy. New fields should be added through versioned data contracts, source adapters, evidence models and validation plans—not by forcing unlike data into one generic table.
 
 ## 3. The connected intelligence vision
 
@@ -73,6 +73,7 @@ No recommendation should be produced merely because a model can produce a score.
 - Build source adapters incrementally. A source being catalogued does not mean its data are downloaded, licensed for redistribution, normalized or validated.
 - Never scrape or redistribute restricted data without permission. Respect consent, data-use agreements, privacy law and provider terms.
 - Make data tiers explicit: tiny redistributable reference packs in Git; larger approved data via Git LFS or external object storage; user/private data outside public Git history; federated retrieval where bulk mirroring is not permitted.
+- **First knowledge-archive scale milestone:** acquire and process at least 10,000 books and 10,000 research papers across the approved scientific domains. This is a minimum milestone, not a final ceiling or a claim about current holdings. Count each resource separately at each verified stage (rights-reviewed, downloaded, checksum-verified, extracted, tokenized, indexed and retrievable); never count discovered, failed, duplicate or rights-ineligible records as processed/searchable.
 
 ## 6. Intelligence and scientific standards
 

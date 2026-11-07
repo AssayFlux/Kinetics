@@ -1,68 +1,66 @@
-# Documentation and repository consistency audit
+# Documentation and repository governance audit
 
-> Review date: 2026-11-07. Scope: recursive tracked-file inventory of the 200-file base branch (203 tracked files after this documentation change), root plans, subsystem documentation, directory layout, key implementation/status documents, UI asset notes, and selected source/test cross-checks. This is a repository inspection, not a full local execution of every test or every scientific workflow.
+**Audit date:** 2026-11-07  
+**Branch:** `cleanup/documentation-consolidation-2026-11`  
+**Scope:** recursive tracked-tree inventory; all Markdown documents; source-of-truth hierarchy; duplicate-document review; link/reference checks for retired documents; and selective source, test, workflow, asset and package-metadata cross-checks.
 
-## Source-of-truth hierarchy
+## Single source-of-truth hierarchy
 
-1. `KINETICS_MISSION.md` — purpose, principles and non-negotiable boundaries.
-2. `VISION.md` — long-term product/scientific ambition.
-3. `ROADMAP.md` — 15 long-term programmes and dependency order.
-4. `ARCHITECTURE.md` and `ENGINEERING_STACK.md` — system and technology boundaries.
-5. `docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md` — active engineering sequence and acceptance criteria.
-6. `docs/IMPLEMENTATION_STATUS.md` — current implementation snapshot.
-7. Subsystem specifications — detailed contracts and acceptance tests.
-8. `docs/IMPLEMENTATION_HISTORY.md` — historical record only; not a current status authority.
+1. `KINETICS_MISSION.md` — purpose, principles, boundaries and decision filter.
+2. `VISION.md` — long-term scientific and product ambition.
+3. `ROADMAP.md` — long-range programmes, dependencies and gates.
+4. `docs/SCIENTIFIC_CAPABILITY_MAP.md` — functional capability catalogue, maturity labels and dependency-aware scientific build sequence.
+5. `ARCHITECTURE.md` and `ENGINEERING_STACK.md` — system boundaries and technology ownership.
+6. `docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md` — active engineering completion sequence.
+7. `docs/IMPLEMENTATION_STATUS.md` — current repository evidence snapshot and blockers.
+8. Subsystem specifications — detailed data, scientific, security, workflow and acceptance contracts.
+9. `docs/IMPLEMENTATION_HISTORY.md` — historical audit trail only; never use it as current status authority.
 
-The 100-domain catalogue is a scope register, not an implementation checklist. The 10-step programme is the current engineering sequence; the 15-programme roadmap is the long-range plan. Neither replaces the mission.
+The 160-domain register is an acquisition/source-discovery taxonomy (100 foundational domains plus 60 extensions). It is not the functional capability map and is not an implementation checklist. The 15-programme roadmap is long-range direction; the 10-step programme is the active engineering sequence. The 10,000-book plus 10,000-paper target is a minimum archive milestone, not a current-holdings claim.
 
-## Findings and actions taken in this change
+## Consolidation decisions
 
-| Finding | Why it mattered | Action |
-|---|---|---|
-| The root `project_structure.md` described only knowledge ingestion, not the repository | Filename and scope were misleading | Moved the subsystem guide to `docs/KNOWLEDGE_INGESTION_STRUCTURE.md`; added `docs/REPOSITORY_STRUCTURE.md`; removed the misleading root file |
-| `IMPLEMENTATION_STATUS.md` repeated Step 6 headings and contained superseded status statements | Readers could not tell which implementation state was current | Preserved the previous detailed register as `IMPLEMENTATION_HISTORY.md`; replaced current status with a dated, capability-by-capability snapshot |
-| Roadmap's immediate checklist instructed maintainers to replace the already-established vision and roadmap | Stale instruction contradicted the existing authoritative documents | Replaced it with near-term work aligned to current Step 1–10 blockers |
-| Roadmap and contribution notes referenced an unrelated legacy external project by name | Distracted from the actual separate Kinetics Ecosystem boundary | Reworded as a general external-project/API boundary |
-| Asset policy said generated GIF/animation assets were not maintained, while the README and asset test require the tracked GIF | Documentation, tests and README disagreed | Clarified the GIF as a legacy presentation asset and the HTML/CSS layouts as prototypes |
-| Documentation index omitted the knowledge-ingestion guide and structure maps, and mislabeled the asset policy | Index was incomplete and some descriptions were inaccurate | Rebuilt the index around the authority hierarchy and current files |
-| Step 9 documentation described PDB/mmCIF support inconsistently across Python and native C++ components | It could imply mmCIF support in the C++ parser or incorrectly imply no Python mmCIF adapter | Explicitly separate the native C++ PDB parser from Python PDB/mmCIF adapters and the Biopython workbench |
-| README documentation links did not expose the full plan/status hierarchy | New contributors could miss the authoritative plan and active completion programme | Updated README links now surface the mission, roadmap, architecture, active completion programme, current status and documentation index |
+| Retired document | Information retained in |
+|---|---|
+| `docs/STEP6_IMPLEMENTATION_STATUS.md` | Current summary in `docs/IMPLEMENTATION_STATUS.md`; technical contract and limitations in `docs/NATIVE_MOLECULAR_ENGINE.md`; step acceptance in the 10-step programme |
+| `docs/SCIENTIFIC_ARCHITECTURE.md` | Kinetic observation semantics in `docs/DATA_MODEL.md`; model/evaluation details in `RESEARCH_BLUEPRINT.md`, `docs/MODELING_AND_UNCERTAINTY.md` and `docs/STEP5_VALIDATION_PROTOCOL.md` |
+| `docs/RESEARCH_PAPER_OUTLINE.md` | Manuscript structure, figures and tables in Section 8 of `RESEARCH_BLUEPRINT.md` |
 
-## Verified implementation boundaries used in the status register
+No scientific source code, schema, test, fixture, workflow, data adapter, brand asset or UI prototype was removed. The reviewed non-document files have identifiable roles or lack sufficient evidence to classify them as dead. In particular, the four platform HTML/CSS layouts and original brand assets are retained.
 
-- The repository contains Python scientific modules, data/identity/feature/modeling/validation code, a local workbench, knowledge ingestion, C++ native structure code, Rust infrastructure and AWS Terraform candidates.
-- The native C++ molecular parser is PDB-oriented; its XY PPM renderer is a diagnostic projection, not a full interactive 3D renderer.
-- Python contains separate PDB and mmCIF coordinate adapters with fixture tests; this does not mean that the C++ parser supports mmCIF.
-- The workbench is local-first and loopback-only; it is not a deployed multi-user service.
-- Rust/AWS infrastructure is a candidate implementation, not a live production deployment. The worker currently registers only a no-op health-check task.
-- The knowledge pipeline is a resumable, source/license-aware full-text acquisition and retrieval foundation. It is not a complete knowledge graph or 10,000+ acquired corpus.
-- The CatPred real-data release and actual pinned ESM-2/MMseqs2 execution are not recorded as completed; scientific model validation remains open.
-- Responsive HTML/CSS shells are prototypes, not native desktop applications or an Android APK.
-- Release-gate software does not provide human release sign-off or clinical authorization.
+## Repository inventory
 
-## Documentation validation completed
+The base tree inspected for this cleanup contained 213 tracked files, including 54 Markdown documents. The verified cleanup branch contains **211 tracked files and 52 Markdown documents**: one new capability map and three retired duplicate documents. The recursive Git tree contains 248 entries including directories.
 
-- Inspected the complete tracked Markdown set (54 files across the root, docs, Assets and database seed guide).
-- Checked relative Markdown links against the tracked-file tree. Two pre-existing broken-link groups were found in `database/seed/README.md` and `docs/APPLICABILITY_DOMAIN.md`; both were corrected. The final check found no broken relative links in the changed documentation entry points.
-- Checked the documentation index against the tracked tree: all 43 `docs/*.md` files are now represented, with no missing index targets.
-- Confirmed the misleading root `project_structure.md` is gone and the subsystem guide and repository-wide map are present.
+## Verified direction and implementation boundaries
 
-## Remaining review work
+- Kinetics is a cross-disciplinary biomedical/scientific research platform, not only an enzyme-kinetics predictor.
+- Scientific scope is organized into 18 functional capability areas in the capability map; the 160-domain taxonomy guides acquisition discovery.
+- The first archive scale milestone is at least 10,000 books and 10,000 research papers. Counts must be manifest-backed and separated by resource type and processing stage.
+- The knowledge pipeline is an acquisition/extraction/tokenization/SQLite FTS retrieval foundation, not a completed 20,000-resource corpus or a complete knowledge graph.
+- Kinetic model and feature code, sequence/chemistry utilities, selected Python PDB/mmCIF adapters, Biopython analyses and a local workbench exist; real-data scientific validation remains open.
+- The native C++ molecular parser is PDB-only and its XY preview is not a full interactive 3D renderer.
+- Rust/AWS infrastructure is a deployment candidate, not a verified live production service; the worker's scientific task execution and per-job isolation remain acceptance blockers.
+- The four platform HTML/CSS shells are responsive layout prototypes, not native desktop applications or an Android APK.
+- Research, production and clinical status must be reported separately; a plan, fixture test or CI pass cannot substitute for scientific or clinical validation.
 
-The changes establish the documentation hierarchy and resolve the identified high-impact contradictions. They do not claim that every one of the 203 tracked files has been line-edited. The following require a separate, evidence-led pass rather than speculative mass edits:
+## Verification completed in this cleanup
 
-1. Run all repository CI jobs on the latest main commit and resolve any failures.
-2. Reconcile the detailed 10-step programme against the current status snapshot, including dated CI references and newly merged changes.
-3. Review the full 100-domain catalogue and source registry for duplicate scopes, source terms, stale endpoints and unsupported redistribution assumptions.
-4. Review every workflow for permissions, schedules, secrets exposure, release publication and actual recent run evidence.
-5. Review the entire source/test tree for dead modules, duplicated APIs, unreferenced assets and unused dependencies before deleting anything.
-6. Review privacy, retention, consent and threat-model documents before any personal genomic or clinical data is accepted.
-7. Reassess each subsystem's acceptance state after real-data and independent scientific validation.
+- Inventoried the recursive tracked tree and all 54 Markdown files present at the start of this cleanup.
+- Reviewed the project mission, vision, roadmap, research blueprint, active completion programme, current status, documentation index, subsystem specifications, UI documentation and historical notes.
+- Checked GitHub code-search references for the three retired document names before deletion; references in the index and active Step 6 programme were updated or confirmed absent.
+- Kept the 100+60 taxonomy filename stable to avoid breaking existing links; corrected its title and purpose so the 160-domain scope is unambiguous.
+- Updated the README, vision, mission, roadmap and active completion programme so the capability map and 10k+10k archive milestone are part of the project direction.
 
-## Deletion policy
+This was a remote repository/documentation audit. It does not claim that every source file was line-by-line reviewed, that all CI jobs were executed locally, or that every scientific workflow was run.
 
-No scientific source, schema, test, fixture, data adapter, historical plan or asset should be deleted merely because it is not currently used by the README. Delete only when references, import paths, workflows, package metadata, tests, historical evidence and user-facing documentation have been checked. Prefer deprecation and a migration window for public interfaces.
+## Maintenance rules
 
-## Change boundary
-
-This audit changes documentation organization, wording and a source-code comment only. It does not remove scientific modules, datasets, model code, workflows, assets or historical implementation evidence.
+1. Keep one authority for each concern; do not create another competing roadmap, status register or capability catalogue.
+2. Add a capability only with a defined research question, domain contract, authoritative source/license review, validation plan, compute budget and acceptance criteria.
+3. Update `IMPLEMENTATION_STATUS.md` only when code and relevant test/evidence links support the change.
+4. Keep historical records only when they preserve useful decisions or evidence; label them historical and never let them override current status.
+5. Delete a file only after checking references, imports, package metadata, workflows, tests, assets and historical evidence. If uncertain, retain and document the reason.
+6. Do not repeat generic mission paragraphs in every technical document; link to the authoritative mission instead.
+7. Update the documentation index and repository map whenever maintained documents or major directory ownership changes.
+8. Distinguish intended scope, implemented software, fixture/CI evidence, real-data execution, independent scientific validation, production deployment and clinical authorization.

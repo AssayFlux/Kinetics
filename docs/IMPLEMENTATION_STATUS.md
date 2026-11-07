@@ -25,7 +25,7 @@ A design, fixture, passing unit test, workflow configuration or deployment candi
 | Native C++ molecular engine | C++17 PDB parser, scene contract, explicit CONECT bonds, CPU XY preview and Python bridge | Native parser is PDB-only; preview is not an interactive 3D renderer; no executed MD adapters or performance claims |
 | Research workbench | Local-first FastAPI/browser workbench, bounded workflows, project/job/artifact handling and report generation | Loopback/single-user only; researcher/accessibility UAT, real-data workflow and install/upgrade/recovery acceptance remain |
 | Rust infrastructure | Auth/job/artifact/audit foundations, PostgreSQL and AWS adapters, Terraform candidate and recovery scripts | Not deployed; worker has only the no-op health-check handler; per-job sandboxing, live tenant/security tests and restore drills remain |
-| Knowledge ingestion | Resumable license-aware acquisition, extraction, SQLite FTS5 indexing, source-linked retrieval API/CLI and scheduled workflow | No 10,000+ corpus acquisition is claimed; no full knowledge graph, embeddings or clinical knowledge system is implied |
+| Knowledge ingestion | Resumable license-aware acquisition, extraction, tokenization, SQLite FTS5 indexing, source-linked retrieval API/CLI and scheduled workflow | The 10,000-book + 10,000-paper minimum is a plan, not achieved; no verified corpus at that scale is recorded. No complete knowledge graph or clinical knowledge system is implied |
 | Desktop/mobile UI | Four responsive HTML/CSS shell layouts for Windows, macOS, Linux and Android; local workbench UI | These are web layout prototypes, not native desktop installers or an Android APK |
 | Release readiness | Executable release-gate evaluator and documented evidence requirements | No production release or human sign-off; SBOM, security/recovery/UAT evidence and signed reviews remain outstanding |
 | Precision-health research | Mission, architecture, governance and clinical-translation requirements documented | Long-term research programme only; no autonomous diagnosis, prescribing or treatment recommendation capability |
@@ -65,6 +65,8 @@ The Python workbench is intentionally loopback-only and single-user. The Rust/AW
 10. Keep clinical translation a separate, evidence-gated programme.
 
 ## Governing documents
+
+- [Scientific capability map](SCIENTIFIC_CAPABILITY_MAP.md)
 
 - [Foundational mission](../KINETICS_MISSION.md)
 - [Vision](../VISION.md)

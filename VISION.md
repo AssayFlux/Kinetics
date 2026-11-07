@@ -13,6 +13,8 @@ The ambition is exceptionally large; claims must remain proportional to evidence
 
 ## The future scientific platform
 
+The scientific function catalogue is maintained in [SCIENTIFIC_CAPABILITY_MAP.md](docs/SCIENTIFIC_CAPABILITY_MAP.md), while the 160-domain acquisition taxonomy is maintained separately in [SCIENCE_DOMAIN_CATALOGUE_100.md](docs/SCIENCE_DOMAIN_CATALOGUE_100.md). The first knowledge-archive scale milestone is at least 10,000 books and 10,000 research papers, counted only after rights review and verified processing; this target is a minimum, not a claim about current holdings.
+
 ### 1. Biological knowledge foundation
 Create a provenance-aware, versioned knowledge layer connecting genes, variants, transcripts, proteins, structures, compounds, reactions, pathways, phenotypes, diseases, assays, samples, cohorts, publications and clinical evidence. Every relationship must retain source, context, evidence type, confidence and version. Preserve conflicts and missingness rather than silently resolving them.
 

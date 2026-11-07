@@ -58,6 +58,10 @@ Every scientific result must be traceable to versioned inputs, code, configurati
 
 Do not treat the CatPred aggregate as individually replicated assay data or claim its kcat scale is independently validated. Step 2 remains open until a real, reviewed source snapshot and release pass the acceptance checks.
 
+### Parallel knowledge-archive track under the shared data foundation
+
+The cross-domain archive is a platform-level deliverable alongside the kinetics-specific Kinetics-KDB work; it does not change the one-observation-per-row semantics or acceptance criteria of the kinetic dataset. Its first scale milestone is **at least 10,000 books and 10,000 research papers**. Each object must pass source-rights review, download integrity checks, extraction/normalization and tokenization before it is counted as processed; it is counted as searchable only after a successful index commit with provenance. Track books and papers separately, preserve immutable originals and manifests, deduplicate without deleting source provenance, and keep raw corpora outside ordinary Git blobs. See [Scientific capability map](SCIENTIFIC_CAPABILITY_MAP.md) and [Knowledge ingestion](KNOWLEDGE_INGESTION.md). The target is not a current-holdings claim and is not complete until verified manifests and index counts demonstrate it.
+
 ## Step 3 — Protein and chemical representation (IMPLEMENTED; EXECUTION VALIDATION PENDING)
 
 **Purpose:** Produce reproducible validated representations of enzymes and substrates.
@@ -150,7 +154,7 @@ Step 4 is being implemented as a software engine, not validated as a scientific 
 - Implement real engine-specific OpenMM/GROMACS adapters, generated input decks, controlled execution, restart/cancellation and reference-system stability checks with complete execution provenance.
 - Add representative parser/renderer benchmarks with reproducible structures, compiler flags, hardware and memory/time measurements; optimize only after profiling.
 
-**Evidence:** native/, tests/test_native_molecule.py, docs/NATIVE_MOLECULAR_ENGINE.md, docs/STEP6_IMPLEMENTATION_STATUS.md, CMake/CTest workflow matrix. This is an engineering foundation, not full Step 6 acceptance.
+**Evidence:** native/, tests/test_native_molecule.py, docs/NATIVE_MOLECULAR_ENGINE.md, docs/IMPLEMENTATION_STATUS.md and docs/NATIVE_MOLECULAR_ENGINE.md, CMake/CTest workflow matrix. This is an engineering foundation, not full Step 6 acceptance.
 
 ## Step 7 — Rust infrastructure and security
 

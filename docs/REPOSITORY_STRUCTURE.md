@@ -15,6 +15,7 @@ Kinetics/
 ├── deploy/aws/              # Candidate AWS infrastructure (Terraform)
 ├── docs/
 │   ├── api/                 # OpenAPI contracts
+│   ├── SCIENTIFIC_CAPABILITY_MAP.md # Functional scope, maturity and build sequence
 │   ├── ...                  # Mission, architecture, research, acceptance and user docs
 │   ├── DOCUMENTATION_INDEX.md
 │   ├── DOCUMENTATION_GOVERNANCE.md

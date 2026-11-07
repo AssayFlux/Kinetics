@@ -4,6 +4,8 @@
 > **Mission authority:** This architecture is governed by the [Kinetics foundational mission](KINETICS_MISSION.md): a cross-disciplinary biomedical and precision-health research platform, built foundation-first with privacy, evidence, clinical safety and low-memory Android performance designed in.
 
 ## Objective
+
+The functional scientific scope and maturity labels are maintained in [docs/SCIENTIFIC_CAPABILITY_MAP.md](docs/SCIENTIFIC_CAPABILITY_MAP.md); the 160-domain register is an acquisition taxonomy only. Architecture and implementation status must not be inferred from catalogue inclusion.
 A modular, platform-first biomedical research and precision-health research platform with independently versioned scientific domains, a shared evidence/data foundation and a native visualization engine. Scientific modules must remain usable from Python/CLI without launching the desktop application.
 
 ## Layers

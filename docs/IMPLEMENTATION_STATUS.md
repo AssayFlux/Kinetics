@@ -168,3 +168,10 @@ The versioned sequence, structure, residue-mapping and derived-feature contracts
 ## Step 10 release readiness
 
 The executable release evaluator validates required gates, source commit, evidence references and non-critical waiver metadata. It always reports `release_signoff: false`; it does not inspect evidence files or replace human approvals. Release manifest, SBOM, security/recovery/UAT evidence, signed reviews and production release remain outstanding.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

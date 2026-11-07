@@ -1,0 +1,8 @@
+package:
+  name: biopython
+  version: "1.88"
+
+requirements:
+  host:
+    - python
+    - numpy 1.26.2

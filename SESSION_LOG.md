@@ -137,3 +137,21 @@ Wait for the owner's explicit R0 exit-gate approval. On approval, begin R1 feasi
 
 ### Next step
 Continue R1 experiments and record raw reproducible evidence in docs/android-feasibility.md. Stop at the R1 go/no-go gate.
+
+
+## 2026-11-07 — Session 7: Owner decision D-001 — project license
+**Phase:** Track R / R1 Android feasibility (in progress)
+**Objective:** Record the owner's project-license selection and proceed to the next owner decision without changing R1 scope.
+
+### Done
+- Owner selected **Apache License 2.0 (Apache-2.0)** on 2026-11-07.
+- Recorded D-001 as approved in DECISIONS.md, including the choice, rationale/options and third-party license caveat.
+- Updated ROADMAP.md: five owner decisions remain open; canonical LICENSE grant text remains to be added as a repository task.
+
+### Not done / validation status
+- The canonical Apache-2.0 LICENSE file has not yet been added; the repository must not be described as carrying the license grant until that is committed.
+- Third-party engines, dependencies, models and data packs still require individual license verification.
+- No R1 feasibility result is changed by this governance decision.
+
+### Next step
+- Ask the owner to decide D-002: target jurisdictions.

@@ -126,7 +126,7 @@ def main() -> int:
         run(["git", "lfs", "track", "*.pdf", "*.epub"])
         run(["git", "add", ".gitattributes"])
         run(["git", "add", "-f", "data/corpus/objects"])
-    run(["git", "add", "data/corpus-manifests"])
+    # Update the public growth graph after release_uploaded flags are finalized.\n    run(["python", "scripts/update_corpus_dashboard.py"])\n    run(["git", "add", "data/corpus-manifests"])\n    run(["git", "add", "Assets/corpus-growth.svg"])
 
     status = run(["git", "status", "--porcelain"]).stdout.strip()
     if not status:

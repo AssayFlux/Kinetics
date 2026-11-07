@@ -52,6 +52,46 @@
       "adapter_status": "implemented"
     },
     {
+      "id": "openalex",
+      "name": "OpenAlex",
+      "kind": "open_access_literature",
+      "endpoint": "https://api.openalex.org/works",
+      "adapter": "scripts/fetch_specialist_sources.py",
+      "enabled": true,
+      "notes": "Downloads only OA PDFs whose best OA location explicitly identifies CC0, CC BY or CC BY-SA.",
+      "adapter_status": "implemented"
+    },
+    {
+      "id": "arxiv",
+      "name": "arXiv",
+      "kind": "preprints",
+      "endpoint": "https://export.arxiv.org/api/query",
+      "adapter": "scripts/fetch_specialist_sources.py",
+      "enabled": true,
+      "notes": "Only papers with an explicit accepted Creative Commons license link on the abstract page are downloaded; default arXiv terms are not treated as open redistribution rights.",
+      "adapter_status": "implemented"
+    },
+    {
+      "id": "uniprot",
+      "name": "UniProtKB",
+      "kind": "protein_sequences_and_annotations",
+      "endpoint": "https://rest.uniprot.org/uniprotkb/search",
+      "adapter": "scripts/fetch_specialist_sources.py",
+      "enabled": true,
+      "notes": "Protein sequence FASTA exports under CC BY 4.0; records retain query and provider provenance.",
+      "adapter_status": "implemented"
+    },
+    {
+      "id": "rcsb_pdb",
+      "name": "RCSB Protein Data Bank",
+      "kind": "macromolecular_structures",
+      "endpoint": "https://search.rcsb.org/rcsbsearch/v2/query",
+      "adapter": "scripts/fetch_specialist_sources.py",
+      "enabled": true,
+      "notes": "Experimental structure coordinate files under CC0; mmCIF retained and parsed with Biopython.",
+      "adapter_status": "implemented"
+    },
+    {
       "id": "doab",
       "name": "Directory of Open Access Books",
       "kind": "academic_books",

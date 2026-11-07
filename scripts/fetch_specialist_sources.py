@@ -49,20 +49,31 @@ def now() -> str:
 def accepted_license(value: str | None) -> bool:
     if not value:
         return False
-    v = value.strip().lower().replace("_", "-").replace(" ", "")
-    if any(x in v for x in ("-nc", "-nd", "noncommercial", "allrightsreserved")):
+    raw = value.strip().lower()
+    compact = re.sub(r"[^a-z0-9]+", "", raw)
+    if any(x in raw for x in ("-nc", "-nd", "noncommercial", "non-commercial",
+                              "no derivatives", "all rights reserved")):
         return False
-    if v in ACCEPTED:
+    if compact in {"cc0", "cc01", "cc01.0", "publicdomain", "publicdomainmark",
+                   "publicdomainmark10", "ccby", "ccby30", "ccby40",
+                   "ccbysa", "ccbysa30", "ccbysa40"}:
         return True
-    return any(x in v for x in (
-        "creativecommons.org/licenses/by/4.0",
-        "creativecommons.org/licenses/by/3.0",
-        "creativecommons.org/licenses/by-sa/4.0",
-        "creativecommons.org/licenses/by-sa/3.0",
+    if any(x in raw for x in (
+        "creativecommons.org/licenses/by/4.0", "creativecommons.org/licenses/by/3.0",
+        "creativecommons.org/licenses/by-sa/4.0", "creativecommons.org/licenses/by-sa/3.0",
         "creativecommons.org/publicdomain/zero/1.0",
         "creativecommons.org/publicdomain/mark/1.0",
-    ))
-
+    )):
+        return True
+    if re.search(r"cc\s*[- ]?\s*by\s*[- ]?\s*4\.0", raw):
+        return True
+    if re.search(r"cc\s*[- ]?\s*by\s*[- ]?\s*3\.0", raw):
+        return True
+    if re.search(r"cc\s*[- ]?\s*by\s*[- ]?sa\s*[- ]?\s*4\.0", raw):
+        return True
+    if re.search(r"creative\s+commons\s+attribution\s+4\.0", raw):
+        return True
+    return False
 
 def session() -> requests.Session:
     s = requests.Session()

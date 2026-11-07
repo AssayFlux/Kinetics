@@ -1,5 +1,7 @@
 # Kinetics: 10-Step Completion Programme
 
+> **Mission authority:** This document is governed by [KINETICS_MISSION.md](../KINETICS_MISSION.md). Kinetics is a cross-disciplinary biomedical and precision-health research platform—not only an enzyme-kinetics project. All domains, datasets, models and applications must align with the mission, preserve provenance and clinical safety, and follow the foundation-first build order. Small Android devices are a first-class performance target.
+
 **Status:** Active programme. Step 1 is in progress; no step is complete merely because it is planned or has a prototype.
 **Governing direction:** `VISION.md`, `RESEARCH_BLUEPRINT.md`, `ROADMAP.md`, `ARCHITECTURE.md`, `ENGINEERING_STACK.md`, and `CLINICAL_TRANSLATION.md`.
 

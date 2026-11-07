@@ -24,7 +24,7 @@ def main() -> int:
     db.row_factory = sqlite3.Row
     try:
         sql = """SELECT f.item_id,f.title,f.domain,f.text,
-                        d.source_url,d.license,d.sha256,d.object_path,
+                        d.source_url,d.license,d.citation_metadata_json,d.sha256,d.object_path,
                         bm25(knowledge_fts) AS score
                  FROM knowledge_fts f
                  JOIN knowledge_documents d ON d.item_id=f.item_id

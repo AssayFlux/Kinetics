@@ -154,11 +154,11 @@ jobs:
             sleep 10
             adb logcat -d -s KineticsR1:I '*:S' | tee r1-emulator.log
             grep -F "Rust FFI: 25.0; C++17 JNI: 25.0" r1-emulator.log
-            grep -F '"biopython": "1.88"' r1-emulator.log
-            grep -F '"numpy": "1.26.2"' r1-emulator.log
-            grep -F '"seqio_fasta_smoke": "ACGTACGT"' r1-emulator.log
-            grep -F '"bio_pdb_residue_smoke": "GLY"' r1-emulator.log
-            grep -F '"biopython_pairwise_alignment_score": 5.0' r1-emulator.log
+            grep -F "'biopython': '1.88'" r1-emulator.log
+            grep -F "'numpy': '1.26.2'" r1-emulator.log
+            grep -F "'seqio_fasta_smoke': 'ACGTACGT'" r1-emulator.log
+            grep -F "'bio_pdb_residue_smoke': 'GLY'" r1-emulator.log
+            grep -F "'biopython_pairwise_alignment_score': 5.0" r1-emulator.log
             adb shell dumpsys meminfo org.assayflux.kinetics | tee r1-emulator-memory.txt
             adb shell am force-stop org.assayflux.kinetics
             adb shell am start -W -n org.assayflux.kinetics/.MainActivity | tee r1-cold-start.txt

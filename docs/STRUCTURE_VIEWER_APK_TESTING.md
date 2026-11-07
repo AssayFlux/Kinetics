@@ -1,5 +1,7 @@
 # Kinetics structural biology and APK viewer validation
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## What is implemented in this increment
 
 - Biopython-backed structure summary for local PDB/mmCIF files, with SHA-256 source provenance.

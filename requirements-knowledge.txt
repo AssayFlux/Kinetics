@@ -5,3 +5,4 @@ lxml==5.4.0
 PyMuPDF==1.26.3
 EbookLib==0.19
 tqdm==4.67.1
+biopython==1.86

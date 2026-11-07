@@ -42,6 +42,16 @@
       "adapter_status": "implemented"
     },
     {
+      "id": "zenodo",
+      "name": "Zenodo",
+      "kind": "open_research_books_and_datasets",
+      "endpoint": "https://zenodo.org/api/records",
+      "adapter": "scripts/fetch_research_data.py",
+      "enabled": true,
+      "notes": "Download only records with explicit CC0, CC BY or CC BY-SA licenses; individual file and record metadata are retained.",
+      "adapter_status": "implemented"
+    },
+    {
       "id": "doab",
       "name": "Directory of Open Access Books",
       "kind": "academic_books",

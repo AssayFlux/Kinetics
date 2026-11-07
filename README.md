@@ -189,7 +189,7 @@ versioned source manifest is **data/corpus-manifests/metadata_index.json**.
 The metadata/chunk index is stored in the existing local **data/kinetics.sqlite3**
 database. The corpus is not committed as ordinary Git blobs.
 
-The GitHub Actions workflow **.github/workflows/knowledge_ingestion.yml** runs
+The GitHub Actions workflow **.github/workflows/bulk_downloader.yml** runs
 two bounded cycles per week and can also be started from **Actions → Kinetics
 knowledge corpus ingestion → Run workflow**. It publishes licensed corpus
 batches as GitHub Release assets by default and commits compact manifests.

@@ -141,7 +141,7 @@ Step 4 is being implemented as a software engine, not validated as a scientific 
 - Parameter-validated OpenMM/GROMACS simulation-plan schema that records engine/version, input hash, force field, water model, integrator, timestep, steps, temperature, pressure, random seed and outputs. Plans are explicitly marked planned-not-executed.
 - Native CMake/CTest CI matrix declared for Ubuntu, macOS and Windows; Python interoperability and simulation-plan tests.
 
-**Scope boundaries:** This first parser supports PDB only. The CPU XY preview is not a GPU-accelerated 3D renderer or interactive desktop viewer. Molecular surfaces, mmCIF/biological assembly support and molecular dynamics execution are not implemented. No performance claim is made.
+**Scope boundaries:** The native C++ parser in this step supports PDB only. A separate Python mmCIF coordinate adapter is tracked under Step 9; it does not extend the C++ parser. The CPU XY preview is not a GPU-accelerated 3D renderer or interactive desktop viewer. Molecular surfaces, biological assembly expansion and molecular dynamics execution are not implemented. No performance claim is made.
 
 **Remaining acceptance work:**
 - Pass the native build and test matrix on all declared operating systems.
@@ -234,7 +234,7 @@ The latest verification run [#42173358868](https://github.com/AssayFlux/Kinetics
 
 ## Step 9 and Step 10 implementation status
 
-The first Step 9 increment implements versioned protein-sequence, structure, residue-mapping and derived-feature records, plus a fixed-column PDB adapter that verifies source-file SHA-256 and computes evidence-linked C-alpha distances only from explicit mappings. Deterministic fixtures cover parsing, insertion codes, sequence identity, coordinate integrity and feature provenance. mmCIF, external structure-source adapters, automatic alignment, independent reference validation and real-data benchmarks remain open. See [Proteomics and structural biology](STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md).
+The first Step 9 increment implements versioned protein-sequence, structure, residue-mapping and derived-feature records, plus provenance-checked Python PDB and mmCIF coordinate adapters that compute evidence-linked C-alpha distances only from explicit mappings. Deterministic fixtures cover both coordinate formats, digest integrity, author residue/chain identity and mapping evidence. External structure-source adapters, automatic mapping generation, independent reference validation and real-data benchmarks remain open. This Python support is separate from the native C++ PDB-only parser. See [Proteomics and structural biology](STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md).
 
 Step 10 includes an executable release-manifest evaluator that validates required gates, source commit, evidence references and waiver metadata and conservatively emits GO/CONDITIONAL/NO-GO without claiming human sign-off. Actual release evidence, SBOM, vulnerability triage, security/recovery/UAT reports, accountable reviews and production sign-off remain open. See [Release readiness gates](STEP10_RELEASE_READINESS_GATES.md).
 

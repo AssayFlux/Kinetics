@@ -32,6 +32,19 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun FeasibilityScreen(context: android.content.Context) {
     var report by remember { mutableStateOf("Running on-device Python and scientific package smoke tests…") }
+    val nativeReport = remember {
+        runCatching {
+            val probe = NativeProbe()
+            val rust = probe.rustSumSquares(3.0, 4.0)
+            val cpp = probe.cppSumSquares(3.0, 4.0)
+            check(kotlin.math.abs(rust - 25.0) < 1e-9)
+            check(kotlin.math.abs(cpp - 25.0) < 1e-9)
+            "Rust FFI: $rust; C++17 JNI: $cpp"
+        }.fold(
+            onSuccess = { it },
+            onFailure = { "Native smoke test failed: ${it.stackTraceToString()}" },
+        )
+    }
 
     LaunchedEffect(Unit) {
         report = withContext(Dispatchers.IO) {
@@ -49,6 +62,7 @@ private fun FeasibilityScreen(context: android.content.Context) {
             ) {
                 Text("Kinetics — R1 feasibility")
                 Text("Research Mode only. No scientific capability is validated.")
+                Text(nativeReport)
                 Text(report)
             }
         }

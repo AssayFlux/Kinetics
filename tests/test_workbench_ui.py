@@ -11,8 +11,8 @@ STATIC = Path(__file__).parents[1] / "src" / "kinetics_core" / "workbench" / "st
 def test_workbench_has_responsive_and_accessible_foundations():
     html = (STATIC / "index.html").read_text(encoding="utf-8")
     assert 'name="viewport"' in html
-    assert "@media(max-width:1050px)" in html
-    assert "@media(max-width:680px)" in html
+    assert "@media(max-width:1100px)" in html
+    assert "@media(max-width:480px)" in html
     assert "prefers-reduced-motion:reduce" in html
     assert 'role="status"' in html
     assert 'aria-live="polite"' in html
@@ -59,7 +59,7 @@ def test_structure_viewer_has_mobile_and_accessibility_controls():
 
 def test_workbench_uses_cross_platform_shell_and_brand_asset():
     html = (STATIC / "index.html").read_text(encoding="utf-8")
-    app = (STATIC.parents[2] / "workbench" / "app.py").read_text(encoding="utf-8")
+    app = (STATIC.parent / "app.py").read_text(encoding="utf-8")
     for feature in (
         'class="topbar"',
         'class="sidebar"',

@@ -1,5 +1,20 @@
 {
   "schema_version": 1,
   "description": "Only repository-bundled model checkpoints with independently verified tensor parameter counts belong here. Architecture definitions and externally downloaded weights are excluded.",
-  "models": []
+  "models": [
+    {
+      "id": "esm2_t6_8M_UR50D",
+      "provider": "Meta AI",
+      "model_id": "facebook/esm2_t6_8M_UR50D",
+      "revision": "8c576d2aba1b27317e9321c8491d72f00d1b110a",
+      "status": "configured_external",
+      "parameter_count": 8000000,
+      "parameter_count_verified": true,
+      "parameter_count_is_approximate": true,
+      "license": "MIT",
+      "weights_bundled": false,
+      "load_behavior": "downloaded on first use through transformers",
+      "source_url": "https://huggingface.co/facebook/esm2_t6_8M_UR50D"
+    }
+  ]
 }

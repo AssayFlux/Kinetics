@@ -29,6 +29,7 @@ python -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements-knowledge.txt
+python -m pip install -e . --no-deps
 ```
 
 The lightweight ingestion dependencies are pinned in `requirements-knowledge.txt`; the existing root `requirements.txt` also includes them for full Kinetics environments. PDF, EPUB and HTML parsing libraries are used only by the tokenization step.
@@ -64,9 +65,10 @@ Extract and index up to 50 downloaded documents:
 python scripts/tokenize_corpus.py --max-documents 50
 python scripts/analyze_corpus.py
 python scripts/query_knowledge.py "cardiac AND imaging" --limit 10
+kinetics-knowledge "cardiac AND imaging" --limit 10
 ```
 
-The index is added to the existing `data/kinetics.sqlite3` SQLite database. FTS5 stores text chunks and source metadata; the original document stays in the content-addressed filesystem store. Chunking is a deterministic baseline tokenizer, not a model-specific tokenizer. A future embedding adapter can add versioned vectors without changing source identity or provenance.
+The index is added to the existing `data/kinetics.sqlite3` SQLite database. Other Kinetics modules can use the read-only `kinetics_core.knowledge.KnowledgeStore` API or the installed `kinetics-knowledge` command to retrieve source-linked chunks. FTS5 stores text chunks and source metadata; the original document stays in the content-addressed filesystem store. Chunking is a deterministic baseline tokenizer, not a model-specific tokenizer. A future embedding adapter can add versioned vectors without changing source identity or provenance.
 
 ## GitHub automation
 

@@ -45,3 +45,10 @@ Run `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, and `cargo
 The mainline now also contains a deployable candidate API/worker crate: RS256 OIDC/JWKS validation, exact scope checks, managed AWS Secrets Manager integration, tenant-prefixed KMS-encrypted S3 artifacts, PostgreSQL job leases/heartbeats/retries/cancellation, and hash-chained append-only audit records. The current AWS ECS/RDS/S3/KMS deployment definitions and PostgreSQL integration CI are tracked in `docs/STEP7_PRODUCTION_ACCEPTANCE.md`.
 
 This does not supersede the security boundaries above. The candidate worker currently registers only a no-op health-check task. Per-job CPU/memory isolation is not implemented by recording requested limits or by sizing a shared Fargate worker task. Production deployment, live cross-tenant tests, managed identity configuration, and recovery drills remain unverified.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

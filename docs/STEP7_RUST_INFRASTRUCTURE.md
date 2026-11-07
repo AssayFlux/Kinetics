@@ -1,5 +1,7 @@
 # Step 7 — Rust infrastructure and security foundation
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## Status
 Implementation foundation only. This crate is not yet a deployed network service and does not claim production authentication, durable job orchestration, remote artifact transport, or a completed disaster-recovery drill.
 

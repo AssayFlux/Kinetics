@@ -120,3 +120,46 @@ jobs:
           path: |
             android/app/build/outputs/apk/debug/app-debug.apk
             android/app/build/outputs/bundle/debug/app-debug.aab
+
+  android-r1-16k-emulator:
+    name: R1 Android 16 KB arm64 emulator runtime
+    needs: android-r1
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: kinetics-r1-android-arm64
+          path: r1-artifacts
+      - name: Boot Android 15 16 KB arm64 emulator and run smoke tests
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis_ps16k
+          arch: arm64-v8a
+          profile: pixel_7
+          ram-size: 4096M
+          heap-size: 1024M
+          emulator-boot-timeout: 900
+          disable-animations: true
+          script: |
+            set -euo pipefail
+            PAGE_SIZE="$(adb shell getconf PAGE_SIZE | tr -d '\r')"
+            echo "Android emulator page size: $PAGE_SIZE"
+            test "$PAGE_SIZE" = "16384"
+            adb install -r r1-artifacts/apk/debug/app-debug.apk
+            adb logcat -c
+            adb shell am force-stop org.assayflux.kinetics
+            adb shell am start -W -n org.assayflux.kinetics/.MainActivity
+            sleep 10
+            adb logcat -d -s KineticsR1:I '*:S' | tee r1-emulator.log
+            grep -F "Rust FFI: 25.0; C++17 JNI: 25.0" r1-emulator.log
+            grep -F '"biopython": "1.88"' r1-emulator.log
+            grep -F '"numpy": "1.26.2"' r1-emulator.log
+            grep -F '"seqio_fasta_smoke": "ACGTACGT"' r1-emulator.log
+            grep -F '"bio_pdb_residue_smoke": "GLY"' r1-emulator.log
+            grep -F '"biopython_pairwise_alignment_score": 5.0' r1-emulator.log
+            adb shell dumpsys meminfo org.assayflux.kinetics | tee r1-emulator-memory.txt
+            adb shell am force-stop org.assayflux.kinetics
+            adb shell am start -W -n org.assayflux.kinetics/.MainActivity | tee r1-cold-start.txt
+            cat r1-cold-start.txt

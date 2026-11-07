@@ -103,3 +103,10 @@ The `kinetics_core.proteomics` module now implements versioned protein-sequence,
 A strict fixed-column PDB adapter now verifies the exact coordinate-file SHA-256 before parsing ATOM/HETATM records. It retains model, chain, author residue number, insertion code, alternate location, occupancy, B-factor, and coordinates. The C-alpha distance utility requires two explicit sequence-to-structure mappings, validates their sequence identity and chain/residue identity, selects alternate locations deterministically, and records coordinate digest, model frame, parameter digest, tool version, and mapping evidence IDs.
 
 The adapter intentionally does not parse mmCIF, infer residue alignments, expand biological assemblies, reconstruct missing residues, or estimate coordinate uncertainty. Experimental/predicted status remains supplied explicitly in the structure record. Tests use a small deterministic PDB fixture; this is parser/contract validation, not biological validation or a real-data benchmark.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

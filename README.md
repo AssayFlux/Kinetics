@@ -47,7 +47,7 @@ The platform is being built in stages: integrate the scientific and infrastructu
 
 ## Scientific scope
 
-Kinetics is designed to span 160 scientific, biomedical, engineering, computing and natural-science acquisition domains (100 foundational domains plus 60 extensions). The canonical domain register, grouped taxonomy and scope notes are maintained in [`docs/SCIENCE_DOMAIN_CATALOGUE_100.md`](docs/SCIENCE_DOMAIN_CATALOGUE_100.md). Catalogue inclusion describes intended scope only; it does not imply that a domain-specific module is implemented, tested or clinically validated.
+Kinetics is designed to span 160 scientific, biomedical, engineering, computing and natural-science acquisition domains (100 foundational domains plus 60 extensions). The canonical domain register, grouped taxonomy and scope notes are maintained in [`docs/SCIENCE_DOMAIN_CATALOGUE_100.md`](docs/SCIENCE_DOMAIN_CATALOGUE_100.md). Catalogue inclusion describes intended acquisition scope only; it does not imply that a domain-specific module is implemented, tested or clinically validated. The functional capability map is maintained separately in [docs/SCIENTIFIC_CAPABILITY_MAP.md](docs/SCIENTIFIC_CAPABILITY_MAP.md). The first archive milestone is **10,000 books plus 10,000 research papers**; this is a target, not current corpus size.
 
 ## Architecture at a glance
 
@@ -155,7 +155,7 @@ Some integration checks require optional dependencies or local services.
 | [docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md](docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md) | Active engineering completion programme |
 | [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) | Current implementation snapshot and blockers |
 | [docs/IMPLEMENTATION_HISTORY.md](docs/IMPLEMENTATION_HISTORY.md) | Preserved historical implementation notes |
-| [docs/SCIENCE_DOMAIN_CATALOGUE_100.md](docs/SCIENCE_DOMAIN_CATALOGUE_100.md) | Complete scientific domain catalogue |
+| [docs/SCIENCE_DOMAIN_CATALOGUE_100.md](docs/SCIENCE_DOMAIN_CATALOGUE_100.md) | 100 foundational domains plus 60 acquisition extensions |\n| [docs/SCIENTIFIC_CAPABILITY_MAP.md](docs/SCIENTIFIC_CAPABILITY_MAP.md) | Functional capability map, current evidence and dependency-aware build sequence |
 | [docs/WORKFLOW.md](docs/WORKFLOW.md) | End-to-end enzyme-kinetics research workflow |
 | [docs/WORKBENCH_GUIDE.md](docs/WORKBENCH_GUIDE.md) | Setup, usage and workbench boundaries |
 | [docs/STEP7_PRODUCTION_ACCEPTANCE.md](docs/STEP7_PRODUCTION_ACCEPTANCE.md) | Infrastructure and production acceptance criteria |

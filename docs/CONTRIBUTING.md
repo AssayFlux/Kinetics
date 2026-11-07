@@ -26,9 +26,9 @@ Keep source acquisition, schema validation, numerical methods, model fitting, an
 
 Do not describe a feature as validated until the final verification stage is complete. Do not use random-split metrics as evidence of cold-start generalization. Preserve rejected-row audits and document data transformations. Never commit credentials, private data, or third-party artifacts without redistribution rights.
 
-## Astronaut boundary
+## External project boundary
 
-Kinetics remains standalone. Do not add Astronaut dependencies, services, or code until the project owner explicitly authorizes integration.
+Kinetics owns the scientific data contracts, research workflows and permission-scoped APIs. The separate Kinetics Ecosystem project may integrate through documented, versioned interfaces; do not bundle an assistant runtime into the scientific core or grant it implicit access to private data or consequential operations.
 
 
 ---

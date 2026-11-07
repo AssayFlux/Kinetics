@@ -3,3 +3,4 @@ pre-commit>=3.8,<5
 pytest>=8,<9
 PyYAML>=6,<7
 ruff>=0.6,<1
+types-PyYAML>=6,<7

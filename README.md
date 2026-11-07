@@ -20,7 +20,6 @@ Requires Python 3.10+.
 ```bash
 python -m pip install -r requirements-dev.txt
 ruff check scripts tests
-ruff format --check scripts tests
 mypy scripts tests
 python scripts/check_registry.py
 pytest

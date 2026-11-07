@@ -34,3 +34,10 @@ A research run should save the dataset manifest, curation configuration, split m
 
 ## Claims discipline
 A passing software test is not scientific validation. A random split score is not evidence of cold-start generalization. A low error does not establish mechanistic correctness. Publication claims must be limited to independently verified evidence.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

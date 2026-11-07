@@ -31,46 +31,14 @@ The ambition spans fundamental biological discovery through translational resear
 | Build order | Integrate foundations first; build the application second; comprehensive acceptance and training third |
 | Safety | Research infrastructure—not an autonomous clinician or prescribing system |
 
-## The 100-domain scientific atlas
+## Kinetics in motion
 
-The canonical catalogue is maintained in docs/SCIENCE_DOMAIN_CATALOGUE_100.md. Inclusion defines planned integration scope; it does not imply that a complete dataset, validated model, clinical workflow or production capability already exists.
+Kinetics has one visual asset: an original, colourful, continuously looping science animation. It brings the platform's molecular, cellular and computational vision to life through an original pixel-art science quest.
 
-**Animated science quest**\n\n<img src="Assets/Future/kinetics-science-quest.gif" width="640" alt="Colourful Kinetics science quest pixel runner animation">\n\n<!-- KINETICS_GALLERY_START -->
-
-**Real scientific imagery — downloaded and committed files only.**
-
-**Gallery status: 12/100 verified images; 88 blank domain slots.**
-
-Each domain keeps its fixed position in the four-column atlas. A blank cell means its real image has not yet been downloaded and verified; no placeholder or generated image is used.
-
-<table>
-<tr><td></td><td></td><td align="center"><img src="Assets/Future/PNG/003-transcriptomics.png" width="170" alt="Transcriptomics"><br><b>Transcriptomics</b></td><td></td></tr>
-<tr><td align="center"><img src="Assets/Future/PNG/005-structural-biology.png" width="170" alt="Structural Biology"><br><b>Structural Biology</b></td><td align="center"><img src="Assets/Future/PNG/006-cell-biology.png" width="170" alt="Cell Biology"><br><b>Cell Biology</b></td><td align="center"><img src="Assets/Future/PNG/007-molecular-biology.png" width="170" alt="Molecular Biology"><br><b>Molecular Biology</b></td><td align="center"><img src="Assets/Future/PNG/008-biochemistry.png" width="170" alt="Biochemistry"><br><b>Biochemistry</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/PNG/009-epigenetics.png" width="170" alt="Epigenetics"><br><b>Epigenetics</b></td><td></td><td></td><td></td></tr>
-<tr><td></td><td align="center"><img src="Assets/Future/PNG/014-metagenomics.png" width="170" alt="Metagenomics"><br><b>Metagenomics</b></td><td align="center"><img src="Assets/Future/PNG/015-single-cell-biology.png" width="170" alt="Single Cell Biology"><br><b>Single Cell Biology</b></td><td align="center"><img src="Assets/Future/PNG/016-spatial-omics.png" width="170" alt="Spatial Omics"><br><b>Spatial Omics</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/PNG/017-developmental-biology.png" width="170" alt="Developmental Biology"><br><b>Developmental Biology</b></td><td align="center"><img src="Assets/Future/PNG/018-stem-cell-biology.png" width="170" alt="Stem Cell Biology"><br><b>Stem Cell Biology</b></td><td></td><td align="center"><img src="Assets/Future/PNG/020-regenerative-medicine.png" width="170" alt="Regenerative Medicine"><br><b>Regenerative Medicine</b></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-</table>
-<!-- KINETICS_GALLERY_END -->
+<!-- KINETICS_ANIMATION -->
+<div align="center">
+<img src="Assets/Future/kinetics-science-quest.gif" width="960" alt="Original Kinetics science-in-motion animation">
+</div>
 
 ### 1. Molecular foundations
 
@@ -222,18 +190,19 @@ Each domain keeps its fixed position in the four-column atlas. A blank cell mean
 | 99 | Artificial intelligence in medicine | Validated AI methods for medical research and decision support. |
 | 100 | Humanitarian and disaster health | Health resilience in disasters, conflict, displacement and infrastructure failure. |
 
-## Visual assets
+## Visual asset policy
 
-The gallery currently contains 12/100 downloaded and attributed PNG images; the other 88 domain positions remain blank. The importer updates the README status count and fills only slots whose local PNG checksum matches an accepted-license record in Assets/Future/ATTRIBUTION.json. No absent image path is embedded, so the README never shows broken-image placeholders.
+The repository intentionally contains **one image asset only**: the original animated GIF shown above. No static logos, illustrations, scientific photo galleries, PNG collections, placeholders or image-acquisition jobs are maintained.
 
-~~~bash
+Regenerate and validate the animation:
+
+```bash
 python -m pip install Pillow
-python scripts/import_science_gallery.py
 python scripts/build_pixel_animation.py
-python scripts/validate_visual_assets.py --strict-gallery
-~~~
+python scripts/validate_visual_assets.py
+```
 
-The previously tracked GIF does not pass structural validation, so the README does not embed that broken binary. The builder replaces it with a verified multi-frame looping animation. Commit the generated GIF and PNG gallery after review to make them available to everyone cloning the repository.
+The animation is original pixel-art artwork generated from code. Its source is maintained in `scripts/build_pixel_animation.py`; the binary GIF is built and checked by GitHub Actions.
 
 ## A connected research infrastructure
 
@@ -300,7 +269,7 @@ Continuous tests run during development. Comprehensive end-to-end acceptance and
 | docs/SCIENCE_DOMAIN_CATALOGUE_100.md | Canonical 100-domain scope |
 | docs/IMPLEMENTATION_STATUS.md | Implemented work, evidence and blockers |
 | docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md | Acceptance-based completion plan |
-| docs/ASSET_PIPELINE.md | PNG and pixel-animation generation and validation |
+| docs/ASSET_PIPELINE.md | Single animated visual asset generation and validation |
 | scripts/ | Acquisition, curation, validation and asset tools |
 
 ## Scientific and clinical responsibility

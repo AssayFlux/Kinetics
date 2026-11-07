@@ -1,5 +1,7 @@
 # Proposed research paper outline
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 This outline is a planning document. It does not assert novelty or results before the corresponding work is completed.
 
 ## Working title

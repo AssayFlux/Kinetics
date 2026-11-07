@@ -11,6 +11,7 @@ import math
 import random
 import re
 import sys
+import zipfile
 from pathlib import Path
 
 try:
@@ -25,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "Assets" / "Future" / "PNG"
 README = ROOT / "README.md"
 MANIFEST = ROOT / "Assets" / "Future" / "ARTWORK_MANIFEST.json"
+ARCHIVE = ROOT / "Assets" / "Future" / "kinetics-100-square-science-artworks.zip"
 ATTRIBUTION = ROOT / "Assets" / "Future" / "ATTRIBUTION.json"
 SIZE = 1024
 PALETTES = [
@@ -285,6 +287,9 @@ def main():
             "generator":"scripts/generate_futuristic_gallery.py"
         })
         print(f"[{number:03d}/100] {path.name}")
+    with zipfile.ZipFile(ARCHIVE, "w", compression=zipfile.ZIP_STORED) as bundle:
+        for record in records:
+            bundle.write(ROOT / record["file"], arcname=Path(record["file"]).name)
     MANIFEST.write_text(json.dumps(records,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     # These generated files replace the old downloaded gallery; no external image credits apply.
     ATTRIBUTION.write_text("[]\n",encoding="utf-8")

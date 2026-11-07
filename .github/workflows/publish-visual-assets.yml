@@ -49,7 +49,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md Assets/Future/PNG Assets/Future/ARTWORK_MANIFEST.json Assets/Future/ATTRIBUTION.json Assets/Future/kinetics-science-quest.gif
+          git add README.md Assets/Future/PNG Assets/Future/ARTWORK_MANIFEST.json Assets/Future/kinetics-100-square-science-artworks.zip Assets/Future/ATTRIBUTION.json Assets/Future/kinetics-science-quest.gif
           if git diff --cached --quiet; then
             echo "No artwork changes to publish."
           else

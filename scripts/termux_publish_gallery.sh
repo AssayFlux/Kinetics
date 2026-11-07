@@ -20,7 +20,7 @@ fi
 python scripts/generate_futuristic_gallery.py
 python scripts/build_pixel_animation.py
 python scripts/validate_visual_assets.py --strict-gallery
-git add README.md Assets/Future/PNG Assets/Future/ARTWORK_MANIFEST.json Assets/Future/ATTRIBUTION.json Assets/Future/kinetics-science-quest.gif
+git add README.md Assets/Future/PNG Assets/Future/ARTWORK_MANIFEST.json Assets/Future/kinetics-100-square-science-artworks.zip Assets/Future/ATTRIBUTION.json Assets/Future/kinetics-science-quest.gif
 if git diff --cached --quiet; then
   echo "No changes to publish."
   exit 0

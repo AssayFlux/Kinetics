@@ -1,5 +1,7 @@
 # ESM-2 protein representation card
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## Identity
 
 - Model: `facebook/esm2_t6_8M_UR50D`

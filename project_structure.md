@@ -1,11 +1,11 @@
 # Kinetics Knowledge Ingestion — Project Structure
 
 This subsystem extends the canonical 100-domain register in
-\`docs/SCIENCE_DOMAIN_CATALOGUE_100.md\` and the existing SQLite/data-platform
+`docs/SCIENCE_DOMAIN_CATALOGUE_100.md` and the existing SQLite/data-platform
 architecture. It does not create a second domain catalogue or replace the
 existing scientific data model.
 
-\`\`\`text
+```text
 Kinetics/
 ├── .github/
 │   └── workflows/
@@ -36,7 +36,7 @@ Kinetics/
 │   └── test_knowledge_ingestion.py
 ├── requirements.txt               # existing requirements + pinned ingestion extras
 └── README.md
-\`\`\`
+```
 
 ## Data flow
 
@@ -44,9 +44,9 @@ Kinetics/
 2. Require an explicit redistribution-compatible license before downloading.
 3. Stream each object to a temporary file, enforce per-file and per-batch byte caps,
    calculate SHA-256, and atomically move it into content storage.
-4. Save resumable source IDs and provenance in \`metadata_index.json\`.
+4. Save resumable source IDs and provenance in `metadata_index.json`.
 5. Extract supported formats and create bounded overlapping text chunks.
-6. Index chunks and source metadata in the existing \`data/kinetics.sqlite3\` file.
+6. Index chunks and source metadata in the existing `data/kinetics.sqlite3` file.
 7. Run deterministic analysis and expose source-linked retrieval results.
 
 ## Storage policy

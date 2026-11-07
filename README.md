@@ -43,11 +43,11 @@ The platform is being built in stages: integrate the scientific and infrastructu
 | Molecular structures | C++17 PDB parsing and molecular scene-data foundation | Broader structure formats, independent validation and interactive rendering |
 | Platform services | Rust foundations for identity, jobs, artifacts and audit; AWS deployment configuration | Live deployment, scientific workers, isolation, security and recovery tests |
 
-**Scope note:** these are implementation foundations, not claims of production deployment, clinical validation or scientific performance. The 100-domain catalogue describes intended scope; it does not mean 100 finished modules.
+**Scope note:** these are implementation foundations, not claims of production deployment, clinical validation or scientific performance. The 160-domain catalogue describes intended scope; it does not mean 160 finished modules.
 
 ## Scientific scope
 
-Kinetics is designed to span 100 scientific and biomedical domains. The canonical domain register, grouped taxonomy and scope notes are maintained in [`docs/SCIENCE_DOMAIN_CATALOGUE_100.md`](docs/SCIENCE_DOMAIN_CATALOGUE_100.md). Catalogue inclusion describes intended scope only; it does not imply that a domain-specific module is implemented, tested or clinically validated.
+Kinetics is designed to span 160 scientific, biomedical, engineering, computing and natural-science acquisition domains (100 foundational domains plus 60 extensions). The canonical domain register, grouped taxonomy and scope notes are maintained in [`docs/SCIENCE_DOMAIN_CATALOGUE_100.md`](docs/SCIENCE_DOMAIN_CATALOGUE_100.md). Catalogue inclusion describes intended scope only; it does not imply that a domain-specific module is implemented, tested or clinically validated.
 
 ## Architecture at a glance
 
@@ -178,7 +178,7 @@ Contributions should include tests, clear documentation and evidence for scienti
 ## Knowledge corpus ingestion
 
 Kinetics includes an incremental, license-aware knowledge ingestion pipeline
-covering the canonical 100-domain catalogue plus an extensible set of engineering, computing and natural-science scopes. It discovers and acquires
+covering a unified 160-domain catalogue: 100 foundational biomedical/healthcare domains plus 60 cross-disciplinary extensions. It discovers and acquires
 redistributable books and biomedical papers in bounded batches, preserves
 source/license/checksum provenance, and builds a local searchable text index.
 

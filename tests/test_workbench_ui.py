@@ -55,3 +55,24 @@ def test_structure_viewer_has_mobile_and_accessibility_controls():
         "Analyze structure evidence",
     ):
         assert feature in html
+
+
+def test_workbench_uses_cross_platform_shell_and_brand_asset():
+    html = (STATIC / "index.html").read_text(encoding="utf-8")
+    app = (STATIC.parents[2] / "workbench" / "app.py").read_text(encoding="utf-8")
+    for feature in (
+        'class="topbar"',
+        'class="sidebar"',
+        'class="bottom-nav"',
+        'id="global-search"',
+        'id="theme-toggle"',
+        'id="project-workspace"',
+        'id="research-workflow"',
+        'id="artifact-browser"',
+        'src="/brand-logo.svg"',
+        "--sidebar:16rem",
+        "max-width:480px",
+    ):
+        assert feature in html
+    assert '"/brand-logo.svg"' in app
+    assert 'Brand Logo.svg' in app

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "download_requires_explicit_redistribution_license": true,
+    "allowed_license_families": [
+      "CC0",
+      "Public Domain Mark",
+      "CC BY",
+      "CC BY-SA"
+    ],
+    "excluded": [
+      "CC BY-NC",
+      "CC BY-ND",
+      "All Rights Reserved",
+      "unknown"
+    ],
+    "https_only": true
+  },
+  "sources": [
+    {
+      "id": "internet_archive",
+      "name": "Internet Archive",
+      "kind": "books_and_texts",
+      "endpoint": "https://archive.org/advancedsearch.php",
+      "adapter": "scripts/fetch_corpus.py",
+      "enabled": true,
+      "notes": "Download only when item metadata carries an explicitly accepted license."
+    },
+    {
+      "id": "europe_pmc_oa",
+      "name": "Europe PMC / PMC Open Access",
+      "kind": "biomedical_articles",
+      "endpoint": "https://www.ebi.ac.uk/europepmc/webservices/rest/search",
+      "adapter": "scripts/fetch_corpus.py",
+      "enabled": true,
+      "notes": "OA subset only; package license checked before retrieval."
+    },
+    {
+      "id": "doab",
+      "name": "Directory of Open Access Books",
+      "kind": "academic_books",
+      "endpoint": "https://www.doabooks.org/",
+      "adapter": "discovery_only",
+      "enabled": false,
+      "notes": "Discovery candidate; add a reviewed adapter and verify book-level rights before downloads."
+    },
+    {
+      "id": "doaj",
+      "name": "Directory of Open Access Journals",
+      "kind": "journal_discovery",
+      "endpoint": "https://doaj.org/",
+      "adapter": "discovery_only",
+      "enabled": false,
+      "notes": "Discovery candidate; journal/article licenses must be checked individually."
+    },
+    {
+      "id": "arxiv",
+      "name": "arXiv",
+      "kind": "preprints",
+      "endpoint": "https://export.arxiv.org/api/query",
+      "adapter": "discovery_only",
+      "enabled": false,
+      "notes": "Use source-specific terms and verify reuse/redistribution rights before mirroring."
+    }
+  ]
+}

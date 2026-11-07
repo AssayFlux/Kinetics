@@ -9,7 +9,7 @@ existing scientific data model.
 Kinetics/
 ├── .github/
 │   └── workflows/
-│       └── knowledge_ingestion.yml
+│       └── bulk_downloader.yml
 ├── database/
 │   ├── domains/
 │   │   └── extended_domains.json  # additional cross-disciplinary scopes

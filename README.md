@@ -1,242 +1,220 @@
 <div align="center">
 
-<img src="Assets/Brand%20Logo.svg" alt="Kinetics logo" width="380">
+<img src="Assets/Brand%20Logo.svg" width="380" alt="Kinetics">
 
 # KINETICS
 ### CONNECTING SCIENCE · ADVANCING HEALTH · PROTECTING HUMANITY
 
-**A long-horizon scientific and biomedical intelligence infrastructure for discovery, precision-health research and human resilience.**
+**ONE SCIENTIFIC ECOSYSTEM. MANY DISCIPLINES. A MORE RESILIENT FUTURE.**
 
-[Mission](KINETICS_MISSION.md) · [Vision](VISION.md) · [Roadmap](ROADMAP.md) · [Architecture](ARCHITECTURE.md) · [Emergency Resilience](docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md)
+*A long-horizon scientific and biomedical intelligence infrastructure for discovery, precision-health research and human resilience.*
 
 </div>
 
 ---
 
-<p align="center">
-  <img src="Assets/Brochure/01-science-network.svg" alt="Kinetics connects scientific disciplines and evidence" width="100%">
-</p>
+<div align="center">
 
-## The idea behind Kinetics
+<img src="Assets/Future/kinetics-science-quest.gif" width="100%" alt="Colourful pixel-art Kinetics science explorer animation">
 
-Humanity has accumulated extraordinary knowledge about life: genomes, proteins, molecular structures, chemical compounds, cellular systems, diseases, medicines, clinical studies and the environments in which people live. Yet much of this knowledge remains fragmented across disciplines, databases, formats, institutions and technical systems.
+**EXPLORE · CONNECT · UNDERSTAND · ADVANCE**
 
-**Kinetics is being built to connect that knowledge.**
+</div>
 
-Our long-term ambition is to create an extensible, evidence-centred scientific platform that can integrate biological and biomedical information, preserve its provenance, connect meaningful relationships, support reproducible analysis and make trusted knowledge more accessible. It is intended to serve scientific discovery and responsible healthcare research—and to preserve essential knowledge when normal infrastructure is unavailable.
+## The idea
 
-Kinetics is not merely a single-purpose enzyme-kinetics application, a database browser or a chatbot. It is a foundation for a broad ecosystem of scientific data, computational methods, validated models, research workflows and future applications.
+Humanity's knowledge of life is extraordinary—but fragmented. Genomes, proteins, structures, compounds, pathways, cells, diseases, medicines, clinical studies, imaging and population evidence live in separate resources and formats.
 
-> **Our north star:** build scientific infrastructure that helps humanity understand life, investigate disease, advance responsible medicine and preserve knowledge for the most difficult circumstances.
+**Kinetics is being built to connect these layers into a coherent, evidence-centred scientific infrastructure.**
+
+The ambition reaches from molecular mechanisms to human health, from laboratory research to population science, and from high-performance research environments to low-resource devices that must keep working when networks fail.
+
+| At a glance | Kinetics direction |
+|---|---|
+| Core identity | Integrated scientific and biomedical research infrastructure |
+| Scientific reach | Molecular biology → cells → systems → human biology → population health |
+| Research purpose | Connect evidence, support reproducible analysis and expose uncertainty |
+| Resilience purpose | Preserve trusted knowledge for offline and humanitarian contexts |
+| Device philosophy | Low-resource Android, bounded memory, incremental work and local-first access |
+| Development philosophy | Build and validate the integrated foundation before the final application |
+| Safety boundary | Research support—not autonomous diagnosis, prescribing or clinical decision-making |
+
+## The Kinetics science atlas
+
+The following original visual collection is stored inside this repository. Each panel represents a scientific or platform domain in the long-term scope.
+
+<table>
+<tr><td align="center"><img src="Assets/Future/01-genomics.svg" width="100%" alt="Genomics & genetics"><br><b>Genomics & genetics</b></td><td align="center"><img src="Assets/Future/02-proteomics.svg" width="100%" alt="Proteomics"><br><b>Proteomics</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/03-structural-biology.svg" width="100%" alt="Structural biology"><br><b>Structural biology</b></td><td align="center"><img src="Assets/Future/04-chemistry.svg" width="100%" alt="Chemistry"><br><b>Chemistry</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/05-enzymology.svg" width="100%" alt="Enzymology"><br><b>Enzymology</b></td><td align="center"><img src="Assets/Future/06-metabolomics.svg" width="100%" alt="Metabolomics"><br><b>Metabolomics</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/07-cell-biology.svg" width="100%" alt="Cell biology"><br><b>Cell biology</b></td><td align="center"><img src="Assets/Future/08-immunology.svg" width="100%" alt="Immunology"><br><b>Immunology</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/09-neuroscience.svg" width="100%" alt="Neuroscience"><br><b>Neuroscience</b></td><td align="center"><img src="Assets/Future/10-cardiovascular.svg" width="100%" alt="Cardiovascular science"><br><b>Cardiovascular science</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/11-pathology.svg" width="100%" alt="Pathology"><br><b>Pathology</b></td><td align="center"><img src="Assets/Future/12-pharmacology.svg" width="100%" alt="Pharmacology"><br><b>Pharmacology</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/13-pharmacogenomics.svg" width="100%" alt="Pharmacogenomics"><br><b>Pharmacogenomics</b></td><td align="center"><img src="Assets/Future/14-multiomics.svg" width="100%" alt="Multi-omics"><br><b>Multi-omics</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/15-systems-biology.svg" width="100%" alt="Systems biology"><br><b>Systems biology</b></td><td align="center"><img src="Assets/Future/16-microbiome.svg" width="100%" alt="Microbiome science"><br><b>Microbiome science</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/17-imaging.svg" width="100%" alt="Imaging & spatial biology"><br><b>Imaging & spatial biology</b></td><td align="center"><img src="Assets/Future/18-clinical-evidence.svg" width="100%" alt="Clinical evidence"><br><b>Clinical evidence</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/19-ai-research.svg" width="100%" alt="AI & scientific computing"><br><b>AI & scientific computing</b></td><td align="center"><img src="Assets/Future/20-data-archives.svg" width="100%" alt="Scientific data archives"><br><b>Scientific data archives</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/21-offline-resilience.svg" width="100%" alt="Offline resilience"><br><b>Offline resilience</b></td><td align="center"><img src="Assets/Future/22-humanitarian.svg" width="100%" alt="Humanitarian readiness"><br><b>Humanitarian readiness</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/23-precision-health.svg" width="100%" alt="Precision-health research"><br><b>Precision-health research</b></td><td align="center"><img src="Assets/Future/24-global-network.svg" width="100%" alt="Global research network"><br><b>Global research network</b></td></tr>
+</table>
 
 ## Our mission
 
 To advance human health and survival by connecting biological, biomedical and scientific knowledge into an integrated, accessible, evidence-centred and resilient platform.
 
-Kinetics aims to help researchers and qualified professionals:
-
-- Investigate biological systems from genes and molecules through cells, tissues, organs and populations.
-- Connect genetic variation to transcripts, proteins, structures, pathways, molecular function and phenotypes.
-- Explore biochemical mechanisms, chemical biology, pharmacology and therapeutic hypotheses.
-- Integrate multi-omics, physiology, disease biology, clinical literature and population-level evidence.
-- Study why biological characteristics and treatment responses differ across individuals and populations.
-- Develop reproducible research workflows with transparent assumptions, uncertainty and limitations.
-- Access curated scientific and health reference material locally, including during prolonged network outages.
-
-The mission is to make scientific knowledge more connected and useful—not to replace scientific judgment or qualified healthcare.
-
-## Our vision: a connected intelligence ecosystem for life sciences
-
-<p align="center">
-  <img src="Assets/Brochure/02-precision-health.svg" alt="From biological evidence to integrated research insight" width="100%">
-</p>
-
-We envision Kinetics evolving into a comprehensive scientific infrastructure that can connect many layers of life and health:
-
-### 1. Molecular and genetic understanding
-Genomes, genes, regulatory regions, variants, transcripts, epigenetics, protein sequences, domains, structures, complexes, folding, molecular dynamics and functional interactions.
-
-### 2. Chemistry and therapeutic research
-Small molecules, natural products, metabolites, reactions, molecular properties, target interactions, enzyme kinetics, pharmacology, pharmacokinetics, pharmacodynamics and safety evidence.
-
-### 3. Cellular and systems biology
-Transcriptomics, proteomics, metabolomics, lipidomics, microbiomics, single-cell and spatial omics, cell states, biological networks, pathways, immunology, microbiology and systems-level regulation.
-
-### 4. Human biology and disease
-Physiology, pathology, phenotypes, biomarkers, disease mechanisms, environmental context, longitudinal observations and population variation.
-
-### 5. Evidence-informed precision-health research
-Pharmacogenomics, treatment-response heterogeneity, prevention research, clinical trials, guidelines, systematic reviews and carefully governed clinical evidence—always with attention to population applicability and uncertainty.
-
-### 6. Imaging and emerging scientific modalities
-Microscopy, medical imaging, spatial biology, structural visualization and future data modalities introduced through explicit, validated data contracts.
-
-### 7. A platform that can keep evolving
-New disciplines, datasets, instruments, analytical techniques and computational models should be incorporable without rebuilding the entire system or erasing the semantics of existing scientific domains.
-
-This is a long-term ambition, not a claim that all domains are already integrated or clinically validated. The [mission document](KINETICS_MISSION.md) defines the authoritative scope and decision principles.
-
-## A responsibility beyond the laboratory: emergency and humanitarian resilience
-
-<p align="center">
-  <img src="Assets/Brochure/03-offline-resilience.svg" alt="Offline emergency and humanitarian resilience" width="100%">
-</p>
-
-Scientific and health knowledge can become critically important during earthquakes, floods, epidemics, conflict, displacement, remote-area emergencies and prolonged power or network failures.
-
-Kinetics therefore treats **offline capability and humanitarian resilience as core architectural requirements**, not optional conveniences.
-
-The long-term objective is to provide locally available, carefully reviewed and verifiable reference resources that remain useful when cloud services and connectivity are unavailable.
-
-Planned capabilities include:
-
-- Offline scientific and health reference libraries with local search.
-- Small, modular, signed and versioned knowledge packs.
-- Locally approved first-aid and emergency-response references.
-- Public-health, infection-prevention, sanitation and safe-water resources.
-- Maternal, newborn, child and chronic-care continuity references.
-- Medication information and safety references, with strict validation requirements for any calculation.
-- Local-language packs with transparent translation and review status.
-- Printable and human-readable materials for use when devices fail.
-- Secure distribution through trusted removable media.
-- Low-power operation and bounded-memory performance on constrained Android devices.
-- Integrity verification, safe rollback and recovery after interrupted updates.
-
-**Offline does not mean omniscient.** The system can only use information physically stored on the device or connected storage. It must display source, version, review date and limitations; it must not silently rely on the network or pretend that stale facility information is current.
-
-Kinetics is not an autonomous clinician and cannot replace emergency services, trained responders, medicines, equipment or hands-on care. High-risk protocols and calculators require independent clinical review, local approval, usability testing and validation before deployment. When evidence is missing or outside the approved scope, the system must say so and abstain.
-
-Read the [Emergency and Humanitarian Resilience specification](docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md).
-
-## Scientific domains and connected capabilities
-
-| Domain | Intended scientific coverage |
+| Mission area | Intended contribution |
 |---|---|
-| Genetics and genomics | Genes, genomes, variants, regulation, inheritance and pharmacogenomics |
+| Understand life | Connect genes, proteins, molecules, cells, organs and biological systems |
+| Investigate disease | Bring mechanisms, phenotypes, biomarkers and evidence into context |
+| Advance research | Support reproducible analysis, transparent methods and scientific collaboration |
+| Enable responsible precision-health research | Study variation in biology and treatment response without overstating evidence |
+| Preserve knowledge | Make carefully reviewed reference material available offline |
+| Serve humanity | Design for accessibility, privacy, resilience and responsible use |
+
+## A connected scientific universe
+
+| Layer | Scope |
+|---|---|
+| Genetics & genomics | Genes, genomes, variants, regulation, inheritance and pharmacogenomics |
 | Protein science | Sequences, domains, function, mutations, interactions and engineering |
-| Structural biology | PDB/mmCIF, complexes, folding, dynamics and structure-function analysis |
-| Enzymology and biochemistry | Enzyme kinetics, assays, reactions, metabolism and molecular mechanisms |
-| Chemistry | Compounds, reactions, descriptors, fingerprints and chemical biology |
-| Pharmacology | Drug mechanisms, target evidence, PK/PD, interactions and safety research |
+| Structural biology | PDB/mmCIF, complexes, folding, dynamics and structure-function research |
+| Chemistry & biochemistry | Compounds, reactions, metabolites, enzyme kinetics and molecular mechanisms |
+| Pharmacology | Targets, drug mechanisms, PK/PD, interactions and safety evidence |
 | Multi-omics | Transcriptomics, proteomics, metabolomics, lipidomics, microbiomics and single-cell data |
-| Systems biology | Pathways, networks, regulation and cross-domain relationships |
-| Physiology and pathology | Organ systems, disease mechanisms, phenotypes and biomarkers |
-| Clinical and population evidence | Trials, guidelines, literature, epidemiology and real-world evidence under governance |
-| Imaging and spatial science | Microscopy, medical imaging, spatial data and visualization |
-| Lifestyle and environment | Nutrition, physical activity, sleep, stress and environmental evidence |
+| Systems biology | Pathways, networks, feedback and cross-domain relationships |
+| Human biology | Physiology, pathology, phenotypes, biomarkers and longitudinal observations |
+| Clinical & population evidence | Trials, guidelines, literature, epidemiology and real-world evidence under governance |
+| Imaging & spatial science | Microscopy, medical imaging, spatial biology and visualization |
+| Lifestyle & environment | Nutrition, activity, sleep, stress and environmental evidence |
 
-The platform must preserve the distinctions between raw observations, curated assertions, statistical associations, causal hypotheses, simulations, model predictions and clinical evidence.
+## From fragmented data to connected insight
 
-## How the platform is intended to work
+| Platform layer | Responsibility | Required safeguards |
+|---|---|---|
+| Source registry | Identify authoritative datasets, publications and APIs | License, consent, access terms and version checks |
+| Acquisition | Download or import permitted records | Checksums, resumability and source provenance |
+| Archive and object storage | Preserve large files and scientific artifacts | Integrity, safe formats and bounded resource use |
+| Local catalogue | Index identifiers, metadata, relationships and jobs | SQLite transactions, migrations and validation |
+| Scientific normalization | Map domain entities without erasing meaning | Versioned schemas and explicit mappings |
+| Analysis runtime | Execute reproducible scientific workflows | Isolation, quotas, logs and cancellation |
+| Evidence layer | Record support, uncertainty and applicability | Provenance, review status and abstention |
+| Service layer | Expose secure APIs and tenant-aware operations | Authentication, authorization, audit and recovery |
+| Applications | Deliver researcher and operator experiences | Accessibility, privacy and usability |
+| Validation | Establish scientific and operational trust | Independent benchmarks and adversarial testing |
 
-<p align="center">
-  <img src="Assets/Brochure/04-platform-architecture.svg" alt="Kinetics platform foundation and application architecture" width="100%">
-</p>
+## Offline by design. Resilient by purpose.
 
-Kinetics follows a foundation-first architecture:
+Kinetics treats offline access as a foundational requirement. A future offline installation should remain useful when internet access, cloud services or centralized infrastructure are unavailable.
 
-1. **Scientific sources and data rights** — identify authoritative sources, licenses, access terms, consent requirements and release versions.
-2. **Ingestion and provenance** — acquire permitted data, preserve original records, validate checksums and record every transformation.
-3. **Local catalogue and storage** — use SQLite for metadata, identifiers, relationships, jobs and compact indexes; keep large scientific objects in suitable external files or chunk stores.
-4. **Archive-first offline access** — inspect ZIP/ZIP64 packages safely, stream selected members, use indexed chunk formats and avoid unnecessary full extraction.
-5. **Scientific normalization and relationships** — connect domain-specific entities through versioned contracts without flattening away scientific meaning.
-6. **Analysis and computational methods** — build reproducible workflows, statistical analysis, simulation and model evaluation.
-7. **Evidence and uncertainty** — attach source-level provenance, applicability limits, quality indicators and uncertainty to outputs.
-8. **Secure services and stable APIs** — establish identity, permissions, auditability, tenant isolation, resource limits and recovery.
-9. **Applications and user experiences** — build polished desktop and Android experiences after the scientific and service foundations are integrated.
-10. **Comprehensive acceptance** — test the whole system scientifically, technically, operationally and with intended users.
+| Resilience capability | Design direction |
+|---|---|
+| Local knowledge packs | Small, modular, signed and versioned content bundles |
+| Scientific archives | Inspect ZIP/ZIP64 safely and stream selected members without extract-all |
+| Local search | Search installed catalogues and indexes without remote services |
+| Low-resource operation | Streaming reads, bounded memory, incremental indexing and controlled caches |
+| Interrupted operations | Checkpoints, resumable jobs and safe rollback |
+| Emergency reference | Locally reviewed, jurisdiction-appropriate reference content |
+| Distribution | Trusted removable media and verifiable offline updates |
+| Privacy | Minimize sensitive data and protect devices in conflict or displacement settings |
 
-## Engineering philosophy
+**Offline has a physical limit:** information must actually be present on the device or connected storage. A catalogue entry is not a downloaded dataset, and compression cannot magically make arbitrary petabytes fit on a small phone.
 
-Kinetics is intended to use the right tool for each responsibility, connected through stable and versioned interfaces.
+Emergency content must be reviewed by qualified experts, approved for its jurisdiction and versioned. Kinetics must not invent current facility availability, replace emergency services or act as an autonomous clinician.
+
+## Designed for constrained devices
+
+| Constraint | Engineering response |
+|---|---|
+| Limited RAM | Streaming parsers, bounded buffers and memory budgets |
+| Limited storage | Selective acquisition, compact indexes and external archive support |
+| Slow CPU | Incremental jobs, prioritization and measured native acceleration |
+| Battery limits | Pause/resume, scheduling and low-power background work |
+| Unreliable connectivity | Offline-first operation and resumable synchronization |
+| Small screens | Accessible, responsive interfaces after foundation integration |
+| Long outages | Locally stored, signed and verifiable reference packs |
+
+## Engineering responsibilities
 
 | Technology | Intended responsibility |
 |---|---|
-| Python | Scientific computing, bioinformatics, cheminformatics, machine learning, ingestion and research workflows |
-| Rust | Secure systems components, concurrency, workflow runtime, resource management and portable services |
-| C++ | Performance-sensitive native computation, molecular visualization, geometry and imaging |
-| SQLite | Embedded metadata, provenance, local catalogue, compact indexes and offline coordination |
+| Python | Scientific computing, bioinformatics, cheminformatics, ingestion and workflows |
+| Rust | Secure systems components, concurrency, resource management and portable services |
+| C++ | Performance-sensitive computation, geometry, imaging and visualization |
+| SQLite | Embedded metadata, provenance, identifiers, compact indexes and local coordination |
 | Domain-specific formats | Efficient storage and selective access for sequences, structures, matrices, images, publications and model artifacts |
 
-Technology choices must be justified by maintainability, licensing, security, measured performance and portability—not novelty.
+Tools will be selected for measured value, maintainability, security, licensing and portability—not novelty.
 
-### Designed for constrained devices
+## The development sequence
 
-Low-end Android devices are a first-class engineering target. Kinetics should use streaming operations, bounded memory, incremental indexing, compact metadata, controlled caches, resumable jobs and battery-aware scheduling. Heavy training or large simulations may require suitable workstations or authorized remote compute; core offline reference functions must not depend on cloud availability.
+The user-directed order is explicit: integrate the scientific, data, compute, security and offline foundations first; build the polished application on top of stable foundations; then validate and train the complete system.
 
-## Our philosophy and principles
-
-**Scientific integrity.** A prediction is not a fact; correlation is not causation; a model score is not proof of treatment benefit.
-
-**Interconnected knowledge.** Biological questions cross disciplinary boundaries. Kinetics should connect evidence while preserving the semantics and limitations of each source.
-
-**Human-centred technology.** The purpose of engineering is to serve people and improve the quality, accessibility and usefulness of scientific work.
-
-**Knowledge resilience.** Essential information should remain accessible when networks, institutions or centralized services fail.
-
-**Reliability over appearance.** A polished interface is not a substitute for sound data, robust engineering, security and validation.
-
-**Privacy and dignity.** Sensitive genetic, health and location information requires minimization, consent, access control, encryption and responsible governance.
-
-**Responsible translation.** Research outputs must not be presented as clinical instructions without the evidence, validation, oversight and authorization required for their intended use.
-
-**Long-term adaptability.** The architecture should evolve as science advances, without sacrificing reproducibility or compatibility.
-
-## Development sequence: build the foundation first
-
-The user-directed sequence is binding: integrate the system foundation before investing in the final polished application.
-
-| Stage | Focus | Expected evidence of completion |
+| Stage | Workstream | Exit evidence |
 |---|---|---|
-| I | Mission, governance and architecture | Approved requirements, threat models, data contracts and design decisions |
-| II | Scientific data foundation | Working source adapters, lawful datasets, provenance, normalization and local indexes |
-| III | Scientific analysis foundation | Reproducible pipelines, benchmarks, model evaluation and domain validation |
-| IV | Platform reliability | Security, privacy, APIs, isolation, recovery, offline operation and device performance |
-| V | Application development | Polished desktop and Android clients built on stable APIs |
-| VI | Comprehensive validation | Integration, scientific, adversarial, field, usability and clinical validation as appropriate |
+| 1 | Mission, governance and architecture | Requirements, threat models, data contracts and design decisions |
+| 2 | Scientific data foundation | Lawful source adapters, provenance, normalization and local indexes |
+| 3 | Scientific analysis foundation | Reproducible pipelines, benchmarks and domain validation |
+| 4 | Platform reliability | Secure APIs, isolation, audit, recovery, offline operation and device performance |
+| 5 | Application experience | Polished desktop and Android clients over stable APIs |
+| 6 | Comprehensive acceptance | Integration, scientific, security, field, usability and expert validation |
 
-Testing does not wait until the end: unit, integration, security and data-quality checks run continuously. Comprehensive system-level acceptance follows integration of the foundation.
+Testing runs continuously—not only at the end. A feature is not complete merely because code exists.
 
-## What Kinetics is today—and what it is not
+## What is implemented—and what remains a goal
 
-Kinetics is an evolving research software repository with an existing enzyme-kinetics foundation and expanding scientific architecture. It contains implementation, schemas, source catalogues, documentation and planned capabilities at different maturity levels.
-
-A source listed in a catalogue is not necessarily downloaded. A schema is not proof of populated data. A workflow is not proof of a benchmark. A proposed clinical feature is not a validated medical device. The project will report implemented, planned, acquired and independently validated capabilities separately.
-
-The current local-first browser workbench is an engineering/operator interface, not the final polished application or a patient-facing clinical product.
-
-### Research and clinical safety boundary
-
-Kinetics is research infrastructure. It does not independently diagnose, prescribe, select treatment, change medication or replace qualified healthcare professionals. Future clinical-facing functions require a defined intended use, lawful data access, ethics and privacy review, independent analytical and clinical validation, usability and safety evaluation, appropriate human oversight and regulatory authorization where required. High-risk emergency content has additional expert-review and local-protocol requirements.
-
-## Explore the project
-
-| Document | What it explains |
+| Evidence category | Meaning |
 |---|---|
-| [KINETICS_MISSION.md](KINETICS_MISSION.md) | Authoritative mission, global ambition, principles and decision filter |
-| [VISION.md](VISION.md) | Long-term scientific and platform vision |
-| [ROADMAP.md](ROADMAP.md) | Programme direction and staged development |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture and boundaries |
-| [ENGINEERING_STACK.md](ENGINEERING_STACK.md) | Technology responsibilities and engineering choices |
-| [CLINICAL_TRANSLATION.md](CLINICAL_TRANSLATION.md) | Clinical evidence, governance and safety boundaries |
-| [DATASETS.md](DATASETS.md) | Scientific data sources and acquisition principles |
-| [docs/ARCHIVE_FIRST_OFFLINE_DATA_ARCHITECTURE.md](docs/ARCHIVE_FIRST_OFFLINE_DATA_ARCHITECTURE.md) | Safe archive inspection, chunking and offline scientific data |
-| [docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md](docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md) | Offline emergency and humanitarian requirements |
-| [docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md](docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md) | Foundation completion programme |
-| [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) | Current implementation status and known gaps |
-| [docs/WORKBENCH_GUIDE.md](docs/WORKBENCH_GUIDE.md) | Local engineering workbench |
+| Implemented | Code exists in the repository; tests and limitations must still be stated |
+| Documented | Requirements or architecture are specified, but implementation is not implied |
+| Acquired | Dataset bytes have actually been obtained and recorded with source and license metadata |
+| Benchmarked | A defined workload has been executed and results preserved |
+| Validated | Independent, domain-appropriate acceptance evidence exists |
 
-## Repository guide
+A source catalogue is not proof of acquisition. A schema is not proof of populated data. A proposed workflow is not proof of a benchmark. A research model is not proof of clinical benefit. Kinetics will keep these distinctions visible.
 
-| Location | Purpose |
+## Scientific integrity and safety
+
+| Principle | Required behaviour |
 |---|---|
-| `Assets/` | Brand identity and brochure illustrations |
-| `src/` | Current Python implementation |
-| `database/` | SQLite schemas, migrations, source catalogues and seed data |
+| Evidence over appearance | Show source, version, assumptions and limitations |
+| Prediction ≠ fact | Label model outputs and uncertainty clearly |
+| Association ≠ causation | Avoid unsupported causal conclusions |
+| Privacy by design | Minimize, protect and govern sensitive data |
+| Human oversight | Keep qualified people responsible for high-risk decisions |
+| Safe abstention | Say when evidence is missing, conflicting, stale or out of scope |
+| Clinical boundary | No autonomous diagnosis, prescribing or medication changes |
+
+Kinetics is research infrastructure, not currently a validated medical device or autonomous clinician. Clinical-facing functions require defined intended use, lawful data access, ethics and privacy review, independent analytical and clinical validation, usability and safety evaluation, human oversight and regulatory authorization where applicable.
+
+## Repository map
+
+| Path | Purpose |
+|---|---|
+| `Assets/Brand Logo.svg` | Primary Kinetics identity |
+| `Assets/Future/` | 24 original futuristic scientific illustrations |
+| `Assets/Future/kinetics-science-quest.gif` | Colourful pixel-art science explorer animation |
+| `database/` | SQLite schemas, migrations, source catalogues and seed resources |
 | `docs/` | Scientific, engineering, safety and implementation specifications |
 | `scripts/` | Data acquisition, inspection and validation tools |
-| `tests/` | Software tests |
-| `data/`, `models/` | Local workspaces; do not commit private data or large generated artifacts |
+| `src/` | Application and scientific implementation |
+| `tests/` | Automated software tests |
+| `data/`, `models/` | Local workspaces; private or large generated data should not be committed |
+
+## Project reference index
+
+| Reference | Repository document |
+|---|---|
+| Mission and governance | `KINETICS_MISSION.md` |
+| Long-term vision | `VISION.md` |
+| Programme direction | `ROADMAP.md` |
+| System architecture | `ARCHITECTURE.md` |
+| Engineering stack | `ENGINEERING_STACK.md` |
+| Clinical translation boundaries | `CLINICAL_TRANSLATION.md` |
+| Scientific datasets | `DATASETS.md` |
+| Archive-first offline architecture | `docs/ARCHIVE_FIRST_OFFLINE_DATA_ARCHITECTURE.md` |
+| Emergency and humanitarian resilience | `docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md` |
+| Ten-step completion programme | `docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md` |
+| Implementation status | `docs/IMPLEMENTATION_STATUS.md` |
 
 ---
 

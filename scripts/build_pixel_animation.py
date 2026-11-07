@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate a colourful, looping pixel-art Kinetics science explorer GIF."""
 from __future__ import annotations
-from pathlib import Path
 import math
+from pathlib import Path
 from PIL import Image, ImageDraw
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"Assets"/"Future"/"kinetics-science-quest.gif"

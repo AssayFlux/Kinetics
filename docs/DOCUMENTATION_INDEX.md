@@ -6,6 +6,8 @@ A document describes requirements or design unless it explicitly links implement
 
 ## Project direction and architecture
 
+Read the capability map to understand what Kinetics intends to do across scientific areas and what is actually present. Use the domain taxonomy only to guide source discovery; use the roadmap for long-term sequencing and the implementation register for current evidence.
+
 | Document | Authority / purpose |
 |---|---|
 | [KINETICS_MISSION.md](../KINETICS_MISSION.md) | Authoritative mission, principles and human-health ambition |
@@ -14,8 +16,8 @@ A document describes requirements or design unless it explicitly links implement
 | [ARCHITECTURE.md](../ARCHITECTURE.md) | Platform layers, component boundaries and interoperability |
 | [ENGINEERING_STACK.md](../ENGINEERING_STACK.md) | Technology responsibilities and engineering standards |
 | [CLINICAL_TRANSLATION.md](../CLINICAL_TRANSLATION.md) | Separate research-to-care evidence and safety gates |
-| [SCIENCE_DOMAIN_CATALOGUE_100.md](SCIENCE_DOMAIN_CATALOGUE_100.md) | Canonical 100-domain intended-scope register |
-| [SCIENTIFIC_ARCHITECTURE.md](SCIENTIFIC_ARCHITECTURE.md) | Scientific modules, evidence and data relationships |
+| [SCIENCE_DOMAIN_CATALOGUE_100.md](SCIENCE_DOMAIN_CATALOGUE_100.md) | 100 foundational domains plus 60 extension domains for acquisition discovery |
+| [SCIENTIFIC_CAPABILITY_MAP.md](SCIENTIFIC_CAPABILITY_MAP.md) | Functional capability areas, evidence status and dependency-aware implementation sequence |
 | [APPLICABILITY_DOMAIN.md](APPLICABILITY_DOMAIN.md) | Applicability-domain diagnostics |
 
 ## Current planning and status
@@ -30,7 +32,6 @@ A document describes requirements or design unless it explicitly links implement
 | [STEP10_RELEASE_READINESS_GATES.md](STEP10_RELEASE_READINESS_GATES.md) | Executable release-evidence requirements and release decision policy |
 | [STEP7_PRODUCTION_ACCEPTANCE.md](STEP7_PRODUCTION_ACCEPTANCE.md) | Production deployment, isolation, security and recovery acceptance |
 | [STEP7_RUST_INFRASTRUCTURE.md](STEP7_RUST_INFRASTRUCTURE.md) | Rust infrastructure design and implementation boundaries |
-| [STEP6_IMPLEMENTATION_STATUS.md](STEP6_IMPLEMENTATION_STATUS.md) | Native C++ molecular engine foundation and limitations |
 | [NATIVE_MOLECULAR_ENGINE.md](NATIVE_MOLECULAR_ENGINE.md) | Native parser, scene contract, build and simulation-plan details |
 | [STRUCTURE_VIEWER_APK_TESTING.md](STRUCTURE_VIEWER_APK_TESTING.md) | Browser/WebView structure viewer and Android device test instructions |
 | [STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md](STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md) | Protein/structure records, coordinate adapters and acceptance plan |
@@ -68,7 +69,6 @@ A document describes requirements or design unless it explicitly links implement
 | [CALIBRATION_AND_CONTEXT_WORKFLOW.md](CALIBRATION_AND_CONTEXT_WORKFLOW.md) | Assay context, calibration and applicability workflow |
 | [STEP5_VALIDATION_PROTOCOL.md](STEP5_VALIDATION_PROTOCOL.md) | Predeclared scientific validation and benchmarking protocol |
 | [REPORTING_AND_FIGURES.md](REPORTING_AND_FIGURES.md) | Research reports and figure standards |
-| [RESEARCH_PAPER_OUTLINE.md](RESEARCH_PAPER_OUTLINE.md) | Initial enzyme-kinetics manuscript outline |
 
 ## Application, operations and contribution
 

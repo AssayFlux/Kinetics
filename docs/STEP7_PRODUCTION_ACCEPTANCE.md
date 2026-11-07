@@ -48,3 +48,10 @@ The Rust OIDC/API, AWS Secrets Manager and KMS-encrypted S3 adapter, PostgreSQL 
 A code review of the current worker boundary is explicit: the only registered task handler is `kinetics.noop_healthcheck`. Scientific task execution is not yet registered. Job CPU/memory values are admission metadata; shared-worker Fargate task sizing is not per-job isolation. The deployment CIDR allowlist is required rather than defaulting to open internet access. The AWS account, VPC/subnets, ACM certificate, ECR image, OIDC provider and protected Terraform state must be supplied and reviewed before deployment.
 
 Acceptance remains blocked on successful current CI, deployed OIDC negative tests, live tenant-isolation tests, enforced per-job sandbox isolation, AWS IAM/network review, database and artifact restore drills, and scientific executor integration.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

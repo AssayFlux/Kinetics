@@ -9,7 +9,7 @@
 
 *An evidence-centred scientific and biomedical research infrastructure connecting life sciences, medicine, healthcare, treatment research and the engineering of future health.*
 
-<img src="Assets/Future/kinetics-science-quest.gif" width="100%" alt="Animated Kinetics pixel-art science explorer">
+**Pixel-art science explorer:** a 32-frame, 640 × 240 looping GIF is generated locally by the repository animation builder. Regenerate and validate the banner before embedding it.
 
 **EXPLORE · CONNECT · UNDERSTAND · DISCOVER · ADVANCE**
 </div>
@@ -194,8 +194,10 @@ The 100-domain PNG gallery will be stored locally in Assets/Future/PNG/ after th
 python -m pip install -e ".[gallery]"
 python scripts/import_science_gallery.py
 python scripts/build_pixel_animation.py
-python scripts/validate_visual_assets.py
+python scripts/validate_visual_assets.py --strict-gallery
 ~~~
+
+The previously tracked GIF does not pass structural validation, so the README does not embed that broken binary. The builder replaces it with a verified multi-frame looping animation. Commit the generated GIF and PNG gallery after review to make them available to everyone cloning the repository.
 
 ## A connected research infrastructure
 

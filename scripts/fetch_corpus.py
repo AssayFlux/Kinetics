@@ -15,6 +15,7 @@ import os
 import re
 import tarfile
 import tempfile
+import time
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
@@ -315,6 +316,7 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
             try:
                 size, _ = stream_download(session, package_url, archive,
                                           remaining_bytes - used, MAX_FILE_BYTES)
+                used += size
                 with tarfile.open(archive, "r:gz") as tar:
                     members = [m for m in tar.getmembers() if m.isfile()
                                and Path(m.name).suffix.lower() in (".pdf", ".xml")]
@@ -349,7 +351,6 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
                         "package_bytes": size, "status": "downloaded",
                     }
                     count += 1
-                    used += size
             except (requests.RequestException, OSError, tarfile.TarError, ValueError) as exc:
                 LOG.warning("PMC item %s failed: %s", pmcid, exc)
                 manifest["items"][pmcid] = {"item_id": pmcid, "status": "error",
@@ -397,15 +398,24 @@ def main() -> int:
             remaining_items = args.batch_size - total_count
             remaining_bytes = budget - total_bytes
             if args.source in ("all", "ia"):
-                n, b = fetch_internet_archive(session, domain, manifest, args.objects,
-                                              remaining_bytes, remaining_items)
+                try:
+                    n, b = fetch_internet_archive(session, domain, manifest, args.objects,
+                                                  remaining_bytes, remaining_items)
+                except requests.RequestException as exc:
+                    LOG.warning("Internet Archive query failed for %s: %s", domain, exc)
+                    n, b = 0, 0
                 total_count += n
                 total_bytes += b
             if args.source in ("all", "europe-pmc") and total_count < args.batch_size and total_bytes < budget:
-                n, b = fetch_europe_pmc(session, domain, manifest, args.objects,
-                                        budget - total_bytes, args.batch_size - total_count)
+                try:
+                    n, b = fetch_europe_pmc(session, domain, manifest, args.objects,
+                                            budget - total_bytes, args.batch_size - total_count)
+                except requests.RequestException as exc:
+                    LOG.warning("Europe PMC query failed for %s: %s", domain, exc)
+                    n, b = 0, 0
                 total_count += n
                 total_bytes += b
+            time.sleep(0.1)
             save_manifest(args.manifest, manifest)
         manifest.setdefault("cursor", {})["domain_index"] = (start + len(selected)) % len(domains)
         manifest["last_batch"] = {"items": total_count, "bytes": total_bytes,

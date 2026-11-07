@@ -68,6 +68,8 @@ The Python workbench is intentionally loopback-only and single-user. The Rust/AW
 
 - [Scientific capability map](SCIENTIFIC_CAPABILITY_MAP.md)
 
+- [Scientific capability map](SCIENTIFIC_CAPABILITY_MAP.md)
+
 - [Foundational mission](../KINETICS_MISSION.md)
 - [Vision](../VISION.md)
 - [Master roadmap](../ROADMAP.md)

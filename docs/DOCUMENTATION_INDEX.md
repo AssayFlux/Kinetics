@@ -43,7 +43,6 @@ A document describes requirements or design unless it explicitly links implement
 | [DATABASE_ARCHITECTURE.md](DATABASE_ARCHITECTURE.md) | SQLite, artifact storage and migration architecture |
 | [KNOWLEDGE_INGESTION.md](KNOWLEDGE_INGESTION.md) | Source acquisition, licensing, indexing and retrieval |
 | [KNOWLEDGE_INGESTION_STRUCTURE.md](KNOWLEDGE_INGESTION_STRUCTURE.md) | Knowledge-ingestion subsystem directory/data-flow map |
-| [REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) | Repository-wide directory ownership and layout |
 | [ARCHIVE_FIRST_OFFLINE_DATA_ARCHITECTURE.md](ARCHIVE_FIRST_OFFLINE_DATA_ARCHITECTURE.md) | Offline archive and selective-access design |
 | [EMERGENCY_HUMANITARIAN_RESILIENCE.md](EMERGENCY_HUMANITARIAN_RESILIENCE.md) | Offline resilience, emergency knowledge and safety requirements |
 | [OBSERVATION_QUALITY.md](OBSERVATION_QUALITY.md) | Measurement and observation quality rules |

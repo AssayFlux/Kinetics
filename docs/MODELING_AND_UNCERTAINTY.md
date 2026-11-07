@@ -33,3 +33,10 @@ The research layer includes split-conformal interval utilities on the log10 targ
 ## Kinetics-Multi feature-fusion baseline
 
 The first multimodal model is a target-specific MLP over ESM-2 embeddings, Morgan fingerprints, 24 pooled RDKit molecular graph descriptors, and optional raw assay context. Numeric imputation/scaling and categorical encoding are fitted inside each CV fold. This is nonlinear feature fusion, not a message-passing GNN or explicit residue–atom interaction model. Train and evaluate it on the exact same frozen archives as the classical baselines; see [KINETICS_MULTI.md](KINETICS_MULTI.md). Synthetic software tests do not establish predictive validity.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

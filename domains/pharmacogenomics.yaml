@@ -1,0 +1,11 @@
+{
+  "id": "pharmacogenomics",
+  "name": "Pharmacogenomics",
+  "category": "molecular_design_and_therapeutics",
+  "description": "Gene–drug variation, pharmacogenetic evidence and response research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

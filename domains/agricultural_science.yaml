@@ -1,0 +1,11 @@
+{
+  "id": "agricultural_science",
+  "name": "Agricultural science",
+  "category": "cross_disciplinary",
+  "description": "Crop and animal systems, soil, agronomy, agricultural ecology and production research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

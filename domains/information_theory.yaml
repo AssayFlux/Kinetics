@@ -1,0 +1,11 @@
+{
+  "id": "information_theory",
+  "name": "Information theory",
+  "category": "cross_disciplinary",
+  "description": "Entropy, coding, compression, information measures and communication limits.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

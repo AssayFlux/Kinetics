@@ -1,0 +1,11 @@
+{
+  "id": "nanomedicine",
+  "name": "Nanomedicine",
+  "category": "frontier_and_human_resilience",
+  "description": "Nanoscale diagnostics, delivery and therapeutic platforms.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

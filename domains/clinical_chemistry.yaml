@@ -1,0 +1,11 @@
+{
+  "id": "clinical_chemistry",
+  "name": "Clinical chemistry",
+  "category": "diagnostics_and_medical_technology",
+  "description": "Biochemical testing, biomarkers and analytical methods.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "nephrology",
+  "name": "Nephrology",
+  "category": "human_biology_and_specialties",
+  "description": "Kidney function, filtration, fluid balance and renal disease.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

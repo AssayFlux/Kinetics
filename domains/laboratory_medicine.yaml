@@ -1,0 +1,11 @@
+{
+  "id": "laboratory_medicine",
+  "name": "Laboratory medicine",
+  "category": "diagnostics_and_medical_technology",
+  "description": "Clinical laboratory workflows, assays and analytical quality.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

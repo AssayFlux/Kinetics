@@ -1,0 +1,11 @@
+{
+  "id": "humanitarian_and_disaster_health",
+  "name": "Humanitarian and disaster health",
+  "category": "frontier_and_human_resilience",
+  "description": "Health resilience in disasters, conflict, displacement and infrastructure failure.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

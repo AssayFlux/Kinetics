@@ -1,0 +1,11 @@
+{
+  "id": "gastroenterology",
+  "name": "Gastroenterology",
+  "category": "human_biology_and_specialties",
+  "description": "Digestive tract, gut physiology, disorders and endoscopy.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

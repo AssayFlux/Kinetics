@@ -1,0 +1,11 @@
+{
+  "id": "nuclear_medicine",
+  "name": "Nuclear medicine",
+  "category": "diagnostics_and_medical_technology",
+  "description": "Radiotracers, molecular imaging and radionuclide therapy research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

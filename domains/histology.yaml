@@ -1,0 +1,11 @@
+{
+  "id": "histology",
+  "name": "Histology",
+  "category": "diagnostics_and_medical_technology",
+  "description": "Microscopic tissue architecture and staining methods.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

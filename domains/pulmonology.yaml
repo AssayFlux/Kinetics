@@ -1,0 +1,11 @@
+{
+  "id": "pulmonology",
+  "name": "Pulmonology",
+  "category": "human_biology_and_specialties",
+  "description": "Lung structure, respiratory physiology and disease research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

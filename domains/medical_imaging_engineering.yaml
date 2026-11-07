@@ -1,0 +1,11 @@
+{
+  "id": "medical_imaging_engineering",
+  "name": "Medical imaging engineering",
+  "category": "diagnostics_and_medical_technology",
+  "description": "Image reconstruction, sensors, acquisition and computational imaging.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

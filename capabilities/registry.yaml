@@ -1,0 +1,1292 @@
+{
+  "schema_version": 1,
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "domains": [
+    {
+      "id": "genomics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "genetics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "transcriptomics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "proteomics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "structural_biology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "cell_biology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "molecular_biology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "biochemistry",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "epigenetics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "systems_biology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "metabolomics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "lipidomics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "glycomics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "metagenomics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "single_cell_biology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "spatial_omics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "developmental_biology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "stem_cell_biology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "microbiome_science",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "regenerative_medicine",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "microbiology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "virology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "immunology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "bacteriology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "mycology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "parasitology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "vaccinology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "antimicrobial_resistance",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "infectious_diseases",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "oncology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "pharmacology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "medicinal_chemistry",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "enzymology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "protein_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "biophysics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "molecular_simulation",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "chemical_biology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "pharmacogenomics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "clinical_pharmacology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "toxicology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "anatomy",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "physiology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "pathology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "cardiology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "neuroscience",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "endocrinology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "pulmonology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "nephrology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "gastroenterology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "hepatology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "hematology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "dermatology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "rheumatology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "orthopedics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "obstetrics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "gynecology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "pediatrics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "geriatrics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "ophthalmology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "psychiatry",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "radiology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "medical_ultrasound",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "nuclear_medicine",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "computed_tomography",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "histology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "cytology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "laboratory_medicine",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "clinical_chemistry",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "clinical_genetics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "medical_imaging_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "surgery",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "anesthesiology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "emergency_medicine",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "critical_care",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "radiation_oncology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "pharmaceutics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "drug_delivery",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "rehabilitation_medicine",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "palliative_care",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "preventive_medicine",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "public_health",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "epidemiology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "global_health",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "clinical_research",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "clinical_trials",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "evidence_synthesis",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "health_economics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "bioethics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "biomedical_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "bioinformatics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "medical_robotics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "prosthetics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "biomaterials",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "bioinstrumentation",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "medical_devices",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "nanomedicine",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "health_informatics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "digital_health",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "artificial_intelligence_in_medicine",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "humanitarian_and_disaster_health",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "computer_science",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "software_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "data_science",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "machine_learning",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "deep_learning",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "cybersecurity",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "cloud_computing",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "distributed_systems",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "database_systems",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "information_theory",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "signal_processing",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "control_systems",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "electrical_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "mechanical_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "chemical_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "civil_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "aerospace_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "environmental_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "materials_science",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "nanotechnology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "robotics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "mechatronics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "bioengineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "computational_physics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "applied_mathematics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "statistics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "operations_research",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "energy_systems",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "agricultural_science",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "food_science",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "climate_science",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "geoscience",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "geophysics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "optical_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "photonics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "quantum_computing",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "human_computer_interaction",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "scientific_computing",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "computational_neuroscience",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "medical_software_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "reliability_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "safety_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "industrial_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "manufacturing_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "systems_engineering",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "computational_chemistry",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "organic_chemistry",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "inorganic_chemistry",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "analytical_chemistry",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "physical_chemistry",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "thermodynamics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "fluid_mechanics",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "astrobiology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "ecology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "evolutionary_biology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "marine_science",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "hydrology",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "atmospheric_science",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "science_education",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    },
+    {
+      "id": "technical_communication",
+      "status": "planned",
+      "runs_on_device": false,
+      "tools": [],
+      "engines": [],
+      "data_packs": []
+    }
+  ],
+  "coverage": {
+    "implemented_domains": 0,
+    "total_domains": 160
+  }
+}

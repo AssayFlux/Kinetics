@@ -1,0 +1,11 @@
+{
+  "id": "medical_ultrasound",
+  "name": "Medical ultrasound",
+  "category": "diagnostics_and_medical_technology",
+  "description": "Ultrasound physics, sonography and image-guided assessment.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "structural_biology",
+  "name": "Structural biology",
+  "category": "molecular_foundations",
+  "description": "Macromolecular structures, complexes, folding and cryo-EM.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

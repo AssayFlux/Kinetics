@@ -1,0 +1,11 @@
+{
+  "id": "computer_science",
+  "name": "Computer science",
+  "category": "cross_disciplinary",
+  "description": "Algorithms, programming languages, computer architecture, computation theory and scientific software foundations.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

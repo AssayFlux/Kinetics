@@ -1,0 +1,11 @@
+{
+  "id": "climate_science",
+  "name": "Climate science",
+  "category": "cross_disciplinary",
+  "description": "Climate processes, variability, change attribution, impacts and projections.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "medicinal_chemistry",
+  "name": "Medicinal chemistry",
+  "category": "molecular_design_and_therapeutics",
+  "description": "Molecular design, synthesis, SAR and lead optimization.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

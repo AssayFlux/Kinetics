@@ -1,0 +1,11 @@
+{
+  "id": "antimicrobial_resistance",
+  "name": "Antimicrobial resistance",
+  "category": "microbes_immunity_and_disease",
+  "description": "Resistance mechanisms, surveillance and antimicrobial stewardship research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "bioinstrumentation",
+  "name": "Bioinstrumentation",
+  "category": "frontier_and_human_resilience",
+  "description": "Sensors, biosignal acquisition and biomedical measurement devices.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

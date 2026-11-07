@@ -1,0 +1,11 @@
+{
+  "id": "energy_systems",
+  "name": "Energy systems",
+  "category": "cross_disciplinary",
+  "description": "Energy conversion, storage, grids, efficiency and integrated energy technologies.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

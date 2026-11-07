@@ -1,0 +1,11 @@
+{
+  "id": "mycology",
+  "name": "Mycology",
+  "category": "microbes_immunity_and_disease",
+  "description": "Fungi, fungal pathogenesis, ecology and antifungal research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

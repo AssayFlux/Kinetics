@@ -1,0 +1,11 @@
+{
+  "id": "analytical_chemistry",
+  "name": "Analytical chemistry",
+  "category": "cross_disciplinary",
+  "description": "Chemical measurement, separation science, spectroscopy, chromatography and assay validation.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

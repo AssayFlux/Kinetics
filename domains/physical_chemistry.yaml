@@ -1,0 +1,11 @@
+{
+  "id": "physical_chemistry",
+  "name": "Physical chemistry",
+  "category": "cross_disciplinary",
+  "description": "Chemical physics, molecular energetics, kinetics, thermodynamics and reaction dynamics.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

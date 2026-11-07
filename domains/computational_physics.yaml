@@ -1,0 +1,11 @@
+{
+  "id": "computational_physics",
+  "name": "Computational physics",
+  "category": "cross_disciplinary",
+  "description": "Numerical simulation, physical modelling, computational methods and reproducible physics.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

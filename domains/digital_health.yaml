@@ -1,0 +1,11 @@
+{
+  "id": "digital_health",
+  "name": "Digital health",
+  "category": "frontier_and_human_resilience",
+  "description": "Remote monitoring, telehealth and connected-care technologies.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

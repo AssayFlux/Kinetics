@@ -1,0 +1,11 @@
+{
+  "id": "computational_chemistry",
+  "name": "Computational chemistry",
+  "category": "cross_disciplinary",
+  "description": "Molecular modelling, quantum chemistry, molecular simulation and computational prediction.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

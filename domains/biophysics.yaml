@@ -1,0 +1,11 @@
+{
+  "id": "biophysics",
+  "name": "Biophysics",
+  "category": "molecular_design_and_therapeutics",
+  "description": "Molecular forces, binding, dynamics and quantitative biophysical assays.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

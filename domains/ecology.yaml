@@ -1,0 +1,11 @@
+{
+  "id": "ecology",
+  "name": "Ecology",
+  "category": "cross_disciplinary",
+  "description": "Organism-environment relationships, populations, communities, ecosystems and biodiversity.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

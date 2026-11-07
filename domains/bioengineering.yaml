@@ -1,0 +1,11 @@
+{
+  "id": "bioengineering",
+  "name": "Bioengineering",
+  "category": "cross_disciplinary",
+  "description": "Engineering analysis and design applied to biological systems and processes.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

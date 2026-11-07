@@ -1,0 +1,11 @@
+{
+  "id": "biomaterials",
+  "name": "Biomaterials",
+  "category": "frontier_and_human_resilience",
+  "description": "Biocompatible materials, implants and tissue interfaces.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

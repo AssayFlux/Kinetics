@@ -1,0 +1,11 @@
+{
+  "id": "evolutionary_biology",
+  "name": "Evolutionary biology",
+  "category": "cross_disciplinary",
+  "description": "Evolutionary mechanisms, adaptation, phylogenetics, speciation and population genetics.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

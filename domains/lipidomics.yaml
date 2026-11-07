@@ -1,0 +1,11 @@
+{
+  "id": "lipidomics",
+  "name": "Lipidomics",
+  "category": "omics_and_living_systems",
+  "description": "Lipid species, membranes, signalling and lipid metabolism.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

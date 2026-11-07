@@ -1,0 +1,11 @@
+{
+  "id": "signal_processing",
+  "name": "Signal processing",
+  "category": "cross_disciplinary",
+  "description": "Digital signal analysis, filtering, transforms, time-frequency methods and sensor data.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

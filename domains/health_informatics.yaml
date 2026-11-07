@@ -1,0 +1,11 @@
+{
+  "id": "health_informatics",
+  "name": "Health informatics",
+  "category": "frontier_and_human_resilience",
+  "description": "Health data standards, interoperability and clinical information systems.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

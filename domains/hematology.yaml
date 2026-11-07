@@ -1,0 +1,11 @@
+{
+  "id": "hematology",
+  "name": "Hematology",
+  "category": "clinical_specialties_and_care",
+  "description": "Blood cells, coagulation, marrow and blood disorders.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

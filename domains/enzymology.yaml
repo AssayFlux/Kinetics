@@ -1,0 +1,11 @@
+{
+  "id": "enzymology",
+  "name": "Enzymology",
+  "category": "molecular_design_and_therapeutics",
+  "description": "Enzyme mechanisms, kinetics, inhibition and catalysis.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

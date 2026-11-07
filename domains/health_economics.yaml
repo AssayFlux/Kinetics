@@ -1,0 +1,11 @@
+{
+  "id": "health_economics",
+  "name": "Health economics",
+  "category": "population_engineering_and_future_health",
+  "description": "Cost, value, resource allocation and health technology assessment.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

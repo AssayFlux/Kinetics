@@ -1,0 +1,11 @@
+{
+  "id": "distributed_systems",
+  "name": "Distributed systems",
+  "category": "cross_disciplinary",
+  "description": "Distributed algorithms, consensus, fault tolerance, coordination and scalable services.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

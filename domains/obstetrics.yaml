@@ -1,0 +1,11 @@
+{
+  "id": "obstetrics",
+  "name": "Obstetrics",
+  "category": "clinical_specialties_and_care",
+  "description": "Pregnancy, maternal health, fetal development and childbirth research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "deep_learning",
+  "name": "Deep learning",
+  "category": "cross_disciplinary",
+  "description": "Neural network architectures, representation learning, optimization and model evaluation.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

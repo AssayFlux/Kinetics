@@ -1,0 +1,11 @@
+{
+  "id": "systems_engineering",
+  "name": "Systems engineering",
+  "category": "cross_disciplinary",
+  "description": "Requirements, architecture, integration, verification and lifecycle management of complex systems.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

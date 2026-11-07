@@ -1,0 +1,11 @@
+{
+  "id": "human_computer_interaction",
+  "name": "Human-computer interaction",
+  "category": "cross_disciplinary",
+  "description": "Interaction design, usability, accessibility, human factors and user evaluation.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

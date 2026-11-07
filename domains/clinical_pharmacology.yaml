@@ -1,0 +1,11 @@
+{
+  "id": "clinical_pharmacology",
+  "name": "Clinical pharmacology",
+  "category": "molecular_design_and_therapeutics",
+  "description": "Human drug exposure, response, dose and safety evidence.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

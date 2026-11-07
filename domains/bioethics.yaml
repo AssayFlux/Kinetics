@@ -1,0 +1,11 @@
+{
+  "id": "bioethics",
+  "name": "Bioethics",
+  "category": "population_engineering_and_future_health",
+  "description": "Research ethics, consent, governance and responsible innovation.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

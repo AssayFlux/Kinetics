@@ -1,0 +1,11 @@
+{
+  "id": "medical_software_engineering",
+  "name": "Medical software engineering",
+  "category": "cross_disciplinary",
+  "description": "Software lifecycle, verification, safety, usability and quality for medical software.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

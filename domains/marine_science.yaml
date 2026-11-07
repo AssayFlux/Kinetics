@@ -1,0 +1,11 @@
+{
+  "id": "marine_science",
+  "name": "Marine science",
+  "category": "cross_disciplinary",
+  "description": "Oceanography, marine ecosystems, ocean chemistry, marine geology and coastal systems.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

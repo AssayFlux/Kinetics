@@ -1,0 +1,11 @@
+{
+  "id": "endocrinology",
+  "name": "Endocrinology",
+  "category": "human_biology_and_specialties",
+  "description": "Hormones, endocrine organs, metabolism and regulation.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "fluid_mechanics",
+  "name": "Fluid mechanics",
+  "category": "cross_disciplinary",
+  "description": "Fluid statics and dynamics, turbulence, rheology and flow through natural and engineered systems.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "cytology",
+  "name": "Cytology",
+  "category": "diagnostics_and_medical_technology",
+  "description": "Cell morphology, cytopathology and cellular diagnostics.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

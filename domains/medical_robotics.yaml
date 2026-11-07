@@ -1,0 +1,11 @@
+{
+  "id": "medical_robotics",
+  "name": "Medical robotics",
+  "category": "frontier_and_human_resilience",
+  "description": "Surgical, rehabilitation and assistive robotics research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "psychiatry",
+  "name": "Psychiatry",
+  "category": "clinical_specialties_and_care",
+  "description": "Mental health, brain–behaviour relationships and psychiatric research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

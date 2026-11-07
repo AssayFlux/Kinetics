@@ -1,0 +1,11 @@
+{
+  "id": "materials_science",
+  "name": "Materials science",
+  "category": "cross_disciplinary",
+  "description": "Structure-property relationships, materials synthesis, characterization and performance.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

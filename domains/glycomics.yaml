@@ -1,0 +1,11 @@
+{
+  "id": "glycomics",
+  "name": "Glycomics",
+  "category": "omics_and_living_systems",
+  "description": "Glycans, glycosylation, glycoproteins and carbohydrate biology.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

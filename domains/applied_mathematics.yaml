@@ -1,0 +1,11 @@
+{
+  "id": "applied_mathematics",
+  "name": "Applied mathematics",
+  "category": "cross_disciplinary",
+  "description": "Mathematical modelling, differential equations, optimization and applied analysis.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

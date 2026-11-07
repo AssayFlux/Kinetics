@@ -1,0 +1,11 @@
+{
+  "id": "chemical_biology",
+  "name": "Chemical biology",
+  "category": "molecular_design_and_therapeutics",
+  "description": "Chemical probes, biomolecular interactions and chemical tools.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "biomedical_engineering",
+  "name": "Biomedical engineering",
+  "category": "population_engineering_and_future_health",
+  "description": "Engineering methods for biology, medicine and healthcare.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "virology",
+  "name": "Virology",
+  "category": "microbes_immunity_and_disease",
+  "description": "Virus structure, replication, host response and viral evolution.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

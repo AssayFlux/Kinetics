@@ -1,0 +1,11 @@
+{
+  "id": "palliative_care",
+  "name": "Palliative care",
+  "category": "treatment_rehabilitation_and_prevention",
+  "description": "Symptom science, supportive care and quality-of-life research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

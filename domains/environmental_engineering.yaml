@@ -1,0 +1,11 @@
+{
+  "id": "environmental_engineering",
+  "name": "Environmental engineering",
+  "category": "cross_disciplinary",
+  "description": "Pollution control, water/waste systems, remediation and environmental process design.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

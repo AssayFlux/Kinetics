@@ -1,0 +1,11 @@
+{
+  "id": "preventive_medicine",
+  "name": "Preventive medicine",
+  "category": "treatment_rehabilitation_and_prevention",
+  "description": "Risk reduction, screening evidence and prevention strategies.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "scientific_computing",
+  "name": "Scientific computing",
+  "category": "cross_disciplinary",
+  "description": "Numerical algorithms, high-performance computing, simulation and reproducible computation.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

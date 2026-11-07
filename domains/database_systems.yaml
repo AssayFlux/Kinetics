@@ -1,0 +1,11 @@
+{
+  "id": "database_systems",
+  "name": "Database systems",
+  "category": "cross_disciplinary",
+  "description": "Data models, query processing, transactions, indexing, storage engines and database reliability.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

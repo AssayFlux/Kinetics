@@ -1,0 +1,11 @@
+{
+  "id": "machine_learning",
+  "name": "Machine learning",
+  "category": "cross_disciplinary",
+  "description": "Supervised, unsupervised and reinforcement learning methods, evaluation and deployment research.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

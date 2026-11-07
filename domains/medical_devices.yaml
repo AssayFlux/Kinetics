@@ -1,0 +1,11 @@
+{
+  "id": "medical_devices",
+  "name": "Medical devices",
+  "category": "frontier_and_human_resilience",
+  "description": "Medical device design, verification, usability and safety engineering.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

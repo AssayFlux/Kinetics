@@ -1,0 +1,11 @@
+{
+  "id": "geophysics",
+  "name": "Geophysics",
+  "category": "cross_disciplinary",
+  "description": "Physical properties of Earth, seismic methods, gravity, magnetism and subsurface imaging.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

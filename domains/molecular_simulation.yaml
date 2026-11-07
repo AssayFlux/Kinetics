@@ -1,0 +1,11 @@
+{
+  "id": "molecular_simulation",
+  "name": "Molecular simulation",
+  "category": "molecular_design_and_therapeutics",
+  "description": "Molecular dynamics, docking and computational biophysics.",
+  "tools": [],
+  "engines": [],
+  "data_packs": [],
+  "status": "planned",
+  "owner": "me"
+}

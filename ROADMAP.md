@@ -225,24 +225,25 @@
 
 ## Immediate execution checklist
 
-1. Replace outdated project vision and roadmap.
-2. Remove obsolete Astronaut-specific integration documentation and code.
-3. Preserve and reconcile the existing enzyme-kinetics foundation.
-4. Design domain schemas and cross-language contracts.
-5. Build data, provenance and storage foundations.
-6. Prototype C++ rendering and Rust services independently.
-7. Implement real modules incrementally; do not substitute empty directories for functionality.
-8. Assemble end-to-end desktop workflows.
-9. Then run the comprehensive training, testing, benchmarking and scientific evaluation programme.
-10. Start clinical and Android tracks only when their prerequisites are satisfied.
+This checklist is the near-term queue, not a replacement for the 15-programme roadmap or the active 10-step completion programme.
+
+1. Reconcile package, API, dependency, migration and security contracts under Step 1.
+2. Acquire an authorized, licensed real Kinetics-KDB snapshot; audit source semantics and publish an immutable release.
+3. Execute the pinned ESM-2 and MMseqs2 workflows on reviewed data and retain repeatability and resource evidence.
+4. Run the predeclared protein-cold, scaffold-cold and double-cold model evaluations; obtain independent scientific review.
+5. Complete the Python structural PDB/mmCIF reference checks while keeping the native C++ PDB parser scope explicit.
+6. Complete local workbench researcher, accessibility, real-data, install/upgrade and recovery acceptance.
+7. Keep remote production blocked until scientific workers, per-job isolation, tenant security and restore drills pass.
+8. Expand additional scientific domains only through versioned contracts, reviewed sources, tests and domain-specific validation.
+9. Build polished desktop and Android applications against stable APIs and measured hardware requirements.
+10. Keep precision-health and clinical translation behind separate evidence, ethics, oversight and jurisdictional authorization gates.
 
 ## Explicit exclusions
 
-- No Astronaut dependency or integration.
-- No autonomous diagnosis, prescription, medication changes or treatment selection.
-- No unsupported claim of clinical readiness or universal treatment capability.
-- No patient data, secrets or restricted datasets in Git.
-- No large model or costly simulation without a justified question and benchmark.
+- No autonomous diagnosis, prescribing, medication changes or treatment selection.
+- No unsupported claim of clinical readiness, universal treatment capability or scientific validation.
+- No patient data, secrets or restricted datasets in the public repository.
+- No large model, bulk download or costly simulation without a justified research question, rights review and resource budget.
 
 
 ---

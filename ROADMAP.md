@@ -152,7 +152,8 @@
 9. Benchmark robustness, subgroup failures and compute cost.
 **Exit:** task-specific external validation and explicit limitations; no universal intelligence claims.
 
-## Programme 11 — Desktop research workbench (Years 2–6)
+## Programme 11 — End-user research application (after integrated scientific foundation; Years 3–7)
+**Dependency:** Do not begin the polished end-user application until the cross-domain data, scientific workflows, evidence model, security/privacy controls, stable APIs and integration gates are ready. The existing local workbench is engineering/research-operator tooling, not the final patient-facing or full product application.
 1. Select UI framework after accessibility and renderer prototypes.
 2. Build project/workspace and local-first storage.
 3. Add dataset explorer and sequence/structure/compound viewers.
@@ -190,7 +191,7 @@
 10. Establish quality/risk management, cybersecurity, usability and post-deployment monitoring as required.
 **Exit:** ethics approval, prospective clinical evidence, independent validation and jurisdiction-specific authorization for each clinical use.
 
-## Programme 14 — Android companion (Years 5–10+)
+## Programme 14 — Android application and constrained-device experience (after stable platform APIs; Years 3–8+)
 1. Stabilize mobile-safe APIs and synchronization.
 2. Reuse Rust services and portable C++ components where feasible.
 3. Build native Android UX and accessibility.

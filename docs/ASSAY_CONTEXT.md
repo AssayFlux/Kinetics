@@ -40,3 +40,10 @@ and context-free models using identical, leakage-resistant split manifests.
 ## Cross-validation integration
 
 For model fitting, prefer `attach_context_archive` from `kinetics_core.context`. It attaches raw metadata arrays after exact source-record alignment. The model workflow builds a scikit-learn preprocessing pipeline, so imputation, scaling, and one-hot vocabularies are fitted separately inside each cross-validation training fold. This avoids the subtle leakage that occurs when preprocessing is fitted once on the full training partition before CV. The standalone `AssayContextEncoder` remains available for exploratory use, but pre-encoded context archives are rejected by the publication-oriented fitting workflow.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

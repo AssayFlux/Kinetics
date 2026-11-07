@@ -531,6 +531,13 @@ def create_app(
     def structure_viewer() -> FileResponse:
         return FileResponse(Path(__file__).parent / "static" / "structure-viewer.html")
 
+    @app.get("/brand-logo.svg", include_in_schema=False)
+    def brand_logo() -> FileResponse:
+        logo = Path(__file__).resolve().parents[3] / "Assets" / "Brand Logo.svg"
+        if not logo.is_file():
+            raise HTTPException(status_code=404, detail="Brand logo asset is unavailable")
+        return FileResponse(logo, media_type="image/svg+xml")
+
     @app.get("/", include_in_schema=False)
     def home() -> FileResponse:
         return FileResponse(Path(__file__).parent / "static" / "index.html")

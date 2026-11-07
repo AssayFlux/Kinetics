@@ -191,11 +191,31 @@ def main() -> int:
             terms = search_terms(domain)
             query = " OR ".join(f'"{term}"' for term in terms[:8])
             page = int(pages.get(domain, 1))
-            response = session.get(API, params={"q": query, "size": min(50, args.batch_size * 3),
-                                                "page": page, "sort": "mostviewed"},
-                                   timeout=(20, 60))
-            response.raise_for_status()
-            hits = response.json().get("hits", {}).get("hits", [])
+            search_params = {"q": query, "size": min(50, args.batch_size * 3),
+                             "page": page, "sort": "mostviewed"}
+            try:
+                response = session.get(API, params=search_params, timeout=(20, 60))
+                # A malformed/unsupported expanded query must not abort every
+                # other source. Retry once with the plain domain term first.
+                if response.status_code == 400 and query != domain:
+                    LOG.warning("Zenodo rejected expanded query for %s; retrying plain term",
+                                domain)
+                    search_params["q"] = domain
+                    response = session.get(API, params=search_params, timeout=(20, 60))
+                response.raise_for_status()
+                hits = response.json().get("hits", {}).get("hits", [])
+            except requests.RequestException as exc:
+                status = getattr(getattr(exc, "response", None), "status_code", "network")
+                detail = getattr(getattr(exc, "response", None), "text", "")
+                LOG.warning("Zenodo search skipped for %s (HTTP %s): %s %s",
+                            domain, status, exc, str(detail)[:300])
+                cursor.setdefault("zenodo_search_errors", {})[domain] = {
+                    "error": str(exc)[:500], "status": status, "checked_at": utcnow()
+                }
+                processed += 1
+                save_manifest(args.manifest, manifest)
+                time.sleep(0.25)
+                continue
             pages[domain] = page + 1 if hits else 1
             for hit in hits:
                 if total_items >= args.batch_size or total_bytes >= budget:

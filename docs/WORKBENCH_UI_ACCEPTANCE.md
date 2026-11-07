@@ -18,6 +18,22 @@
   handling.
 - CI static acceptance checks for the responsive/accessibility contract.
 
+## Cross-platform shell implementation
+
+The live workbench now follows the shared geometry in `Assets/README-UI-LAYOUTS.md`:
+a 72px desktop top bar, 256px desktop navigation rail (216px at medium widths),
+a fluid 12-column workspace, and a 60px compact mobile app bar with a 68px
+bottom navigation. At 760px the desktop rail becomes icon-only; at 480px the
+interface switches to the compact phone layout. The existing dark scientific
+theme remains the default, with an accessible light-theme toggle. The original
+`Assets/Brand Logo.svg` is served unchanged by the local workbench.
+
+The single responsive workbench surface is intended to adapt to Windows, macOS,
+Linux and Android browser/WebView sizes. The four HTML files in `Assets/`
+remain visual reference wireframes, not separate native application builds.
+The reference artboards (1440×960 desktop and 412×915 Android) remain design
+targets, not proof of device acceptance.
+
 ## Automated acceptance
 
 Run:

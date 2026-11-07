@@ -1,5 +1,7 @@
 # Native molecular engine — Step 6 foundation
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## Scope and supported platforms
 
 The first native module is a dependency-free C++17 molecular-structure and scene-data core, built with CMake. The declared initial build matrix is Ubuntu, macOS and Windows using each CI runner's default C++ compiler. It includes a deterministic CPU XY orthographic preview renderer that writes PPM, plus a versioned scene contract. It is not yet a GPU-accelerated 3D renderer or interactive desktop viewer; a VTK/Qt or other maintained renderer must be selected through a separate platform prototype.

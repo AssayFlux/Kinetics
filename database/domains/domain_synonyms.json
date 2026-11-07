@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "description": "Search aliases improve discovery recall; aliases are search terms only and never imply data rights or domain implementation.",
+  "domains": {
+    "Computer science": [],
+    "Software engineering": [],
+    "Data science": [],
+    "Machine learning": [],
+    "Deep learning": [],
+    "Cybersecurity": [],
+    "Cloud computing": [],
+    "Distributed systems": [],
+    "Database systems": [],
+    "Information theory": [],
+    "Signal processing": [],
+    "Control systems": [],
+    "Electrical engineering": [],
+    "Mechanical engineering": [],
+    "Chemical engineering": [],
+    "Civil engineering": [],
+    "Aerospace engineering": [],
+    "Environmental engineering": [],
+    "Materials science": [],
+    "Nanotechnology": [],
+    "Robotics": [],
+    "Mechatronics": [],
+    "Bioengineering": [],
+    "Computational physics": [],
+    "Applied mathematics": [],
+    "Statistics": [],
+    "Operations research": [],
+    "Energy systems": [],
+    "Agricultural science": [],
+    "Food science": [],
+    "Climate science": [],
+    "Geoscience": [],
+    "Geophysics": [],
+    "Optical engineering": [],
+    "Photonics": [],
+    "Quantum computing": [],
+    "Human-computer interaction": [],
+    "Scientific computing": [],
+    "Computational neuroscience": [],
+    "Medical software engineering": [],
+    "Reliability engineering": [],
+    "Safety engineering": [],
+    "Industrial engineering": [],
+    "Manufacturing engineering": [],
+    "Systems engineering": [],
+    "Computational chemistry": [
+      "molecular modelling",
+      "quantum chemistry",
+      "computational molecular science"
+    ],
+    "Organic chemistry": [
+      "organic compounds",
+      "organic synthesis",
+      "carbon chemistry"
+    ],
+    "Inorganic chemistry": [
+      "coordination chemistry",
+      "organometallic chemistry",
+      "inorganic compounds"
+    ],
+    "Analytical chemistry": [
+      "chemical analysis",
+      "spectroscopy",
+      "chromatography",
+      "mass spectrometry"
+    ],
+    "Physical chemistry": [
+      "chemical physics",
+      "chemical thermodynamics",
+      "reaction dynamics"
+    ],
+    "Thermodynamics": [
+      "heat transfer",
+      "statistical thermodynamics",
+      "thermal science"
+    ],
+    "Fluid mechanics": [
+      "fluid dynamics",
+      "hydrodynamics",
+      "continuum mechanics"
+    ],
+    "Astrobiology": [
+      "exobiology",
+      "origin of life",
+      "life in the universe"
+    ],
+    "Ecology": [
+      "ecosystem science",
+      "community ecology",
+      "population ecology"
+    ],
+    "Evolutionary biology": [
+      "evolution",
+      "phylogenetics",
+      "evolutionary genetics"
+    ],
+    "Marine science": [
+      "ocean science",
+      "marine biology",
+      "oceanography"
+    ],
+    "Hydrology": [
+      "water science",
+      "groundwater",
+      "watershed science"
+    ],
+    "Atmospheric science": [
+      "meteorology",
+      "atmospheric physics",
+      "weather and climate"
+    ],
+    "Science education": [
+      "STEM education",
+      "scientific pedagogy",
+      "science teaching"
+    ],
+    "Technical communication": [
+      "scientific communication",
+      "technical writing",
+      "research communication"
+    ],
+    "Genomics": [],
+    "Genetics": [],
+    "Transcriptomics": [],
+    "Proteomics": [],
+    "Structural biology": [],
+    "Cell biology": [],
+    "Molecular biology": [],
+    "Biochemistry": [],
+    "Epigenetics": [],
+    "Systems biology": [],
+    "Neuroscience": [],
+    "Cardiology": [],
+    "Oncology": [],
+    "Pharmacology": [],
+    "Bioinformatics": [],
+    "Public health": [],
+    "Epidemiology": [],
+    "Biomedical engineering": [],
+    "Artificial intelligence in medicine": []
+  }
+}

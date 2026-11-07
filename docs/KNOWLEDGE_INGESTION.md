@@ -2,11 +2,11 @@
 
 ## Scope
 
-This subsystem turns openly redistributable books and research articles into a source-grounded local knowledge index for Kinetics. It is an acquisition and research-support pipeline, not a clinical decision system. The existing `docs/SCIENCE_DOMAIN_CATALOGUE_100.md` remains the canonical domain taxonomy; the fetcher rotates through its entries instead of maintaining a duplicate list.
+This subsystem turns openly redistributable books and research articles into a source-grounded local knowledge index for Kinetics. It is an acquisition and research-support pipeline, not a clinical decision system. The 100 foundational domains in `docs/SCIENCE_DOMAIN_CATALOGUE_100.md` are combined with 60 extensions in `database/domains/extended_domains.json`, yielding 160 unique acquisition domains. `database/domains/domain_synonyms.json` expands each domain into source-search terms; this is the single acquisition taxonomy used by the fetcher.
 
 ## Components
 
-- `scripts/fetch_corpus.py`: source discovery, explicit license gate, bounded streaming downloads, SHA-256, atomic files, retry/backoff and resumable manifest.
+- `scripts/fetch_corpus.py`: source discovery, explicit license gate, bounded streaming downloads (configurable per-file cap), HTTP Range resume, SHA-256, atomic files, retry/backoff, synonym-aware discovery and resumable manifest.
 - `scripts/tokenize_corpus.py`: PDF/EPUB/XML/NXML/HTML/TXT extraction, deterministic word/punctuation tokenization, overlapping chunks and SQLite FTS5 indexing.
 - `scripts/analyze_corpus.py`: exploratory term/entity counts and domain summaries.
 - `scripts/query_knowledge.py`: source-linked local full-text retrieval.
@@ -48,7 +48,7 @@ Fetch one bounded batch (30 files maximum; 80 MiB total by default):
 python scripts/fetch_corpus.py --batch-size 30 --max-batch-mb 80
 ```
 
-The source IDs and states are checkpointed in `data/corpus-manifests/metadata_index.json`. Binary objects are stored under `data/corpus/objects/{medicine,biomedical,engineering}/`. Re-running the command resumes from the domain cursor and skips already downloaded IDs. A failed transient item can be retried on a later run. The default batch configuration is deliberately bounded; do not remove the per-file or aggregate byte guards for unattended execution.
+The source IDs and states are checkpointed in `data/corpus-manifests/metadata_index.json`. Binary objects are stored under `data/corpus/objects/{medicine,biomedical,engineering}/`. Re-running the command resumes from the domain cursor and skips already downloaded IDs. A failed transient item can be retried on a later run. The default batch configuration is deliberately bounded. The per-file cap defaults to 100 MiB (`--max-file-mb`, maximum 200 MiB) and the aggregate byte guard remains mandatory for unattended execution.
 
 To restore the public corpus batches published by Actions, authenticate GitHub CLI and run:
 
@@ -92,18 +92,18 @@ git add .gitattributes
 python scripts/git_sync.py --mode lfs --push
 ```
 
-Each file is capped below 20 MiB by the fetcher. Git LFS is not unlimited storage; review current account and repository quotas. For a large corpus, prefer an object store (S3-compatible or equivalent) and commit only immutable manifests and checksums to Git. Do not place SQLite database files in Git.
+Each file is capped by `--max-file-mb` (100 MiB by default; configurable up to 200 MiB). Git LFS is not unlimited storage; review current account and repository quotas. For a large corpus, prefer an object store (S3-compatible or equivalent) and commit only immutable manifests and checksums to Git. Do not place SQLite database files in Git.
 
 ## Recovery, audit and limitations
 
-- A `.part` download is deleted after failure; only complete files are moved into the object store.
+- Interrupted `.part` downloads are retained and resumed with HTTP Range when the origin supports it; a server that ignores Range safely restarts the transfer. Only complete files are moved into the object store.
 - The manifest is atomically replaced after a successful batch and includes source, item ID, URL, license, domain, retrieval time, size and SHA-256.
 - The tokenizer re-hashes every object before parsing it.
 - Keep the source package, source citation and license snapshot for audits.
 - OCR is not performed. Scanned PDFs may yield no text and are marked as such.
 - Token counts are tokenizer-specific estimates; current chunking counts Unicode word/punctuation tokens, not LLM model tokens.
 - Lightweight entity/keyword counts are exploratory signals, not validated scientific assertions. Every retrieval result should be checked against its cited source and relevant study limitations.
-- The 10,000+ target is an incremental collection objective, not a promise that one workflow run downloads that many files. Rate limits, rights, source availability and storage budgets govern actual throughput.
+- The 160-domain target is a taxonomy breadth objective, not a claim of corpus coverage. The 10,000+ target is an incremental collection objective, not a promise that one workflow run downloads that many files. Rate limits, rights, source availability and storage budgets govern actual throughput.
 
 
 ### Reuse from Kinetics Python modules

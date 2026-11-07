@@ -8,6 +8,7 @@ This subsystem turns openly redistributable books and research articles into a s
 
 - `scripts/fetch_corpus.py`: Internet Archive books and Europe PMC Open Access papers, with explicit license gates, bounded streaming, HTTP Range resume, SHA-256, retry/backoff and resumable manifest.
 - `scripts/fetch_research_data.py`: Zenodo books, publications and research datasets. It requires explicit CC0, CC BY or CC BY-SA record licenses and records DOI, creators, version, keywords, file identity and source links.
+- `scripts/fetch_specialist_sources.py`: OpenAlex and arXiv openly licensed literature, UniProtKB protein FASTA, RCSB PDB macromolecular structures, OAPEN academic books, DOAJ journal articles, Figshare research files and Dryad datasets. OpenAlex/arXiv/OAPEN/Figshare/Dryad files require explicit accepted item-level CC rights; UniProtKB data is CC BY 4.0 and RCSB PDB archive data is CC0.
 - `scripts/tokenize_corpus.py`: PDF/EPUB/XML/NXML/HTML/TXT extraction, deterministic word/punctuation tokenization, overlapping chunks and SQLite FTS5 indexing.
 - `scripts/analyze_corpus.py`: exploratory term/entity counts and domain summaries.
 - `scripts/query_knowledge.py`: source-linked local full-text retrieval.
@@ -17,7 +18,7 @@ This subsystem turns openly redistributable books and research articles into a s
 ## Legal and source policy
 
 A public API or downloadable URL is not a redistribution grant. Internet Archive items are acquired only when item metadata carries a recognized CC0, Public Domain Mark, CC BY or CC BY-SA license. Europe PMC/PMC OA records must expose an accepted license and an OA package. Zenodo records must carry an explicit CC0, CC BY or CC BY-SA license; record-level rights are applied conservatively to the selected file. Unknown, NC, ND and all-rights-reserved records are skipped. Review third-party content notices, attribution and exact item/file terms before redistributing any mirrored corpus.
-DOAB, DOAJ and arXiv remain discovery candidates until their individual adapters and rights checks are implemented.
+DOAB remains a discovery candidate; DOAJ has an article-level license gate and direct-PDF adapter. OAPEN covers a substantial overlapping set of open academic books. OAPEN, DOAJ, Figshare and Dryad use their public APIs but skip records where a supported item-level license cannot be established. arXiv is implemented conservatively and skips records without an explicit CC license. OpenAlex is likewise restricted to explicit CC licenses.
 
 The repository is public. Never ingest patient records, identifiable health information, credentials, private research, restricted full text or data-use agreement material into it. The SQLite database is local-only by default and its file permissions are restricted to the current POSIX user (0600). This is not encryption; use full-disk encryption and encrypted backups where needed. Raw corpus batches are published as public GitHub Release assets. Use encrypted, access-controlled object storage for confidential or larger collections.
 
@@ -33,7 +34,7 @@ python -m pip install -r requirements-knowledge.txt
 python -m pip install -e . --no-deps
 ```
 
-The ingestion dependencies are pinned in `requirements-knowledge.txt`. PDF, EPUB, HTML, tabular and JSON parsers are used during indexing. Biopython parses FASTA/GenBank sequences and PDB/mmCIF structures into searchable sequence representations; original source objects remain preserved and checksummed.
+The ingestion dependencies are pinned in `requirements-knowledge.txt`. PDF, EPUB, HTML, tabular and JSON parsers are used during indexing. Biopython parses FASTA/GenBank sequences and PDB/mmCIF structures into searchable sequence representations; original source objects remain preserved and checksummed. UniProtKB and RCSB PDB adapters add dedicated, structured molecular data alongside books and papers.
 
 ## Run locally
 
@@ -47,7 +48,8 @@ Fetch one bounded batch (30 files maximum; 80 MiB total by default):
 
 ```bash
 python scripts/fetch_corpus.py --batch-size 15 --max-batch-mb 40 --max-domains 8 --max-file-mb 40
-python scripts/fetch_research_data.py --batch-size 15 --max-batch-mb 40 --max-file-mb 40 --max-domains 8
+python scripts/fetch_research_data.py --batch-size 10 --max-batch-mb 25 --max-file-mb 25 --max-domains 8
+python scripts/fetch_specialist_sources.py --batch-size 10 --max-batch-mb 25 --max-file-mb 25 --max-domains 8 --per-source-limit 3
 ```
 
 The source IDs and states are checkpointed in `data/corpus-manifests/metadata_index.json`. Binary objects are stored under `data/corpus/objects/{medicine,biomedical,engineering}/`. Re-running the command resumes from the domain cursor and skips already downloaded IDs. A failed transient item can be retried on a later run. The default batch configuration is deliberately bounded. The per-file cap defaults to 80 MiB (`--max-file-mb`, maximum 80 MiB) and the aggregate byte guard remains mandatory for unattended execution.

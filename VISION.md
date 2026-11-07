@@ -50,7 +50,7 @@ Study target engagement, pharmacokinetics/pharmacodynamics, exposure–response,
 Support study design, protocol tracking, cohort criteria, power planning, assay QC, replicate handling, negative-result capture, external validation and publication-ready reproducibility packages.
 
 ### 13. Kinetics Ecosystem AI
-A separate, independently developed project will become the research companion through versioned APIs. It may retrieve literature, explain workflows, query approved project data, plan analyses and orchestrate permission-scoped tools. It must cite sources, label uncertainty, request approval for consequential actions and never become an autonomous clinical decision-maker. It is not Astronaut.
+A separate, independently developed project will become the research companion through versioned APIs. It may retrieve literature, explain workflows, query approved project data, plan analyses and orchestrate permission-scoped tools. It must cite sources, label uncertainty, request approval for consequential actions and never become an autonomous clinical decision-maker.
 
 ## Engineering vision
 

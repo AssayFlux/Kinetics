@@ -40,7 +40,11 @@ echo "[3/5] Acquiring missing or checksum-invalid domain images..."
 # No --overwrite: verified downloads are retained and the job resumes safely.
 python scripts/import_science_gallery.py --start 1 --end 100
 
-echo "[4/5] Strictly validating all 100 images and attribution records..."
+echo "[4/6] Building the colourful looping science-runner GIF..."
+python scripts/build_pixel_animation.py
+
+echo "[5/6] Strictly validating all 100 images, attribution and animation..."
+python scripts/validate_visual_assets.py --strict-gallery
 python - <<'PY'
 import ast
 import hashlib
@@ -117,14 +121,14 @@ print("PASS: 100 source pages, image URLs, accepted licenses and SHA-256 checksu
 PY
 
 git diff --check
-git add README.md Assets/Future/PNG Assets/Future/ATTRIBUTION.json
+git add README.md Assets/Future/PNG Assets/Future/ATTRIBUTION.json Assets/Future/kinetics-science-quest.gif
 
 if git diff --cached --quiet; then
   echo "No new image files or gallery metadata to publish."
   exit 0
 fi
 
-echo "[5/5] Committing and pushing verified assets..."
+echo "[6/6] Committing and pushing verified assets..."
 git commit -m "Add 100 verified real scientific domain images"
 git push origin main
 

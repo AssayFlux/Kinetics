@@ -129,3 +129,10 @@ Test random-access correctness, decompression integrity, corruption recovery, in
 Build ZIP/ZIP64 as an ingestion/compatibility layer, not the core random-access data format. Build KAC as a versioned chunked container while adopting BGZF/tabix and other established indexed scientific formats where appropriate. SQLite remains the local catalogue and index coordinator; compressed scientific chunks and original source files remain separate objects.
 
 This provides the intended experience: add a large archive, inspect it without full extraction, query only what is needed and use pinned collections offline—without impossible claims about petabyte compression or phone storage.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

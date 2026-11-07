@@ -1,5 +1,7 @@
 # Modeling and uncertainty design
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## Independent targets
 
 Km and kcat are modeled independently. Each target has its own canonical observations, feature archive, fitted model, held-out evaluation, and uncertainty calibration. No implicit row-wise pairing is required.

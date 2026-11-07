@@ -110,18 +110,98 @@ def create_release_batch(manifest: dict) -> int:
     return total_uploaded
 
 
+
+def restore_database_snapshot() -> bool:
+    """Restore the newest durable SQLite/FTS5 snapshot from GitHub Releases."""
+    database = ROOT / "data/kinetics.sqlite3"
+    token = os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN")
+    if not token or not os.getenv("GITHUB_REPOSITORY"):
+        raise RuntimeError("Database restore requires GH_TOKEN/GITHUB_TOKEN and GITHUB_REPOSITORY")
+    listing = run(["gh", "release", "list", "--limit", "100", "--json", "tagName,createdAt"])
+    releases = json.loads(listing.stdout)
+    snapshots = [r for r in releases if str(r.get("tagName", "")).startswith("knowledge-db-snapshot-")]
+    if not snapshots:
+        print("No prior database snapshot; starting a new knowledge index")
+        return False
+    tag = snapshots[0]["tagName"]
+    download_dir = ROOT / ".kinetics-db-restore"
+    download_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        run(["gh", "release", "download", tag, "--pattern", "kinetics-knowledge-db-*.tar.gz", "--dir", str(download_dir)])
+        archives = sorted(download_dir.glob("kinetics-knowledge-db-*.tar.gz"))
+        if len(archives) != 1:
+            raise RuntimeError(f"Expected one SQLite snapshot in {tag}, found {len(archives)}")
+        with tarfile.open(archives[0], "r:gz") as archive:
+            members = archive.getmembers()
+            if len(members) != 1 or members[0].name != "kinetics.sqlite3" or not members[0].isfile():
+                raise RuntimeError("Unsafe or unexpected database snapshot archive")
+            extracted = archive.extractfile(members[0])
+            if extracted is None:
+                raise RuntimeError("Snapshot archive has no database payload")
+            database.parent.mkdir(parents=True, exist_ok=True)
+            temporary = database.with_suffix(".sqlite3.restore")
+            with temporary.open("wb") as target:
+                while block := extracted.read(1024 * 1024):
+                    target.write(block)
+            os.replace(temporary, database)
+        print(f"Restored durable knowledge database from {tag}")
+        return True
+    finally:
+        for child in download_dir.iterdir():
+            child.unlink(missing_ok=True)
+        download_dir.rmdir()
+
+
+def create_database_snapshot() -> None:
+    """Publish a compressed SQLite snapshot so indexed chunks survive runner teardown."""
+    database = ROOT / "data/kinetics.sqlite3"
+    if not database.is_file():
+        print("No SQLite database exists; skipping database snapshot")
+        return
+    token = os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN")
+    repository = os.getenv("GITHUB_REPOSITORY")
+    if not token or not repository:
+        raise RuntimeError("Database snapshot requires GH_TOKEN/GITHUB_TOKEN and GITHUB_REPOSITORY")
+    import sqlite3
+    with sqlite3.connect(database) as db:
+        db.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    run_id = os.getenv("GITHUB_RUN_ID", "local")
+    tag = f"knowledge-db-snapshot-{stamp}-{run_id}"
+    archive_path = ROOT / f"kinetics-knowledge-db-{stamp}-{run_id}.tar.gz"
+    try:
+        with tarfile.open(archive_path, "w:gz") as archive:
+            archive.add(database, arcname="kinetics.sqlite3", recursive=False)
+        if archive_path.stat().st_size > 1800 * 1024 * 1024:
+            raise RuntimeError("Compressed SQLite snapshot exceeds 1,800 MiB; use durable object storage for larger indexes")
+        run(["gh", "release", "create", tag, str(archive_path),
+             "--title", f"Kinetics knowledge database snapshot {stamp}",
+             "--notes", "Compressed SQLite/FTS5 index snapshot. The source manifest and checksums remain in the repository. This snapshot is public and contains only approved, redistributable corpus text."])
+        print(f"Published durable SQLite snapshot: https://github.com/{repository}/releases/tag/{tag}")
+    finally:
+        archive_path.unlink(missing_ok=True)
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--branch", default=os.getenv("GITHUB_REF_NAME", "main"))
     parser.add_argument("--mode", choices=("manifest", "lfs", "release"), default="manifest")
     parser.add_argument("--push", action="store_true")
+    parser.add_argument("--restore-database", action="store_true")
+    parser.add_argument("--snapshot-database", action="store_true")
     args = parser.parse_args()
     if not (ROOT / ".git").exists():
         raise RuntimeError("Run this command inside a Git checkout")
+    if args.restore_database:
+        restore_database_snapshot()
+        return 0
+    if args.snapshot_database:
+        create_database_snapshot()
+        return 0
 
     if args.mode == "release":
         manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
         create_release_batch(manifest)
+        create_database_snapshot()
     elif args.mode == "lfs":
         run(["git", "lfs", "install", "--local"])
         run(["git", "lfs", "track", "*.pdf", "*.epub"])

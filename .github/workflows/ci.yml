@@ -63,8 +63,9 @@ jobs:
         run: |
           git clone --depth 1 --branch 17.2.0 https://github.com/chaquo/chaquopy.git "$RUNNER_TEMP/chaquopy"
           python - <<'PY'
+          import os
           from pathlib import Path
-          path = Path("$RUNNER_TEMP/chaquopy/server/pypi/build-wheel.py")
+          path = Path(os.environ["RUNNER_TEMP"]) / "chaquopy/server/pypi/build-wheel.py"
           source = path.read_text()
           old = 'run(f"ln -s {filename} {reqs_lib_dir}/{link_filename}")'
           new = 'run(f"ln -sf {filename} {reqs_lib_dir}/{link_filename}")'

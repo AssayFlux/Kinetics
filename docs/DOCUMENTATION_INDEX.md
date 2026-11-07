@@ -25,6 +25,7 @@ A document describes requirements or design unless it explicitly links implement
 | [KINETICS_10_STEP_COMPLETION_PROGRAMME.md](KINETICS_10_STEP_COMPLETION_PROGRAMME.md) | Active engineering completion and acceptance sequence |
 | [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) | Current repository status snapshot and blockers |
 | [IMPLEMENTATION_HISTORY.md](IMPLEMENTATION_HISTORY.md) | Preserved dated implementation notes; historical, not current authority |
+| [DOCUMENTATION_GOVERNANCE.md](DOCUMENTATION_GOVERNANCE.md) | Source-of-truth hierarchy, consistency findings and maintenance policy |
 | [STEP10_RELEASE_READINESS_GATES.md](STEP10_RELEASE_READINESS_GATES.md) | Executable release-evidence requirements and release decision policy |
 | [STEP7_PRODUCTION_ACCEPTANCE.md](STEP7_PRODUCTION_ACCEPTANCE.md) | Production deployment, isolation, security and recovery acceptance |
 | [STEP7_RUST_INFRASTRUCTURE.md](STEP7_RUST_INFRASTRUCTURE.md) | Rust infrastructure design and implementation boundaries |

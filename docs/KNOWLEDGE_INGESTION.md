@@ -104,3 +104,22 @@ Each file is capped below 20 MiB by the fetcher. Git LFS is not unlimited storag
 - Token counts are tokenizer-specific estimates; current chunking counts Unicode word/punctuation tokens, not LLM model tokens.
 - Lightweight entity/keyword counts are exploratory signals, not validated scientific assertions. Every retrieval result should be checked against its cited source and relevant study limitations.
 - The 10,000+ target is an incremental collection objective, not a promise that one workflow run downloads that many files. Rate limits, rights, source availability and storage budgets govern actual throughput.
+
+
+### Reuse from Kinetics Python modules
+
+~~~python
+from kinetics_core.knowledge import KnowledgeStore
+
+knowledge = KnowledgeStore("data/kinetics.sqlite3")
+hits = knowledge.search("cardiac AND imaging", limit=8, domain="Cardiology")
+for hit in hits:
+    print(hit["title"], hit["source_url"], hit["license"])
+    print(hit["citation_metadata"])
+    print(hit["text"])
+~~~
+
+The API opens the index read-only and returns the original source URL, license,
+SHA-256 and citation metadata with each chunk. Consumers must preserve those
+fields when presenting derived summaries and should verify the source document
+before relying on a claim.

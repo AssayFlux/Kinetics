@@ -161,8 +161,8 @@ def main() -> int:
     parser.add_argument("--manifest", type=Path, default=MANIFEST_FILE)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
-    if not 1 <= args.batch_size <= 30 or not 1 <= args.max_domains <= 160:
-        parser.error("batch-size must be 1-30 and max-domains 1-160")
+    if not 1 <= args.batch_size <= 50 or not 1 <= args.max_domains <= 160:
+        parser.error("batch-size must be 1-50 and max-domains 1-160")
     if not 1 <= args.max_batch_mb <= 512 or not 1 <= args.max_file_mb <= 80:
         parser.error("batch limit must be 1-512 MiB and file limit 1-80 MiB")
 

@@ -72,9 +72,6 @@ jobs:
             https://chaquo.com/pypi-13.1/numpy/numpy-1.26.2-0-cp311-cp311-android_21_arm64_v8a.whl \
             --output "$RUNNER_TEMP/chaquopy/server/pypi/dist/numpy/numpy-1.26.2-0-cp311-cp311-android_21_arm64_v8a.whl"
       - name: Cross-build pinned Biopython 1.88 Android wheel
-        env:
-          ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/28.2.13676358
-          ANDROID_NDK_ROOT: ${{ env.ANDROID_HOME }}/ndk/28.2.13676358
         run: |
           cd "$RUNNER_TEMP/chaquopy/server/pypi"
           python build-wheel.py --python 3.11 --abi arm64-v8a "$GITHUB_WORKSPACE/android/biopython-wheel"

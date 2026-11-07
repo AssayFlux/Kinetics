@@ -21,11 +21,12 @@ on:
         required: false
         default: "80"
         type: string
-      sync_artifacts:
-        description: "Push public PDF/EPUB objects through Git LFS (uses quota)"
+      sync_mode:
+        description: "Durable corpus storage target"
         required: false
-        default: false
-        type: boolean
+        default: "release"
+        type: choice
+        options: ["release", "lfs", "manifest"]
 
 permissions:
   contents: write
@@ -91,15 +92,11 @@ jobs:
             python scripts/analyze_corpus.py
           done
 
-      - name: Synchronize manifests and optional LFS objects
+      - name: Synchronize manifests and corpus objects
         env:
-          SYNC_ARTIFACTS: ${{ inputs.sync_artifacts || 'false' }}
+          SYNC_MODE: ${{ inputs.sync_mode || 'release' }}
         run: |
-          if [ "$SYNC_ARTIFACTS" = "true" ]; then
-            python scripts/git_sync.py --mode lfs --push
-          else
-            python scripts/git_sync.py --mode manifest --push
-          fi
+          python scripts/git_sync.py --mode "$SYNC_MODE" --push
 
       - name: Upload run diagnostics
         if: always()

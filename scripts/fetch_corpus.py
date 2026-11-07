@@ -30,8 +30,10 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = ROOT / "data/corpus-manifests/metadata_index.json"
 DEFAULT_OBJECTS = ROOT / "data/corpus/objects"
 DOMAIN_FILE = ROOT / "docs/SCIENCE_DOMAIN_CATALOGUE_100.md"
+DOMAIN_SYNONYMS_FILE = ROOT / "database/domains/domain_synonyms.json"
+SOURCE_REGISTRY_FILE = ROOT / "database/sources/knowledge_sources.json"
 USER_AGENT = "Kinetics-KnowledgeIngestion/1.0 (research; contact: repository-maintainer)"
-MAX_FILE_BYTES = 20 * 1024 * 1024
+MAX_FILE_BYTES = 100 * 1024 * 1024
 DEFAULT_BATCH_BYTES = 80 * 1024 * 1024
 ALLOWED_LICENSES = (
     "creativecommons.org/licenses/by/4.0",
@@ -99,7 +101,33 @@ def domain_catalogue() -> list[str]:
     if extension_path.exists():
         extension = json.loads(extension_path.read_text(encoding="utf-8"))
         names.extend(str(name).strip() for name in extension.get("domains", []) if str(name).strip())
-    return list(dict.fromkeys(names))
+    names = list(dict.fromkeys(names))
+    if len(names) < 150:
+        raise RuntimeError(f"Expected at least 150 acquisition domains; loaded {len(names)}")
+    return names
+
+
+def domain_search_terms(domain: str) -> list[str]:
+    terms = [domain]
+    if DOMAIN_SYNONYMS_FILE.exists():
+        data = json.loads(DOMAIN_SYNONYMS_FILE.read_text(encoding="utf-8"))
+        configured = data.get("domains", {}).get(domain, [])
+        terms.extend(str(value).strip() for value in configured if str(value).strip())
+    return list(dict.fromkeys(terms))
+
+
+def load_source_registry() -> dict[str, dict[str, Any]]:
+    if not SOURCE_REGISTRY_FILE.exists():
+        raise FileNotFoundError(f"Source registry missing: {SOURCE_REGISTRY_FILE}")
+    data = json.loads(SOURCE_REGISTRY_FILE.read_text(encoding="utf-8"))
+    entries = data.get("sources", [])
+    registry = {entry["id"]: entry for entry in entries if entry.get("id")}
+    supported = {"internet_archive": "scripts/fetch_corpus.py",
+                 "europe_pmc_oa": "scripts/fetch_corpus.py"}
+    for source_id, entry in registry.items():
+        if entry.get("enabled") and source_id not in supported:
+            raise RuntimeError(f"Source {source_id} is enabled but has no implemented adapter")
+    return registry
 
 
 def safe_category(domain: str) -> str:
@@ -130,18 +158,33 @@ def stream_download(session: requests.Session, url: str, destination: Path,
         raise ValueError("Only HTTPS source URLs are accepted")
     destination.parent.mkdir(parents=True, exist_ok=True)
     part = destination.with_suffix(destination.suffix + ".part")
-    part.unlink(missing_ok=True)
-    total = 0
+    offset = part.stat().st_size if part.exists() else 0
     digest = hashlib.sha256()
+    if offset:
+        with part.open("rb") as existing:
+            for block in iter(lambda: existing.read(1024 * 1024), b""):
+                digest.update(block)
+    total = offset
+    request_headers = {"Range": f"bytes={offset}-"} if offset else {}
     try:
-        with session.get(url, stream=True, timeout=(15, 90), allow_redirects=True) as response:
+        with session.get(url, stream=True, timeout=(15, 90), allow_redirects=True,
+                         headers=request_headers) as response:
             response.raise_for_status()
             if not response.url.startswith("https://"):
                 raise ValueError("Refusing a non-HTTPS redirect target")
+            if offset and response.status_code == 200:
+                # Origin ignored Range: restart rather than append a duplicate body.
+                offset = 0
+                total = 0
+                digest = hashlib.sha256()
+            elif offset and response.status_code == 206:
+                content_range = response.headers.get("Content-Range", "")
+                if not content_range.startswith(f"bytes {offset}-"):
+                    raise ValueError("Origin returned an invalid Content-Range")
             length = response.headers.get("Content-Length")
-            if length and int(length) > min(remaining_bytes, per_file_limit):
+            if length and total + int(length) > min(remaining_bytes, per_file_limit):
                 raise ValueError("Remote object exceeds configured byte budget")
-            with part.open("wb") as output:
+            with part.open("ab" if offset else "wb") as output:
                 for block in response.iter_content(chunk_size=256 * 1024):
                     if not block:
                         continue
@@ -154,6 +197,9 @@ def stream_download(session: requests.Session, url: str, destination: Path,
             raise ValueError("Source returned an empty object")
         part.replace(destination)
         return total, digest.hexdigest()
+    except requests.RequestException:
+        # Keep the verified prefix so a later run can request the remaining range.
+        raise
     except Exception:
         part.unlink(missing_ok=True)
         raise
@@ -203,7 +249,9 @@ def persist_record(session: requests.Session, item_id: str, title: str, source: 
 
 def fetch_internet_archive(session: requests.Session, domain: str, manifest: dict[str, Any],
                            objects: Path, remaining_bytes: int, remaining_items: int) -> tuple[int, int]:
-    query = f'mediatype:texts AND (subject:"{domain}" OR title:"{domain}")'
+    terms = domain_search_terms(domain)
+    clauses = " OR ".join(f'(subject:"{term}" OR title:"{term}")' for term in terms)
+    query = f"mediatype:texts AND ({clauses})"
     cursor = manifest.setdefault("cursor", {})
     pages = cursor.setdefault("ia_pages", {})
     page = int(pages.get(domain, 1))
@@ -271,7 +319,9 @@ def fetch_internet_archive(session: requests.Session, domain: str, manifest: dic
 
 def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str, Any],
                      objects: Path, remaining_bytes: int, remaining_items: int) -> tuple[int, int]:
-    query = f'OPEN_ACCESS:Y AND (TITLE_ABS:"{domain}")'
+    terms = domain_search_terms(domain)
+    clauses = " OR ".join(f'TITLE_ABS:"{term}"' for term in terms)
+    query = f"OPEN_ACCESS:Y AND ({clauses})"
     cursor = manifest.setdefault("cursor", {})
     pages = cursor.setdefault("epmc_pages", {})
     page = int(pages.get(domain, 1))
@@ -368,6 +418,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--batch-size", type=int, default=30)
     parser.add_argument("--max-batch-mb", type=int, default=80)
+    parser.add_argument("--max-file-mb", type=int, default=100,
+                        help="Maximum size per downloaded source object (1-200 MiB)")
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--objects", type=Path, default=DEFAULT_OBJECTS)
     parser.add_argument("--source", choices=("all", "ia", "europe-pmc"), default="all")
@@ -379,18 +431,27 @@ def main() -> int:
         parser.error("--batch-size must be between 1 and 50")
     if not 1 <= args.max_batch_mb <= 80:
         parser.error("--max-batch-mb must be between 1 and 80")
+    if not 1 <= args.max_file_mb <= 200:
+        parser.error("--max-file-mb must be between 1 and 200")
+    global MAX_FILE_BYTES
+    MAX_FILE_BYTES = args.max_file_mb * 1024 * 1024
     if not 1 <= args.max_domains <= 200:
         parser.error("--max-domains must be between 1 and 200")
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     manifest = load_manifest(args.manifest)
     domains = domain_catalogue()
+    source_registry = load_source_registry()
+    enabled_ia = bool(source_registry.get("internet_archive", {}).get("enabled"))
+    enabled_epmc = bool(source_registry.get("europe_pmc_oa", {}).get("enabled"))
     start = int(manifest.get("cursor", {}).get("domain_index", 0)) % len(domains)
     selected = [domains[(start + offset) % len(domains)] for offset in range(args.max_domains)]
     budget = args.max_batch_mb * 1024 * 1024
     if args.dry_run:
         print(json.dumps({"selected_domains": selected, "known_items": len(manifest["items"]),
-                          "batch_size": args.batch_size, "max_batch_bytes": budget}, indent=2))
+                          "batch_size": args.batch_size, "max_batch_bytes": budget,
+                          "max_file_bytes": MAX_FILE_BYTES,
+                          "enabled_sources": [key for key, value in source_registry.items() if value.get("enabled")]}, indent=2))
         return 0
 
     args.objects.mkdir(parents=True, exist_ok=True)
@@ -403,7 +464,7 @@ def main() -> int:
                 break
             remaining_items = args.batch_size - total_count
             remaining_bytes = budget - total_bytes
-            if args.source in ("all", "ia"):
+            if args.source in ("all", "ia") and enabled_ia:
                 try:
                     n, b = fetch_internet_archive(session, domain, manifest, args.objects,
                                                   remaining_bytes, remaining_items)
@@ -412,7 +473,7 @@ def main() -> int:
                     n, b = 0, 0
                 total_count += n
                 total_bytes += b
-            if args.source in ("all", "europe-pmc") and total_count < args.batch_size and total_bytes < budget:
+            if args.source in ("all", "europe-pmc") and enabled_epmc and total_count < args.batch_size and total_bytes < budget:
                 try:
                     n, b = fetch_europe_pmc(session, domain, manifest, args.objects,
                                             budget - total_bytes, args.batch_size - total_count)

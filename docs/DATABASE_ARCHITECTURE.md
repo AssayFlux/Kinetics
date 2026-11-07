@@ -1,5 +1,7 @@
 # Kinetics data and training storage architecture
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## Decision
 
 Use the Python standard-library `sqlite3` engine as the local transactional

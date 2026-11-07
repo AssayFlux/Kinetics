@@ -82,8 +82,8 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 | Biopython | Custom Biopython 1.88 wheel built and packaged; Bio.PDB and SeqIO probes added; runtime not executed | Run FASTA and PDB parser tests on emulator and physical arm64 device; license file audit |
 | NumPy | NumPy 1.26.2 packaged; all inspected APK/AAB native ELF PT_LOAD segments pass 16 KB alignment | Runtime import/numerical smoke test on emulator and physical arm64 device; assess wheel age/maintenance |
 | SciPy | Gradle resolution failed: no compatible distribution on the configured Chaquopy indexes for CPython 3.11 / arm64-v8a | Evaluate a custom Android wheel or a documented on-device alternative; otherwise define an explicit on-device vs remote-compute capability boundary and obtain owner approval |
-| Rust app FFI | Not implemented/tested | Android arm64 library and Kotlin call test |
-| C++17 JNI | Not implemented/tested | NDK build, JNI invocation and numeric correctness test |
+| Rust app FFI | Minimal Rust static library and Kotlin JNI bridge added; CI cross-compile/build and on-device call pending | Successful arm64 build and runtime result `sumSquares(3,4)=25`; cancellation/timeout test |
+| C++17 JNI | Minimal C++17 JNI library and Kotlin bridge added; CI build and on-device invocation pending | Successful NDK build and runtime numeric correctness test; sanitizer-capable host tests |
 | One real scientific engine | Not selected | License review, Android build, real test vector |
 | RDKit / alternative | Not tested | arm64 build, dependency/license/size and smoke test |
 | Offline Mol* / 3Dmol.js | Not implemented/tested | Bundled viewer renders known structure without network |
@@ -129,4 +129,9 @@ For every run record: date; commit; host OS; JDK/Gradle/AGP/Kotlin/SDK/NDK versi
 
 ## Outstanding R1 exit blockers
 
-The R1 exit criteria in `docs/phase-r1-plan.md` are not met. No arm64 emulator or physical device run is available in this session. SciPy remains unresolved. Rust FFI, C++17 JNI, a real scientific engine, RDKit/alternative, offline molecular viewer, SAF/background/cancellation, cold-start and memory measurements remain unimplemented or untested. Biopython's file-level license audit and production redistribution approval are also outstanding. Do not start R2 or declare an R1 go/no-go until these outcomes and the owner review are recorded.
+The R1 exit criteria in `docs/phase-r1-plan.md` are not met. No arm64 emulator or physical device run is available in this session. SciPy remains unresolved. Rust FFI and C++17 JNI prototypes have been added but their latest CI build and device runtime are pending. A real scientific engine, RDKit/alternative, offline molecular viewer, SAF/background/cancellation, cold-start and memory measurements remain unimplemented or untested. Biopython's file-level license audit and production redistribution approval are also outstanding. Do not start R2 or declare an R1 go/no-go until these outcomes and the owner review are recorded.
+
+
+## Native-language prototype additions
+
+A minimal Rust static library and C++17 JNI bridge now exist under `android/native-rust/` and `android/app/src/main/cpp/`. The Kotlin `NativeProbe` exposes two test functions which should both return 25 for inputs 3 and 4. CI cross-compiles Rust for `aarch64-linux-android`, then Gradle/CMake links the Rust static library into an arm64 JNI shared object. This is an FFI feasibility probe only: it is not a scientific engine, and no on-device invocation has yet been observed. The resulting shared library must also pass the 16 KB ELF check in CI.

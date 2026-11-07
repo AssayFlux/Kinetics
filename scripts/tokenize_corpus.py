@@ -66,7 +66,8 @@ def connect(path: Path) -> sqlite3.Connection:
     db.executescript("""
     CREATE TABLE IF NOT EXISTS knowledge_documents (
       item_id TEXT PRIMARY KEY, title TEXT NOT NULL, source TEXT NOT NULL,
-      source_url TEXT, license TEXT, domain TEXT, object_path TEXT NOT NULL,
+      source_url TEXT, license TEXT, citation_metadata_json TEXT NOT NULL DEFAULT '{}',
+      domain TEXT, object_path TEXT NOT NULL,
       sha256 TEXT NOT NULL, byte_size INTEGER NOT NULL, token_count INTEGER NOT NULL DEFAULT 0,
       indexed_at TEXT, status TEXT NOT NULL DEFAULT 'downloaded'
     );
@@ -81,6 +82,9 @@ def connect(path: Path) -> sqlite3.Connection:
     );
     CREATE INDEX IF NOT EXISTS idx_knowledge_chunks_item ON knowledge_chunks(item_id, chunk_index);
     """)
+    columns = {row[1] for row in db.execute("PRAGMA table_info(knowledge_documents)")}
+    if "citation_metadata_json" not in columns:
+        db.execute("ALTER TABLE knowledge_documents ADD COLUMN citation_metadata_json TEXT NOT NULL DEFAULT '{}'")
     return db
 
 
@@ -122,13 +126,14 @@ def main() -> int:
             token_count = sum(piece[2] for piece in pieces)
             with db:
                 db.execute("""INSERT OR REPLACE INTO knowledge_documents
-                    (item_id,title,source,source_url,license,domain,object_path,sha256,
-                     byte_size,token_count,indexed_at,status)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+                    (item_id,title,source,source_url,license,citation_metadata_json,domain,
+                     object_path,sha256,byte_size,token_count,indexed_at,status)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                     (item_id, record.get("title", item_id), record.get("source", ""),
-                     record.get("source_url"), record.get("license"), record.get("domain"),
-                     record["path"], digest, path.stat().st_size, token_count,
-                     datetime.now(timezone.utc).isoformat(), "indexed"))
+                     record.get("source_url"), record.get("license"),
+                     json.dumps(record.get("citation_metadata", {}), sort_keys=True),
+                     record.get("domain"), record["path"], digest, path.stat().st_size,
+                     token_count, datetime.now(timezone.utc).isoformat(), "indexed"))
                 db.execute("DELETE FROM knowledge_fts WHERE item_id=?", (item_id,))
                 db.execute("DELETE FROM knowledge_chunks WHERE item_id=?", (item_id,))
                 for index, content, count in pieces:

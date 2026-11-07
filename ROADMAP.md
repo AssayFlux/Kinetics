@@ -30,7 +30,7 @@
 
 ## Programme 2 — Biomedical data and knowledge foundation (Years 1–3)
 
-**Purpose:** Build the lawful, provenance-preserving scientific knowledge archive and the shared data layer that every domain can use.
+**Purpose:** Build the lawful, provenance-preserving scientific knowledge archive and the shared data layer that every domain can use. The functional scope and maturity boundaries are defined in [docs/SCIENTIFIC_CAPABILITY_MAP.md](docs/SCIENTIFIC_CAPABILITY_MAP.md); the 160-domain taxonomy is used for acquisition discovery, not as an implementation checklist.
 
 1. Maintain a versioned source registry covering scientific domains, publishers, repositories, books, papers, datasets, APIs, licenses, access conditions and rate limits.
 2. Build explicit source adapters; no undocumented scraping, access-control bypass or assumed redistribution rights.

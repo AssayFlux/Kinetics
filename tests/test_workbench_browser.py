@@ -83,7 +83,7 @@ def test_researcher_can_create_project_in_real_browser(workbench_url: str, brows
     browser_page.locator("#project-name").fill("Browser acceptance project")
     browser_page.locator("#project-description").fill("Created through the real UI")
     browser_page.get_by_role("button", name="Create project").click()
-    browser_page.get_by_role("option", name="Browser acceptance project").wait_for()
+    browser_page.locator("#project option", has_text="Browser acceptance project").wait_for(state="attached")
     assert browser_page.locator("#project").input_value()
 
 

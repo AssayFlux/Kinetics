@@ -55,9 +55,10 @@ Kinetics/
 ## Storage policy
 
 - Git versions code, schemas, source registry, manifests and compact summaries.
-- Raw PDFs/EPUBs are local-only by default. Git LFS is an explicit opt-in because
-  LFS has independent storage/bandwidth quotas and a public repository is not a
-  secure vault.
+- Standalone fetch runs keep raw PDFs/EPUBs local. The scheduled GitHub workflow
+  publishes newly acquired, explicitly redistributable batches as public Release
+  assets; use the restore utility to populate a local object store. Git LFS is an
+  optional alternative with separate storage/bandwidth quotas.
 - Never put patient data, credentials, private datasets or restricted documents
   in this public repository.
 - Use encrypted, access-controlled object storage for private or large corpora.

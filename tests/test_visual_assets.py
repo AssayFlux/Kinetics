@@ -42,6 +42,8 @@ def test_readme_does_not_embed_uncommitted_png_gallery_paths() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "100-domain scientific atlas" in readme
     assert "deliberately avoids embedding absent PNG paths" in readme
+    assert "<!-- KINETICS_GALLERY_START -->" in readme
+    assert "<!-- KINETICS_GALLERY_END -->" in readme
     assert not re.search(r"<img[^>]+Assets/Future/PNG/[^>]+>", readme)
 
 

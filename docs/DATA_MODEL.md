@@ -1,5 +1,7 @@
 # Canonical kinetic observation data model
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## One row represents one measured target
 
 A canonical observation represents exactly one value: either Km or kcat. This design is necessary because public enzyme-kinetics resources often publish target-specific tables, and two records with similar protein/substrate identifiers are not automatically matched experiments.

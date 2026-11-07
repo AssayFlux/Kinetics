@@ -1,5 +1,7 @@
 # Clinical translation and safety
 
+> **Mission authority:** This document is governed by [KINETICS_MISSION.md](KINETICS_MISSION.md). Kinetics is a cross-disciplinary biomedical and precision-health research platform—not only an enzyme-kinetics project. All domains, datasets, models and applications must align with the mission, preserve provenance and clinical safety, and follow the foundation-first build order. Small Android devices are a first-class performance target.
+
 This document describes a future evidence pathway. It does not claim Kinetics is a medical device or clinically validated.
 
 ## Research-to-care boundary

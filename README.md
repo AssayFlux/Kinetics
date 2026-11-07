@@ -179,7 +179,7 @@ Contributions should include tests, clear documentation and evidence for scienti
 
 ### Live corpus growth
 
-The graph below is generated from the ingestion manifest and SQLite index after each successful corpus synchronization. It tracks **cumulative, verified objects published as public GitHub Release assets**—not planned download limits or unverified downloads. The latest-workflow index figures are shown separately so a temporary build index is not mistaken for the entire accumulated archive. Model parameters are counted only from verified checkpoint entries in `data/model-manifests/model_registry.json`; no external or merely configured model weights are included.
+The graph below is generated from the ingestion manifest and SQLite index after each successful corpus synchronization. It tracks **cumulative, verified objects published as public GitHub Release assets**—not planned download limits or unverified downloads. The latest-workflow index figures are shown separately so a temporary build index is not mistaken for the entire accumulated archive. Model parameters are separated by availability: Kinetics configures the external `facebook/esm2_t6_8M_UR50D` encoder (approximately **8 million parameters**, downloaded on first use), while bundled checkpoint parameters are counted separately and remain zero until weights are actually committed. The registry is `data/model-manifests/model_registry.json`.
 
 <p align="center">
   <img src="Assets/corpus-growth.svg" width="100%" alt="Kinetics cumulative public corpus growth and latest workflow indexing metrics">
@@ -187,7 +187,7 @@ The graph below is generated from the ingestion manifest and SQLite index after 
 
 - **Public corpus:** downloadable release-published objects with recorded source, licence, size and checksum.
 - **Latest workflow index:** documents, searchable chunks and tokenizer counts in the SQLite database produced by the latest ingestion workflow. Download the database from that run's **knowledge-ingestion-diagnostics** artifact; artifacts are retained for 30 days.
-- The chart updates automatically during ingestion synchronization. If no verified release assets exist yet, it explicitly shows that the first release is pending. The dashboard also reports verified parameter counts for model checkpoints actually bundled with the repository; architecture definitions and external weights are not counted.
+- The chart updates automatically during ingestion synchronization. If no verified release assets exist yet, it explicitly shows that the first release is pending. The dashboard reports bundled checkpoint parameters separately from configured external model parameters. The configured ESM-2 model is approximately 8M parameters; its weights are downloaded on first use and are not included in repository storage.
 
 Open [corpus ingestion runs and artifacts](https://github.com/AssayFlux/Kinetics/actions/workflows/bulk_downloader.yml) to download the latest database and inspect build logs.
 

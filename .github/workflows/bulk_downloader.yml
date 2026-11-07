@@ -24,9 +24,9 @@ on:
         type: choice
         options: ["1", "2", "3"]
       batch_size:
-        description: "Maximum objects per cycle (3-30)"
+        description: "Maximum objects per cycle (3-90)"
         required: false
-        default: "30"
+        default: "90"
         type: string
       max_batch_mb:
         description: "Maximum combined download MiB per cycle (3-1536)"
@@ -84,8 +84,8 @@ jobs:
           cycles, count, size = map(int, (
               os.environ["CYCLES"], os.environ["BATCH_SIZE"], os.environ["MAX_BATCH_MB"]
           ))
-          if not 1 <= cycles <= 3 or not 3 <= count <= 30 or not 3 <= size <= 1536:
-              raise SystemExit("Limits exceeded: cycles 1-3, batch size 3-30, combined MiB 3-1536")
+          if not 1 <= cycles <= 3 or not 3 <= count <= 90 or not 3 <= size <= 1536:
+              raise SystemExit("Limits exceeded: cycles 1-3, batch size 3-90, combined MiB 3-1536")
           PY
 
       - name: Fetch, tokenize and analyze bounded batches

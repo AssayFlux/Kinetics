@@ -6,6 +6,7 @@ receives a source/license/creator entry in Assets/Future/ATTRIBUTION.json.
 """
 from __future__ import annotations
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -541,7 +542,9 @@ def main():
             item=find_file(term,used)
             if not item: print("  NOT FOUND: no qualifying image"); continue
             download_png(item,target); used.add(item["title"])
-            records[key]={"file":key,"number":number,"category":slug.replace("-"," ").title(),**item}
+            digest=hashlib.sha256(target.read_bytes()).hexdigest()
+            records[key]={"file":key,"number":number,"category":slug.replace("-"," ").title(),
+                          "sha256":digest,"downloaded_width":1024,"downloaded_height":1024,**item}
             print(f"  SAVED {target.name} ({item['license']})",flush=True)
         except Exception as exc:
             print(f"  ERROR {type(exc).__name__}: {exc}",file=sys.stderr,flush=True)

@@ -8,7 +8,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-001 | 2026-11-07 | Project LICENSE | Approved — Apache-2.0 selected; canonical LICENSE grant file still to be added and verified | Project owner |
 | D-002 | 2026-11-07 | Target jurisdictions and applicable privacy/medical-device laws | Approved strategic scope — global, including future clinical use; jurisdiction-specific clearance remains mandatory | Project owner; qualified advisers required for implementation |
 | D-003 | 2026-11-07 | Research-paper framing and venue(s) | Approved — multiple papers over time; owner requests guidance at milestones | Project owner |
-| D-004 | 2026-11-07 | Clinical advisory board/advisers | Open — identities/commitments not supplied | Project owner |
+| D-004 | 2026-11-07 | Clinical advisory board/advisers | Approved — defer recruitment until software is more mature; P0 remains blocked pending qualified advisers | Project owner |
 | D-005 | 2026-11-07 | First PGx gene set | Open — no genes selected | Project owner + clinical advisers |
 | D-006 | 2026-11-07 | Target Android devices/minimum support matrix | Open — no devices selected | Project owner |
 | D-007 | 2026-11-07 | Source-master archival | Resolved operationally — reconstructed from owner's complete chat-supplied master at docs/origin/KINETICS_MASTER.md; not represented as a Git move | Owner instruction |
@@ -22,9 +22,17 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 
 ## Open decisions
 1. Paper framing/venue: multiple papers over time. Start with a platform/software-methods paper only after R1–R3 evidence is adequate and the target venue's current requirements are reviewed; pursue separate domain papers only after the relevant workflows have independent validation. Owner supplies/approves authorship, affiliations, funding and competing interests. Guide the owner through framing, evidence readiness and venue selection at the appropriate milestones.
-2. Clinical advisers: identify clinical pharmacologist/pharmacist, clinical geneticist and physician; P0 cannot pass without them.
+2. Clinical advisers: owner chose to defer recruitment until the software is more mature. Revisit after the research-platform maturity milestone (target: R3), and before P0 or any PGx/clinical-scope work. P0 remains blocked until the required qualified expertise is identified and engaged.
 3. First PGx gene set: choose with advisers based on guideline maturity, reference materials and caller reliability.
 4. Target devices: owner specifies Android devices and emulator targets before feasibility/support claims.
+
+## D-004 — Clinical adviser timing (approved)
+- Date: 2026-11-07.
+- Context: Decide when to recruit clinical advisers for Kinetics' possible future clinical/PGx work.
+- Options considered: formal advisory board early; recruit one adviser first; defer advisers until software is more mature; remain research-only indefinitely.
+- Choice: Defer all clinical adviser recruitment until the software is more mature (owner selected option 3).
+- Consequences: Do not spend effort recruiting a clinical advisory board during the current R1 engineering-feasibility phase. Revisit adviser recruitment after the research platform reaches a meaningful maturity milestone (target review point: after R3), and before P0, PGx gene-set selection, patient-related workflows, clinical studies or any clinical-scope implementation. P0 remains blocked until qualified advisers and all other required legal, ethics, regulatory, QMS and evidence prerequisites are satisfied. This timing decision does not authorize patient data, clinical features or clinical claims; Research Mode remains the only public mode and Clinical Decision Support Mode remains disabled. If the project approaches a gated activity earlier than expected, pause and recruit/consult qualified advisers before proceeding.
+- Approver: Project owner, explicit selection in chat on 2026-11-07.
 
 ## D-003 — Research-paper strategy (approved)
 - Date: 2026-11-07.

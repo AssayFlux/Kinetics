@@ -174,3 +174,23 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Ask the owner to decide D-003: research-paper framing and venue strategy.
+
+
+## 2026-11-07 — Session 9: Owner decision D-003 — research-paper strategy
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Record the owner's publication strategy and set evidence-based publication milestones without changing R1 scope.
+
+### Done
+- Owner selected option 4: multiple papers over time.
+- Recorded D-003 as approved in DECISIONS.md.
+- Updated ROADMAP.md with a staged publication strategy: platform/software-methods paper after adequate R1–R3 evidence, then separate domain papers only after independent validation.
+- Recorded the owner's request for guidance at relevant milestones.
+
+### Constraints and interpretation
+- This is a publication strategy, not a claim that a paper is ready, submitted, accepted or peer reviewed.
+- No unsupported capabilities, fabricated results or broad claims across unvalidated domains.
+- Venue requirements, authorship, affiliations, funding, competing interests and manuscript claims require owner review when the evidence and candidate venue are known.
+- R1 remains in progress; R2 remains gated on R1 evidence and explicit owner go/no-go approval.
+
+### Next step
+- Ask the owner to decide D-004: clinical advisers/advisory board.

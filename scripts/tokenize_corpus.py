@@ -32,9 +32,9 @@ def extract_text(path: Path) -> str:
         for item in book.get_items_of_type(ITEM_DOCUMENT):
             parts.append(BeautifulSoup(item.get_content(), "html.parser").get_text(" ", strip=True))
         return "\n".join(parts)
-    if suffix in (".xml", ".html", ".htm"):
+    if suffix in (".xml", ".nxml", ".html", ".htm"):
         from bs4 import BeautifulSoup
-        return BeautifulSoup(path.read_bytes(), "xml" if suffix == ".xml" else "html.parser").get_text(" ", strip=True)
+        return BeautifulSoup(path.read_bytes(), "xml" if suffix in (".xml", ".nxml") else "html.parser").get_text(" ", strip=True)
     if suffix == ".txt":
         return path.read_text(encoding="utf-8", errors="replace")
     return ""

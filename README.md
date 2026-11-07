@@ -215,7 +215,7 @@ database. The corpus is not committed as ordinary Git blobs.
 
 The GitHub Actions workflow **.github/workflows/bulk_downloader.yml** runs
 two bounded cycles per week and can also be started from **Actions → Kinetics
-knowledge corpus ingestion → Run workflow**. Manual runs support up to three cycles
+knowledge corpus ingestion → Run workflow**. Manual runs support up to three cycles of 90 records each
 and a combined ceiling of 1,536 MiB per cycle (up to 4.5 GiB in configured transfer
 budgets per run). Individual source objects remain capped at 80 MiB for release
 packaging. These are ceilings, not guaranteed throughput; source availability,

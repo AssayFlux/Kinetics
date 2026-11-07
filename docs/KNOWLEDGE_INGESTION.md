@@ -45,10 +45,10 @@ python scripts/fetch_corpus.py --dry-run
 Fetch one bounded batch (30 files maximum; 80 MiB total by default):
 
 ```bash
-python scripts/fetch_corpus.py --batch-size 30 --max-batch-mb 80 --max-domains 8 --max-file-mb 100
+python scripts/fetch_corpus.py --batch-size 30 --max-batch-mb 80 --max-domains 8 --max-file-mb 80
 ```
 
-The source IDs and states are checkpointed in `data/corpus-manifests/metadata_index.json`. Binary objects are stored under `data/corpus/objects/{medicine,biomedical,engineering}/`. Re-running the command resumes from the domain cursor and skips already downloaded IDs. A failed transient item can be retried on a later run. The default batch configuration is deliberately bounded. The per-file cap defaults to 100 MiB (`--max-file-mb`, maximum 200 MiB) and the aggregate byte guard remains mandatory for unattended execution.
+The source IDs and states are checkpointed in `data/corpus-manifests/metadata_index.json`. Binary objects are stored under `data/corpus/objects/{medicine,biomedical,engineering}/`. Re-running the command resumes from the domain cursor and skips already downloaded IDs. A failed transient item can be retried on a later run. The default batch configuration is deliberately bounded. The per-file cap defaults to 80 MiB (`--max-file-mb`, maximum 80 MiB) and the aggregate byte guard remains mandatory for unattended execution.
 
 To restore the public corpus batches published by Actions, authenticate GitHub CLI and run:
 
@@ -77,7 +77,7 @@ The index is added to the existing `data/kinetics.sqlite3` SQLite database. Othe
 3. No third-party API token is required for the configured public APIs. The workflow uses the short-lived `GITHUB_TOKEN` provided by Actions.
 4. Open **Actions → Kinetics knowledge corpus ingestion → Run workflow**.
 5. Choose 1–3 cycles, up to 30 records per cycle and at most 80 MiB per cycle. The scheduled run executes two bounded cycles per week.
-6. The workflow publishes each bounded binary batch as a GitHub Release asset and commits compact manifests. Release assets are separate from Git history and each archive is kept below 100 MiB. Release assets on this public repository are public; only explicitly redistributable documents may be included. Git LFS remains an opt-in alternative because it has separate storage and bandwidth quotas.
+6. The workflow publishes each bounded binary batch as a GitHub Release asset and commits compact manifests. Release assets are separate from Git history and each archive is kept below 80 MiB. Release assets on this public repository are public; only explicitly redistributable documents may be included. Git LFS remains an opt-in alternative because it has separate storage and bandwidth quotas.
 
 Git pushes use an HTTP authorization header scoped to the single git command; the token is never written to the remote URL or manifest. Commit messages include `[skip ci]` to avoid recursively triggering the general CI workflow. The workflow uses a concurrency group and a non-forced push.
 
@@ -92,7 +92,7 @@ git add .gitattributes
 python scripts/git_sync.py --mode lfs --push
 ```
 
-Each file is capped by `--max-file-mb` (100 MiB by default; configurable up to 200 MiB). Git LFS is not unlimited storage; review current account and repository quotas. For a large corpus, prefer an object store (S3-compatible or equivalent) and commit only immutable manifests and checksums to Git. Do not place SQLite database files in Git.
+Each file is capped by `--max-file-mb` (80 MiB maximum) so the object remains compatible with bounded GitHub Release batches. Git LFS is not unlimited storage; review current account and repository quotas. For a large corpus, prefer an object store (S3-compatible or equivalent) and commit only immutable manifests and checksums to Git. Do not place SQLite database files in Git.
 
 ## Recovery, audit and limitations
 

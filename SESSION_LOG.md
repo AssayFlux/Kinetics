@@ -334,3 +334,11 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Continue R1 by resolving the Biopython packaging blocker, rerunning Android build, then completing the embedded Python/native/device evidence matrix. Start R2 only after the documented R1 gate passes.
+
+
+### R1 Biopython packaging investigation — 2026-11-07
+- Rechecked the current Android Gradle configuration: Chaquopy 17.2.0, Python 3.11, arm64-v8a, and unpinned `biopython`, `numpy`, `scipy` pip installs.
+- Reviewed current Chaquopy FAQ, package-index listing, wheel-build instructions and version-17 pip behavior. The no-matching-distribution error indicates there is no compatible Android distribution available through the configured indexes. Chaquopy documents custom Android-wheel builds for packages not already supported; version 17's normal index installs are binary-only.
+- Biopython upstream source builds require Python headers and a C compiler. A normal sdist install cannot be assumed to work in Chaquopy's app build task. Next experiment: inspect exact Android wheel availability, then build a reproducible CPython 3.11 arm64 wheel with Chaquopy's documented toolchain if needed; verify extension linkage, 16 KB ELF alignment, license notices and representative runtime test vectors.
+- Biopython licensing is not accurately summarized as BSD-3-Clause for the whole distribution: upstream identifies the Biopython License Agreement for most files and BSD-3-Clause dual licensing for some files. Added a third-party register note; no adoption/bundling approval is implied.
+- Updated `docs/android-feasibility.md` and `docs/third-party.md` with the findings and candidate path. No dependency was removed, no build success is claimed, and no production technology choice was made.

@@ -27,10 +27,10 @@ Python 3.10+ is required.
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-knowledge.txt
 ```
 
-The ingestion extras are pinned in the existing root `requirements.txt`. PDF, EPUB and HTML parsing libraries are used only by the tokenization step.
+The lightweight ingestion dependencies are pinned in `requirements-knowledge.txt`; the existing root `requirements.txt` also includes them for full Kinetics environments. PDF, EPUB and HTML parsing libraries are used only by the tokenization step.
 
 ## Run locally
 

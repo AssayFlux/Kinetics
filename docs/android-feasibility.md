@@ -53,7 +53,7 @@ Chaquopy 17's pip behavior is particularly important: it uses binary-only resolu
 
 1. Keep the current Python 3.11 / arm64-v8a baseline for this controlled experiment.
 2. Added `android/biopython-wheel/meta.yaml`, pinned to Biopython 1.88, and a CI step which checks out Chaquopy 17.2.0, downloads its Python 3.11.17 target and NumPy 1.26.2 Android wheel, and invokes Chaquopy's documented `build-wheel.py` for arm64-v8a.
-3. Updated the Android Gradle pip configuration to consume the generated local wheel using `--find-links`, with Biopython and NumPy versions pinned.
+3. Updated the Android Gradle pip configuration to consume the generated local wheel using `--find-links`, with Biopython and NumPy versions pinned. The Python 3.11 NumPy 1.26.2 wheel available in Chaquopy's index dates from 2023; Chaquopy warns that older Android wheels may not be 16 KB-page compatible. This is an explicit risk to test, not a compatibility claim. If it fails, the next candidate is a newer Android wheel or a Python 3.13+ build path.
 4. The workflow prints the wheel SHA-256 and proceeds to APK/AAB build only if the cross-build succeeds.
 5. Still required: inspect every compiled extension and linked native dependency; run import and representative sequence/structure parsing and alignment smoke tests on an arm64 emulator; repeat on a physical arm64 device; record package size, startup and RSS.
 6. If the custom wheel build fails or is not maintainable, evaluate a narrower native implementation for the specific required operations while retaining Biopython for desktop/remote workflows only if the architecture and capability registry explicitly describe that difference. This remains a fallback proposal, not a decision.
@@ -67,7 +67,9 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 - Chaquopy FAQ: https://chaquo.com/chaquopy/doc/current/faq.html
 - Chaquopy wheel-building instructions: https://github.com/chaquo/chaquopy/tree/master/server/pypi
 - Chaquopy package index: https://chaquo.com/pypi-13.1/
-- Chaquopy 17 change log (binary-only pip behavior): https://chaquo.com/chaquopy/doc/current/changelog.html
+- Chaquopy 17 change log (binary-only pip behavior and 16 KB wheel caveat): https://chaquo.com/chaquopy/doc/current/changelog.html
+- Chaquopy legacy wheel-builder instructions for Python 3.12 and older: https://github.com/chaquo/chaquopy/blob/17.2.0/server/pypi/README-old.md
+- Chaquopy 17.2.0 Python runtime version table: https://github.com/chaquo/chaquopy/blob/17.2.0/product/buildSrc/src/main/java/com/chaquo/python/internal/Common.java
 - Biopython installation/build instructions: https://pypi.org/project/biopython/
 - Biopython license: https://github.com/biopython/biopython/blob/master/LICENSE.rst
 
@@ -78,7 +80,7 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 | Minimal Compose app / Gradle build | Workflow run 1384 stopped before APK compilation at Biopython resolution. CI now cross-builds a pinned Android wheel before Gradle; outcome pending | Successful wheel build, APK/AAB build, alignment check, artifact hash/size and toolchain record |
 | Embedded Python runtime | Chaquopy probe configured; not executed | arm64 build/import/startup/RSS/package-size logs |
 | Biopython | CI recipe added for 1.88 / CPython 3.11 / arm64-v8a using Chaquopy 17.2.0 wheel builder; build result pending | Successful wheel build; extension/ELF inspection; runtime import, SeqIO FASTA and Bio.PDB parsing test vectors on emulator and physical arm64 device |
-| NumPy / SciPy | Declared in R1 probe; not tested on Android | Native wheel ABI, import and numerical smoke tests |
+| NumPy / SciPy | NumPy 1.26.2 cp311 arm64 wheel is a pinned build input; its 2023 build date creates a known 16 KB alignment risk. SciPy remains untested on Android | Inspect every packaged ELF; if NumPy is not 16 KB compatible, rebuild/select a newer supported stack; import and numerical smoke tests |
 | Rust app FFI | Not implemented/tested | Android arm64 library and Kotlin call test |
 | C++17 JNI | Not implemented/tested | NDK build, JNI invocation and numeric correctness test |
 | One real scientific engine | Not selected | License review, Android build, real test vector |

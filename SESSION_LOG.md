@@ -484,3 +484,31 @@ R1 remains IN PROGRESS. No R1 go/no-go has been issued and R2 remains blocked.
 ### Blocked pending device access
 - No Android phone has been connected to ADB in this environment. The APK is build-validated but not device-runtime validated.
 - Owner needs to connect a representative Android 10+ arm64 device and provide its model/SoC/RAM/API/page-size and run logs. A separate 16 KB emulator/device test is also required.
+
+
+## 2026-11-08 — Session 19: R1 integrated arm64 build evidence rechecked
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Reconcile the current CI result and maintain an accurate phase gate before further runtime experiments.
+
+### Validated
+- Inspected the latest workflow run 1481: https://github.com/AssayFlux/Kinetics/actions/runs/42384785011, commit `a7c3fd885f408bfcd46d487d58f96358129b03b2`.
+- Both Python foundation and Android arm64 jobs passed.
+- Android CI passed Rust arm64 cross-compilation, Chaquopy 17.2.0 preparation, Biopython 1.88 custom arm64 wheel build, APK/AAB packaging, APK ZIP alignment, static ELF alignment and artifact upload.
+- APK: 63 MiB; AAB: 36 MiB. Artifact ID 13579510157; uploaded artifact digest `sha256:1c545a16edbea1453652d7c7321af4610764ad897ec39f04fdf5b66908db45fc`.
+- Static ELF checker reports 16,384-byte minimum PT_LOAD alignment for every inspected native library in APK and AAB. This is static package evidence only.
+- Updated docs/android-feasibility.md to record run 1481 and explicitly distinguish static build validation from runtime/device validation.
+
+### Not validated / still open
+- No Android emulator has been booted by CI and no APK runtime smoke test has run.
+- No arm64 physical phone is connected; the owner has not yet supplied the previously requested exact model. Physical-device launch/runtime, low/mid/flagship coverage, cold-start and peak RSS remain blocked.
+- Python/Biopython/NumPy and Rust/C++ JNI calls are compiled/packaged but not yet confirmed executing on Android.
+- No 16 KB kernel runtime test; ZIP/ELF alignment is not a substitute.
+- SciPy packaging, independent domain engine, RDKit/alternative, offline molecular viewer, SAF/background/cancellation, and dependency license/redistribution review remain open.
+
+### Phase gate
+- R1 remains IN PROGRESS; no R1 go/no-go is recorded.
+- Owner authorization D-008 permits execution of R1, R2 and R3 sequentially, but does not waive the R1 exit gate. R2 remains not started until complete R1 evidence and explicit R1 go/no-go approval. R3 remains dependent on R2 exit evidence and approval.
+- No patient data or clinical feature work is authorized; P0 remains blocked.
+
+### Next action
+- Continue R1 runtime validation using a 16 KB Android emulator and collect physical-device identity/logs from the owner. Resolve or explicitly scope the remaining scientific/runtime and licensing items before requesting R1 go/no-go.

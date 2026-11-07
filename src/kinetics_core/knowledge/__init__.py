@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 from typing import Any
 
@@ -41,7 +42,7 @@ class KnowledgeStore:
         sql += " ORDER BY score LIMIT ?"
         parameters.append(limit)
         try:
-            with self._connect() as connection:
+            with closing(self._connect()) as connection:
                 return [dict(row) for row in connection.execute(sql, parameters).fetchall()]
         except sqlite3.OperationalError as exc:
             if "fts5" in str(exc).lower() or "no such table" in str(exc).lower():

@@ -14,7 +14,6 @@ import logging
 import re
 import tarfile
 import tempfile
-import time
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
@@ -119,14 +118,6 @@ def license_allowed(value: str | None) -> bool:
     return any(fragment in normalized for fragment in ALLOWED_LICENSES)
 
 
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def stream_download(session: requests.Session, url: str, destination: Path,
                     remaining_bytes: int, per_file_limit: int) -> tuple[int, str]:
     if not url.startswith("https://"):
@@ -158,6 +149,14 @@ def stream_download(session: requests.Session, url: str, destination: Path,
     except Exception:
         part.unlink(missing_ok=True)
         raise
+
+
+def local_record_is_valid(record: dict[str, Any]) -> bool:
+    try:
+        path = (ROOT / record["path"]).resolve()
+        return ROOT in path.parents and path.is_file() and path.stat().st_size == int(record["bytes"])
+    except (KeyError, OSError, TypeError, ValueError):
+        return False
 
 
 def persist_record(session: requests.Session, item_id: str, title: str, source: str,
@@ -214,7 +213,9 @@ def fetch_internet_archive(session: requests.Session, domain: str, manifest: dic
         if not identifier:
             continue
         prior = manifest["items"].get(identifier, {})
-        if prior.get("status") in ("downloaded", "skipped_license"):
+        if prior.get("status") == "skipped_license":
+            continue
+        if prior.get("status") == "downloaded" and local_record_is_valid(prior):
             continue
         meta_response = session.get(f"https://archive.org/metadata/{quote(identifier, safe='')}",
                                     timeout=(15, 45))
@@ -233,7 +234,6 @@ def fetch_internet_archive(session: requests.Session, domain: str, manifest: dic
         candidates = []
         for file_info in files:
             name = str(file_info.get("name", ""))
-            fmt = str(file_info.get("format", "")).lower()
             ext = Path(name).suffix.lower()
             if ext in (".pdf", ".epub") and not file_info.get("private"):
                 size = int(file_info.get("size") or 0)
@@ -313,7 +313,6 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
                     if source is None:
                         continue
                     ext = Path(selected.name).suffix.lower()
-                    safe_id = re.sub(r"[^A-Za-z0-9._-]", "_", pmcid)
                     payload = source.read(MAX_FILE_BYTES + 1)
                     if len(payload) > MAX_FILE_BYTES:
                         continue

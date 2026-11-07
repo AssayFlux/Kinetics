@@ -39,8 +39,9 @@ chaquopy {
     defaultConfig {
         version = "3.11"
         pip {
-            install("biopython")
-            install("numpy")
+            options("--find-links", "libs/python-wheels")
+            install("biopython==1.88")
+            install("numpy==1.26.2")
             install("scipy")
         }
     }

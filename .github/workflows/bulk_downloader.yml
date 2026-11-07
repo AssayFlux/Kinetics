@@ -76,7 +76,7 @@ jobs:
       - name: Validate workflow limits
         env:
           CYCLES: ${{ inputs.cycles || '3' }}
-          BATCH_SIZE: ${{ inputs.batch_size || '30' }}
+          BATCH_SIZE: ${{ inputs.batch_size || '90' }}
           MAX_BATCH_MB: ${{ inputs.max_batch_mb || '1536' }}
         run: |
           python - <<'PY'
@@ -91,7 +91,7 @@ jobs:
       - name: Fetch, tokenize and analyze bounded batches
         env:
           CYCLES: ${{ inputs.cycles || '3' }}
-          BATCH_SIZE: ${{ inputs.batch_size || '30' }}
+          BATCH_SIZE: ${{ inputs.batch_size || '90' }}
           MAX_BATCH_MB: ${{ inputs.max_batch_mb || '1536' }}
         run: |
           IA_BATCH=$(( BATCH_SIZE / 3 ))

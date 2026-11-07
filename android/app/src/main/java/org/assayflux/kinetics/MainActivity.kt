@@ -11,19 +11,35 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { FeasibilityScreen() }
+        setContent { FeasibilityScreen(this) }
     }
 }
 
 @Composable
-private fun FeasibilityScreen() {
+private fun FeasibilityScreen(context: android.content.Context) {
+    var report by remember { mutableStateOf("Running on-device Python and scientific package smoke tests…") }
+
+    LaunchedEffect(Unit) {
+        report = withContext(Dispatchers.IO) {
+            runCatching { PythonProbe.report(context) }
+                .getOrElse { error -> "R1 probe failed: ${error.stackTraceToString()}" }
+        }
+    }
+
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -33,6 +49,7 @@ private fun FeasibilityScreen() {
             ) {
                 Text("Kinetics — R1 feasibility")
                 Text("Research Mode only. No scientific capability is validated.")
+                Text(report)
             }
         }
     }

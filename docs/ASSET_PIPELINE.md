@@ -9,7 +9,7 @@ The earlier README embedded 30 paths under Assets/Future/PNG/, but the PNG files
 Install the optional dependency and run:
 
 ~~~bash
-python -m pip install -e ".[gallery]"
+python -m pip install Pillow
 python scripts/import_science_gallery.py
 ~~~
 
@@ -30,7 +30,7 @@ Review original file pages and license terms before redistribution. Wikimedia me
 Regenerate the local banner with:
 
 ~~~bash
-python -m pip install -e ".[gallery]"
+python -m pip install Pillow
 python scripts/build_pixel_animation.py
 ~~~
 

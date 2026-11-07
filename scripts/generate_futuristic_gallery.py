@@ -72,8 +72,8 @@ def gradient(seed: int, palette):
         vignette = int(13 * abs(t - 0.5) * 2)
         noise = rng.randrange(-2, 3)
         pixels[0, y] = tuple(
-            max(0, min(255, int(top[c] * (1-t) + bottom[c] * t)
-                        + drift - vignette + noise))
+            max(0, min(255, int(top[c] * (1-t) + bottom[c] * t
+                        + drift - vignette + noise)))
             for c in range(3)
         )
     return ramp.resize((SIZE, SIZE), Image.Resampling.BILINEAR)

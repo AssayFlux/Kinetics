@@ -24,6 +24,7 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"Assets"/"Future"/"PNG"
 MANIFEST=ROOT/"Assets"/"Future"/"ATTRIBUTION.json"
 API="https://commons.wikimedia.org/w/api.php"
+OPENVERSE_API="https://api.openverse.org/v1/images/"
 HEADERS={"User-Agent":"KineticsScienceGallery/2.0 (open-source research project)"}
 LICENSE_OK=re.compile(r"^(?:CC0|Public domain|CC BY(?:-SA)?(?: |$))",re.I)
 CATEGORIES=[
@@ -443,7 +444,7 @@ def api(params):
 def clean(value):
     return re.sub(r"<[^>]+>","",value or "").strip()
 
-def find_file(term,used):
+def find_file_commons(term,used):
     data=api({"action":"query","generator":"search","gsrsearch":term,"gsrnamespace":6,"gsrlimit":50,
               "prop":"imageinfo","iiprop":"url|size|mime|extmetadata","iiurlwidth":1600})
     pages=(data.get("query") or {}).get("pages") or {}
@@ -466,6 +467,85 @@ def find_file(term,used):
                     "credit":val("Credit"),"description":val("ImageDescription"),
                     "original_width":info.get("width"),"original_height":info.get("height")}
     return None
+
+
+def find_file_openverse(term, used):
+    """Search the openly licensed image index across many source websites."""
+    params = urllib.parse.urlencode({
+        "q": term,
+        "license": "cc0,pdm,by,by-sa",
+        "license_type": "commercial",
+        "extension": "jpg,jpeg,png,webp",
+        "page_size": 50,
+        "mature": "false",
+        "filter_dead": "true",
+    })
+    request = urllib.request.Request(
+        OPENVERSE_API + "?" + params,
+        headers={**HEADERS, "Accept": "application/json"},
+    )
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(request, timeout=45) as response:
+                data = json.load(response)
+            break
+        except Exception:
+            if attempt == 3:
+                raise
+            time.sleep(2 ** attempt)
+    for result in data.get("results", []):
+        title = (result.get("title") or "").strip()
+        image_url = result.get("url") or ""
+        landing = result.get("foreign_landing_url") or ""
+        license_code = (result.get("license") or "").lower()
+        width = int(result.get("width") or 0)
+        height = int(result.get("height") or 0)
+        identity = result.get("id") or image_url
+        if not title or title in used or identity in used:
+            continue
+        if license_code not in {"cc0", "pdm", "by", "by-sa"}:
+            continue
+        if width < 1024 or height < 1024:
+            continue
+        if not image_url.startswith("https://") or not landing.startswith("https://"):
+            continue
+        license_labels = {
+            "cc0": "CC0",
+            "pdm": "Public domain",
+            "by": "CC BY",
+            "by-sa": "CC BY-SA",
+        }
+        tags = [tag.get("name", "") for tag in result.get("tags", []) if tag.get("name")]
+        return {
+            "title": title,
+            "url": image_url,
+            "source_page": landing,
+            "license": license_labels[license_code] + (
+                " " + str(result.get("license_version"))
+                if result.get("license_version") else ""
+            ),
+            "license_url": result.get("license_url") or "",
+            "artist": result.get("creator") or "",
+            "credit": result.get("attribution") or "",
+            "description": ", ".join(tags[:12]),
+            "original_width": width,
+            "original_height": height,
+            "provider": result.get("provider") or "",
+            "source": result.get("source") or "",
+            "openverse_id": identity,
+        }
+    return None
+
+
+def find_file(term, used):
+    """Prefer Openverse's multi-provider index, then fall back to Commons."""
+    try:
+        item = find_file_openverse(term, used)
+        if item:
+            return item
+    except Exception as exc:
+        print(f"  Openverse unavailable ({type(exc).__name__}); trying Commons", flush=True)
+    return find_file_commons(term, used)
 
 def download_png(item,target):
     request=urllib.request.Request(item["url"],headers=HEADERS)
@@ -531,6 +611,7 @@ def main():
         except (OSError,json.JSONDecodeError): print("Warning: old manifest unreadable",file=sys.stderr)
     records={x.get("file"):x for x in previous if x.get("file")}
     used={x.get("title") for x in previous if x.get("title")}
+    used.update(x.get("openverse_id") for x in previous if x.get("openverse_id"))
     for number,(slug,term) in enumerate(CATEGORIES,1):
         if not args.start<=number<=args.end: continue
         target=OUT/f"{number:03d}-{slug}.png"
@@ -546,6 +627,7 @@ def main():
             item=find_file(term,used)
             if not item: print("  NOT FOUND: no qualifying image"); continue
             download_png(item,target); used.add(item["title"])
+            if item.get("openverse_id"): used.add(item["openverse_id"])
             digest=hashlib.sha256(target.read_bytes()).hexdigest()
             records[key]={"file":key,"number":number,"category":slug.replace("-"," ").title(),
                           "sha256":digest,"downloaded_width":1024,"downloaded_height":1024,**item}

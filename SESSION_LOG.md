@@ -232,3 +232,21 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Ask the owner to decide D-006: target Android devices and minimum support matrix.
+
+
+## 2026-11-07 — Session 12: Correct D-005 to owner-selected six-gene PGx scope
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Correct the PGx decision record to match the owner's explicit option 1 selection.
+
+### Done
+- Owner selected option 1: focused starter set of CYP2D6, CYP2C19, CYP2C9, VKORC1, TPMT and DPYD.
+- Corrected D-005 in DECISIONS.md. The prior 15–20-gene entry did not match the owner's selection and is superseded by this correction.
+- Updated ROADMAP.md and the P2 scope description to reflect the provisional six-gene research scope.
+
+### Constraints and interpretation
+- The six genes are a provisional planning scope, not a clinically approved panel, validated assay or implemented capability.
+- Qualified advisers must review the list after the D-004 maturity checkpoint and before P0/PGx implementation. Review includes guideline support, reference data, locus/caller limitations (including CYP2D6 structural variation), ancestry coverage, licensing and validation feasibility.
+- P0 remains blocked. No patient-data or clinical use is authorized.
+
+### Next step
+- Ask the owner to decide D-006: target Android devices and minimum support matrix.

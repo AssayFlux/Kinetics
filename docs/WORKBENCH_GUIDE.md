@@ -90,3 +90,10 @@ Before Step 8 can be declared fully complete:
 - Verify result/uncertainty fields against the scientific model output schema and ensure reports preserve calibration and applicability limitations.
 
 Do not interpret a successful job or report as evidence of model validity, clinical readiness or suitability for treatment decisions.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

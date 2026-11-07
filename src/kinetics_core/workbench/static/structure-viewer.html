@@ -2,27 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#07111f">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
 <title>Kinetics · 3D Structure Viewer</title>
 <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
 <style>
-:root{font-family:system-ui,sans-serif;color-scheme:light dark}*{box-sizing:border-box}
-body{margin:0;background:Canvas;color:CanvasText}header{padding:1rem 1.25rem;border-bottom:1px solid GrayText}
-main{max-width:1500px;margin:auto;padding:1rem;display:grid;grid-template-columns:minmax(0,2fr) minmax(270px,1fr);gap:1rem}
-.panel{border:1px solid GrayText;border-radius:12px;padding:1rem;min-width:0}
-#viewer{height:min(70vh,720px);min-height:380px;background:#101820;border-radius:8px;overflow:hidden}
-.controls{display:flex;gap:.65rem;flex-wrap:wrap;align-items:center;margin:.75rem 0}
-label{font-size:.9rem}button,select,input{font:inherit;padding:.5rem;border-radius:6px;border:1px solid GrayText;background:Canvas;color:CanvasText}
-button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid Highlight;outline-offset:2px}
-.status{min-height:1.5rem;color:GrayText}.scroll{max-height:320px;overflow:auto}table{width:100%;border-collapse:collapse;font-size:.85rem}td,th{text-align:left;padding:.4rem;border-bottom:1px solid GrayText}
-.sequence{display:flex;flex-wrap:wrap;gap:3px}.residue{font-family:monospace;padding:3px;border:1px solid GrayText;border-radius:4px;background:ButtonFace;color:ButtonText}
-small{color:GrayText}.notice{font-size:.85rem;color:GrayText}
-@media(max-width:850px){main{grid-template-columns:1fr}#viewer{height:55vh;min-height:340px}}
+:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color-scheme:dark;--bg:#07111f;--line:#263b55;--text:#e8f0fb;--muted:#9aacc2;--accent:#59d6c5}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 10% -10%,#173452 0,transparent 42%),var(--bg);color:var(--text);line-height:1.55}header{padding:1.5rem clamp(1rem,4vw,3rem);border-bottom:1px solid var(--line);background:linear-gradient(110deg,#10253b,#091727)}
+header h1{margin:0;font-size:clamp(1.5rem,3vw,2.25rem);letter-spacing:-.04em}header p{max-width:900px;color:var(--muted)}
+main{max-width:1600px;margin:auto;padding:1.25rem;display:grid;grid-template-columns:minmax(0,1.8fr) minmax(300px,1fr);gap:1rem}.panel{min-width:0;padding:1.15rem;border:1px solid var(--line);border-radius:16px;background:linear-gradient(150deg,#14243a,#0d1b2c);box-shadow:0 12px 32px #0003}
+#viewer{height:min(72vh,820px);min-height:390px;background:radial-gradient(ellipse at center,#172d42,#07111f);border:1px solid #2b415a;border-radius:13px;overflow:hidden}
+.controls{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin:.8rem 0}label{font-size:.88rem;color:#c8d7e9;font-weight:650}button,select,input,textarea{font:inherit;padding:.58rem .7rem;border-radius:9px;border:1px solid #344b67;background:#091727;color:var(--text)}button{cursor:pointer;font-weight:700;background:#1a2c43}button:hover{border-color:var(--accent);background:#223b58}button:disabled{opacity:.45;cursor:not-allowed}input[type=checkbox]{width:auto;accent-color:var(--accent)}input[type=file]{max-width:100%}textarea{width:100%;resize:vertical}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.status{min-height:1.6rem;padding:.6rem .75rem;border:1px solid #59d6c533;border-radius:10px;background:#59d6c50f;color:#a9eee3}
+.scroll{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;font-size:.85rem}td,th{text-align:left;padding:.55rem;border-bottom:1px solid var(--line);overflow-wrap:anywhere}th{color:#b9cce2;background:#172b43}
+.sequence{display:flex;flex-wrap:wrap;gap:4px}.residue{font-family:ui-monospace,monospace;font-size:.75rem;padding:.32rem .42rem;border:1px solid #344b67;border-radius:6px;background:#1a2c43;color:#dce8f6}small,.notice{color:var(--muted);font-size:.86rem}.panel h2,.panel h3{letter-spacing:-.015em}.panel h3{margin-top:1.4rem}
+@media(max-width:900px){main{grid-template-columns:1fr;padding:.8rem}#viewer{height:58vh;min-height:340px}.panel{padding:1rem}}@media(max-width:520px){header{padding:1.2rem 1rem}main{padding:.6rem}.controls{align-items:stretch}.controls>*{max-width:100%}#viewer{height:52vh;min-height:300px}.panel{border-radius:13px;padding:.85rem}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<header><h1>Kinetics 3D Structure Viewer</h1><p class="notice">Local PDB/mmCIF viewing and exploratory analysis. Coordinates are not modified. Experimental/predicted status must come from verified source metadata.</p></header>
+<header><p class="notice"><a href="/" style="color:#9af2e5;text-decoration:none">← Kinetics Workbench</a> · STRUCTURAL BIOINFORMATICS</p><h1>Kinetics 3D Structure Viewer</h1><p class="notice">Local PDB/mmCIF viewing and exploratory analysis. Coordinates are not modified. Experimental/predicted status must come from verified source metadata.</p></header>
 <main>
 <section class="panel">
 <div class="controls">

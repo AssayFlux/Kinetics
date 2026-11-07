@@ -34,7 +34,7 @@ python -m pip install -e ".[gallery]"
 python scripts/build_pixel_animation.py
 ~~~
 
-The generator writes Assets/Future/kinetics-science-quest.gif as a multi-frame GIF89a file and verifies its dimensions, frame count and looping metadata. Keep the path case-sensitive.
+The currently tracked legacy GIF fails structural validation and is intentionally not embedded by the README. The generator writes Assets/Future/kinetics-science-quest.gif as a 32-frame, 640 × 240 GIF89a file and verifies its dimensions, frame count and infinite-loop metadata. Run the generator, validate the output, then commit the replacement binary. Keep the path case-sensitive.
 
 ## Validation before commit
 

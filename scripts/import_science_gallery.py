@@ -497,10 +497,10 @@ def update_readme_gallery():
     for offset in range(0, len(cells), 4):
         rows.append("<tr>" + "".join(cells[offset:offset + 4]) + "</tr>")
     rows.append("</table>")
-    gallery = "\\n".join(rows)
+    gallery = chr(10).join(rows)
     left = text.index(start_marker) + len(start_marker)
     right = text.index(end_marker, left)
-    updated = text[:left] + "\\n" + gallery + "\\n" + text[right:]
+    updated = text[:left] + chr(10) + gallery + chr(10) + text[right:]
     readme_path.write_text(updated, encoding="utf-8")
     print("README gallery updated with all 100 local PNG images.", flush=True)
 

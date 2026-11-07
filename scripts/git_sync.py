@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import base64
 import hashlib
+import io
 import json
 import os
 import subprocess
@@ -73,6 +74,24 @@ def create_release_batch(manifest: dict) -> int:
             with tarfile.open(archive_path, "w:gz") as archive:
                 for _, record, path in group:
                     archive.add(path, arcname=record["path"], recursive=False)
+                attribution = [{
+                    "item_id": item_id,
+                    "title": record.get("title"),
+                    "source": record.get("source"),
+                    "source_url": record.get("source_url"),
+                    "license": record.get("license"),
+                    "sha256": record.get("sha256"),
+                    "bytes": record.get("bytes"),
+                    "path": record.get("path"),
+                    "domain": record.get("domain"),
+                    "retrieved_at": record.get("retrieved_at"),
+                    "citation_metadata": record.get("citation_metadata", {}),
+                } for item_id, record, _ in group]
+                payload = json.dumps(attribution, indent=2, sort_keys=True).encode("utf-8")
+                info = tarfile.TarInfo("ATTRIBUTION.json")
+                info.size = len(payload)
+                info.mode = 0o644
+                archive.addfile(info, io.BytesIO(payload))
             if archive_path.stat().st_size > 100 * 1024 * 1024:
                 raise RuntimeError("Release archive exceeds 100 MiB safety ceiling")
             run(["gh", "release", "create", tag, str(archive_path),

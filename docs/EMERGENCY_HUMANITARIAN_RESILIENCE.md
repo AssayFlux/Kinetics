@@ -1,5 +1,8 @@
 # Kinetics Emergency and Humanitarian Resilience
 
+> **Platform context:** This document describes a focused component of Kinetics. The complete cross-disciplinary scope is catalogued in `docs/SCIENCE_DOMAIN_CATALOGUE_100.md`; catalogue inclusion is not implementation or clinical-validation evidence.
+
+
 > **Mission authority:** This specification extends [KINETICS_MISSION.md](../KINETICS_MISSION.md). It defines a design and validation target; it does not claim that emergency functionality is implemented, clinically validated, or guaranteed to work flawlessly.
 
 ## 1. Purpose

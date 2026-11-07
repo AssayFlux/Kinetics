@@ -10,6 +10,7 @@ def runtime_report():
     import Bio
     import numpy
     from Bio import SeqIO
+    from Bio.PDB import PDBParser
 
     try:
         import scipy
@@ -19,6 +20,17 @@ def runtime_report():
     fasta = StringIO(">kinetics-r1-smoke\nACGTACGT\n")
     record = next(SeqIO.parse(fasta, "fasta"))
     assert str(record.seq) == "ACGTACGT"
+
+    pdb = """\
+ATOM      1  N   GLY A   1      11.104  13.207   9.123  1.00 20.00           N
+ATOM      2  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C
+ATOM      3  C   GLY A   1      13.200  13.000  10.000  1.00 20.00           C
+TER
+END
+"""
+    structure = PDBParser(QUIET=True).get_structure("kinetics-r1", StringIO(pdb))
+    residues = list(structure.get_residues())
+    assert len(residues) == 1 and residues[0].resname == "GLY"
 
     vector = numpy.asarray([3.0, 4.0], dtype=numpy.float64)
     if scipy is None:
@@ -39,5 +51,6 @@ def runtime_report():
         "scipy": scipy_version,
         "scipy_smoke": scipy_smoke,
         "seqio_fasta_smoke": str(record.seq),
+        "bio_pdb_residue_smoke": residues[0].resname,
         "numpy_linalg_norm": norm,
     }

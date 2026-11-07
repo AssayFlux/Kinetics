@@ -73,7 +73,7 @@ jobs:
 
       - name: Validate workflow limits
         env:
-          CYCLES: ${{ inputs.cycles || '2' }}
+          CYCLES: ${{ inputs.cycles || '3' }}
           BATCH_SIZE: ${{ inputs.batch_size || '30' }}
           MAX_BATCH_MB: ${{ inputs.max_batch_mb || '240' }}
         run: |
@@ -88,7 +88,7 @@ jobs:
 
       - name: Fetch, tokenize and analyze bounded batches
         env:
-          CYCLES: ${{ inputs.cycles || '2' }}
+          CYCLES: ${{ inputs.cycles || '3' }}
           BATCH_SIZE: ${{ inputs.batch_size || '30' }}
           MAX_BATCH_MB: ${{ inputs.max_batch_mb || '240' }}
         run: |
@@ -103,18 +103,18 @@ jobs:
             python scripts/fetch_corpus.py \
               --batch-size "$IA_BATCH" \
               --max-batch-mb "$IA_MB" \
-              --max-domains 8
+              --max-domains 160
             python scripts/fetch_research_data.py \
               --batch-size "$ZENODO_BATCH" \
               --max-batch-mb "$ZENODO_MB" \
               --max-file-mb "$ZENODO_MB" \
-              --max-domains 8
+              --max-domains 160
             python scripts/fetch_specialist_sources.py \
               --batch-size "$SPECIALIST_BATCH" \
               --max-batch-mb "$SPECIALIST_MB" \
               --max-file-mb "$SPECIALIST_MB" \
-              --max-domains 8 \
-              --per-source-limit 3
+              --max-domains 160 \
+              --per-source-limit 1
             python scripts/tokenize_corpus.py --max-documents 1000
             python scripts/analyze_corpus.py
           done
@@ -132,5 +132,6 @@ jobs:
           name: knowledge-ingestion-diagnostics
           path: |
             data/corpus-manifests/
+            data/kinetics.sqlite3
           if-no-files-found: ignore
-          retention-days: 14
+          retention-days: 30

@@ -193,20 +193,21 @@ def main() -> None:
     readme = ROOT / "README.md"
     text = readme.read_text(encoding="utf-8")
     marker = "<!-- KINETICS_ANIMATION -->"
+    end_marker = "<!-- /KINETICS_ANIMATION -->"
     embed = (
-        '<div align="center">\n'
+        '<div align="center">\\n'
         '<img src="Assets/Future/kinetics-science-quest.gif" width="960" '
-        'alt="Original Kinetics science-in-motion animation">\n'
-        '</div>\n'
+        'alt="Original Kinetics science-in-motion animation">\\n'
+        '</div>\\n'
     )
-    if marker not in text:
-        raise RuntimeError("README animation marker is missing")
-    before, after = text.split(marker, 1)
-    after = after.replace(
-        '<img src="Assets/Future/kinetics-science-quest.gif" width="960" alt="Original Kinetics science-in-motion animation">\n',
-        "",
+    if marker not in text or end_marker not in text:
+        raise RuntimeError("README animation markers are missing")
+    before, remainder = text.split(marker, 1)
+    _, after = remainder.split(end_marker, 1)
+    readme.write_text(
+        before + marker + "\\n" + embed + end_marker + after,
+        encoding="utf-8",
     )
-    readme.write_text(before + marker + "\n" + embed + after, encoding="utf-8")
 
     with Image.open(OUTPUT) as result:
         if result.format != "GIF" or result.n_frames != FRAME_COUNT:

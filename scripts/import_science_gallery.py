@@ -17,7 +17,7 @@ from pathlib import Path
 try:
     from PIL import Image
 except ImportError:
-    raise SystemExit("Install gallery support: python -m pip install -e '.[gallery]'")
+    raise SystemExit("Install Pillow first: python -m pip install Pillow")
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"Assets"/"Future"/"PNG"

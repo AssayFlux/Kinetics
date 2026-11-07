@@ -46,6 +46,7 @@ knowledge = ["beautifulsoup4>=4.13,<5", "lxml>=5.4,<6", "PyMuPDF>=1.26,<2", "Ebo
 kinetics-curate-catpred = "kinetics_core.catpred:main"
 kinetics-research = "kinetics_core.cli:main"
 kinetics-workbench = "kinetics_core.workbench.cli:main"
+kinetics-knowledge = "kinetics_core.knowledge.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

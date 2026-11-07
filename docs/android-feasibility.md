@@ -82,8 +82,8 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 | Biopython | Custom Biopython 1.88 wheel built and packaged; Bio.PDB, SeqIO and PairwiseAligner probes added; runtime not executed | Run FASTA and PDB parser tests on emulator and physical arm64 device; license file audit |
 | NumPy | NumPy 1.26.2 packaged; all inspected APK/AAB native ELF PT_LOAD segments pass 16 KB alignment | Runtime import/numerical smoke test on emulator and physical arm64 device; assess wheel age/maintenance |
 | SciPy | Gradle resolution failed: no compatible distribution on the configured Chaquopy indexes for CPython 3.11 / arm64-v8a | Evaluate a custom Android wheel or a documented on-device alternative; otherwise define an explicit on-device vs remote-compute capability boundary and obtain owner approval |
-| Rust app FFI | Minimal Rust static library and Kotlin JNI bridge added; CI cross-compile/build and on-device call pending | Successful arm64 build and runtime result `sumSquares(3,4)=25`; cancellation/timeout test |
-| C++17 JNI | Minimal C++17 JNI library and Kotlin bridge added; CI build and on-device invocation pending | Successful NDK build and runtime numeric correctness test; sanitizer-capable host tests |
+| Rust app FFI | Rust static library cross-compiled successfully and linked into packaged arm64 JNI library in CI; exported Rust symbol verified in artifact; runtime call pending | Run `sumSquares(3,4)=25` on emulator and physical device; cancellation/timeout test |
+| C++17 JNI | CMake/NDK built and packaged `libkinetics_native.so`; both JNI entry points exported and 16 KB aligned; runtime invocation pending | Run numeric correctness test on emulator and physical device; sanitizer-capable host tests |
 | One real scientific engine | Biopython `Bio.Align.PairwiseAligner` added as a real sequence-alignment algorithm test (global alignment score 5.0 for ACGT vs ACCT); Android runtime not executed | Run the fixed alignment vector on arm64 Android; record algorithm/version/license and limits; decide whether a separate domain engine is needed |
 | RDKit / alternative | Not tested | arm64 build, dependency/license/size and smoke test |
 | Offline Mol* / 3Dmol.js | Not implemented/tested | Bundled viewer renders known structure without network |
@@ -129,9 +129,24 @@ For every run record: date; commit; host OS; JDK/Gradle/AGP/Kotlin/SDK/NDK versi
 
 ## Outstanding R1 exit blockers
 
-The R1 exit criteria in `docs/phase-r1-plan.md` are not met. No arm64 emulator or physical device run is available in this session. SciPy remains unresolved. Rust FFI and C++17 JNI prototypes have been added but their latest CI build and device runtime are pending. A real scientific engine, RDKit/alternative, offline molecular viewer, SAF/background/cancellation, cold-start and memory measurements remain unimplemented or untested. Biopython's file-level license audit and production redistribution approval are also outstanding. Do not start R2 or declare an R1 go/no-go until these outcomes and the owner review are recorded.
+The R1 exit criteria in `docs/phase-r1-plan.md` are not met. No arm64 emulator or physical device run is available in this session. SciPy remains unresolved. Rust FFI and C++17 JNI prototypes have now cross-compiled, linked and packaged successfully in CI; static symbol and 16 KB alignment checks passed. Device runtime remains pending. A real scientific engine, RDKit/alternative, offline molecular viewer, SAF/background/cancellation, cold-start and memory measurements remain unimplemented or untested. Biopython's file-level license audit and production redistribution approval are also outstanding. Do not start R2 or declare an R1 go/no-go until these outcomes and the owner review are recorded.
 
 
 ## Native-language prototype additions
 
 A minimal Rust static library and C++17 JNI bridge now exist under `android/native-rust/` and `android/app/src/main/cpp/`. The Kotlin `NativeProbe` exposes two test functions which should both return 25 for inputs 3 and 4. CI cross-compiles Rust for `aarch64-linux-android`, then Gradle/CMake links the Rust static library into an arm64 JNI shared object. This is an FFI feasibility probe only: it is not a scientific engine, and no on-device invocation has yet been observed. The resulting shared library must also pass the 16 KB ELF check in CI.
+
+
+## CI run 1471 — Rust/C++ integration and repeatable ELF gate
+
+- Workflow: https://github.com/AssayFlux/Kinetics/actions/runs/42384355517
+- Commit: `2683a4f2212f3337593a1ac0ff0d59cc4105f986`
+- Both Python foundation and Android arm64 jobs completed successfully.
+- Rust target `aarch64-linux-android` cross-compilation passed.
+- Gradle/CMake compiled and linked the C++17 JNI shared library with the Rust static library.
+- Android probe exports verified in the packaged `libkinetics_native.so`: `Java_org_assayflux_kinetics_NativeProbe_rustSumSquares`, `Java_org_assayflux_kinetics_NativeProbe_cppSumSquares`, and `kinetics_rust_sum_squares`.
+- APK: 65,405,092 bytes; SHA-256 `fca08d6ba9b0b0cecb63f93d9f6c0cdeb7d115253cb80a227fd009ea57cabf09`.
+- AAB: 37,577,400 bytes; SHA-256 `1c27e74a9501e32c2381ca387f4de88c2a2373d7da38efd28ca59ed563db1509`.
+- Workflow artifact archive: 75,471,020 bytes; digest `sha256:38f0f76879623d2a243c69dbce0208d9fb2fe646c4370ca2936adef6786e6143`.
+- Both APK and AAB contain 23 native ELF libraries. Independent inspection found all are ELF64 little-endian AArch64, and every PT_LOAD segment in every library has at least 16 KB alignment. The CI checker passed for both artifacts, as did `zipalign -c -P 16 -v 4`.
+- This proves cross-compilation, linking, packaging, exported symbol presence and static ELF alignment. It does not prove JNI calls execute correctly on Android; no emulator or physical-device runtime has been run.

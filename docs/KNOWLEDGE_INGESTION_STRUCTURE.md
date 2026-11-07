@@ -1,6 +1,6 @@
 # Kinetics knowledge-ingestion subsystem structure
 
-This document describes only the knowledge-ingestion subsystem. It extends the canonical 100-domain register in
+This document describes only the knowledge-ingestion subsystem. It extends the foundational 100-domain register plus 60 extension domains (160 total) in
 `SCIENCE_DOMAIN_CATALOGUE_100.md` and the existing SQLite/data-platform
 architecture. It does not create a second domain catalogue or replace the
 existing scientific data model.
@@ -12,7 +12,8 @@ Kinetics/
 │       └── bulk_downloader.yml
 ├── database/
 │   ├── domains/
-│   │   └── extended_domains.json  # additional cross-disciplinary scopes
+│   │   ├── extended_domains.json  # 60 additional scopes; 160 total
+│   │   └── domain_synonyms.json   # source-search aliases per domain
 │   └── sources/
 │       └── knowledge_sources.json
 ├── data/
@@ -48,9 +49,9 @@ Kinetics/
 
 ## Data flow
 
-1. Discover records from source adapters, rotating through the existing domain catalogue.
+1. Merge and validate the 100 foundational plus 60 extension domains; expand each domain through its synonym map; rotate through all 160 scopes.
 2. Require an explicit redistribution-compatible license before downloading.
-3. Stream each object to a temporary file, enforce per-file and per-batch byte caps,
+3. Stream each object to a resumable `.part` file (HTTP Range where supported), enforce per-file and per-batch byte caps,
    calculate SHA-256, and atomically move it into content storage.
 4. Save resumable source IDs and provenance in `metadata_index.json`.
 5. Extract supported formats and create bounded overlapping text chunks.

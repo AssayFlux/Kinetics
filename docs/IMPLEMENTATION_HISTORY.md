@@ -4,7 +4,7 @@
 
 # Implementation status
 
-> 100-domain scope register: docs/SCIENCE_DOMAIN_CATALOGUE_100.md. This catalogue defines intended breadth; it is not evidence that every domain is implemented or clinically validated.
+> 160-domain acquisition scope register: docs/SCIENCE_DOMAIN_CATALOGUE_100.md. This catalogue defines intended breadth; it is not evidence that every domain is implemented or clinically validated.
 > **Mission authority:** This document is governed by [KINETICS_MISSION.md](../KINETICS_MISSION.md). Kinetics is a cross-disciplinary biomedical and precision-health research platform—not only an enzyme-kinetics project. All domains, datasets, models and applications must align with the mission, preserve provenance and clinical safety, and follow the foundation-first build order. Small Android devices are a first-class performance target.
 
 This file distinguishes repository contents from execution, verification and scientific evidence. The expanded Kinetics platform is a long-term plan; it is not implemented merely because it appears in the roadmap.
@@ -193,7 +193,7 @@ This document contributes to Kinetics' wider mission: connect scientific knowled
 ## Knowledge corpus ingestion foundation
 
 - Added a resumable, bounded acquisition pipeline for explicitly redistributable Internet Archive and Europe PMC/PMC Open Access material.
-- The fetcher reads the canonical 100-domain catalogue and extends it with 45 cross-disciplinary computing, engineering, mathematics, physics and natural-science scopes.
+- The fetcher reads the canonical 160-domain catalogue and extends it with 45 cross-disciplinary computing, engineering, mathematics, physics and natural-science scopes.
 - Added a per-item license gate, source/citation provenance, content-addressed storage, SHA-256 verification, source pagination, retry/backoff and per-file/per-batch byte limits.
 - Added PDF/EPUB/XML/NXML/HTML/TXT extraction, deterministic tokenization, SQLite FTS5 chunk indexing, exploratory analysis, source-grounded retrieval scripts, and an installable read-only `KnowledgeStore` API/CLI.
 - Added scheduled/manual GitHub Actions automation. The default durable export is a GitHub Release asset batch with bundled attribution metadata; Git LFS remains an optional alternative.

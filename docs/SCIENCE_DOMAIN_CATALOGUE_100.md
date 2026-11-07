@@ -1,6 +1,6 @@
-# Kinetics 100-domain scientific and healthcare catalogue
+# Kinetics scientific and healthcare catalogue — 160 acquisition domains
 
-**Purpose:** define the intended breadth of Kinetics across biological science, medical science, healthcare, treatment research, biomedical engineering and future human resilience.
+**Purpose:** define the foundational 100 biomedical/healthcare domains and link them to 60 cross-disciplinary extension domains, for a unified 160-domain acquisition scope spanning biological science, medicine, computing, engineering, chemistry, physics, Earth systems and human resilience.
 
 **Status rule:** inclusion means a domain is in scope for integration planning. It does not mean a complete dataset, validated model, clinical workflow or production capability already exists.
 
@@ -155,6 +155,8 @@
 | 98 | Digital health | Remote monitoring, telehealth and connected-care technologies. |
 | 99 | Artificial intelligence in medicine | Validated AI methods for medical research and decision support. |
 | 100 | Humanitarian and disaster health | Health resilience in disasters, conflict, displacement and infrastructure failure. |
+
+The 100 numbered domains below remain the foundational biomedical and healthcare taxonomy. The additional 60 domains are maintained in `database/domains/extended_domains.json`; the downloader merges both sources, deduplicates them, and uses `database/domains/domain_synonyms.json` to broaden source discovery. Total: **160 unique acquisition domains**.
 
 ## Integration requirements
 

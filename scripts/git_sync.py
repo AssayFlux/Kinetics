@@ -54,8 +54,8 @@ def create_release_batch(manifest: dict) -> int:
     current_bytes = 0
     for item in pending:
         size = item[2].stat().st_size
-        if size > 20 * 1024 * 1024:
-            raise RuntimeError(f"Object exceeds 20 MiB file safety limit: {item[2]}")
+        if size > 80 * 1024 * 1024:
+            raise RuntimeError(f"Object exceeds 80 MiB file safety limit: {item[2]}")
         if current and current_bytes + size > 80 * 1024 * 1024:
             groups.append(current)
             current, current_bytes = [], 0

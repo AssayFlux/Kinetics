@@ -65,9 +65,9 @@ def main() -> int:
                     source = archive.extractfile(member)
                     if source is None:
                         raise RuntimeError(f"Cannot read archive member: {relative}")
-                    payload = source.read(20 * 1024 * 1024 + 1)
-                    if len(payload) > 20 * 1024 * 1024:
-                        raise RuntimeError(f"Archive member exceeds 20 MiB: {relative}")
+                    payload = source.read(200 * 1024 * 1024 + 1)
+                    if len(payload) > 200 * 1024 * 1024:
+                        raise RuntimeError(f"Archive member exceeds 200 MiB: {relative}")
                     digest = hashlib.sha256(payload).hexdigest()
                     if digest != digest_expected:
                         raise RuntimeError(f"SHA-256 mismatch for restored object: {relative}")

@@ -1,6 +1,6 @@
 # Kinetics — Vision
 
-> 100-domain scope register: docs/SCIENCE_DOMAIN_CATALOGUE_100.md. This catalogue defines intended breadth; it is not evidence that every domain is implemented or clinically validated.
+> 160-domain acquisition scope register: docs/SCIENCE_DOMAIN_CATALOGUE_100.md. This catalogue defines intended breadth; it is not evidence that every domain is implemented or clinically validated.
 ## North star
 
 The authoritative, expanded project mission is maintained in [KINETICS_MISSION.md](KINETICS_MISSION.md). It governs the long-horizon goal: a globally useful, cross-disciplinary biomedical and precision-health research infrastructure that connects scientific evidence to better prevention and treatment research, without claiming clinical validity before it is demonstrated.

@@ -87,7 +87,7 @@ jobs:
             python scripts/fetch_corpus.py \
               --batch-size "$BATCH_SIZE" \
               --max-batch-mb "$MAX_BATCH_MB" \
-              --max-domains 2
+              --max-domains 8
             python scripts/tokenize_corpus.py --max-documents 50
             python scripts/analyze_corpus.py
           done

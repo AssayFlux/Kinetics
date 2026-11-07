@@ -1,6 +1,6 @@
 # Kinetics — System architecture
 
-> 100-domain scope register: docs/SCIENCE_DOMAIN_CATALOGUE_100.md. This catalogue defines intended breadth; it is not evidence that every domain is implemented or clinically validated.
+> 160-domain acquisition scope register: docs/SCIENCE_DOMAIN_CATALOGUE_100.md. This catalogue defines intended breadth; it is not evidence that every domain is implemented or clinically validated.
 > **Mission authority:** This architecture is governed by the [Kinetics foundational mission](KINETICS_MISSION.md): a cross-disciplinary biomedical and precision-health research platform, built foundation-first with privacy, evidence, clinical safety and low-memory Android performance designed in.
 
 ## Objective

@@ -55,8 +55,13 @@ jobs:
           gradle-version: "8.13"
       - name: Install Android SDK and NDK
         run: |
-          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358"
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358" "cmake;3.22.1"
           yes | sdkmanager --licenses
+      - name: Build Rust arm64 static library
+        run: |
+          rustup target add aarch64-linux-android
+          export CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER="$ANDROID_HOME/ndk/28.2.13676358/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang"
+          cargo build --manifest-path android/native-rust/Cargo.toml --target aarch64-linux-android --release
       - name: Install wheel-build system tools
         run: sudo apt-get update && sudo apt-get install -y patch patchelf
       - name: Fetch pinned Chaquopy wheel builder and Python 3.11 target

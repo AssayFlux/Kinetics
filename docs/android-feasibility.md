@@ -1,6 +1,6 @@
 # Android feasibility — R1 in progress
 
-**Status:** IN PROGRESS — first Android CI build failed at the host-Python prerequisite; Python provisioning correction committed; subsequent run outcome must be checked against live Actions evidence  
+**Status:** IN PROGRESS — Python provisioning correction succeeded; Android arm64 build now reaches Chaquopy dependency resolution but fails because no compatible Biopython distribution is available from the configured indexes  
 **Last updated:** 2026-11-07  
 **Phase plan:** docs/phase-r1-plan.md  
 **Owner gate:** R1 go/no-go review required before R2
@@ -9,7 +9,7 @@
 
 An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11 with Biopython, NumPy and SciPy as an R1 experiment. These are prototype dependencies only, not a production architecture or dependency approval.
 
-The first GitHub Actions Android build (run 1381, commit `fe63ecf56538d4e1d494c44a51dfb9b5654b199a`) reached Chaquopy's Python-requirements task and failed because the runner did not have a discoverable Python 3.11 executable. The Python/registry/tests CI job passed. The workflow now explicitly provisions Python 3.11 before Gradle; commit `6705fe8dc27b90e3dea8482b21d89c7fe321afbd`. A later workflow run was started after this correction, but its terminal result is not established by this document revision. Verify the live Actions run and record its job/step evidence before drawing a build conclusion.
+The first GitHub Actions Android build (run 1381, commit `fe63ecf56538d4e1d494c44a51dfb9b5654b199a`) reached Chaquopy's Python-requirements task and failed because the runner did not have a discoverable Python 3.11 executable. The Python/registry/tests CI job passed. The workflow now explicitly provisions Python 3.11 before Gradle; commit `6705fe8dc27b90e3dea8482b21d89c7fe321afbd`. Workflow run 1384 (commit `3bd4e152faf4007e44cd3fc0de63e5a26ecf065e`) confirms that Python 3.11 setup and Android SDK/NDK provisioning now succeed. The Gradle build then fails at `:app:installDebugPythonRequirements`: pip reports no matching distribution for `biopython` from the configured PyPI and Chaquopy indexes. APK alignment, size reporting and artifact upload are skipped. This is a dependency-availability blocker, not an Android compilation or runtime result.
 
 No APK/AAB, app runtime, emulator or physical-device result is yet accepted as validated. No embedded package import, Rust app call, C++ JNI, scientific engine, RDKit, offline viewer, 16 KB runtime, startup, memory or device result is claimed.
 
@@ -45,9 +45,9 @@ Sources:
 
 | Area | Current status | Required next evidence |
 |---|---|---|
-| Minimal Compose app / Gradle build | Android project and CI job present; first build blocked finding host Python 3.11; workflow fix committed | Successful build log, APK/AAB, toolchain versions |
+| Minimal Compose app / Gradle build | Workflow run 1384 provisions Python 3.11 and SDK/NDK successfully; Gradle stops at Chaquopy's Biopython requirement resolution before APK compilation | Resolve a supported Biopython packaging strategy or select a justified alternative; then successful APK/AAB build and toolchain record |
 | Embedded Python runtime | Chaquopy probe configured; not executed | arm64 build/import/startup/RSS/package-size logs |
-| Biopython | Declared in R1 probe; not tested on Android | Android package resolution and import/test vectors |
+| Biopython | Dependency resolution failed in run 1384: no matching distribution found for `biopython` on configured indexes; no Android package installed | Determine Chaquopy-compatible distribution/build path or evaluate a justified alternative; verify license and arm64 import/test vectors |
 | NumPy / SciPy | Declared in R1 probe; not tested on Android | Native wheel ABI, import and numerical smoke tests |
 | Rust app FFI | Not implemented/tested | Android arm64 library and Kotlin call test |
 | C++17 JNI | Not implemented/tested | NDK build, JNI invocation and numeric correctness test |
@@ -69,8 +69,8 @@ D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low
 
 ## Preliminary assessment (not a go/no-go)
 
-- The Android project is build-configured. The first build did not reach compilation because the CI host Python prerequisite was missing.
-- Python 3.11 provisioning was committed as the corrective action. The next step is to verify the latest workflow's terminal status and inspect the Android job's build/artifact steps; do not infer success from the existence of the rerun.
+- The Android project is build-configured. The host-Python prerequisite is now resolved: run 1384 successfully installs Python 3.11 and Android SDK/NDK.
+- The next blocker is Chaquopy's inability to resolve a compatible Biopython distribution. The build fails before APK compilation; no APK/AAB artifact exists from this run.
 - No conclusion is yet possible about overall architecture feasibility, memory fit, APK/AAB size or real-device performance.
 - R1 remains in progress. R2 must not start until the full experiment matrix and owner go/no-go review are complete.
 

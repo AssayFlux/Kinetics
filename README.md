@@ -37,9 +37,9 @@ The canonical catalogue is maintained in docs/SCIENCE_DOMAIN_CATALOGUE_100.md. I
 
 <!-- KINETICS_GALLERY_START -->
 
-**Real scientific imagery — downloaded from Wikimedia Commons**
+**Real scientific imagery — downloaded from openly licensed scientific image sources**
 
-The gallery is populated with real photographs, microscopy, clinical imaging and scientific instrument images. The downloader accepts only public-domain, CC0, CC BY or CC BY-SA files, saves square 1024 × 1024 PNGs, and records the original source, creator and licence in Assets/Future/ATTRIBUTION.json.
+The gallery uses Openverse's multi-provider index first, with Wikimedia Commons as a fallback. It accepts only public-domain, CC0, CC BY or CC BY-SA images suitable for commercial reuse, saves square 1024 × 1024 PNGs, and records the original image URL, source page, creator, provider, licence and SHA-256 checksum in Assets/Future/ATTRIBUTION.json.
 
 Run the Termux downloader after cloning or updating the repository:
 

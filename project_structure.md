@@ -11,6 +11,8 @@ Kinetics/
 │   └── workflows/
 │       └── knowledge_ingestion.yml
 ├── database/
+│   ├── domains/
+│   │   └── extended_domains.json  # additional cross-disciplinary scopes
 │   └── sources/
 │       └── knowledge_sources.json
 ├── data/
@@ -35,6 +37,7 @@ Kinetics/
 ├── tests/
 │   └── test_knowledge_ingestion.py
 ├── requirements.txt               # existing requirements + pinned ingestion extras
+├── requirements-knowledge.txt     # lightweight pinned ingestion environment
 └── README.md
 ```
 

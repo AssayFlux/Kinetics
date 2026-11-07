@@ -33,7 +33,7 @@ DOMAIN_FILE = ROOT / "docs/SCIENCE_DOMAIN_CATALOGUE_100.md"
 DOMAIN_SYNONYMS_FILE = ROOT / "database/domains/domain_synonyms.json"
 SOURCE_REGISTRY_FILE = ROOT / "database/sources/knowledge_sources.json"
 USER_AGENT = "Kinetics-KnowledgeIngestion/1.0 (research; contact: repository-maintainer)"
-MAX_FILE_BYTES = 100 * 1024 * 1024
+MAX_FILE_BYTES = 80 * 1024 * 1024
 DEFAULT_BATCH_BYTES = 80 * 1024 * 1024
 ALLOWED_LICENSES = (
     "creativecommons.org/licenses/by/4.0",
@@ -422,8 +422,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--batch-size", type=int, default=30)
     parser.add_argument("--max-batch-mb", type=int, default=80)
-    parser.add_argument("--max-file-mb", type=int, default=100,
-                        help="Maximum size per downloaded source object (1-200 MiB)")
+    parser.add_argument("--max-file-mb", type=int, default=80,
+                        help="Maximum size per downloaded source object (1-80 MiB; compatible with release batching)")
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--objects", type=Path, default=DEFAULT_OBJECTS)
     parser.add_argument("--source", choices=("all", "ia", "europe-pmc"), default="all")
@@ -435,8 +435,8 @@ def main() -> int:
         parser.error("--batch-size must be between 1 and 50")
     if not 1 <= args.max_batch_mb <= 80:
         parser.error("--max-batch-mb must be between 1 and 80")
-    if not 1 <= args.max_file_mb <= 200:
-        parser.error("--max-file-mb must be between 1 and 200")
+    if not 1 <= args.max_file_mb <= 80:
+        parser.error("--max-file-mb must be between 1 and 80")
     global MAX_FILE_BYTES
     MAX_FILE_BYTES = args.max_file_mb * 1024 * 1024
     if not 1 <= args.max_domains <= 200:

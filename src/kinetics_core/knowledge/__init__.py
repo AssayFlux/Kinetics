@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import sqlite3
 from contextlib import closing
 from pathlib import Path
@@ -29,7 +30,7 @@ class KnowledgeStore:
         if not 1 <= limit <= 100:
             raise ValueError("limit must be between 1 and 100")
         sql = """SELECT f.item_id,f.title,f.domain,f.text,
-                        d.source,d.source_url,d.license,d.sha256,d.object_path,
+                        d.source,d.source_url,d.license,d.citation_metadata_json,d.sha256,d.object_path,
                         c.chunk_index,c.token_count,bm25(knowledge_fts) AS score
                  FROM knowledge_fts f
                  JOIN knowledge_documents d ON d.item_id=f.item_id
@@ -43,7 +44,10 @@ class KnowledgeStore:
         parameters.append(limit)
         try:
             with closing(self._connect()) as connection:
-                return [dict(row) for row in connection.execute(sql, parameters).fetchall()]
+                results = [dict(row) for row in connection.execute(sql, parameters).fetchall()]
+                for result in results:
+                    result["citation_metadata"] = json.loads(result.pop("citation_metadata_json") or "{}")
+                return results
         except sqlite3.OperationalError as exc:
             if "fts5" in str(exc).lower() or "no such table" in str(exc).lower():
                 raise RuntimeError("Knowledge index is not initialized; run scripts/tokenize_corpus.py") from exc
@@ -53,12 +57,16 @@ class KnowledgeStore:
         """Return document provenance without loading its binary payload."""
         with self._connect() as connection:
             row = connection.execute(
-                """SELECT item_id,title,source,source_url,license,domain,object_path,
+                """SELECT item_id,title,source,source_url,license,citation_metadata_json,domain,object_path,
                           sha256,byte_size,token_count,indexed_at,status
                    FROM knowledge_documents WHERE item_id=?""",
                 (item_id,),
             ).fetchone()
-            return dict(row) if row else None
+            if not row:
+                return None
+            record = dict(row)
+            record["citation_metadata"] = json.loads(record.pop("citation_metadata_json") or "{}")
+            return record
 
     def verify_document(self, item_id: str, *, root: str | Path | None = None) -> bool:
         """Verify a local content object against the database's recorded SHA-256."""

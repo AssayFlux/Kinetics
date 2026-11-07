@@ -270,3 +270,22 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Clarify the intended breadth of the gene catalogue before revising P2 or creating a gene inventory.
+
+
+## 2026-11-07 — Session 14: Owner approves both gene-scope dimensions
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Resolve D-005 scope direction for both comprehensive PGx and cross-domain gene coverage.
+
+### Done
+- Owner explicitly selected both: (1) a comprehensive, expandable PGx gene panel and (2) a broad cross-domain gene catalogue spanning genomics and relevant Kinetics domains.
+- Updated D-005 in DECISIONS.md and the gene strategy/P2 descriptions in ROADMAP.md.
+- Defined PGx as a specialised workstream within the wider catalogue, with distinct evidence, reference, caller/assay, interpretation and validation requirements.
+
+### Constraints and interpretation
+- The previous six-gene list is not the agreed scope limit.
+- No fixed gene count or exhaustive coverage claim is implied. Inventory and implementation waves must be evidence-led.
+- Listing a gene does not imply that analysis, caller, assay or interpretation is implemented or validated.
+- PGx remains research-only and gated by qualified advisers, P0, jurisdiction-specific legal/ethics/regulatory requirements and owner approval. No patient-data or clinical work is authorized.
+
+### Next step
+- Develop the gene-catalogue taxonomy and prioritisation framework as a planned work item after the current R1 feasibility gate; do not interrupt R1 or start R2 before its go/no-go approval.

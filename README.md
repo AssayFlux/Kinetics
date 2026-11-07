@@ -16,6 +16,18 @@
 
 ---
 
+## Interactive 3D Science Universe
+
+The local Research Workbench includes an immersive, browser-based scientific environment with real-time 3D molecular forms, a DNA double helix, protein-like structures, cellular models and a curated 4:3 scientific image gallery.
+
+Start the workbench with:
+
+```bash
+kinetics-workbench
+```
+
+Then open `/science-universe` in the local workbench (typically `http://127.0.0.1:8000/science-universe`). The original brand logo is retained. The 3D scene uses Three.js from jsDelivr; an internet connection is required for the 3D engine and remote gallery photography. Reduced-motion preferences are respected, and the scientific gallery remains available if WebGL cannot initialize.
+
 ## The mission
 
 Human knowledge about life and health is fragmented across genomes, proteins, cells, organs, diseases, medicines, imaging, clinical research, population evidence and engineering systems. Kinetics is being built to connect those layers through reproducible data, interoperable scientific workflows, transparent evidence and responsible analysis.

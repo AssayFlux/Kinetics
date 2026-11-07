@@ -30,6 +30,7 @@ Kinetics/
 │   ├── tokenize_corpus.py          # extraction, tokenization, FTS indexing
 │   ├── analyze_corpus.py           # deterministic summaries and entities
 │   ├── query_knowledge.py          # local evidence retrieval
+│   ├── restore_corpus_releases.py  # verified release restore
 │   └── git_sync.py                # manifest/LFS synchronization
 ├── tests/
 │   └── test_knowledge_ingestion.py

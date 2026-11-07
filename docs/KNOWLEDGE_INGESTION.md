@@ -80,7 +80,7 @@ The index is added to the existing `data/kinetics.sqlite3` SQLite database. Othe
 2. In **Settings → Actions → General → Workflow permissions**, select **Read and write permissions** so the workflow can publish Release assets and push the compact manifest.
 3. No third-party API token is required for the configured public APIs. The workflow uses the short-lived `GITHUB_TOKEN` provided by Actions.
 4. Open **Actions → Kinetics knowledge corpus ingestion → Run workflow**.
-5. Choose 1–3 cycles, up to 30 records per cycle and at most 1,536 MiB per cycle (up to 720 MiB across three cycles). A push to the main branch that changes the ingestion adapters/configuration starts an initial bounded run; the scheduled run executes two bounded cycles per week.
+5. Choose 1–3 cycles, up to 30 records per cycle and at most 1,536 MiB per cycle (up to 4.5 GiB across three cycles). A push to the main branch that changes the ingestion adapters/configuration starts an initial bounded run; the scheduled run executes two bounded cycles per week.
 6. The workflow publishes each bounded binary batch as a GitHub Release asset and commits compact manifests. Release assets are separate from Git history and each archive is kept below 80 MiB. Release assets on this public repository are public; only explicitly redistributable documents may be included. Git LFS remains an opt-in alternative because it has separate storage and bandwidth quotas.
 
 Git pushes use an HTTP authorization header scoped to the single git command; the token is never written to the remote URL or manifest. Commit messages include `[skip ci]` to avoid recursively triggering the general CI workflow. The workflow uses a concurrency group and a non-forced push.

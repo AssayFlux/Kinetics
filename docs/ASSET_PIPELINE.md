@@ -13,7 +13,7 @@ python -m pip install -e ".[gallery]"
 python scripts/import_science_gallery.py
 ~~~
 
-The importer queries Wikimedia Commons for the 100 catalogue domains, rejects non-images, SVGs, small images and restrictive licenses, accepts only CC0/public domain/CC BY/CC BY-SA, converts accepted images to local PNGs, and records creator, source page, license, license URL and dimensions in Assets/Future/ATTRIBUTION.json. Missing categories can be retried.
+The importer queries Wikimedia Commons for the 100 catalogue domains, rejects non-images, SVGs, small images and restrictive licenses, accepts only CC0/public domain/CC BY/CC BY-SA, converts accepted images to local PNGs, and records creator, source page, license, license URL and dimensions in Assets/Future/ATTRIBUTION.json. Missing categories can be retried. Once all 100 images and attribution records exist, the importer automatically inserts the local PNGs into the README between guarded gallery markers; before then, the README contains no broken image paths.
 
 Examples:
 

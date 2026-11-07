@@ -154,7 +154,9 @@ def stream_download(session: requests.Session, url: str, destination: Path,
 def local_record_is_valid(record: dict[str, Any]) -> bool:
     try:
         path = (ROOT / record["path"]).resolve()
-        return ROOT in path.parents and path.is_file() and path.stat().st_size == int(record["bytes"])
+        return (ROOT in path.parents and path.is_file()
+                and path.stat().st_size == int(record["bytes"])
+                and hashlib.sha256(path.read_bytes()).hexdigest() == record["sha256"])
     except (KeyError, OSError, TypeError, ValueError):
         return False
 
@@ -215,7 +217,7 @@ def fetch_internet_archive(session: requests.Session, domain: str, manifest: dic
         prior = manifest["items"].get(identifier, {})
         if prior.get("status") == "skipped_license":
             continue
-        if prior.get("status") == "downloaded" and local_record_is_valid(prior):
+        if prior.get("status") == "downloaded" and (prior.get("release_uploaded") or local_record_is_valid(prior)):
             continue
         meta_response = session.get(f"https://archive.org/metadata/{quote(identifier, safe='')}",
                                     timeout=(15, 45))

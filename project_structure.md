@@ -27,6 +27,11 @@ Kinetics/
 │   └── kinetics.sqlite3           # existing local database; gitignored
 ├── docs/
 │   └── KNOWLEDGE_INGESTION.md
+├── src/
+│   └── kinetics_core/
+│       └── knowledge/
+│           ├── __init__.py          # reusable KnowledgeStore retrieval API
+│           └── cli.py               # installed knowledge search command
 ├── scripts/
 │   ├── fetch_corpus.py             # discovery, licensing, download, resume
 │   ├── tokenize_corpus.py          # extraction, tokenization, FTS indexing

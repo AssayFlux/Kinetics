@@ -36,3 +36,10 @@ This is a fixed baseline comparison, not an exhaustive hyperparameter search.
 Do not tune candidates against the final test set. Repeat independently for Km
 and kcat; they are distinct targets and datasets. Row-random CV is marked
 diagnostic-only and cannot support protein/chemical cold-start claims.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

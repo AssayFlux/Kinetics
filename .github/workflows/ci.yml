@@ -62,6 +62,16 @@ jobs:
       - name: Fetch pinned Chaquopy wheel builder and Python 3.11 target
         run: |
           git clone --depth 1 --branch 17.2.0 https://github.com/chaquo/chaquopy.git "$RUNNER_TEMP/chaquopy"
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("$RUNNER_TEMP/chaquopy/server/pypi/build-wheel.py")
+          source = path.read_text()
+          old = 'run(f"ln -s {filename} {reqs_lib_dir}/{link_filename}")'
+          new = 'run(f"ln -sf {filename} {reqs_lib_dir}/{link_filename}")'
+          if old not in source:
+              raise SystemExit("Expected Chaquopy SONAME alias line was not found")
+          path.write_text(source.replace(old, new, 1))
+          PY
           cd "$RUNNER_TEMP/chaquopy"
           target/download-target.sh maven/com/chaquo/python/target/3.11.17-0
       - name: Prepare Chaquopy wheel builder

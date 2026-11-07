@@ -23,7 +23,7 @@ References:
 - https://chaquo.com/chaquopy/license/
 - https://github.com/chaquo/chaquopy/blob/master/LICENSE.txt
 
-No R1 candidate is approved for bundling by this entry. GPL/AGPL and other restrictive terms remain subject to explicit owner review. The project's own license remains unselected.
+No R1 candidate is approved for bundling by this entry. GPL/AGPL and other restrictive terms remain subject to explicit owner review. The project's own license is Apache-2.0 by owner decision D-001; the canonical LICENSE grant file remains pending.
 
 
 Biopython references:

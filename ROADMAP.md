@@ -11,8 +11,8 @@ This roadmap operationalises the archived master. A phase is complete only when 
 - The owner-approved direction baseline and reconstructed historical master are present; NORTH_STAR was not changed.
 - Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
 - R0 accepted by the owner when they authorised R1 on 2026-11-07. CI evidence: [R0 workflow run](https://github.com/AssayFlux/Kinetics/actions/runs/42378815901).
-- R1 is now in progress. D-006 target devices remains open; no Android feasibility or device verification is yet claimed.
-- One owner decision remains open: target Android devices/minimum support matrix. D-005 records the owner's provisional six-gene PGx research scope (CYP2D6, CYP2C19, CYP2C9, VKORC1, TPMT and DPYD); qualified advisers must review it after the D-004 maturity checkpoint and before P0/PGx implementation. D-004 is approved: defer clinical-adviser recruitment until the research platform is more mature (target review after R3); P0 and all patient/clinical work remain blocked until qualified advisers and all other prerequisites are in place. D-003 (publication strategy) is approved: multiple papers over time, beginning with an evidence-backed platform/software-methods paper after R1–R3 readiness, followed by independently validated domain papers. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. Adding the canonical LICENSE grant file remains a repository task.
+- R1 is now in progress. D-006 target is Android 10+ (API 29), 64-bit ARM, with low-end, mid-range and flagship test tiers; this is a target, not a verified support claim.
+- D-005 has been reopened: the owner superseded the earlier six-gene selection and requested a large, broad gene scope. Clarify whether this means a comprehensive PGx panel or a cross-domain gene catalogue before freezing scope. No gene catalogue coverage or PGx implementation is claimed. D-004 is approved: defer clinical-adviser recruitment until the research platform is more mature (target review after R3); P0 and all patient/clinical work remain blocked until qualified advisers and all other prerequisites are in place. D-003 (publication strategy) is approved: multiple papers over time, beginning with an evidence-backed platform/software-methods paper after R1–R3 readiness, followed by independently validated domain papers. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. Adding the canonical LICENSE grant file remains a repository task.
 
 ## Track R — Research platform
 | ID | Scope | Dependencies | Exit gate | Status | Owner | Date |
@@ -72,11 +72,11 @@ Further disease areas only after P7 evidence, one at a time.
 | G4 | Bias and ancestry coverage | Relevant P/I capabilities and datasets | Coverage/limitations in reports and outputs | not-started | Validation + advisers | TBD |
 | G5 | Paper evidence pipeline | R/S/I/P evidence | Manuscript tables/figures generated from validation/benchmarks | not-started | Research + Validation | TBD |
 
-## Initial PGx research scope (D-005)
-- Owner-selected provisional six-gene scope: CYP2D6, CYP2C19, CYP2C9, VKORC1, TPMT and DPYD.
-- This is a planning scope, not a clinically approved panel, validated assay or implemented capability.
-- Qualified advisers must review the list after the D-004 maturity checkpoint and before P0/PGx implementation. Assess guideline support, reference availability, locus/caller reliability (including structural/copy-number variation where relevant), ancestry coverage, evidence quality, licensing and independent validation feasibility.
-- The list may be revised or staged based on expert review and evidence. No P0, patient-data or clinical work is authorized by this decision.
+## Gene scope (D-005 — reopened; clarification pending)
+- Owner direction: plan for a large, broad and expandable gene scope; the earlier six-gene PGx list is superseded.
+- Clarify whether the intended scope is a comprehensive PGx panel or a cross-domain gene catalogue spanning genomics and related Kinetics domains.
+- Build a catalogue/roadmap in evidence-based waves; distinguish planned, implemented, validated and device-verified capabilities. Do not equate listing a gene with having a validated caller or interpretation workflow.
+- Any PGx implementation remains subject to qualified-adviser review, reference/caller validation, licensing, ancestry coverage and the full P0/legal/ethics/regulatory gates. No patient-data or clinical work is authorized.
 
 ## Clinical adviser timing (D-004)
 - Defer clinical-adviser recruitment during the current R1 engineering-feasibility phase.

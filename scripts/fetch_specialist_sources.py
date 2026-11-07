@@ -470,9 +470,23 @@ def run_dryad(s, manifest, domain, budget, per_file, limit):
                 license_id = license_id.get("uri") or license_id.get("name") or license_id.get("id")
             if not accepted_license(str(license_id or "")):
                 continue
-            version = detail.get("versionNumber") or detail.get("version") or 1
-            files_response = s.get(f"https://datadryad.org/api/v2/datasets/{encoded}/versions/{version}/files",
-                                   timeout=(20, 60))
+            versions_response = s.get(f"https://datadryad.org/api/v2/datasets/{encoded}/versions",
+                                       timeout=(20, 60))
+            versions_response.raise_for_status()
+            versions_payload = versions_response.json()
+            versions = versions_payload if isinstance(versions_payload, list) else versions_payload.get("_embedded", {}).get("stash:versions", versions_payload.get("versions", []))
+            if not versions:
+                continue
+            latest = versions[-1]
+            version = latest.get("versionNumber") or latest.get("version") or 1
+            version_id = latest.get("id") or latest.get("versionId") or latest.get("version_id") or version
+            file_link = (latest.get("_links") or {}).get("files") or {}
+            files_url = file_link.get("href") if isinstance(file_link, dict) else file_link
+            if not files_url:
+                files_url = f"https://datadryad.org/api/v2/versions/{version_id}/files"
+            elif str(files_url).startswith("/"):
+                files_url = "https://datadryad.org" + str(files_url)
+            files_response = s.get(files_url, timeout=(20, 60))
             files_response.raise_for_status()
             files_payload = files_response.json()
             files = files_payload if isinstance(files_payload, list) else files_payload.get("_embedded", {}).get("stash:files", files_payload.get("files", []))

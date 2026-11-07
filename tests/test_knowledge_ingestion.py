@@ -15,11 +15,13 @@ def load_script(name: str):
     return module
 
 
-def test_domain_catalogue_has_at_least_100_domains():
+def test_domain_catalogue_has_at_least_150_domains():
     fetch = load_script("fetch_corpus")
     domains = fetch.domain_catalogue()
-    assert len(domains) >= 140
+    assert len(domains) == 160
     assert "Quantum computing" in domains
+    assert "Computational chemistry" in domains
+    assert "Atmospheric science" in domains
     assert len(domains) == len(set(domains))
 
 
@@ -92,3 +94,18 @@ def test_reusable_knowledge_store_api(tmp_path: Path):
     assert results[0]["citation_metadata"] == {}
     assert store.get_document("PMC123")["license"] == "CC BY 4.0"
     assert store.get_document("missing") is None
+
+
+def test_domain_search_terms_include_synonyms():
+    fetch = load_script("fetch_corpus")
+    terms = fetch.domain_search_terms("Computational chemistry")
+    assert "Computational chemistry" in terms
+    assert "molecular modelling" in [term.lower() for term in terms]
+
+
+def test_source_registry_is_valid_and_only_known_adapters_enabled():
+    fetch = load_script("fetch_corpus")
+    registry = fetch.load_source_registry()
+    assert registry["internet_archive"]["enabled"] is True
+    assert registry["europe_pmc_oa"]["enabled"] is True
+    assert registry["doab"]["enabled"] is False

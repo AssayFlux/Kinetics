@@ -492,7 +492,7 @@ def main() -> int:
             save_manifest(args.manifest, manifest)
         manifest.setdefault("cursor", {})["domain_index"] = (start + processed_domains) % len(domains)
         manifest["last_batch"] = {"items": total_count, "bytes": total_bytes,
-                                  "domains": selected, "completed_at": utcnow()}
+                                  "domains": selected[:processed_domains], "completed_at": utcnow()}
         save_manifest(args.manifest, manifest)
     finally:
         session.close()

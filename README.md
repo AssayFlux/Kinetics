@@ -22,7 +22,7 @@ An evidence-centred research infrastructure connecting molecular biology, life s
 </p>
 <p align="center"><sub>MOLECULES · GENOMICS · PROTEINS · CELLS · DISCOVERY</sub></p>
 
-> **Animation asset:** `Assets/Kinetics-Science-Universe.gif` · 400 × 300 · 32 frames · looping GIF.
+> **Animation asset:** `Assets/Kinetics.gif` · 400 × 300 · 32 frames · looping GIF.
 
 ## 1. Mission and scope
 

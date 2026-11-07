@@ -442,8 +442,8 @@ def main() -> int:
     args = parser.parse_args()
     if not 1 <= args.batch_size <= 50:
         parser.error("--batch-size must be between 1 and 50")
-    if not 1 <= args.max_batch_mb <= 80:
-        parser.error("--max-batch-mb must be between 1 and 80")
+    if not 1 <= args.max_batch_mb <= 512:
+        parser.error("--max-batch-mb must be between 1 and 512")
     if not 1 <= args.max_file_mb <= 80:
         parser.error("--max-file-mb must be between 1 and 80")
     global MAX_FILE_BYTES

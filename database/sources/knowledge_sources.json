@@ -140,16 +140,6 @@
       "enabled": false,
       "notes": "Discovery candidate; journal/article licenses must be checked individually.",
       "adapter_status": "discovery_only"
-    },
-    {
-      "id": "arxiv",
-      "name": "arXiv",
-      "kind": "preprints",
-      "endpoint": "https://export.arxiv.org/api/query",
-      "adapter": "discovery_only",
-      "enabled": false,
-      "notes": "Use source-specific terms and verify reuse/redistribution rights before mirroring.",
-      "adapter_status": "discovery_only"
     }
   ]
 }

@@ -40,7 +40,7 @@ jobs:
     timeout-minutes: 45
     env:
       PYTHONUNBUFFERED: "1"
-      GH_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -62,9 +62,9 @@ jobs:
 
       - name: Validate workflow limits
         env:
-          CYCLES: \${{ inputs.cycles || '2' }}
-          BATCH_SIZE: \${{ inputs.batch_size || '30' }}
-          MAX_BATCH_MB: \${{ inputs.max_batch_mb || '80' }}
+          CYCLES: ${{ inputs.cycles || '2' }}
+          BATCH_SIZE: ${{ inputs.batch_size || '30' }}
+          MAX_BATCH_MB: ${{ inputs.max_batch_mb || '80' }}
         run: |
           python - <<'PY'
           import os
@@ -77,9 +77,9 @@ jobs:
 
       - name: Fetch, tokenize and analyze bounded batches
         env:
-          CYCLES: \${{ inputs.cycles || '2' }}
-          BATCH_SIZE: \${{ inputs.batch_size || '30' }}
-          MAX_BATCH_MB: \${{ inputs.max_batch_mb || '80' }}
+          CYCLES: ${{ inputs.cycles || '2' }}
+          BATCH_SIZE: ${{ inputs.batch_size || '30' }}
+          MAX_BATCH_MB: ${{ inputs.max_batch_mb || '80' }}
         run: |
           for cycle in $(seq 1 "$CYCLES"); do
             echo "Starting bounded ingestion cycle $cycle/$CYCLES"
@@ -93,7 +93,7 @@ jobs:
 
       - name: Synchronize manifests and optional LFS objects
         env:
-          SYNC_ARTIFACTS: \${{ inputs.sync_artifacts || 'false' }}
+          SYNC_ARTIFACTS: ${{ inputs.sync_artifacts || 'false' }}
         run: |
           if [ "$SYNC_ARTIFACTS" = "true" ]; then
             python scripts/git_sync.py --mode lfs --push

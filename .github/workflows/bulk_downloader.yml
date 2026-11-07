@@ -76,7 +76,7 @@ jobs:
       - name: Validate workflow limits
         env:
           CYCLES: ${{ inputs.cycles || '3' }}
-          BATCH_SIZE: ${{ inputs.batch_size || '90' }}
+          BATCH_SIZE: ${{ inputs.batch_size || '150' }}
           MAX_BATCH_MB: ${{ inputs.max_batch_mb || '1536' }}
         run: |
           python - <<'PY'
@@ -88,10 +88,13 @@ jobs:
               raise SystemExit("Limits exceeded: cycles 1-3, batch size 3-150, combined MiB 3-1536")
           PY
 
+      - name: Restore the latest durable knowledge database
+        run: python scripts/git_sync.py --restore-database
+
       - name: Fetch, tokenize and analyze bounded batches
         env:
           CYCLES: ${{ inputs.cycles || '3' }}
-          BATCH_SIZE: ${{ inputs.batch_size || '90' }}
+          BATCH_SIZE: ${{ inputs.batch_size || '150' }}
           MAX_BATCH_MB: ${{ inputs.max_batch_mb || '1536' }}
         run: |
           IA_BATCH=$(( BATCH_SIZE / 3 ))

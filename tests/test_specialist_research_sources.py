@@ -31,6 +31,6 @@ def test_enabled_specialist_sources_have_implemented_adapter():
 
     registry = json.loads(Path("database/sources/knowledge_sources.json").read_text())
     sources = {x["id"]: x for x in registry["sources"]}
-    for source_id in ("openalex", "arxiv", "uniprot", "rcsb_pdb", "oapen", "figshare", "dryad"):
+    for source_id in ("openalex", "arxiv", "uniprot", "rcsb_pdb", "oapen", "figshare", "dryad", "doaj"):
         assert sources[source_id]["enabled"] is True
         assert sources[source_id]["adapter_status"] == "implemented"

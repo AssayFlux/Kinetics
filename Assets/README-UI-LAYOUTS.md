@@ -32,3 +32,13 @@ All HTML files load `./Brand Logo.svg` directly. The original asset is not modif
 
 ## Preview
 Open an HTML file in a modern browser. Keep the HTML and CSS beside `Brand Logo.svg`. These are editable HTML/CSS layouts, not native OS binaries.
+
+
+## Live workbench alignment
+
+The live local workbench at `src/kinetics_core/workbench/static/index.html`
+uses the same desktop header/navigation measurements and responsive breakpoints.
+It adapts as one interface across Windows, macOS, Linux and Android browser or
+WebView viewports; these HTML layouts remain blank structural references rather
+than separate native app implementations. The workbench serves the original
+brand SVG from the repository without modifying the asset.

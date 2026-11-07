@@ -1,6 +1,6 @@
 # Android feasibility — R1 in progress
 
-**Status:** IN PROGRESS — Python provisioning correction succeeded; Android arm64 build now reaches Chaquopy dependency resolution but fails because no compatible Biopython distribution is available from the configured indexes  
+**Status:** IN PROGRESS — custom Biopython 1.88 / CPython 3.11 / arm64 wheel build is now wired into CI; awaiting the first build result and subsequent APK/runtime/device evidence  
 **Last updated:** 2026-11-07  
 **Phase plan:** docs/phase-r1-plan.md  
 **Owner gate:** R1 go/no-go review required before R2
@@ -49,14 +49,14 @@ The run-1384 failure is consistent with a package-format/ABI gap, not a missing 
 
 Chaquopy 17's pip behavior is particularly important: it uses binary-only resolution for normal index installs. Its documentation describes building Android wheels with its package-build tooling (for Python 3.12 and older) or cibuildwheel (Python 3.13+), then supplying the resulting wheel through a local `--find-links` directory. Therefore, simply changing the pip index, loosening the version, or adding a source URL is not an evidence-based fix.
 
-### Candidate path (not yet implemented or validated)
+### Implemented CI experiment (not yet validated)
 
-1. Keep the current Python 3.11 / arm64-v8a baseline for the first controlled experiment, so the result isolates the current blocker.
-2. Check whether upstream Biopython already has an Android-compatible wheel for the exact CPython/ABI target. If not, prototype a reproducible Android wheel build using Chaquopy's documented Python 3.12-and-older build tooling or a compatible upstream recipe.
-3. Inspect every compiled extension and linked native dependency in the wheel; do not assume that a successful wheel build proves runtime compatibility or 16 KB page-size compatibility.
-4. Install only the locally built, hash-pinned wheel via Chaquopy's documented `--find-links` mechanism. Keep the artifact and build recipe reproducible in CI.
-5. Run import and representative sequence/structure parsing and alignment smoke tests on an arm64 emulator, then repeat on a physical arm64 device. Record package size, startup and RSS.
-6. If a reproducible, maintainable wheel cannot be built, evaluate a narrower native implementation for the specific required operations while retaining Biopython for desktop/remote workflows only if the architecture and capability registry explicitly describe that difference. This is a fallback proposal, not a decision.
+1. Keep the current Python 3.11 / arm64-v8a baseline for this controlled experiment.
+2. Added `android/biopython-wheel/meta.yaml`, pinned to Biopython 1.88, and a CI step which checks out Chaquopy 17.2.0, downloads its Python 3.11.17 target and NumPy 1.26.2 Android wheel, and invokes Chaquopy's documented `build-wheel.py` for arm64-v8a.
+3. Updated the Android Gradle pip configuration to consume the generated local wheel using `--find-links`, with Biopython and NumPy versions pinned.
+4. The workflow prints the wheel SHA-256 and proceeds to APK/AAB build only if the cross-build succeeds.
+5. Still required: inspect every compiled extension and linked native dependency; run import and representative sequence/structure parsing and alignment smoke tests on an arm64 emulator; repeat on a physical arm64 device; record package size, startup and RSS.
+6. If the custom wheel build fails or is not maintainable, evaluate a narrower native implementation for the specific required operations while retaining Biopython for desktop/remote workflows only if the architecture and capability registry explicitly describe that difference. This remains a fallback proposal, not a decision.
 
 ### Licensing note
 
@@ -75,9 +75,9 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 
 | Area | Current status | Required next evidence |
 |---|---|---|
-| Minimal Compose app / Gradle build | Workflow run 1384 provisions Python 3.11 and SDK/NDK successfully; Gradle stops at Chaquopy's Biopython requirement resolution before APK compilation | Resolve a supported Biopython packaging strategy or select a justified alternative; then successful APK/AAB build and toolchain record |
+| Minimal Compose app / Gradle build | Workflow run 1384 stopped before APK compilation at Biopython resolution. CI now cross-builds a pinned Android wheel before Gradle; outcome pending | Successful wheel build, APK/AAB build, alignment check, artifact hash/size and toolchain record |
 | Embedded Python runtime | Chaquopy probe configured; not executed | arm64 build/import/startup/RSS/package-size logs |
-| Biopython | Run 1384 has no compatible indexed Android distribution; upstream docs indicate a custom Android wheel may be required. No Android package installed. | Check exact wheel availability; prototype reproducible Python 3.11/arm64 wheel build; inspect extensions/ELF/license; import and scientific smoke tests on emulator and physical arm64 device |
+| Biopython | CI recipe added for 1.88 / CPython 3.11 / arm64-v8a using Chaquopy 17.2.0 wheel builder; build result pending | Successful wheel build; extension/ELF inspection; runtime import, SeqIO FASTA and Bio.PDB parsing test vectors on emulator and physical arm64 device |
 | NumPy / SciPy | Declared in R1 probe; not tested on Android | Native wheel ABI, import and numerical smoke tests |
 | Rust app FFI | Not implemented/tested | Android arm64 library and Kotlin call test |
 | C++17 JNI | Not implemented/tested | NDK build, JNI invocation and numeric correctness test |
@@ -100,7 +100,7 @@ D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low
 ## Preliminary assessment (not a go/no-go)
 
 - The Android project is build-configured. The host-Python prerequisite is now resolved: run 1384 successfully installs Python 3.11 and Android SDK/NDK.
-- The next blocker is Chaquopy's inability to resolve a compatible Biopython Android wheel. Upstream guidance points to a custom Android-wheel build as the preferred experiment if no suitable wheel exists. The build fails before APK compilation; no APK/AAB artifact exists from this run.
+- The prior blocker was Chaquopy's inability to resolve a compatible Biopython Android wheel. A reproducible custom-wheel build is now configured in CI, but its first run has not yet been observed. No APK/AAB artifact or Android runtime result is claimed from the prior run.
 - No conclusion is yet possible about overall architecture feasibility, memory fit, APK/AAB size or real-device performance.
 - R1 remains in progress. R2 must not start until the full experiment matrix and owner go/no-go review are complete.
 

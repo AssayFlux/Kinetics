@@ -1,5 +1,8 @@
 # Public enzyme-kinetics datasets
 
+> **Platform context:** This document describes a focused component of Kinetics. The complete cross-disciplinary scope is catalogued in `docs/SCIENCE_DOMAIN_CATALOGUE_100.md`; catalogue inclusion is not implementation or clinical-validation evidence.
+
+
 > **Mission authority:** This document is governed by [KINETICS_MISSION.md](KINETICS_MISSION.md). Kinetics is a cross-disciplinary biomedical and precision-health research platform—not only an enzyme-kinetics project. All domains, datasets, models and applications must align with the mission, preserve provenance and clinical safety, and follow the foundation-first build order. Small Android devices are a first-class performance target.
 
 Kinetics will use public datasets first. Raw downloads are intentionally kept out of Git; download them locally into `data/public/` and preserve the source files unchanged. **Access is not necessarily anonymous:** the current CatPred-DB Hugging Face page is gated and requires a signed-in user to agree to share account contact details before file access. Do not bypass the gate or use another person's token.

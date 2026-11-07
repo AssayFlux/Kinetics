@@ -7,7 +7,6 @@ import hashlib
 import json
 import re
 import sqlite3
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterator
@@ -16,7 +15,6 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "data/corpus-manifests/metadata_index.json"
 DATABASE = ROOT / "data/kinetics.sqlite3"
 TOKEN_RE = re.compile(r"\w+|[^\w\s]", re.UNICODE)
-WORD_RE = re.compile(r"\w+", re.UNICODE)
 
 
 def extract_text(path: Path) -> str:

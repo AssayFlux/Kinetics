@@ -171,7 +171,7 @@ Contributions should include tests, clear documentation and evidence for scienti
 ## Knowledge corpus ingestion
 
 Kinetics includes an incremental, license-aware knowledge ingestion pipeline
-covering the canonical 100-domain catalogue. It discovers and acquires
+covering the canonical 100-domain catalogue plus an extensible set of engineering, computing and natural-science scopes. It discovers and acquires
 redistributable books and biomedical papers in bounded batches, preserves
 source/license/checksum provenance, and builds a local searchable text index.
 

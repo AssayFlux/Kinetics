@@ -97,7 +97,7 @@ Inspect the GitHub Actions run on `main`, fix any failures, record the actual ru
 
 ### Validated
 - Final R0 commit: `6746e124ed888afd1d284a6a52d0eb1432b33fe9`.
-- GitHub Actions run 1374: [successful run](https://github.com/AssayFlux/Kinetics/actions/runs/42378678625).
+- GitHub Actions run 1375 on the final R0 commit: [successful run](https://github.com/AssayFlux/Kinetics/actions/runs/42378747002).
 - Both workflow jobs completed successfully.
 - Pre-commit configuration validation, Ruff lint, strict mypy, registry validation, all **11 tests**, reproduce-all wrapper and Android artifact gate-status check passed.
 - The native/Android job passed only its explicit R0 blocker-reporting step. No native or Android build was performed or represented as passed.

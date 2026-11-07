@@ -10,7 +10,7 @@ This roadmap operationalises the archived master. A phase is complete only when 
 - Track R / R0 Foundations: implementation and automated acceptance checks complete; exit gate is blocked pending explicit owner acceptance.
 - The owner-approved direction baseline and reconstructed historical master are present; NORTH_STAR was not changed.
 - Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
-- GitHub Actions run 1374 is green: pre-commit configuration validation, Ruff, mypy, registry validation, 11 unit tests, reproduction stub and explicit Android blocker check passed. [Run details](https://github.com/AssayFlux/Kinetics/actions/runs/42378678625).
+- GitHub Actions run 1375 is green on the current main commit: pre-commit configuration validation, Ruff, mypy, registry validation, 11 unit tests, reproduction stub and explicit Android blocker check passed. [Run details](https://github.com/AssayFlux/Kinetics/actions/runs/42378747002).
 - Native/Android, 16 KB alignment and APK/AAB size checks are explicitly blocked/not applicable in R0 pending R1 toolchains and named devices. No scientific validation, Android feasibility or device verification is claimed.
 - Six decisions remain open: license, target jurisdictions, paper framing/venue, clinical advisers, first PGx gene set and target Android devices.
 

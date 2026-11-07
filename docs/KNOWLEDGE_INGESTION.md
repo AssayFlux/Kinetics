@@ -10,14 +10,15 @@ This subsystem turns openly redistributable books and research articles into a s
 - `scripts/tokenize_corpus.py`: PDF/EPUB/XML/HTML/TXT extraction, deterministic word/punctuation tokenization, overlapping chunks and SQLite FTS5 indexing.
 - `scripts/analyze_corpus.py`: exploratory term/entity counts and domain summaries.
 - `scripts/query_knowledge.py`: source-linked local full-text retrieval.
-- `scripts/git_sync.py`: metadata commits by default; optional Git LFS for redistributable PDFs/EPUBs.
+- `scripts/git_sync.py`: manifest commits, GitHub Release assets or optional Git LFS for redistributable PDFs/EPUBs.
+- `scripts/restore_corpus_releases.py`: safe, checksum-verified release restore.
 
 ## Legal and source policy
 
 A public API or downloadable URL is not a redistribution grant. The initial fetcher enables Internet Archive items only when item metadata carries a recognized CC0, Public Domain Mark, CC BY or CC BY-SA license. It enables Europe PMC/PMC OA records only when the record exposes an accepted license and the OA service supplies a package. Unknown, NC, ND and all-rights-reserved records are skipped. Review every source's terms, third-party content notices, attribution and exact item/release license before using a mirrored corpus.
 Source adapters are deliberately conservative; DOAB, DOAJ and arXiv are registered as discovery candidates but are not silently bulk-downloaded.
 
-The repository is public. Never ingest patient records, identifiable health information, credentials, private research, restricted full text or data-use agreement material into it. The SQLite database is local-only by default. Raw corpus batches are published as public GitHub Release assets. Use encrypted, access-controlled object storage for confidential or larger collections.
+The repository is public. Never ingest patient records, identifiable health information, credentials, private research, restricted full text or data-use agreement material into it. The SQLite database is local-only by default and its file permissions are restricted to the current POSIX user (0600). This is not encryption; use full-disk encryption and encrypted backups where needed. Raw corpus batches are published as public GitHub Release assets. Use encrypted, access-controlled object storage for confidential or larger collections.
 
 ## Install
 

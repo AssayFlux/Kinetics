@@ -15,8 +15,8 @@ The project license decision is Apache-2.0 (D-001); the canonical LICENSE grant 
 
 | Candidate | Upstream licensing / status | Feasibility status | Decision |
 |---|---|---|---|
-| Chaquopy 17.2.0 | Upstream states 12.0.1+ is MIT/free-open-source; verify exact release artifact and transitive packages before distribution | Isolated R1 prototype; Python 3.11 and SDK/NDK provisioned in CI; custom Biopython wheel build configured in CI; first result pending | R1 candidate only; not selected for production |
-| Biopython 1.88 | Upstream Biopython License Agreement applies to most files; some files are explicitly dual-licensed under that agreement or BSD-3-Clause; file-level audit required | No compatible indexed Android wheel found in run 1384; custom Chaquopy wheel build is wired into CI; outcome pending | Not approved for bundling; license and ABI review required |
+| Chaquopy 17.2.0 | Upstream states 12.0.1+ is MIT/free-open-source; verify exact release artifact and transitive packages before distribution | Isolated R1 prototype; Python 3.11 / SDK / NDK and custom Biopython wheel build succeed in CI; APK build pending | R1 candidate only; not selected for production |
+| Biopython 1.88 | Upstream Biopython License Agreement applies to most files; some files are explicitly dual-licensed under that agreement or BSD-3-Clause; file-level audit required | Custom CPython 3.11 / arm64-v8a wheel successfully built in CI; APK/runtime and 16 KB checks pending | Not approved for production bundling; file-level license and ABI review required |\n| SciPy (version TBD) | BSD-3-Clause | No compatible CPython 3.11 / arm64-v8a distribution found in Chaquopy indexes; custom build/alternative not yet evaluated | Not approved for bundling; required architecture candidate remains unresolved |
 
 References:
 - https://chaquo.com/chaquopy/documentation/
@@ -32,4 +32,3 @@ Biopython references:
 - Upstream installation/build requirements: https://pypi.org/project/biopython/
 - Chaquopy FAQ and Android wheel build guidance: https://chaquo.com/chaquopy/doc/current/faq.html and https://github.com/chaquo/chaquopy/tree/master/server/pypi
 
-| SciPy | Version not selected | https://pypi.org/project/scipy/ and Chaquopy package index | BSD-3-Clause | Required scientific-stack candidate; no compatible CPython 3.11 / arm64 Android distribution found in current configured indexes | Not bundled; custom wheel/alternative and license review required |

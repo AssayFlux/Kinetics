@@ -1,6 +1,6 @@
 # Documentation and repository consistency audit
 
-> Review date: 2026-11-07. Scope: recursive tracked-file inventory (200 files), root plans, subsystem documentation, directory layout, key implementation/status documents, UI asset notes, and selected source/test cross-checks. This is a repository inspection, not a full local execution of every test or every scientific workflow.
+> Review date: 2026-11-07. Scope: recursive tracked-file inventory of the 200-file base branch (203 tracked files after this documentation change), root plans, subsystem documentation, directory layout, key implementation/status documents, UI asset notes, and selected source/test cross-checks. This is a repository inspection, not a full local execution of every test or every scientific workflow.
 
 ## Source-of-truth hierarchy
 

@@ -1,33 +1,33 @@
 # Kinetics — Session Log
 
-## 2026-11-07 — Session 1: Direction system bootstrap
-
+## 2026-11-07 — Session 2: Align direction system with complete master
 **Phase:** Track R / R0 Foundations  
-**Session objective:** Establish the four living direction documents and inspect repository state before implementation.
+**Objective:** Archive the owner-supplied master, reconcile roadmap/decision log, and prepare the R0 plan before implementation.
 
 ### Done
-- Confirmed access to `AssayFlux/Kinetics` and inspected the default branch `main`.
-- Inspected the current root tree: it contains `Assets/Brand Logo.svg` and `Assets/Kinetics.gif`; no root `KINETICS_MASTER.md` or existing direction files were present in the current tree.
-- Prepared the initial NORTH_STAR, ROADMAP, DECISIONS and SESSION_LOG baseline for owner review.
+- Re-read NORTH_STAR.md, ROADMAP.md, DECISIONS.md and prior session entry.
+- Reconstructed the complete 18-part master supplied by the owner in this conversation at docs/origin/KINETICS_MASTER.md as read-only history. This is a reconstruction, not a Git move; no root master file existed.
+- Updated ROADMAP to reflect actual archive and R0 status.
+- Updated DECISIONS: D-007 records archival reconstruction; all six owner decisions remain open.
+- Added docs/phase-r0-plan.md.
+- NORTH_STAR.md was not changed.
 
 ### Validated
-- Repository/default branch and current tree contents were read through GitHub.
-- No code, scientific capability, validation result, device test or CI result has been produced or validated in this session.
+- Prior main-branch tree and four living files were read before edits.
+- No CI, tests, registry checker, app build, scientific validation, Android feasibility or device verification has been run or claimed.
 
 ### Not done
-- No app code, build system, CI, registry, tests or R0 skeleton implementation.
-- No LICENSE selected or created.
-- No source master file moved to `docs/origin/`; canonical source file was absent from inspected tree.
-- No Android feasibility, scientific correctness, performance, privacy/security implementation or clinical evidence claimed.
+- R0 implementation: skeleton, registry, checker, reproduce-all, pre-commit and CI.
+- No LICENSE selected or added.
+- No Android/device or scientific work; no P0 or clinical functionality.
 
 ### Risks / blockers
-- The four direction documents are proposed until explicit owner approval.
-- Exact archival of the source master is blocked until the owner confirms reconstruction from the supplied session text or provides the canonical root file.
-- License, target jurisdictions, paper framing, clinical advisers, initial PGx gene set and target devices remain open decisions.
-- R0 exit gate (CI green on empty skeleton) has not been reached.
+- Direction baseline remains proposed until explicit owner approval.
+- R0 exit requires actual green CI on empty skeleton.
+- License, jurisdictions, paper framing, advisers, PGx gene set and target devices remain open.
 
 ### Next step
-Present the four direction documents and all open decisions to the project owner. Wait for explicit approval of the direction baseline and clarification of the source-master archival. Only then continue R0, with a phase plan, and stop at the R0 exit gate.
+Present direction documents and open decisions for owner approval. After approval, execute R0 plan and stop at its CI-green exit gate.
 
 ### Gate status
-**WAITING FOR OWNER APPROVAL — direction baseline / archival clarification.**
+WAITING FOR OWNER APPROVAL — direction baseline. R0 implementation has not started.

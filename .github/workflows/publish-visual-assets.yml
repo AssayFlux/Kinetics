@@ -1,12 +1,13 @@
-name: Publish scientific visual assets
+name: Build and publish futuristic science gallery
 
 on:
   push:
     branches: [main]
     paths:
       - ".github/workflows/publish-visual-assets.yml"
-      - "scripts/import_science_gallery.py"
+      - "scripts/generate_futuristic_gallery.py"
       - "scripts/build_pixel_animation.py"
+      - "scripts/validate_visual_assets.py"
   workflow_dispatch:
 
 permissions:
@@ -17,8 +18,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  acquire-and-publish:
-    name: Acquire images and publish animation
+  generate-and-publish:
+    name: Generate 100 square science artworks
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -35,23 +36,23 @@ jobs:
       - name: Install image processing dependency
         run: python -m pip install "Pillow>=10,<13"
 
-      - name: Acquire 24 licensed scientific images
-        run: python scripts/import_science_gallery.py --start 1 --end 24
+      - name: Generate all 100 original square PNG illustrations
+        run: python scripts/generate_futuristic_gallery.py
 
       - name: Generate colourful looping pixel animation
         run: python scripts/build_pixel_animation.py
 
-      - name: Validate generated assets
-        run: python scripts/validate_visual_assets.py
+      - name: Validate all 100 images and animation
+        run: python scripts/validate_visual_assets.py --strict-gallery
 
-      - name: Commit generated assets to the repository
+      - name: Commit generated artwork
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md Assets/Future/PNG Assets/Future/ATTRIBUTION.json Assets/Future/kinetics-science-quest.gif
+          git add README.md Assets/Future/PNG Assets/Future/ARTWORK_MANIFEST.json Assets/Future/ATTRIBUTION.json Assets/Future/kinetics-science-quest.gif
           if git diff --cached --quiet; then
-            echo "No visual asset changes to publish."
+            echo "No artwork changes to publish."
           else
-            git commit -m "Add licensed scientific image gallery and pixel animation [skip ci]"
+            git commit -m "Publish 100 square futuristic science artworks [skip ci]"
             git push
           fi

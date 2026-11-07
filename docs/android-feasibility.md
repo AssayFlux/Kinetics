@@ -1,6 +1,6 @@
 # Android feasibility — R1 in progress
 
-**Status:** IN PROGRESS — Biopython 1.88 custom Android wheel successfully built for CPython 3.11 / arm64-v8a. The next Gradle run consumed Biopython and NumPy but stopped because SciPy has no compatible distribution in the Chaquopy indexes. The next build isolates Biopython/NumPy; APK, runtime, 16 KB and device evidence remain pending.  
+**Status:** IN PROGRESS — Biopython 1.88 and NumPy 1.26.2 now install successfully from the custom arm64 wheel and Chaquopy index. APK build reaches Kotlin compilation but fails on mismatched Java 1.8 / Kotlin 17 JVM targets; both are being aligned to Java 17. APK, runtime, 16 KB and device evidence remain pending.  
 **Last updated:** 2026-11-07  
 **Phase plan:** docs/phase-r1-plan.md  
 **Owner gate:** R1 go/no-go review required before R2
@@ -9,7 +9,7 @@
 
 An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11, Biopython and NumPy for the current APK probe. SciPy is tracked separately as a required but currently unavailable R1 candidate. These are prototype dependencies only, not a production architecture or dependency approval.
 
-Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. The current CI cross-build successfully creates a pinned Biopython 1.88 Android wheel (SHA-256 `cdf569ea13eb9314e43afeb9bbd3dbdbf95616d138f775a2e12e4cb7ba0cecbf`). Gradle consumed that wheel and NumPy 1.26.2, then stopped because SciPy has no compatible distribution for CPython 3.11 / arm64-v8a on the configured indexes. The next isolated APK build removes SciPy only from the immediate Android install experiment; SciPy remains an unresolved architecture requirement. No APK/AAB artifact exists yet.
+Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. The current CI cross-build successfully creates a pinned Biopython 1.88 Android wheel (SHA-256 `cdf569ea13eb9314e43afeb9bbd3dbdbf95616d138f775a2e12e4cb7ba0cecbf`). Gradle consumed that wheel and NumPy 1.26.2 successfully after SciPy was removed from the immediate APK probe. It progressed through Python packaging, Android resource processing and stopped at Kotlin compilation because Java bytecode target 1.8 did not match Kotlin target 17. The build configuration is being aligned to JVM 17. SciPy remains an unresolved architecture requirement. No APK/AAB artifact exists yet.
 
 No APK/AAB, app runtime, emulator or physical-device result is yet accepted as validated. No embedded package import, Rust app call, C++ JNI, scientific engine, RDKit, offline viewer, 16 KB runtime, startup, memory or device result is claimed.
 
@@ -77,7 +77,7 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 
 | Area | Current status | Required next evidence |
 |---|---|---|
-| Minimal Compose app / Gradle build | Biopython wheel now builds and Gradle consumes it; latest build stopped at SciPy resolution. SciPy removed from immediate APK probe only | Successful Biopython/NumPy APK/AAB build, alignment check, artifact hash/size and toolchain record |
+| Minimal Compose app / Gradle build | Biopython/NumPy install succeeds; run 1451 reaches Kotlin compile and fails on Java 1.8 vs Kotlin 17 JVM target mismatch; Gradle configuration now aligns both to 17 | Successful APK/AAB build, alignment check, artifact hash/size and toolchain record |
 | Embedded Python runtime | Chaquopy probe configured; app build/runtime not yet successful | arm64 APK build, on-device import/startup/RSS/package-size logs |
 | Biopython | Custom Biopython 1.88 wheel successfully built for CPython 3.11 / arm64-v8a; SHA-256 recorded in SESSION_LOG.md | Inspect wheel ELF; runtime import and SeqIO FASTA / Bio.PDB test vectors on emulator and physical arm64 device |
 | NumPy | NumPy 1.26.2 cp311 arm64 wheel is a pinned build input; its 2023 build date creates a known 16 KB alignment risk | Inspect packaged ELF; import and NumPy numerical smoke test on emulator and physical arm64 device |
@@ -103,7 +103,7 @@ D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low
 ## Preliminary assessment (not a go/no-go)
 
 - The Android project is build-configured. The host-Python prerequisite is now resolved: run 1384 successfully installs Python 3.11 and Android SDK/NDK.
-- Biopython 1.88 has now been cross-built into an Android arm64 wheel; the local Chaquopy 17.2.0 alias/safe-path patches allowed compilation and wheel packaging. The following Gradle task installed the local Biopython wheel and NumPy 1.26.2, then failed only on unavailable SciPy. The immediate APK experiment now tests Biopython/NumPy with SciPy reported as unavailable. No APK/AAB artifact or Android runtime result is claimed yet.
+- Biopython 1.88 has now been cross-built into an Android arm64 wheel; Gradle installed the local Biopython wheel and NumPy 1.26.2 successfully. With SciPy excluded from the immediate app probe, the build progressed to Kotlin compilation and failed because Java bytecode target 1.8 differed from Kotlin target 17. The Gradle config now aligns Java and Kotlin to JVM 17. No APK/AAB artifact or Android runtime result is claimed yet.
 - No conclusion is yet possible about overall architecture feasibility, memory fit, APK/AAB size or real-device performance.
 - R1 remains in progress. R2 must not start until the full experiment matrix and owner go/no-go review are complete.
 

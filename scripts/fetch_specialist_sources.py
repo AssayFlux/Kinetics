@@ -575,7 +575,7 @@ def main():
     args = p.parse_args()
     if not 1 <= args.batch_size <= 30 or not 1 <= args.max_domains <= 160:
         p.error("batch-size 1-30 and max-domains 1-160")
-    if not 1 <= args.max_batch_mb <= 80 or not 1 <= args.max_file_mb <= 80:
+    if not 1 <= args.max_batch_mb <= 512 or not 1 <= args.max_file_mb <= 80:
         p.error("byte limits 1-80 MiB")
     if not 1 <= args.per_source_limit <= 10:
         p.error("per-source-limit 1-10")

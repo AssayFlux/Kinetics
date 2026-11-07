@@ -15,7 +15,7 @@ The project license decision is Apache-2.0 (D-001); the canonical LICENSE grant 
 
 | Candidate | Upstream licensing / status | Feasibility status | Decision |
 |---|---|---|---|
-| Chaquopy 17.2.0 | Upstream states 12.0.1+ is MIT/free-open-source; verify exact release artifact and transitive packages before distribution | Isolated R1 prototype; Python 3.11 and SDK/NDK provisioned in CI; Biopython package resolution still blocks APK compilation | R1 candidate only; not selected for production |\n| Biopython (version to pin) | Upstream Biopython License Agreement applies to most files; some files are explicitly dual-licensed under that agreement or BSD-3-Clause; file-level audit required | No compatible indexed Android wheel found in run 1384; custom Android wheel is an unvalidated candidate | Not approved for bundling; license and ABI review required |
+| Chaquopy 17.2.0 | Upstream states 12.0.1+ is MIT/free-open-source; verify exact release artifact and transitive packages before distribution | Isolated R1 prototype; Python 3.11 and SDK/NDK provisioned in CI; Biopython package resolution still blocks APK compilation | R1 candidate only; not selected for production |\n| Biopython (version to pin) | Upstream Biopython License Agreement applies to most files; some files are explicitly dual-licensed under that agreement or BSD-3-Clause; file-level audit required | No compatible indexed Android wheel found in run 1384; custom Chaquopy wheel build is wired into CI; outcome pending | Not approved for bundling; license and ABI review required |
 
 References:
 - https://chaquo.com/chaquopy/documentation/

@@ -100,7 +100,7 @@ def main() -> int:
         for item_id, record in manifest.get("items", {}).items():
             if indexed >= args.max_documents:
                 break
-            if record.get("status") != "downloaded" or record.get("indexed_at"):
+            if record.get("status") != "downloaded":
                 continue
             path = (ROOT / record["path"]).resolve()
             if ROOT not in path.parents or not path.is_file():
@@ -108,6 +108,11 @@ def main() -> int:
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
             if digest != record.get("sha256"):
                 raise RuntimeError(f"SHA-256 mismatch for {item_id}; refusing to index")
+            existing = db.execute(
+                "SELECT sha256 FROM knowledge_documents WHERE item_id=?", (item_id,)
+            ).fetchone()
+            if existing and existing[0] == digest:
+                continue
             text = extract_text(path)
             pieces = list(chunks(text, args.max_tokens, args.overlap))
             if not pieces:

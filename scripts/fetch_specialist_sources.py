@@ -573,8 +573,8 @@ def main():
     p.add_argument("--manifest", type=Path, default=MANIFEST_FILE)
     p.add_argument("--dry-run", action="store_true")
     args = p.parse_args()
-    if not 1 <= args.batch_size <= 30 or not 1 <= args.max_domains <= 160:
-        p.error("batch-size 1-30 and max-domains 1-160")
+    if not 1 <= args.batch_size <= 50 or not 1 <= args.max_domains <= 160:
+        p.error("batch-size 1-50 and max-domains 1-160")
     if not 1 <= args.max_batch_mb <= 512 or not 1 <= args.max_file_mb <= 80:
         p.error("byte limits 1-80 MiB")
     if not 1 <= args.per_source_limit <= 10:

@@ -1,5 +1,7 @@
 # Assay-context feature pipeline
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 `kinetics_core.context.attach_context_archive` attaches raw assay metadata to feature archives with exact source-record ID alignment. The model-fitting pipeline then performs fold-local preprocessing. `AssayContextEncoder` remains available as a standalone utility for non-CV exploratory workflows.
 
 ## Supported behavior

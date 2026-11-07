@@ -281,7 +281,9 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
         if not pmcid or not license_allowed(license_value):
             continue
         prior = manifest["items"].get(pmcid, {})
-        if prior.get("status") in ("downloaded", "skipped_license"):
+        if prior.get("status") == "skipped_license":
+            continue
+        if prior.get("status") == "downloaded" and local_record_is_valid(prior):
             continue
         oa = session.get("https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi",
                          params={"id": pmcid}, timeout=(15, 45))
@@ -316,7 +318,6 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
                     payload = source.read(MAX_FILE_BYTES + 1)
                     if len(payload) > MAX_FILE_BYTES:
                         continue
-                    target.write_bytes(payload)
                     digest = hashlib.sha256(payload).hexdigest()
                     target = objects / "biomedical" / digest[:2] / f"{digest}{ext}"
                     target.parent.mkdir(parents=True, exist_ok=True)

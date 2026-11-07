@@ -381,3 +381,10 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 - Removed SciPy from the mandatory Android pip install only for the next isolated Biopython/NumPy feasibility build. Updated the runtime probe to test SciPy if present and explicitly report it unavailable if absent; an ABI/import error is not swallowed. SciPy remains a required architecture candidate and unresolved R1 item, not silently dropped.
 - Added SciPy to the third-party register with BSD-3-Clause upstream licensing noted as a candidate; exact version, Android packaging and redistribution review remain open.
 - R1 remains in progress. No APK/AAB, app runtime, emulator, physical-device, 16 KB or performance result is claimed.
+
+
+### R1 Gradle build attempt after SciPy isolation — 2026-11-07
+- CI run 1451 passed the Python foundation job.
+- The Android job successfully built the pinned Biopython 1.88 arm64 wheel, installed it from local find-links, and resolved/installed NumPy 1.26.2 plus Chaquopy OpenBLAS/libcxx/libgfortran runtime wheels. SciPy was the only package-resolution blocker and is now kept as a separate unresolved R1 candidate rather than blocking the Biopython/NumPy APK probe.
+- Gradle progressed through Python source packaging, proxy generation, resource processing and stopped at Kotlin compilation due to Java target 1.8 vs Kotlin target 17 mismatch.
+- Updated app Gradle configuration to set Java source/target compatibility and Kotlin compiler JVM target to 17. Rerun required. No APK/AAB, zipalign, ELF, runtime or device result is yet available.

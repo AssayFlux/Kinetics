@@ -6,7 +6,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 |---|---|---|---|---|
 | D-000 | 2026-11-07 | Adopt owner master and living direction files | Approved — owner approved baseline in chat | Project owner |
 | D-001 | 2026-11-07 | Project LICENSE | Approved — Apache-2.0 selected; canonical LICENSE grant file still to be added and verified | Project owner |
-| D-002 | 2026-11-07 | Target jurisdictions and applicable privacy/medical-device laws | Open — qualified advice required | Project owner + advisers |
+| D-002 | 2026-11-07 | Target jurisdictions and applicable privacy/medical-device laws | Approved strategic scope — global, including future clinical use; jurisdiction-specific clearance remains mandatory | Project owner; qualified advisers required for implementation |
 | D-003 | 2026-11-07 | Research-paper framing and venue(s) | Open — decide after evidence and venue review | Project owner |
 | D-004 | 2026-11-07 | Clinical advisory board/advisers | Open — identities/commitments not supplied | Project owner |
 | D-005 | 2026-11-07 | First PGx gene set | Open — no genes selected | Project owner + clinical advisers |
@@ -21,11 +21,18 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Approver: Project owner (explicit approval received 2026-11-07).
 
 ## Open decisions
-1. Jurisdictions: owner identifies countries/regions; obtain qualified advice before relevant data/features.
-2. Paper framing/venue: owner decides after evidence exists and current venue requirements are checked. Owner supplies authors, affiliations, funding and competing interests.
-3. Clinical advisers: identify clinical pharmacologist/pharmacist, clinical geneticist and physician; P0 cannot pass without them.
-4. First PGx gene set: choose with advisers based on guideline maturity, reference materials and caller reliability.
-5. Target devices: owner specifies Android devices and emulator targets before feasibility/support claims.
+1. Paper framing/venue: owner decides after evidence exists and current venue requirements are checked. Owner supplies authors, affiliations, funding and competing interests.
+2. Clinical advisers: identify clinical pharmacologist/pharmacist, clinical geneticist and physician; P0 cannot pass without them.
+3. First PGx gene set: choose with advisers based on guideline maturity, reference materials and caller reliability.
+4. Target devices: owner specifies Android devices and emulator targets before feasibility/support claims.
+
+## D-002 — Target jurisdictions (approved strategic scope)
+- Date: 2026-11-07.
+- Context: Establish the intended geographic ambition for Kinetics, including the possibility of future clinical functionality.
+- Options considered: India-first; India + US; India + EU/UK; global research-only; global including future clinical use.
+- Choice: Global scope, including future clinical use (owner selected option 5).
+- Consequences: The long-term product ambition is international, and future clinical use may be pursued. This is not a finding of legal compliance, regulatory clearance, market authorisation or permission to process patient data in any country. Research Mode remains the only public mode; Clinical Decision Support Mode remains disabled. Before any patient-data workflow, clinical feature, clinical study or market entry, identify each relevant jurisdiction and obtain qualified local privacy, health-data, medical-device/software, research-ethics and other applicable advice/approvals. P0 and all existing clinical, ethics, security and evidence gates remain mandatory. No single global approval is presumed.
+- Approver: Project owner, explicit selection in chat on 2026-11-07.
 
 ## D-001 — Project license (approved)
 - Date: 2026-11-07.

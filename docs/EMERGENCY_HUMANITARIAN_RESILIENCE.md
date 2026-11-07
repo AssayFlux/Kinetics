@@ -130,3 +130,10 @@ Emergency resilience is part of the scientific and platform foundation. It must 
 ---
 
 **Acceptance principle:** When the network is gone, Kinetics should still provide trustworthy, pre-verified local reference material and resilient tools—while clearly identifying what it cannot know or safely do.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

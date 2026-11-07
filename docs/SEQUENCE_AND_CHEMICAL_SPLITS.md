@@ -1,5 +1,7 @@
 # Protein and chemical grouping for evaluation
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## Protein sequence clusters
 
 The optional sequence-clustering utility wraps MMseqs2. Record the tool version, sequence identity threshold, coverage threshold, coverage mode, command, and mapping output. For a cold-start evaluation, split by cluster IDs rather than individual rows. Threshold choice is a scientific design decision and should be justified and reported.

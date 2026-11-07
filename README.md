@@ -35,7 +35,7 @@ The ambition spans fundamental biological discovery through translational resear
 
 The canonical catalogue is maintained in docs/SCIENCE_DOMAIN_CATALOGUE_100.md. Inclusion defines planned integration scope; it does not imply that a complete dataset, validated model, clinical workflow or production capability already exists.
 
-<!-- KINETICS_GALLERY_START -->
+**Animated science quest**\n\n<img src="Assets/Future/kinetics-science-quest.gif" width="640" alt="Colourful Kinetics science quest pixel runner animation">\n\n<!-- KINETICS_GALLERY_START -->
 
 **Real scientific imagery — downloaded from openly licensed scientific image sources**
 

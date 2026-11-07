@@ -27,7 +27,7 @@ def main() -> int:
         run(["git", "lfs", "install", "--local"])
         run(["git", "lfs", "track", "*.pdf", "*.epub"])
         run(["git", "add", ".gitattributes"])
-        run(["git", "add", "data/corpus/objects"])
+        run(["git", "add", "-f", "data/corpus/objects"])
     else:
         run(["git", "add", "data/corpus-manifests"])
     status = run(["git", "status", "--porcelain"]).stdout.strip()

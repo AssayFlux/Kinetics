@@ -89,5 +89,6 @@ def test_reusable_knowledge_store_api(tmp_path: Path):
     assert len(results) == 1
     assert results[0]["item_id"] == "PMC123"
     assert results[0]["source_url"] == "https://example.org/paper"
+    assert results[0]["citation_metadata"] == {}
     assert store.get_document("PMC123")["license"] == "CC BY 4.0"
     assert store.get_document("missing") is None

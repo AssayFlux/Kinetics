@@ -215,8 +215,12 @@ database. The corpus is not committed as ordinary Git blobs.
 
 The GitHub Actions workflow **.github/workflows/bulk_downloader.yml** runs
 two bounded cycles per week and can also be started from **Actions → Kinetics
-knowledge corpus ingestion → Run workflow**. It publishes licensed corpus
-batches as GitHub Release assets by default and commits compact manifests.
+knowledge corpus ingestion → Run workflow**. Manual runs support up to three cycles
+and a combined ceiling of 1,536 MiB per cycle (up to 4.5 GiB in configured transfer
+budgets per run). Individual source objects remain capped at 80 MiB for release
+packaging. These are ceilings, not guaranteed throughput; source availability,
+rate limits, licensing and runner time determine actual downloads. It publishes
+licensed corpus batches as GitHub Release assets by default and commits compact manifests.
 Restore the release assets into a local checkout before indexing the complete
 remote corpus:
 

@@ -11,6 +11,7 @@ import argparse
 import hashlib
 import json
 import logging
+import os
 import re
 import tarfile
 import tempfile
@@ -186,6 +187,8 @@ def persist_record(session: requests.Session, item_id: str, title: str, source: 
         staging_path.unlink(missing_ok=True)
     else:
         staging_path.replace(content_path)
+    if os.name == "posix":
+        content_path.chmod(0o600)
     rel = content_path.relative_to(ROOT).as_posix()
     record = {
         "item_id": item_id, "title": title[:1000], "source": source,
@@ -331,6 +334,8 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
                         temporary_target = target.with_suffix(target.suffix + ".tmp")
                         temporary_target.write_bytes(payload)
                         temporary_target.replace(target)
+                    if os.name == "posix":
+                        target.chmod(0o600)
                     rel = target.relative_to(ROOT).as_posix()
                     manifest["items"][pmcid] = {
                         "item_id": pmcid, "title": item.get("title", pmcid),

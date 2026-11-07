@@ -1,21 +1,18 @@
 <p align="center">
-  <img src="Assets/Brand%20Logo.svg" width="190" alt="Kinetics original brand mark">
+  <img src="Assets/Brand%20Logo.svg" width="350" alt="Kinetics original brand mark">
 </p>
 <h1 align="center">KINETICS</h1>
 <p align="center"><strong>CONNECTING SCIENCE · ADVANCING HEALTH · PROTECTING HUMANITY</strong><br>
 An evidence-centred scientific infrastructure for connected biomedical research.</p>
 <p align="center">
-  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml/badge.svg" alt="CI">
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+">
   <img src="https://img.shields.io/badge/Rust-infrastructure-000000?logo=rust" alt="Rust infrastructure">
   <img src="https://img.shields.io/badge/C%2B%2B-17-00599C?logo=cplusplus" alt="C++17">
   <img src="https://img.shields.io/badge/Research--first-not%20clinical%20software-6D28D9" alt="Research-first">
 </p>
 <p align="center">
-  <a href="#overview">Overview</a> · <a href="#capabilities">Capabilities</a> ·
-  <a href="#science-domain-universe">100 domains</a> · <a href="#architecture">Architecture</a> ·
-  <a href="#get-started">Get started</a> · <a href="#assets-and-visual-identity">Assets</a> ·
-  <a href="#project-status">Status</a>
+  Overview · Capabilities · 100 domains · Architecture · Get started · Assets · Project status
 </p>
 
 ---
@@ -54,26 +51,163 @@ The table distinguishes code already present from work that still needs real-wor
 | Rust services | Job, artifact, audit, identity and cloud-integration foundations | Live deployment, scientific task handlers, per-job isolation and recovery/security drills |
 | Release governance | Executable release-gate evaluator and documented evidence requirements | Complete evidence manifest, SBOM, signed reviews and human release decision |
 
-See [Implementation status](docs/IMPLEMENTATION_STATUS.md) for the detailed capability register and limitations.
+See Implementation status (`docs/IMPLEMENTATION_STATUS.md`) for the detailed capability register and limitations.
 
-## Science domain universe
+## Complete 100-domain scientific catalogue
 
-Kinetics uses a 100-domain catalogue as its long-term coverage map. The table below groups that catalogue into ten connected research families; the canonical catalogue contains all domain names and descriptions.
+The following tables reproduce the complete domain register, including every domain name and its scientific / healthcare scope. Catalogue inclusion defines intended integration scope; it is not a claim of completed implementation, validated models or clinical readiness.
 
-| Domain family | Catalogue range | Included research areas |
-|---|---:|---|
-| Molecular foundations | 01–10 | Genomics, genetics, transcriptomics, proteomics, structural biology, cell and molecular biology, biochemistry, epigenetics, systems biology |
-| Omics and living systems | 11–20 | Metabolomics, lipidomics, glycomics, metagenomics, single-cell and spatial omics, development, stem cells, microbiome, regenerative medicine |
-| Microbes, immunity and disease | 21–30 | Microbiology, virology, immunology, bacteriology, mycology, parasitology, vaccinology, antimicrobial resistance, infectious disease, oncology |
-| Molecular design and therapeutics | 31–40 | Pharmacology, medicinal chemistry, enzymology, protein engineering, biophysics, molecular simulation, chemical biology, pharmacogenomics, clinical pharmacology, toxicology |
-| Human biology and specialties | 41–50 | Anatomy, physiology, pathology, cardiology, neuroscience, endocrinology, pulmonology, nephrology, gastroenterology, hepatology |
-| Clinical specialties and care | 51–60 | Hematology, dermatology, rheumatology, orthopedics, obstetrics, gynecology, pediatrics, geriatrics, ophthalmology, psychiatry |
-| Diagnostics and medical technology | 61–70 | Radiology, ultrasound, nuclear medicine, CT, histology, cytology, laboratory medicine, clinical chemistry, clinical genetics, imaging engineering |
-| Treatment, rehabilitation and prevention | 71–80 | Surgery, anesthesiology, emergency and critical care, radiation oncology, pharmaceutics, drug delivery, rehabilitation, palliative and preventive medicine |
-| Population, engineering and future health | 81–90 | Public and global health, epidemiology, clinical research, trials, evidence synthesis, health economics, bioethics, biomedical engineering, bioinformatics |
-| Frontier and human resilience | 91–100 | Medical robotics, prosthetics, biomaterials, bioinstrumentation, medical devices, nanomedicine, health informatics, digital health, medical AI, humanitarian and disaster health |
+### 1. Molecular foundations
 
-**Full register:** [100-domain scientific catalogue](docs/SCIENCE_DOMAIN_CATALOGUE_100.md).
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 1 | Genomics | Genome structure, sequencing, variation and population-scale genomic analysis. |
+| 2 | Genetics | Inheritance, gene function, genetic variation and genotype–phenotype relationships. |
+| 3 | Transcriptomics | RNA abundance, splicing, regulation and expression profiling. |
+| 4 | Proteomics | Protein abundance, modification, interactions and mass-spectrometry profiling. |
+| 5 | Structural biology | Macromolecular structures, complexes, folding and cryo-EM. |
+| 6 | Cell biology | Cellular organization, signalling, organelles and cell-state imaging. |
+| 7 | Molecular biology | DNA/RNA/protein mechanisms, PCR, cloning and molecular assays. |
+| 8 | Biochemistry | Biomolecules, reactions, metabolism and biochemical mechanisms. |
+| 9 | Epigenetics | DNA methylation, chromatin, histone marks and gene regulation. |
+| 10 | Systems biology | Pathways, networks, feedback, multiscale and quantitative models. |
+
+### 2. Omics and living systems
+
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 11 | Metabolomics | Small-molecule profiles, metabolic flux and biochemical phenotyping. |
+| 12 | Lipidomics | Lipid species, membranes, signalling and lipid metabolism. |
+| 13 | Glycomics | Glycans, glycosylation, glycoproteins and carbohydrate biology. |
+| 14 | Metagenomics | Community DNA, microbial diversity and functional profiling. |
+| 15 | Single-cell biology | Single-cell sequencing, cell atlases and cellular heterogeneity. |
+| 16 | Spatial omics | Spatial transcriptomics, tissue maps and molecular neighbourhoods. |
+| 17 | Developmental biology | Embryogenesis, morphogenesis, differentiation and development. |
+| 18 | Stem-cell biology | Pluripotency, differentiation, stem-cell niches and cell therapy research. |
+| 19 | Microbiome science | Host-associated microbial communities and host–microbe interactions. |
+| 20 | Regenerative medicine | Tissue repair, cell replacement and regeneration research. |
+
+### 3. Microbes, immunity and disease
+
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 21 | Microbiology | Microorganisms, microbial physiology and laboratory methods. |
+| 22 | Virology | Virus structure, replication, host response and viral evolution. |
+| 23 | Immunology | Innate/adaptive immunity, immune cells, antibodies and inflammation. |
+| 24 | Bacteriology | Bacterial structure, physiology, pathogenesis and diagnostics. |
+| 25 | Mycology | Fungi, fungal pathogenesis, ecology and antifungal research. |
+| 26 | Parasitology | Protozoa, helminths, vectors and host–parasite biology. |
+| 27 | Vaccinology | Vaccine platforms, immunogenicity, adjuvants and evaluation. |
+| 28 | Antimicrobial resistance | Resistance mechanisms, surveillance and antimicrobial stewardship research. |
+| 29 | Infectious diseases | Pathogens, transmission, host response and infectious disease research. |
+| 30 | Oncology | Cancer biology, tumour microenvironments, biomarkers and therapeutics. |
+
+### 4. Molecular design and therapeutics
+
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 31 | Pharmacology | Drug targets, mechanisms, dose response and pharmacological evidence. |
+| 32 | Medicinal chemistry | Molecular design, synthesis, SAR and lead optimization. |
+| 33 | Enzymology | Enzyme mechanisms, kinetics, inhibition and catalysis. |
+| 34 | Protein engineering | Protein design, directed evolution, stability and function. |
+| 35 | Biophysics | Molecular forces, binding, dynamics and quantitative biophysical assays. |
+| 36 | Molecular simulation | Molecular dynamics, docking and computational biophysics. |
+| 37 | Chemical biology | Chemical probes, biomolecular interactions and chemical tools. |
+| 38 | Pharmacogenomics | Gene–drug variation, pharmacogenetic evidence and response research. |
+| 39 | Clinical pharmacology | Human drug exposure, response, dose and safety evidence. |
+| 40 | Toxicology | Chemical hazards, mechanisms of toxicity and safety assessment. |
+
+### 5. Human biology and specialties
+
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 41 | Anatomy | Human structures, organs, tissues and anatomical relationships. |
+| 42 | Physiology | Normal function of organs, tissues and integrated systems. |
+| 43 | Pathology | Disease-related structural and functional changes in tissues. |
+| 44 | Cardiology | Heart, circulation, cardiovascular mechanisms and imaging. |
+| 45 | Neuroscience | Brain, spinal cord, neural circuits and nervous-system function. |
+| 46 | Endocrinology | Hormones, endocrine organs, metabolism and regulation. |
+| 47 | Pulmonology | Lung structure, respiratory physiology and disease research. |
+| 48 | Nephrology | Kidney function, filtration, fluid balance and renal disease. |
+| 49 | Gastroenterology | Digestive tract, gut physiology, disorders and endoscopy. |
+| 50 | Hepatology | Liver biology, metabolism, fibrosis and liver disease. |
+
+### 6. Clinical specialties and care
+
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 51 | Hematology | Blood cells, coagulation, marrow and blood disorders. |
+| 52 | Dermatology | Skin biology, inflammatory disease and dermatopathology. |
+| 53 | Rheumatology | Autoimmunity, joints, connective tissue and inflammatory disease. |
+| 54 | Orthopedics | Musculoskeletal structure, injury, reconstruction and function. |
+| 55 | Obstetrics | Pregnancy, maternal health, fetal development and childbirth research. |
+| 56 | Gynecology | Reproductive health, pelvic medicine and gynecologic disease. |
+| 57 | Pediatrics | Child health, growth, development and pediatric disease research. |
+| 58 | Geriatrics | Ageing, multimorbidity, function and older-adult care research. |
+| 59 | Ophthalmology | Eye anatomy, vision science, retinal and ocular disease. |
+| 60 | Psychiatry | Mental health, brain–behaviour relationships and psychiatric research. |
+
+### 7. Diagnostics and medical technology
+
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 61 | Radiology | Diagnostic imaging, image interpretation research and radiological methods. |
+| 62 | Medical ultrasound | Ultrasound physics, sonography and image-guided assessment. |
+| 63 | Nuclear medicine | Radiotracers, molecular imaging and radionuclide therapy research. |
+| 64 | Computed tomography | CT acquisition, reconstruction and cross-sectional imaging. |
+| 65 | Histology | Microscopic tissue architecture and staining methods. |
+| 66 | Cytology | Cell morphology, cytopathology and cellular diagnostics. |
+| 67 | Laboratory medicine | Clinical laboratory workflows, assays and analytical quality. |
+| 68 | Clinical chemistry | Biochemical testing, biomarkers and analytical methods. |
+| 69 | Clinical genetics | Genetic evaluation, variant interpretation and inherited disease research. |
+| 70 | Medical imaging engineering | Image reconstruction, sensors, acquisition and computational imaging. |
+
+### 8. Treatment, rehabilitation and prevention
+
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 71 | Surgery | Operative science, surgical systems and perioperative research. |
+| 72 | Anesthesiology | Anaesthesia, perioperative physiology and pain mechanisms. |
+| 73 | Emergency medicine | Time-critical assessment systems, trauma and acute-care research. |
+| 74 | Critical care | Organ support, intensive care physiology and critical illness. |
+| 75 | Radiation oncology | Radiation biology, planning systems and cancer treatment research. |
+| 76 | Pharmaceutics | Dosage forms, formulation science and pharmaceutical delivery. |
+| 77 | Drug delivery | Targeted delivery, release systems and therapeutic transport. |
+| 78 | Rehabilitation medicine | Recovery, function, assistive therapy and outcome measurement. |
+| 79 | Palliative care | Symptom science, supportive care and quality-of-life research. |
+| 80 | Preventive medicine | Risk reduction, screening evidence and prevention strategies. |
+
+### 9. Population, engineering and future health
+
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 81 | Public health | Population health, prevention systems and health protection. |
+| 82 | Epidemiology | Disease frequency, determinants, surveillance and causal inference. |
+| 83 | Global health | Health systems, cross-border health challenges and equity. |
+| 84 | Clinical research | Human-subject research design, monitoring and evidence generation. |
+| 85 | Clinical trials | Trial design, endpoints, randomization and safety monitoring. |
+| 86 | Evidence synthesis | Systematic reviews, meta-analysis and evidence grading. |
+| 87 | Health economics | Cost, value, resource allocation and health technology assessment. |
+| 88 | Bioethics | Research ethics, consent, governance and responsible innovation. |
+| 89 | Biomedical engineering | Engineering methods for biology, medicine and healthcare. |
+| 90 | Bioinformatics | Computational analysis of biological data and scientific workflows. |
+
+### 10. Frontier and human resilience
+
+| # | Domain | Scientific / healthcare scope |
+|---:|---|---|
+| 91 | Medical robotics | Surgical, rehabilitation and assistive robotics research. |
+| 92 | Prosthetics | Prosthetic limbs, orthotics, interfaces and human-device integration. |
+| 93 | Biomaterials | Biocompatible materials, implants and tissue interfaces. |
+| 94 | Bioinstrumentation | Sensors, biosignal acquisition and biomedical measurement devices. |
+| 95 | Medical devices | Medical device design, verification, usability and safety engineering. |
+| 96 | Nanomedicine | Nanoscale diagnostics, delivery and therapeutic platforms. |
+| 97 | Health informatics | Health data standards, interoperability and clinical information systems. |
+| 98 | Digital health | Remote monitoring, telehealth and connected-care technologies. |
+| 99 | Artificial intelligence in medicine | Validated AI methods for medical research and decision support. |
+| 100 | Humanitarian and disaster health | Health resilience in disasters, conflict, displacement and infrastructure failure. |
+
+Canonical source document: `docs/SCIENCE_DOMAIN_CATALOGUE_100.md`.
 
 ## Architecture
 
@@ -103,7 +237,7 @@ Kinetics is designed as a set of explicit layers rather than one monolithic mode
 | AWS components | Terraform deployment candidate using ECS, RDS, S3 and KMS |
 | Scientific formats | CSV/NPZ, FASTA, PDB and related formats as supported by each adapter |
 
-Architecture and engineering decisions: [Architecture](ARCHITECTURE.md) · [Engineering stack](ENGINEERING_STACK.md) · [Scientific architecture](docs/SCIENTIFIC_ARCHITECTURE.md).
+Architecture and engineering decisions: Architecture (`ARCHITECTURE.md`) · Engineering stack (`ENGINEERING_STACK.md`) · Scientific architecture (`docs/SCIENTIFIC_ARCHITECTURE.md`).
 
 ## Research workflow
 
@@ -120,7 +254,7 @@ The current scientific workflow is organized around traceable, target-specific o
 | 7 | Compare and train models | Target-specific and multimodal model artifacts |
 | 8 | Evaluate and report | Metrics, uncertainty summaries and reproducibility report |
 
-The workflow is documented in [End-to-end research workflow](docs/WORKFLOW.md). The CatPred-DB source currently has an access gate and an upstream kcat-unit caveat; a real immutable source release and source-level audit are still required before scientific benchmark claims.
+The workflow is documented in End-to-end research workflow (`docs/WORKFLOW.md`). The CatPred-DB source currently has an access gate and an upstream kcat-unit caveat; a real immutable source release and source-level audit are still required before scientific benchmark claims.
 
 ## Get started
 
@@ -163,11 +297,16 @@ Optional scientific dependencies for protein encoders, chemistry and baseline mo
 python -m pip install -e ".[baseline]"
 ~~~
 
-For detailed setup, supported tasks, workspace layout and security boundaries, read the [Workbench guide](docs/WORKBENCH_GUIDE.md).
+For detailed setup, supported tasks, workspace layout and security boundaries, read the Workbench guide (`docs/WORKBENCH_GUIDE.md`).
 
 ## Assets and visual identity
 
 The repository currently tracks a small, explicit asset set. This section intentionally lists only files that exist in the Git tree; planned domain imagery is not presented as if it had already been downloaded.
+
+<p align="center">
+  <img src="Assets/Kinetics.gif" width="100%" alt="Kinetics animated scientific platform showcase">
+</p>
+<p align="center"><sub>Kinetics animated showcase · Assets/Kinetics.gif</sub></p>
 
 | Asset | Repository path | Purpose | Status |
 |---|---|---|---|
@@ -182,9 +321,9 @@ The repository currently tracks a small, explicit asset set. This section intent
 
 | Asset resource | Location |
 |---|---|
-| Brand asset policy | [docs/ASSET_PIPELINE.md](docs/ASSET_PIPELINE.md) |
-| Legacy GIF file | [Assets/Kinetics.gif](Assets/Kinetics.gif) |
-| Asset and visual regression tests | [tests/test_visual_assets.py](tests/test_visual_assets.py) |
+| Brand asset policy | docs/ASSET_PIPELINE.md (`docs/ASSET_PIPELINE.md`) |
+| Legacy GIF file | Assets/Kinetics.gif (`Assets/Kinetics.gif`) |
+| Asset and visual regression tests | tests/test_visual_assets.py (`tests/test_visual_assets.py`) |
 
 **Asset integrity policy:** preserve original artwork and source attribution; verify file format, dimensions, frame metadata and license before displaying downloaded media. Do not fabricate gallery entries or commit unverified/generated substitutes for real scientific imagery. Add domain images only after their source, reuse license, attribution and checksum have been recorded.
 
@@ -228,7 +367,7 @@ The project is in an integration and acceptance phase. Passing unit tests or CI 
 - The PDB adapter is not a complete proteomics or structural-biology platform.
 - The 100-domain catalogue is not evidence that 100 domain implementations exist.
 
-See [Step 10 release-readiness gates](docs/STEP10_RELEASE_READINESS_GATES.md) for the current NO-GO conditions and required evidence.
+See Step 10 release-readiness gates (`docs/STEP10_RELEASE_READINESS_GATES.md`) for the current NO-GO conditions and required evidence.
 
 ## Testing and quality checks
 
@@ -264,20 +403,20 @@ Some tests require optional dependencies or local services. Follow the relevant 
 
 | Document | What it explains |
 |---|---|
-| [Mission](KINETICS_MISSION.md) | Authoritative purpose, principles and boundaries |
-| [Vision](VISION.md) | Long-term scientific and platform direction |
-| [Master roadmap](ROADMAP.md) | Multi-stage programme and exit criteria |
-| [Implementation status](docs/IMPLEMENTATION_STATUS.md) | Implemented, pending and blocked capabilities |
-| [100-domain catalogue](docs/SCIENCE_DOMAIN_CATALOGUE_100.md) | Canonical scientific domain register |
-| [Architecture](ARCHITECTURE.md) | Platform architecture and data/evidence model |
-| [Engineering stack](ENGINEERING_STACK.md) | Technology responsibilities and interoperability |
-| [Research workflow](docs/WORKFLOW.md) | Data-to-model workflow and scientific cautions |
-| [Workbench guide](docs/WORKBENCH_GUIDE.md) | Local setup, researcher workflow and security |
-| [Step 6 native engine](docs/STEP6_IMPLEMENTATION_STATUS.md) | Molecular parser, scene foundation and limitations |
-| [Step 7 production acceptance](docs/STEP7_PRODUCTION_ACCEPTANCE.md) | Identity, infrastructure and deployment gates |
-| [Step 9 structural contract](docs/STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md) | Protein/structure data contracts and PDB adapter |
-| [Step 10 release gates](docs/STEP10_RELEASE_READINESS_GATES.md) | Evidence manifest and release decision rules |
-| [Asset policy](docs/ASSET_PIPELINE.md) | Brand and media handling |
+| Mission (`KINETICS_MISSION.md`) | Authoritative purpose, principles and boundaries |
+| Vision (`VISION.md`) | Long-term scientific and platform direction |
+| Master roadmap (`ROADMAP.md`) | Multi-stage programme and exit criteria |
+| Implementation status (`docs/IMPLEMENTATION_STATUS.md`) | Implemented, pending and blocked capabilities |
+| 100-domain catalogue (`docs/SCIENCE_DOMAIN_CATALOGUE_100.md`) | Canonical scientific domain register |
+| Architecture (`ARCHITECTURE.md`) | Platform architecture and data/evidence model |
+| Engineering stack (`ENGINEERING_STACK.md`) | Technology responsibilities and interoperability |
+| Research workflow (`docs/WORKFLOW.md`) | Data-to-model workflow and scientific cautions |
+| Workbench guide (`docs/WORKBENCH_GUIDE.md`) | Local setup, researcher workflow and security |
+| Step 6 native engine (`docs/STEP6_IMPLEMENTATION_STATUS.md`) | Molecular parser, scene foundation and limitations |
+| Step 7 production acceptance (`docs/STEP7_PRODUCTION_ACCEPTANCE.md`) | Identity, infrastructure and deployment gates |
+| Step 9 structural contract (`docs/STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md`) | Protein/structure data contracts and PDB adapter |
+| Step 10 release gates (`docs/STEP10_RELEASE_READINESS_GATES.md`) | Evidence manifest and release decision rules |
+| Asset policy (`docs/ASSET_PIPELINE.md`) | Brand and media handling |
 
 ## Scientific integrity, privacy and safety
 
@@ -287,7 +426,7 @@ Do not upload private, controlled, identifiable or sensitive health/genetic data
 
 ## Contributing and licensing
 
-Contributions should preserve scientific semantics, provenance, reproducibility, test coverage and documented capability boundaries. Start with [Contributing](docs/CONTRIBUTING.md), [Publication protocol](docs/PUBLICATION_PROTOCOL.md) and the repository [LICENSE](LICENSE).
+Contributions should preserve scientific semantics, provenance, reproducibility, test coverage and documented capability boundaries. Start with Contributing (`docs/CONTRIBUTING.md`), Publication protocol (`docs/PUBLICATION_PROTOCOL.md`) and the repository LICENSE (`LICENSE`).
 
 ---
 

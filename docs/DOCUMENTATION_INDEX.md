@@ -37,7 +37,6 @@ This index maps the repository documentation. The 100-domain catalogue defines t
 | docs/REPORTING_AND_FIGURES.md | Research reporting and figure standards |
 | docs/RESEARCHER_OPERATOR_ACCEPTANCE_PROGRAMME.md | Researcher/operator acceptance programme |
 | docs/RESEARCH_PAPER_OUTLINE.md | Research paper outline |
-| docs/ROADMAP.md | Subsystem roadmap |
 | docs/SCIENCE_DOMAIN_CATALOGUE_100.md | Canonical 100-domain scope |
 | docs/SCIENTIFIC_ARCHITECTURE.md | Scientific module architecture |
 | docs/SEQUENCE_AND_CHEMICAL_SPLITS.md | Protein and chemical split methodology |

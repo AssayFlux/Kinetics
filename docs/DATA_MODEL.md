@@ -33,3 +33,10 @@ The original value and unit must be preserved alongside the canonical value. Uni
 ## Rejected records
 
 Every curation operation should emit a row-level rejection table with source row identifier and reason. Rejected rows are not silently deleted. Curation manifests must record source file hash, mapping configuration, source version, license note, and accepted/rejected counts.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

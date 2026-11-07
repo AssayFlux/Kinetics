@@ -59,3 +59,33 @@ WAITING FOR OWNER APPROVAL — direction baseline. R0 implementation has not sta
 
 ### Next step
 Inspect the GitHub Actions run on `main`, fix any failures, record the actual run URL/result, then stop at the R0 exit gate for owner review.
+
+
+## 2026-11-07 — Session 4: R0 validation and exit-gate review
+**Phase:** Track R / R0 Foundations  
+**Objective:** Validate the completed R0 scaffold in GitHub Actions, record evidence and stop at the owner gate.
+
+### Done
+- Added the repository metadata and governance entry points: LICENSE status placeholder (no license grant), CHANGELOG, SECURITY, PRIVACY, CONTRIBUTING and CITATION.cff.
+- Added executable `scripts/reproduce-all` wrapper and expanded pre-commit checks for Ruff, Black and mypy.
+- Strengthened registry checks so implemented tools require implementation metadata; validated tools require existing validation-record IDs; device verification requires a device log; clinical tools require the Part 12 gate/evidence; and public/paper claims may reference only validated tools.
+- Kept the six open owner decisions unchanged.
+
+### Validated
+- GitHub Actions run 1373: [successful run](https://github.com/AssayFlux/Kinetics/actions/runs/42378594100) on commit `043cffe1c15dbf4361a7323e2febe42155334513`.
+- Pre-commit configuration validation passed.
+- Ruff lint passed.
+- Mypy strict type-check passed.
+- Registry validation passed for the intentionally empty R0 registry.
+- Unit tests: **11 passed**.
+- Reproduction stub ran and correctly reported that no evidence jobs are registered.
+- Android artifact check explicitly reported BLOCKED / NOT APPLICABLE: no APK/AAB exists. Native/Android CI job explicitly reports the R1 blockers and does not claim native build success.
+
+### Not done / risks
+- No Android application/build, embedded Python, Rust/C++/Kotlin implementation, scientific capability, benchmark, device run, 16 KB alignment result or APK/AAB size result exists.
+- No scientific validation, clinical evidence or patient-data workflow exists.
+- Project license remains unselected; jurisdictions, paper framing/venue, clinical advisers, initial PGx genes and target devices remain open.
+- First CI attempt failed on Ruff lint; issues were corrected, and the subsequent complete run 1373 passed.
+
+### Gate status
+**R0 implementation and automated acceptance checks are complete. Awaiting explicit owner acceptance of the R0 exit gate. R1 has not started.**

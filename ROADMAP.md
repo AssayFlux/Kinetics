@@ -17,7 +17,7 @@ This roadmap operationalises the archived master. A phase is complete only when 
 ## Track R — Research platform
 | ID | Scope | Dependencies | Exit gate | Status | Owner | Date |
 |---|---|---|---|---|---|---|
-| R0 | Skeleton; direction files; owner-selected license (do not choose); CI lint/type/tests/native builds/16 KB/size budgets; pre-commit; registry/checker; reproduce-all stub | Direction approval | Empty-skeleton CI green; registry checks/tests; honest blocked checks; stop | in-progress | Engineering + owner | Owner review |
+| R0 | Skeleton; direction files; owner-selected license (do not choose); CI lint/type/tests/native builds/16 KB/size budgets; pre-commit; registry/checker; reproduce-all stub | Direction approval | Empty-skeleton CI green; registry checks/tests; honest blocked checks; stop | blocked | Engineering + owner | Owner exit approval pending |
 | R1 | Real arm64 + emulator: embedded Python/Biopython, Rust app call, C++ JNI, cross-compiled engine, RDKit/alternative, offline Mol* WebView, 16 KB, APK/AAB size, cold start, memory | R0 approved | docs/android-feasibility.md and go/no-go matrix; owner decision | not-started | Engineering | TBD |
 | R2 | Compose, SQLite, SAF, provenance, cancellable/resumable WorkManager, registry, pack manager, Keystore encryption | R1 go | On-device import, cancellable job, provenance inspection | not-started | Engineering | TBD |
 | R3 | v0.1 alpha: sequence tools, protein properties, enzyme kinetics and independent-reference validation | R2 | Offline real-device install and validation records; v0.1 gate | not-started | Engineering + Validation | TBD |

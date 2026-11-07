@@ -1,6 +1,6 @@
 # R0 — Foundations phase plan
 **Roadmap item:** Track R / R0  
-**Status:** Owner-approved; R0 implementation committed, CI validation pending  
+**Status:** R0 implementation and automated checks complete; awaiting owner acceptance of exit gate  
 **Owner:** Engineering + Project owner  
 **Date:** 2026-11-07
 
@@ -38,6 +38,6 @@ No patient-related feature, real patient data, human-participant work, clinical 
 2. Added minimal repository skeleton, empty registry, evidence checker and checker tests.
 3. Added reproduce-all stub, CI workflow, pre-commit hooks and development tooling.
 4. Added explicit R0 blocker reporting for native/Android/16 KB/size checks.
-5. Inspect the actual CI run, correct failures and retain its URL/result.
-6. Update roadmap/session log with observed results only.
-7. Report done/validated/device-verified/not done/risks/paper evidence; stop at gate.
+5. GitHub Actions run 1373 completed successfully: pre-commit config validation, Ruff, mypy, registry validation, 11 unit tests and reproduce-all passed.
+6. Android/native, 16 KB and size checks are explicitly blocked/not applicable pending R1 toolchains and named devices.
+7. Update roadmap/session log with observed results; stop for owner approval. Do not begin R1 without explicit approval.

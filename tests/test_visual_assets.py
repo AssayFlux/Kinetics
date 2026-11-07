@@ -38,13 +38,17 @@ def test_gallery_license_filter_excludes_restricted_commons_licenses() -> None:
     assert not allowed.search("CC BY-ND 4.0")
 
 
-def test_readme_does_not_embed_uncommitted_png_gallery_paths() -> None:
+def test_readme_gallery_is_guarded_by_asset_presence() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "100-domain scientific atlas" in readme
-    assert "deliberately avoids embedding absent PNG paths" in readme
     assert "<!-- KINETICS_GALLERY_START -->" in readme
     assert "<!-- KINETICS_GALLERY_END -->" in readme
-    assert not re.search(r"<img[^>]+Assets/Future/PNG/[^>]+>", readme)
+    image_refs = re.findall(r'<img[^>]+Assets/Future/PNG/[^>]+>', readme)
+    png_files = list((ROOT / "Assets" / "Future" / "PNG").glob("*.png"))
+    if len(png_files) == 100:
+        assert len(image_refs) == 100
+    else:
+        assert image_refs == []
 
 
 def test_pixel_animation_builder_and_validator_are_present() -> None:

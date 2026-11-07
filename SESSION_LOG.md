@@ -315,3 +315,22 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 - Android job successfully provisioned Python 3.11 and Android SDK/NDK. Gradle then failed at `:app:installDebugPythonRequirements`: pip could not find a matching `biopython` distribution in the configured PyPI/Chaquopy indexes.
 - APK compilation did not complete; APK alignment, size reporting and artifact upload were skipped. No APK/AAB or Android runtime result is claimed.
 - Updated docs/android-feasibility.md with this concrete blocker. Next R1 action: investigate a supported Chaquopy-compatible Biopython distribution/build strategy or a justified alternative, including license and ABI review; then rerun the build.
+
+
+## 2026-11-07 — Session 16: Owner authorizes R1–R3 execution sequence
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Record the owner's explicit authorization to proceed through R1, R2 and R3 while preserving all phase exit gates.
+
+### Owner approval
+- Owner explicitly stated: “Approved R1,R2&R3” on 2026-11-07.
+- Interpreted as authorization to execute R1, R2 and R3 sequentially. This resolves the earlier ambiguous “R2 & R2” wording.
+- Recorded as D-008 in DECISIONS.md and reflected in ROADMAP.md.
+
+### Gate status (unchanged)
+- R1 remains in progress; run 1384's Android build is blocked at Chaquopy Biopython dependency resolution. No APK build/runtime success is claimed.
+- R2 remains not started until R1 evidence is complete and the R1 go/no-go is documented.
+- R3 remains not started until R2 exit evidence and approval.
+- D-008 is execution authorization, not phase acceptance and not a waiver of scientific validation, licensing, physical-device, security, privacy, clinical or P0 gates.
+
+### Next step
+- Continue R1 by resolving the Biopython packaging blocker, rerunning Android build, then completing the embedded Python/native/device evidence matrix. Start R2 only after the documented R1 gate passes.

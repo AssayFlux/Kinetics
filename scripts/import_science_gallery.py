@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Download a 100-domain biomedical image gallery from Wikimedia Commons.
+"""Download a 100-domain scientific gallery from Openverse and Wikimedia Commons.
 
-Only original images at least 1024 px on each side are accepted. Files are centre-cropped to square. Only public-domain, CC0, CC BY and CC BY-SA assets are accepted. Every PNG
-receives a source/license/creator entry in Assets/Future/ATTRIBUTION.json.
+Only openly licensed images with at least 1024 pixels on each side are accepted.
+Files are centre-cropped to square. Only public-domain, CC0, CC BY and CC BY-SA
+assets are accepted. Every PNG receives source, licence and SHA-256 metadata.
 """
 from __future__ import annotations
 import argparse

@@ -31,3 +31,5 @@ Biopython references:
 - Upstream license: https://github.com/biopython/biopython/blob/master/LICENSE.rst
 - Upstream installation/build requirements: https://pypi.org/project/biopython/
 - Chaquopy FAQ and Android wheel build guidance: https://chaquo.com/chaquopy/doc/current/faq.html and https://github.com/chaquo/chaquopy/tree/master/server/pypi
+
+| SciPy | Version not selected | https://pypi.org/project/scipy/ and Chaquopy package index | BSD-3-Clause | Required scientific-stack candidate; no compatible CPython 3.11 / arm64 Android distribution found in current configured indexes | Not bundled; custom wheel/alternative and license review required |

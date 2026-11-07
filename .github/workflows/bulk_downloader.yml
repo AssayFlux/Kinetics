@@ -77,7 +77,7 @@ jobs:
         env:
           CYCLES: ${{ inputs.cycles || '3' }}
           BATCH_SIZE: ${{ inputs.batch_size || '30' }}
-          MAX_BATCH_MB: ${{ inputs.max_batch_mb || '240' }}
+          MAX_BATCH_MB: ${{ inputs.max_batch_mb || '1536' }}
         run: |
           python - <<'PY'
           import os

@@ -7,7 +7,7 @@ This subsystem turns openly redistributable books and research articles into a s
 ## Components
 
 - `scripts/fetch_corpus.py`: source discovery, explicit license gate, bounded streaming downloads, SHA-256, atomic files, retry/backoff and resumable manifest.
-- `scripts/tokenize_corpus.py`: PDF/EPUB/XML/HTML/TXT extraction, deterministic word/punctuation tokenization, overlapping chunks and SQLite FTS5 indexing.
+- `scripts/tokenize_corpus.py`: PDF/EPUB/XML/NXML/HTML/TXT extraction, deterministic word/punctuation tokenization, overlapping chunks and SQLite FTS5 indexing.
 - `scripts/analyze_corpus.py`: exploratory term/entity counts and domain summaries.
 - `scripts/query_knowledge.py`: source-linked local full-text retrieval.
 - `scripts/git_sync.py`: manifest commits, GitHub Release assets or optional Git LFS for redistributable PDFs/EPUBs.

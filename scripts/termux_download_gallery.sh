@@ -21,14 +21,31 @@ if [[ "$BRANCH" != "main" ]]; then
   exit 1
 fi
 
-if [[ -n "$(git status --porcelain)" ]]; then
-  echo "ERROR: Your working tree is not clean."
-  echo "Commit or stash your existing work before running this publisher."
-  exit 1
+MARKER=".kinetics-gallery-download-in-progress"
+if [[ -f "$MARKER" ]]; then
+  echo "Resuming an interrupted Kinetics gallery download..."
+  while IFS= read -r line; do
+    path="${line:3}"
+    case "$path" in
+      "$MARKER"|Assets/Future/PNG/*|Assets/Future/ATTRIBUTION.json|README.md|Assets/Future/kinetics-science-quest.gif)
+        ;;
+      *)
+        echo "ERROR: Unexpected local change while resuming: $path"
+        echo "No files were discarded. Inspect git status before continuing."
+        exit 1
+        ;;
+    esac
+  done < <(git status --porcelain)
+else
+  if [[ -n "$(git status --porcelain)" ]]; then
+    echo "ERROR: Your working tree is not clean."
+    echo "Commit or stash your existing work before starting the gallery download."
+    exit 1
+  fi
+  echo "[1/6] Updating main without overwriting local work..."
+  git pull --ff-only origin main
+  touch "$MARKER"
 fi
-
-echo "[1/6] Updating main without overwriting local work..."
-git pull --ff-only origin main
 
 echo "[2/6] Checking image dependencies..."
 if ! python -c "from PIL import Image" >/dev/null 2>&1; then
@@ -129,6 +146,7 @@ if git diff --cached --quiet; then
 fi
 
 echo "[6/6] Committing and pushing verified assets..."
+rm -f "$MARKER"
 git commit -m "Add 100 verified real scientific domain images"
 git push origin main
 

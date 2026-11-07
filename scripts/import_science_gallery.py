@@ -477,6 +477,33 @@ def download_png(item,target):
         target.parent.mkdir(parents=True,exist_ok=True)
         image.save(target,format="PNG",optimize=True)
 
+
+def update_readme_gallery():
+    readme_path = ROOT / "README.md"
+    text = readme_path.read_text(encoding="utf-8")
+    start_marker = "<!-- KINETICS_GALLERY_START -->"
+    end_marker = "<!-- KINETICS_GALLERY_END -->"
+    if start_marker not in text or end_marker not in text:
+        raise RuntimeError("README gallery insertion markers are missing")
+    cells = []
+    for number, (slug, _) in enumerate(CATEGORIES, 1):
+        filename = f"{number:03d}-{slug}.png"
+        label = slug.replace("-", " ").title()
+        cells.append(
+            f'<td align="center"><img src="Assets/Future/PNG/{filename}" '
+            f'width="170" alt="{label}"><br><b>{label}</b></td>'
+        )
+    rows = ["<table>"]
+    for offset in range(0, len(cells), 4):
+        rows.append("<tr>" + "".join(cells[offset:offset + 4]) + "</tr>")
+    rows.append("</table>")
+    gallery = "\\n".join(rows)
+    left = text.index(start_marker) + len(start_marker)
+    right = text.index(end_marker, left)
+    updated = text[:left] + "\\n" + gallery + "\\n" + text[right:]
+    readme_path.write_text(updated, encoding="utf-8")
+    print("README gallery updated with all 100 local PNG images.", flush=True)
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--start",type=int,default=1)
@@ -516,4 +543,5 @@ def main():
     if present<100 or attributed<100:
         print("Retry missing categories with the same command or process a range.")
         raise SystemExit(2)
+    update_readme_gallery()
 if __name__=="__main__": main()

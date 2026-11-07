@@ -6,6 +6,7 @@
 
 <p align="center"><strong>A long-horizon biomedical research, molecular discovery and therapeutic-translation platform.</strong></p>
 <p align="center">
+  <a href="KINETICS_MISSION.md">Foundational mission</a> ·
   <a href="VISION.md">Vision</a> ·
   <a href="ROADMAP.md">Master roadmap</a> ·
   <a href="ARCHITECTURE.md">Architecture</a> ·
@@ -44,17 +45,17 @@
       A separate AI project planned to assist research through cited evidence, permission-scoped tools and reproducible workflows.
     </td>
     <td width="50%" valign="top">
-      <h3>📱 Desktop first, Android later</h3>
-      Establish a powerful desktop research workbench and stable APIs before developing a secure mobile companion.
+      <h3>📱 Scientific foundation first; desktop and Android clients afterwards</h3>
+      Complete the cross-domain scientific foundation and stable APIs before building polished end-user applications for desktop and Android. Validate constrained-device performance throughout foundation development.
     </td>
   </tr>
 </table>
 
-## The ambition
+## The global mission
 
-Kinetics aims to connect biology across scales—from genes, variants, proteins and molecular interactions to cells, tissues, disease mechanisms, therapeutic candidates, imaging and treatment-response evidence—in one reproducible scientific environment.
+Kinetics aims to become a comprehensive, connected biomedical-science and precision-health research platform: linking genetics, proteins and structures, chemistry, multi-omics, systems biology, physiology, disease, pharmacology, clinical evidence, imaging and lifestyle research. Its long-term purpose is to help researchers understand biological individuality, discover and validate better interventions, and support more precise prevention and treatment research.
 
-The long-term goal is to accelerate discovery and the research that may enable more precise, effective and safer treatment. This is a multi-year ambition, not a claim that a universal treatment engine exists today.
+The ambition, build order, data principles and mandatory decision filter are defined in [KINETICS_MISSION.md](KINETICS_MISSION.md). The system foundation comes first; polished applications follow stable scientific data, analysis, security and API foundations. Small Android devices are a first-class performance constraint. This is a multi-year ambition, not a claim that a universal or clinically validated treatment engine exists today.
 
 > **Research and safety boundary:** Kinetics is research software. It does not diagnose, prescribe, select treatment or replace clinicians. Computational predictions and simulations are hypotheses, not medical instructions. Any future clinical function requires a defined intended use, independent clinical validation, appropriate governance and regulatory authorization.
 

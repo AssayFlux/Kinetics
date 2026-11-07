@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="510" viewBox="0 0 960 510" role="img" aria-labelledby="title desc">
 <title id="title">Kinetics public corpus growth</title>
-<desc id="desc">Initial dashboard awaiting the first verified public corpus release. No bundled model checkpoint parameter counts are currently registered.</desc>
+<desc id="desc">Initial dashboard awaiting the first verified public corpus release. The repository configures an external ESM-2 checkpoint with approximately 8 million parameters; its weights are not bundled.</desc>
 <style>
 .bg{fill:#0b1220}.title{fill:#f8fafc;font:700 25px sans-serif}.subtitle{fill:#a8b4c7;font:14px sans-serif}.grid{stroke:#29364a;stroke-width:1}.axis{fill:#9aa9bd;font:12px sans-serif}.empty{fill:#cbd5e1;font:16px sans-serif}.metric{fill:#f8fafc;font:700 21px sans-serif}.metric-label{fill:#94a3b8;font:12px sans-serif}
 </style>
@@ -13,5 +13,6 @@
 <line x1="42" y1="365" x2="918" y2="365" class="grid"/>
 <text x="55" y="397" class="metric">0 MiB</text><text x="55" y="416" class="metric-label">0 public objects · 0 domains · 0 sources</text>
 <text x="510" y="397" class="metric">0</text><text x="510" y="416" class="metric-label">indexed documents · 0 searchable chunks · 0 tokens</text>
-<text x="55" y="451" class="metric">0</text><text x="55" y="466" class="metric-label">verified parameters in bundled model checkpoints · 0 checkpoints; external weights excluded</text>
+<text x="55" y="451" class="metric">0</text><text x="55" y="466" class="metric-label">verified parameters in bundled model checkpoints · 0 checkpoints</text>
+<text x="55" y="491" class="metric">8,000,000</text><text x="55" y="506" class="metric-label">configured external model parameters (approx.) · 1 model; weights downloaded on first use</text>
 </svg>

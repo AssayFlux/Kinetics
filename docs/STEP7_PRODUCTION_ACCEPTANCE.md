@@ -1,5 +1,7 @@
 # Step 7 production acceptance and security review
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## Runtime architecture implemented in this branch
 
 - Identity: RS256 JWT verification against an HTTPS OIDC JWKS endpoint; issuer, audience, expiry, key ID, subject, tenant claim and exact scopes are checked. JWKS keys are cached for five minutes and provider failures fail closed.

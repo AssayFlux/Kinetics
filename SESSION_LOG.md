@@ -110,3 +110,30 @@ Inspect the GitHub Actions run on `main`, fix any failures, record the actual ru
 
 ### Next step
 Wait for the owner's explicit R0 exit-gate approval. On approval, begin R1 feasibility planning and stop again at its go/no-go gate.
+
+
+## 2026-11-07 — Session 6: R1 Android feasibility started
+**Phase:** Track R / R1 Android feasibility  
+**Objective:** Start the R1 feasibility investigation and define evidence requirements without crossing the R1 go/no-go gate.
+
+### Done
+- Owner authorised R1 on 2026-11-07; R0 exit is treated as accepted.
+- Read NORTH_STAR.md, ROADMAP.md, DECISIONS.md and the prior session log.
+- Confirmed current main tree and existing R0 scaffolding.
+- Added the R1 phase plan with experiments, evidence protocol, device constraints and exit criteria.
+- Updated roadmap: R0 done; R1 in progress. R2 and R3 remain not started.
+- NORTH_STAR status metadata now reflects the already-approved baseline; mission and scope are unchanged.
+
+### Not done / validation status
+- No Android project, APK/AAB, emulator or physical-device experiment has been run in this session.
+- Embedded Python/Biopython, Rust FFI, C++ JNI, real engine, RDKit/alternative, offline viewer, 16 KB alignment, package size, cold-start and memory results are all untested.
+- No scientific capability or clinical feature is implemented or validated.
+- Target device decision D-006 remains open; six owner decisions remain open.
+
+### Risks / blockers
+- Physical-device evidence requires owner-selected or owner-provided arm64 target hardware. Emulator results cannot substitute for it.
+- Candidate scientific engines and chemistry libraries require upstream support and license review; restrictive licenses require owner approval.
+- R1 go/no-go must be reviewed and approved before R2. R3 depends on R2 and cannot start in parallel.
+
+### Next step
+Continue R1 experiments and record raw reproducible evidence in docs/android-feasibility.md. Stop at the R1 go/no-go gate.

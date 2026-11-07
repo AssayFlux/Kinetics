@@ -1,6 +1,6 @@
 # Kinetics — North Star
 
-**Status:** Proposed for owner approval  
+**Status:** Owner-approved baseline  
 **Last reviewed:** 2026-11-07  
 **Authority:** Permanent direction. This file changes only with the project owner's explicit approval and a corresponding entry in `DECISIONS.md`.
 

@@ -1,5 +1,5 @@
 # Kinetics — Roadmap
-**Status:** Owner-approved baseline; R0 implementation and automated checks complete; exit gate awaiting owner acceptance  
+**Status:** Owner-approved baseline; R0 done; R1 in progress  
 **Last updated:** 2026-11-07  
 **Statuses:** not-started | in-progress | blocked | done | dropped  
 **Owners:** Project owner = repository owner; Engineering = implementation contributor. Dates are review/target dates, not completion claims.
@@ -7,18 +7,18 @@
 This roadmap operationalises the archived master. A phase is complete only when exit evidence exists in the repository and required owner approval is recorded.
 
 ## Current position
-- Track R / R0 Foundations: implementation and automated acceptance checks complete; exit gate is blocked pending explicit owner acceptance.
+- Track R / R0 Foundations: owner accepted the R0 exit and authorised R1 on 2026-11-07; R0 is done.
 - The owner-approved direction baseline and reconstructed historical master are present; NORTH_STAR was not changed.
 - Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
-- GitHub Actions run 1375 is green on the current main commit: pre-commit configuration validation, Ruff, mypy, registry validation, 11 unit tests, reproduction stub and explicit Android blocker check passed. [Run details](https://github.com/AssayFlux/Kinetics/actions/runs/42378747002).
-- Native/Android, 16 KB alignment and APK/AAB size checks are explicitly blocked/not applicable in R0 pending R1 toolchains and named devices. No scientific validation, Android feasibility or device verification is claimed.
+- R0 accepted by the owner when they authorised R1 on 2026-11-07. CI evidence: [R0 workflow run](https://github.com/AssayFlux/Kinetics/actions/runs/42378815901).
+- R1 is now in progress. D-006 target devices remains open; no Android feasibility or device verification is yet claimed.
 - Six decisions remain open: license, target jurisdictions, paper framing/venue, clinical advisers, first PGx gene set and target Android devices.
 
 ## Track R — Research platform
 | ID | Scope | Dependencies | Exit gate | Status | Owner | Date |
 |---|---|---|---|---|---|---|
-| R0 | Skeleton; direction files; owner-selected license (do not choose); CI lint/type/tests/native builds/16 KB/size budgets; pre-commit; registry/checker; reproduce-all stub | Direction approval | Empty-skeleton CI green; registry checks/tests; honest blocked checks; stop | blocked | Engineering + owner | Owner exit approval pending |
-| R1 | Real arm64 + emulator: embedded Python/Biopython, Rust app call, C++ JNI, cross-compiled engine, RDKit/alternative, offline Mol* WebView, 16 KB, APK/AAB size, cold start, memory | R0 approved | docs/android-feasibility.md and go/no-go matrix; owner decision | not-started | Engineering | TBD |
+| R0 | Skeleton; direction files; owner-selected license (do not choose); CI lint/type/tests/native builds/16 KB/size budgets; pre-commit; registry/checker; reproduce-all stub | Direction approval | Empty-skeleton CI green; registry checks/tests; honest blocked checks; stop | done | Engineering + owner | 2026-11-07 |
+| R1 | Real arm64 + emulator: embedded Python/Biopython, Rust app call, C++ JNI, cross-compiled engine, RDKit/alternative, offline Mol* WebView, 16 KB, APK/AAB size, cold start, memory | R0 approved | docs/android-feasibility.md and go/no-go matrix; owner decision | in-progress | Engineering + owner | Started 2026-11-07 |
 | R2 | Compose, SQLite, SAF, provenance, cancellable/resumable WorkManager, registry, pack manager, Keystore encryption | R1 go | On-device import, cancellable job, provenance inspection | not-started | Engineering | TBD |
 | R3 | v0.1 alpha: sequence tools, protein properties, enzyme kinetics and independent-reference validation | R2 | Offline real-device install and validation records; v0.1 gate | not-started | Engineering + Validation | TBD |
 | R4 | Rust FASTA/FASTQ/SAM/BAM/VCF, QC, trimming, k-mers | R2/Rust feasibility | Reference concordance, bounded memory, device benchmarks | not-started | Engineering + Validation | TBD |
@@ -73,7 +73,7 @@ Further disease areas only after P7 evidence, one at a time.
 | G5 | Paper evidence pipeline | R/S/I/P evidence | Manuscript tables/figures generated from validation/benchmarks | not-started | Research + Validation | TBD |
 
 ## Mandatory gates
-Direction baseline; R0 exit; R1 go/no-go; owner-selected LICENSE; P0; GPL/AGPL bundling; new language; engine-tier change; restrictive license; target jurisdiction; real patient data/human participants; paper framing/venue/authorship; NORTH_STAR change; Clinical Mode. Stop at each gate.
+Direction baseline; R0 exit (accepted 2026-11-07); R1 go/no-go; owner-selected LICENSE; P0; GPL/AGPL bundling; new language; engine-tier change; restrictive license; target jurisdiction; real patient data/human participants; paper framing/venue/authorship; NORTH_STAR change; Clinical Mode. Stop at each gate.
 
 ## Session protocol
 At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase/objective in two lines. Map every task to roadmap; drift-check before tasks/commits. At end update statuses, record decisions, append session log and report evidence/gaps/risks. Never claim unverified work.

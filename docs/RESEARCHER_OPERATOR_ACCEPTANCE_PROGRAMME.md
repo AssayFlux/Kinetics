@@ -117,3 +117,10 @@ Programme completion requires all role-based sessions run against the release ca
 ## 9. Current limitations
 
 This document defines training and acceptance; it does not record completed sessions, accessibility testing, production operator training, independent scientific review or recovery-drill evidence. A cloud scientific executor and enforced per-job sandbox are prerequisites; a no-op worker is insufficient. Real licensed benchmarks require approved access and immutable snapshots. Keep these limitations visible until evidence exists.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

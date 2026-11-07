@@ -1,5 +1,7 @@
 # Kinetics — Master roadmap
 
+> **Mission authority:** This document is governed by [KINETICS_MISSION.md](KINETICS_MISSION.md). Kinetics is a cross-disciplinary biomedical and precision-health research platform—not only an enzyme-kinetics project. All domains, datasets, models and applications must align with the mission, preserve provenance and clinical safety, and follow the foundation-first build order. Small Android devices are a first-class performance target.
+
 **Horizon:** multi-year and potentially decade-scale. Time bands are planning estimates, not promises.  
 **Build principle:** architecture and functional scope first; comprehensive training, testing, benchmarking and scientific evaluation after the integrated implementation is assembled. Continuous engineering checks, security review and safety controls remain active throughout.
 

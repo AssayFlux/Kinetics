@@ -234,3 +234,12 @@ models/*
 data/public/
 data/raw/
 data/processed/
+
+# Local SQLite databases and transient scientific data
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+data/cache/
+data/downloads/

@@ -4,6 +4,8 @@
 
 ### CONNECTING SCIENCE · ADVANCING HEALTH · PROTECTING HUMANITY
 
+<img src="Assets/Brand%20Logo.svg" width="240" alt="Kinetics brand logo">
+
 **ONE SCIENTIFIC ECOSYSTEM. 100 DOMAINS. A MORE RESILIENT FUTURE.**
 
 *An evidence-centred scientific and biomedical research infrastructure connecting life sciences, medicine, healthcare, treatment research and the engineering of future health.*
@@ -30,15 +32,6 @@ The ambition spans fundamental biological discovery through translational resear
 | Build order | Integrate foundations first; build the application second; comprehensive acceptance and training third |
 | Safety | Research infrastructure—not an autonomous clinician or prescribing system |
 
-## Kinetics in motion
-
-Kinetics has one visual asset: an original, colourful, continuously looping science animation. It brings the platform's molecular, cellular and computational vision to life through an original pixel-art science quest.
-
-<!-- KINETICS_ANIMATION -->
-<div align="center">
-<img src="Assets/Future/kinetics-science-quest.gif" width="960" alt="Original Kinetics science-in-motion animation">
-</div>
-<!-- /KINETICS_ANIMATION -->
 
 ### 1. Molecular foundations
 
@@ -190,19 +183,10 @@ Kinetics has one visual asset: an original, colourful, continuously looping scie
 | 99 | Artificial intelligence in medicine | Validated AI methods for medical research and decision support. |
 | 100 | Humanitarian and disaster health | Health resilience in disasters, conflict, displacement and infrastructure failure. |
 
-## Visual asset policy
+## Brand identity and visual assets
 
-The repository intentionally contains **one image asset only**: the original animated GIF shown above. No static logos, illustrations, scientific photo galleries, PNG collections, placeholders or image-acquisition jobs are maintained.
+The original Kinetics brand mark is preserved at `Assets/Brand Logo.svg`. It is the repository's brand identity asset. Generated GIF animations and the retired animation-generation workflow are not part of the project.
 
-Regenerate and validate the animation:
-
-```bash
-python -m pip install Pillow
-python scripts/build_pixel_animation.py
-python scripts/validate_visual_assets.py
-```
-
-The animation is original pixel-art artwork generated from code. Its source is maintained in `scripts/build_pixel_animation.py`; the binary GIF is built and checked by GitHub Actions.
 
 ## A connected research infrastructure
 
@@ -269,7 +253,7 @@ Continuous tests run during development. Comprehensive end-to-end acceptance and
 | docs/SCIENCE_DOMAIN_CATALOGUE_100.md | Canonical 100-domain scope |
 | docs/IMPLEMENTATION_STATUS.md | Implemented work, evidence and blockers |
 | docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md | Acceptance-based completion plan |
-| docs/ASSET_PIPELINE.md | Single animated visual asset generation and validation |
+| docs/ASSET_PIPELINE.md | Brand identity asset policy |
 | scripts/ | Acquisition, curation, validation and asset tools |
 
 ## Scientific and clinical responsibility

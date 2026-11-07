@@ -55,7 +55,7 @@ Hard gate: no patient-related feature before P0; early research uses public test
 |---|---|---|---|---|---|---|
 | P0 | Intended use; legal/ethics/regulatory advice; advisers identified; QMS approach | G1–G3 planning | Written gate packet and owner approval; no patient feature before pass | blocked | Owner + qualified advisers | TBD |
 | P1 | Genotype ingest/QC/annotation/build handling, Research Mode, public data | P0, R4, reference/license review | Pinned builds, thresholds and concordance | not-started | Engineering + Validation | TBD |
-| P2 | PGx star-allele/diplotype/phenotype for an adviser-reviewed, owner-approved panel (provisional six-gene research scope in D-005; revise/stage if evidence requires) | P1, caller/license review | Reference and established-tool concordance; indeterminate never guessed | not-started | Engineering + advisers | TBD |
+| P2 | PGx star-allele/diplotype/phenotype for a broad, adviser-reviewed, owner-approved gene panel; exact panel scope pending D-005 clarification and evidence-based staging | P1, caller/license review | Reference and established-tool concordance; indeterminate never guessed | not-started | Engineering + advisers | TBD |
 | P3 | Guideline mapping/report, Research Mode | P2, guideline license review | Versioned mapping tests and wording review | not-started | Engineering + advisers | TBD |
 | P4 | Variant evidence assistant with human curator | P1, evidence-source license review | Curator workflow; no autonomous final classification | not-started | Engineering + curators | TBD |
 | P5 | Advisory review and clinician usability testing | P3–P4, ethics review/exemption | Documented review/study evidence | not-started | Owner + advisers | TBD |

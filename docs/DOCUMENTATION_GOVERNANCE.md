@@ -40,18 +40,24 @@ The 100-domain catalogue is a scope register, not an implementation checklist. T
 - Responsive HTML/CSS shells are prototypes, not native desktop applications or an Android APK.
 - Release-gate software does not provide human release sign-off or clinical authorization.
 
+## Documentation validation completed
+
+- Inspected the complete tracked Markdown set (54 files across the root, docs, Assets and database seed guide).
+- Checked relative Markdown links against the tracked-file tree. Two pre-existing broken-link groups were found in `database/seed/README.md` and `docs/APPLICABILITY_DOMAIN.md`; both were corrected. The final check found no broken relative links in the changed documentation entry points.
+- Checked the documentation index against the tracked tree: all 43 `docs/*.md` files are now represented, with no missing index targets.
+- Confirmed the misleading root `project_structure.md` is gone and the subsystem guide and repository-wide map are present.
+
 ## Remaining review work
 
-The changes in this branch establish the documentation hierarchy and resolve the identified high-impact contradictions. They do not claim that every one of the 200 tracked files has been line-edited. The following require a separate, evidence-led pass rather than speculative mass edits:
+The changes establish the documentation hierarchy and resolve the identified high-impact contradictions. They do not claim that every one of the 203 tracked files has been line-edited. The following require a separate, evidence-led pass rather than speculative mass edits:
 
-1. Run all repository CI jobs on the final branch commit and resolve any failures.
-2. Validate every relative Markdown link and every documented CLI command against the actual source tree.
-3. Reconcile the detailed 10-step programme against the new status snapshot, including all dated CI references and any newly merged PRs.
-4. Review the full 100-domain catalogue and source registry for duplicate scopes, source terms, stale endpoints and unsupported redistribution assumptions.
-5. Review every workflow for permissions, schedules, secrets exposure, release publication and actual recent run evidence.
-6. Review the entire source/test tree for dead modules, duplicated APIs, unreferenced assets and unused dependencies before deleting anything.
-7. Review privacy, retention, consent and threat-model documents before any personal genomic or clinical data is accepted.
-8. Reassess each subsystem's acceptance state after real-data and independent scientific validation.
+1. Run all repository CI jobs on the latest main commit and resolve any failures.
+2. Reconcile the detailed 10-step programme against the current status snapshot, including dated CI references and newly merged changes.
+3. Review the full 100-domain catalogue and source registry for duplicate scopes, source terms, stale endpoints and unsupported redistribution assumptions.
+4. Review every workflow for permissions, schedules, secrets exposure, release publication and actual recent run evidence.
+5. Review the entire source/test tree for dead modules, duplicated APIs, unreferenced assets and unused dependencies before deleting anything.
+6. Review privacy, retention, consent and threat-model documents before any personal genomic or clinical data is accepted.
+7. Reassess each subsystem's acceptance state after real-data and independent scientific validation.
 
 ## Deletion policy
 

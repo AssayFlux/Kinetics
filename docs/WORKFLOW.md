@@ -1,5 +1,7 @@
 # End-to-end research workflow
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 This guide describes the intended order of operations. It is documentation for the implemented utilities, not a report that the workflow has been executed or validated.
 
 ## 1. Acquire and inspect public data

@@ -12,6 +12,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-005 | 2026-11-07 | Gene-scope breadth | Approved strategic direction — both a comprehensive PGx gene panel and a broad cross-domain gene catalogue; exact inventories and rollout are staged by evidence | Project owner |
 | D-006 | 2026-11-07 | Target Android devices/minimum support matrix | Approved — Android 10+ (API 29), 64-bit ARM; low-end, mid-range and flagship test tiers | Project owner |
 | D-007 | 2026-11-07 | Source-master archival | Resolved operationally — reconstructed from owner's complete chat-supplied master at docs/origin/KINETICS_MASTER.md; not represented as a Git move | Owner instruction |
+| D-008 | 2026-11-07 | Authorization to execute R1–R3 | Approved — proceed sequentially, subject to each phase's evidence, safety and exit gates; not a waiver or completion sign-off | Project owner |
 
 ## D-000 — Direction baseline (approved)
 - Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.
@@ -73,3 +74,12 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Consequences / roadmap impact:
 - Approver:
 - Evidence:
+
+
+## D-008 — Authorization to execute R1–R3 sequentially (approved)
+- Date: 2026-11-07.
+- Context: Owner explicitly approved “R1, R2 & R3” after clarification of the earlier ambiguous “R2 & R2” message.
+- Choice: Proceed with the R1, R2 and R3 workstreams in sequence.
+- Consequences: This is authorization to execute the approved roadmap phases, not a finding that any phase has passed its exit criteria. R1 remains in progress and currently has a documented Android build blocker at Chaquopy Biopython dependency resolution. R2 may begin only after R1 evidence is complete and the R1 go/no-go is documented; R3 may begin only after R2's exit evidence and approval. All scientific validation, third-party licensing, device verification, security, privacy, clinical and P0 gates remain in force. No clinical mode, patient-data workflow or clinical claim is authorized by this decision.
+- Approver: Project owner, explicit approval in chat on 2026-11-07 (“Approved R1,R2&R3”).
+- Evidence: Owner approval message in project conversation; phase completion evidence remains outstanding and must be recorded separately.

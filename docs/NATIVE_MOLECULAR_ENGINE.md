@@ -40,3 +40,10 @@ The CTest fixture checks atom and bond identity, coordinate preservation, known-
 ## Performance policy
 
 No renderer or performance claim is made in this stage. The native reference workload is the checked-in two-atom fixture; meaningful parser/renderer benchmarks must use versioned representative structures, report atom/bond counts, compiler/build flags, hardware, wall time and peak memory. Optimize only after those profiles exist.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

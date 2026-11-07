@@ -1,6 +1,15 @@
 name: Kinetics knowledge corpus ingestion
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/bulk_downloader.yml"
+      - "scripts/fetch_corpus.py"
+      - "scripts/fetch_research_data.py"
+      - "scripts/tokenize_corpus.py"
+      - "database/sources/knowledge_sources.json"
+      - "requirements-knowledge.txt"
   schedule:
     - cron: "23 2 * * 1,4"
   workflow_dispatch:
@@ -72,8 +81,8 @@ jobs:
           cycles, count, size = map(int, (
               os.environ["CYCLES"], os.environ["BATCH_SIZE"], os.environ["MAX_BATCH_MB"]
           ))
-          if not 1 <= cycles <= 3 or not 1 <= count <= 30 or not 1 <= size <= 80:
-              raise SystemExit("Limits exceeded: cycles 1-3, batch size 1-30, MiB 1-80")
+          if not 1 <= cycles <= 3 or not 1 <= count <= 30 or not 2 <= size <= 80:
+              raise SystemExit("Limits exceeded: cycles 1-3, batch size 1-30, MiB 2-80")
           PY
 
       - name: Fetch, tokenize and analyze bounded batches
@@ -82,13 +91,20 @@ jobs:
           BATCH_SIZE: ${{ inputs.batch_size || '30' }}
           MAX_BATCH_MB: ${{ inputs.max_batch_mb || '80' }}
         run: |
+          HALF_BATCH=$(( (BATCH_SIZE + 1) / 2 ))
+          HALF_MB=$(( MAX_BATCH_MB / 2 ))
           for cycle in $(seq 1 "$CYCLES"); do
-            echo "Starting bounded ingestion cycle $cycle/$CYCLES"
+            echo "Starting bounded multi-source ingestion cycle $cycle/$CYCLES"
             python scripts/fetch_corpus.py \
-              --batch-size "$BATCH_SIZE" \
-              --max-batch-mb "$MAX_BATCH_MB" \
+              --batch-size "$HALF_BATCH" \
+              --max-batch-mb "$HALF_MB" \
               --max-domains 8
-            python scripts/tokenize_corpus.py --max-documents 50
+            python scripts/fetch_research_data.py \
+              --batch-size "$HALF_BATCH" \
+              --max-batch-mb "$HALF_MB" \
+              --max-file-mb "$HALF_MB" \
+              --max-domains 8
+            python scripts/tokenize_corpus.py --max-documents 100
             python scripts/analyze_corpus.py
           done
 

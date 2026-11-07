@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Validate the 100 PNG gallery, attribution manifest and animated GIF."""
 from __future__ import annotations
-import argparse,json
+import argparse
+import json
 from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[1]

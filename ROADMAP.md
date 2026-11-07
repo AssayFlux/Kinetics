@@ -12,7 +12,7 @@ This roadmap operationalises the archived master. A phase is complete only when 
 - Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
 - R0 accepted by the owner when they authorised R1 on 2026-11-07. CI evidence: [R0 workflow run](https://github.com/AssayFlux/Kinetics/actions/runs/42378815901).
 - R1 is now in progress. D-006 target devices remains open; no Android feasibility or device verification is yet claimed.
-- Six decisions remain open: license, target jurisdictions, paper framing/venue, clinical advisers, first PGx gene set and target Android devices.
+- Five owner decisions remain open: target jurisdictions, paper framing/venue, clinical advisers, first PGx gene set and target Android devices. D-001 (project license) is approved as Apache-2.0; adding the canonical LICENSE grant file remains a repository task.
 
 ## Track R — Research platform
 | ID | Scope | Dependencies | Exit gate | Status | Owner | Date |
@@ -73,7 +73,7 @@ Further disease areas only after P7 evidence, one at a time.
 | G5 | Paper evidence pipeline | R/S/I/P evidence | Manuscript tables/figures generated from validation/benchmarks | not-started | Research + Validation | TBD |
 
 ## Mandatory gates
-Direction baseline; R0 exit (accepted 2026-11-07); R1 go/no-go; owner-selected LICENSE; P0; GPL/AGPL bundling; new language; engine-tier change; restrictive license; target jurisdiction; real patient data/human participants; paper framing/venue/authorship; NORTH_STAR change; Clinical Mode. Stop at each gate.
+Direction baseline; R0 exit (accepted 2026-11-07); R1 go/no-go; Apache-2.0 LICENSE grant file; P0; GPL/AGPL bundling; new language; engine-tier change; restrictive license; target jurisdiction; real patient data/human participants; paper framing/venue/authorship; NORTH_STAR change; Clinical Mode. Stop at each gate.
 
 ## Session protocol
 At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase/objective in two lines. Map every task to roadmap; drift-check before tasks/commits. At end update statuses, record decisions, append session log and report evidence/gaps/risks. Never claim unverified work.

@@ -2,7 +2,7 @@
 
 ## Scope
 
-This subsystem turns openly redistributable books and research articles into a source-grounded local knowledge index for Kinetics. It is an acquisition and research-support pipeline, not a clinical decision system. The 100 foundational domains in `docs/SCIENCE_DOMAIN_CATALOGUE_100.md` are combined with 60 extensions in `database/domains/extended_domains.json`, yielding 160 unique acquisition domains. `database/domains/domain_synonyms.json` expands each domain into source-search terms; this is the single acquisition taxonomy used by the fetcher.
+This subsystem turns openly redistributable books and research articles into a source-grounded local knowledge index for Kinetics. It is an acquisition and research-support pipeline, not a clinical decision system. The 100 foundational domains in `docs/SCIENCE_DOMAIN_CATALOGUE_100.md` are combined with 60 extensions in `database/domains/extended_domains.json`, yielding 160 unique acquisition domains. Their extension scope descriptions are maintained in `database/domains/extended_domain_scopes.json`. `database/domains/domain_synonyms.json` expands each domain into source-search terms; this is the single acquisition taxonomy used by the fetcher.
 
 ## Components
 
@@ -45,7 +45,7 @@ python scripts/fetch_corpus.py --dry-run
 Fetch one bounded batch (30 files maximum; 80 MiB total by default):
 
 ```bash
-python scripts/fetch_corpus.py --batch-size 30 --max-batch-mb 80
+python scripts/fetch_corpus.py --batch-size 30 --max-batch-mb 80 --max-domains 8 --max-file-mb 100
 ```
 
 The source IDs and states are checkpointed in `data/corpus-manifests/metadata_index.json`. Binary objects are stored under `data/corpus/objects/{medicine,biomedical,engineering}/`. Re-running the command resumes from the domain cursor and skips already downloaded IDs. A failed transient item can be retried on a later run. The default batch configuration is deliberately bounded. The per-file cap defaults to 100 MiB (`--max-file-mb`, maximum 200 MiB) and the aggregate byte guard remains mandatory for unattended execution.

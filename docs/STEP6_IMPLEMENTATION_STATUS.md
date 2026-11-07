@@ -16,7 +16,7 @@ Implemented in this change:
 - Parameter-validated OpenMM/GROMACS simulation-plan schema recording force field, water model, integrator, timestep, steps, temperature, pressure, seed and input hash. Plans explicitly say planned_not_executed.
 
 Not yet accepted as complete:
-- This first parser supports PDB only; mmCIF and biological assemblies are not implemented.
+- The native C++ parser supports PDB only. A separate Python mmCIF coordinate adapter is documented in `STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md`; it does not extend this native parser. Biological assembly expansion is not implemented.
 - No GPU-accelerated 3D renderer, camera/interactive desktop viewer, molecular surfaces or depth-aware interaction overlays are implemented. The current XY preview is a diagnostic projection, not a full molecular viewer.
 - The simulation interface currently produces a traceable plan only. It does not generate engine-specific OpenMM/GROMACS input decks or execute simulations.
 - Native cross-platform build/test evidence must pass CI; reference fixtures are minimal and do not replace validation against reviewed reference structures.

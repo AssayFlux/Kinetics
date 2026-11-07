@@ -1,7 +1,7 @@
 """Offline-first assistant boundary for Kinetics.
 
 This module deliberately does not bundle or download a language model. A local
-backend (planned: AssayFlux/Astronaut) is injected through the small
+backend (for example, a separately deployed Kinetics Ecosystem runtime) is injected through the small
 `AssistantBackend` protocol. Keeping this boundary dependency-free allows the
 scientific package to remain usable without an AI runtime.
 """
@@ -47,7 +47,7 @@ class AssistantResponse:
 
 
 class AssistantBackend(Protocol):
-    """Adapter contract implemented by Astronaut or another local runtime."""
+    """Adapter contract implemented by an explicitly configured local runtime."""
 
     def generate(self, request: AssistantRequest) -> AssistantResponse:
         """Generate a response without requiring Kinetics to know model internals."""

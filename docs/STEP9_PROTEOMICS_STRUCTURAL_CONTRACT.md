@@ -105,7 +105,13 @@ The `kinetics_core.proteomics` module now implements versioned protein-sequence,
 
 A strict fixed-column PDB adapter now verifies the exact coordinate-file SHA-256 before parsing ATOM/HETATM records. It retains model, chain, author residue number, insertion code, alternate location, occupancy, B-factor, and coordinates. The C-alpha distance utility requires two explicit sequence-to-structure mappings, validates their sequence identity and chain/residue identity, selects alternate locations deterministically, and records coordinate digest, model frame, parameter digest, tool version, and mapping evidence IDs.
 
-The adapter intentionally does not parse mmCIF, infer residue alignments, expand biological assemblies, reconstruct missing residues, or estimate coordinate uncertainty. Experimental/predicted status remains supplied explicitly in the structure record. Tests use a small deterministic PDB fixture; this is parser/contract validation, not biological validation or a real-data benchmark.
+The PDB adapter intentionally does not infer residue alignments, expand biological assemblies, reconstruct missing residues, or estimate coordinate uncertainty. Experimental/predicted status remains supplied explicitly in the structure record. Tests use small deterministic fixtures; this is parser/contract validation, not biological validation or a real-data benchmark.
+
+## mmCIF coordinate adapter increment (2026-11-07)
+
+A separate Python mmCIF adapter now verifies the exact source-file SHA-256 and parses deposited `_atom_site` author-coordinate fields through Biopython's `MMCIF2Dict`. It preserves author chain and residue identifiers, model number, insertion code, alternate location, occupancy, B-factor, element and Cartesian coordinates. It rejects missing author identity, unregistered chains, invalid/non-finite coordinates and digest mismatches. The parsed records use the shared explicit residue-mapping and evidence-linked C-alpha distance routine. Fixture tests cover a known distance, digest tampering, unregistered chains and non-finite coordinates.
+
+This is a bounded coordinate adapter, not a general mmCIF parser or source-acquisition service. It does not generate sequence mappings, expand biological assemblies, reconstruct missing atoms/residues or establish biological validity. It does not add mmCIF support to the native C++ parser.
 
 
 ---

@@ -145,14 +145,21 @@ Some integration checks require optional dependencies or local services.
 
 | Document | Purpose |
 |---|---|
-| `ARCHITECTURE.md` | System architecture and component boundaries |
-| `ROADMAP.md` | Development stages and milestones |
-| `docs/IMPLEMENTATION_STATUS.md` | Implemented, pending and blocked work |
-| `docs/SCIENCE_DOMAIN_CATALOGUE_100.md` | Complete scientific domain catalogue |
-| `docs/WORKFLOW.md` | End-to-end scientific workflow |
-| `docs/WORKBENCH_GUIDE.md` | Setup, usage and workbench boundaries |
-| `docs/STEP7_PRODUCTION_ACCEPTANCE.md` | Infrastructure and production acceptance criteria |
-| `docs/STEP10_RELEASE_READINESS_GATES.md` | Release evidence and go/no-go requirements |
+| [KINETICS_MISSION.md](KINETICS_MISSION.md) | Authoritative mission and project boundaries |
+| [VISION.md](VISION.md) | Long-term scientific and product vision |
+| [ROADMAP.md](ROADMAP.md) | Fifteen long-term programmes and dependencies |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture and component boundaries |
+| [ENGINEERING_STACK.md](ENGINEERING_STACK.md) | Technology responsibilities and engineering standards |
+| [docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md) | Complete maintained documentation map |
+| [docs/DOCUMENTATION_GOVERNANCE.md](docs/DOCUMENTATION_GOVERNANCE.md) | Documentation authority and consistency audit |
+| [docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md](docs/KINETICS_10_STEP_COMPLETION_PROGRAMME.md) | Active engineering completion programme |
+| [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) | Current implementation snapshot and blockers |
+| [docs/IMPLEMENTATION_HISTORY.md](docs/IMPLEMENTATION_HISTORY.md) | Preserved historical implementation notes |
+| [docs/SCIENCE_DOMAIN_CATALOGUE_100.md](docs/SCIENCE_DOMAIN_CATALOGUE_100.md) | Complete scientific domain catalogue |
+| [docs/WORKFLOW.md](docs/WORKFLOW.md) | End-to-end enzyme-kinetics research workflow |
+| [docs/WORKBENCH_GUIDE.md](docs/WORKBENCH_GUIDE.md) | Setup, usage and workbench boundaries |
+| [docs/STEP7_PRODUCTION_ACCEPTANCE.md](docs/STEP7_PRODUCTION_ACCEPTANCE.md) | Infrastructure and production acceptance criteria |
+| [docs/STEP10_RELEASE_READINESS_GATES.md](docs/STEP10_RELEASE_READINESS_GATES.md) | Release evidence and go/no-go requirements |
 
 ## Responsible research
 

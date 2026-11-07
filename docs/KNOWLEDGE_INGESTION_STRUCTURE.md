@@ -1,7 +1,7 @@
-# Kinetics Knowledge Ingestion — Project Structure
+# Kinetics knowledge-ingestion subsystem structure
 
-This subsystem extends the canonical 100-domain register in
-`docs/SCIENCE_DOMAIN_CATALOGUE_100.md` and the existing SQLite/data-platform
+This document describes only the knowledge-ingestion subsystem. It extends the canonical 100-domain register in
+`SCIENCE_DOMAIN_CATALOGUE_100.md` and the existing SQLite/data-platform
 architecture. It does not create a second domain catalogue or replace the
 existing scientific data model.
 
@@ -41,8 +41,8 @@ Kinetics/
 │   └── git_sync.py                # manifest/LFS synchronization
 ├── tests/
 │   └── test_knowledge_ingestion.py
-├── requirements.txt               # existing requirements + pinned ingestion extras
-├── requirements-knowledge.txt     # lightweight pinned ingestion environment
+├── requirements.txt               # general project/runtime dependencies
+├── requirements-knowledge.txt     # optional pinned knowledge-ingestion dependencies
 └── README.md
 ```
 

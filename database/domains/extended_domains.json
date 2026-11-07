@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "extends": "docs/SCIENCE_DOMAIN_CATALOGUE_100.md",
-  "note": "Additional cross-disciplinary engineering, computing and natural-science acquisition scopes; this extends rather than replaces the canonical 100 domains.",
+  "note": "Extends the 100 foundational biomedical/scientific domains with 60 cross-disciplinary scopes. Total acquisition catalogue: 160 unique domains. Catalogue membership is scope, not implementation or corpus-completeness evidence.",
   "domains": [
     "Computer science",
     "Software engineering",
@@ -47,6 +47,21 @@
     "Safety engineering",
     "Industrial engineering",
     "Manufacturing engineering",
-    "Systems engineering"
+    "Systems engineering",
+    "Computational chemistry",
+    "Organic chemistry",
+    "Inorganic chemistry",
+    "Analytical chemistry",
+    "Physical chemistry",
+    "Thermodynamics",
+    "Fluid mechanics",
+    "Astrobiology",
+    "Ecology",
+    "Evolutionary biology",
+    "Marine science",
+    "Hydrology",
+    "Atmospheric science",
+    "Science education",
+    "Technical communication"
   ]
 }

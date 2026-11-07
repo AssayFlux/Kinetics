@@ -249,7 +249,7 @@ def run_arxiv(s, manifest, domain, budget, per_file, limit):
         paper_id = match.group(1)
         page = s.get(paper_url, timeout=(20, 60))
         page.raise_for_status()
-        licenses = re.findall(r'https?://creativecommons\.org/(?:licenses|publicdomain)/[^"\'<> ]+', page.text, re.I)
+        licenses = re.findall(r"https?://creativecommons\.org/[^\s\"<>']+", page.text, re.I)
         license_id = next((x for x in licenses if accepted_license(x)), None)
         if not license_id:
             continue

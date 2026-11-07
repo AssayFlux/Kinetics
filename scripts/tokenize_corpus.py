@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sqlite3
 from datetime import datetime, timezone
@@ -60,6 +61,8 @@ def connect(path: Path) -> sqlite3.Connection:
     db = sqlite3.connect(path)
     db.execute("PRAGMA journal_mode=WAL")
     db.execute("PRAGMA foreign_keys=ON")
+    if os.name == "posix" and path.exists():
+        os.chmod(path, 0o600)
     db.executescript("""
     CREATE TABLE IF NOT EXISTS knowledge_documents (
       item_id TEXT PRIMARY KEY, title TEXT NOT NULL, source TEXT NOT NULL,
@@ -144,6 +147,8 @@ def main() -> int:
         tmp.replace(args.manifest)
     finally:
         db.close()
+        if os.name == "posix" and args.database.exists():
+            os.chmod(args.database, 0o600)
     print(f"Indexed {indexed} documents")
     return 0
 

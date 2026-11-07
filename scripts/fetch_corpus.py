@@ -341,7 +341,7 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
                     rel = target.relative_to(ROOT).as_posix()
                     manifest["items"][pmcid] = {
                         "item_id": pmcid, "title": item.get("title", pmcid),
-                        "source": "europe_pmc_oa", "source_url": f"https://europepmc.org/article/MED/{pmcid}",
+                        "source": "europe_pmc_oa", "source_url": f"https://europepmc.org/articles/{pmcid}",
                         "file_url": package_url, "domain": domain, "category": "biomedical",
                         "license": license_value, "path": rel, "format": ext.lstrip("."),
                         "bytes": len(payload), "sha256": digest, "retrieved_at": utcnow(),

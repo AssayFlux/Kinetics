@@ -84,3 +84,20 @@ jobs:
         run: |
           echo "The image acquisition is still incomplete. Successful files were pushed when available; the scheduled workflow will retry missing domains."
           exit 1
+
+      - name: Package the acquired gallery as a ZIP
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          zip -r dist/kinetics-science-gallery.zip Assets/Future/PNG Assets/Future/ATTRIBUTION.json Assets/Future/kinetics-science-quest.gif || true
+          test -s dist/kinetics-science-gallery.zip
+
+      - name: Upload downloadable gallery ZIP
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kinetics-science-gallery
+          path: dist/kinetics-science-gallery.zip
+          if-no-files-found: error
+          retention-days: 30

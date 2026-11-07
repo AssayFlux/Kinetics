@@ -73,6 +73,7 @@ No recommendation should be produced merely because a model can produce a score.
 - Build source adapters incrementally. A source being catalogued does not mean its data are downloaded, licensed for redistribution, normalized or validated.
 - Never scrape or redistribute restricted data without permission. Respect consent, data-use agreements, privacy law and provider terms.
 - Make data tiers explicit: tiny redistributable reference packs in Git; larger approved data via Git LFS or external object storage; user/private data outside public Git history; federated retrieval where bulk mirroring is not permitted.
+- **First knowledge-archive scale milestone:** acquire and process at least 10,000 books and 10,000 research papers across the approved scientific domains. This is a minimum milestone, not a final ceiling or a claim about current holdings. Count each resource separately at each verified stage (rights-reviewed, downloaded, checksum-verified, extracted, tokenized, indexed and retrievable); never count discovered, failed, duplicate or rights-ineligible records as processed/searchable.
 
 ## 6. Intelligence and scientific standards
 

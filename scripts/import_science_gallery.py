@@ -536,7 +536,11 @@ def main():
         target=OUT/f"{number:03d}-{slug}.png"
         key=f"Assets/Future/PNG/{target.name}"
         if target.exists() and key in records and not args.overwrite:
-            print(f"SKIP {number:03d}/100 {target.name}",flush=True); continue
+            recorded=records[key].get("sha256")
+            actual=hashlib.sha256(target.read_bytes()).hexdigest()
+            if recorded and recorded==actual:
+                print(f"VERIFIED/SKIP {number:03d}/100 {target.name}",flush=True); continue
+            print(f"REPAIR {number:03d}/100 {target.name}: missing or mismatched checksum",flush=True)
         print(f"SEARCH {number:03d}/100 {slug}",flush=True)
         try:
             item=find_file(term,used)

@@ -123,7 +123,8 @@ def load_source_registry() -> dict[str, dict[str, Any]]:
     entries = data.get("sources", [])
     registry = {entry["id"]: entry for entry in entries if entry.get("id")}
     supported = {"internet_archive": "scripts/fetch_corpus.py",
-                 "europe_pmc_oa": "scripts/fetch_corpus.py"}
+                 "europe_pmc_oa": "scripts/fetch_corpus.py",
+                 "zenodo": "scripts/fetch_research_data.py"}
     for source_id, entry in registry.items():
         if entry.get("enabled") and source_id not in supported:
             raise RuntimeError(f"Source {source_id} is enabled but has no implemented adapter")

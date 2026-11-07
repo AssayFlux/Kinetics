@@ -15,8 +15,8 @@
       "unknown"
     ],
     "https_only": true,
-    "per_file_default_limit_mib": 100,
-    "per_file_maximum_limit_mib": 200,
+    "per_file_default_limit_mib": 80,
+    "per_file_maximum_limit_mib": 80,
     "resume_strategy": "HTTP Range when supported; otherwise restart from byte zero",
     "domain_catalogue": "100 foundational domains plus 60 extensions (160 unique)"
   },

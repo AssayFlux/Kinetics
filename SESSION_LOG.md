@@ -155,3 +155,22 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Ask the owner to decide D-002: target jurisdictions.
+
+
+## 2026-11-07 — Session 8: Owner decision D-002 — target jurisdictions
+**Phase:** Track R / R1 Android feasibility (in progress)
+**Objective:** Record the owner's geographic and long-term clinical ambition while retaining all jurisdiction-specific safety and regulatory gates.
+
+### Done
+- Owner selected option 5: global scope, including possible future clinical use.
+- Recorded D-002 in DECISIONS.md as an approved strategic scope decision.
+- Updated ROADMAP.md: four owner decisions remain open; jurisdiction-specific reviews and approvals remain mandatory.
+
+### Constraints and interpretation
+- This is a product ambition, not evidence of legal compliance, regulatory clearance, market authorisation or permission to process patient data anywhere.
+- Research Mode remains the only public mode; Clinical Decision Support Mode remains disabled.
+- Before patient-data workflows, clinical features/studies or market entry, identify each relevant jurisdiction and obtain qualified local privacy, health-data, medical-device/software, research-ethics and other applicable advice/approvals.
+- P0 and all existing clinical, ethics, security and evidence gates remain mandatory. No global approval is presumed.
+
+### Next step
+- Ask the owner to decide D-003: research-paper framing and venue strategy.

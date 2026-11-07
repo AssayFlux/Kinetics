@@ -4,7 +4,10 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from PIL import Image
+try:
+    from PIL import Image
+except ImportError as exc:
+    raise SystemExit("Install Pillow first: python -m pip install Pillow") from exc
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"Assets"/"Future"/"PNG"
 MANIFEST=ROOT/"Assets"/"Future"/"ATTRIBUTION.json"

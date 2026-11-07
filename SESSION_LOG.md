@@ -373,3 +373,11 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 - Link failed because Chaquopy's compiler-wrapper.py removed the workspace-local Chaquopy host-library path from the compiler command as outside its allowlisted safe directories. Consequently ld.lld could not resolve -lpython3.11. The compile command was using Chaquopy's Android clang wrapper and the expected 16 KB max-page-size linker flag.
 - Patched the pinned CI checkout's compiler-wrapper safe roots to include only GITHUB_WORKSPACE, in addition to its existing safe root. This allows the generated host headers/libraries under the repository's build directory while continuing to reject arbitrary host paths. Both toolchain patches are asserted and scoped to the pinned Chaquopy 17.2.0 build checkout.
 - The custom wheel has not yet completed. APK/AAB, runtime, ELF, emulator and physical-device evidence remain outstanding.
+
+
+### R1 Biopython wheel success / SciPy package blocker — 2026-11-07
+- Latest custom-wheel CI attempt successfully built Biopython 1.88 for CPython 3.11 / Android arm64-v8a. Wheel SHA-256: cdf569ea13eb9314e43afeb9bbd3dbdbf95616d138f775a2e12e4cb7ba0cecbf.
+- Gradle then consumed the generated local Biopython wheel and downloaded NumPy 1.26.2 successfully. It stopped at SciPy: no matching distribution exists on the configured PyPI/Chaquopy indexes for this Android target. APK compilation did not start.
+- Removed SciPy from the mandatory Android pip install only for the next isolated Biopython/NumPy feasibility build. Updated the runtime probe to test SciPy if present and explicitly report it unavailable if absent; an ABI/import error is not swallowed. SciPy remains a required architecture candidate and unresolved R1 item, not silently dropped.
+- Added SciPy to the third-party register with BSD-3-Clause upstream licensing noted as a candidate; exact version, Android packaging and redistribution review remain open.
+- R1 remains in progress. No APK/AAB, app runtime, emulator, physical-device, 16 KB or performance result is claimed.

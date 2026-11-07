@@ -248,3 +248,8 @@ data/downloads/
 data/corpus/
 !data/corpus-manifests/
 !data/corpus-manifests/**
+
+# Temporary corpus packaging/restoration files
+kinetics-corpus-*.tar.gz
+*.restore
+*.staging

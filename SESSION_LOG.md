@@ -419,3 +419,32 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 Run the expanded Python/Biopython probe on an arm64 Android device/emulator; continue remaining R1 experiments and record owner go/no-go only after the complete evidence matrix.
+
+
+## 2026-11-07 — Session 16: Expand R1 native and scientific-engine probes
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Extend the arm64 feasibility app beyond packaging into native-language and real algorithm probes.
+
+### Done
+- Added a minimal Rust static library under android/native-rust exporting a C ABI numeric function.
+- Added C++17 JNI shared-library source and Kotlin bridge (NativeProbe); the app screen now calls both Rust and C++ functions with the expected 3² + 4² = 25 result.
+- Wired CMake/NDK into the Android Gradle build and added CI steps to cross-compile Rust for aarch64-linux-android before the arm64 APK build.
+- Added Bio.PDB structure parsing and Bio.Align.PairwiseAligner global-alignment test vector to the Python runtime probe. The known vector ACGT vs ACCT with match=2, mismatch=-1, gap-open=-5 and gap-extension=-1 yields score 5.0 on the host Biopython test.
+- Evaluated Parasail v2.6.2 as a possible standalone sequence-alignment engine. Its upstream Battelle BSD-style license has source/binary notice retention and citation obligations plus restrictions on Battelle name use; recorded it as an unapproved evaluation candidate in docs/third-party.md.
+
+### Pending validation
+- CI run for the integrated Rust/C++/Python probe and native ELF gate must complete successfully.
+- No on-device invocation or emulator/physical-device result exists yet.
+- Parasail has not been cross-built or adopted. Biopython PairwiseAligner is a real algorithm smoke test but does not replace the separate engine/RDKit evaluation required by the phase plan.
+
+### Remaining R1 blockers
+- SciPy Android packaging or a documented and owner-approved compute boundary.
+- Rust/C++ native runtime and 16 KB-device verification.
+- One domain-appropriate scientific engine decision and measured Android test.
+- RDKit or alternative assessment; offline molecular viewer.
+- SAF import, background execution, cancellation, cold-start and peak RSS.
+- Physical arm64 test devices covering the approved low/mid/flagship tiers.
+- Biopython file-level license audit and all dependency redistribution reviews.
+
+### Gate
+R1 remains IN PROGRESS. No R1 go/no-go has been issued and R2 remains blocked.

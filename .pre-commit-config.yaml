@@ -7,3 +7,20 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-merge-conflict
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.20.2
+    hooks:
+      - id: mypy
+        args: [--strict]
+        additional_dependencies:
+          - "PyYAML>=6,<7"
+          - "types-PyYAML>=6,<7"

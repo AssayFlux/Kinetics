@@ -600,7 +600,9 @@ def update_readme_gallery():
     for offset in range(0, 100, 4):
         rows.append("<tr>" + "".join(cells[offset:offset + 4]) + "</tr>")
     rows.append("</table>")
-    gallery = chr(10).join(rows)
+    verified_count = sum(1 for cell in cells if "<img src=" in cell)
+    status = f"**Gallery status: {verified_count}/100 verified images; {100 - verified_count} blank domain slots.**"
+    gallery = status + chr(10) + chr(10) + chr(10).join(rows)
     left = text.index(start_marker) + len(start_marker)
     right = text.index(end_marker, left)
     updated = text[:left] + chr(10) + gallery + chr(10) + text[right:]

@@ -5,6 +5,8 @@ engines: []
 data_packs: []
 domains: []
 device_logs: []
+validation_records: []
+claims: []
 clinical_gate:
   enabled: false
   part12_evidence: []

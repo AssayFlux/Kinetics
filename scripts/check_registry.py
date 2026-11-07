@@ -12,7 +12,14 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "capabilities" / "registry.yaml"
-COLLECTIONS = ("tools", "engines", "data_packs", "domains", "device_logs")
+COLLECTIONS = (
+    "tools",
+    "engines",
+    "data_packs",
+    "domains",
+    "device_logs",
+    "validation_records",
+)
 STATUSES = {"planned", "implemented", "validated"}
 EVIDENCE = {"none", "benchmark", "reference-concordance", "clinical-study"}
 
@@ -46,6 +53,12 @@ def validate_registry(data: Any) -> list[str]:
     tools = data.get("tools", [])
     if not isinstance(tools, list):
         tools = []
+    tool_by_id = {
+        str(tool.get("id")): tool
+        for tool in tools
+        if isinstance(tool, dict) and isinstance(tool.get("id"), str)
+    }
+
     for tool in tools:
         if not isinstance(tool, dict):
             continue
@@ -56,6 +69,8 @@ def validate_registry(data: Any) -> list[str]:
             errors.append(f"tool {tid}: invalid status {status!r}")
         if evidence not in EVIDENCE:
             errors.append(f"tool {tid}: invalid evidence_level {evidence!r}")
+        if status == "implemented" and not tool.get("implementation"):
+            errors.append(f"tool {tid}: implemented status requires implementation")
         references = (
             ("engine_ids", "engines"),
             ("data_pack_ids", "data_packs"),
@@ -75,10 +90,18 @@ def validate_registry(data: Any) -> list[str]:
             records = tool.get("validation_records", [])
             if not isinstance(records, list) or not records:
                 errors.append(f"tool {tid}: validated status requires validation_records")
+            else:
+                for record_id in records:
+                    if record_id not in known["validation_records"]:
+                        errors.append(
+                            f"tool {tid}: validation_records references missing id {record_id!r}"
+                        )
             if evidence == "none":
                 errors.append(
                     f"tool {tid}: validated status requires non-none evidence_level"
                 )
+        if "device_verified" in tool and not isinstance(tool["device_verified"], bool):
+            errors.append(f"tool {tid}: device_verified must be a boolean")
         if tool.get("device_verified", False):
             logs = tool.get("device_log_ids", [])
             if not isinstance(logs, list) or not logs:
@@ -95,6 +118,31 @@ def validate_registry(data: Any) -> list[str]:
                 )
             elif not gate.get("part12_evidence"):
                 errors.append(f"tool {tid}: clinical capability requires Part 12 evidence")
+
+    claims = data.get("claims", [])
+    if not isinstance(claims, list):
+        errors.append("claims must be a list")
+        claims = []
+    _ids(claims, "claims", errors)
+    for claim in claims:
+        if not isinstance(claim, dict):
+            continue
+        claim_id = str(claim.get("id", "<unknown>"))
+        if claim.get("claim_type") not in {"public", "paper"}:
+            errors.append(f"claim {claim_id}: claim_type must be public or paper")
+        tool_ids = claim.get("tool_ids", [])
+        if not isinstance(tool_ids, list) or not tool_ids:
+            errors.append(f"claim {claim_id}: requires tool_ids")
+            continue
+        for tool_id in tool_ids:
+            tool = tool_by_id.get(str(tool_id))
+            if tool is None:
+                errors.append(f"claim {claim_id}: references missing tool {tool_id!r}")
+            elif tool.get("status") != "validated":
+                errors.append(
+                    f"claim {claim_id}: tool {tool_id!r} is not validated; "
+                    "public/paper claims require validated tools"
+                )
     if not isinstance(data.get("clinical_gate", {}), dict):
         errors.append("clinical_gate must be a mapping")
     return errors

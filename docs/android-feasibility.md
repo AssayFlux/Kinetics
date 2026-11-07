@@ -1,6 +1,6 @@
 # Android feasibility — R1 in progress
 
-**Status:** IN PROGRESS — custom Biopython 1.88 / CPython 3.11 / arm64 wheel build is wired into CI; first attempt found an upstream SONAME alias collision; second attempt compiled native extensions but link failed because compiler-wrapper removed the project-local Python library path. Both issues are patched in the CI checkout; retry and subsequent APK/runtime/device evidence pending  
+**Status:** IN PROGRESS — Biopython 1.88 custom Android wheel successfully built for CPython 3.11 / arm64-v8a. The next Gradle run consumed Biopython and NumPy but stopped because SciPy has no compatible distribution in the Chaquopy indexes. The next build isolates Biopython/NumPy; APK, runtime, 16 KB and device evidence remain pending.  
 **Last updated:** 2026-11-07  
 **Phase plan:** docs/phase-r1-plan.md  
 **Owner gate:** R1 go/no-go review required before R2
@@ -9,7 +9,7 @@
 
 An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11 with Biopython, NumPy and SciPy as an R1 experiment. These are prototype dependencies only, not a production architecture or dependency approval.
 
-The first GitHub Actions Android build (run 1381, commit `fe63ecf56538d4e1d494c44a51dfb9b5654b199a`) reached Chaquopy's Python-requirements task and failed because the runner did not have a discoverable Python 3.11 executable. The Python/registry/tests CI job passed. The workflow now explicitly provisions Python 3.11 before Gradle; commit `6705fe8dc27b90e3dea8482b21d89c7fe321afbd`. Workflow run 1384 (commit `3bd4e152faf4007e44cd3fc0de63e5a26ecf065e`) confirms that Python 3.11 setup and Android SDK/NDK provisioning now succeed. The Gradle build then fails at `:app:installDebugPythonRequirements`: pip reports no matching distribution for `biopython` from the configured PyPI and Chaquopy indexes. APK alignment, size reporting and artifact upload are skipped. This is a dependency-availability blocker, not an Android compilation or runtime result.
+Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. The current CI cross-build successfully creates a pinned Biopython 1.88 Android wheel (SHA-256 `cdf569ea13eb9314e43afeb9bbd3dbdbf95616d138f775a2e12e4cb7ba0cecbf`). Gradle consumed that wheel and NumPy 1.26.2, then stopped because SciPy has no compatible distribution for CPython 3.11 / arm64-v8a on the configured indexes. The next isolated APK build removes SciPy only from the immediate Android install experiment; SciPy remains an unresolved architecture requirement. No APK/AAB artifact exists yet.
 
 No APK/AAB, app runtime, emulator or physical-device result is yet accepted as validated. No embedded package import, Rust app call, C++ JNI, scientific engine, RDKit, offline viewer, 16 KB runtime, startup, memory or device result is claimed.
 
@@ -30,7 +30,7 @@ Sources:
 ### Embedded Python candidate: Chaquopy
 
 - Chaquopy 17.2 is configured in the isolated R1 prototype with Python 3.11.
-- The app probe imports Python, Biopython, NumPy and SciPy and reports versions. This code has not yet executed successfully on Android.
+- The app probe imports Python, Biopython and NumPy, runs a FASTA parsing and numerical smoke test, and reports SciPy availability without masking ABI/import failures. It has not yet executed successfully on Android.
 - Package availability and native ABI compatibility remain unproven until the Gradle build and runtime probe succeed.
 - Chaquopy remains an R1 candidate only; no production selection or release bundling approval is implied.
 
@@ -49,7 +49,7 @@ The run-1384 failure is consistent with a package-format/ABI gap, not a missing 
 
 Chaquopy 17's pip behavior is particularly important: it uses binary-only resolution for normal index installs. Its documentation describes building Android wheels with its package-build tooling (for Python 3.12 and older) or cibuildwheel (Python 3.13+), then supplying the resulting wheel through a local `--find-links` directory. Therefore, simply changing the pip index, loosening the version, or adding a source URL is not an evidence-based fix.
 
-### Implemented CI experiment (not yet validated)
+### Implemented CI experiment (Biopython wheel built; APK pending)
 
 1. Keep the current Python 3.11 / arm64-v8a baseline for this controlled experiment.
 2. Added `android/biopython-wheel/meta.yaml`, pinned to Biopython 1.88, and a CI step which checks out Chaquopy 17.2.0, downloads its Python 3.11.17 target and NumPy 1.26.2 Android wheel, and invokes Chaquopy's documented `build-wheel.py` for arm64-v8a.
@@ -77,9 +77,9 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 
 | Area | Current status | Required next evidence |
 |---|---|---|
-| Minimal Compose app / Gradle build | Workflow run 1384 stopped before APK compilation at Biopython resolution. CI now cross-builds a pinned Android wheel before Gradle; outcome pending | Successful wheel build, APK/AAB build, alignment check, artifact hash/size and toolchain record |
+| Minimal Compose app / Gradle build | Biopython wheel now builds and Gradle consumes it; latest build stopped at SciPy resolution. SciPy removed from immediate APK probe only | Successful Biopython/NumPy APK/AAB build, alignment check, artifact hash/size and toolchain record |
 | Embedded Python runtime | Chaquopy probe configured; app build/runtime not yet successful | arm64 APK build, on-device import/startup/RSS/package-size logs |
-| Biopython | Second CI attempt compiled Biopython C extensions but failed at link time because Chaquopy compiler-wrapper stripped the workspace-local Python library path; CI now patches the safe-path allowlist and retries | Successful wheel build; extension/ELF inspection; runtime import, SeqIO FASTA and Bio.PDB parsing test vectors on emulator and physical arm64 device |
+| Biopython | Custom Biopython 1.88 wheel successfully built for CPython 3.11 / arm64-v8a; SHA-256 recorded in SESSION_LOG.md | Inspect wheel ELF; runtime import and SeqIO FASTA / Bio.PDB test vectors on emulator and physical arm64 device |
 | NumPy | NumPy 1.26.2 cp311 arm64 wheel is a pinned build input; its 2023 build date creates a known 16 KB alignment risk | Inspect packaged ELF; import and NumPy numerical smoke test on emulator and physical arm64 device |\n| SciPy | Gradle resolution failed: no compatible distribution on the configured Chaquopy indexes for CPython 3.11 / arm64-v8a | Evaluate a custom Android wheel or a documented on-device alternative; otherwise define an explicit on-device vs remote-compute capability boundary and obtain owner approval |
 | Rust app FFI | Not implemented/tested | Android arm64 library and Kotlin call test |
 | C++17 JNI | Not implemented/tested | NDK build, JNI invocation and numeric correctness test |
@@ -102,7 +102,7 @@ D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low
 ## Preliminary assessment (not a go/no-go)
 
 - The Android project is build-configured. The host-Python prerequisite is now resolved: run 1384 successfully installs Python 3.11 and Android SDK/NDK.
-- The prior package-resolution blocker has been replaced by a custom-wheel build experiment. The first attempt failed in Chaquopy's SONAME alias loop before compilation. After the alias patch, the second attempt compiled Biopython's C extensions but failed at link time because Chaquopy compiler-wrapper stripped the workspace-local Python library path as outside its safe directories. The workflow now adds GITHUB_WORKSPACE as an allowed safe root, with an assertion-checked local patch. No APK/AAB artifact or Android runtime result is claimed.
+- Biopython 1.88 has now been cross-built into an Android arm64 wheel; the local Chaquopy 17.2.0 alias/safe-path patches allowed compilation and wheel packaging. The following Gradle task installed the local Biopython wheel and NumPy 1.26.2, then failed only on unavailable SciPy. The immediate APK experiment now tests Biopython/NumPy with SciPy reported as unavailable. No APK/AAB artifact or Android runtime result is claimed yet.
 - No conclusion is yet possible about overall architecture feasibility, memory fit, APK/AAB size or real-device performance.
 - R1 remains in progress. R2 must not start until the full experiment matrix and owner go/no-go review are complete.
 

@@ -351,3 +351,10 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 - CI prints the generated wheel SHA-256 and proceeds to APK/AAB build and 16 KB APK alignment check only if the wheel build succeeds.
 - Updated the R1 evidence matrix and third-party register. This is an experiment, not a validated package: the CI run, APK build, emulator import/tests, ELF inspection and physical-device tests are still pending.
 - Biopython 1.88 is pinned to a current upstream release; upstream PyPI metadata identifies NumPy as a required dependency and a Biopython-specific license expression. The custom recipe includes NumPy 1.26.2 as a host dependency for the cross-build. No production bundling approval is implied.
+
+
+### R1 build pipeline correction — 2026-11-07
+- Confirmed from the Chaquopy 17.2.0 tag that its Python 3.11 target is 3.11.17-0 and its legacy Android wheel builder uses NDK r27.3.13750724 internally, installing it from ANDROID_HOME if needed. Removed misleading environment overrides which pointed at the app-build NDK rather than the wheel builder's own configured toolchain.
+- Confirmed Biopython 1.88 declares NumPy as a required dependency and uses setuptools 74.1+ with native C extension modules. The pinned Chaquopy wheel recipe uses NumPy 1.26.2 as the host/runtime requirement input.
+- Added an explicit R1 risk: Chaquopy's Python 3.11 NumPy 1.26.2 Android wheel in the index dates from 2023, before the 16 KB compatibility era. It must be ELF-inspected and runtime-tested; if it fails 16 KB validation, the stack must be rebuilt or moved to a compatible newer Python/package path.
+- This correction does not establish wheel-build success, APK/AAB success, or 16 KB compatibility.

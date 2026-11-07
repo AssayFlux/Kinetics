@@ -194,7 +194,7 @@ The canonical catalogue is maintained in docs/SCIENCE_DOMAIN_CATALOGUE_100.md. I
 The 100-domain PNG gallery will be stored locally in Assets/Future/PNG/ after the importer is run. The PNG binaries are not included yet; run the command below, review the license manifest, then commit the generated files. Each image must have an accepted license and a matching record in Assets/Future/ATTRIBUTION.json. The README deliberately avoids embedding absent PNG paths, so it does not show broken-image placeholders.
 
 ~~~bash
-python -m pip install -e ".[gallery]"
+python -m pip install Pillow
 python scripts/import_science_gallery.py
 python scripts/build_pixel_animation.py
 python scripts/validate_visual_assets.py --strict-gallery

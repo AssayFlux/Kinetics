@@ -1,10 +1,10 @@
 # Kinetics — System architecture
 
 ## Objective
-A modular, desktop-first biomedical research platform with independently versioned scientific domains, a shared evidence/data foundation and a native visualization engine. Scientific modules must remain usable from Python/CLI without launching the desktop application.
+A modular, platform-first biomedical research and precision-health research platform with independently versioned scientific domains, a shared evidence/data foundation and a native visualization engine. Scientific modules must remain usable from Python/CLI without launching the desktop application.
 
 ## Layers
-1. Experience: desktop workbench first; later Android; CLI/notebooks for researchers.
+1. Experience: CLI and researcher workflows during foundation development; polished desktop and Android applications after the scientific platform and stable APIs are ready. Low-memory Android performance is a first-class architectural constraint from the beginning.
 2. Application: projects, workflows, access control, jobs and reports.
 3. Scientific domains: genomics, transcriptomics, proteomics, structure, kinetics, chemistry, pharmacology, imaging, systems biology and multi-omics.
 4. Intelligence: task-specific ML, multimodal models, uncertainty, retrieval and model registry.

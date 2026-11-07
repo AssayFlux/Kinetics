@@ -49,7 +49,9 @@ def extract_text(path: Path) -> str:
         fmt = "genbank" if suffix in (".gb", ".gbk", ".genbank") else "fasta"
         records = []
         for record in SeqIO.parse(str(path), fmt):
-            records.append(f">{record.id} {record.description}\n{str(record.seq)}")
+            sequence = str(record.seq).upper()
+            kmer_text = " ".join(sequence[i:i + 3] for i in range(0, len(sequence), 3))
+            records.append(f">{record.id} {record.description}\n{kmer_text}")
         return "\n".join(records)
     if suffix in (".pdb", ".cif", ".mmcif"):
         from Bio.PDB import MMCIFParser, PDBParser, PPBuilder
@@ -60,7 +62,9 @@ def extract_text(path: Path) -> str:
         for model in structure:
             for chain in model:
                 for peptide in builder.build_peptides(chain):
-                    parts.append(f">chain_{chain.id}\n{str(peptide.get_sequence())}")
+                    sequence = str(peptide.get_sequence()).upper()
+                    kmer_text = " ".join(sequence[i:i + 3] for i in range(0, len(sequence), 3))
+                    parts.append(f">chain_{chain.id}\n{kmer_text}")
         return "\n".join(parts)
     return ""
 

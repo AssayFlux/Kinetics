@@ -30,7 +30,7 @@ No scientific source code, schema, test, fixture, workflow, data adapter, brand 
 
 ## Repository inventory
 
-The base tree inspected for this cleanup contained 213 tracked files, including 54 Markdown documents. The cleanup branch adds the capability map and retires the three duplicate documents. Recalculate the final tracked-file and Markdown counts from the branch tree before merging; do not reuse stale counts from prior audits.
+The base tree inspected for this cleanup contained 213 tracked files, including 54 Markdown documents. The verified cleanup branch contains **211 tracked files and 52 Markdown documents**: one new capability map and three retired duplicate documents. The recursive Git tree contains 248 entries including directories.
 
 ## Verified direction and implementation boundaries
 

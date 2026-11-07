@@ -3,7 +3,7 @@ project(kinetics_native LANGUAGES C CXX)
 
 add_library(kinetics_rust STATIC IMPORTED)
 set_target_properties(kinetics_rust PROPERTIES
-    IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../native-rust/target/aarch64-linux-android/release/libkinetics_rust.a"
+    IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/../../../../native-rust/target/aarch64-linux-android/release/libkinetics_rust.a"
 )
 
 add_library(kinetics_native SHARED kinetics_native.cpp)

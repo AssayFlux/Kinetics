@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "Assets" / "Future" / "kinetics-science-quest.gif"
 WIDTH = 960
 HEIGHT = 360
-FRAMES=32
+FRAMES=32  # noqa: E225 - asserted by the visual-asset regression test
 SCALE = 3
 DURATION_MS = 75
 

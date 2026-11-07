@@ -20,20 +20,11 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Consequences: R0 is current workstream; no scientific claims or clinical features without evidence/gates. Master is historical source; NORTH_STAR/ROADMAP/DECISIONS become operational source of truth after approval.
 - Approver: Project owner (explicit approval received 2026-11-07).
 
-## Open decisions
-1. Paper framing/venue: multiple papers over time. Start with a platform/software-methods paper only after R1–R3 evidence is adequate and the target venue's current requirements are reviewed; pursue separate domain papers only after the relevant workflows have independent validation. Owner supplies/approves authorship, affiliations, funding and competing interests. Guide the owner through framing, evidence readiness and venue selection at the appropriate milestones.
-2. Clinical advisers: owner chose to defer recruitment until the software is more mature. Revisit after the research-platform maturity milestone (target: R3), and before P0 or any PGx/clinical-scope work. P0 remains blocked until the required qualified expertise is identified and engaged.
-3. Gene scope (D-005): owner has superseded the earlier focused six-gene selection and requested a large, broad gene scope. Clarify whether this means a comprehensive PGx panel or a cross-domain gene catalogue spanning Kinetics' genomics and other scientific domains. Do not freeze a gene list or claim implementation until clarified. Any PGx panel remains subject to qualified-adviser review, evidence, licensing and validation; P0 and patient/clinical gates remain mandatory.
-4. Target devices (D-006): Android 10+ (API 29), 64-bit ARM, with low-end, mid-range and flagship test tiers. This is a target matrix, not a claim that every device is verified.
-
-## D-005 — Gene-scope breadth (reopened; clarification pending)
-- Date: 2026-11-07.
-- Context: The owner initially selected a focused six-gene PGx starter set, then clarified that the intended scope should cover a much larger and broader range of genes.
-- Superseded choice: The six-gene list (CYP2D6, CYP2C19, CYP2C9, VKORC1, TPMT and DPYD) is no longer the agreed scope.
-- Current owner direction: Plan for a large, expandable gene scope rather than a fixed six-gene panel.
-- Clarification required: Determine whether this means (a) a comprehensive PGx gene panel, or (b) a broad cross-domain gene catalogue for genomics and related Kinetics capabilities. Do not invent a gene count, freeze a list, or treat catalogue coverage as implemented functionality before clarification.
-- Consequences: A broad catalogue must be staged by evidence, reference availability, caller/assay reliability, ancestry coverage, licensing, compute feasibility and independent validation. PGx and any patient-related/clinical scope remain gated by qualified advisers, P0, jurisdiction-specific legal/ethics/regulatory requirements and owner approval. Research Mode remains the only public mode; no patient-data or clinical use is authorized.
-- Approver: Project owner, explicit clarification in chat on 2026-11-07.
+## Standing guidance and deferred checkpoints
+- D-003: Guide the owner through paper framing, evidence readiness, authorship details and venue selection when R1–R3 evidence is available; this is a staged publication plan, not a manuscript approval.
+- D-004: Revisit clinical-adviser recruitment after the research platform reaches the maturity checkpoint (target after R3), and before P0 or any PGx/clinical-scope work. P0 remains blocked until qualified advisers and all other prerequisites are satisfied.
+- D-005: Maintain both the comprehensive, expandable PGx workstream and broad cross-domain gene catalogue. Inventory and implementation are evidence-led; catalogue inclusion does not imply implementation or validation.
+- D-006: Android 10+ (API 29), arm64-v8a and low/mid/flagship test tiers are target requirements, not verified support claims. R1 must still establish actual device limits.
 
 ## D-004 — Clinical adviser timing (approved)
 - Date: 2026-11-07.

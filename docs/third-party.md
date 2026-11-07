@@ -1,6 +1,6 @@
 # Third-party software and data register
 
-No third-party scientific engine, model, database, dataset or runtime payload is bundled by the R0 scaffold.
+No third-party scientific engine, model or database is approved for product bundling. Chaquopy and its scientific package dependencies are configured only in the isolated R1 feasibility prototype; they are not production selections.
 
 | Component | Version | Source | License | Use | Approval/status |
 |---|---|---|---|---|---|
@@ -15,7 +15,7 @@ The project license is unselected (D-001). This file does not grant a license or
 
 | Candidate | Upstream licensing / status | Feasibility status | Decision |
 |---|---|---|---|
-| Chaquopy 17.2 | Upstream states 12.0.1+ is MIT/free-open-source; verify exact release artifact and transitive packages before distribution | Android Gradle integration documented; Python 3.10–3.15 / AGP 7.3–9.5 / min API 24 documented; Biopython and exact NumPy/SciPy Android builds untested | Candidate for R1 prototype only; not selected for production |
+| Chaquopy 17.2.0 | Upstream states 12.0.1+ is MIT/free-open-source; verify exact release artifact and transitive packages before distribution | Added to isolated R1 Android prototype; first CI attempt stopped because host Python 3.11 was unavailable; package resolution/runtime still unverified | R1 candidate only; not selected for production |
 
 References:
 - https://chaquo.com/chaquopy/documentation/

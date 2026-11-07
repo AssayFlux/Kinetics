@@ -8,6 +8,8 @@ A document describes requirements or design unless it explicitly links implement
 
 Read the capability map to understand what Kinetics intends to do across scientific areas and what is actually present. Use the domain taxonomy only to guide source discovery; use the roadmap for long-term sequencing and the implementation register for current evidence.
 
+Read the capability map to understand what Kinetics intends to do across scientific areas and what is actually present. Use the domain taxonomy only to guide source discovery; use the roadmap for long-term sequencing and the implementation register for current evidence.
+
 | Document | Authority / purpose |
 |---|---|
 | [KINETICS_MISSION.md](../KINETICS_MISSION.md) | Authoritative mission, principles and human-health ambition |

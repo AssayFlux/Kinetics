@@ -1,5 +1,5 @@
 # Kinetics — Roadmap
-**Status:** Proposed baseline; owner approval pending  
+**Status:** Owner-approved baseline; R0 implementation in progress  
 **Last updated:** 2026-11-07  
 **Statuses:** not-started | in-progress | blocked | done | dropped  
 **Owners:** Project owner = repository owner; Engineering = implementation contributor. Dates are review/target dates, not completion claims.
@@ -9,7 +9,8 @@ This roadmap operationalises the archived master. A phase is complete only when 
 ## Current position
 - Track R / R0 Foundations: in-progress. Direction documents exist; master archive and R0 phase plan are prepared. Skeleton, registry, checker, reproduce-all, pre-commit and CI remain unimplemented.
 - The owner supplied the complete master in conversation; it is reconstructed at docs/origin/KINETICS_MASTER.md as read-only history. No root master file existed to Git-move.
-- Direction baseline remains proposed pending explicit owner approval. NORTH_STAR was not changed.
+- Direction baseline approved by project owner on 2026-11-07. NORTH_STAR was not changed.
+- R0 scaffold is being implemented: repository layout, registry/checker, tests, reproduce-all stub, pre-commit and CI. Validation awaits a green Actions run.
 - No scientific implementation, validation, Android feasibility or device verification is claimed.
 - Six decisions remain open: license, target jurisdictions, paper framing/venue, clinical advisers, first PGx gene set and target Android devices.
 

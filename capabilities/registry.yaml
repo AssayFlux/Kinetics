@@ -1,0 +1,10 @@
+# Empty collections are intentional in R0; no scientific capability is validated.
+schema_version: 1
+tools: []
+engines: []
+data_packs: []
+domains: []
+device_logs: []
+clinical_gate:
+  enabled: false
+  part12_evidence: []

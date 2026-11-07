@@ -1,0 +1,44 @@
+name: Kinetics CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: kinetics-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  python-foundations:
+    name: Python foundation, registry and tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install development checks
+        run: python -m pip install -r requirements-dev.txt
+      - name: Ruff lint
+        run: ruff check scripts tests
+      - name: Mypy
+        run: mypy scripts tests
+      - name: Registry validation
+        run: python scripts/check_registry.py
+      - name: Unit tests
+        run: pytest
+      - name: Reproduction stub
+        run: python scripts/reproduce_all.py
+      - name: Android artifact gate status
+        run: python scripts/check_android_artifacts.py
+  native-and-android:
+    name: Native and Android checks (R0 blocked)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Report phase gate
+        run: |
+          echo "::notice::BLOCKED in R0: no Rust, C++, Kotlin, Android project or APK/AAB has been introduced."
+          echo "::notice::Rust clippy/rustfmt, C++ sanitizers, Kotlin lint, Android builds, 16 KB alignment and package budgets are deferred to R1 after toolchain/device feasibility review."

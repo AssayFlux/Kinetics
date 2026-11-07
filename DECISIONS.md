@@ -4,7 +4,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 ## Decision register
 | ID | Date | Topic | Status | Approver |
 |---|---|---|---|---|
-| D-000 | 2026-11-07 | Adopt owner master and living direction files | Proposed — owner approval pending | Project owner |
+| D-000 | 2026-11-07 | Adopt owner master and living direction files | Approved — owner approved baseline in chat | Project owner |
 | D-001 | 2026-11-07 | Project LICENSE | Open — no license selected/file added | Project owner |
 | D-002 | 2026-11-07 | Target jurisdictions and applicable privacy/medical-device laws | Open — qualified advice required | Project owner + advisers |
 | D-003 | 2026-11-07 | Research-paper framing and venue(s) | Open — decide after evidence and venue review | Project owner |
@@ -13,12 +13,12 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-006 | 2026-11-07 | Target Android devices/minimum support matrix | Open — no devices selected | Project owner |
 | D-007 | 2026-11-07 | Source-master archival | Resolved operationally — reconstructed from owner's complete chat-supplied master at docs/origin/KINETICS_MASTER.md; not represented as a Git move | Owner instruction |
 
-## D-000 — Direction baseline (proposed)
+## D-000 — Direction baseline (approved)
 - Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.
 - Options: (a) adopt master and derive living direction files; (b) implement without controlled baseline.
-- Proposed choice: (a), subject to explicit owner approval of the living direction baseline.
+- Choice: (a), approved by the project owner in chat on 2026-11-07.
 - Consequences: R0 is current workstream; no scientific claims or clinical features without evidence/gates. Master is historical source; NORTH_STAR/ROADMAP/DECISIONS become operational source of truth after approval.
-- Approver: Pending owner approval.
+- Approver: Project owner (explicit approval received 2026-11-07).
 
 ## Open decisions — all remain open
 1. License: assess distribution and dependency compatibility; owner chooses. Do not add selected license.

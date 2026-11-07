@@ -1,6 +1,6 @@
 # R0 — Foundations phase plan
 **Roadmap item:** Track R / R0  
-**Status:** Plan prepared; implementation pending owner approval of direction baseline  
+**Status:** Owner-approved; R0 implementation committed, CI validation pending  
 **Owner:** Engineering + Project owner  
 **Date:** 2026-11-07
 
@@ -34,10 +34,10 @@ No patient-related feature, real patient data, human-participant work, clinical 
 - Stop and report to owner; do not proceed to R1 without explicit approval.
 
 ## Execution sequence
-1. Obtain explicit direction-baseline approval; NORTH_STAR changes only with explicit approval.
-2. Inspect actual CI/runtime toolchains.
-3. Create skeleton, registry and checker tests.
-4. Add reproduce-all stub, CI and pre-commit.
-5. Run local checks and CI; retain logs/results.
-6. Update roadmap/session log and decisions only when an actual decision is made.
+1. Owner approved the direction baseline on 2026-11-07; NORTH_STAR remains unchanged.
+2. Added minimal repository skeleton, empty registry, evidence checker and checker tests.
+3. Added reproduce-all stub, CI workflow, pre-commit hooks and development tooling.
+4. Added explicit R0 blocker reporting for native/Android/16 KB/size checks.
+5. Inspect the actual CI run, correct failures and retain its URL/result.
+6. Update roadmap/session log with observed results only.
 7. Report done/validated/device-verified/not done/risks/paper evidence; stop at gate.

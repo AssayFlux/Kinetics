@@ -25,7 +25,10 @@ def categories() -> list[list[str]]:
     node = next(
         item for item in module.body
         if isinstance(item, ast.Assign)
-        and any(isinstance(target, ast.Name) and target.id == "CATEGORIES" for target in item.targets)
+        and any(
+            isinstance(target, ast.Name) and target.id == "CATEGORIES"
+            for target in item.targets
+        )
     )
     return ast.literal_eval(node.value)
 

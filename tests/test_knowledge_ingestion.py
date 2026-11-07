@@ -60,3 +60,34 @@ def test_safe_category_routing():
     assert fetch.safe_category("Biomedical engineering") == "engineering"
     assert fetch.safe_category("Cardiology") == "medicine"
     assert fetch.safe_category("Genomics") == "biomedical"
+
+
+def test_reusable_knowledge_store_api(tmp_path: Path):
+    tokenizer = load_script("tokenize_corpus")
+    database = tmp_path / "knowledge.sqlite3"
+    db = tokenizer.connect(database)
+    with db:
+        db.execute("""INSERT INTO knowledge_documents
+            (item_id,title,source,source_url,license,domain,object_path,sha256,
+             byte_size,token_count,indexed_at,status)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+            ("PMC123", "Cardiac imaging review", "fixture", "https://example.org/paper",
+             "CC BY 4.0", "Cardiology", "data/corpus/objects/aa/example.pdf",
+             "a" * 64, 100, 5, "2026-01-01T00:00:00+00:00", "indexed"))
+        db.execute("INSERT INTO knowledge_chunks VALUES (?,?,?,?,?,?)",
+                   ("chunk-1", "PMC123", 0, "cardiac imaging evidence", 5, "b" * 64))
+        db.execute("""INSERT INTO knowledge_fts(chunk_id,item_id,title,domain,text)
+                      VALUES (?,?,?,?,?)""",
+                   ("chunk-1", "PMC123", "Cardiac imaging review",
+                    "Cardiology", "cardiac imaging evidence"))
+    db.close()
+
+    from kinetics_core.knowledge import KnowledgeStore
+
+    store = KnowledgeStore(database)
+    results = store.search("cardiac AND imaging", limit=5)
+    assert len(results) == 1
+    assert results[0]["item_id"] == "PMC123"
+    assert results[0]["source_url"] == "https://example.org/paper"
+    assert store.get_document("PMC123")["license"] == "CC BY 4.0"
+    assert store.get_document("missing") is None

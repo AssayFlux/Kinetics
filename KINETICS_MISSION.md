@@ -1,6 +1,6 @@
 # Kinetics — Foundational Mission and Global Ambition
 
-> 100-domain scope register: docs/SCIENCE_DOMAIN_CATALOGUE_100.md. This catalogue defines intended breadth; it is not evidence that every domain is implemented or clinically validated.
+> 160-domain acquisition scope register: docs/SCIENCE_DOMAIN_CATALOGUE_100.md. This catalogue defines intended breadth; it is not evidence that every domain is implemented or clinically validated.
 **Status:** Authoritative project direction. This document governs product scope, architecture, scientific priorities and release decisions.  
 **North star:** Build an open, interoperable, evidence-centred biomedical intelligence infrastructure that helps humanity understand health and disease and accelerates the discovery, evaluation and responsible delivery of more precise prevention and treatment.
 

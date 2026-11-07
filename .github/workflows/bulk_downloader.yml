@@ -7,7 +7,7 @@ on:
       - ".github/workflows/bulk_downloader.yml"
       - "scripts/fetch_corpus.py"
       - "scripts/fetch_research_data.py"
-      - "scripts/fetch_specialist_sources.py"
+      - "scripts/fetch_specialist_sources.py"\n      - "scripts/git_sync.py"\n      - "scripts/update_corpus_dashboard.py"
       - "scripts/tokenize_corpus.py"
       - "database/sources/knowledge_sources.json"
       - "requirements-knowledge.txt"

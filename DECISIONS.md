@@ -5,7 +5,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | ID | Date | Topic | Status | Approver |
 |---|---|---|---|---|
 | D-000 | 2026-11-07 | Adopt owner master and living direction files | Approved — owner approved baseline in chat | Project owner |
-| D-001 | 2026-11-07 | Project LICENSE | Open — status placeholder only; no license selected or grant added | Project owner |
+| D-001 | 2026-11-07 | Project LICENSE | Approved — Apache-2.0 selected; canonical LICENSE grant file still to be added and verified | Project owner |
 | D-002 | 2026-11-07 | Target jurisdictions and applicable privacy/medical-device laws | Open — qualified advice required | Project owner + advisers |
 | D-003 | 2026-11-07 | Research-paper framing and venue(s) | Open — decide after evidence and venue review | Project owner |
 | D-004 | 2026-11-07 | Clinical advisory board/advisers | Open — identities/commitments not supplied | Project owner |
@@ -20,13 +20,20 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Consequences: R0 is current workstream; no scientific claims or clinical features without evidence/gates. Master is historical source; NORTH_STAR/ROADMAP/DECISIONS become operational source of truth after approval.
 - Approver: Project owner (explicit approval received 2026-11-07).
 
-## Open decisions — all remain open
-1. License: assess distribution and dependency compatibility; owner chooses. Do not add selected license.
-2. Jurisdictions: owner identifies countries/regions; obtain qualified advice before relevant data/features.
-3. Paper framing/venue: owner decides after evidence exists and current venue requirements are checked. Owner supplies authors, affiliations, funding and competing interests.
-4. Clinical advisers: identify clinical pharmacologist/pharmacist, clinical geneticist and physician; P0 cannot pass without them.
-5. First PGx gene set: choose with advisers based on guideline maturity, reference materials and caller reliability.
-6. Target devices: owner specifies Android devices and emulator targets before feasibility/support claims.
+## Open decisions
+1. Jurisdictions: owner identifies countries/regions; obtain qualified advice before relevant data/features.
+2. Paper framing/venue: owner decides after evidence exists and current venue requirements are checked. Owner supplies authors, affiliations, funding and competing interests.
+3. Clinical advisers: identify clinical pharmacologist/pharmacist, clinical geneticist and physician; P0 cannot pass without them.
+4. First PGx gene set: choose with advisers based on guideline maturity, reference materials and caller reliability.
+5. Target devices: owner specifies Android devices and emulator targets before feasibility/support claims.
+
+## D-001 — Project license (approved)
+- Date: 2026-11-07.
+- Context: Select a project-level license that supports academic and commercial adoption while providing explicit patent terms.
+- Options considered: MIT, Apache-2.0, GPL-3.0, AGPL-3.0 and proprietary licensing.
+- Choice: Apache License 2.0 (Apache-2.0).
+- Consequences: The project intends to distribute its own code under Apache-2.0. Each third-party engine, dependency, model and data pack remains subject to separate license verification; this decision does not relicense third-party materials. Add the canonical Apache-2.0 LICENSE text in a separate repository change before representing the grant as present.
+- Approver: Project owner, explicit selection in chat on 2026-11-07.
 
 ## New decision template
 - Date / ID:

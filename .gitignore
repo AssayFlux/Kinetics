@@ -243,3 +243,8 @@ data/processed/
 *.db-shm
 data/cache/
 data/downloads/
+
+# Kinetics downloaded knowledge corpus (only compact manifests are versioned)
+data/corpus/
+!data/corpus-manifests/
+!data/corpus-manifests/**

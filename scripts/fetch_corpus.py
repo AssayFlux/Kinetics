@@ -172,7 +172,7 @@ def local_record_is_valid(record: dict[str, Any]) -> bool:
 def persist_record(session: requests.Session, item_id: str, title: str, source: str,
                    domain: str, license_value: str, source_url: str, file_url: str,
                    extension: str, manifest: dict[str, Any], objects: Path,
-                   remaining_bytes: int) -> tuple[dict[str, Any] | None, int]:
+                   remaining_bytes: int, citation_metadata: dict[str, Any] | None = None) -> tuple[dict[str, Any] | None, int]:
     if not license_allowed(license_value):
         return None, 0
     if extension not in (".pdf", ".epub", ".xml", ".html", ".txt"):
@@ -195,7 +195,7 @@ def persist_record(session: requests.Session, item_id: str, title: str, source: 
         "source_url": source_url, "file_url": file_url, "domain": domain,
         "category": category, "license": license_value, "path": rel,
         "format": extension.lstrip("."), "bytes": size, "sha256": digest,
-        "retrieved_at": utcnow(), "status": "downloaded",
+        "retrieved_at": utcnow(), "citation_metadata": citation_metadata or {}, "status": "downloaded",
     }
     manifest["items"][item_id] = record
     return record, size
@@ -256,7 +256,9 @@ def fetch_internet_archive(session: requests.Session, domain: str, manifest: dic
         try:
             record, size = persist_record(session, identifier, str(md.get("title") or hit.get("title") or identifier),
                 "internet_archive", domain, license_value, f"https://archive.org/details/{identifier}",
-                url, ext, manifest, objects, remaining_bytes - used)
+                url, ext, manifest, objects, remaining_bytes - used,
+                {"creator": md.get("creator"), "date": md.get("date"),
+                 "doi": md.get("doi"), "identifier": md.get("identifier")})
             if record:
                 count += 1
                 used += size
@@ -345,7 +347,14 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
                         "file_url": package_url, "domain": domain, "category": "biomedical",
                         "license": license_value, "path": rel, "format": ext.lstrip("."),
                         "bytes": len(payload), "sha256": digest, "retrieved_at": utcnow(),
-                        "package_bytes": size, "status": "downloaded",
+                        "package_bytes": size,
+                        "citation_metadata": {
+                            "doi": item.get("doi"), "pmid": item.get("pmid"),
+                            "author_string": item.get("authorString"),
+                            "journal_title": item.get("journalTitle"),
+                            "first_publication_date": item.get("firstPublicationDate"),
+                        },
+                        "status": "downloaded",
                     }
                     count += 1
             except (requests.RequestException, OSError, tarfile.TarError, ValueError) as exc:

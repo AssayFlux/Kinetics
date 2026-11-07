@@ -14,7 +14,7 @@ Determine by reproducible experiments whether the planned Android architecture c
 ## Required experiments
 
 1. **Android baseline:** establish Gradle/AGP/Kotlin/SDK/NDK/JDK versions; build a minimal Compose shell; capture APK/AAB size, build reproducibility and Android target/min SDK choices as proposals, not owner-approved support commitments.
-2. **Embedded Python:** integrate a pinned Python 3.10+ Android-compatible runtime for arm64; import and execute Python plus Biopython and NumPy/SciPy candidates; record ABI, wheel/native-library compatibility, startup, peak RSS and package contribution. No unsupported wheel is assumed to work.
+2. **Embedded Python:** integrate a pinned Python 3.10+ Android-compatible runtime for arm64; import and execute Python plus Biopython (SeqIO, Bio.PDB and PairwiseAligner) and NumPy/SciPy candidates; record ABI, wheel/native-library compatibility, startup, peak RSS and package contribution. No unsupported wheel is assumed to work.
 3. **Rust:** compile a minimal Rust library for Android arm64, call it from the app through the intended JNI/FFI boundary, and test correctness and cancellation/timeout behaviour.
 4. **C++17/JNI:** build and call a minimal numeric kernel through JNI; run correctness tests and sanitizer-capable host tests. Record NDK and ABI details.
 5. **One real scientific engine:** select a small, license-compatible candidate only after inspecting upstream license, Android build support, binary/runtime constraints and scientific test vectors. Do not bundle GPL/AGPL or other restrictive terms without owner approval. A stub is not an engine feasibility pass.
@@ -30,7 +30,7 @@ No device result may be inferred from an emulator. No build-time check is descri
 
 ## Device and scope constraints
 
-- D-006 (target Android devices) remains open. Initial experiments may use a documented emulator and any owner-provided arm64 device; the supported-device matrix cannot be approved until the owner identifies target devices.
+- D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low-end, mid-range and flagship test tiers. This is a target matrix, not verified compatibility across all devices. Initial experiments may use a documented emulator and owner-provided arm64 device; the supported-device matrix cannot be approved until representative target devices are tested.
 - No new programming language is introduced. Use only the approved Kotlin, Python, Rust, C/C++ and JS/TS plan.
 - No executable is downloaded at runtime. Pin all sources and inspect licenses before bundling.
 - No patient-data or clinical functionality. Research Mode only; P0 remains blocked.

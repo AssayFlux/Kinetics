@@ -250,3 +250,23 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Ask the owner to decide D-006: target Android devices and minimum support matrix.
+
+
+## 2026-11-07 — Session 13: Android target approved; gene scope broadened and reopened
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Record the owner's Android device target and capture the revised broad gene-scope direction without guessing its exact boundary.
+
+### Done
+- Owner approved D-006 option 1: Android 10+ (API 29), 64-bit ARM, with low-end, mid-range and flagship device test tiers.
+- Updated DECISIONS.md and ROADMAP.md. This is a target matrix, not a verified compatibility claim.
+- Owner clarified that the earlier six-gene PGx scope is too narrow and requested a large, broad gene scope.
+- Reopened D-005 and superseded the six-gene list; exact scope boundary remains to be clarified.
+
+### Constraints and interpretation
+- Clarify whether “all types of gene” means a comprehensive PGx gene panel or a cross-domain gene catalogue spanning Kinetics' genomics and related scientific domains.
+- Do not invent a gene count, freeze a list, or claim genes/callers are implemented or validated.
+- PGx and all patient-related/clinical work remain subject to qualified advisers, P0, jurisdiction-specific legal/ethics/regulatory requirements and owner approval.
+- R1 must test emulator and physical arm64 devices; the target does not establish support for every Android 10+ device.
+
+### Next step
+- Clarify the intended breadth of the gene catalogue before revising P2 or creating a gene inventory.

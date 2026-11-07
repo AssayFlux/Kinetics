@@ -1,6 +1,6 @@
 # Android feasibility — R1 in progress
 
-**Status:** IN PROGRESS — Biopython 1.88 and NumPy 1.26.2 now install successfully from the custom arm64 wheel and Chaquopy index. APK build reaches Kotlin compilation but fails on mismatched Java 1.8 / Kotlin 17 JVM targets; both are being aligned to Java 17. APK, runtime, 16 KB and device evidence remain pending.  
+**Status:** IN PROGRESS — CI run 1454 passed the arm64 debug APK/AAB build, Biopython/NumPy installation, APK ZIP alignment and artifact upload. Independent inspection of the downloaded APK and AAB found 22/22 AArch64 native libraries per archive with every PT_LOAD segment aligned to 16 KB. This is static package evidence only; Android runtime/emulator/physical-device tests, SciPy, Rust/C++/engine/viewer experiments and performance measurements remain open.  
 **Last updated:** 2026-11-07  
 **Phase plan:** docs/phase-r1-plan.md  
 **Owner gate:** R1 go/no-go review required before R2
@@ -11,7 +11,7 @@ An isolated Android arm64 feasibility app and Chaquopy probe now exist under `an
 
 Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. The current CI cross-build successfully creates a pinned Biopython 1.88 Android wheel (SHA-256 `cdf569ea13eb9314e43afeb9bbd3dbdbf95616d138f775a2e12e4cb7ba0cecbf`). Gradle consumed that wheel and NumPy 1.26.2 successfully after SciPy was removed from the immediate APK probe. It progressed through Python packaging, Android resource processing and stopped at Kotlin compilation because Java bytecode target 1.8 did not match Kotlin target 17. The build configuration is being aligned to JVM 17. SciPy remains an unresolved architecture requirement. No APK/AAB artifact exists yet.
 
-No APK/AAB, app runtime, emulator or physical-device result is yet accepted as validated. No embedded package import, Rust app call, C++ JNI, scientific engine, RDKit, offline viewer, 16 KB runtime, startup, memory or device result is claimed.
+No Android app runtime, emulator or physical-device result is yet accepted as validated. No successful on-device Python import, Rust app call, C++ JNI, scientific engine, RDKit, offline viewer, 16 KB runtime, startup, memory or device result is claimed.
 
 ## Initial research findings
 
@@ -49,13 +49,13 @@ The run-1384 failure is consistent with a package-format/ABI gap, not a missing 
 
 Chaquopy 17's pip behavior is particularly important: it uses binary-only resolution for normal index installs. Its documentation describes building Android wheels with its package-build tooling (for Python 3.12 and older) or cibuildwheel (Python 3.13+), then supplying the resulting wheel through a local `--find-links` directory. Therefore, simply changing the pip index, loosening the version, or adding a source URL is not an evidence-based fix.
 
-### Implemented CI experiment (Biopython wheel built; APK pending)
+### Implemented CI experiment (Biopython wheel and arm64 APK/AAB built)
 
 1. Keep the current Python 3.11 / arm64-v8a baseline for this controlled experiment.
 2. Added `android/biopython-wheel/meta.yaml`, pinned to Biopython 1.88, and a CI step which checks out Chaquopy 17.2.0, downloads its Python 3.11.17 target and NumPy 1.26.2 Android wheel, and invokes Chaquopy's documented `build-wheel.py` for arm64-v8a.
 3. Updated the Android Gradle pip configuration to consume the generated local wheel using --find-links, with Biopython and NumPy versions pinned. The first complete wheel build succeeded, but the following Gradle package-resolution run found no compatible SciPy distribution in the configured Chaquopy indexes. The R1 APK probe therefore tests Biopython and NumPy while reporting SciPy as unavailable; SciPy remains a required architecture candidate and is not declared supported or dropped. The initial wheel-build attempts exposed two upstream Chaquopy 17.2.0 build-tool issues. First, its SONAME alias loop tried to create libpython.so twice when both stable-ABI and version-specific Python libraries were present; CI now applies an assertion-checked ln -sf patch so the version-specific alias wins. Second, compiler-wrapper.py rejected the checked-out wheel build's own host library path as outside its safe directories, stripping -L and -I arguments; CI now adds only GITHUB_WORKSPACE as an allowed safe root for those build paths. Both are local, pinned-toolchain compatibility patches and require review if the builder is upgraded. The Python 3.11 NumPy 1.26.2 wheel available in Chaquopy's index dates from 2023; Chaquopy warns that older Android wheels may not be 16 KB-page compatible. This is an explicit risk to test, not a compatibility claim. If it fails, the next candidate is a newer Android wheel or a Python 3.13+ build path.
 4. The workflow prints the wheel SHA-256 and proceeds to APK/AAB build only if the cross-build succeeds.
-5. Still required: inspect every compiled extension and linked native dependency; run import and representative sequence/structure parsing and alignment smoke tests on an arm64 emulator; repeat on a physical arm64 device; record package size, startup and RSS.
+5. Still required: execute the Python/Biopython/NumPy probe including SeqIO and Bio.PDB tests on an arm64 emulator and physical arm64 device; record startup and RSS. Static packaged ELF alignment has been inspected.
 6. If the custom wheel build fails or is not maintainable, evaluate a narrower native implementation for the specific required operations while retaining Biopython for desktop/remote workflows only if the architecture and capability registry explicitly describe that difference. This remains a fallback proposal, not a decision.
 
 ### Licensing note
@@ -77,18 +77,18 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 
 | Area | Current status | Required next evidence |
 |---|---|---|
-| Minimal Compose app / Gradle build | Biopython/NumPy install succeeds; run 1451 reaches Kotlin compile and fails on Java 1.8 vs Kotlin 17 JVM target mismatch; Gradle configuration now aligns both to 17 | Successful APK/AAB build, alignment check, artifact hash/size and toolchain record |
-| Embedded Python runtime | Chaquopy probe configured; app build/runtime not yet successful | arm64 APK build, on-device import/startup/RSS/package-size logs |
-| Biopython | Custom Biopython 1.88 wheel successfully built for CPython 3.11 / arm64-v8a; SHA-256 recorded in SESSION_LOG.md | Inspect wheel ELF; runtime import and SeqIO FASTA / Bio.PDB test vectors on emulator and physical arm64 device |
-| NumPy | NumPy 1.26.2 cp311 arm64 wheel is a pinned build input; its 2023 build date creates a known 16 KB alignment risk | Inspect packaged ELF; import and NumPy numerical smoke test on emulator and physical arm64 device |
+| Minimal Compose app / Gradle build | CI run 1454 successful; debug APK 63 MiB, AAB 36 MiB; artifact uploaded | On-device install/launch, startup/RSS and repeatable release-build assessment |
+| Embedded Python runtime | Chaquopy 17.2 / Python 3.11 packaged; app APK/AAB built; runtime not executed | On-device import/startup/RSS logs |
+| Biopython | Custom Biopython 1.88 wheel built and packaged; Bio.PDB and SeqIO probes added; runtime not executed | Run FASTA and PDB parser tests on emulator and physical arm64 device; license file audit |
+| NumPy | NumPy 1.26.2 packaged; all inspected APK/AAB native ELF PT_LOAD segments pass 16 KB alignment | Runtime import/numerical smoke test on emulator and physical arm64 device; assess wheel age/maintenance |
 | SciPy | Gradle resolution failed: no compatible distribution on the configured Chaquopy indexes for CPython 3.11 / arm64-v8a | Evaluate a custom Android wheel or a documented on-device alternative; otherwise define an explicit on-device vs remote-compute capability boundary and obtain owner approval |
 | Rust app FFI | Not implemented/tested | Android arm64 library and Kotlin call test |
 | C++17 JNI | Not implemented/tested | NDK build, JNI invocation and numeric correctness test |
 | One real scientific engine | Not selected | License review, Android build, real test vector |
 | RDKit / alternative | Not tested | arm64 build, dependency/license/size and smoke test |
 | Offline Mol* / 3Dmol.js | Not implemented/tested | Bundled viewer renders known structure without network |
-| 16 KB ELF / APK alignment | Not tested; workflow check is configured after successful build | ELF inspection, zipalign and 16 KB emulator/device run |
-| Cold start / peak memory / package size | Not measured | Repeatable measurements with environment metadata |
+| 16 KB ELF / APK alignment | `zipalign -P 16` passed; all 22 native ELF libraries in APK and AAB are AArch64 with PT_LOAD alignment 0x4000 | Run app on 16 KB Android emulator/device and confirm runtime page size |
+| Cold start / peak memory / package size | APK 63 MiB; AAB 36 MiB; cold start and RSS not measured | Repeatable measurements on emulator and low/mid/flagship physical devices |
 | SAF / background / cancellation | Not implemented/tested | Import and job lifecycle tests on Android |
 
 ## Device matrix
@@ -110,3 +110,23 @@ D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low
 ## Evidence capture template
 
 For every run record: date; commit; host OS; JDK/Gradle/AGP/Kotlin/SDK/NDK versions; dependency versions and licenses; device model/SoC/RAM/Android/API/ABI/page size; exact command; output/log link; artifact hash/size; cold-start method and repetitions; peak memory method; result (pass/fail/blocked); limitations and reproduction steps.
+
+
+## CI run 1454 — arm64 build and static package inspection
+
+- Workflow: https://github.com/AssayFlux/Kinetics/actions/runs/42383161737
+- Commit: `87a5b6f0fcae54de6858bc32d7472379ba09ccc7`
+- Android arm64 job and Python foundation job: both successful.
+- Python foundation: Ruff, mypy, registry validation, reproduction stub and all 11 unit tests passed.
+- Chaquopy 17.2.0 / Python 3.11.17-0, Biopython 1.88 custom arm64 wheel, NumPy 1.26.2; SciPy was not installed.
+- Debug APK: 65,388,299 bytes (about 62.3 MiB); debug AAB: 37,573,255 bytes (about 35.8 MiB).
+- Downloaded workflow artifact archive: 75,463,086 bytes; GitHub artifact digest: `sha256:48c14aa1e8f642f2c44ee11b1c69ec605ac3b92e599588b7351a496edd7eda04`.
+- Extracted APK SHA-256: `a6cd53256acfa8d408ef3fddbf8da37c98367f9dbcd082fe9c68ebcb4d53152b`.
+- Extracted AAB SHA-256: `def0e546c518f721d839b2c4238df1a95bca75db269ca3206645e3a8c0b46dda`.
+- APK ZIP alignment passed with build-tools 36.0.0 `zipalign -c -P 16 -v 4`.
+- Independent inspection of both archives found 22 native shared libraries per archive, all ELF64 little-endian AArch64. Every PT_LOAD segment had `p_align=0x4000` (16,384 bytes). A repeatable repository checker is now in CI.
+- Interpretation: build, packaging and static 16 KB ELF alignment pass. This does not establish app launch, native loading, Python imports, or operation on a 16 KB kernel/device.
+
+## Outstanding R1 exit blockers
+
+The R1 exit criteria in `docs/phase-r1-plan.md` are not met. No arm64 emulator or physical device run is available in this session. SciPy remains unresolved. Rust FFI, C++17 JNI, a real scientific engine, RDKit/alternative, offline molecular viewer, SAF/background/cancellation, cold-start and memory measurements remain unimplemented or untested. Biopython's file-level license audit and production redistribution approval are also outstanding. Do not start R2 or declare an R1 go/no-go until these outcomes and the owner review are recorded.

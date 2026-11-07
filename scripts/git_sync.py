@@ -109,6 +109,7 @@ def create_release_batch(manifest: dict) -> int:
     save_manifest(manifest)
     return total_uploaded
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--branch", default=os.getenv("GITHUB_REF_NAME", "main"))
@@ -126,7 +127,11 @@ def main() -> int:
         run(["git", "lfs", "track", "*.pdf", "*.epub"])
         run(["git", "add", ".gitattributes"])
         run(["git", "add", "-f", "data/corpus/objects"])
-    # Update the public growth graph after release_uploaded flags are finalized.\n    run(["python", "scripts/update_corpus_dashboard.py"])\n    run(["git", "add", "data/corpus-manifests"])\n    run(["git", "add", "Assets/corpus-growth.svg"])
+
+    # Update the public growth graph after release_uploaded flags are finalized.
+    run(["python", "scripts/update_corpus_dashboard.py"])
+    run(["git", "add", "data/corpus-manifests"])
+    run(["git", "add", "Assets/corpus-growth.svg"])
 
     status = run(["git", "status", "--porcelain"]).stdout.strip()
     if not status:

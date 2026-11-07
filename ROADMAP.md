@@ -12,7 +12,7 @@ This roadmap operationalises the archived master. A phase is complete only when 
 - Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
 - R0 accepted by the owner when they authorised R1 on 2026-11-07. CI evidence: [R0 workflow run](https://github.com/AssayFlux/Kinetics/actions/runs/42378815901).
 - R1 is now in progress. D-006 target devices remains open; no Android feasibility or device verification is yet claimed.
-- Three owner decisions remain open: clinical advisers, first PGx gene set and target Android devices. D-003 (publication strategy) is approved: multiple papers over time, beginning with an evidence-backed platform/software-methods paper after R1–R3 readiness, followed by independently validated domain papers. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. Adding the canonical LICENSE grant file remains a repository task.
+- Two owner decisions remain open: first PGx gene set and target Android devices. D-004 is approved: defer clinical-adviser recruitment until the research platform is more mature (target review after R3); P0 and all patient/clinical work remain blocked until qualified advisers and all other prerequisites are in place. D-003 (publication strategy) is approved: multiple papers over time, beginning with an evidence-backed platform/software-methods paper after R1–R3 readiness, followed by independently validated domain papers. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. Adding the canonical LICENSE grant file remains a repository task.
 
 ## Track R — Research platform
 | ID | Scope | Dependencies | Exit gate | Status | Owner | Date |
@@ -71,6 +71,12 @@ Further disease areas only after P7 evidence, one at a time.
 | G3 | QMS/software lifecycle documentation from P0 | P0 planning | Requirements, risk, verification, change and traceability controls | not-started | Owner + advisers | TBD |
 | G4 | Bias and ancestry coverage | Relevant P/I capabilities and datasets | Coverage/limitations in reports and outputs | not-started | Validation + advisers | TBD |
 | G5 | Paper evidence pipeline | R/S/I/P evidence | Manuscript tables/figures generated from validation/benchmarks | not-started | Research + Validation | TBD |
+
+## Clinical adviser timing (D-004)
+- Defer clinical-adviser recruitment during the current R1 engineering-feasibility phase.
+- Revisit after the research platform reaches a meaningful maturity milestone, with a target review after R3.
+- Recruit/engage qualified clinical expertise before P0, PGx gene-set selection or any patient-related, clinical-study or clinical-scope work. P0 remains blocked until its full gate packet and owner approval are complete.
+- This is a timing decision only; it does not relax safety, legal, ethics, regulatory, QMS or evidence requirements.
 
 ## Publication strategy (D-003)
 - Plan multiple papers over time, not one broad paper claiming every planned domain.

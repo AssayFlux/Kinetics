@@ -35,8 +35,33 @@ def extract_text(path: Path) -> str:
     if suffix in (".xml", ".nxml", ".html", ".htm"):
         from bs4 import BeautifulSoup
         return BeautifulSoup(path.read_bytes(), "xml" if suffix in (".xml", ".nxml") else "html.parser").get_text(" ", strip=True)
-    if suffix == ".txt":
+    if suffix in (".txt", ".csv", ".tsv"):
+        if suffix in (".csv", ".tsv"):
+            import csv
+            delimiter = "," if suffix == ".csv" else "\t"
+            with path.open(encoding="utf-8", errors="replace", newline="") as handle:
+                return "\n".join(" | ".join(row) for row in csv.reader(handle, delimiter=delimiter))
         return path.read_text(encoding="utf-8", errors="replace")
+    if suffix == ".json":
+        return json.dumps(json.loads(path.read_text(encoding="utf-8")), ensure_ascii=False, indent=2)
+    if suffix in (".fasta", ".fa", ".fna", ".faa", ".gb", ".gbk", ".genbank"):
+        from Bio import SeqIO
+        fmt = "genbank" if suffix in (".gb", ".gbk", ".genbank") else "fasta"
+        records = []
+        for record in SeqIO.parse(str(path), fmt):
+            records.append(f">{record.id} {record.description}\n{str(record.seq)}")
+        return "\n".join(records)
+    if suffix in (".pdb", ".cif", ".mmcif"):
+        from Bio.PDB import MMCIFParser, PDBParser, PPBuilder
+        parser = MMCIFParser(QUIET=True) if suffix in (".cif", ".mmcif") else PDBParser(QUIET=True)
+        structure = parser.get_structure(path.stem, str(path))
+        parts = []
+        builder = PPBuilder()
+        for model in structure:
+            for chain in model:
+                for peptide in builder.build_peptides(chain):
+                    parts.append(f">chain_{chain.id}\n{str(peptide.get_sequence())}")
+        return "\n".join(parts)
     return ""
 
 

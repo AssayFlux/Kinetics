@@ -1,6 +1,7 @@
 package org.assayflux.kinetics
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -39,17 +40,23 @@ private fun FeasibilityScreen(context: android.content.Context) {
             val cpp = probe.cppSumSquares(3.0, 4.0)
             check(kotlin.math.abs(rust - 25.0) < 1e-9)
             check(kotlin.math.abs(cpp - 25.0) < 1e-9)
-            "Rust FFI: $rust; C++17 JNI: $cpp"
+            "Rust FFI: $rust; C++17 JNI: $cpp".also { Log.i("KineticsR1", it) }
         }.fold(
             onSuccess = { it },
-            onFailure = { "Native smoke test failed: ${it.stackTraceToString()}" },
+            onFailure = {
+                Log.e("KineticsR1", "Native smoke test failed", it)
+                "Native smoke test failed: ${it.stackTraceToString()}"
+            },
         )
     }
 
     LaunchedEffect(Unit) {
         report = withContext(Dispatchers.IO) {
-            runCatching { PythonProbe.report(context) }
-                .getOrElse { error -> "R1 probe failed: ${error.stackTraceToString()}" }
+            runCatching { PythonProbe.report(context).also { Log.i("KineticsR1", it) } }
+                .getOrElse { error ->
+                    Log.e("KineticsR1", "Python smoke test failed", error)
+                    "R1 probe failed: ${error.stackTraceToString()}"
+                }
         }
     }
 

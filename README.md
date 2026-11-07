@@ -4,7 +4,7 @@
   <img src="Assets/Brand%20Logo.svg" alt="Kinetics brand logo" width="350">
 </p>
 
-<p align="center"><strong>A long-horizon biomedical research, molecular discovery and therapeutic-translation platform.</strong></p>
+<p align="center"><strong>A long-horizon, cross-disciplinary biomedical science and precision-health research platform.</strong></p>
 <p align="center">
   <a href="KINETICS_MISSION.md">Foundational mission</a> ·
   <a href="VISION.md">Vision</a> ·

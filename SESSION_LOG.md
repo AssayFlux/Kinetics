@@ -358,3 +358,11 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 - Confirmed Biopython 1.88 declares NumPy as a required dependency and uses setuptools 74.1+ with native C extension modules. The pinned Chaquopy wheel recipe uses NumPy 1.26.2 as the host/runtime requirement input.
 - Added an explicit R1 risk: Chaquopy's Python 3.11 NumPy 1.26.2 Android wheel in the index dates from 2023, before the 16 KB compatibility era. It must be ELF-inspected and runtime-tested; if it fails 16 KB validation, the stack must be rebuilt or moved to a compatible newer Python/package path.
 - This correction does not establish wheel-build success, APK/AAB success, or 16 KB compatibility.
+
+
+### R1 first custom-wheel CI attempt — 2026-11-07
+- Latest CI run 42382373740 passed the Python foundation job (Ruff, mypy, registry validation, unit tests and reproduction stub).
+- Android job provisioned Java, Python, Android SDK/NDK, installed wheel-builder dependencies, checked out the pinned Chaquopy 17.2.0 source and downloaded its CPython 3.11.17 target plus Biopython 1.88 source.
+- The first custom wheel build failed before Biopython compilation: Chaquopy's wheel builder created a libpython.so alias for both libpython3.so and libpython3.11.so; the second ln -s failed because the alias already existed. This is a toolchain alias collision, not a Biopython compiler failure.
+- Added an assertion-checked, CI-local patch changing that alias creation to ln -sf, so the version-specific alias takes precedence. This does not modify the pinned upstream repository or claim wheel success; rerun required.
+- Aligned the prototype app minSdk to API 29, matching D-006 Android 10+ target rather than leaving an accidental API 24 app floor.

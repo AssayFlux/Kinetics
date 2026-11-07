@@ -366,3 +366,10 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 - The first custom wheel build failed before Biopython compilation: Chaquopy's wheel builder created a libpython.so alias for both libpython3.so and libpython3.11.so; the second ln -s failed because the alias already existed. This is a toolchain alias collision, not a Biopython compiler failure.
 - Added an assertion-checked, CI-local patch changing that alias creation to ln -sf, so the version-specific alias takes precedence. This does not modify the pinned upstream repository or claim wheel success; rerun required.
 - Aligned the prototype app minSdk to API 29, matching D-006 Android 10+ target rather than leaving an accidental API 24 app floor.
+
+
+### R1 Biopython wheel build attempt 2 — 2026-11-07
+- The SONAME alias patch allowed the second CI attempt to progress through Biopython 1.88 C-extension compilation for aarch64 Android.
+- Link failed because Chaquopy's compiler-wrapper.py removed the workspace-local Chaquopy host-library path from the compiler command as outside its allowlisted safe directories. Consequently ld.lld could not resolve -lpython3.11. The compile command was using Chaquopy's Android clang wrapper and the expected 16 KB max-page-size linker flag.
+- Patched the pinned CI checkout's compiler-wrapper safe roots to include only GITHUB_WORKSPACE, in addition to its existing safe root. This allows the generated host headers/libraries under the repository's build directory while continuing to reject arbitrary host paths. Both toolchain patches are asserted and scoped to the pinned Chaquopy 17.2.0 build checkout.
+- The custom wheel has not yet completed. APK/AAB, runtime, ELF, emulator and physical-device evidence remain outstanding.

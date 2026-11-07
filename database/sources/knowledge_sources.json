@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "policy": {
     "download_requires_explicit_redistribution_license": true,
     "allowed_license_families": [
@@ -14,7 +14,11 @@
       "All Rights Reserved",
       "unknown"
     ],
-    "https_only": true
+    "https_only": true,
+    "per_file_default_limit_mib": 100,
+    "per_file_maximum_limit_mib": 200,
+    "resume_strategy": "HTTP Range when supported; otherwise restart from byte zero",
+    "domain_catalogue": "100 foundational domains plus 60 extensions (160 unique)"
   },
   "sources": [
     {
@@ -24,7 +28,8 @@
       "endpoint": "https://archive.org/advancedsearch.php",
       "adapter": "scripts/fetch_corpus.py",
       "enabled": true,
-      "notes": "Download only when item metadata carries an explicitly accepted license."
+      "notes": "Download only when item metadata carries an explicitly accepted license.",
+      "adapter_status": "implemented"
     },
     {
       "id": "europe_pmc_oa",
@@ -33,7 +38,8 @@
       "endpoint": "https://www.ebi.ac.uk/europepmc/webservices/rest/search",
       "adapter": "scripts/fetch_corpus.py",
       "enabled": true,
-      "notes": "OA subset only; package license checked before retrieval."
+      "notes": "OA subset only; package license checked before retrieval.",
+      "adapter_status": "implemented"
     },
     {
       "id": "doab",
@@ -42,7 +48,8 @@
       "endpoint": "https://www.doabooks.org/",
       "adapter": "discovery_only",
       "enabled": false,
-      "notes": "Discovery candidate; add a reviewed adapter and verify book-level rights before downloads."
+      "notes": "Discovery candidate; add a reviewed adapter and verify book-level rights before downloads.",
+      "adapter_status": "discovery_only"
     },
     {
       "id": "doaj",
@@ -51,7 +58,8 @@
       "endpoint": "https://doaj.org/",
       "adapter": "discovery_only",
       "enabled": false,
-      "notes": "Discovery candidate; journal/article licenses must be checked individually."
+      "notes": "Discovery candidate; journal/article licenses must be checked individually.",
+      "adapter_status": "discovery_only"
     },
     {
       "id": "arxiv",
@@ -60,7 +68,8 @@
       "endpoint": "https://export.arxiv.org/api/query",
       "adapter": "discovery_only",
       "enabled": false,
-      "notes": "Use source-specific terms and verify reuse/redistribution rights before mirroring."
+      "notes": "Use source-specific terms and verify reuse/redistribution rights before mirroring.",
+      "adapter_status": "discovery_only"
     }
   ]
 }

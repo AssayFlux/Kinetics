@@ -84,3 +84,14 @@ Progression to patient care requires independent prospective clinical evidence, 
 A researcher investigates a disease mechanism, traces variants to genes and proteins, inspects structures and interactions, studies kinetic and chemical evidence, integrates omics and imaging, compares therapeutic hypotheses, designs an experiment and produces a reproducible report in one coherent environment.
 
 Over years, validated components may contribute to better translational research and, where evidence and authorization permit, carefully scoped clinical tools. Kinetics should become infrastructure for better biomedical questions—and help make better treatment research possible.
+
+
+## Offline resilience and humanitarian purpose
+
+The long-term vision includes a dependable offline knowledge layer for emergencies and humanitarian settings. Kinetics should preserve access to verified scientific and health references during conflict, displacement, disasters, epidemics, remote-area emergencies and prolonged infrastructure failure. This requires signed and versioned local knowledge packs, offline search, low-power operation, removable-media distribution, printable references, integrity verification, privacy protections and tested recovery. Emergency protocols must be curated and reviewed by qualified professionals for their intended jurisdiction and user role. Kinetics must never claim flawless operation or replace emergency services, trained responders or hands-on care. See [docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md](docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md).
+
+## The larger horizon
+
+Kinetics should be designed as an evolving public-benefit scientific infrastructure: extensible across disciplines, interoperable across institutions, usable across device classes and resilient across infrastructure conditions. Its future may include federated research, privacy-preserving computation, portable scientific libraries, collaborative evidence curation, validated multimodal analysis and new scientific domains not yet anticipated. These are strategic directions, not claims of current capability. Each must earn its place through lawful data access, scientific rationale, engineering feasibility, independent evaluation and measurable benefit.
+
+The ambition is to help humanity build a deeper, more connected understanding of life and disease; make research more reproducible and accessible; and preserve essential knowledge for future generations. The measure of success is not maximal feature count, but trustworthy scientific utility and responsible contribution to human health.

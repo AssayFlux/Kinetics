@@ -79,12 +79,12 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 |---|---|---|
 | Minimal Compose app / Gradle build | CI run 1454 successful; debug APK 63 MiB, AAB 36 MiB; artifact uploaded | On-device install/launch, startup/RSS and repeatable release-build assessment |
 | Embedded Python runtime | Chaquopy 17.2 / Python 3.11 packaged; app APK/AAB built; runtime not executed | On-device import/startup/RSS logs |
-| Biopython | Custom Biopython 1.88 wheel built and packaged; Bio.PDB and SeqIO probes added; runtime not executed | Run FASTA and PDB parser tests on emulator and physical arm64 device; license file audit |
+| Biopython | Custom Biopython 1.88 wheel built and packaged; Bio.PDB, SeqIO and PairwiseAligner probes added; runtime not executed | Run FASTA and PDB parser tests on emulator and physical arm64 device; license file audit |
 | NumPy | NumPy 1.26.2 packaged; all inspected APK/AAB native ELF PT_LOAD segments pass 16 KB alignment | Runtime import/numerical smoke test on emulator and physical arm64 device; assess wheel age/maintenance |
 | SciPy | Gradle resolution failed: no compatible distribution on the configured Chaquopy indexes for CPython 3.11 / arm64-v8a | Evaluate a custom Android wheel or a documented on-device alternative; otherwise define an explicit on-device vs remote-compute capability boundary and obtain owner approval |
 | Rust app FFI | Minimal Rust static library and Kotlin JNI bridge added; CI cross-compile/build and on-device call pending | Successful arm64 build and runtime result `sumSquares(3,4)=25`; cancellation/timeout test |
 | C++17 JNI | Minimal C++17 JNI library and Kotlin bridge added; CI build and on-device invocation pending | Successful NDK build and runtime numeric correctness test; sanitizer-capable host tests |
-| One real scientific engine | Not selected | License review, Android build, real test vector |
+| One real scientific engine | Biopython `Bio.Align.PairwiseAligner` added as a real sequence-alignment algorithm test (global alignment score 5.0 for ACGT vs ACCT); Android runtime not executed | Run the fixed alignment vector on arm64 Android; record algorithm/version/license and limits; decide whether a separate domain engine is needed |
 | RDKit / alternative | Not tested | arm64 build, dependency/license/size and smoke test |
 | Offline Mol* / 3Dmol.js | Not implemented/tested | Bundled viewer renders known structure without network |
 | 16 KB ELF / APK alignment | `zipalign -P 16` passed; all 22 native ELF libraries in APK and AAB are AArch64 with PT_LOAD alignment 0x4000 | Run app on 16 KB Android emulator/device and confirm runtime page size |

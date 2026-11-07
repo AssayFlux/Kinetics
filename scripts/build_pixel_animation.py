@@ -3,7 +3,10 @@
 from __future__ import annotations
 import math
 from pathlib import Path
-from PIL import Image, ImageDraw
+try:
+    from PIL import Image, ImageDraw
+except ImportError as exc:
+    raise SystemExit("Install Pillow first: python -m pip install Pillow") from exc
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"Assets"/"Future"/"kinetics-science-quest.gif"
 W,H,FRAMES=320,120,32

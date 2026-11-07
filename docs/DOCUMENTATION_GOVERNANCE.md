@@ -26,7 +26,7 @@ The 100-domain catalogue is a scope register, not an implementation checklist. T
 | Asset policy said generated GIF/animation assets were not maintained, while the README and asset test require the tracked GIF | Documentation, tests and README disagreed | Clarified the GIF as a legacy presentation asset and the HTML/CSS layouts as prototypes |
 | Documentation index omitted the knowledge-ingestion guide and structure maps, and mislabeled the asset policy | Index was incomplete and some descriptions were inaccurate | Rebuilt the index around the authority hierarchy and current files |
 | Step 9 documentation described PDB/mmCIF support inconsistently across Python and native C++ components | It could imply mmCIF support in the C++ parser or incorrectly imply no Python mmCIF adapter | Explicitly separate the native C++ PDB parser from Python PDB/mmCIF adapters and the Biopython workbench |
-| README documentation links did not expose the full plan/status hierarchy | New contributors could miss the authoritative plan and active completion programme | To be checked against the updated index in the next documentation pass |
+| README documentation links did not expose the full plan/status hierarchy | New contributors could miss the authoritative plan and active completion programme | Updated README links now surface the mission, roadmap, architecture, active completion programme, current status and documentation index |
 
 ## Verified implementation boundaries used in the status register
 

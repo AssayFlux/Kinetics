@@ -36,6 +36,9 @@ The ambition spans fundamental biological discovery through translational resear
 
 The canonical catalogue is maintained in docs/SCIENCE_DOMAIN_CATALOGUE_100.md. Inclusion defines planned integration scope; it does not imply that a complete dataset, validated model, clinical workflow or production capability already exists.
 
+<!-- KINETICS_GALLERY_START -->
+<!-- KINETICS_GALLERY_END -->
+
 ### 1. Molecular foundations
 
 | # | Domain | Focus |

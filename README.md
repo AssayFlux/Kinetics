@@ -177,11 +177,13 @@ source/license/checksum provenance, and builds a local searchable text index.
 
 ~~~bash
 python -m pip install -r requirements-knowledge.txt
+python -m pip install -e . --no-deps
 python scripts/fetch_corpus.py --dry-run
 python scripts/fetch_corpus.py --batch-size 30 --max-batch-mb 80
 python scripts/tokenize_corpus.py --max-documents 50
 python scripts/analyze_corpus.py
 python scripts/query_knowledge.py "cardiac AND imaging" --limit 10
+kinetics-knowledge "cardiac AND imaging" --limit 10
 ~~~
 
 Raw files are stored locally under **data/corpus/objects/**; the resumable,

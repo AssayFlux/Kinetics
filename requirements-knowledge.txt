@@ -1,0 +1,7 @@
+# Lightweight runtime for the Kinetics knowledge ingestion subsystem.
+requests==2.32.4
+beautifulsoup4==4.13.4
+lxml==5.4.0
+PyMuPDF==1.26.3
+EbookLib==0.19
+tqdm==4.67.1

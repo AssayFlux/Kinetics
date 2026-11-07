@@ -52,3 +52,10 @@ The repository's automated tests use a deterministic fixture encoder to test cac
 - [Hugging Face model repository and pinned checkpoint](https://huggingface.co/facebook/esm2_t6_8M_UR50D/tree/8c576d2aba1b27317e9321c8491d72f00d1b110a)
 - [Official ESM repository and model-family documentation](https://github.com/facebookresearch/esm)
 - Lin et al. (2023), *Evolutionary-scale prediction of atomic-level protein structure with a language model*, Science 379, 1123–1130. See the official ESM repository for model family and release details.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

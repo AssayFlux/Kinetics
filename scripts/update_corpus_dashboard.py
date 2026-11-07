@@ -16,6 +16,7 @@ DEFAULT_MANIFEST = ROOT / "data/corpus-manifests/metadata_index.json"
 DEFAULT_HISTORY = ROOT / "data/corpus-manifests/corpus_history.json"
 DEFAULT_DATABASE = ROOT / "data/kinetics.sqlite3"
 DEFAULT_SVG = ROOT / "Assets/corpus-growth.svg"
+DEFAULT_MODEL_REGISTRY = ROOT / "data/model-manifests/model_registry.json"
 
 
 def database_metrics(path: Path) -> dict[str, int]:
@@ -41,7 +42,24 @@ def database_metrics(path: Path) -> dict[str, int]:
     return metrics
 
 
-def corpus_metrics(manifest: dict[str, Any], database: Path) -> dict[str, int]:
+def model_metrics(path: Path) -> dict[str, int]:
+    """Count only verified parameter totals for model checkpoints bundled in this repo."""
+    if not path.is_file():
+        return {"bundled_model_parameters": 0, "bundled_model_checkpoints": 0}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if data.get("schema_version") != 1 or not isinstance(data.get("models"), list):
+        raise ValueError(f"Unsupported model registry format: {path}")
+    entries = [
+        item for item in data["models"]
+        if item.get("status") == "bundled" and item.get("parameter_count_verified") is True
+    ]
+    return {
+        "bundled_model_parameters": sum(max(0, int(item["parameter_count"])) for item in entries),
+        "bundled_model_checkpoints": len(entries),
+    }
+
+
+def corpus_metrics(manifest: dict[str, Any], database: Path, model_registry: Path) -> dict[str, int]:
     published = [
         record for record in manifest.get("items", {}).values()
         if record.get("status") == "downloaded" and record.get("release_uploaded") is True
@@ -52,6 +70,7 @@ def corpus_metrics(manifest: dict[str, Any], database: Path) -> dict[str, int]:
         "published_domains": len({str(r.get("domain")) for r in published if r.get("domain")}),
         "published_sources": len({str(r.get("source")) for r in published if r.get("source")}),
         **database_metrics(database),
+        **model_metrics(model_registry),
     }
 
 
@@ -65,8 +84,8 @@ def load_history(path: Path) -> dict[str, Any]:
 
 
 def render_svg(history: dict[str, Any], metrics: dict[str, int], generated_at: str) -> str:
-    width, height = 960, 430
-    left, right, top, bottom = 92, 38, 92, 105
+    width, height = 960, 470
+    left, right, top, bottom = 92, 38, 92, 145
     plot_w, plot_h = width - left - right, height - top - bottom
     snapshots = history.get("snapshots", [])[-12:]
     max_mib = max((int(p.get("published_bytes", 0)) for p in snapshots), default=0) / (1024 * 1024)
@@ -127,7 +146,9 @@ def render_svg(history: dict[str, Any], metrics: dict[str, int], generated_at: s
 <text x="55" y="397" class="metric">{storage}</text>
 <text x="55" y="416" class="metric-label">{metrics['published_objects']} public objects · {metrics['published_domains']} domains · {metrics['published_sources']} sources</text>
 <text x="510" y="397" class="metric">{metrics['indexed_documents']:,}</text>
-<text x="510" y="416" class="metric-label">documents indexed in latest workflow · {metrics['indexed_chunks']:,} searchable chunks · {metrics['indexed_tokens']:,} tokens</text>
+<text x="510" y="416" class="metric-label">documents indexed · {metrics['indexed_chunks']:,} searchable chunks · {metrics['indexed_tokens']:,} tokens</text>
+<text x="55" y="451" class="metric">{metrics['bundled_model_parameters']:,}</text>
+<text x="55" y="466" class="metric-label">verified parameters in bundled model checkpoints · {metrics['bundled_model_checkpoints']} checkpoint(s); external weights excluded</text>
 </svg>
 """
 
@@ -136,12 +157,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE)
+    parser.add_argument("--model-registry", type=Path, default=DEFAULT_MODEL_REGISTRY)
     parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY)
     parser.add_argument("--output", type=Path, default=DEFAULT_SVG)
     args = parser.parse_args()
 
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
-    metrics = corpus_metrics(manifest, args.database)
+    metrics = corpus_metrics(manifest, args.database, args.model_registry)
     now = datetime.now(timezone.utc).isoformat()
     history = load_history(args.history)
     run_id = os.getenv("GITHUB_RUN_ID") or now[:10]

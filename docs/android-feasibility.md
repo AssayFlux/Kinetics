@@ -1,6 +1,6 @@
 # Android feasibility — R1 in progress
 
-**Status:** IN PROGRESS — first Android CI build attempted; blocked by missing host Python executable; workflow correction committed and awaiting rerun  
+**Status:** IN PROGRESS — first Android CI build failed at the host-Python prerequisite; Python provisioning correction committed; subsequent run outcome must be checked against live Actions evidence  
 **Last updated:** 2026-11-07  
 **Phase plan:** docs/phase-r1-plan.md  
 **Owner gate:** R1 go/no-go review required before R2
@@ -9,7 +9,7 @@
 
 An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11 with Biopython, NumPy and SciPy as an R1 experiment. These are prototype dependencies only, not a production architecture or dependency approval.
 
-The first GitHub Actions Android build (run 1381, commit `fe63ecf56538d4e1d494c44a51dfb9b5654b199a`) reached Chaquopy's Python-requirements task and failed because the runner did not have a discoverable Python 3.11 executable. The Python/registry/tests CI job passed. The workflow now explicitly provisions Python 3.11 before Gradle; commit `6705fe8dc27b90e3dea8482b21d89c7fe321afbd`. The rerun result must be recorded before drawing any build conclusion.
+The first GitHub Actions Android build (run 1381, commit `fe63ecf56538d4e1d494c44a51dfb9b5654b199a`) reached Chaquopy's Python-requirements task and failed because the runner did not have a discoverable Python 3.11 executable. The Python/registry/tests CI job passed. The workflow now explicitly provisions Python 3.11 before Gradle; commit `6705fe8dc27b90e3dea8482b21d89c7fe321afbd`. A later workflow run was started after this correction, but its terminal result is not established by this document revision. Verify the live Actions run and record its job/step evidence before drawing a build conclusion.
 
 No APK/AAB, app runtime, emulator or physical-device result is yet accepted as validated. No embedded package import, Rust app call, C++ JNI, scientific engine, RDKit, offline viewer, 16 KB runtime, startup, memory or device result is claimed.
 
@@ -60,7 +60,7 @@ Sources:
 
 ## Device matrix
 
-D-006 remains open. No physical target device has been nominated or provided. Emulator experiments can proceed, but cannot substitute for a real arm64 device. The supported-device matrix remains undecided.
+D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low-end, mid-range and flagship test tiers. This is a target matrix, not verified compatibility across all devices. No physical target device has yet been nominated or provided. Emulator experiments can proceed, but cannot substitute for a real arm64 device; actual supported-device limits remain evidence-dependent.
 
 | Target | Model / SoC / RAM | Android | Page size | Status |
 |---|---|---|---|---|
@@ -69,8 +69,8 @@ D-006 remains open. No physical target device has been nominated or provided. Em
 
 ## Preliminary assessment (not a go/no-go)
 
-- The Android project is now build-configured, but the first build did not reach compilation because the CI host Python prerequisite was missing.
-- Explicitly provisioning Python 3.11 is the first corrective action; the subsequent CI run will determine whether the prototype dependency resolution/build advances.
+- The Android project is build-configured. The first build did not reach compilation because the CI host Python prerequisite was missing.
+- Python 3.11 provisioning was committed as the corrective action. The next step is to verify the latest workflow's terminal status and inspect the Android job's build/artifact steps; do not infer success from the existence of the rerun.
 - No conclusion is yet possible about overall architecture feasibility, memory fit, APK/AAB size or real-device performance.
 - R1 remains in progress. R2 must not start until the full experiment matrix and owner go/no-go review are complete.
 

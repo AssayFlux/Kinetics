@@ -135,6 +135,8 @@ def stream_download(session: requests.Session, url: str, destination: Path,
     try:
         with session.get(url, stream=True, timeout=(15, 90), allow_redirects=True) as response:
             response.raise_for_status()
+            if not response.url.startswith("https://"):
+                raise ValueError("Refusing a non-HTTPS redirect target")
             length = response.headers.get("Content-Length")
             if length and int(length) > min(remaining_bytes, per_file_limit):
                 raise ValueError("Remote object exceeds configured byte budget")
@@ -292,7 +294,7 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
         prior = manifest["items"].get(pmcid, {})
         if prior.get("status") == "skipped_license":
             continue
-        if prior.get("status") == "downloaded" and local_record_is_valid(prior):
+        if prior.get("status") == "downloaded" and (prior.get("release_uploaded") or local_record_is_valid(prior)):
             continue
         oa = session.get("https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi",
                          params={"id": pmcid}, timeout=(15, 45))
@@ -330,7 +332,8 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
                     digest = hashlib.sha256(payload).hexdigest()
                     target = objects / "biomedical" / digest[:2] / f"{digest}{ext}"
                     target.parent.mkdir(parents=True, exist_ok=True)
-                    if not target.exists():
+                    if (not target.exists()
+                            or hashlib.sha256(target.read_bytes()).hexdigest() != digest):
                         temporary_target = target.with_suffix(target.suffix + ".tmp")
                         temporary_target.write_bytes(payload)
                         temporary_target.replace(target)

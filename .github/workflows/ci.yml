@@ -99,10 +99,12 @@ jobs:
       - name: Build arm64 debug APK and bundle
         working-directory: android
         run: gradle --no-daemon :app:assembleDebug :app:bundleDebug
-      - name: Check APK ZIP alignment
+      - name: Check APK ZIP and native ELF 16 KB alignment
         run: |
           APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          AAB="android/app/build/outputs/bundle/debug/app-debug.aab"
           "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 "$APK"
+          python scripts/check_android_elf_alignment.py "$APK" "$AAB"
       - name: Report APK size and upload artifacts
         run: |
           ls -lh android/app/build/outputs/apk/debug/app-debug.apk

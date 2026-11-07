@@ -74,6 +74,10 @@ kinetics-knowledge "cardiac AND imaging" --limit 10
 
 The index is added to the persistent `data/kinetics.sqlite3` SQLite database. Each automated run restores the newest `knowledge-db-snapshot-*` release before tokenization and publishes a fresh full database snapshot afterward, so indexed chunks and FTS5 search data survive ephemeral GitHub Actions runners. Other Kinetics modules can use the read-only `kinetics_core.knowledge.KnowledgeStore` API or the installed `kinetics-knowledge` command to retrieve source-linked chunks. FTS5 stores text chunks and source metadata; the original document stays in the content-addressed filesystem store. Chunking is a deterministic baseline tokenizer, not a model-specific tokenizer. A future embedding adapter can add versioned vectors without changing source identity or provenance.
 
+## Minimum archive milestone
+
+The first platform-level corpus milestone is **10,000 books and 10,000 research papers minimum**. Track these categories separately. Each object moves through explicit states: discovered → rights-reviewed → downloaded → checksum-verified → extracted → normalized → tokenized → indexed → retrievable. Only count an item at a stage when its manifest and corresponding artifact/index evidence confirm success. A failed parse, duplicate content object, inaccessible record, or item without approved reuse rights must not inflate processed/searchable totals. Preserve duplicate source records and their provenance even when a content hash identifies identical bytes. Report source coverage, rights exclusions, extraction failures and unreadable/scanned documents alongside totals. This is a minimum growth target, not a claim that the current corpus has reached it.
+
 ## GitHub automation
 
 1. Push the subsystem to the repository's `main` branch.
@@ -107,7 +111,7 @@ Each file is capped by `--max-file-mb` (80 MiB maximum) so the object remains co
 - OCR is not performed. Scanned PDFs may yield no text and are marked as such.
 - Token counts are tokenizer-specific estimates; current chunking counts Unicode word/punctuation tokens, not LLM model tokens.
 - Lightweight entity/keyword counts are exploratory signals, not validated scientific assertions. Every retrieval result should be checked against its cited source and relevant study limitations.
-- The 160-domain target is a taxonomy breadth objective, not a claim of corpus coverage. Zenodo expands books and general research-data coverage; BioPython adds sequence and structure-aware indexing. The 10,000+ target is an incremental collection objective, not a promise that one workflow run downloads that many files. Rate limits, rights, source availability and storage budgets govern actual throughput.
+- The 160-domain target is a taxonomy breadth objective, not a claim of corpus coverage. Zenodo expands books and general research-data coverage; BioPython adds sequence and structure-aware indexing. The first archive milestone is at least 10,000 books and 10,000 research papers; this is an incremental collection objective, not a promise that one workflow run downloads that many files. Rate limits, rights, source availability and storage budgets govern actual throughput.
 
 
 ### Reuse from Kinetics Python modules

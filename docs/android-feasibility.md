@@ -100,11 +100,12 @@ D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low
 | Emulator | To be recorded | Android 15+ 16 KB image | 16 KB | Not run |
 | Physical arm64 | Owner to nominate/provide | To be recorded | To be measured | Blocked on target device |
 
-## Preliminary assessment (not a go/no-go)
+## Preliminary assessment (not a go/no-go; updated after CI run 1481)
 
-- The Android project is build-configured. The host-Python prerequisite is now resolved: run 1384 successfully installs Python 3.11 and Android SDK/NDK.
-- Biopython 1.88 has now been cross-built into an Android arm64 wheel; Gradle installed the local Biopython wheel and NumPy 1.26.2 successfully. With SciPy excluded from the immediate app probe, the build progressed to Kotlin compilation and failed because Java bytecode target 1.8 differed from Kotlin target 17. The Gradle config now aligns Java and Kotlin to JVM 17. No APK/AAB artifact or Android runtime result is claimed yet.
-- No conclusion is yet possible about overall architecture feasibility, memory fit, APK/AAB size or real-device performance.
+- The host-Python prerequisite, Biopython wheel build, JVM target mismatch and subsequent APK/AAB packaging blockers have been resolved in CI.
+- CI run 1481 successfully built the arm64 debug APK and AAB, built the pinned Biopython 1.88 arm64 wheel, compiled Rust and C++17 JNI, and passed APK ZIP plus static ELF 16 KB alignment checks. APK is 63 MiB; AAB is 36 MiB.
+- Static artifact inspection proves packaging/alignment only. It does not establish Android app launch, native calls, Python/Biopython/NumPy imports, 16 KB kernel runtime, cold-start, peak memory or physical-device compatibility.
+- SciPy is still unavailable in the current Chaquopy Android package path. No conclusion is yet possible about the complete intended architecture until the remaining R1 experiments are run.
 - R1 remains in progress. R2 must not start until the full experiment matrix and owner go/no-go review are complete.
 
 ## Evidence capture template
@@ -181,3 +182,18 @@ adb shell dumpsys meminfo org.assayflux.kinetics
 The expected native line is `Rust FFI: 25.0; C++17 JNI: 25.0`. The Python report should show successful Python/Biopython/NumPy imports, FASTA parsing, one GLY PDB residue, PairwiseAligner score 5.0 and NumPy norm 5.0. SciPy is expected to report unavailable in this prototype. Capture the complete log, screenshot, model/SoC/RAM, Android/API, ABI, page size, cold-start time and memory. Repeat launch/memory measurements at least five times after a clean force-stop and record every result, including failures.
 
 A device reporting page size 16384 is a 16 KB runtime target. A device reporting 4096 is still useful for the Android 10+ baseline but does not replace a 16 KB emulator/device test. Repeat on representative low-end, mid-range and flagship arm64 devices before proposing a support matrix. Do not interpret CI static ELF alignment as a runtime pass.
+
+
+## CI run 1481 — integrated arm64 build and static alignment re-confirmed
+
+- Workflow: https://github.com/AssayFlux/Kinetics/actions/runs/42384785011
+- Commit: `a7c3fd885f408bfcd46d487d58f96358129b03b2`.
+- Both workflow jobs passed: Python foundation/registry/tests and R1 Android arm64 feasibility build.
+- Android steps passed: Rust arm64 cross-compilation; pinned Chaquopy 17.2.0 wheel-builder preparation; Biopython 1.88 arm64 wheel build; Gradle debug APK/AAB build; APK ZIP alignment; static native ELF alignment; artifact upload.
+- APK: 63 MiB. AAB: 36 MiB. Uploaded artifact: 75,471,340 bytes; artifact ID 13579510157; digest `sha256:1c545a16edbea1453652d7c7321af4610764ad897ec39f04fdf5b66908db45fc`.
+- The ELF checker reports a minimum PT_LOAD alignment of 16,384 bytes for every inspected native library in both APK and AAB. Rust and C++ JNI symbols are present in the packaged arm64 library.
+- The workflow does not boot an Android emulator and does not execute the APK. Therefore Python runtime, JNI runtime, 16 KB page-size runtime, startup, RSS and device support remain unverified.
+
+## R1 status after run 1481
+
+Build and static package evidence is green. R1 is **not complete**. Outstanding: 16 KB emulator runtime; Android arm64 physical-device runtime; Python/Biopython/NumPy runtime tests; Rust/C++ invocation; SciPy decision/packaging experiment; separate domain scientific engine evaluation; RDKit or alternative; offline Mol*/3Dmol.js; SAF import/background/cancellation; repeatable cold-start and peak RSS; Biopython file-level license audit and third-party redistribution review. No R1 go/no-go has been issued.

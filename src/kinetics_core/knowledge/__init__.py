@@ -17,7 +17,7 @@ class KnowledgeStore:
     def _connect(self) -> sqlite3.Connection:
         if not self.database.is_file():
             raise FileNotFoundError(f"Knowledge database not found: {self.database}")
-        connection = sqlite3.connect(f"file:{self.database.resolve()}?mode=ro", uri=True)
+        connection = sqlite3.connect(f"{self.database.resolve().as_uri()}?mode=ro", uri=True)
         connection.row_factory = sqlite3.Row
         return connection
 

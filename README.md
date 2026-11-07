@@ -176,7 +176,7 @@ redistributable books and biomedical papers in bounded batches, preserves
 source/license/checksum provenance, and builds a local searchable text index.
 
 ~~~bash
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-knowledge.txt
 python scripts/fetch_corpus.py --dry-run
 python scripts/fetch_corpus.py --batch-size 30 --max-batch-mb 80
 python scripts/tokenize_corpus.py --max-documents 50

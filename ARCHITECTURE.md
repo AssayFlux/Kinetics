@@ -1,5 +1,7 @@
 # Kinetics — System architecture
 
+> **Mission authority:** This architecture is governed by the [Kinetics foundational mission](KINETICS_MISSION.md): a cross-disciplinary biomedical and precision-health research platform, built foundation-first with privacy, evidence, clinical safety and low-memory Android performance designed in.
+
 ## Objective
 A modular, platform-first biomedical research and precision-health research platform with independently versioned scientific domains, a shared evidence/data foundation and a native visualization engine. Scientific modules must remain usable from Python/CLI without launching the desktop application.
 

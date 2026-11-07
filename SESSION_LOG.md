@@ -213,3 +213,22 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Ask the owner to decide D-005: initial PGx gene set.
+
+
+## 2026-11-07 — Session 11: Owner decision D-005 — initial PGx panel breadth
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Record the intended initial PGx panel breadth without selecting genes or bypassing the deferred clinical-adviser gate.
+
+### Done
+- Owner selected option 2: target a broader initial panel of approximately 15–20 genes.
+- Recorded D-005 as an approved strategic breadth decision in DECISIONS.md.
+- Updated ROADMAP.md to reflect the 15–20-gene target while retaining evidence-based staging.
+
+### Constraints and interpretation
+- No individual PGx gene has been selected, validated, implemented or clinically endorsed by this decision.
+- Exact gene selection is deferred until qualified clinical advisers are engaged after the D-004 maturity checkpoint and before P0/PGx implementation.
+- Selection must consider guideline support, reference materials, caller/assay reliability, ancestry coverage, evidence quality, licensing and validation feasibility. Do not pad the panel to meet a numerical target; a smaller or staged panel may be proposed if evidence warrants.
+- P0 remains blocked; Research Mode remains the only public mode. No patient-data or clinical use is authorized.
+
+### Next step
+- Ask the owner to decide D-006: target Android devices and minimum support matrix.

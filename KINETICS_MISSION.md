@@ -99,7 +99,11 @@ Before any clinical deployment, the relevant module must pass:
 
 When evidence is insufficient, conflicting, out of scope or unsafe, the system must abstain and explain why. Emergency and high-risk scenarios require clear escalation to qualified care.
 
-## 8. Performance, accessibility and device strategy
+## 8. Archive-first offline data strategy
+
+Kinetics must support safe, bounded-memory inspection and selective querying of compressed scientific archives without requiring full extraction. Ordinary ZIP/ZIP64 is an import and packaging format; indexed, independently compressed chunks and domain-specific random-access formats are required for efficient selective reads. SQLite is the local catalogue and provenance index, while large scientific objects remain in separate content-addressed storage. Offline analysis is limited to data physically available in local or attached storage. The implementation plan is maintained in [docs/ARCHIVE_FIRST_OFFLINE_DATA_ARCHITECTURE.md](docs/ARCHIVE_FIRST_OFFLINE_DATA_ARCHITECTURE.md).
+
+## 9. Performance, accessibility and device strategy
 
 Kinetics must be useful on powerful research workstations and constrained devices. Small Android devices are a first-class performance constraint, not an afterthought.
 
@@ -111,7 +115,7 @@ Kinetics must be useful on powerful research workstations and constrained device
 - Allow heavy training, large simulations and bulk processing to run on suitable remote or workstation compute, with explicit consent and secure transfer.
 - Build the complete platform foundation and stable APIs before investing in a polished end-user application. Then build desktop and Android experiences against those stable contracts.
 
-## 9. Build order and programme discipline
+## 10. Build order and programme discipline
 
 The user-directed sequence is binding:
 
@@ -124,7 +128,7 @@ The user-directed sequence is binding:
 
 Testing and security checks still run continuously during development; the sequence means comprehensive system-level acceptance and training happen after the integrated foundation is assembled, not that code is left untested.
 
-## 10. Definition of success
+## 11. Definition of success
 
 Success is not measured by the number of source names in a catalogue, lines of code, model parameters or unsupported claims of being the world's largest. It is measured by:
 - breadth and quality of lawfully accessible scientific coverage;
@@ -138,7 +142,7 @@ Success is not measured by the number of source names in a catalogue, lines of c
 
 The phrase "world's biggest system" expresses the scale of the ambition. Kinetics should strive to become one of the most comprehensive, connected and useful platforms in its field, while earning every scientific and clinical claim through evidence.
 
-## 11. Mandatory decision filter
+## 12. Mandatory decision filter
 
 Every future feature, dependency, dataset, model, UI, infrastructure change and roadmap item must answer:
 

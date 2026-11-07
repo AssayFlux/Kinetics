@@ -37,18 +37,37 @@ The canonical catalogue is maintained in docs/SCIENCE_DOMAIN_CATALOGUE_100.md. I
 
 **Animated science quest**\n\n<img src="Assets/Future/kinetics-science-quest.gif" width="640" alt="Colourful Kinetics science quest pixel runner animation">\n\n<!-- KINETICS_GALLERY_START -->
 
-**Real scientific imagery — downloaded from openly licensed scientific image sources**
+**Real scientific imagery — downloaded and committed files only.**
 
-The gallery uses Openverse's multi-provider index first, with Wikimedia Commons as a fallback. It accepts only public-domain, CC0, CC BY or CC BY-SA images suitable for commercial reuse, saves square 1024 × 1024 PNGs, and records the original image URL, source page, creator, provider, licence and SHA-256 checksum in Assets/Future/ATTRIBUTION.json.
+Each domain keeps its fixed position in the four-column atlas. A blank cell means its real image has not yet been downloaded and verified; no placeholder or generated image is used.
 
-Run the Termux downloader after cloning or updating the repository:
-
-```bash
-bash scripts/termux_download_gallery.sh
-```
-
-Images are not synthesized or procedurally generated. Some domains may need a retry or manual image review if Commons has no suitable high-resolution openly licensed file.
-
+<table>
+<tr><td></td><td></td><td align="center"><img src="Assets/Future/PNG/003-transcriptomics.png" width="170" alt="Transcriptomics"><br><b>Transcriptomics</b></td><td></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/005-structural-biology.png" width="170" alt="Structural Biology"><br><b>Structural Biology</b></td><td align="center"><img src="Assets/Future/PNG/006-cell-biology.png" width="170" alt="Cell Biology"><br><b>Cell Biology</b></td><td align="center"><img src="Assets/Future/PNG/007-molecular-biology.png" width="170" alt="Molecular Biology"><br><b>Molecular Biology</b></td><td align="center"><img src="Assets/Future/PNG/008-biochemistry.png" width="170" alt="Biochemistry"><br><b>Biochemistry</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/009-epigenetics.png" width="170" alt="Epigenetics"><br><b>Epigenetics</b></td><td></td><td></td><td></td></tr>
+<tr><td></td><td align="center"><img src="Assets/Future/PNG/014-metagenomics.png" width="170" alt="Metagenomics"><br><b>Metagenomics</b></td><td align="center"><img src="Assets/Future/PNG/015-single-cell-biology.png" width="170" alt="Single Cell Biology"><br><b>Single Cell Biology</b></td><td align="center"><img src="Assets/Future/PNG/016-spatial-omics.png" width="170" alt="Spatial Omics"><br><b>Spatial Omics</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/017-developmental-biology.png" width="170" alt="Developmental Biology"><br><b>Developmental Biology</b></td><td align="center"><img src="Assets/Future/PNG/018-stem-cell-biology.png" width="170" alt="Stem Cell Biology"><br><b>Stem Cell Biology</b></td><td></td><td align="center"><img src="Assets/Future/PNG/020-regenerative-medicine.png" width="170" alt="Regenerative Medicine"><br><b>Regenerative Medicine</b></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+</table>
 <!-- KINETICS_GALLERY_END -->
 
 ### 1. Molecular foundations

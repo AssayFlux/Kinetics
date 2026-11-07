@@ -236,3 +236,10 @@ The latest verification run [#42173358868](https://github.com/AssayFlux/Kinetics
 The first Step 9 increment implements versioned protein-sequence, structure, residue-mapping and derived-feature records, plus a fixed-column PDB adapter that verifies source-file SHA-256 and computes evidence-linked C-alpha distances only from explicit mappings. Deterministic fixtures cover parsing, insertion codes, sequence identity, coordinate integrity and feature provenance. mmCIF, external structure-source adapters, automatic alignment, independent reference validation and real-data benchmarks remain open. See [Proteomics and structural biology](STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md).
 
 Step 10 includes an executable release-manifest evaluator that validates required gates, source commit, evidence references and waiver metadata and conservatively emits GO/CONDITIONAL/NO-GO without claiming human sign-off. Actual release evidence, SBOM, vulnerability triage, security/recovery/UAT reports, accountable reviews and production sign-off remain open. See [Release readiness gates](STEP10_RELEASE_READINESS_GATES.md).
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

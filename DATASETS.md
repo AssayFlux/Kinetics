@@ -83,3 +83,10 @@ python -m kinetics_core.catpred \
 ```
 
 Run kcat separately using `kcat/kcat_train.csv` and `--unit s^-1`. Preserve the source train/validation/test partitions; do not concatenate them. Treat the kcat absolute scale as provisional until the upstream SABIO unit conversion is audited. The adapter retains source accessions, sequences, substrate SMILES, EC/taxonomy annotations, sequence source, and published split/cluster labels. Missing DOI, assay IDs, or organism names remain missing. Do not treat published split labels as newly generated clusters or merge published test partitions into training.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](KINETICS_MISSION.md), expanded [vision](VISION.md), and [emergency and humanitarian resilience requirements](docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

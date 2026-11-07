@@ -448,3 +448,25 @@ Run the expanded Python/Biopython probe on an arm64 Android device/emulator; con
 
 ### Gate
 R1 remains IN PROGRESS. No R1 go/no-go has been issued and R2 remains blocked.
+
+
+## 2026-11-07 — Session 17: R1 Rust/C++ arm64 build and ELF validation passed
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Validate that the Rust and C++17 native prototypes build, link and satisfy static 16 KB ELF alignment checks in the packaged arm64 artifacts.
+
+### Validated
+- CI run 1471: https://github.com/AssayFlux/Kinetics/actions/runs/42384355517 — both jobs succeeded on commit 2683a4f2212f3337593a1ac0ff0d59cc4105f986.
+- Rust static library cross-compilation for aarch64-linux-android passed.
+- Gradle/CMake compiled and linked the C++17 JNI shared library with the Rust static library.
+- Packaged libkinetics_native.so exports both Kotlin JNI entry points and kinetics_rust_sum_squares.
+- APK: 65,405,092 bytes; SHA-256 fca08d6ba9b0b0cecb63f93d9f6c0cdeb7d115253cb80a227fd009ea57cabf09.
+- AAB: 37,577,400 bytes; SHA-256 1c27e74a9501e32c2381ca387f4de88c2a2373d7da38efd28ca59ed563db1509.
+- Workflow artifact archive: 75,471,020 bytes; digest sha256:38f0f76879623d2a243c69dbce0208d9fb2fe646c4370ca2936adef6786e6143.
+- Both APK and AAB contain 23 native ELF libraries; all are ELF64 little-endian AArch64 with every PT_LOAD segment aligned to at least 16 KB. The CI checker and zipalign check passed.
+
+### Not done / blockers
+- Native Rust/C++ JNI calls have not yet been executed on an Android emulator or physical device.
+- The Python/Biopython/NumPy/PairwiseAligner/PDB runtime probe has not yet been executed on Android.
+- No 16 KB page-size emulator/device runtime test, physical-device matrix, cold-start or peak-memory measurement.
+- SciPy, independent scientific engine, RDKit/alternative, offline viewer, SAF/background/cancellation and license audit remain open.
+- R1 exit gate remains unmet; R2 remains blocked.

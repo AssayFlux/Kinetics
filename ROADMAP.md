@@ -12,7 +12,7 @@ This roadmap operationalises the archived master. A phase is complete only when 
 - Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
 - R0 accepted by the owner when they authorised R1 on 2026-11-07. CI evidence: [R0 workflow run](https://github.com/AssayFlux/Kinetics/actions/runs/42378815901).
 - R1 is now in progress. D-006 target devices remains open; no Android feasibility or device verification is yet claimed.
-- Two owner decisions remain open: first PGx gene set and target Android devices. D-004 is approved: defer clinical-adviser recruitment until the research platform is more mature (target review after R3); P0 and all patient/clinical work remain blocked until qualified advisers and all other prerequisites are in place. D-003 (publication strategy) is approved: multiple papers over time, beginning with an evidence-backed platform/software-methods paper after R1–R3 readiness, followed by independently validated domain papers. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. Adding the canonical LICENSE grant file remains a repository task.
+- One owner decision remains open: target Android devices/minimum support matrix. D-005 approves a strategic target of 15–20 genes for the initial PGx panel; the exact genes remain unselected and must be chosen with qualified advisers after the D-004 maturity checkpoint. D-004 is approved: defer clinical-adviser recruitment until the research platform is more mature (target review after R3); P0 and all patient/clinical work remain blocked until qualified advisers and all other prerequisites are in place. D-003 (publication strategy) is approved: multiple papers over time, beginning with an evidence-backed platform/software-methods paper after R1–R3 readiness, followed by independently validated domain papers. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. Adding the canonical LICENSE grant file remains a repository task.
 
 ## Track R — Research platform
 | ID | Scope | Dependencies | Exit gate | Status | Owner | Date |
@@ -55,7 +55,7 @@ Hard gate: no patient-related feature before P0; early research uses public test
 |---|---|---|---|---|---|---|
 | P0 | Intended use; legal/ethics/regulatory advice; advisers identified; QMS approach | G1–G3 planning | Written gate packet and owner approval; no patient feature before pass | blocked | Owner + qualified advisers | TBD |
 | P1 | Genotype ingest/QC/annotation/build handling, Research Mode, public data | P0, R4, reference/license review | Pinned builds, thresholds and concordance | not-started | Engineering + Validation | TBD |
-| P2 | PGx star-allele/diplotype/phenotype for owner-approved small gene set | P1, caller/license review | Reference and established-tool concordance; indeterminate never guessed | not-started | Engineering + advisers | TBD |
+| P2 | PGx star-allele/diplotype/phenotype for an adviser-reviewed, owner-approved panel (strategic target: 15–20 genes; staged/smaller scope if evidence requires) | P1, caller/license review | Reference and established-tool concordance; indeterminate never guessed | not-started | Engineering + advisers | TBD |
 | P3 | Guideline mapping/report, Research Mode | P2, guideline license review | Versioned mapping tests and wording review | not-started | Engineering + advisers | TBD |
 | P4 | Variant evidence assistant with human curator | P1, evidence-source license review | Curator workflow; no autonomous final classification | not-started | Engineering + curators | TBD |
 | P5 | Advisory review and clinician usability testing | P3–P4, ethics review/exemption | Documented review/study evidence | not-started | Owner + advisers | TBD |
@@ -71,6 +71,12 @@ Further disease areas only after P7 evidence, one at a time.
 | G3 | QMS/software lifecycle documentation from P0 | P0 planning | Requirements, risk, verification, change and traceability controls | not-started | Owner + advisers | TBD |
 | G4 | Bias and ancestry coverage | Relevant P/I capabilities and datasets | Coverage/limitations in reports and outputs | not-started | Validation + advisers | TBD |
 | G5 | Paper evidence pipeline | R/S/I/P evidence | Manuscript tables/figures generated from validation/benchmarks | not-started | Research + Validation | TBD |
+
+## PGx panel breadth (D-005)
+- Strategic target: approximately 15–20 genes in the initial panel.
+- This is not an approved gene list. Individual genes remain unselected pending qualified clinical-adviser review after the D-004 maturity checkpoint.
+- Choose genes using guideline maturity, reference availability, assay/caller reliability, ancestry coverage, evidence quality, licensing and validation feasibility. Do not include weakly supported genes merely to reach a count; propose a smaller or staged panel for owner approval if warranted.
+- No P0, patient-data or clinical work is authorized by this scope decision.
 
 ## Clinical adviser timing (D-004)
 - Defer clinical-adviser recruitment during the current R1 engineering-feasibility phase.

@@ -24,12 +24,15 @@ A document describes requirements or design unless it explicitly links implement
 |---|---|
 | [KINETICS_10_STEP_COMPLETION_PROGRAMME.md](KINETICS_10_STEP_COMPLETION_PROGRAMME.md) | Active engineering completion and acceptance sequence |
 | [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) | Current repository status snapshot and blockers |
+| [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) | This maintained documentation map |
 | [IMPLEMENTATION_HISTORY.md](IMPLEMENTATION_HISTORY.md) | Preserved dated implementation notes; historical, not current authority |
 | [DOCUMENTATION_GOVERNANCE.md](DOCUMENTATION_GOVERNANCE.md) | Source-of-truth hierarchy, consistency findings and maintenance policy |
 | [STEP10_RELEASE_READINESS_GATES.md](STEP10_RELEASE_READINESS_GATES.md) | Executable release-evidence requirements and release decision policy |
 | [STEP7_PRODUCTION_ACCEPTANCE.md](STEP7_PRODUCTION_ACCEPTANCE.md) | Production deployment, isolation, security and recovery acceptance |
 | [STEP7_RUST_INFRASTRUCTURE.md](STEP7_RUST_INFRASTRUCTURE.md) | Rust infrastructure design and implementation boundaries |
 | [STEP6_IMPLEMENTATION_STATUS.md](STEP6_IMPLEMENTATION_STATUS.md) | Native C++ molecular engine foundation and limitations |
+| [NATIVE_MOLECULAR_ENGINE.md](NATIVE_MOLECULAR_ENGINE.md) | Native parser, scene contract, build and simulation-plan details |
+| [STRUCTURE_VIEWER_APK_TESTING.md](STRUCTURE_VIEWER_APK_TESTING.md) | Browser/WebView structure viewer and Android device test instructions |
 | [STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md](STEP9_PROTEOMICS_STRUCTURAL_CONTRACT.md) | Protein/structure records, coordinate adapters and acceptance plan |
 | [RESEARCHER_OPERATOR_ACCEPTANCE_PROGRAMME.md](RESEARCHER_OPERATOR_ACCEPTANCE_PROGRAMME.md) | Researcher/operator acceptance and usability programme |
 | [WORKBENCH_UI_ACCEPTANCE.md](WORKBENCH_UI_ACCEPTANCE.md) | Workbench UI, accessibility and interaction acceptance |
@@ -44,6 +47,7 @@ A document describes requirements or design unless it explicitly links implement
 | [DATABASE_ARCHITECTURE.md](DATABASE_ARCHITECTURE.md) | SQLite, artifact storage and migration architecture |
 | [KNOWLEDGE_INGESTION.md](KNOWLEDGE_INGESTION.md) | Source acquisition, licensing, indexing and retrieval |
 | [KNOWLEDGE_INGESTION_STRUCTURE.md](KNOWLEDGE_INGESTION_STRUCTURE.md) | Knowledge-ingestion subsystem directory/data-flow map |
+| [database/seed/README.md](../database/seed/README.md) | Seed-data scope and bootstrap instructions |
 | [ARCHIVE_FIRST_OFFLINE_DATA_ARCHITECTURE.md](ARCHIVE_FIRST_OFFLINE_DATA_ARCHITECTURE.md) | Offline archive and selective-access design |
 | [EMERGENCY_HUMANITARIAN_RESILIENCE.md](EMERGENCY_HUMANITARIAN_RESILIENCE.md) | Offline resilience, emergency knowledge and safety requirements |
 | [OBSERVATION_QUALITY.md](OBSERVATION_QUALITY.md) | Measurement and observation quality rules |

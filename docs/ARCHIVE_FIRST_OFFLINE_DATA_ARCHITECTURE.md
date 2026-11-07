@@ -1,5 +1,8 @@
 # Kinetics Archive-First Offline Data Architecture
 
+> **Platform context:** This document describes a focused component of Kinetics. The complete cross-disciplinary scope is catalogued in `docs/SCIENCE_DOMAIN_CATALOGUE_100.md`; catalogue inclusion is not implementation or clinical-validation evidence.
+
+
 > **Mission authority:** This plan implements the archive and offline-data requirements of [KINETICS_MISSION.md](../KINETICS_MISSION.md). It is a proposed design, not a claim that petabyte-scale processing is already implemented.
 
 ## 1. Feasibility and physical limits

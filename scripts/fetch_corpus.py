@@ -197,8 +197,12 @@ def stream_download(session: requests.Session, url: str, destination: Path,
             raise ValueError("Source returned an empty object")
         part.replace(destination)
         return total, digest.hexdigest()
-    except requests.RequestException:
-        # Keep the verified prefix so a later run can request the remaining range.
+    except requests.RequestException as exc:
+        # A stale partial can receive 416 when the remote object changed or was
+        # already complete. Clear it so the next invocation starts cleanly.
+        if getattr(getattr(exc, "response", None), "status_code", None) == 416:
+            part.unlink(missing_ok=True)
+        # Keep other verified prefixes so a later run can request the remaining range.
         raise
     except Exception:
         part.unlink(missing_ok=True)
@@ -423,7 +427,7 @@ def main() -> int:
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--objects", type=Path, default=DEFAULT_OBJECTS)
     parser.add_argument("--source", choices=("all", "ia", "europe-pmc"), default="all")
-    parser.add_argument("--max-domains", type=int, default=2,
+    parser.add_argument("--max-domains", type=int, default=8,
                         help="Rotate through at most this many domains per run")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -458,6 +462,7 @@ def main() -> int:
     session = make_session()
     total_count = 0
     total_bytes = 0
+    processed_domains = 0
     try:
         for domain in selected:
             if total_count >= args.batch_size or total_bytes >= budget:
@@ -482,9 +487,10 @@ def main() -> int:
                     n, b = 0, 0
                 total_count += n
                 total_bytes += b
+            processed_domains += 1
             time.sleep(0.1)
             save_manifest(args.manifest, manifest)
-        manifest.setdefault("cursor", {})["domain_index"] = (start + len(selected)) % len(domains)
+        manifest.setdefault("cursor", {})["domain_index"] = (start + processed_domains) % len(domains)
         manifest["last_batch"] = {"items": total_count, "bytes": total_bytes,
                                   "domains": selected, "completed_at": utcnow()}
         save_manifest(args.manifest, manifest)

@@ -183,4 +183,4 @@ This document contributes to Kinetics' wider mission: connect scientific knowled
 - The 100-domain scope is defined in `docs/SCIENCE_DOMAIN_CATALOGUE_100.md`; catalogue inclusion is not implementation evidence.
 - The Wikimedia Commons importer targets 100 categories and restricts accepted licenses to CC0, public domain, CC BY and CC BY-SA.
 - The 100 PNG binaries have not yet been downloaded and committed. Until they are present, README avoids embedding missing PNG paths.
-- A reproducible pixel-art GIF generator and asset validator are provided. The generator must be run locally and the generated GIF committed to replace the earlier banner; validation checks dimensions, frame count and looping metadata.
+- A reproducible pixel-art GIF generator and asset validator are provided. The currently tracked legacy GIF fails structural validation; the README therefore no longer embeds it. Run the generator locally and commit the replacement binary. The validator checks dimensions, frame count and looping metadata.

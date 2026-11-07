@@ -1,5 +1,7 @@
 # Assay context, calibration and applicability workflow
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 ## Fit assay context without leakage
 
 Attach raw assay metadata after verifying exact source-record ID order. The modeling pipeline fits imputation, scaling, and categorical vocabularies independently inside each cross-validation fold, then refits on the full training partition.

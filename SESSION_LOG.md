@@ -289,3 +289,21 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Develop the gene-catalogue taxonomy and prioritisation framework as a planned work item after the current R1 feasibility gate; do not interrupt R1 or start R2 before its go/no-go approval.
+
+
+## 2026-11-07 — Session 15: Direction-file reconciliation and R1 continuation
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Continue repository hygiene and keep the phase gate accurate while awaiting an unambiguous owner approval statement.
+
+### Done
+- Reconciled DECISIONS.md after D-001 through D-007 were resolved: replaced the obsolete “Open decisions” section with standing guidance and removed the superseded D-005 clarification-pending text.
+- Corrected docs/android-feasibility.md to reflect the approved D-006 Android target and to avoid describing the target matrix as verified device support.
+- Clarified that the first Android CI build failed on the missing host-Python prerequisite and that the later workflow result must be checked before any build-success claim.
+
+### Gate and approval status
+- The owner's message “R2 & R2 both approved” is ambiguous. A clarification was requested (R1 + R2 or R2 + R3); “Carry on” did not resolve which pair was intended. No new phase approval has been recorded from that exchange.
+- R1 remains in progress. R2 remains gated on complete R1 evidence and an explicit R1 go/no-go decision. R3 depends on R2 and must not start early.
+- D-001 through D-007 remain recorded as resolved/approved according to their respective scopes. The Apache-2.0 LICENSE grant text is still not installed; the current LICENSE file remains a non-grant placeholder.
+
+### Next step
+- Verify the latest Android workflow's terminal status and job steps; continue R1 experiments and record only reproducible evidence. Ask the owner to state the intended approval pair explicitly before changing phase gates.

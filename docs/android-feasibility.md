@@ -150,3 +150,34 @@ A minimal Rust static library and C++17 JNI bridge now exist under `android/nati
 - Workflow artifact archive: 75,471,020 bytes; digest `sha256:38f0f76879623d2a243c69dbce0208d9fb2fe646c4370ca2936adef6786e6143`.
 - Both APK and AAB contain 23 native ELF libraries. Independent inspection found all are ELF64 little-endian AArch64, and every PT_LOAD segment in every library has at least 16 KB alignment. The CI checker passed for both artifacts, as did `zipalign -c -P 16 -v 4`.
 - This proves cross-compilation, linking, packaging, exported symbol presence and static ELF alignment. It does not prove JNI calls execute correctly on Android; no emulator or physical-device runtime has been run.
+
+
+## Owner/device validation runbook
+
+The build artifacts are available from CI run 1471. Download the `kinetics-r1-android-arm64` artifact from the workflow page, extract `apk/debug/app-debug.apk`, and connect one Android 10+ arm64 phone with USB debugging enabled.
+
+Capture the device identity and page size before installing:
+
+```sh
+adb devices
+adb shell getprop ro.product.model
+adb shell getprop ro.build.version.release
+adb shell getprop ro.build.version.sdk
+adb shell getprop ro.product.cpu.abi
+adb shell getconf PAGE_SIZE
+```
+
+Install and launch the debug APK:
+
+```sh
+adb install -r app-debug.apk
+adb logcat -c
+adb shell am force-stop org.assayflux.kinetics
+adb shell am start -W -n org.assayflux.kinetics/.MainActivity
+adb logcat -d -s KineticsR1
+adb shell dumpsys meminfo org.assayflux.kinetics
+```
+
+The expected native line is `Rust FFI: 25.0; C++17 JNI: 25.0`. The Python report should show successful Python/Biopython/NumPy imports, FASTA parsing, one GLY PDB residue, PairwiseAligner score 5.0 and NumPy norm 5.0. SciPy is expected to report unavailable in this prototype. Capture the complete log, screenshot, model/SoC/RAM, Android/API, ABI, page size, cold-start time and memory. Repeat launch/memory measurements at least five times after a clean force-stop and record every result, including failures.
+
+A device reporting page size 16384 is a 16 KB runtime target. A device reporting 4096 is still useful for the Android 10+ baseline but does not replace a 16 KB emulator/device test. Repeat on representative low-end, mid-range and flagship arm64 devices before proposing a support matrix. Do not interpret CI static ELF alignment as a runtime pass.

@@ -91,6 +91,19 @@ def main() -> None:
     with Image.open(OUTPUT) as result:
         if result.n_frames != FRAMES:
             raise RuntimeError(f"Expected {FRAMES} GIF frames, got {result.n_frames}")
+    readme = ROOT / "README.md"
+    text = readme.read_text(encoding="utf-8")
+    marker = "<!-- KINETICS_GALLERY_START -->"
+    animation = (
+        "**Animated science quest**\\n\\n"
+        '<img src="Assets/Future/kinetics-science-quest.gif" width="640" '
+        'alt="Colourful Kinetics science quest pixel runner animation">\\n\\n'
+    )
+    if marker not in text:
+        raise RuntimeError("README gallery insertion marker is missing")
+    if "Assets/Future/kinetics-science-quest.gif" not in text:
+        text = text.replace(marker, animation + marker)
+        readme.write_text(text, encoding="utf-8")
     print(f"Created {OUTPUT.relative_to(ROOT)} ({FRAMES} frames, looping GIF).")
 
 

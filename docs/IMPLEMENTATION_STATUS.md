@@ -1,5 +1,6 @@
 # Implementation status
 
+> 100-domain scope register: docs/SCIENCE_DOMAIN_CATALOGUE_100.md. This catalogue defines intended breadth; it is not evidence that every domain is implemented or clinically validated.
 > **Mission authority:** This document is governed by [KINETICS_MISSION.md](../KINETICS_MISSION.md). Kinetics is a cross-disciplinary biomedical and precision-health research platform—not only an enzyme-kinetics project. All domains, datasets, models and applications must align with the mission, preserve provenance and clinical safety, and follow the foundation-first build order. Small Android devices are a first-class performance target.
 
 This file distinguishes repository contents from execution, verification and scientific evidence. The expanded Kinetics platform is a long-term plan; it is not implemented merely because it appears in the roadmap.
@@ -175,3 +176,11 @@ The executable release evaluator validates required gates, source commit, eviden
 ## Kinetics mission alignment
 
 This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.
+
+
+## 100-domain scope and visual asset implementation status
+
+- The 100-domain scope is defined in `docs/SCIENCE_DOMAIN_CATALOGUE_100.md`; catalogue inclusion is not implementation evidence.
+- The Wikimedia Commons importer targets 100 categories and restricts accepted licenses to CC0, public domain, CC BY and CC BY-SA.
+- The 100 PNG binaries have not yet been downloaded and committed. Until they are present, README avoids embedding missing PNG paths.
+- A reproducible pixel-art GIF generator and asset validator are provided. The generator must be run locally and the generated GIF committed to replace the earlier banner; validation checks dimensions, frame count and looping metadata.

@@ -34,7 +34,11 @@ The ambition spans fundamental biological discovery through translational resear
 
 Kinetics has one visual asset: an original, colourful, continuously looping science animation. It brings the platform's molecular, cellular and computational vision to life through an original pixel-art science quest.
 
-<!-- KINETICS_ANIMATION -->\n<div align="center">\n<img src="Assets/Future/kinetics-science-quest.gif" width="960" alt="Original Kinetics science-in-motion animation">\n</div>\n<!-- /KINETICS_ANIMATION -->
+<!-- KINETICS_ANIMATION -->
+<div align="center">
+<img src="Assets/Future/kinetics-science-quest.gif" width="960" alt="Original Kinetics science-in-motion animation">
+</div>
+<!-- /KINETICS_ANIMATION -->
 
 ### 1. Molecular foundations
 

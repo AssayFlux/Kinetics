@@ -644,8 +644,8 @@ def main():
     print(f"\nPNG files present: {present}/100; attributed: {attributed}/100")
     if present == 0 or attributed == 0:
         raise SystemExit("No qualifying, attributed images were acquired.")
-    update_readme_gallery()
     if args.start == 1 and args.end == 100 and (present < 100 or attributed < 100):
-        print("Gallery is partial; retry missing categories or process a smaller range.")
+        print("Gallery is partial; retry missing categories. README remains unchanged until all 100 are ready.")
         raise SystemExit(2)
+    update_readme_gallery()
 if __name__=="__main__": main()

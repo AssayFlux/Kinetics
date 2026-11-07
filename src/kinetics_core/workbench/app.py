@@ -527,10 +527,6 @@ def create_app(
                     ),
                 )
 
-    @app.get("/science-universe", include_in_schema=False)
-    def science_universe() -> FileResponse:
-        return FileResponse(Path(__file__).parent / "static" / "science-universe.html")
-
     @app.get("/structure-viewer", include_in_schema=False)
     def structure_viewer() -> FileResponse:
         return FileResponse(Path(__file__).parent / "static" / "structure-viewer.html")

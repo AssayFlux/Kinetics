@@ -55,3 +55,14 @@ def test_structure_viewer_has_mobile_and_accessibility_controls():
         "Analyze structure evidence",
     ):
         assert feature in html
+
+
+def test_science_universe_is_served_and_accessible():
+    html = (STATIC / "science-universe.html").read_text(encoding="utf-8")
+    assert 'name="viewport"' in html
+    assert 'aria-label="Interactive three-dimensional scientific universe"' in html
+    assert "prefers-reduced-motion" in html
+    assert "OrbitControls" in html
+    assert "4000" in html and "3000" in html
+    assert "DNA" in html and "Protein" in html and "Cellular" in html
+    assert "Explore the science" in html

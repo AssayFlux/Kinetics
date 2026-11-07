@@ -163,8 +163,8 @@ def main() -> int:
     args = parser.parse_args()
     if not 1 <= args.batch_size <= 30 or not 1 <= args.max_domains <= 160:
         parser.error("batch-size must be 1-30 and max-domains 1-160")
-    if not 1 <= args.max_batch_mb <= 80 or not 1 <= args.max_file_mb <= 80:
-        parser.error("byte limits must be 1-80 MiB")
+    if not 1 <= args.max_batch_mb <= 512 or not 1 <= args.max_file_mb <= 80:
+        parser.error("batch limit must be 1-512 MiB and file limit 1-80 MiB")
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     manifest = load_manifest(args.manifest)

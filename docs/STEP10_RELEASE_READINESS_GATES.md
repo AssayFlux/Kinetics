@@ -93,3 +93,10 @@ Store the release manifest, CI URLs, SBOM, vulnerability triage, test reports, b
 ## Executable manifest evaluator (2026-11-06)
 
 The `kinetics_core.release_gate` module validates the candidate version, source commit SHA, required gate inventory, evidence references, and waiver metadata. Missing, not-run, blocked, or failed mandatory gates produce NO-GO; a valid non-critical waiver produces CONDITIONAL; all passed gates produce GO. The evaluator always sets `release_signoff: false`. It does not inspect external evidence, deploy software, run security scans, perform recovery, or replace accountable human sign-off.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

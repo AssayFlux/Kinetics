@@ -11,7 +11,6 @@ import argparse
 import hashlib
 import json
 import logging
-import os
 import re
 import tarfile
 import tempfile
@@ -20,7 +19,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urljoin
+from urllib.parse import quote
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -174,9 +173,15 @@ def persist_record(session: requests.Session, item_id: str, title: str, source: 
         return None, 0
     safe_id = re.sub(r"[^A-Za-z0-9._-]", "_", item_id)[:140]
     category = safe_category(domain)
-    temp_path = objects / category / f"{safe_id}{extension}"
-    size, digest = stream_download(session, file_url, temp_path, remaining_bytes, MAX_FILE_BYTES)
-    rel = temp_path.relative_to(ROOT).as_posix()
+    staging_path = objects / category / f".{safe_id}{extension}.staging"
+    size, digest = stream_download(session, file_url, staging_path, remaining_bytes, MAX_FILE_BYTES)
+    content_path = objects / category / digest[:2] / f"{digest}{extension}"
+    content_path.parent.mkdir(parents=True, exist_ok=True)
+    if content_path.exists():
+        staging_path.unlink(missing_ok=True)
+    else:
+        staging_path.replace(content_path)
+    rel = content_path.relative_to(ROOT).as_posix()
     record = {
         "item_id": item_id, "title": title[:1000], "source": source,
         "source_url": source_url, "file_url": file_url, "domain": domain,
@@ -191,18 +196,25 @@ def persist_record(session: requests.Session, item_id: str, title: str, source: 
 def fetch_internet_archive(session: requests.Session, domain: str, manifest: dict[str, Any],
                            objects: Path, remaining_bytes: int, remaining_items: int) -> tuple[int, int]:
     query = f'mediatype:texts AND (subject:"{domain}" OR title:"{domain}")'
+    cursor = manifest.setdefault("cursor", {})
+    pages = cursor.setdefault("ia_pages", {})
+    page = int(pages.get(domain, 1))
     params = {"q": query, "fl[]": ["identifier", "title"], "rows": min(100, remaining_items * 4),
-              "page": 1, "output": "json", "sort[]": "downloads desc"}
+              "page": page, "output": "json", "sort[]": "downloads desc"}
     response = session.get("https://archive.org/advancedsearch.php", params=params, timeout=(15, 45))
     response.raise_for_status()
     docs = response.json().get("response", {}).get("docs", [])
+    pages[domain] = page + 1 if docs else 1
     count = 0
     used = 0
     for hit in docs:
         if count >= remaining_items or used >= remaining_bytes:
             break
         identifier = hit.get("identifier")
-        if not identifier or identifier in manifest["items"]:
+        if not identifier:
+            continue
+        prior = manifest["items"].get(identifier, {})
+        if prior.get("status") in ("downloaded", "skipped_license"):
             continue
         meta_response = session.get(f"https://archive.org/metadata/{quote(identifier, safe='')}",
                                     timeout=(15, 45))
@@ -223,7 +235,7 @@ def fetch_internet_archive(session: requests.Session, domain: str, manifest: dic
             name = str(file_info.get("name", ""))
             fmt = str(file_info.get("format", "")).lower()
             ext = Path(name).suffix.lower()
-            if ext in (".pdf", ".epub") and not file_info.get("private") and not file_info.get("source") == "original":
+            if ext in (".pdf", ".epub") and not file_info.get("private"):
                 size = int(file_info.get("size") or 0)
                 if size and size <= MAX_FILE_BYTES:
                     candidates.append((size, name, ext))
@@ -249,12 +261,16 @@ def fetch_internet_archive(session: requests.Session, domain: str, manifest: dic
 def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str, Any],
                      objects: Path, remaining_bytes: int, remaining_items: int) -> tuple[int, int]:
     query = f'OPEN_ACCESS:Y AND (TITLE_ABS:"{domain}")'
+    cursor = manifest.setdefault("cursor", {})
+    pages = cursor.setdefault("epmc_pages", {})
+    page = int(pages.get(domain, 1))
     params = {"query": query, "format": "json", "pageSize": min(100, remaining_items * 5),
-              "resultType": "core"}
+              "page": page, "resultType": "core"}
     response = session.get("https://www.ebi.ac.uk/europepmc/webservices/rest/search",
                            params=params, timeout=(15, 45))
     response.raise_for_status()
     results = response.json().get("resultList", {}).get("result", [])
+    pages[domain] = page + 1 if results else 1
     count = 0
     used = 0
     for item in results:
@@ -262,7 +278,10 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
             break
         pmcid = item.get("pmcid")
         license_value = str(item.get("license") or "")
-        if not pmcid or pmcid in manifest["items"] or not license_allowed(license_value):
+        if not pmcid or not license_allowed(license_value):
+            continue
+        prior = manifest["items"].get(pmcid, {})
+        if prior.get("status") in ("downloaded", "skipped_license"):
             continue
         oa = session.get("https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi",
                          params={"id": pmcid}, timeout=(15, 45))
@@ -295,13 +314,17 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
                         continue
                     ext = Path(selected.name).suffix.lower()
                     safe_id = re.sub(r"[^A-Za-z0-9._-]", "_", pmcid)
-                    target = objects / "biomedical" / f"{safe_id}{ext}"
-                    target.parent.mkdir(parents=True, exist_ok=True)
                     payload = source.read(MAX_FILE_BYTES + 1)
                     if len(payload) > MAX_FILE_BYTES:
                         continue
                     target.write_bytes(payload)
                     digest = hashlib.sha256(payload).hexdigest()
+                    target = objects / "biomedical" / digest[:2] / f"{digest}{ext}"
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    if not target.exists():
+                        temporary_target = target.with_suffix(target.suffix + ".tmp")
+                        temporary_target.write_bytes(payload)
+                        temporary_target.replace(target)
                     rel = target.relative_to(ROOT).as_posix()
                     manifest["items"][pmcid] = {
                         "item_id": pmcid, "title": item.get("title", pmcid),

@@ -5,7 +5,13 @@ Only public-domain, CC0, CC BY and CC BY-SA assets are accepted. Every PNG
 receives a source/license/creator entry in Assets/Future/ATTRIBUTION.json.
 """
 from __future__ import annotations
-import argparse, json, re, sys, time, urllib.parse, urllib.request
+import argparse
+import json
+import re
+import sys
+import time
+import urllib.parse
+import urllib.request
 from io import BytesIO
 from pathlib import Path
 try:

@@ -74,3 +74,10 @@ The APK's WebView can then open `http://127.0.0.1:8765/structure-viewer` on the 
 - Structural superposition requires explicit residue pairs; automated alignment, insertion-code-aware correspondence, alternate-conformation policy and independent reference validation remain follow-up work.
 - No PyMOL renderer, molecular dynamics, docking, or de novo structure prediction is included in this increment.
 - APK compatibility, offline operation, accessibility, large-structure performance and scientific acceptance must be tested on actual target devices before release.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](../KINETICS_MISSION.md), expanded [vision](../VISION.md), and [emergency and humanitarian resilience requirements](EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

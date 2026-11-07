@@ -342,3 +342,12 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 - Biopython upstream source builds require Python headers and a C compiler. A normal sdist install cannot be assumed to work in Chaquopy's app build task. Next experiment: inspect exact Android wheel availability, then build a reproducible CPython 3.11 arm64 wheel with Chaquopy's documented toolchain if needed; verify extension linkage, 16 KB ELF alignment, license notices and representative runtime test vectors.
 - Biopython licensing is not accurately summarized as BSD-3-Clause for the whole distribution: upstream identifies the Biopython License Agreement for most files and BSD-3-Clause dual licensing for some files. Added a third-party register note; no adoption/bundling approval is implied.
 - Updated `docs/android-feasibility.md` and `docs/third-party.md` with the findings and candidate path. No dependency was removed, no build success is claimed, and no production technology choice was made.
+
+
+### R1 custom Biopython wheel CI experiment — 2026-11-07
+- Added `android/biopython-wheel/meta.yaml` pinned to Biopython 1.88.
+- Updated the Android Gradle pip configuration to consume a local Android wheel and pin Biopython 1.88 and NumPy 1.26.2.
+- Updated the Android CI job to check out Chaquopy 17.2.0, download its CPython 3.11.17 Android target and the Chaquopy NumPy 1.26.2 arm64 wheel, then cross-build Biopython for arm64-v8a using the documented Chaquopy wheel builder.
+- CI prints the generated wheel SHA-256 and proceeds to APK/AAB build and 16 KB APK alignment check only if the wheel build succeeds.
+- Updated the R1 evidence matrix and third-party register. This is an experiment, not a validated package: the CI run, APK build, emulator import/tests, ELF inspection and physical-device tests are still pending.
+- Biopython 1.88 is pinned to a current upstream release; upstream PyPI metadata identifies NumPy as a required dependency and a Biopython-specific license expression. The custom recipe includes NumPy 1.26.2 as a host dependency for the cross-build. No production bundling approval is implied.

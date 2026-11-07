@@ -93,12 +93,16 @@ def domain_catalogue() -> list[str]:
     names = list(dict.fromkeys(name.strip() for name in names if name.strip()))
     if len(names) < 100:
         raise RuntimeError(f"Expected at least 100 canonical domains; parsed {len(names)}")
-    return names
+    extension_path = ROOT / "database/domains/extended_domains.json"
+    if extension_path.exists():
+        extension = json.loads(extension_path.read_text(encoding="utf-8"))
+        names.extend(str(name).strip() for name in extension.get("domains", []) if str(name).strip())
+    return list(dict.fromkeys(names))
 
 
 def safe_category(domain: str) -> str:
     key = re.sub(r"[^a-z0-9]+", "_", domain.lower()).strip("_")
-    if any(term in key for term in ("engineering", "robotics", "device", "material", "instrument")):
+    if any(term in key for term in ("engineering", "robotics", "device", "material", "instrument", "computer", "software", "data_science", "machine_learning", "cybersecurity", "cloud", "distributed", "database", "signal", "control", "mathematics", "statistics", "physics", "energy", "geoscience", "photonics", "quantum", "industrial", "manufacturing", "systems_engineering", "agricultural", "food_science", "climate", "environmental")):
         return "engineering"
     if any(term in key for term in ("medicine", "clinical", "health", "cardio", "oncology",
                                      "pathology", "surgery", "pediatrics", "pharmacology")):
@@ -360,8 +364,8 @@ def main() -> int:
         parser.error("--batch-size must be between 1 and 50")
     if not 1 <= args.max_batch_mb <= 80:
         parser.error("--max-batch-mb must be between 1 and 80")
-    if not 1 <= args.max_domains <= 100:
-        parser.error("--max-domains must be between 1 and 100")
+    if not 1 <= args.max_domains <= 200:
+        parser.error("--max-domains must be between 1 and 200")
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     manifest = load_manifest(args.manifest)

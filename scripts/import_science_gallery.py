@@ -479,18 +479,24 @@ def download_png(item,target):
 
 
 def update_readme_gallery():
+    """Render every locally available, attributed image into the README."""
     readme_path = ROOT / "README.md"
     text = readme_path.read_text(encoding="utf-8")
     start_marker = "<!-- KINETICS_GALLERY_START -->"
     end_marker = "<!-- KINETICS_GALLERY_END -->"
     if start_marker not in text or end_marker not in text:
         raise RuntimeError("README gallery insertion markers are missing")
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    attributed = {item.get("file") for item in manifest}
     cells = []
     for number, (slug, _) in enumerate(CATEGORIES, 1):
         filename = f"{number:03d}-{slug}.png"
+        key = f"Assets/Future/PNG/{filename}"
+        if not (OUT / filename).is_file() or key not in attributed:
+            continue
         label = slug.replace("-", " ").title()
         cells.append(
-            f'<td align="center"><img src="Assets/Future/PNG/{filename}" '
+            f'<td align="center"><img src="{key}" '
             f'width="170" alt="{label}"><br><b>{label}</b></td>'
         )
     rows = ["<table>"]
@@ -502,7 +508,7 @@ def update_readme_gallery():
     right = text.index(end_marker, left)
     updated = text[:left] + chr(10) + gallery + chr(10) + text[right:]
     readme_path.write_text(updated, encoding="utf-8")
-    print("README gallery updated with all 100 local PNG images.", flush=True)
+    print(f"README gallery updated with {len(cells)} attributed local PNG images.", flush=True)
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
@@ -540,8 +546,10 @@ def main():
     present=sum((OUT/f"{i:03d}-{slug}.png").exists() for i,(slug,_) in enumerate(CATEGORIES,1))
     attributed=sum(f"Assets/Future/PNG/{i:03d}-{slug}.png" in records for i,(slug,_) in enumerate(CATEGORIES,1))
     print(f"\nPNG files present: {present}/100; attributed: {attributed}/100")
-    if present<100 or attributed<100:
-        print("Retry missing categories with the same command or process a range.")
-        raise SystemExit(2)
+    if present == 0 or attributed == 0:
+        raise SystemExit("No qualifying, attributed images were acquired.")
     update_readme_gallery()
+    if args.start == 1 and args.end == 100 and (present < 100 or attributed < 100):
+        print("Gallery is partial; retry missing categories or process a smaller range.")
+        raise SystemExit(2)
 if __name__=="__main__": main()

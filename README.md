@@ -9,7 +9,9 @@
 
 *An evidence-centred scientific and biomedical research infrastructure connecting life sciences, medicine, healthcare, treatment research and the engineering of future health.*
 
-**Pixel-art science explorer:** a 32-frame, 640 × 240 looping GIF is generated locally by the repository animation builder. Regenerate and validate the banner before embedding it.
+**Pixel-art science explorer**
+
+<img src="Assets/Future/kinetics-science-quest.gif" width="640" alt="Colourful looping Kinetics science quest pixel animation">
 
 **EXPLORE · CONNECT · UNDERSTAND · DISCOVER · ADVANCE**
 </div>

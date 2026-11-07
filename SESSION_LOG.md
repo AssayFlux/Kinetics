@@ -89,3 +89,24 @@ Inspect the GitHub Actions run on `main`, fix any failures, record the actual ru
 
 ### Gate status
 **R0 implementation and automated acceptance checks are complete. Awaiting explicit owner acceptance of the R0 exit gate. R1 has not started.**
+
+
+## 2026-11-07 — Session 5: Final R0 CI verification
+**Phase:** Track R / R0 Foundations  
+**Objective:** Verify the final R0 documentation/governance commit and leave an accurate owner-gate status.
+
+### Validated
+- Final R0 commit: `6746e124ed888afd1d284a6a52d0eb1432b33fe9`.
+- GitHub Actions run 1374: [successful run](https://github.com/AssayFlux/Kinetics/actions/runs/42378678625).
+- Both workflow jobs completed successfully.
+- Pre-commit configuration validation, Ruff lint, strict mypy, registry validation, all **11 tests**, reproduce-all wrapper and Android artifact gate-status check passed.
+- The native/Android job passed only its explicit R0 blocker-reporting step. No native or Android build was performed or represented as passed.
+
+### Current state
+- R0 implementation and automated acceptance checks are complete.
+- R0 exit gate is awaiting explicit owner acceptance. R1 has not started.
+- Six owner decisions remain open; the LICENSE file is only a no-license-selected notice, not a license grant.
+- No scientific capability, scientific validation, Android feasibility, device verification, patient-data workflow or clinical feature is claimed.
+
+### Next step
+Wait for the owner's explicit R0 exit-gate approval. On approval, begin R1 feasibility planning and stop again at its go/no-go gate.

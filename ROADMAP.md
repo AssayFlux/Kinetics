@@ -1,5 +1,5 @@
 # Kinetics — Roadmap
-**Status:** Owner-approved baseline; R0 implementation in progress  
+**Status:** Owner-approved baseline; R0 implementation and automated checks complete; exit gate awaiting owner acceptance  
 **Last updated:** 2026-11-07  
 **Statuses:** not-started | in-progress | blocked | done | dropped  
 **Owners:** Project owner = repository owner; Engineering = implementation contributor. Dates are review/target dates, not completion claims.
@@ -7,11 +7,11 @@
 This roadmap operationalises the archived master. A phase is complete only when exit evidence exists in the repository and required owner approval is recorded.
 
 ## Current position
-- Track R / R0 Foundations: in-progress. Direction documents exist; master archive and R0 phase plan are prepared. Skeleton, registry, checker, reproduce-all, pre-commit and CI remain unimplemented.
-- The owner supplied the complete master in conversation; it is reconstructed at docs/origin/KINETICS_MASTER.md as read-only history. No root master file existed to Git-move.
-- Direction baseline approved by project owner on 2026-11-07. NORTH_STAR was not changed.
-- R0 scaffold is being implemented: repository layout, registry/checker, tests, reproduce-all stub, pre-commit and CI. Validation awaits a green Actions run.
-- No scientific implementation, validation, Android feasibility or device verification is claimed.
+- Track R / R0 Foundations: implementation and automated acceptance checks complete; exit gate is blocked pending explicit owner acceptance.
+- The owner-approved direction baseline and reconstructed historical master are present; NORTH_STAR was not changed.
+- Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
+- GitHub Actions run 1374 is green: pre-commit configuration validation, Ruff, mypy, registry validation, 11 unit tests, reproduction stub and explicit Android blocker check passed. [Run details](https://github.com/AssayFlux/Kinetics/actions/runs/42378678625).
+- Native/Android, 16 KB alignment and APK/AAB size checks are explicitly blocked/not applicable in R0 pending R1 toolchains and named devices. No scientific validation, Android feasibility or device verification is claimed.
 - Six decisions remain open: license, target jurisdictions, paper framing/venue, clinical advisers, first PGx gene set and target Android devices.
 
 ## Track R — Research platform

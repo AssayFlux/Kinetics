@@ -5,7 +5,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | ID | Date | Topic | Status | Approver |
 |---|---|---|---|---|
 | D-000 | 2026-11-07 | Adopt owner master and living direction files | Approved — owner approved baseline in chat | Project owner |
-| D-001 | 2026-11-07 | Project LICENSE | Open — no license selected/file added | Project owner |
+| D-001 | 2026-11-07 | Project LICENSE | Open — status placeholder only; no license selected or grant added | Project owner |
 | D-002 | 2026-11-07 | Target jurisdictions and applicable privacy/medical-device laws | Open — qualified advice required | Project owner + advisers |
 | D-003 | 2026-11-07 | Research-paper framing and venue(s) | Open — decide after evidence and venue review | Project owner |
 | D-004 | 2026-11-07 | Clinical advisory board/advisers | Open — identities/commitments not supplied | Project owner |

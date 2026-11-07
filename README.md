@@ -188,7 +188,7 @@ The canonical catalogue is maintained in docs/SCIENCE_DOMAIN_CATALOGUE_100.md. I
 
 ## Visual assets
 
-The 100-domain PNG gallery is stored locally in Assets/Future/PNG/. It is populated by scripts/import_science_gallery.py; each image must have an accepted license and a matching record in Assets/Future/ATTRIBUTION.json. This README intentionally does not embed PNG paths until those files exist, preventing broken-image placeholders.
+The 100-domain PNG gallery will be stored locally in Assets/Future/PNG/ after the importer is run. The PNG binaries are not included yet; run the command below, review the license manifest, then commit the generated files. Each image must have an accepted license and a matching record in Assets/Future/ATTRIBUTION.json. The README deliberately avoids embedding absent PNG paths, so it does not show broken-image placeholders.
 
 ~~~bash
 python -m pip install -e ".[gallery]"

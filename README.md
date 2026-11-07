@@ -41,22 +41,37 @@ The ambition reaches from molecular mechanisms to human health, from laboratory 
 
 ## The Kinetics science atlas
 
-The following original visual collection is stored inside this repository. Each panel represents a scientific or platform domain in the long-term scope.
+A 30-discipline visual atlas spanning biological, biomedical and medical sciences. The gallery uses locally stored PNG files sourced from Wikimedia Commons. The importer accepts only CC0, public-domain, CC BY and CC BY-SA material and writes source, creator and license details to `Assets/Future/ATTRIBUTION.json`.
 
 <table>
-<tr><td align="center"><img src="Assets/Future/01-genomics.svg" width="100%" alt="Genomics & genetics"><br><b>Genomics & genetics</b></td><td align="center"><img src="Assets/Future/02-proteomics.svg" width="100%" alt="Proteomics"><br><b>Proteomics</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/03-structural-biology.svg" width="100%" alt="Structural biology"><br><b>Structural biology</b></td><td align="center"><img src="Assets/Future/04-chemistry.svg" width="100%" alt="Chemistry"><br><b>Chemistry</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/05-enzymology.svg" width="100%" alt="Enzymology"><br><b>Enzymology</b></td><td align="center"><img src="Assets/Future/06-metabolomics.svg" width="100%" alt="Metabolomics"><br><b>Metabolomics</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/07-cell-biology.svg" width="100%" alt="Cell biology"><br><b>Cell biology</b></td><td align="center"><img src="Assets/Future/08-immunology.svg" width="100%" alt="Immunology"><br><b>Immunology</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/09-neuroscience.svg" width="100%" alt="Neuroscience"><br><b>Neuroscience</b></td><td align="center"><img src="Assets/Future/10-cardiovascular.svg" width="100%" alt="Cardiovascular science"><br><b>Cardiovascular science</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/11-pathology.svg" width="100%" alt="Pathology"><br><b>Pathology</b></td><td align="center"><img src="Assets/Future/12-pharmacology.svg" width="100%" alt="Pharmacology"><br><b>Pharmacology</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/13-pharmacogenomics.svg" width="100%" alt="Pharmacogenomics"><br><b>Pharmacogenomics</b></td><td align="center"><img src="Assets/Future/14-multiomics.svg" width="100%" alt="Multi-omics"><br><b>Multi-omics</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/15-systems-biology.svg" width="100%" alt="Systems biology"><br><b>Systems biology</b></td><td align="center"><img src="Assets/Future/16-microbiome.svg" width="100%" alt="Microbiome science"><br><b>Microbiome science</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/17-imaging.svg" width="100%" alt="Imaging & spatial biology"><br><b>Imaging & spatial biology</b></td><td align="center"><img src="Assets/Future/18-clinical-evidence.svg" width="100%" alt="Clinical evidence"><br><b>Clinical evidence</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/19-ai-research.svg" width="100%" alt="AI & scientific computing"><br><b>AI & scientific computing</b></td><td align="center"><img src="Assets/Future/20-data-archives.svg" width="100%" alt="Scientific data archives"><br><b>Scientific data archives</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/21-offline-resilience.svg" width="100%" alt="Offline resilience"><br><b>Offline resilience</b></td><td align="center"><img src="Assets/Future/22-humanitarian.svg" width="100%" alt="Humanitarian readiness"><br><b>Humanitarian readiness</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/23-precision-health.svg" width="100%" alt="Precision-health research"><br><b>Precision-health research</b></td><td align="center"><img src="Assets/Future/24-global-network.svg" width="100%" alt="Global research network"><br><b>Global research network</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/01-genomics.png" width="100%" alt="Genomics"><br><b>Genomics</b></td><td align="center"><img src="Assets/Future/PNG/02-genetics.png" width="100%" alt="Genetics"><br><b>Genetics</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/03-transcriptomics.png" width="100%" alt="Transcriptomics"><br><b>Transcriptomics</b></td><td align="center"><img src="Assets/Future/PNG/04-proteomics.png" width="100%" alt="Proteomics"><br><b>Proteomics</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/05-structural-biology.png" width="100%" alt="Structural biology"><br><b>Structural biology</b></td><td align="center"><img src="Assets/Future/PNG/06-cell-biology.png" width="100%" alt="Cell biology"><br><b>Cell biology</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/07-molecular-biology.png" width="100%" alt="Molecular biology"><br><b>Molecular biology</b></td><td align="center"><img src="Assets/Future/PNG/08-microbiology.png" width="100%" alt="Microbiology"><br><b>Microbiology</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/09-virology.png" width="100%" alt="Virology"><br><b>Virology</b></td><td align="center"><img src="Assets/Future/PNG/10-immunology.png" width="100%" alt="Immunology"><br><b>Immunology</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/11-neuroscience.png" width="100%" alt="Neuroscience"><br><b>Neuroscience</b></td><td align="center"><img src="Assets/Future/PNG/12-cardiology.png" width="100%" alt="Cardiology"><br><b>Cardiology</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/13-oncology.png" width="100%" alt="Oncology"><br><b>Oncology</b></td><td align="center"><img src="Assets/Future/PNG/14-pathology.png" width="100%" alt="Pathology"><br><b>Pathology</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/15-pharmacology.png" width="100%" alt="Pharmacology"><br><b>Pharmacology</b></td><td align="center"><img src="Assets/Future/PNG/16-medicinal-chemistry.png" width="100%" alt="Medicinal chemistry"><br><b>Medicinal chemistry</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/17-biochemistry.png" width="100%" alt="Biochemistry"><br><b>Biochemistry</b></td><td align="center"><img src="Assets/Future/PNG/18-enzymology.png" width="100%" alt="Enzymology"><br><b>Enzymology</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/19-metabolomics.png" width="100%" alt="Metabolomics"><br><b>Metabolomics</b></td><td align="center"><img src="Assets/Future/PNG/20-microbiome.png" width="100%" alt="Microbiome science"><br><b>Microbiome science</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/21-anatomy.png" width="100%" alt="Anatomy"><br><b>Anatomy</b></td><td align="center"><img src="Assets/Future/PNG/22-physiology.png" width="100%" alt="Physiology"><br><b>Physiology</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/23-radiology.png" width="100%" alt="Radiology & MRI"><br><b>Radiology & MRI</b></td><td align="center"><img src="Assets/Future/PNG/24-medical-ultrasound.png" width="100%" alt="Medical ultrasound"><br><b>Medical ultrasound</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/25-surgery.png" width="100%" alt="Surgery"><br><b>Surgery</b></td><td align="center"><img src="Assets/Future/PNG/26-public-health.png" width="100%" alt="Public health"><br><b>Public health</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/27-clinical-research.png" width="100%" alt="Clinical research"><br><b>Clinical research</b></td><td align="center"><img src="Assets/Future/PNG/28-regenerative-medicine.png" width="100%" alt="Regenerative medicine"><br><b>Regenerative medicine</b></td></tr>
+<tr><td align="center"><img src="Assets/Future/PNG/29-bioinformatics.png" width="100%" alt="Bioinformatics"><br><b>Bioinformatics</b></td><td align="center"><img src="Assets/Future/PNG/30-biomedical-engineering.png" width="100%" alt="Biomedical engineering"><br><b>Biomedical engineering</b></td></tr>
 </table>
+
+| Gallery property | Specification |
+|---|---|
+| Scientific categories | 30 |
+| Image format | PNG |
+| Maximum image dimensions | 1800 × 1200 pixels |
+| Source policy | CC0, public domain, CC BY or CC BY-SA only |
+| Attribution | Per-image source and license manifest |
+| Repository location | `Assets/Future/PNG/` |
+| Import utility | `scripts/import_science_gallery.py` |
+
+**Populate the gallery:** install Pillow with `python -m pip install Pillow`, then run `python scripts/import_science_gallery.py`. The script downloads the images into the repository and records attribution. Review each image and its license before redistribution. The original SVG concepts remain in the repository as supplementary assets; this README gallery points to the PNG collection.
 
 ## Our mission
 
@@ -191,7 +206,7 @@ Kinetics is research infrastructure, not currently a validated medical device or
 | Path | Purpose |
 |---|---|
 | `Assets/Brand Logo.svg` | Primary Kinetics identity |
-| `Assets/Future/` | 24 original futuristic scientific illustrations |
+| `Assets/Future/` | 30 category PNG scientific photo gallery plus supplementary SVG concepts |
 | `Assets/Future/kinetics-science-quest.gif` | Colourful pixel-art science explorer animation |
 | `database/` | SQLite schemas, migrations, source catalogues and seed resources |
 | `docs/` | Scientific, engineering, safety and implementation specifications |

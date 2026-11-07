@@ -7,7 +7,7 @@
 
 ## Current evidence boundary
 
-An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11 with Biopython, NumPy and SciPy as an R1 experiment. These are prototype dependencies only, not a production architecture or dependency approval.
+An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11, Biopython and NumPy for the current APK probe. SciPy is tracked separately as a required but currently unavailable R1 candidate. These are prototype dependencies only, not a production architecture or dependency approval.
 
 Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. The current CI cross-build successfully creates a pinned Biopython 1.88 Android wheel (SHA-256 `cdf569ea13eb9314e43afeb9bbd3dbdbf95616d138f775a2e12e4cb7ba0cecbf`). Gradle consumed that wheel and NumPy 1.26.2, then stopped because SciPy has no compatible distribution for CPython 3.11 / arm64-v8a on the configured indexes. The next isolated APK build removes SciPy only from the immediate Android install experiment; SciPy remains an unresolved architecture requirement. No APK/AAB artifact exists yet.
 
@@ -80,7 +80,8 @@ Biopython's upstream license file identifies the Biopython License Agreement as 
 | Minimal Compose app / Gradle build | Biopython wheel now builds and Gradle consumes it; latest build stopped at SciPy resolution. SciPy removed from immediate APK probe only | Successful Biopython/NumPy APK/AAB build, alignment check, artifact hash/size and toolchain record |
 | Embedded Python runtime | Chaquopy probe configured; app build/runtime not yet successful | arm64 APK build, on-device import/startup/RSS/package-size logs |
 | Biopython | Custom Biopython 1.88 wheel successfully built for CPython 3.11 / arm64-v8a; SHA-256 recorded in SESSION_LOG.md | Inspect wheel ELF; runtime import and SeqIO FASTA / Bio.PDB test vectors on emulator and physical arm64 device |
-| NumPy | NumPy 1.26.2 cp311 arm64 wheel is a pinned build input; its 2023 build date creates a known 16 KB alignment risk | Inspect packaged ELF; import and NumPy numerical smoke test on emulator and physical arm64 device |\n| SciPy | Gradle resolution failed: no compatible distribution on the configured Chaquopy indexes for CPython 3.11 / arm64-v8a | Evaluate a custom Android wheel or a documented on-device alternative; otherwise define an explicit on-device vs remote-compute capability boundary and obtain owner approval |
+| NumPy | NumPy 1.26.2 cp311 arm64 wheel is a pinned build input; its 2023 build date creates a known 16 KB alignment risk | Inspect packaged ELF; import and NumPy numerical smoke test on emulator and physical arm64 device |
+| SciPy | Gradle resolution failed: no compatible distribution on the configured Chaquopy indexes for CPython 3.11 / arm64-v8a | Evaluate a custom Android wheel or a documented on-device alternative; otherwise define an explicit on-device vs remote-compute capability boundary and obtain owner approval |
 | Rust app FFI | Not implemented/tested | Android arm64 library and Kotlin call test |
 | C++17 JNI | Not implemented/tested | NDK build, JNI invocation and numeric correctness test |
 | One real scientific engine | Not selected | License review, Android build, real test vector |

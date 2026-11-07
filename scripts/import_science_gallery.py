@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Download a 100-domain biomedical image gallery from Wikimedia Commons.
 
-Only public-domain, CC0, CC BY and CC BY-SA assets are accepted. Every PNG
+Only original images at least 1024 px on each side are accepted. Files are centre-cropped to square. Only public-domain, CC0, CC BY and CC BY-SA assets are accepted. Every PNG
 receives a source/license/creator entry in Assets/Future/ATTRIBUTION.json.
 """
 from __future__ import annotations
@@ -457,8 +457,8 @@ def find_file(term,used):
         if not LICENSE_OK.search(license_name): continue
         mime=info.get("mime","")
         if not mime.startswith("image/") or mime=="image/svg+xml": continue
-        if int(info.get("width",0))<600 or int(info.get("height",0))<400: continue
-        url=info.get("thumburl") or info.get("url")
+        if int(info.get("width",0))<1024 or int(info.get("height",0))<1024: continue
+        url=info.get("url")
         if url:
             return {"title":title,"url":url,"source_page":info.get("descriptionurl",""),
                     "license":license_name,"license_url":val("LicenseUrl"),"artist":val("Artist"),
@@ -472,8 +472,14 @@ def download_png(item,target):
     with Image.open(BytesIO(raw)) as image: image.verify()
     with Image.open(BytesIO(raw)) as source:
         image=source.convert("RGB")
-        image.thumbnail((1200,800),Image.Resampling.LANCZOS)
-        if image.width<500 or image.height<300: raise ValueError("Image below minimum dimensions")
+        # Centre-crop the original high-resolution photograph/micrograph to a
+        # true square, then downsample once to a consistent 1024 x 1024 PNG.
+        side=min(image.width,image.height)
+        if side<1024: raise ValueError("Original image is smaller than 1024 px on its shortest side")
+        left=(image.width-side)//2
+        top=(image.height-side)//2
+        image=image.crop((left,top,left+side,top+side))
+        image=image.resize((1024,1024),Image.Resampling.LANCZOS)
         target.parent.mkdir(parents=True,exist_ok=True)
         image.save(target,format="PNG",optimize=True)
 

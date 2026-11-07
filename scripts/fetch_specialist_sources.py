@@ -54,7 +54,7 @@ def accepted_license(value: str | None) -> bool:
     if any(x in raw for x in ("-nc", "-nd", "noncommercial", "non-commercial",
                               "no derivatives", "all rights reserved")):
         return False
-    if compact in {"cc0", "cc01", "cc01.0", "publicdomain", "publicdomainmark",
+    if compact.startswith("cc0") or compact in {"cc01", "cc010", "cc01.0", "publicdomain", "publicdomainmark",
                    "publicdomainmark10", "ccby", "ccby30", "ccby40",
                    "ccbysa", "ccbysa30", "ccbysa40"}:
         return True

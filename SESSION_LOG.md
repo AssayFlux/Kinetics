@@ -194,3 +194,22 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Ask the owner to decide D-004: clinical advisers/advisory board.
+
+
+## 2026-11-07 — Session 10: Owner decision D-004 — clinical adviser timing
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Record the owner's decision to defer clinical-adviser recruitment while preserving the P0 and clinical-scope gates.
+
+### Done
+- Owner selected option 3: defer clinical advisers until the software is more mature.
+- Recorded D-004 as approved in DECISIONS.md.
+- Updated ROADMAP.md: revisit adviser recruitment at a maturity milestone, targeting after R3 and before P0/PGx work.
+
+### Constraints and interpretation
+- No clinical advisers are being represented as recruited or engaged.
+- P0 remains blocked until qualified advisers and all other legal, ethics, regulatory, QMS and evidence prerequisites are satisfied.
+- No patient-data workflows, clinical studies, PGx gene-set selection or clinical-scope implementation may begin ahead of the required gates.
+- Research Mode remains the only public mode; Clinical Decision Support Mode remains disabled.
+
+### Next step
+- Ask the owner to decide D-005: initial PGx gene set.

@@ -505,6 +505,50 @@ def run_dryad(s, manifest, domain, budget, per_file, limit):
     return count, used
 
 
+
+def run_doaj(s, manifest, domain, budget, per_file, limit):
+    count = used = 0
+    for term in terms_for(domain)[:2]:
+        query = quote(term, safe="")
+        response = s.get(f"https://doaj.org/api/search/articles/{query}",
+                         params={"page": 1, "pageSize": min(20, limit*4)},
+                         timeout=(20, 60))
+        response.raise_for_status()
+        payload = response.json()
+        for result in payload.get("results", []):
+            if count >= limit or used >= budget:
+                break
+            article = result.get("bibjson") or {}
+            licenses = article.get("license") or []
+            license_id = next((x.get("url") or x.get("type") or ""
+                               for x in licenses if isinstance(x, dict)
+                               and accepted_license(x.get("url") or x.get("type"))), "")
+            if not license_id:
+                continue
+            links = article.get("link") or []
+            pdf_url = next((x.get("url") for x in links if isinstance(x, dict)
+                            and str(x.get("url", "")).lower().split("?")[0].endswith(".pdf")), None)
+            if not pdf_url:
+                continue
+            title = article.get("title") or "DOAJ open access article"
+            doi = next((x.get("id") for x in article.get("identifier", [])
+                        if x.get("type") == "doi"), None)
+            item_id = f"doaj:{doi or hashlib.sha256((title+pdf_url).encode()).hexdigest()}"
+            try:
+                n = store(s, manifest, item_id, title, "doaj", domain, license_id,
+                          pdf_url, pdf_url, ".pdf",
+                          {"doi": doi, "authors": article.get("author", []),
+                           "journal": (article.get("journal") or {}).get("title"),
+                           "year": article.get("year"), "publisher": (article.get("journal") or {}).get("publisher"),
+                           "license": license_id}, budget-used, per_file)
+                if n:
+                    used += n; count += 1
+            except (requests.RequestException, ValueError) as exc:
+                LOG.warning("DOAJ %s: %s", item_id, exc)
+        time.sleep(0.3)
+    return count, used
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--batch-size", type=int, default=20)
@@ -528,7 +572,7 @@ def main():
     start = int(cursor.get("specialist_domain_index", 0)) % len(all_domains)
     selected = [all_domains[(start+i) % len(all_domains)] for i in range(args.max_domains)]
     if args.dry_run:
-        print(json.dumps({"sources": ["openalex", "arxiv", "uniprot", "rcsb_pdb", "oapen", "figshare", "dryad"],
+        print(json.dumps({"sources": ["openalex", "arxiv", "uniprot", "rcsb_pdb", "oapen", "figshare", "dryad", "doaj"],
                           "domains": selected, "manifest_items": len(manifest["items"]),
                           "rights_policy": sorted(ACCEPTED)}, indent=2))
         return 0
@@ -538,7 +582,7 @@ def main():
     total_count = total_bytes = processed = 0
     adapters = [("openalex", run_openalex), ("arxiv", run_arxiv),
                 ("uniprot", run_uniprot), ("rcsb_pdb", run_pdb),
-                ("oapen", run_oapen), ("figshare", run_figshare), ("dryad", run_dryad)]
+                ("oapen", run_oapen), ("figshare", run_figshare), ("dryad", run_dryad), ("doaj", run_doaj)]
     try:
         for domain in selected:
             if total_count >= args.batch_size or total_bytes >= budget:

@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import hashlib
+
+import requests
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -109,3 +112,64 @@ def test_source_registry_is_valid_and_only_known_adapters_enabled():
     assert registry["internet_archive"]["enabled"] is True
     assert registry["europe_pmc_oa"]["enabled"] is True
     assert registry["doab"]["enabled"] is False
+
+
+def test_all_extension_domains_have_scope_definitions():
+    extension = json.loads((ROOT / "database/domains/extended_domains.json").read_text())
+    scopes = json.loads((ROOT / "database/domains/extended_domain_scopes.json").read_text())
+    assert len(extension["domains"]) == 60
+    assert set(extension["domains"]) == set(scopes["domains"])
+
+
+def test_stream_download_resumes_partial_http_range(tmp_path: Path):
+    fetch = load_script("fetch_corpus")
+
+    class Response:
+        url = "https://example.org/book.pdf"
+
+        def __init__(self, status, headers, chunks, fail=False):
+            self.status_code = status
+            self.headers = headers
+            self.chunks = chunks
+            self.fail = fail
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def raise_for_status(self):
+            return None
+
+        def iter_content(self, chunk_size):
+            for chunk in self.chunks:
+                yield chunk
+            if self.fail:
+                raise requests.exceptions.ChunkedEncodingError("connection interrupted")
+
+    class Session:
+        def __init__(self):
+            self.calls = []
+
+        def get(self, url, **kwargs):
+            self.calls.append(kwargs)
+            if len(self.calls) == 1:
+                return Response(200, {"Content-Length": "6"}, [b"abc"], fail=True)
+            return Response(206, {"Content-Length": "3", "Content-Range": "bytes 3-5/6"}, [b"def"])
+
+    session = Session()
+    destination = tmp_path / "book.pdf"
+    try:
+        fetch.stream_download(session, "https://example.org/book.pdf", destination, 1024, 1024)
+        assert False, "first transfer should be interrupted"
+    except requests.exceptions.ChunkedEncodingError:
+        pass
+
+    part = destination.with_suffix(".pdf.part")
+    assert part.read_bytes() == b"abc"
+    size, digest = fetch.stream_download(session, "https://example.org/book.pdf", destination, 1024, 1024)
+    assert size == 6
+    assert destination.read_bytes() == b"abcdef"
+    assert digest == hashlib.sha256(b"abcdef").hexdigest()
+    assert session.calls[1]["headers"] == {"Range": "bytes=3-"}

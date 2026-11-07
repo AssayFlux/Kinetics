@@ -307,3 +307,11 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 
 ### Next step
 - Verify the latest Android workflow's terminal status and job steps; continue R1 experiments and record only reproducible evidence. Ask the owner to state the intended approval pair explicitly before changing phase gates.
+
+
+### R1 CI evidence update — workflow run 1384
+- Inspected GitHub Actions run 1384: [workflow run](https://github.com/AssayFlux/Kinetics/actions/runs/42379811746), commit `3bd4e152faf4007e44cd3fc0de63e5a26ecf065e`.
+- Python foundation/registry/tests job completed successfully, including Ruff, mypy, registry validation, unit tests and reproduce-all stub.
+- Android job successfully provisioned Python 3.11 and Android SDK/NDK. Gradle then failed at `:app:installDebugPythonRequirements`: pip could not find a matching `biopython` distribution in the configured PyPI/Chaquopy indexes.
+- APK compilation did not complete; APK alignment, size reporting and artifact upload were skipped. No APK/AAB or Android runtime result is claimed.
+- Updated docs/android-feasibility.md with this concrete blocker. Next R1 action: investigate a supported Chaquopy-compatible Biopython distribution/build strategy or a justified alternative, including license and ABI review; then rerun the build.

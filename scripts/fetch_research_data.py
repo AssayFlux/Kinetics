@@ -54,7 +54,13 @@ def license_allowed(value: str | None) -> bool:
         return False
     if normalized in ALLOWED_LICENSES:
         return True
-    return any(f"/{license_id}/" in normalized for license_id in ALLOWED_LICENSES)
+    if any(path in normalized for path in (
+        "/licenses/by/4.0", "/licenses/by/3.0", "/licenses/by/2.0",
+        "/licenses/by-sa/4.0", "/licenses/by-sa/3.0", "/licenses/by-sa/2.0",
+        "/publicdomain/zero/1.0", "/publicdomain/mark/1.0",
+    )):
+        return True
+    return False
 
 
 def load_manifest(path: Path) -> dict[str, Any]:
@@ -205,7 +211,7 @@ def main() -> int:
                     filename = str(item.get("key") or "")
                     ext = Path(filename).suffix.lower()
                     size = int(item.get("size") or 0)
-                    link = (item.get("links") or {}).get("self") or (item.get("links") or {}).get("download")
+                    link = (item.get("links") or {}).get("download") or (item.get("links") or {}).get("self")
                     if ext in ALLOWED_EXTENSIONS and link and 0 < size <= per_file:
                         candidates.append((filename, ext, size, link))
                 if not candidates:

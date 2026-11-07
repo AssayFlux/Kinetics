@@ -18,7 +18,8 @@ def load_script(name: str):
 def test_domain_catalogue_has_at_least_100_domains():
     fetch = load_script("fetch_corpus")
     domains = fetch.domain_catalogue()
-    assert len(domains) >= 100
+    assert len(domains) >= 140
+    assert "Quantum computing" in domains
     assert len(domains) == len(set(domains))
 
 

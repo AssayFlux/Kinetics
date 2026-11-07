@@ -1,5 +1,7 @@
 # Research reporting and figure conventions
 
+> **Project-wide direction:** Follow the authoritative [Kinetics mission](../KINETICS_MISSION.md). This module is one component of a cross-disciplinary biomedical and precision-health research platform; preserve domain semantics, provenance, uncertainty, privacy and clinical safety. The integrated scientific foundation precedes polished end-user applications; constrained Android performance is a first-class requirement.
+
 The reporting utilities generate Markdown experiment summaries and target-specific diagnostic figures. They do not create publication claims automatically.
 
 ## Minimum report content

@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "description": "Only repository-bundled model checkpoints with independently verified tensor parameter counts belong here. Architecture definitions and externally downloaded weights are excluded.",
+  "models": []
+}

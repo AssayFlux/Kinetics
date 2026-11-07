@@ -388,3 +388,34 @@ Continue R1 experiments and record raw reproducible evidence in docs/android-fea
 - The Android job successfully built the pinned Biopython 1.88 arm64 wheel, installed it from local find-links, and resolved/installed NumPy 1.26.2 plus Chaquopy OpenBLAS/libcxx/libgfortran runtime wheels. SciPy was the only package-resolution blocker and is now kept as a separate unresolved R1 candidate rather than blocking the Biopython/NumPy APK probe.
 - Gradle progressed through Python source packaging, proxy generation, resource processing and stopped at Kotlin compilation due to Java target 1.8 vs Kotlin target 17 mismatch.
 - Updated app Gradle configuration to set Java source/target compatibility and Kotlin compiler JVM target to 17. Rerun required. No APK/AAB, zipalign, ELF, runtime or device result is yet available.
+
+
+## 2026-11-07 — Session 15: R1 arm64 build and static 16 KB package evidence
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Complete the first successful Android arm64 packaging experiment and inspect the actual APK/AAB native ELF payloads.
+
+### Done
+- Fixed the Java/Kotlin JVM target mismatch by setting both toolchains to Java 17.
+- CI run 1454 succeeded on commit `87a5b6f0fcae54de6858bc32d7472379ba09ccc7`: Python foundations and Android arm64 build jobs both green.
+- Built and uploaded arm64 debug APK (65,388,299 bytes) and AAB (37,573,255 bytes).
+- APK ZIP alignment check passed with `zipalign -c -P 16 -v 4`.
+- Downloaded and independently inspected both build artifacts. All 22 native shared libraries in each archive were ELF64 little-endian AArch64; every PT_LOAD segment had 16 KB alignment (`p_align=0x4000`).
+- Recorded APK SHA-256 `a6cd53256acfa8d408ef3fddbf8da37c98367f9dbcd082fe9c68ebcb4d53152b`, AAB SHA-256 `def0e546c518f721d839b2c4238df1a95bca75db269ca3206645e3a8c0b46dda`, and workflow artifact digest in `docs/android-feasibility.md`.
+- Added a repeatable CI ELF alignment checker and extended the app probe to exercise Bio.PDB parsing alongside SeqIO and NumPy; the latter is packaged but has not run on Android.
+
+### Validated
+- Workflow: https://github.com/AssayFlux/Kinetics/actions/runs/42383161737
+- Python foundation job passed Ruff, mypy, registry validation, reproduction stub and 11 unit tests.
+- Android arm64 Gradle APK/AAB build, Biopython/NumPy installation, ZIP alignment and artifact upload passed.
+- Static ELF inspection passed for all native libraries in APK and AAB.
+
+### Not done / blockers
+- No Android emulator or physical arm64 device runtime test; no claim that Python/Biopython/NumPy imports or app startup work on-device.
+- No 16 KB emulator/device runtime test.
+- SciPy Android packaging remains unresolved.
+- Rust FFI, C++ JNI, actual scientific engine, RDKit/alternative, offline viewer, SAF/background/cancellation, cold-start and peak RSS remain open.
+- Biopython file-level license audit and distribution approval remain open.
+- R1 exit gate is not met; R2 must remain gated.
+
+### Next step
+Run the expanded Python/Biopython probe on an arm64 Android device/emulator; continue remaining R1 experiments and record owner go/no-go only after the complete evidence matrix.

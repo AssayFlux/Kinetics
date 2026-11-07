@@ -60,19 +60,23 @@ def font(size: int, bold: bool = False):
 
 
 def gradient(seed: int, palette):
+    # Build the 1-D colour ramp first, then expand it with Pillow's native
+    # resampler. This keeps generation practical on Android/Termux devices.
     top, bottom, *_ = palette
-    im = Image.new("RGB", (SIZE, SIZE))
-    px = im.load()
     rng = random.Random(seed)
-    drift = rng.uniform(-12, 12)
+    ramp = Image.new("RGB", (1, SIZE))
+    pixels = ramp.load()
+    drift = rng.uniform(-10, 10)
     for y in range(SIZE):
         t = y / (SIZE - 1)
-        row = tuple(int(top[c] * (1 - t) + bottom[c] * t) for c in range(3))
-        for x in range(SIZE):
-            vignette = int(22 * ((x - SIZE / 2) ** 2 + (y - SIZE / 2) ** 2) / (SIZE * SIZE))
-            noise = rng.randrange(-2, 3)
-            px[x, y] = tuple(max(0, min(255, v + int(drift * (x / SIZE - .5)) - vignette + noise)) for v in row)
-    return im
+        vignette = int(13 * abs(t - 0.5) * 2)
+        noise = rng.randrange(-2, 3)
+        pixels[0, y] = tuple(
+            max(0, min(255, int(top[c] * (1-t) + bottom[c] * t)
+                        + drift - vignette + noise))
+            for c in range(3)
+        )
+    return ramp.resize((SIZE, SIZE), Image.Resampling.BILINEAR)
 
 
 def glow_layer(seed: int, palette):

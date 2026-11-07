@@ -35,12 +35,37 @@ jobs:
         run: scripts/reproduce-all
       - name: Android artifact gate status
         run: python scripts/check_android_artifacts.py
-  native-and-android:
-    name: Native and Android checks (R0 blocked)
+  android-r1:
+    name: R1 Android arm64 feasibility build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Report phase gate
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.13"
+      - name: Install Android SDK and NDK
         run: |
-          echo "::notice::BLOCKED in R0: no Rust, C++, Kotlin, Android project or APK/AAB has been introduced."
-          echo "::notice::Rust clippy/rustfmt, C++ sanitizers, Kotlin lint, Android builds, 16 KB alignment and package budgets are deferred to R1 after toolchain/device feasibility review."
+          sdkmanager "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358"
+          yes | sdkmanager --licenses
+      - name: Build arm64 debug APK and bundle
+        working-directory: android
+        run: gradle --no-daemon :app:assembleDebug :app:bundleDebug
+      - name: Check APK ZIP alignment
+        run: |
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 "$APK"
+      - name: Report APK size and upload artifacts
+        run: |
+          ls -lh android/app/build/outputs/apk/debug/app-debug.apk
+          ls -lh android/app/build/outputs/bundle/debug/app-debug.aab
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kinetics-r1-android-arm64
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/bundle/debug/app-debug.aab

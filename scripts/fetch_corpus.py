@@ -175,7 +175,7 @@ def persist_record(session: requests.Session, item_id: str, title: str, source: 
                    remaining_bytes: int, citation_metadata: dict[str, Any] | None = None) -> tuple[dict[str, Any] | None, int]:
     if not license_allowed(license_value):
         return None, 0
-    if extension not in (".pdf", ".epub", ".xml", ".html", ".txt"):
+    if extension not in (".pdf", ".epub", ".xml", ".nxml", ".html", ".txt"):
         return None, 0
     safe_id = re.sub(r"[^A-Za-z0-9._-]", "_", item_id)[:140]
     category = safe_category(domain)
@@ -318,7 +318,7 @@ def fetch_europe_pmc(session: requests.Session, domain: str, manifest: dict[str,
                 used += size
                 with tarfile.open(archive, "r:gz") as tar:
                     members = [m for m in tar.getmembers() if m.isfile()
-                               and Path(m.name).suffix.lower() in (".pdf", ".xml")]
+                               and Path(m.name).suffix.lower() in (".pdf", ".xml", ".nxml")]
                     members.sort(key=lambda m: (Path(m.name).suffix.lower() != ".pdf", m.size))
                     selected = next((m for m in members if m.size <= MAX_FILE_BYTES), None)
                     if selected is None:

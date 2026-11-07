@@ -23,7 +23,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -278,7 +278,7 @@ def run_uniprot(s, manifest, domain, budget, per_file, limit):
         data = data[:cut] if cut > 0 else b""
     if not data:
         return 0, 0
-    item = f"uniprot:{hashlib.sha256((domain+str(len(data))).encode()).hexdigest()[:20]}"
+    item = f"uniprot:{hashlib.sha256(data).hexdigest()}"
     title = f"UniProtKB protein sequences for {domain}"
     # Write via a local response-like adapter path, but keep same content-addressed scheme.
     digest = hashlib.sha256(data).hexdigest()
@@ -325,6 +325,175 @@ def run_pdb(s, manifest, domain, budget, per_file, limit):
     return count, used
 
 
+
+def metadata_map(item: dict[str, Any]) -> dict[str, list[str]]:
+    raw = item.get("metadata") or item.get("metadataFields") or []
+    if isinstance(raw, dict):
+        return {str(k): ([str(v)] if not isinstance(v, list) else [str(x) for x in v]) for k, v in raw.items()}
+    result: dict[str, list[str]] = {}
+    for row in raw if isinstance(raw, list) else []:
+        if not isinstance(row, dict):
+            continue
+        key = str(row.get("key") or row.get("name") or "")
+        values = row.get("value") if "value" in row else row.get("values")
+        if not key:
+            continue
+        if isinstance(values, list):
+            result[key] = [str(v.get("value") if isinstance(v, dict) else v) for v in values]
+        elif values is not None:
+            result[key] = [str(values)]
+    return result
+
+
+def run_oapen(s, manifest, domain, budget, per_file, limit):
+    count = used = 0
+    for term in terms_for(domain)[:2]:
+        response = s.get("https://library.oapen.org/rest/search",
+                         params={"query": term, "expand": "metadata,bitstreams"},
+                         headers={"Accept": "application/json"}, timeout=(20, 60))
+        response.raise_for_status()
+        payload = response.json()
+        results = payload.get("results") or payload.get("items") or payload.get("records") or []
+        for record in results:
+            if count >= limit or used >= budget:
+                break
+            meta = metadata_map(record)
+            rights = " ".join(meta.get("dc.rights", []) + meta.get("dc.rights.uri", []) +
+                              meta.get("oapen.rights", []))
+            if not accepted_license(rights):
+                continue
+            handle = (record.get("handle") or record.get("id") or
+                      (meta.get("dc.identifier.uri") or [""])[0])
+            title = (meta.get("dc.title") or [record.get("name") or "OAPEN book"])[0]
+            bitstreams = record.get("bitstreams") or []
+            for bitstream in bitstreams:
+                name = str(bitstream.get("name") or bitstream.get("bitstreamName") or "")
+                link = bitstream.get("retrieveLink") or bitstream.get("retrieve_link") or bitstream.get("download")
+                if not link or not name.lower().endswith(".pdf"):
+                    continue
+                url = link if str(link).startswith("https://") else "https://library.oapen.org" + str(link)
+                item_id = f"oapen:{handle}:{name}"
+                try:
+                    n = store(s, manifest, item_id, title, "oapen", domain, rights,
+                              f"https://library.oapen.org/handle/{handle}", url, ".pdf",
+                              {"handle": handle, "authors": meta.get("dc.contributor.author", []),
+                               "publisher": meta.get("dc.publisher", []), "publication_date": meta.get("dc.date.issued", []),
+                               "license_metadata": rights}, budget-used, per_file)
+                    if n:
+                        used += n; count += 1
+                except (requests.RequestException, ValueError) as exc:
+                    LOG.warning("OAPEN %s: %s", item_id, exc)
+                break
+        time.sleep(0.25)
+    return count, used
+
+
+def run_figshare(s, manifest, domain, budget, per_file, limit):
+    count = used = 0
+    for term in terms_for(domain)[:2]:
+        response = s.post("https://api.figshare.com/v2/articles/search",
+                          json={"search_for": term, "page": 1, "page_size": min(20, limit*4),
+                                "order": "published_date", "order_direction": "desc"},
+                          timeout=(20, 60))
+        response.raise_for_status()
+        for summary in response.json():
+            if count >= limit or used >= budget:
+                break
+            article_id = summary.get("id")
+            if not article_id:
+                continue
+            detail_response = s.get(f"https://api.figshare.com/v2/articles/{article_id}", timeout=(20, 60))
+            detail_response.raise_for_status()
+            article = detail_response.json()
+            license_obj = article.get("license") or {}
+            license_id = license_obj.get("url") or license_obj.get("name") or license_obj.get("value")
+            if not accepted_license(str(license_id or "")):
+                continue
+            for file in article.get("files", []):
+                filename = str(file.get("name") or "")
+                ext = Path(filename).suffix.lower()
+                if ext not in {".pdf", ".csv", ".tsv", ".json", ".txt", ".fasta", ".fa", ".pdb", ".cif", ".mmcif"}:
+                    continue
+                url = file.get("download_url")
+                if not url:
+                    continue
+                item_id = f"figshare:{article_id}:{file.get('id')}"
+                try:
+                    n = store(s, manifest, item_id, article.get("title") or filename,
+                              "figshare", domain, str(license_id), article.get("url_public_html") or "",
+                              url, ext, {"article_id": article_id, "doi": article.get("doi"),
+                              "authors": article.get("authors", []), "published_date": article.get("published_date"),
+                              "license_name": license_obj.get("name"), "license_url": license_obj.get("url")},
+                              budget-used, per_file)
+                    if n:
+                        used += n; count += 1
+                except (requests.RequestException, ValueError) as exc:
+                    LOG.warning("Figshare %s: %s", item_id, exc)
+                break
+        time.sleep(0.25)
+    return count, used
+
+
+def run_dryad(s, manifest, domain, budget, per_file, limit):
+    count = used = 0
+    for term in terms_for(domain)[:2]:
+        response = s.get("https://datadryad.org/api/v2/search", params={"q": term, "per_page": min(20, limit*4)},
+                         timeout=(20, 60))
+        response.raise_for_status()
+        payload = response.json()
+        datasets = payload.get("_embedded", {}).get("stash:datasets", []) if isinstance(payload, dict) else []
+        if not datasets and isinstance(payload, dict):
+            datasets = payload.get("datasets", payload.get("results", []))
+        for summary in datasets:
+            if count >= limit or used >= budget:
+                break
+            doi = summary.get("identifier") or summary.get("doi")
+            if not doi:
+                continue
+            encoded = quote(str(doi), safe="")
+            detail_response = s.get(f"https://datadryad.org/api/v2/datasets/{encoded}", timeout=(20, 60))
+            detail_response.raise_for_status()
+            detail = detail_response.json()
+            license_id = detail.get("license") or summary.get("license")
+            if isinstance(license_id, dict):
+                license_id = license_id.get("uri") or license_id.get("name") or license_id.get("id")
+            if not accepted_license(str(license_id or "")):
+                continue
+            version = detail.get("versionNumber") or detail.get("version") or 1
+            files_response = s.get(f"https://datadryad.org/api/v2/datasets/{encoded}/versions/{version}/files",
+                                   timeout=(20, 60))
+            files_response.raise_for_status()
+            files_payload = files_response.json()
+            files = files_payload if isinstance(files_payload, list) else files_payload.get("_embedded", {}).get("stash:files", files_payload.get("files", []))
+            for file in files:
+                filename = str(file.get("path") or file.get("name") or "")
+                ext = Path(filename).suffix.lower()
+                if ext not in {".pdf", ".csv", ".tsv", ".json", ".txt", ".fasta", ".fa"}:
+                    continue
+                links = file.get("_links") or {}
+                download = links.get("download") or {}
+                url = download.get("href") if isinstance(download, dict) else download
+                url = url or file.get("downloadUrl") or file.get("download_url")
+                if not url:
+                    continue
+                if str(url).startswith("/"):
+                    url = "https://datadryad.org" + str(url)
+                item_id = f"dryad:{doi}:{file.get('id') or filename}"
+                try:
+                    n = store(s, manifest, item_id, detail.get("title") or filename,
+                              "dryad", domain, str(license_id), f"https://doi.org/{doi}",
+                              str(url), ext, {"doi": doi, "version": version,
+                              "authors": detail.get("authors", []), "abstract": detail.get("abstract"),
+                              "license": license_id}, budget-used, per_file)
+                    if n:
+                        used += n; count += 1
+                except (requests.RequestException, ValueError) as exc:
+                    LOG.warning("Dryad %s: %s", item_id, exc)
+                break
+        time.sleep(0.25)
+    return count, used
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--batch-size", type=int, default=20)
@@ -348,7 +517,7 @@ def main():
     start = int(cursor.get("specialist_domain_index", 0)) % len(all_domains)
     selected = [all_domains[(start+i) % len(all_domains)] for i in range(args.max_domains)]
     if args.dry_run:
-        print(json.dumps({"sources": ["openalex", "arxiv", "uniprot", "rcsb_pdb"],
+        print(json.dumps({"sources": ["openalex", "arxiv", "uniprot", "rcsb_pdb", "oapen", "figshare", "dryad"],
                           "domains": selected, "manifest_items": len(manifest["items"]),
                           "rights_policy": sorted(ACCEPTED)}, indent=2))
         return 0
@@ -357,7 +526,8 @@ def main():
     per_file = args.max_file_mb * 1024 * 1024
     total_count = total_bytes = processed = 0
     adapters = [("openalex", run_openalex), ("arxiv", run_arxiv),
-                ("uniprot", run_uniprot), ("rcsb_pdb", run_pdb)]
+                ("uniprot", run_uniprot), ("rcsb_pdb", run_pdb),
+                ("oapen", run_oapen), ("figshare", run_figshare), ("dryad", run_dryad)]
     try:
         for domain in selected:
             if total_count >= args.batch_size or total_bytes >= budget:

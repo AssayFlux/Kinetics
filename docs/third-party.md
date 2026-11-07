@@ -16,7 +16,8 @@ The project license decision is Apache-2.0 (D-001); the canonical LICENSE grant 
 | Candidate | Upstream licensing / status | Feasibility status | Decision |
 |---|---|---|---|
 | Chaquopy 17.2.0 | Upstream states 12.0.1+ is MIT/free-open-source; verify exact release artifact and transitive packages before distribution | Isolated R1 prototype; Python 3.11 / SDK / NDK and custom Biopython wheel build succeed in CI; APK build pending | R1 candidate only; not selected for production |
-| Biopython 1.88 | Upstream Biopython License Agreement applies to most files; some files are explicitly dual-licensed under that agreement or BSD-3-Clause; file-level audit required | Custom CPython 3.11 / arm64-v8a wheel successfully built in CI; APK/runtime and 16 KB checks pending | Not approved for production bundling; file-level license and ABI review required |\n| SciPy (version TBD) | BSD-3-Clause | No compatible CPython 3.11 / arm64-v8a distribution found in Chaquopy indexes; custom build/alternative not yet evaluated | Not approved for bundling; required architecture candidate remains unresolved |
+| Biopython 1.88 | Upstream Biopython License Agreement applies to most files; some files are explicitly dual-licensed under that agreement or BSD-3-Clause; file-level audit required | Custom CPython 3.11 / arm64-v8a wheel successfully built in CI; APK/runtime and 16 KB checks pending | Not approved for production bundling; file-level license and ABI review required |
+| SciPy (version TBD) | BSD-3-Clause | No compatible CPython 3.11 / arm64-v8a distribution found in Chaquopy indexes; custom build/alternative not yet evaluated | Not approved for bundling; required architecture candidate remains unresolved |
 
 References:
 - https://chaquo.com/chaquopy/documentation/

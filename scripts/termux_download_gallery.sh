@@ -27,16 +27,16 @@ if [[ -n "$(git status --porcelain)" ]]; then
   exit 1
 fi
 
-echo "[1/5] Updating main without overwriting local work..."
+echo "[1/6] Updating main without overwriting local work..."
 git pull --ff-only origin main
 
-echo "[2/5] Checking image dependencies..."
+echo "[2/6] Checking image dependencies..."
 if ! python -c "from PIL import Image" >/dev/null 2>&1; then
   pkg install -y python python-pillow
 fi
 python -c "from PIL import Image; print('Pillow OK')"
 
-echo "[3/5] Acquiring missing or checksum-invalid domain images..."
+echo "[3/6] Acquiring missing or checksum-invalid domain images..."
 # No --overwrite: verified downloads are retained and the job resumes safely.
 python scripts/import_science_gallery.py --start 1 --end 100
 

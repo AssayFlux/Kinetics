@@ -39,35 +39,10 @@ The canonical catalogue is maintained in docs/SCIENCE_DOMAIN_CATALOGUE_100.md. I
 
 **Real scientific imagery — downloaded and committed files only.**
 
+**Gallery status: 12/100 verified images; 88 blank domain slots.**
+
 Each domain keeps its fixed position in the four-column atlas. A blank cell means its real image has not yet been downloaded and verified; no placeholder or generated image is used.
 
-<table>
-<tr><td></td><td></td><td align="center"><img src="Assets/Future/PNG/003-transcriptomics.png" width="170" alt="Transcriptomics"><br><b>Transcriptomics</b></td><td></td></tr>
-<tr><td align="center"><img src="Assets/Future/PNG/005-structural-biology.png" width="170" alt="Structural Biology"><br><b>Structural Biology</b></td><td align="center"><img src="Assets/Future/PNG/006-cell-biology.png" width="170" alt="Cell Biology"><br><b>Cell Biology</b></td><td align="center"><img src="Assets/Future/PNG/007-molecular-biology.png" width="170" alt="Molecular Biology"><br><b>Molecular Biology</b></td><td align="center"><img src="Assets/Future/PNG/008-biochemistry.png" width="170" alt="Biochemistry"><br><b>Biochemistry</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/PNG/009-epigenetics.png" width="170" alt="Epigenetics"><br><b>Epigenetics</b></td><td></td><td></td><td></td></tr>
-<tr><td></td><td align="center"><img src="Assets/Future/PNG/014-metagenomics.png" width="170" alt="Metagenomics"><br><b>Metagenomics</b></td><td align="center"><img src="Assets/Future/PNG/015-single-cell-biology.png" width="170" alt="Single Cell Biology"><br><b>Single Cell Biology</b></td><td align="center"><img src="Assets/Future/PNG/016-spatial-omics.png" width="170" alt="Spatial Omics"><br><b>Spatial Omics</b></td></tr>
-<tr><td align="center"><img src="Assets/Future/PNG/017-developmental-biology.png" width="170" alt="Developmental Biology"><br><b>Developmental Biology</b></td><td align="center"><img src="Assets/Future/PNG/018-stem-cell-biology.png" width="170" alt="Stem Cell Biology"><br><b>Stem Cell Biology</b></td><td></td><td align="center"><img src="Assets/Future/PNG/020-regenerative-medicine.png" width="170" alt="Regenerative Medicine"><br><b>Regenerative Medicine</b></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-<tr><td></td><td></td><td></td><td></td></tr>
-</table>
 <!-- KINETICS_GALLERY_END -->
 
 ### 1. Molecular foundations
@@ -222,7 +197,7 @@ Each domain keeps its fixed position in the four-column atlas. A blank cell mean
 
 ## Visual assets
 
-The 100-domain PNG gallery will be stored locally in Assets/Future/PNG/ after the importer is run. The PNG binaries are not included yet; run the command below, review the license manifest, then commit the generated files. Each image must have an accepted license and a matching record in Assets/Future/ATTRIBUTION.json. The README deliberately avoids embedding absent PNG paths, so it does not show broken-image placeholders.
+The gallery currently contains 12/100 downloaded and attributed PNG images; the other 88 domain positions remain blank. The importer updates the README status count and fills only slots whose local PNG checksum matches an accepted-license record in Assets/Future/ATTRIBUTION.json. No absent image path is embedded, so the README never shows broken-image placeholders.
 
 ~~~bash
 python -m pip install Pillow

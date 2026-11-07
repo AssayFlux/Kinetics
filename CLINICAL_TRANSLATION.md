@@ -36,3 +36,10 @@ Genetic and health information are highly sensitive. Apply data minimization, pu
 Drug response is multifactorial. A genotype or model score alone rarely determines outcome. Research must consider phenotype, disease severity, organ function, co-medications, interactions, environment, population applicability, evidence quality and patient preferences where relevant and lawfully available. Authoritative pharmacogenomic evidence must retain its source, version, strength and context.
 
 Clinical deployment is a separate gated programme. No research milestone automatically authorizes patient-care use.
+
+
+---
+
+## Kinetics mission alignment
+
+This document contributes to Kinetics' wider mission: connect scientific knowledge across disciplines, advance evidence-centred biomedical research, and preserve essential knowledge through resilient offline infrastructure. Its technical scope must remain aligned with the authoritative [Kinetics mission](KINETICS_MISSION.md), expanded [vision](VISION.md), and [emergency and humanitarian resilience requirements](docs/EMERGENCY_HUMANITARIAN_RESILIENCE.md). Planned capabilities must not be represented as implemented or clinically validated; scientific integrity, privacy, provenance, human oversight and measurable validation remain mandatory.

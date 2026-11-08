@@ -1217,3 +1217,26 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 ### Next
 - Implement bounded local reference-pack indexing and exact/similarity search with deterministic fixtures, explicit licensing, version/hash provenance and negative controls.
 - Keep unknown/no-hit cases in abstention unless supported evidence meets calibrated criteria.
+
+
+## 2026-11-08 — S6 bounded exact-reference triage implementation
+**Phase:** Track S / S6 implementation foundation
+
+### Committed
+- Added `python/kinetics/sequence_reference.py` with deterministic exact full-length local reference matching for DNA, RNA and protein inputs.
+- Added strict reference-pack metadata validation (name, version, license, source URI and lowercase SHA-256), unique reference identifiers, alphabet validation, and hard record/residue ceilings.
+- Results include normalized query SHA-256, algorithm/parameters, pack provenance, exact-match identity/coverage, explicit no-hit abstention reasons and limitations.
+- Novelty remains `not_established` for both hits and no-hits; no homology, family, domain, function or clinical inference is attempted.
+- Added regression tests for positive matches, no-hit abstention, provenance, resource limits, invalid hashes, duplicate IDs and protein alphabet handling.
+- Registered the primitive with `evidence_level: none`.
+
+### Limits
+- Exact full-length matching only; no BLAST-like local alignment, profile-HMM, gene caller, domain annotation or calibrated confidence.
+- Pack provenance fields are supplied by the caller and are not independently verified by this code.
+- No real reference dataset is bundled; synthetic fixtures are engineering tests only.
+- CI is pending for this increment.
+
+### Next
+- Add content-addressed reference-pack ingestion and deterministic index persistence with licensing manifest validation.
+- Add independently sourced positive/negative sequence fixtures before assigning validation evidence.
+- Continue R1/R2 runtime/recovery closure, R3 reference comparisons and P0-gated public-data inventory.

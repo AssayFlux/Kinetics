@@ -77,7 +77,6 @@ PY
   chmod +x "$GRADLE_BIN"
   printf '%s\n' "$GRADLE_SHA256" > "$GRADLE_MARKER"
 fi
-fi
 "$GRADLE_BIN" --version | grep -q "Gradle $GRADLE_VERSION" || fail "Pinned Gradle $GRADLE_VERSION unavailable."
 
 NDK_BIN="$SDK_ROOT/ndk/$NDK_VERSION/toolchains/llvm/prebuilt/linux-x86_64/bin"

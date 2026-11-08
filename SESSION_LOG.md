@@ -1313,3 +1313,12 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added a separate CI job that runs the ethanol/benzene descriptor sanity harness and uploads a machine-readable JSON record.
 - The dependency inventory generator includes the RDKit validation pin as host-only; it is not bundled in Android.
 - This is a descriptor/parser sanity check against RDKit, not an independent chemical benchmark, ADMET, biological-activity, docking, PK/PD or clinical validation.
+
+
+## 2026-11-08 — CI evidence checkpoint (run #1870)
+- Python foundation, registry, Ruff/mypy and unit-test job completed successfully on commit `1a416f00d55975e7021ea6b454348d2f9af3740a`.
+- Pinned host-side scientific reference job completed successfully: deterministic Michaelis–Menten comparison against SciPy and exhaustive 64-codon/start/stop comparison against Biopython 1.88. Uploaded artifact: [host reference results](https://github.com/AssayFlux/Kinetics/actions/runs/42464525641/artifacts/13610754008).
+- Direct-dependency SPDX inventory job completed successfully.
+- Android arm64 job failed before build execution because setup-python could not download the pinned Python 3.11.17 build host (HTTP 504 from the hosted toolchain download). This is an infrastructure/setup failure, not a compile or test failure; no APK/AAB artifact was produced in that run.
+- Changed the Android build runner from `ubuntu-latest` to `ubuntu-24.04` to stabilize the pinned host environment. Awaiting the subsequent workflow run before claiming a build result.
+- Scientific reference job success is limited to synthetic numerical agreement and codon-table transcription conformance; no experimental truth, biological validation or S8 genetic-code inference is established.

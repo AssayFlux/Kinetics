@@ -433,7 +433,7 @@ def iter_sdf_stream(
         record_chars += line_size
         if record_chars > max_record_chars:
             raise ValueError("SDF record exceeds max_record_chars")
-        record_lines.append(line if line.endswith("\\n") else line + "\\n")
+        record_lines.append(line if line.endswith("\n") else line + "\n")
 
     parsed = parse_buffer()
     if parsed:

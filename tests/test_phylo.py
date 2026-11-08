@@ -78,3 +78,36 @@ def test_jukes_cantor_rejects_saturation_and_insufficient_sites() -> None:
         jukes_cantor_distance("A" * 20, "C" * 20, minimum_sites=20)
     with pytest.raises(ValueError, match="Too few"):
         jukes_cantor_distance("NNNN", "AAAA", minimum_sites=1)
+
+
+def test_site_bootstrap_neighbor_joining_is_seeded_and_reports_failures() -> None:
+    from kinetics.phylo import bootstrap_neighbor_joining_from_alignment
+
+    alignment = {
+        "A": "A" * 40 + "C" * 10,
+        "B": "A" * 39 + "G" + "C" * 10,
+        "C": "A" * 38 + "GG" + "C" * 10,
+        "D": "A" * 37 + "GGG" + "C" * 10,
+    }
+    first = bootstrap_neighbor_joining_from_alignment(
+        alignment, replicates=30, seed=19, minimum_sites=20,
+    )
+    second = bootstrap_neighbor_joining_from_alignment(
+        alignment, replicates=30, seed=19, minimum_sites=20,
+    )
+    assert first["successful_replicates"] > 0
+    assert first["requested_replicates"] == 30
+    assert first["splits"] == second["splits"]
+    assert all(0.0 <= item["support_percent"] <= 100.0 for item in first["splits"])
+
+
+def test_site_bootstrap_rejects_invalid_alignment_and_limits() -> None:
+    from kinetics.phylo import bootstrap_neighbor_joining_from_alignment
+
+    with pytest.raises(ValueError, match="four unique"):
+        bootstrap_neighbor_joining_from_alignment({"A": "AAAA", "B": "AAAT", "C": "AATT"})
+    with pytest.raises(ValueError, match="replicates"):
+        bootstrap_neighbor_joining_from_alignment(
+            {"A": "A" * 30, "B": "C" * 30, "C": "G" * 30, "D": "T" * 30},
+            replicates=0,
+        )

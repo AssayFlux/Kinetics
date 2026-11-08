@@ -171,6 +171,10 @@ def upgma(distance_matrix: list[list[float]], labels: list[str]) -> Node:
     return next(iter(clusters.values()))[0]
 
 
+def _pair_key(first: int, second: int) -> tuple[int, int]:
+    return (first, second) if first < second else (second, first)
+
+
 def neighbor_joining(distance_matrix: list[list[float]], labels: list[str]) -> Node:
     """Build a neighbour-joining tree; rejects negative inferred limbs rather than clipping.
 
@@ -200,7 +204,7 @@ def neighbor_joining(distance_matrix: list[list[float]], labels: list[str]) -> N
         active = sorted(clusters)
         count = len(active)
         totals = {
-            i: sum(distances[tuple(sorted((i, j)))] for j in active if j != i)
+            i: sum(distances[_pair_key(i, j)] for j in active if j != i)
             for i in active
         }
         pair = min(
@@ -220,12 +224,12 @@ def neighbor_joining(distance_matrix: list[list[float]], labels: list[str]) -> N
         ])
         others = [item for item in active if item not in pair]
         for item in others:
-            left = distances[tuple(sorted((first, item)))]
-            right = distances[tuple(sorted((second, item)))]
+            left = distances[_pair_key(first, item)]
+            right = distances[_pair_key(second, item)]
             new_distance = 0.5 * (left + right - distance)
             if not isfinite(new_distance) or new_distance < -tolerance:
                 raise ValueError("Neighbour joining inferred an invalid cluster distance")
-            distances[tuple(sorted((next_id, item)))] = max(0.0, new_distance)
+            distances[_pair_key(next_id, item)] = max(0.0, new_distance)
         for key in list(distances):
             if first in key or second in key:
                 del distances[key]
@@ -235,7 +239,7 @@ def neighbor_joining(distance_matrix: list[list[float]], labels: list[str]) -> N
         next_id += 1
 
     first, second = sorted(clusters)
-    final_distance = distances[tuple(sorted((first, second)))]
+    final_distance = distances[_pair_key(first, second)]
     root = Node(children=[
         Node(length=final_distance / 2.0, children=[clusters[first]]),
         Node(length=final_distance / 2.0, children=[clusters[second]]),
@@ -277,7 +281,7 @@ def to_newick(root: Node) -> str:
 
 def jukes_cantor_distance(
     first: str, second: str, *, minimum_sites: int = 20,
-) -> dict[str, float | int]:
+) -> dict[str, float | int | str]:
     """Estimate Jukes-Cantor 1969 nucleotide distance with pairwise deletion.
 
     Only unambiguous A/C/G/T columns are retained. Saturated comparisons (p >= 0.75)

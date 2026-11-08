@@ -122,18 +122,18 @@ def parse_pharmvar_tsv(
         reference = (row.get(selected["reference"]) or "").strip()
         if not gene or not haplotype or not reference:
             raise ValueError(f"PharmVar TSV line {line_number}: gene, haplotype and reference are required")
-        key = (gene, haplotype, reference)
+        group_key: tuple[str, str, str] = (gene, haplotype, reference)
         ref = (row.get(selected["ref"]) or "").strip()
         alt = (row.get(selected["alt"]) or "").strip()
         if ref.upper() == "REFERENCE" and alt == ".":
-            if key in grouped and grouped[key]:
+            if group_key in grouped and grouped[key]:
                 raise ValueError(f"PharmVar TSV line {line_number}: reference sentinel conflicts with variants")
-            if key in reference_groups:
+            if group_key in reference_groups:
                 raise ValueError(f"PharmVar TSV line {line_number}: duplicate reference sentinel")
-            reference_groups.add(key)
-            grouped.setdefault(key, [])
+            reference_groups.add(group_key)
+            grouped.setdefault(group_key, [])
             continue
-        if key in reference_groups:
+        if group_key in reference_groups:
             raise ValueError(f"PharmVar TSV line {line_number}: variants conflict with reference sentinel")
         try:
             start = int((row.get(selected["start"]) or "").strip())
@@ -147,7 +147,7 @@ def parse_pharmvar_tsv(
             reference, start, stop, ref.upper(), alt.upper(),
             (row.get(selected["type"]) or "").strip().casefold(), rsid,
         )
-        values = grouped.setdefault(key, [])
+        values = grouped.setdefault(group_key, [])
         if variant in values:
             raise ValueError(f"PharmVar TSV line {line_number}: duplicate variant row")
         values.append(variant)

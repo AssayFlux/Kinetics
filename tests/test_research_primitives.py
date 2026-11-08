@@ -6,7 +6,7 @@ independent scientific validation or a claim of domain accuracy.
 import math
 
 import pytest
-from kinetics import (
+from kinetics import (  # type: ignore[import-untyped]
     fit_michaelis_menten,
     inhibition_rate,
     kmer_counts,

@@ -173,11 +173,11 @@ def bootstrap_michaelis_menten(
     """
     import random
 
-    if replicates < 100 or replicates > 10_000:
-        raise ValueError("replicates must be between 100 and 10000")
+    if not isinstance(replicates, int) or isinstance(replicates, bool) or not 100 <= replicates <= 10_000:
+        raise ValueError("replicates must be an integer between 100 and 10000")
     if not isfinite(confidence_level) or not 0.5 <= confidence_level < 1.0:
         raise ValueError("confidence_level must be finite and in [0.5, 1)")
-    if not isinstance(seed, int):
+    if not isinstance(seed, int) or isinstance(seed, bool):
         raise ValueError("seed must be an integer")
 
     point = fit_michaelis_menten(substrates, rates, grid_size=grid_size)

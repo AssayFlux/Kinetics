@@ -25,7 +25,7 @@ ruff check scripts tests
 mypy scripts tests
 python scripts/check_registry.py
 pytest
-python scripts/reproduce_all.py
+scripts/reproduce-all
 python scripts/check_android_artifacts.py
 ```
 The reproduction command reports that no evidence jobs are registered. Android artifact checks report blocked/not applicable until R1 creates real artifacts. Green R0 CI does not imply Android, scientific or device validation.

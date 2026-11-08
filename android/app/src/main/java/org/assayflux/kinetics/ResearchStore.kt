@@ -62,6 +62,7 @@ class ResearchStore(context: Context) :
             )""".trimIndent(),
         )
         db.execSQL("CREATE INDEX jobs_created_at_idx ON jobs(created_at DESC)")
+        db.execSQL("CREATE INDEX provenance_created_at_idx ON provenance(created_at DESC)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

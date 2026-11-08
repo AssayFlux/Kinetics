@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/public-dataset-catalog.schema.json",
+  "title": "Kinetics public non-patient dataset catalogue",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "purpose", "data_classification", "entries"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "purpose": { "type": "string", "minLength": 1 },
+    "data_classification": { "const": "public_non_patient_only" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "dataset_id", "title", "source_url", "accession_or_version",
+          "license", "license_review_status", "intended_use", "retrieved_at",
+          "content_sha256", "patient_data"
+        ],
+        "properties": {
+          "dataset_id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "source_url": { "type": "string", "format": "uri" },
+          "accession_or_version": { "type": "string", "minLength": 1 },
+          "license": { "type": "string", "minLength": 1 },
+          "license_url": { "type": "string", "format": "uri" },
+          "license_review_status": {
+            "enum": ["not_reviewed", "approved_for_research", "prohibited"]
+          },
+          "intended_use": { "type": "string", "minLength": 1 },
+          "retrieved_at": { "type": "string", "format": "date-time" },
+          "content_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "patient_data": { "const": false },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -62,3 +62,29 @@ def clr_transform(matrix: list[list[float]], *, pseudocount: float = 0.5) -> lis
         center = sum(logs) / len(logs)
         output.append([value - center for value in logs])
     return [list(row) for row in zip(*output)]
+
+
+def logistic_growth(timepoints: list[float], counts: list[float], *,
+                    carrying_capacity: float, growth_rate: float, initial: float) -> list[float]:
+    if len(timepoints) != len(counts) or not timepoints:
+        raise ValueError("Timepoints and counts must have equal non-zero lengths")
+    if carrying_capacity <= 0 or growth_rate <= 0 or initial <= 0:
+        raise ValueError("Model parameters must be positive")
+    if any(t < 0 for t in timepoints) or any(value < 0 for value in counts):
+        raise ValueError("Timepoints and counts must be non-negative")
+    from math import exp
+    return [
+        carrying_capacity / (1 + ((carrying_capacity - initial) / initial) * exp(-growth_rate * t))
+        for t in timepoints
+    ]
+
+
+def cross_omics_correlation(first: list[list[float]], second: list[list[float]]) -> list[list[float]]:
+    """Pairwise feature correlation between two feature-by-sample matrices."""
+    if not first or not second or not first[0]:
+        raise ValueError("Both omics matrices must be non-empty")
+    sample_count = len(first[0])
+    if any(len(row) != sample_count for row in first + second):
+        raise ValueError("All features must share the same sample order and count")
+    from .omics import pearson
+    return [ [pearson(left, right) for right in second] for left in first ]

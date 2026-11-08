@@ -236,3 +236,12 @@ Build and static package evidence is green. R1 is **not complete**. Outstanding:
 The repository's static ELF checker was strengthened after source audit. It now validates ELF64 little-endian version 1, AArch64 machine type, program-header bounds and entry sizes, presence of PT_LOAD segments, minimum 16 KB alignment for every load segment, power-of-two alignment, and the ELF congruence requirement that p_offset and p_vaddr match modulo p_align. Synthetic regression tests cover a valid 16 KB segment, insufficient alignment, incongruent offsets, wrong architecture and missing load segments.
 
 Host-only CI run 42429935581 passed on commit e1560a3f74165a770438000a650a83019a01432d: Ruff, mypy (8 source files), registry validation, all 15 unit tests, reproduction stub, local Android build-script syntax check and owner-directed Android artifact gate. This is host-side checker validation only; it does not add fresh APK evidence or runtime/device evidence. R1 remains in progress.
+
+
+## Owner physical-device target update — 2026-11-08
+
+- Owner supplied **Motorola Moto G54 5G** as the available physical test handset.
+- Device status: selected for the first owner-run arm64 validation; NOT YET TESTED. This does not establish API level, SoC, RAM/storage variant, ABI, boot page size or compatibility. Capture these directly from the connected handset using the commands below rather than assuming specifications from the retail model name.
+- Owner's build-first / test-later instruction remains active. First create the local APK using `docs/local-android-build.md`; then install and execute the R1 probe on the Moto G54 5G. Do not run device tests from GitHub Actions.
+- Required device evidence: exact `ro.product.model`, manufacturer/device codename, Android release/API, CPU ABI, SoC, physical RAM, available storage, `getconf PAGE_SIZE`, APK SHA-256, install/launch logs, full `KineticsR1` probe output, five cold-start timings and five memory captures. If the handset reports 4096-byte pages, it does not replace the separate 16 KB runtime target; if 16384, retain that evidence explicitly.
+- The owner has identified a device, but the phone has not been connected to this environment and no physical-device execution is claimed.

@@ -83,3 +83,13 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Consequences: This is authorization to execute the approved roadmap phases, not a finding that any phase has passed its exit criteria. R1 remains in progress and currently has a documented Android build blocker at Chaquopy Biopython dependency resolution. R2 may begin only after R1 evidence is complete and the R1 go/no-go is documented; R3 may begin only after R2's exit evidence and approval. All scientific validation, third-party licensing, device verification, security, privacy, clinical and P0 gates remain in force. No clinical mode, patient-data workflow or clinical claim is authorized by this decision.
 - Approver: Project owner, explicit approval in chat on 2026-11-07 (“Approved R1,R2&R3”).
 - Evidence: Owner approval message in project conversation; phase completion evidence remains outstanding and must be recorded separately.
+
+
+## D-009 — UI/UX master specification (2026-11-08)
+- Context: Owner supplied `KINETICS_UI_SPEC.md` and instructed parallel Track U and R0–R10 work.
+- Choice: Adopt the UI specification as governing UI contract and execute U0 foundations now.
+- Visual direction: NOT APPROVED. Three neutral proposals (Precision Lab, Field Notes, Dark Instrument) are studies only; owner selection is required before theme lock.
+- Brand: Owner assets only. Existing `Assets/Brand Logo.svg` is preserved but not assumed to be approved app/brand master. Placeholders are development-only and block release.
+- Security: Offline-only/no automatic cloud backup are conservative proposals; app lock/vault lock/panic wipe remain review items. Clinical mode remains disabled.
+- Consequences: U0 records tokens, schema, asset contract, threat-model draft, verified platform facts and quality/device templates. Stop after presenting three working gallery directions for owner choice.
+- Approver: Owner authorised execution; visual-direction and security-default sub-gates remain open.

@@ -6,7 +6,8 @@ selection_policy:
   brand_script: Great Vibes (candidate; restricted to wordmark/brand accent, only if logo has no wordmark)
   display_serif: Cormorant Garamond (candidate; selected display headings only)
   default_scientific_monospace: IBM Plex Mono (candidate; D-015)
-  display_serif: Cormorant Garamond (candidate; selected display headings only)\n  system_fallback: sans-serif\n  indic_fallback: verified Devanagari-capable fallback required
+  system_fallback: sans-serif
+  indic_fallback: verified Devanagari-capable fallback required
   bundle_only_after_licence_audit: true
 families:
   - {id: allura, family: Allura, category: calligraphic_display, style: elegant_script_wordmark_only, licence: OFL-1.1-candidate; verify exact upstream release}

@@ -1087,3 +1087,11 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Run #1717 Python foundation job passed: Ruff checks, mypy (24 source files), registry validation, and pytest (111 passed, 3 skipped).
 - Android APK/AAB build for run #1717 remained in progress at log time. It predates the final Home-background Compose integration and brand master copy. Run #1721 is queued for the current source; final debug APK availability is not yet established.
 - No device, emulator, screenshot, TalkBack, contrast/CVD, font-scale, performance or usability test is claimed.
+
+
+## 2026-11-08 — Responsive shell implementation
+- Added live app-window navigation modes: bottom bar for compact portrait windows, rail for medium/expanded and compact-height windows, permanent drawer for large windows.
+- Added an 840dp maximum readable content width and JVM tests for navigation breakpoint boundaries.
+- Replaced inert status chips with non-interactive state labels carrying TalkBack content descriptions.
+- Official Android window breakpoints and accessibility touch-target guidance recorded in docs/ui/verified-specs.md.
+- Device screenshots, TalkBack, contrast, 200% font scale, fold posture, performance and usability remain untested. No accessibility or device-responsiveness pass claimed.

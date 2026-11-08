@@ -13,6 +13,7 @@ BIOPYTHON_DIR="${BIOPYTHON_DIR:-$HOME/.cache/kinetics/biopython-$BIOPYTHON_VERSI
 GRADLE_VERSION="8.13"
 GRADLE_SHA256="20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78"
 GRADLE_CACHE_DIR="${GRADLE_CACHE_DIR:-$HOME/.cache/kinetics/gradle-$GRADLE_VERSION}"
+PYTHON_HOST_VERSION="3.11.18"
 PYTHON_TARGET="3.11.17-0"
 NUMPY_WHEEL="numpy-1.26.2-0-cp311-cp311-android_21_arm64_v8a.whl"
 NDK_VERSION="28.2.13676358"
@@ -49,7 +50,7 @@ SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 [[ -x "$SDK_ROOT/build-tools/$BUILD_TOOLS_VERSION/zipalign" ]] || fail "Install Android build-tools $BUILD_TOOLS_VERSION."
 [[ -d "$SDK_ROOT/platforms/android-36" ]] || fail "Install Android SDK platform android-36."
 [[ -d "$SDK_ROOT/cmake/3.22.1" ]] || fail "Install Android CMake 3.22.1."
-python -c 'import sys; assert sys.version_info[:3] == (3, 11, 17), sys.version' || fail "Use Python 3.11.17 exactly."
+python -c 'import sys; assert sys.version_info[:3] == (3, 11, 18), sys.version' || fail "Use Python 3.11.18 exactly for the host build tools."
 java -version 2>&1 | grep -q '17\.' || fail "Use JDK 17."
 
 # Fetch a checksum-pinned Gradle distribution rather than trusting a host-installed gradle.

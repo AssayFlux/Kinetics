@@ -18,6 +18,8 @@ data class ResearchJob(
 class ResearchStore(context: Context) :
     SQLiteOpenHelper(context, "kinetics-research.db", null, DATABASE_VERSION) {
 
+    private val appContext = context.applicationContext
+
     override fun onConfigure(db: SQLiteDatabase) {
         super.onConfigure(db)
         db.setForeignKeyConstraintsEnabled(true)
@@ -117,6 +119,11 @@ class ResearchStore(context: Context) :
 
     /** Materialize an authenticated temporary plaintext copy for a caller-controlled analysis/export. */
     fun materializeStoredInput(id: String, destination: File): Boolean {
+        val safeRoot = appContext.cacheDir.canonicalFile.toPath()
+        val safeDestination = destination.canonicalFile.toPath()
+        require(safeDestination.startsWith(safeRoot) && safeDestination != safeRoot) {
+            "Decrypted research inputs may only be materialized inside the app-private cache"
+        }
         val stored = readableDatabase.rawQuery(
             "SELECT storage_path,sha256 FROM jobs WHERE id=?", arrayOf(id),
         ).use { cursor ->
@@ -127,6 +134,17 @@ class ResearchStore(context: Context) :
             File(stored.first), destination, "kinetics-import:$id", stored.second,
         )
         return true
+    }
+
+    /** Run a local analysis callback and always remove its plaintext cache file. */
+    fun <T> withStoredInput(id: String, action: (File) -> T): T? {
+        val temporary = File(appContext.cacheDir, "kinetics-analysis-" + UUID.randomUUID() + ".tmp")
+        if (!materializeStoredInput(id, temporary)) return null
+        return try {
+            action(temporary)
+        } finally {
+            temporary.delete()
+        }
     }
 
     fun updateProgress(id: String, bytes: Long) {

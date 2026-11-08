@@ -30,7 +30,7 @@ from .sequence import (
     SequenceRecord, iter_fasta_records, kmer_counts, needleman_wunsch, parse_fasta, parse_fastq,
     reverse_complement, sequence_statistics, transcribe, trim_fastq_ends,
 )
-from .structure import Atom, contact_pairs, parse_mmcif, parse_pdb, rmsd
+from .structure import Atom, contact_pairs, parse_mmcif, parse_pdb, rmsd, solvent_accessible_surface_area
 
 __all__ = [
     "Atom", "GeneEntry", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
@@ -43,7 +43,7 @@ __all__ = [
     "parse_mmcif", "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",
     "patristic_distance", "path_fingerprint", "pearson", "primer_properties",
     "protein_descriptors", "reverse_complement", "rmsd", "scan_spcas9_ngg",
-    "sequence_statistics", "shannon_diversity", "trim_fastq_ends", "simpson_diversity",
+    "sequence_statistics", "solvent_accessible_surface_area", "shannon_diversity", "trim_fastq_ends", "simpson_diversity",
     "substructure_match", "tanimoto", "theoretical_pi", "transcribe", "upgma",
     "search_gene_catalog", "validate_gene_catalog", "welch_differential_expression",
 ]

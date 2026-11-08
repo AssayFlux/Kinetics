@@ -86,3 +86,30 @@ ATOM 1 C CA GLY A 1 NaN 0.0 0.0
 """
     with pytest.raises(ValueError, match="finite"):
         parse_mmcif(cif)
+
+
+
+def test_sasa_single_atom_area_and_occlusion_are_deterministic() -> None:
+    from math import pi
+
+    from kinetics.structure import solvent_accessible_surface_area
+
+    single = solvent_accessible_surface_area([atom(1, 0, 0, 0)], sphere_points=48)
+    assert single["total_area_angstrom2"] == pytest.approx(4 * pi * (1.7 + 1.4) ** 2)
+    pair = solvent_accessible_surface_area(
+        [atom(1, 0, 0, 0), atom(2, 3, 0, 0)], sphere_points=48,
+    )
+    assert pair["total_area_angstrom2"] < 2 * single["total_area_angstrom2"]
+    assert pair == solvent_accessible_surface_area(
+        [atom(1, 0, 0, 0), atom(2, 3, 0, 0)], sphere_points=48,
+    )
+
+
+def test_sasa_rejects_unsupported_elements_and_invalid_resolution() -> None:
+    from kinetics.structure import solvent_accessible_surface_area
+
+    unknown = Atom(1, "X", "UNK", "A", 1, 0.0, 0.0, 0.0, "")
+    with pytest.raises(ValueError, match="Unsupported"):
+        solvent_accessible_surface_area([unknown])
+    with pytest.raises(ValueError, match="sphere_points"):
+        solvent_accessible_surface_area([atom(1, 0, 0, 0)], sphere_points=4)

@@ -12,7 +12,8 @@ Kinetics is an offline-first, Android-native scientific workbench under active d
 ## Current status
 - R0 foundations are owner-accepted and complete. R1–R10 remain in progress; none is represented as complete. Phase plans document source implementation separately from validation and exit evidence.
 - Research Mode is the only mode intended for public builds. Clinical/patient workflows remain disabled and gated.
-- Latest verified CI run: [run #1650](https://github.com/AssayFlux/Kinetics/actions/runs/42450892141), commit `b5a591aa2b0545188409eacc0eb76043b4143fb8`. Python checks/tests and Android arm64 debug APK/AAB build, package-alignment verification and JVM unit tests passed.
+- Latest verified CI run: [run #1650](https://github.com/AssayFlux/Kinetics/actions/runs/42450892141), commit `b5a591aa2b0545188409eacc0eb76043b4143fb8`. Python checks/tests and Android arm64 debug APK/AAB build and package-alignment verification passed. The JVM test task reported `NO-SOURCE`, so Android unit-test execution is not yet verified; real tests are being added.
+- The current Android app is a functional but rudimentary single-screen Compose workbench, not a finished product UI. The multi-screen design baseline is [docs/android-ui-ux-spec.md](docs/android-ui-ux-spec.md); implementation and device/accessibility verification remain open.
 - The CI build lane does not run an emulator or physical-device tests. The APK/AAB are unsigned debug artifacts; no app launch, SAF, lifecycle, scientific runtime, cold-start or memory claim is made. See [docs/android-feasibility.md](docs/android-feasibility.md) and [docs/ci-build-evidence.md](docs/ci-build-evidence.md).
 - No scientific capability is claimed as validated; no clinical functionality or patient-data workflow is authorized.
 - Project code is licensed under Apache-2.0. Third-party dependencies retain their own licenses; see [docs/third-party.md](docs/third-party.md).

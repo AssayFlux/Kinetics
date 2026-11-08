@@ -19,7 +19,8 @@ from .kinetics import (
 from .molecular import primer_properties, scan_spcas9_ngg
 from .omics import (
     clr_transform, cpm, cross_omics_correlation, logistic_growth,
-    log2_fold_change, pearson, shannon_diversity, simpson_diversity,\n    welch_differential_expression,
+    log2_fold_change, pearson, shannon_diversity, simpson_diversity,
+    welch_differential_expression,
 )
 from .phylo import Node, leaf_names, neighbor_joining, parse_newick, patristic_distance, upgma
 from .protein import protein_descriptors, theoretical_pi

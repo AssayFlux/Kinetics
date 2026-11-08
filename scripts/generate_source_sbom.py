@@ -138,8 +138,8 @@ def generate(root: Path = ROOT) -> dict[str, object]:
     add("Android SDK Platform", sdk_platform, "build-tool", f"pkg:generic/android-sdk-platform@{sdk_platform}")
     add("CMake", cmake_version, "build-tool", f"pkg:generic/cmake@{cmake_version}")
     add("Python host", python_host, "build-tool", f"pkg:generic/python@{python_host}")
-    add("Chaquopy Python target", python_target.split("-")[0], "runtime-target",
-        f"pkg:generic/python@{python_target.split('-')[0]}")
+    add("Chaquopy Python target", python_target, "runtime-target",
+        f"pkg:generic/python@{python_target}")
     add("Rust toolchain", rust_version, "build-tool", f"pkg:generic/rust@{rust_version}")
     add("JDK", "17 (patch/vendor not pinned)", "build-tool")
 

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import isfinite, sqrt
+from math import cos, isfinite, sin, sqrt
 from typing import Iterable
 
 
@@ -278,8 +278,8 @@ def solvent_accessible_surface_area(
         y = ((index * offset) - 1.0) + offset / 2.0
         radial = sqrt(max(0.0, 1.0 - y * y))
         angle = index * increment
-        unit_points.append((radial * __import__("math").cos(angle), y,
-                            radial * __import__("math").sin(angle)))
+        unit_points.append((radial * cos(angle), y,
+                            radial * sin(angle)))
 
     expanded = [radius + probe_radius for radius in radii]
     neighbours: list[list[int]] = [[] for _ in points]

@@ -68,7 +68,8 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                 }
 
                 if (!MessageDigest.isEqual(partialPrefixDigest.digest(), sourcePrefixDigest.digest())) {
-                    throw IllegalStateException("Source content changed since the partial import; restart required")
+                    partial.delete()
+                    throw IllegalStateException("Source content changed since the partial import; partial data discarded and a full restart is required")
                 }
 
                 FileOutputStream(partial, true).use { output ->

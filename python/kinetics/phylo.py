@@ -100,3 +100,50 @@ def _walk(node: Node):
     yield node
     for child in node.children:
         yield from _walk(child)
+
+
+
+def upgma(distance_matrix: list[list[float]], labels: list[str]) -> Node:
+    """Construct a rooted UPGMA tree from a symmetric distance matrix."""
+    size = len(labels)
+    if size < 2 or len(distance_matrix) != size or len(set(labels)) != size:
+        raise ValueError("Need at least two unique labels and a square matrix")
+    if any(len(row) != size for row in distance_matrix):
+        raise ValueError("Distance matrix must be square")
+    for i in range(size):
+        if abs(distance_matrix[i][i]) > 1e-12:
+            raise ValueError("Distance matrix diagonal must be zero")
+        for j in range(size):
+            value = distance_matrix[i][j]
+            if value < 0 or abs(value - distance_matrix[j][i]) > 1e-9:
+                raise ValueError("Distances must be non-negative and symmetric")
+    clusters: dict[int, tuple[Node, list[int], float]] = {
+        i: (Node(name=labels[i]), [i], 0.0) for i in range(size)
+    }
+    distances = {(i, j): distance_matrix[i][j] for i in range(size) for j in range(i+1, size)}
+    next_id = size
+    while len(clusters) > 1:
+        pair = min(distances, key=lambda key: distances[key])
+        first, second = pair
+        distance = distances[pair]
+        height = distance / 2.0
+        left, left_members, left_height = clusters.pop(first)
+        right, right_members, right_height = clusters.pop(second)
+        left.length = max(0.0, height - left_height)
+        right.length = max(0.0, height - right_height)
+        merged = Node(children=[left, right])
+        members = left_members + right_members
+        old_ids = list(clusters)
+        distances = {
+            key: value for key, value in distances.items()
+            if first not in key and second not in key
+        }
+        for other in old_ids:
+            other_members = clusters[other][1]
+            numerator = sum(distance_matrix[a][b] for a in members for b in other_members)
+            distances[(min(next_id, other), max(next_id, other))] = numerator / (
+                len(members) * len(other_members)
+            )
+        clusters[next_id] = (merged, members, height)
+        next_id += 1
+    return next(iter(clusters.values()))[0]

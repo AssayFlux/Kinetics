@@ -38,12 +38,15 @@ def map_exact_chain_sequence(
     query = "".join(query_sequence.split()).upper()
     if not query or set(query) - set(THREE_TO_ONE.values()):
         raise ValueError("query_sequence must contain only the 20 canonical amino acids")
-    if max_query_residues < 1 or len(query) > max_query_residues:
+    for name, limit in (
+        ("max_query_residues", max_query_residues),
+        ("max_structure_residues", max_structure_residues),
+        ("max_atoms", max_atoms),
+    ):
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:
+            raise ValueError(f"{name} must be a positive integer")
+    if len(query) > max_query_residues:
         raise ValueError("query sequence exceeds the configured residue limit")
-    if max_structure_residues < 1:
-        raise ValueError("max_structure_residues must be positive")
-    if max_atoms < 1:
-        raise ValueError("max_atoms must be positive")
     if not isinstance(chain_id, str) or not chain_id:
         raise ValueError("chain_id must be non-empty text")
 
@@ -88,10 +91,17 @@ def map_exact_chain_sequence(
         }
 
     observed = "".join(amino_acid for _, amino_acid in ordered)
-    positions = [
-        index for index in range(len(query) - len(observed) + 1)
-        if query[index:index + len(observed)] == observed
-    ]
+    positions: list[int] = []
+    search_from = 0
+    while True:
+        position = query.find(observed, search_from)
+        if position < 0:
+            break
+        positions.append(position)
+        if len(positions) > 1:
+            break
+        # Advance one residue so overlapping exact occurrences are also detected.
+        search_from = position + 1
     if not positions:
         return {
             "status": "no_exact_match",

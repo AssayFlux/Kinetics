@@ -1495,3 +1495,10 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Commits: `eaa532e` (implementation), `aef4501` (tests). CI for these commits is pending.
 - Remaining S9 gates: alignment/gap handling, insertion-code-aware residue identity, licensed domain/family references, curated independent structure mappings and benchmark concordance.
 - R/S/I/P remain active. No device-runtime, independent biological/chemical validation, dataset license approval, P0 clearance or paper submission readiness is inferred from CI.
+
+## Session 21 — 2026-11-08
+- S9: exact sequence-to-structure matching now rejects boolean/floating-point resource limits and stops after detecting a second occurrence while still detecting overlaps; added regression coverage.
+- I1: added incremental SDF stream ingestion that buffers one record at a time and enforces positive-integer maximum record count, per-record character budget and aggregate character budget; preserves explicit V2000/V3000 subset limitations. Added stream, limit and invalid-budget tests.
+- Commits: `eaa532e`, `aef4501` (S9); `9f26dc0`, `ea94516`, `e448d30` (I1).
+- CI run #1999 passed before these changes. CI for current commits is pending; no passing status claimed yet.
+- I1 remains exploratory: descriptor reference fixtures are host-side sanity checks, not an independently curated chemistry benchmark or validated biological/ADMET model. P0 remains blocked.

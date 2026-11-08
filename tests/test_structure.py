@@ -31,3 +31,8 @@ def test_rmsd_superposition_removes_rigid_rotation_and_translation() -> None:
 def test_rmsd_requires_equal_non_empty_coordinate_sets() -> None:
     with pytest.raises(ValueError):
         rmsd([atom(1, 0, 0, 0)], [])
+
+
+def test_rmsd_and_contact_cutoff_reject_non_finite_values() -> None:
+    with pytest.raises(ValueError, match="finite"):
+        rmsd([atom(1, float("nan"), 0, 0)], [atom(1, 0, 0, 0)])

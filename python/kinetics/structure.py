@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import sqrt
+from math import isfinite, sqrt
 from typing import Iterable
 
 
@@ -39,6 +39,8 @@ def parse_pdb(text: str, *, include_hetero: bool = False) -> list[Atom]:
             )
         except ValueError as exc:
             raise ValueError(f"PDB line {line_no}: invalid atom field") from exc
+        if not all(isfinite(value) for value in (atoms[-1].x, atoms[-1].y, atoms[-1].z)):
+            raise ValueError(f"PDB line {line_no}: coordinates must be finite")
     if not atoms:
         raise ValueError("No supported PDB coordinate records")
     return atoms
@@ -116,6 +118,8 @@ def rmsd(reference: Iterable[Atom], mobile: Iterable[Atom], *, superpose: bool =
         raise ValueError("Coordinate sets must have equal non-zero length")
     target = [(atom.x, atom.y, atom.z) for atom in first]
     moving = [(atom.x, atom.y, atom.z) for atom in second]
+    if not all(isfinite(value) for point in target + moving for value in point):
+        raise ValueError("Coordinate sets must contain only finite values")
     if not superpose:
         return sqrt(sum(sum((a - b) ** 2 for a, b in zip(p, q))
                         for p, q in zip(target, moving)) / len(first))
@@ -134,8 +138,8 @@ def rmsd(reference: Iterable[Atom], mobile: Iterable[Atom], *, superpose: bool =
 
 def contact_pairs(atoms: Iterable[Atom], cutoff_angstrom: float = 8.0) -> list[tuple[int, int, float]]:
     points = list(atoms)
-    if cutoff_angstrom <= 0:
-        raise ValueError("cutoff must be positive")
+    if not isfinite(cutoff_angstrom) or cutoff_angstrom <= 0:
+        raise ValueError("cutoff must be finite and positive")
     result = []
     for i, first in enumerate(points):
         for j in range(i + 1, len(points)):

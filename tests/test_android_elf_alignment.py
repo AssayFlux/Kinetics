@@ -7,8 +7,14 @@ import pytest
 from scripts.check_android_elf_alignment import PAGE_ALIGNMENT, inspect_elf
 
 
-def make_elf(*, alignment: int = PAGE_ALIGNMENT, file_offset: int = 0,
-             virtual_address: int = 0, machine: int = 183, include_load: bool = True) -> bytes:
+def make_elf(
+    *,
+    alignment: int = PAGE_ALIGNMENT,
+    file_offset: int = 0,
+    virtual_address: int = 0,
+    machine: int = 183,
+    include_load: bool = True,
+) -> bytes:
     payload = bytearray(64 + 56)
     payload[:7] = b"\\x7fELF\\x02\\x01\\x01"
     struct.pack_into("<H", payload, 18, machine)
@@ -36,7 +42,9 @@ def test_rejects_incongruent_file_and_virtual_offsets() -> None:
         make_elf(file_offset=0, virtual_address=4096),
     )
     assert result["pass"] is False
-    assert "not congruent" in result["failures"][0]  # type: ignore[index]
+    failures = result["failures"]
+    assert isinstance(failures, list)
+    assert "not congruent" in failures[0]
 
 
 def test_rejects_non_aarch64_and_missing_load_segments() -> None:

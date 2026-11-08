@@ -11,7 +11,7 @@ import json
 import os
 import stat
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, cast
 
 from kinetics.sequence import SequenceRecord, iter_fasta_records, validate_sequence
 from kinetics.sequence_reference import ReferencePack, SequenceType, _alphabet
@@ -53,9 +53,10 @@ def _validate_manifest(value: dict[str, Any]) -> tuple[ReferencePack, SequenceTy
         raise ValueError(f"Manifest keys mismatch; missing={missing}, extra={extra}")
     if value["schema_version"] != 1 or value["format"] != "fasta":
         raise ValueError("Only schema_version 1 and FASTA reference packs are supported")
-    sequence_type = value["sequence_type"]
-    if sequence_type not in ("DNA", "RNA", "protein"):
+    raw_sequence_type = value["sequence_type"]
+    if raw_sequence_type not in ("DNA", "RNA", "protein"):
         raise ValueError("sequence_type must be DNA, RNA, or protein")
+    sequence_type = cast(SequenceType, raw_sequence_type)
     pack = ReferencePack(
         name=value["name"],
         version=value["version"],

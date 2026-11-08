@@ -44,3 +44,9 @@ def test_orf_scan_enforces_limits_and_rejects_ambiguous_sequence() -> None:
         find_orf_candidates("ATGATGTAA", min_protein_length=1, max_orfs=1)
     with pytest.raises(ValueError, match="positive integer"):
         find_orf_candidates("ATGAAATAA", min_protein_length=0)
+    with pytest.raises(ValueError, match="max_sequence_bases"):
+        find_orf_candidates("ATGAAATAA", max_sequence_bases=8)
+    with pytest.raises(ValueError, match="max_open_starts"):
+        find_orf_candidates("ATGATG", max_open_starts=1)
+    with pytest.raises(ValueError, match="positive integer"):
+        find_orf_candidates("ATG", max_open_starts=0)

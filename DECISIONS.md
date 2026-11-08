@@ -56,7 +56,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Context: Select a project-level license that supports academic and commercial adoption while providing explicit patent terms.
 - Options considered: MIT, Apache-2.0, GPL-3.0, AGPL-3.0 and proprietary licensing.
 - Choice: Apache License 2.0 (Apache-2.0).
-- Consequences: The project intends to distribute its own code under Apache-2.0. Each third-party engine, dependency, model and data pack remains subject to separate license verification; this decision does not relicense third-party materials. Add the canonical Apache-2.0 LICENSE text in a separate repository change before representing the grant as present.
+- Consequences: The project distributes its own original code under Apache-2.0; the canonical license text is now present at the repository root. Each third-party engine, dependency, model and data pack remains subject to separate license verification; this decision does not relicense third-party materials.
 - Approver: Project owner, explicit selection in chat on 2026-11-07.
 
 ## D-006 — Android device target (approved)

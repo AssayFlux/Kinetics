@@ -89,3 +89,44 @@ kotlin {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
+
+val verifyOwnerBrandAssets by tasks.registering {
+    group = "verification"
+    description = "Fail release builds while owner-approved Kinetics brand assets are placeholders."
+    doLast {
+        val brandDir = rootProject.file("../../assets/brand")
+        val required = listOf(
+            "app-logo.svg",
+            "app-logo-foreground.svg",
+            "app-logo-monochrome.svg",
+            "brand-logo.svg",
+            "brand-logo-light.svg",
+            "brand-logo-dark.svg",
+            "brand-usage.md",
+        )
+        val missing = required.filterNot { File(brandDir, it).isFile }
+        val placeholders = required.filter { name ->
+            val f = File(brandDir, name)
+            f.isFile && f.readText().contains("PLACEHOLDER", ignoreCase = true)
+        }
+        val backgroundText = File(brandDir, "app-logo-background.txt")
+        val backgroundSvg = File(brandDir, "app-logo-background.svg")
+        val missingBackground = !backgroundText.isFile && !backgroundSvg.isFile
+        val backgroundPlaceholder = backgroundText.isFile &&
+            backgroundText.readText().contains("PLACEHOLDER", ignoreCase = true)
+        if (missing.isNotEmpty() || placeholders.isNotEmpty() ||
+            missingBackground || backgroundPlaceholder) {
+            throw GradleException(
+                "Release blocked: supply approved owner brand assets. " +
+                    "Missing=$missing; placeholders=$placeholders; " +
+                    "missingBackground=$missingBackground; backgroundPlaceholder=$backgroundPlaceholder"
+            )
+        }
+    }
+}
+
+tasks.configureEach {
+    if (name.contains("Release", ignoreCase = true) && name != "verifyOwnerBrandAssets") {
+        dependsOn(verifyOwnerBrandAssets)
+    }
+}

@@ -116,8 +116,12 @@ def rmsd(reference: Iterable[Atom], mobile: Iterable[Atom], *, superpose: bool =
     first, second = list(reference), list(mobile)
     if len(first) != len(second) or not first:
         raise ValueError("Coordinate sets must have equal non-zero length")
-    target = [(atom.x, atom.y, atom.z) for atom in first]
-    moving = [(atom.x, atom.y, atom.z) for atom in second]
+    target: list[tuple[float, float, float]] = [
+        (atom.x, atom.y, atom.z) for atom in first
+    ]
+    moving: list[tuple[float, float, float]] = [
+        (atom.x, atom.y, atom.z) for atom in second
+    ]
     if not all(isfinite(value) for point in target + moving for value in point):
         raise ValueError("Coordinate sets must contain only finite values")
     if not superpose:

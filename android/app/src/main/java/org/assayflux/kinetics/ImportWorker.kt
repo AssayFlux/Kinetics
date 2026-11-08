@@ -143,10 +143,13 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
             finalizedFile?.let { file ->
                 if (!file.renameTo(partial)) file.delete()
             }
-            store.updateJob(
-                jobId, "failed", bytes = byteCount,
-                message = error.message ?: error.javaClass.simpleName,
-            )
+            val detail = error.message ?: error.javaClass.simpleName
+            val state = if (detail.startsWith("Encrypted staging header is invalid")) {
+                "recovery_required"
+            } else {
+                "failed"
+            }
+            store.updateJob(jobId, state, bytes = byteCount, message = detail)
             Result.failure()
         }
     }

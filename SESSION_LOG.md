@@ -1502,3 +1502,34 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Commits: `eaa532e`, `aef4501` (S9); `9f26dc0`, `ea94516`, `e448d30` (I1).
 - CI run #1999 passed before these changes. CI for current commits is pending; no passing status claimed yet.
 - I1 remains exploratory: descriptor reference fixtures are host-side sanity checks, not an independently curated chemistry benchmark or validated biological/ADMET model. P0 remains blocked.
+
+## 2026-11-08 — Session 22: Owner-directed integrated implementation and verification cycle
+**Phase:** Track R1–R10 + S/I/P parallel work; UI/authentication delivery correction  
+**Objective:** Correct the delivery process and active product plan after owner review found the APK still used old UI, lacked login/biometric flows and exposed incomplete options.
+
+### Done
+- Re-inspected Android entry point, Compose shell, app dependencies, manifest, UI screen map, canonical D-015 design system, UI spec, roadmap and decision log.
+- Confirmed concrete gaps: no login/onboarding/profile screen; no biometric dependency or BiometricPrompt flow; dashboard still uses the old generic K mark and background hero; theme state is activity-session-only; Explore is informational rather than a tool dispatcher; only Home/Work/Explore/Settings are active destinations.
+- Confirmed Work currently connects SAF import, background job management, cancel/resume, encrypted export and delete flows; this is not proof of full app functionality.
+- Recorded D-016 and made build → automated test → artifact inspection → fix → repeat mandatory.
+- Reaffirmed D-015 as the only active design. Earlier neon/Obsidian Cyan and pre-D-015 proposals are discontinued for active UI work and retained only as historical records.
+- Expanded UI specification and screen map with authentication, biometric unlock, durable appearance, working-control and evidence requirements.
+
+### Validated
+- Repository source inspection confirmed the gaps above. No Android build, automated test, install, biometric prompt, emulator or physical-device verification was run as part of this documentation update.
+- Latest known CI run #2009 on commit 9d2b0b012853d0092cee54841957c83331576abc was pending at inspection; verify before the next implementation commit.
+
+### Not done / blockers
+- D-015 screens are not fully implemented.
+- Local app-lock trust model, secure recovery and BiometricPrompt integration are not implemented.
+- No real device/emulator evidence for UI, login, biometric, accessibility, performance or complete app actions.
+- Research modules still need registry-to-dispatcher-to-result-viewer integration.
+- Existing debug APK is not the new-design/authenticated build and must not be represented as such.
+
+### Next cycle
+1. Verify workflow #2009 before pushing new changes.
+2. Implement local app-lock and biometric capability handling with secure recovery semantics and tests.
+3. Replace old dashboard composition with D-015 and integrate actual supplied logo assets.
+4. Persist appearance settings and make exposed controls functional or explicitly unavailable.
+5. Add UI/action/instrumentation coverage, build arm64 artifact, run regression suite, inspect screenshots and install/run on emulator/device when available.
+6. Repeat the same cycle for remaining R/S/I/P workstreams while preserving scientific, licensing, privacy and ethics gates.

@@ -1,6 +1,6 @@
 # Local Android arm64 debug build
 
-This is the owner-directed build route. **GitHub Actions does not build APK/AAB files or run Android emulator tests.** Run this procedure on a Linux x86_64 machine or Linux x86_64 WSL2 environment. It builds locally and performs static package checks only; it does not install or run the app.\n\n> **Termux warning:** Termux running directly on an Android phone is not a supported build host for the current pinned toolchain. The build requires Linux x86_64 host binaries (including the NDK `linux-x86_64` toolchain and pinned Chaquopy wheel builder). Android Termux normally reports an Android/aarch64 host, and `proot-distro` on the same phone does not turn it into x86_64 Linux. The build script now detects Termux and unsupported OS/architectures immediately, before downloads or cache changes. Do not try to work around this by substituting random Gradle, NDK, Python wheels or native binaries.
+This is the reproducible manual build route for a Linux x86_64 machine or Linux x86_64 WSL2 environment. The owner has separately authorized GitHub Actions to run the same pinned arm64 APK/AAB build and automated package/JVM checks. CI artifacts are unsigned debug outputs; CI does not install the app on the owner's phone or establish physical-device runtime compatibility.\n\n> **Termux warning:** Termux running directly on an Android phone is not a supported build host for the current pinned toolchain. The build requires Linux x86_64 host binaries (including the NDK `linux-x86_64` toolchain and pinned Chaquopy wheel builder). Android Termux normally reports an Android/aarch64 host, and `proot-distro` on the same phone does not turn it into x86_64 Linux. The build script now detects Termux and unsupported OS/architectures immediately, before downloads or cache changes. Do not try to work around this by substituting random Gradle, NDK, Python wheels or native binaries.
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ This is the owner-directed build route. **GitHub Actions does not build APK/AAB 
 - Set `ANDROID_HOME` (or `ANDROID_SDK_ROOT`) to the Android SDK root.
 - Enough disk space for the Android toolchain, Chaquopy source/target and native build outputs.
 
-Install the Android SDK components with Android Studio SDK Manager or `sdkmanager`. Accept the Android SDK licences. The build script downloads and verifies its own Gradle 8.13 distribution; it requires **Python 3.11.17 exactly**. Confirm `java -version`, `python --version`, `rustc --version` and `cargo --version` before starting.\n\nIf your only computer is an Android phone, use a separate Linux x86_64 computer or x86_64 WSL2 machine for the build. Termux remains useful after the build to transfer/open the APK, install it through Android's package installer, and collect logs; it is not the build host for this script.
+Install the Android SDK components with Android Studio SDK Manager or `sdkmanager`. Accept the Android SDK licences. The build script downloads and verifies its own Gradle 8.13 distribution; it requires **Python 3.11.17 exactly**. Confirm `java -version`, `python --version`, `rustc --version` and `cargo --version` before starting.\n\nIf your only computer is an Android phone, use the authorized GitHub Actions build artifact rather than trying to run this x86_64-host script directly in Termux. Termux can download/transfer the APK, install it through Android's package installer (subject to Android's install-source permission), and collect logs; it is not the build host for this pinned script.
 
 ## Build
 
@@ -45,7 +45,7 @@ These are local build outputs and should not be committed. Record the commit, co
 ## Important limits
 
 - A successful local build and static alignment check do not prove that the application launches or that JNI/Python imports execute.
-- No emulator or physical-device test is performed by this script.
+- No emulator or physical-device test is performed by this script. The Actions workflow also does not currently run an Android emulator: the APK is arm64-only, and JVM unit tests plus static package checks are not substitutes for Android runtime tests.
 - Owner physical-device testing remains deferred. Do not mark runtime or device verification as passed without the actual device logs.
 - SciPy is not included in the current prototype and remains an R1 architecture question.
 - The Biopython and NumPy versions are feasibility pins, not approved production dependencies. Their license and ABI review remains required.

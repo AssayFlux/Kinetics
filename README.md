@@ -30,8 +30,11 @@ python scripts/check_android_artifacts.py
 ```
 The reproduction command reports that no evidence jobs are registered. Android artifact checks report blocked/not applicable until R1 creates real artifacts. Green R0 CI does not imply Android, scientific or device validation.
 
+## Local Android build
+When ready, use the owner-run [local Android build guide](docs/local-android-build.md) and `scripts/build_android_local.sh`. GitHub Actions deliberately does not build APK/AAB files or run Android emulators.
+
 ## Scope and safety
 Research outputs must carry provenance, uncertainty and limitations. Computational predictions are not experimental proof. Kinetics does not autonomously diagnose, prescribe, dose or make emergency decisions. No patient-related feature may be developed before P0 and applicable approvals.
 
 ## License
-No license is selected yet. All rights reserved by default absent an explicit license grant. Do not assume this repository is open source until the owner records and adds a license.
+Original Kinetics project code is licensed under Apache-2.0; see [LICENSE](LICENSE). Third-party dependencies, engines, models and data packs retain their own terms and require separate review.

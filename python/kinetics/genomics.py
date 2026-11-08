@@ -209,6 +209,7 @@ def normalize_small_variant(
 def iter_bam_records(
     source: BinaryIO, *, max_records: int = 10_000_000,
     max_total_bases: int = 500_000_000,
+    max_header_bytes: int = 64 * 1024 * 1024,
 ) -> Iterator[SamRecord]:
     """Lazily decode core BAM fields under explicit record/base resource limits.
 
@@ -232,6 +233,11 @@ def iter_bam_records(
         or max_total_bases <= 0
     ):
         raise ValueError("max_total_bases must be a positive integer")
+    if (
+        isinstance(max_header_bytes, bool) or not isinstance(max_header_bytes, int)
+        or max_header_bytes <= 0
+    ):
+        raise ValueError("max_header_bytes must be a positive integer")
     stream = gzip.GzipFile(fileobj=source, mode="rb")
     if stream.read(4) != b"BAM\x01":
         raise ValueError("Invalid BAM magic; input must be BGZF-compressed BAM")
@@ -239,8 +245,9 @@ def iter_bam_records(
     if len(raw) != 4:
         raise ValueError("Truncated BAM header text length")
     text_length = struct.unpack("<i", raw)[0]
-    if text_length < 0 or text_length > 64 * 1024 * 1024:
-        raise ValueError("BAM header text length outside supported bounds")
+    if text_length < 0 or text_length > max_header_bytes:
+        raise ValueError("BAM header text length outside configured max_header_bytes")
+    header_bytes = text_length
     header_text = stream.read(text_length)
     if len(header_text) != text_length:
         raise ValueError("Truncated BAM header text")
@@ -258,6 +265,9 @@ def iter_bam_records(
         name_length = struct.unpack("<i", raw)[0]
         if not 2 <= name_length <= 1_000_000:
             raise ValueError("Invalid BAM reference name length")
+        if name_length + 4 > max_header_bytes - header_bytes:
+            raise ValueError("BAM reference dictionary exceeds configured max_header_bytes")
+        header_bytes += name_length + 8
         name = stream.read(name_length)
         raw = stream.read(4)
         if len(name) != name_length or name[-1:] != b"\x00" or len(raw) != 4:

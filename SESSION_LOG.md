@@ -1198,3 +1198,22 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 ### Next
 - Pin and review the host RDKit distribution/license, execute the fixture job in a controlled environment, and add independent reference materials before increasing I1 evidence status.
 - Continue S6 sequence evidence implementation and R1/R2 runtime/security closure; keep P0 blocked.
+
+
+## 2026-11-08 — S6 sequence evidence contract increment
+**Phase:** Track S / S6 foundations, parallel with R and I work
+
+### Committed
+- Added `api/sequence-annotation-evidence.schema.json` (JSON Schema 2020-12) for sequence annotation outputs.
+- The contract requires a query sequence SHA-256, sequence type/alphabet, versioned and licensed reference-pack provenance with content hashes, per-hit identity/coverage/score, explicit annotation status, confidence calibration status, abstention reasons and limitations.
+- Novelty status is constrained to `not_established`; a no-hit result cannot be represented as proof of novelty.
+- Added `tests/test_sequence_evidence_schema.py` to guard the provenance and abstention requirements.
+
+### Limits
+- This is an output contract, not a sequence-search implementation.
+- No local protein family/domain database, calibrated threshold, annotation result, genome annotation or genetic-code inference is claimed.
+- Test/CI status for this increment is pending.
+
+### Next
+- Implement bounded local reference-pack indexing and exact/similarity search with deterministic fixtures, explicit licensing, version/hash provenance and negative controls.
+- Keep unknown/no-hit cases in abstention unless supported evidence meets calibrated criteria.

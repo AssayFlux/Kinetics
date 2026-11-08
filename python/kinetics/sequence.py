@@ -174,3 +174,40 @@ def needleman_wunsch(a: str, b: str, *, match: int = 2, mismatch: int = -1,
     return {"score": score[-1][-1], "aligned_a": "".join(reversed(ax)),
             "aligned_b": "".join(reversed(ay)), "algorithm": "Needleman-Wunsch-linear-gap",
             "scoring": {"match": match, "mismatch": mismatch, "gap": gap}}
+
+
+def trim_fastq_ends(
+    record: SequenceRecord, quality: str, *, phred_offset: int = 33,
+    minimum_quality: int = 20, minimum_length: int = 1,
+) -> dict[str, object] | None:
+    """Trim terminal low-quality bases only; returns None when below minimum_length.
+
+    This does not perform adapter trimming, sliding-window trimming or paired-read rescue.
+    """
+    if phred_offset not in (33, 64):
+        raise ValueError("Phred offset must be explicitly 33 or 64")
+    if not 0 <= minimum_quality <= 93 or minimum_length < 1:
+        raise ValueError("Quality threshold must be 0..93 and minimum_length >=1")
+    if len(record.sequence) != len(quality):
+        raise ValueError("Sequence/quality length mismatch")
+    scores = [ord(char) - phred_offset for char in quality]
+    if any(score < 0 or score > 93 for score in scores):
+        raise ValueError("Quality character outside supported Phred range")
+    left, right = 0, len(scores)
+    while left < right and scores[left] < minimum_quality:
+        left += 1
+    while right > left and scores[right - 1] < minimum_quality:
+        right -= 1
+    if right - left < minimum_length:
+        return None
+    trimmed = SequenceRecord(
+        record.identifier, record.sequence[left:right], record.description,
+    )
+    return {
+        "record": trimmed,
+        "quality": quality[left:right],
+        "trimmed_left": left,
+        "trimmed_right": len(quality) - right,
+        "algorithm": "terminal low-quality trimming",
+        "limitations": ["No adapter trimming", "No sliding-window quality model"],
+    }

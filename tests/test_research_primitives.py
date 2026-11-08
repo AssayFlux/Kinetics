@@ -138,3 +138,26 @@ def test_fastq_parser_supports_wrapped_sequence_and_quality_lines() -> None:
 def test_fastq_parser_rejects_plus_identifier_mismatch() -> None:
     with pytest.raises(ValueError, match="separator identifier mismatch"):
         parse_fastq("@read-a\nACGT\n+read-b\n!!!!\n")
+
+
+def test_fastq_terminal_quality_trimming_preserves_metadata() -> None:
+    from kinetics.sequence import SequenceRecord, trim_fastq_ends
+
+    record = parse_fasta(">r1 description\nACGTAC\n")[0]
+    trimmed = trim_fastq_ends(record, "!!IIII", minimum_quality=20, minimum_length=3)
+    assert trimmed is not None
+    trimmed_record = trimmed["record"]
+    assert isinstance(trimmed_record, SequenceRecord)
+    assert trimmed_record.sequence == "GTAC"
+    assert trimmed_record.description == "description"
+    assert trimmed["quality"] == "IIII"
+    assert trimmed["trimmed_left"] == 2
+
+
+def test_fastq_terminal_trimming_rejects_invalid_quality_and_short_reads() -> None:
+    from kinetics.sequence import trim_fastq_ends
+
+    record = parse_fasta(">r1\nACGT\n")[0]
+    assert trim_fastq_ends(record, "!!!!", minimum_quality=20, minimum_length=3) is None
+    with pytest.raises(ValueError, match="Phred offset"):
+        trim_fastq_ends(record, "IIII", phred_offset=0)

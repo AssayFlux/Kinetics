@@ -25,7 +25,7 @@ from .phylo import Node, leaf_names, parse_newick, patristic_distance, upgma
 from .protein import protein_descriptors, theoretical_pi
 from .sequence import (
     SequenceRecord, kmer_counts, needleman_wunsch, parse_fasta, parse_fastq,
-    reverse_complement, sequence_statistics, transcribe,
+    reverse_complement, sequence_statistics, transcribe, trim_fastq_ends,
 )
 from .structure import Atom, contact_pairs, parse_pdb, rmsd
 
@@ -40,7 +40,7 @@ __all__ = [
     "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",
     "patristic_distance", "path_fingerprint", "pearson", "primer_properties",
     "protein_descriptors", "reverse_complement", "rmsd", "scan_spcas9_ngg",
-    "sequence_statistics", "shannon_diversity", "simpson_diversity",
+    "sequence_statistics", "shannon_diversity", "trim_fastq_ends", "simpson_diversity",
     "substructure_match", "tanimoto", "theoretical_pi", "transcribe", "upgma",
     "validate_gene_catalog",
 ]

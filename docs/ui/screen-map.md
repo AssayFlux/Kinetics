@@ -1,17 +1,18 @@
 # Screen map and capability mapping
 
-**Status:** proposed inventory; all screens are planned until individually implemented, tested and evidenced.  
-**Top-level navigation:** Home · Domains · Tools · Data · Jobs · More/Settings. Compact may use bottom navigation; wider windows use rail/drawer as verified and implemented.
+**Current shell:** Home · Work · Explore · Settings. The complete product destinations below remain planned until implemented and connected to registry capabilities. Navigation adapts from bottom bar to rail to permanent drawer based on the live app window.
 
 | Screen ID | Screen | Registry capability | Current status |
 |---|---|---|---|
-| ui.home | Home dashboard | ui.home | planned |
+| ui.home | Home dashboard / import entry | ui.home | implemented; device/accessibility proof pending |
+| ui.work | Work / job list and actions | ui.work | implemented; detail/provenance incomplete |
+| ui.explore | Scientific capability catalogue | ui.explore | implemented; not an executable tool browser |
+| ui.settings | Settings / theme family and diagnostics | ui.settings | partial |
 | ui.domains | Domain browser/detail | ui.domains | planned |
 | ui.tools | Tool search/favourites/runner | ui.tools | planned |
 | ui.data | Projects/imports/data packs | ui.data | planned |
-| ui.jobs | Job list/detail/provenance | ui.jobs | planned |
-| ui.settings | Settings catalogue | ui.settings | planned |
-| ui.onboarding | Splash/onboarding | ui.onboarding | planned |
+| ui.jobs | Job detail and logs | ui.jobs | planned |
+| ui.onboarding | Splash and onboarding | ui.onboarding | planned |
 | ui.sequence | Sequence viewer/editor | ui.sequence | planned |
 | ui.alignment | Alignment viewer | ui.alignment | planned |
 | ui.tree | Tree viewer | ui.tree | planned |
@@ -29,4 +30,4 @@
 | ui.security | Security/privacy centre | ui.security | planned |
 | ui.about | About/licenses | ui.about | planned |
 
-No row implies the screen is implemented or functional. Tool availability is driven by the capability registry and executable Android dispatcher, never by decorative cards.
+Explore describes capability maturity; it is not a promise that all research tools can run from Android UI. Tool availability must be driven by the registry and a real dispatcher.

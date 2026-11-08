@@ -14,6 +14,7 @@
 - `scripts/check_registry.py` validates capability references, implementation paths, evidence status, validation records, device logs and clinical gates.
 - `scripts/check_android_config.py` checks offline manifest settings, pinned SDK/NDK/ABI, 16 KB linker alignment and CI's manual-only no-APK/no-device-test boundary.
 - `scripts/build_android_local.sh` is the owner-directed local build path. GitHub Actions do not build APK/AAB or run emulator/device tests.
+- The Compose home and research-job list expose screen-reader descriptions for the home/status and merged job/state summaries; this is an initial accessibility affordance, not a completed accessibility audit.
 
 ## Outstanding
 - Local APK/AAB build and artifact inspection.

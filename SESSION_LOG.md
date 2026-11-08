@@ -794,3 +794,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R9 large-catalogue search memory bound
 - Gene catalogue search now retains at most the requested result limit in exact and partial result buckets rather than accumulating every partial match from a full streamed NCBI catalogue. This avoids turning a streaming import into an unbounded search-result memory allocation.
 - No tests were run; all new tests remain queued for the later validation phase.
+
+
+### R10 accessibility increment
+- Added Compose semantics descriptions for the research workbench heading, Research Mode notice and merged research-job/state summaries. This improves screen-reader context but is not a full WCAG/accessibility audit.
+- R10 remains in progress; no device accessibility test was run.

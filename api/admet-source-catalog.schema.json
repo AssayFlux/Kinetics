@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/admet-source-catalog.schema.json",
+  "title": "Kinetics non-patient ADMET and PK/PD candidate source catalogue",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "purpose", "data_classification", "candidate_sources", "entries"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "purpose": { "type": "string", "minLength": 1 },
+    "data_classification": { "const": "public_non_patient_only" },
+    "candidate_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "title", "source_url", "candidate_use", "license_review_status", "patient_data", "review_requirements"],
+        "properties": {
+          "source_id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "source_url": { "type": "string", "format": "uri" },
+          "candidate_use": { "type": "string", "minLength": 1 },
+          "license_review_status": { "const": "verify_before_intake" },
+          "patient_data": { "const": false },
+          "review_requirements": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    },
+    "entries": { "type": "array", "maxItems": 0 }
+  }
+}

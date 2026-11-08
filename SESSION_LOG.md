@@ -1412,3 +1412,10 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - The structure residue cap is enforced while consuming the atom iterable, preventing unbounded materialization of a chain. Invalid/non-positive limits fail explicitly.
 - Added regression tests for query and structure caps. Exact unique mapping and abstention semantics are unchanged.
 - Automated CI run #1943 passed immediately before this hardening on commit `06c48d24a429`; the new commits are awaiting their own CI validation. S9 remains in progress.
+
+
+## 2026-11-08 — S9 streaming and atom-count bound
+- Hardened exact chain mapping to consume the supplied atom iterable incrementally instead of materializing all atoms for the selected chain.
+- Added a global input atom cap (default 2,000,000), in addition to the query residue cap (1,000,000) and structure-chain residue cap (100,000). Exceeding any configured limit fails explicitly.
+- Added regression coverage for streaming atom limits and invalid limit values. The current mapping remains exact-only and intentionally abstains on numbering gaps, non-standard residues, repeated matches and no-hit cases.
+- CI run #1949 was queued for these changes at the time of this log update; no pass is claimed until it completes.

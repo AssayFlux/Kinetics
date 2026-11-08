@@ -5,8 +5,8 @@
 ## Implemented source layer
 
 - R1: Android arm64/Python/Rust/C++ feasibility probes and local build script remain in place. Local APK build and Android runtime results are outstanding.
-- R2: Compose research shell, SQLite job/provenance tables, SAF document picker and WorkManager streaming-import/hash worker. Import records file provenance only; it is not a scientific pipeline.
-- R3: initial sequence, protein and enzyme-kinetics primitives.
+- R2: Compose research shell, SQLite job/provenance tables, SAF document picker and WorkManager streaming-import/hash worker. Recent source hardening requires persistable SAF read access, stores partial imports in app-private no-backup storage, and verifies the retained prefix against the source before resuming. SQLite provenance foreign keys are enabled. Import records file provenance only; it is not a scientific pipeline. Schema migrations, encryption-at-rest integration, full export/recovery tests, process-death and device verification remain incomplete.
+- R3: initial sequence, protein and enzyme-kinetics primitives. Added regression tests for FASTA/FASTQ, IUPAC complement, statistics/k-mers, Needleman–Wunsch, protein descriptors/pI, Michaelis–Menten/inhibition equations and synthetic parameter recovery. These are software regression tests, not independent scientific validation; reference datasets, confidence intervals, residual/model diagnostics, unit handling, external concordance and device benchmarks remain open.
 - R4: FASTA/FASTQ, sequence statistics, reverse complement, transcription, k-mers, global pairwise alignment, SAM/VCF text parsing and FASTQ quality summaries.
 - R5: PDB coordinate parsing, geometric contacts and coordinate RMSD without superposition.
 - R6: SDF V2000 parsing, formula/molecular weight and exploratory graph fingerprints/Tanimoto similarity.

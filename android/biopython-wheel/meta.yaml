@@ -4,7 +4,7 @@ package:
 
 requirements:
   build:
-    - setuptools 74.1.2
+    - setuptools 77.0.3
     - wheel 0.33.6
   host:
     - python

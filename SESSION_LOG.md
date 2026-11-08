@@ -841,3 +841,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R4 SAM semantics follow-up
 - Corrected SAM handling so SEQ may be present while QUAL is `*`, as allowed for missing quality data; QUAL must remain `*` when SEQ is unavailable. Present QUAL values still require matching length and printable characters.
 - Added CIGAR query-consuming operation validation against SEQ length, plus regression-test source for both cases. No tests were run.
+
+
+### R6 V3000 source increment
+- Added conservative V3000 atom/bond graph parsing with counts, unique atom/bond identifiers, coordinate finiteness, bond references and duplicate-edge validation. The existing multi-record SDF iterator now dispatches both V2000 and supported V3000 records.
+- Added a basic V3000 regression fixture and updated R6 registry/plan. Stereochemistry and additional V3000 atom/bond attributes remain uninterpreted; this is not production cheminformatics. No tests were run.

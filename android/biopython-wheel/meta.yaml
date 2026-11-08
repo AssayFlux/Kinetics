@@ -3,6 +3,9 @@ package:
   version: "1.88"
 
 requirements:
+  build:
+    - setuptools 69.1.1
+    - wheel 0.33.6
   host:
     - python
     - numpy 1.26.2

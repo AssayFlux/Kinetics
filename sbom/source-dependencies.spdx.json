@@ -3,12 +3,12 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "Kinetics declared direct dependencies",
-  "documentNamespace": "https://assayflux.github.io/Kinetics/sbom/source-dependencies-2026-11-08-4b637e724586d3c192678010f61675d8aba61af5",
+  "documentNamespace": "https://assayflux.github.io/Kinetics/sbom/source-dependencies-2026-11-08-bio-license",
   "creationInfo": {
     "creators": [
       "Tool: kinetics-source-sbom-generator"
     ],
-    "created": "2026-11-08T03:15:00Z",
+    "created": "2026-11-08T03:22:00Z",
     "comment": "Static direct-dependency and pinned build-toolchain inventory; not a resolved transitive release SBOM."
   },
   "packages": [
@@ -209,7 +209,7 @@
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
       "licenseConcluded": "NOASSERTION",
-      "licenseDeclared": "NOASSERTION",
+      "licenseDeclared": "LicenseRef-Biopython-License-Agreement",
       "copyrightText": "NOASSERTION",
       "primaryPackagePurpose": "LIBRARY",
       "comment": "ecosystem=pypi; declared direct dependency only",
@@ -710,6 +710,14 @@
       "annotationType": "OTHER",
       "annotator": "Tool: kinetics-source-sbom-generator",
       "comment": "Direct declarations and pinned toolchain inputs only. Gradle BOM-managed modules and JDK patch/vendor are unresolved. Transitive artifacts, exact resolved versions, checksums, file-level licenses and native binary contents are not included. Do not use as the final release SBOM."
+    }
+  ],
+  "hasExtractedLicensingInfos": [
+    {
+      "licenseId": "LicenseRef-Biopython-License-Agreement",
+      "name": "Biopython License Agreement",
+      "extractedText": "Biopython is currently released under the \"Biopython License Agreement\"\n(given in full below). Unless stated otherwise in individual file headers,\nall Biopython's files are under the \"Biopython License Agreement\".\n\nSome files are explicitly dual licensed under your choice of the\n\"Biopython License Agreement\" or the \"BSD 3-Clause License\" (both given\nin full below). This is with the intention of later offering all of\nBiopython under this dual licensing approach.\n\n\n------------------------------------------------------------------------------\n\n\nBiopython License Agreement\n---------------------------\n\nPermission to use, copy, modify, and distribute this software and its\ndocumentation with or without modifications and for any purpose and\nwithout fee is hereby granted, provided that any copyright notices\nappear in all copies and that both those copyright notices and this\npermission notice appear in supporting documentation, and that the\nnames of the contributors or copyright holders not be used in\nadvertising or publicity pertaining to distribution of the software\nwithout specific prior permission.\n\nTHE CONTRIBUTORS AND COPYRIGHT HOLDERS OF THIS SOFTWARE DISCLAIM ALL\nWARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED\nWARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL THE\nCONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY SPECIAL, INDIRECT\nOR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS\nOF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE\nOR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE\nOR PERFORMANCE OF THIS SOFTWARE.\n\n\n------------------------------------------------------------------------------\n\n\nBSD 3-Clause License\n--------------------\n\nCopyright (c) 1999-2025, The Biopython Contributors\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice,\n   this list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its contributors\n   may be used to endorse or promote products derived from this software\n   without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n",
+      "comment": "The Biopython 1.88 LICENSE file states this is the default license for files unless individual file headers say otherwise; some files are dual licensed under this agreement or BSD-3-Clause. Review individual file headers before redistribution."
     }
   ]
 }

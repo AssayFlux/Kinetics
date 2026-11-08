@@ -93,3 +93,8 @@ PharmVar documents bulk database downloads containing per-gene haplotype TSV, FA
 - Native Rust toolchain: rustc/cargo 1.88.0 pinned by rust-toolchain.toml; android arm64 target pinned; Cargo.lock committed and local build uses --locked.
 
 - Biopython 1.88 source is obtained from the immutable Git commit d7e4b8b19399668b09442a5b35765d9186b5f665, exported with git archive and built from a local recipe path instead of resolving a mutable PyPI sdist at build time. Biopython's PyPI metadata uses LicenseRef-Biopython-License-Agreement; include its upstream LICENSE/terms and review wheel redistribution before release.
+
+
+## Biopython license notice
+
+Biopython 1.88 is built from immutable source commit d7e4b8b19399668b09442a5b35765d9186b5f665. Its upstream LICENSE states the default license is the Biopython License Agreement, with some individual files dual-licensed under that agreement or BSD-3-Clause. The complete upstream LICENSE is reproduced in android/app/src/main/assets/third-party/BIOPYTHON-LICENSE.txt for the app's binary distribution notice. Individual file headers and all other runtime/transitive dependencies still require review.

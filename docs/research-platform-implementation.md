@@ -10,8 +10,8 @@
 - R4: FASTA/FASTQ, sequence statistics, reverse complement, transcription, k-mers, global pairwise alignment, SAM/VCF text parsing and FASTQ quality summaries.
 - R5: PDB coordinate parsing, geometric contacts and coordinate RMSD without superposition.
 - R6: SDF V2000 parsing, formula/molecular weight and exploratory graph fingerprints/Tanimoto similarity.
-- R7: Newick parsing, leaf listing and patristic distance.
-- R8: CPM/CLR normalization, Pearson correlation, log2 fold change and Shannon/Simpson diversity.
+- R7: Newick parsing, leaf listing, patristic distance and UPGMA clustering.
+- R8: CPM/CLR normalization, Pearson correlation, log2 fold change, cross-omics correlation, logistic growth and Shannon/Simpson diversity.
 - R9: streaming NCBI Gene gene_info importer preserving taxonomy, GeneID, symbols, synonyms, source and release metadata. The catalogue is expandable and not represented as exhaustive.
 - R10: release/security/privacy principles and release gates remain documented; operational hardening remains required.
 

@@ -10,8 +10,8 @@ from typing import Any
 
 def _rdkit() -> tuple[Any, Any, Any, Any, Any]:
     try:
-        from rdkit import Chem, DataStructs, rdBase
-        from rdkit.Chem import Descriptors, rdFingerprintGenerator, rdMolDescriptors
+        from rdkit import Chem, DataStructs, rdBase  # type: ignore[import-not-found]
+        from rdkit.Chem import Descriptors, rdFingerprintGenerator, rdMolDescriptors  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError(
             "RDKit backend is unavailable in this runtime; install an approved, "

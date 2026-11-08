@@ -106,3 +106,38 @@ def iter_ncbi_gene_info_file(
     else:
         with source.open("rt", encoding="utf-8", newline="") as handle:
             yield from iter_ncbi_gene_info(handle, source_release=source_release)
+
+
+def search_gene_catalog(
+    entries: Iterable[GeneEntry], query: str, *, tax_id: str | None = None,
+    limit: int = 100,
+) -> list[GeneEntry]:
+    """Search official symbols, synonyms, names and identifiers without hiding provenance."""
+    term = query.strip().casefold()
+    if not term:
+        raise ValueError("Gene search query cannot be empty")
+    if limit < 1 or limit > 10_000:
+        raise ValueError("Gene search limit must be between 1 and 10000")
+    if tax_id is not None and not tax_id.isdigit():
+        raise ValueError("Taxonomy ID must contain digits only")
+    exact: list[GeneEntry] = []
+    partial: list[GeneEntry] = []
+    seen: set[tuple[str, str]] = set()
+    for entry in entries:
+        if tax_id is not None and entry.tax_id != tax_id:
+            continue
+        key = (entry.tax_id, entry.gene_id)
+        if key in seen:
+            continue
+        seen.add(key)
+        fields = (
+            entry.gene_id, entry.symbol, entry.description, entry.locus_tag,
+            entry.nomenclature_symbol, entry.nomenclature_full_name,
+            *entry.synonyms, *entry.other_designations, *entry.dbxrefs,
+        )
+        normalized = [field.casefold() for field in fields if field]
+        if term in normalized:
+            exact.append(entry)
+        elif any(term in field for field in normalized):
+            partial.append(entry)
+    return (exact + partial)[:limit]

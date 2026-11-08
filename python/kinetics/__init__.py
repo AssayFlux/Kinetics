@@ -6,7 +6,7 @@ Source implementation does not imply independent scientific validation or clinic
 __version__ = "0.1.0"
 
 from .catalog import (
-    GeneEntry, iter_ncbi_gene_info, iter_ncbi_gene_info_file, validate_gene_catalog,
+    GeneEntry, iter_ncbi_gene_info, iter_ncbi_gene_info_file, search_gene_catalog, validate_gene_catalog,
 )
 from .chemistry import (
     graph_descriptors, parse_sdf_record, path_fingerprint, substructure_match, tanimoto,
@@ -42,5 +42,5 @@ __all__ = [
     "protein_descriptors", "reverse_complement", "rmsd", "scan_spcas9_ngg",
     "sequence_statistics", "shannon_diversity", "trim_fastq_ends", "simpson_diversity",
     "substructure_match", "tanimoto", "theoretical_pi", "transcribe", "upgma",
-    "validate_gene_catalog", "welch_differential_expression",
+    "search_gene_catalog", "validate_gene_catalog", "welch_differential_expression",
 ]

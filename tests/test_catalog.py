@@ -40,3 +40,18 @@ def test_catalog_import_cannot_mark_gene_validated() -> None:
     ], source_release="release"))
     with pytest.raises(ValueError, match="cannot confer validated"):
         validate_gene_catalog([replace(entry, evidence_status="validated")])
+
+
+def test_gene_catalog_searches_synonyms_and_nomenclature_with_taxonomy_filter() -> None:
+    from kinetics.catalog import search_gene_catalog
+
+    row = "\t".join([
+        "9606", "7157", "TP53", "-", "P53|BCC7", "HGNC:11998", "17",
+        "17p13.1", "tumor protein p53", "protein-coding", "TP53",
+        "tumor protein p53", "Official", "-", "20250101", "gene",
+    ])
+    entries = list(iter_ncbi_gene_info([row], source_release="NCBI-2025-01"))
+    assert search_gene_catalog(entries, "p53")[0].gene_id == "7157"
+    assert search_gene_catalog(entries, "7157", tax_id="10090") == []
+    with pytest.raises(ValueError, match="cannot be empty"):
+        search_gene_catalog(entries, " ")

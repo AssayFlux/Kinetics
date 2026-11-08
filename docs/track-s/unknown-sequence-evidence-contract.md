@@ -37,3 +37,19 @@ Use frozen positive and negative fixtures, taxonomically diverse holdouts, decoy
 ## Novelty and function
 
 The interface must never label a sequence “novel gene/protein” solely because a local search found no hit. Novelty requires a defined search universe and independent review. Functional claims require external experimental evidence and appropriate controls.
+
+
+## Explicit genetic-code translation (S8 foundation)
+
+`python/kinetics/genetic_code.py` supports explicit translation tables 1, 2, 4,
+5 and 11 for canonical DNA/RNA sequences. The caller must select the table.
+CDS mode checks table-specific start/terminal-stop codons and rejects internal
+in-frame stops. Alternative initiators are represented as methionine only in
+CDS mode. Ambiguous bases are rejected rather than guessed.
+
+This primitive does **not** infer the organism's genetic code, locate genes,
+identify reading frames/strands, establish gene function, or support every NCBI
+translation table. A short unknown sequence or a no-hit is not evidence of a
+novel genetic code. Candidate inference remains blocked until organism-specific
+positive/negative truth sets, independent comparisons, calibrated confusion
+matrices and abstention criteria are available.

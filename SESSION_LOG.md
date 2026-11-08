@@ -972,7 +972,7 @@ Continue integrated implementation only where correctness can be supported by so
 
 ### Done
 - Added a tri-state Android Keystore alias probe: present, definitely absent, or unavailable/unknown. An unavailable Keystore is not treated as key loss.
-- On startup, definite alias absence moves completed encrypted records with stored ciphertext into `recovery_required`.
+- On startup, definite alias absence moves completed encrypted records and retained `.encpart` partial imports into `recovery_required`; partial ciphertext is preserved and not offered for unsafe resume.
 - Preserved encrypted files and provenance; no replacement key is generated and no ciphertext is deleted automatically.
 - Exposed the recovery-required state in the research job list and made it ineligible for ordinary resume/export actions.
 - Updated the R2 roadmap and implementation notes.

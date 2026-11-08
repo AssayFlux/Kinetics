@@ -103,12 +103,12 @@ object LocalCrypto {
                 false
             }
             if (!validHeader) {
-                // Legacy, unknown or torn staging files cannot be safely resumed with v2 AAD.
-                output.setLength(0)
-                output.seek(0)
-                output.write(FILE_MAGIC)
-                output.writeByte(FILE_FORMAT_VERSION)
-                output.fd.sync()
+                // Never truncate a non-empty unknown/corrupt file: it may contain ciphertext
+                // that cannot be safely resumed but must still be preserved for recovery.
+                throw IllegalStateException(
+                    "Encrypted staging header is invalid; ciphertext was preserved. " +
+                        "Start a new import rather than overwriting this partial file",
+                )
             }
         }
     }

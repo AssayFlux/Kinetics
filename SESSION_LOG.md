@@ -755,3 +755,9 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - The previous 28-test host result remains the historical baseline for the earlier source revision only; it does not verify these new commits.
 - R1–R10 remain in progress. The remaining scope includes Android build/runtime evidence, full export and recovery integration, BAM/CRAM, VCF normalization, mmCIF/advanced structure metrics, production chemistry and approved engines, broader phylogenetic inference/search/viewers, statistically sound differential expression, PGx allele/diplotype implementation and data packs, and full R10 release hardening.
 - Clinical mode remains disabled; no patient workflow or patient data is enabled.
+
+
+### R4 continuation — wrapped FASTQ and terminal quality trimming
+- FASTQ parser now accepts wrapped sequence and quality lines, validates separator identifiers and exact total quality length, and rejects invalid quality characters.
+- Added explicit terminal low-quality trimming with Phred-offset validation, minimum-length rejection and limitations (no adapter or sliding-window trimming).
+- Added regression cases to the source tree; they were not executed under the test-later instruction.

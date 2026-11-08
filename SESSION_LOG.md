@@ -1283,3 +1283,11 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added `search_local_fasta_reference`, which verifies the on-disk manifest and payload before passing records into the exact-only DNA/RNA/protein triage primitive.
 - Added an end-to-end regression test asserting content-hash provenance and that exact hits still do not establish novelty.
 - Similarity search, homology/family/domain annotation and calibrated thresholds remain unimplemented; evidence level remains none.
+
+
+## 2026-11-08 — R1 declared dependency inventory and R2 cancellation-state safeguard
+- Extended the SPDX source inventory generator to include host-only validation requirements while labelling them as non-Android runtime dependencies.
+- Added a CI job to generate and retain the declared direct-dependency SPDX inventory for each commit, plus a regression test for SciPy/NumPy inventory coverage.
+- Updated the third-party register to distinguish host validation dependencies from Android runtime packages and retain `NOASSERTION` where exact license conclusions/transitive artifacts remain unaudited.
+- In R2, changed user cancellation to persist `cancelled` after requesting WorkManager cancellation, avoiding a permanently active `cancel_requested` state when a queued worker never starts. Added a detailed SAF/encryption/recovery device verification matrix; none of those device scenarios is claimed passed.
+- R1 remains open pending full resolved/transitive dependency and binary/file-level license audit, engine decisions and physical-device runtime/performance evidence.

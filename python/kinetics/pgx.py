@@ -130,11 +130,13 @@ def parse_star_allele_definitions(
 def match_phased_haplotype(
     gene_symbol: str, observed_variants: Iterable[VariantKey],
     definitions: Iterable[StarAlleleDefinition], *, genome_build: str,
-    phase_confirmed: bool,
+    phase_confirmed: bool, call_complete: bool = False,
 ) -> AlleleMatch:
     """Match one completely called, already phased haplotype; never infer missing calls."""
     if not phase_confirmed:
         return AlleleMatch(gene_symbol, None, "no_call_unphased", (), 0)
+    if not call_complete:
+        return AlleleMatch(gene_symbol, None, "no_call_incomplete", (), 0)
     observed = frozenset(observed_variants)
     if any(variant.genome_build != genome_build for variant in observed):
         raise ValueError("Observed variants do not match requested genome build")

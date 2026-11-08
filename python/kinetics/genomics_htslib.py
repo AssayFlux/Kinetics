@@ -7,12 +7,12 @@ never enabled implicitly.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Iterator
+from typing import Any, Iterator
 
 from .genomics import SamRecord
 
 
-def _pysam():
+def _pysam() -> Any:
     try:
         import pysam
     except ImportError as error:

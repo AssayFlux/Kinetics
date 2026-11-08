@@ -205,7 +205,7 @@ def normalize_small_variant(
         "reference_checked": True,
     }
 
-def iter_bam_records(source):
+def iter_bam_records(source: BinaryIO) -> Iterator[SamRecord]:
     """Lazily decode the core fields of coordinate-independent BAM records.
 
     BGZF is a concatenated gzip format, so Python's gzip reader handles its block
@@ -214,8 +214,6 @@ def iter_bam_records(source):
     """
     import gzip
     import struct
-    from typing import BinaryIO, Iterator
-
     if not hasattr(source, "read"):
         raise TypeError("BAM source must be an open binary stream")
     stream = gzip.GzipFile(fileobj=source, mode="rb")
@@ -227,7 +225,7 @@ def iter_bam_records(source):
     text_length = struct.unpack("<i", raw)[0]
     if text_length < 0 or text_length > 64 * 1024 * 1024:
         raise ValueError("BAM header text length outside supported bounds")
-    header_text = stream.read(text_length)
+    _header_text = stream.read(text_length)
     if len(header_text) != text_length:
         raise ValueError("Truncated BAM header text")
     raw = stream.read(4)
@@ -267,7 +265,7 @@ def iter_bam_records(source):
         block = stream.read(block_size)
         if len(block) != block_size:
             raise ValueError("Truncated BAM record block")
-        ref_id, pos, bin_mq_nl, flag_nc, sequence_length, next_ref, next_pos, template_length = (
+        ref_id, pos, bin_mq_nl, flag_nc, sequence_length, _next_ref, _next_pos, _template_length = (
             struct.unpack_from("<iiIIiiii", block, 0)
         )
         name_length = bin_mq_nl & 0xFF

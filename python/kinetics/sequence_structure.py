@@ -26,7 +26,7 @@ def map_exact_chain_sequence(
 ) -> dict[str, object]:
     """Map a uniquely occurring exact chain sequence to a query protein sequence.
 
-    Residues are keyed by (chain, residue_number, residue_name). The current Atom
+    Residues are keyed by chain and residue number. The current Atom
     representation does not retain insertion codes, so insertion-code-aware mapping
     is explicitly unsupported rather than guessed.
     """
@@ -40,6 +40,7 @@ def map_exact_chain_sequence(
 
     selected_atoms = [atom for atom in atoms if atom.chain == chain_id]
     residues: dict[int, str] = {}
+    residue_names: dict[int, str] = {}
     for atom in selected_atoms:
         residue_name = atom.residue.upper()
         amino_acid = THREE_TO_ONE.get(residue_name)
@@ -48,7 +49,8 @@ def map_exact_chain_sequence(
                 f"Unsupported/non-standard residue {residue_name} in chain {chain_id}; mapping abstained"
             )
         previous = residues.setdefault(atom.residue_number, amino_acid)
-        if previous != amino_acid:
+        previous_name = residue_names.setdefault(atom.residue_number, residue_name)
+        if previous != amino_acid or previous_name != residue_name:
             raise ValueError("Conflicting residue identity at one chain position")
     ordered = sorted(residues.items())
     if not ordered:
@@ -107,10 +109,7 @@ def map_exact_chain_sequence(
             "query_position_1based": start + index + 1,
             "chain_id": chain_id,
             "structure_residue_number": residue_number,
-            "residue_name": next(
-                atom.residue.upper() for atom in selected_atoms
-                if atom.residue_number == residue_number
-            ),
+            "residue_name": residue_names[residue_number],
             "amino_acid": amino_acid,
         }
         for index, (residue_number, amino_acid) in enumerate(ordered)

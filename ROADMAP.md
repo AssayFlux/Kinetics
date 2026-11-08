@@ -124,4 +124,4 @@ At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase
 | U5 | Genomics, PGx Research Mode and in-silico screens | P1–P3, I2–I4 | Clinical wording adviser-reviewed before release | not-started |
 | U6 | Settings, themes, localisation/RTL, motion/haptics, usability and quality report | U1–U5 | All quality bars measured and recorded | not-started |
 
-U0 visual direction is an owner gate. Precision Lab, Field Notes and Dark Instrument in `design/tokens.json` are proposals only. No direction is selected. Gallery screenshots await a working build/gallery. Owner brand assets are mandatory; placeholders block release.
+U0 visual direction is an owner gate. Owner preference is dark-first/futuristic with Light/Dark/Neon families; 13 palette combinations and 26 font candidates are proposals only. Initial Compose selector is not the final token-generated system. Gallery screenshots across compact/medium/expanded and light/dark await a working gallery. Owner brand assets are mandatory; placeholders block release.

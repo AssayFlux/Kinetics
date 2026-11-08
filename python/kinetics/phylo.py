@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass, field
-from math import isfinite
+from math import isfinite, log
 
 
 @dataclass
@@ -274,4 +274,58 @@ def to_newick(root: Node) -> str:
             active.remove(identity)
 
     return render(root) + ";"
+
+def jukes_cantor_distance(
+    first: str, second: str, *, minimum_sites: int = 20,
+) -> dict[str, float | int]:
+    """Estimate Jukes-Cantor 1969 nucleotide distance with pairwise deletion.
+
+    Only unambiguous A/C/G/T columns are retained. Saturated comparisons (p >= 0.75)
+    fail explicitly rather than returning an arbitrary finite distance.
+    """
+    if len(first) != len(second) or not first:
+        raise ValueError("Aligned sequences must have equal non-zero lengths")
+    if not isinstance(minimum_sites, int) or minimum_sites < 1:
+        raise ValueError("minimum_sites must be a positive integer")
+    valid = set("ACGT")
+    pairs = [
+        (a.upper(), b.upper()) for a, b in zip(first, second)
+        if a.upper() in valid and b.upper() in valid
+    ]
+    if len(pairs) < minimum_sites:
+        raise ValueError("Too few unambiguous aligned sites for distance estimation")
+    differences = sum(a != b for a, b in pairs)
+    proportion = differences / len(pairs)
+    if proportion >= 0.75:
+        raise ValueError("Jukes-Cantor distance is undefined for saturated divergence")
+    distance = -0.75 * log(1.0 - (4.0 / 3.0) * proportion)
+    return {
+        "distance": distance,
+        "observed_difference_fraction": proportion,
+        "comparable_sites": len(pairs),
+        "differences": differences,
+        "model": "Jukes-Cantor 1969",
+    }
+
+
+def neighbor_joining_from_alignment(
+    sequences: dict[str, str], *, minimum_sites: int = 20,
+) -> Node:
+    """Build a neighbour-joining tree from aligned DNA using Jukes-Cantor distances."""
+    labels = list(sequences)
+    if len(labels) < 3 or len(set(labels)) != len(labels):
+        raise ValueError("At least three uniquely named aligned sequences are required")
+    if any(not label for label in labels):
+        raise ValueError("Sequence labels cannot be empty")
+    aligned = [sequences[label].upper() for label in labels]
+    if len({len(sequence) for sequence in aligned}) != 1 or not aligned[0]:
+        raise ValueError("All input sequences must have equal non-zero alignment length")
+    matrix = [[0.0] * len(labels) for _ in labels]
+    for i in range(len(labels)):
+        for j in range(i + 1, len(labels)):
+            result = jukes_cantor_distance(
+                aligned[i], aligned[j], minimum_sites=minimum_sites,
+            )
+            matrix[i][j] = matrix[j][i] = float(result["distance"])
+    return neighbor_joining(matrix, labels)
 

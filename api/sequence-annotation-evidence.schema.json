@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/kinetics/schemas/sequence-annotation-evidence.schema.json",
+  "title": "Kinetics sequence annotation evidence",
+  "description": "Evidence-bearing result contract for local, versioned sequence-reference searches. A no-hit result is not evidence of novelty.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "query",
+    "search",
+    "hits",
+    "conclusion",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence_sha256",
+        "length",
+        "alphabet",
+        "sequence_type"
+      ],
+      "properties": {
+        "sequence_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "alphabet": {
+          "enum": [
+            "DNA",
+            "RNA",
+            "protein",
+            "unknown"
+          ]
+        },
+        "sequence_type": {
+          "enum": [
+            "gene",
+            "transcript",
+            "protein",
+            "genome_fragment",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "search": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "parameters",
+        "reference_packs"
+      ],
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "reference_packs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "version",
+              "license",
+              "source",
+              "content_sha256"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "license": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source": {
+                "type": "string",
+                "format": "uri"
+              },
+              "content_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "hits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reference_id",
+          "identity",
+          "query_coverage",
+          "reference_coverage",
+          "score",
+          "evidence_type"
+        ],
+        "properties": {
+          "reference_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "identity": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "query_coverage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "reference_coverage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "score": {
+            "type": "number"
+          },
+          "evalue": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "evidence_type": {
+            "enum": [
+              "exact_sequence",
+              "similarity",
+              "domain",
+              "motif",
+              "gene_model",
+              "structure_mapping"
+            ]
+          },
+          "source_coordinates": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "conclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "annotation_status",
+        "novelty_status",
+        "confidence",
+        "abstention_reasons"
+      ],
+      "properties": {
+        "annotation_status": {
+          "enum": [
+            "supported",
+            "candidate",
+            "ambiguous",
+            "no_hit",
+            "not_assessed"
+          ]
+        },
+        "novelty_status": {
+          "const": "not_established"
+        },
+        "confidence": {
+          "enum": [
+            "not_calibrated",
+            "low",
+            "moderate",
+            "high"
+          ]
+        },
+        "abstention_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    }
+  }
+}

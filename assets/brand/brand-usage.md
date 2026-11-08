@@ -1,3 +1,5 @@
-# Brand usage — awaiting owner
+# Brand usage — owner confirmation required
 
-This file is a placeholder. Owner must provide official colours, minimum sizes, clear space, forbidden modifications, approved backgrounds and usage permissions. Do not infer any of these values.
+The organization master at `Assets/Brand Logo.svg` is owner-supplied and copied byte-for-byte to `assets/brand/brand-logo.svg`.
+
+Not yet specified: official brand colour hex values, minimum reproduction size, clear-space measurement, approved backgrounds, permitted/forbidden variants, and usage/clearance terms. Do not infer these from the artwork. Do not recolour, redraw, crop, stretch, simplify, add effects, or create dark/light variants without explicit owner approval.

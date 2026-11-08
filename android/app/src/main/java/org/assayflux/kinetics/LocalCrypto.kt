@@ -6,12 +6,13 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.RandomAccessFile
 import java.security.KeyStore
+import java.security.MessageDigest
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
-/** Android Keystore AES-256-GCM. Chunk files use [4-byte length][IV+ciphertext] records. */
+/** Android Keystore AES-256-GCM with per-chunk identity and ordering authenticated as AAD. */
 object LocalCrypto {
     private const val ALIAS = "kinetics-local-data-v1"
     private const val TRANSFORMATION = "AES/GCM/NoPadding"
@@ -37,14 +38,20 @@ object LocalCrypto {
         return generator.generateKey()
     }
 
-    fun encrypt(plainText: ByteArray): ByteArray {
+    fun associatedData(context: String, chunkIndex: Long): ByteArray {
+        require(context.isNotBlank() && chunkIndex >= 0) { "Invalid encrypted chunk identity" }
+        return "$context:$chunkIndex".toByteArray(Charsets.UTF_8)
+    }
+
+    fun encrypt(plainText: ByteArray, associatedData: ByteArray = byteArrayOf()): ByteArray {
         require(plainText.size <= CHUNK_BYTES) { "AES-GCM chunk exceeds the 4 MiB limit" }
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, key())
+        if (associatedData.isNotEmpty()) cipher.updateAAD(associatedData)
         return cipher.iv + cipher.doFinal(plainText)
     }
 
-    fun decrypt(payload: ByteArray): ByteArray {
+    fun decrypt(payload: ByteArray, associatedData: ByteArray = byteArrayOf()): ByteArray {
         require(payload.size in (IV_BYTES + TAG_BYTES)..(CHUNK_BYTES + IV_BYTES + TAG_BYTES)) {
             "Encrypted chunk is truncated or exceeds the 4 MiB limit"
         }
@@ -52,13 +59,13 @@ object LocalCrypto {
         val encrypted = payload.copyOfRange(IV_BYTES, payload.size)
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.DECRYPT_MODE, key(), GCMParameterSpec(TAG_BITS, iv))
+        if (associatedData.isNotEmpty()) cipher.updateAAD(associatedData)
         return cipher.doFinal(encrypted)
     }
 
-    /** Append one independently authenticated encrypted chunk and fsync its record. */
-    fun appendEncryptedChunk(file: File, plainText: ByteArray) {
+    fun appendEncryptedChunk(file: File, plainText: ByteArray, associatedData: ByteArray) {
         require(plainText.isNotEmpty()) { "Encrypted chunks cannot be empty" }
-        val payload = encrypt(plainText)
+        val payload = encrypt(plainText, associatedData)
         RandomAccessFile(file, "rw").use { output ->
             output.seek(output.length())
             output.writeInt(payload.size)
@@ -67,17 +74,18 @@ object LocalCrypto {
         }
     }
 
-    /**
-     * Decrypts a complete chunked file to a temporary sibling, publishing it only
-     * after every GCM tag has authenticated successfully.
-     */
-    fun decryptChunkedFile(source: File, destination: File) {
+    fun decryptChunkedFile(
+        source: File, destination: File, context: String, expectedSha256: String,
+    ) {
         require(source.isFile) { "Encrypted source file does not exist" }
+        require(expectedSha256.matches(Regex("[a-fA-F0-9]{64}"))) { "Expected SHA-256 is invalid" }
         val temporary = File(destination.parentFile, destination.name + ".tmp")
         temporary.delete()
+        val digest = MessageDigest.getInstance("SHA-256")
         try {
             RandomAccessFile(source, "r").use { input ->
                 FileOutputStream(temporary, false).use { output ->
+                    var chunkIndex = 0L
                     while (input.filePointer < input.length()) {
                         val remaining = input.length() - input.filePointer
                         require(remaining >= 4) { "Encrypted chunk header is truncated" }
@@ -90,10 +98,17 @@ object LocalCrypto {
                         }
                         val payload = ByteArray(length)
                         input.readFully(payload)
-                        output.write(decrypt(payload))
+                        val plaintext = decrypt(payload, associatedData(context, chunkIndex))
+                        output.write(plaintext)
+                        digest.update(plaintext)
+                        chunkIndex++
                     }
                     output.fd.sync()
                 }
+            }
+            val actual = digest.digest().joinToString("") { "%02x".format(it) }
+            require(actual.equals(expectedSha256, ignoreCase = true)) {
+                "Decrypted input SHA-256 does not match recorded provenance"
             }
             if (destination.exists()) {
                 check(destination.delete()) { "Previous decrypted output could not be replaced" }

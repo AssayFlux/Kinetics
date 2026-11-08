@@ -34,6 +34,8 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
         return try {
             val digest = MessageDigest.getInstance("SHA-256")
             val partialPrefixDigest = MessageDigest.getInstance("SHA-256")
+            val chunkContext = "kinetics-import:$jobId"
+            var chunkIndex = 0L
 
             // Restore the plaintext digest by authenticating each retained encrypted chunk.
             RandomAccessFile(partial, "rw").use { input ->
@@ -57,7 +59,7 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                     val encrypted = ByteArray(length)
                     input.readFully(encrypted)
                     val plaintext = try {
-                        LocalCrypto.decrypt(encrypted)
+                        LocalCrypto.decrypt(encrypted, LocalCrypto.associatedData(chunkContext, chunkIndex))
                     } catch (error: Exception) {
                         partial.delete()
                         throw IllegalStateException("Encrypted staging authentication failed; restart import", error)
@@ -74,6 +76,7 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                     digest.update(plaintext)
                     partialPrefixDigest.update(plaintext)
                     lastGoodOffset = input.filePointer
+                    chunkIndex++
                 }
             }
 
@@ -110,7 +113,8 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                         throw IllegalArgumentException("Input exceeds the 512 MiB import limit")
                     }
                     val chunk = buffer.copyOf(count)
-                    LocalCrypto.appendEncryptedChunk(partial, chunk)
+                    LocalCrypto.appendEncryptedChunk(partial, chunk, LocalCrypto.associatedData(chunkContext, chunkIndex))
+                    chunkIndex++
                     digest.update(chunk)
                     byteCount += count
                     store.updateProgress(jobId, byteCount)

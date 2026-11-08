@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.io.File
 
 data class ResearchJob(
     val id: String,
@@ -110,6 +111,19 @@ class ResearchStore(context: Context) :
             "SELECT storage_path FROM jobs WHERE id=?", arrayOf(id),
         ).use { cursor ->
             return if (cursor.moveToFirst() && !cursor.isNull(0)) cursor.getString(0) else null
+        }
+    }
+
+    /** Materialize an authenticated temporary plaintext copy for a caller-controlled analysis/export. */
+    fun materializeStoredInput(id: String, destination: File): Boolean {
+        readableDatabase.rawQuery(
+            "SELECT storage_path,sha256 FROM jobs WHERE id=?", arrayOf(id),
+        ).use { cursor ->
+            if (!cursor.moveToFirst() || cursor.isNull(0) || cursor.isNull(1)) return false
+            LocalCrypto.decryptChunkedFile(
+                File(cursor.getString(0)), destination, "kinetics-import:$id", cursor.getString(1),
+            )
+            return true
         }
     }
 

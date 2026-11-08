@@ -7,6 +7,7 @@ It does not infer phase, copy number, structural alleles, phenotype or treatment
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from typing import Iterable
 
@@ -80,7 +81,7 @@ def parse_star_allele_definitions(
         raise ValueError("PGx source, release, URL, license and genome build are mandatory")
     if not source_url.startswith("https://"):
         raise ValueError("PGx source URL must use HTTPS")
-    if not __import__("re").fullmatch(r"[a-fA-F0-9]{64}", source_sha256):
+    if not re.fullmatch(r"[a-fA-F0-9]{64}", source_sha256):
         raise ValueError("PGx source SHA-256 must be 64 hexadecimal characters")
     if source_release != expected_source_release:
         raise ValueError("PGx source release does not match the pinned release")

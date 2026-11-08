@@ -1,6 +1,6 @@
 # Android feasibility — R1 in progress
 
-**Current status (2026-11-08):** R1 remains IN PROGRESS. Fresh CI run #1650 (commit `b5a591aa2b0545188409eacc0eb76043b4143fb8`) built the arm64 debug APK and AAB, verified APK/ELF 16 KB alignment, ran Android JVM unit tests, and uploaded the artifacts. Exact hashes, sizes, toolchain and test boundaries are recorded in [ci-build-evidence.md](ci-build-evidence.md). Android runtime/device tests, SciPy, a separately evaluated scientific engine, RDKit/alternative, offline viewer and performance measurements remain unresolved.
+**Current status (2026-11-08):** R1 remains IN PROGRESS. Fresh CI run #1721 (commit `342ae0fbbe82e32af28b5e17b77ba9f5b2c5f50c`) built the arm64 debug APK and AAB, verified APK/ELF 16 KB static alignment and uploaded artifacts. Its Android JVM test task was successful but reported no source tests at that commit. The APK SHA-256 is `d07068b6f4d39752d089e9785d7eb27abd6bd6821ed5a8afc32efc21c6fb49bb`; details are in [ci-build-evidence.md](ci-build-evidence.md). Android runtime/device tests, SciPy, a separately evaluated scientific engine, RDKit/alternative, offline viewer and performance measurements remain unresolved.
 
 **Owner build/test instruction (2026-11-08):** The owner explicitly authorized GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated checks including Android JVM unit tests. The build host is pinned Linux x86_64; this is not a Termux build. No emulator or physical-device test is run. Physical-device testing remains deferred until the owner is ready.
 
@@ -11,7 +11,7 @@
 
 An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11, Biopython and NumPy for the isolated R1 APK probe. SciPy is tracked separately as a required but currently unavailable R1 candidate. These are prototype dependencies only, not a production architecture or dependency approval.
 
-Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. Historical CI runs 1471 and 1481 subsequently built the arm64 debug APK/AAB after the JVM target mismatch was resolved. Their recorded hashes and static alignment checks are historical evidence only. The current owner instruction moves all future APK/AAB builds to the owner's local machine; GitHub Actions must not build or test Android artifacts. SciPy remains unresolved.
+Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. Historical CI runs 1471 and 1481 subsequently built the arm64 debug APK/AAB after the JVM target mismatch was resolved. Their recorded hashes and static alignment checks are historical evidence only. The current owner instruction explicitly authorizes GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated checks. The Actions host is pinned Linux x86_64; this is not a Termux build. Physical-device testing remains deferred until the owner begins that campaign. SciPy remains unresolved.
 
 No Android app runtime, emulator or physical-device result is yet accepted as validated. No successful on-device Python import, Rust app call, C++ JNI, scientific engine, RDKit, offline viewer, 16 KB runtime, startup, memory or device result is claimed.
 
@@ -108,7 +108,7 @@ D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low
 - CI run 1481 successfully built the arm64 debug APK and AAB, built the pinned Biopython 1.88 arm64 wheel, compiled Rust and C++17 JNI, and passed APK ZIP plus static ELF 16 KB alignment checks. APK is 63 MiB; AAB is 36 MiB.
 - Static artifact inspection proves packaging/alignment only. It does not establish Android app launch, native calls, Python/Biopython/NumPy imports, 16 KB kernel runtime, cold-start, peak memory or physical-device compatibility.
 - SciPy is still unavailable in the current Chaquopy Android package path. No conclusion is yet possible about the complete intended architecture until the remaining R1 experiments are run.
-- R1 remains in progress. R2 must not start until the full experiment matrix and owner go/no-go review are complete.
+- R1 remains in progress. The owner authorized integrated R1–R10 implementation in parallel; downstream source implementation may proceed. R1 runtime/scientific feasibility evidence and explicit owner go/no-go remain required before claiming the platform architecture is validated or moving to Track S.
 
 ## Evidence capture template
 

@@ -32,6 +32,8 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import java.util.UUID
+import java.io.File
+import java.security.MessageDigest
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -124,7 +126,26 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                                     LocalCrypto.decrypt(encrypted, LocalCrypto.associatedData("wrong-job", 0))
                                 }.isFailure
                                 check(wrongAadRejected) { "AES-GCM did not reject mismatched authenticated metadata" }
-                                "C++ JNI: $cpp; Rust FFI: $rust; Keystore AES-GCM + AAD: passed"
+                                val cryptoDir = File(activity.cacheDir, "kinetics-crypto-probe").apply { mkdirs() }
+                                val encryptedFile = File(cryptoDir, "probe.kdat")
+                                val plaintextFile = File(cryptoDir, "probe.txt")
+                                try {
+                                    LocalCrypto.ensureChunkedFileHeader(encryptedFile)
+                                    LocalCrypto.appendEncryptedChunk(encryptedFile, plaintext, aad)
+                                    val hash = MessageDigest.getInstance("SHA-256").digest(plaintext)
+                                        .joinToString("") { "%02x".format(it) }
+                                    LocalCrypto.decryptChunkedFile(
+                                        encryptedFile, plaintextFile, "runtime-probe", hash,
+                                    )
+                                    check(plaintextFile.readBytes().contentEquals(plaintext)) {
+                                        "Versioned encrypted-file roundtrip mismatch"
+                                    }
+                                } finally {
+                                    encryptedFile.delete()
+                                    plaintextFile.delete()
+                                    cryptoDir.delete()
+                                }
+                                "C++ JNI: $cpp; Rust FFI: $rust; Keystore AES-GCM + versioned file roundtrip: passed"
                             }.getOrElse { "FAILED: ${it.message ?: it.javaClass.simpleName}" }
                             "Python probe:\n$python\nNative probe: $native"
                         }

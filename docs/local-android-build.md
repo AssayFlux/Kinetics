@@ -8,7 +8,7 @@ This is the owner-directed build route. **GitHub Actions does not build APK/AAB 
 - JDK 17.
 - Gradle 8.13.
 - Python 3.11 and pip.
-- Git, curl, patchelf, Rust stable/rustup and Cargo.
+- Git, curl, patch, patchelf, Rust stable/rustup and Cargo.
 - Android SDK platform 36, build-tools 36.0.0, NDK 28.2.13676358 and CMake 3.22.1.
 - Set `ANDROID_HOME` (or `ANDROID_SDK_ROOT`) to the Android SDK root.
 - Enough disk space for the Android toolchain, Chaquopy source/target and native build outputs.

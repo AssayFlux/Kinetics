@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +54,7 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
     var jobs by remember { mutableStateOf(store.recentJobs()) }
     var notice by remember { mutableStateOf("Research Mode. Local files stay on this device.") }
     var runtimeReport by remember { mutableStateOf<String?>(null) }
+    var deleteTarget by remember { mutableStateOf<ResearchJob?>(null) }
     val scope = rememberCoroutineScope()
     var pendingExportJob by remember { mutableStateOf<String?>(null) }
     val exportPicker = rememberLauncherForActivityResult(
@@ -218,6 +221,9 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                             Text("State: ${job.state}")
                             job.sha256?.let { Text("SHA-256: $it") }
                             job.message?.let { Text(it) }
+                            if (job.state == "succeeded" || job.state == "failed" || job.state == "cancelled") {
+                                TextButton(onClick = { deleteTarget = job }) { Text("Delete local data") }
+                            }
                             if (job.state == "succeeded" && job.sha256 != null) {
                                 Button(onClick = {
                                     pendingExportJob = job.id
@@ -250,6 +256,38 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                     }
                 }
             }
+        }
+        deleteTarget?.let { target ->
+            AlertDialog(
+                onDismissRequest = { deleteTarget = null },
+                title = { Text("Delete local research data?") },
+                text = {
+                    Text(
+                        "This removes the encrypted local input, any retained encrypted partial, " +
+                            "and job/provenance metadata. It cannot delete copies you previously exported. " +
+                            "Flash storage secure erasure is not guaranteed."
+                    )
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        deleteTarget = null
+                        WorkManager.getInstance(activity).cancelUniqueWork("import-" + target.id)
+                        scope.launch {
+                            val result = withContext(Dispatchers.IO) {
+                                runCatching { store.deleteStoredJob(target.id) }
+                            }
+                            notice = result.fold(
+                                { "Local research data deleted." },
+                                { "Deletion failed: ${it.message ?: it.javaClass.simpleName}" },
+                            )
+                            jobs = store.recentJobs()
+                        }
+                    }) { Text("Delete") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { deleteTarget = null }) { Text("Keep data") }
+                },
+            )
         }
     }
 }

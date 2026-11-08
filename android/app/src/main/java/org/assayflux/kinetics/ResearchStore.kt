@@ -246,6 +246,39 @@ class ResearchStore(context: Context) :
         return result
     }
 
+    /** Delete local encrypted input, partial staging and associated SQLite metadata (not secure erase). */
+    fun deleteStoredJob(id: String): Boolean {
+        require(id.matches(Regex("[A-Za-z0-9_-]{1,80}"))) { "Invalid research job identifier" }
+        val storedPath = readableDatabase.rawQuery(
+            "SELECT storage_path FROM jobs WHERE id=?", arrayOf(id),
+        ).use { cursor ->
+            if (!cursor.moveToFirst()) return false
+            if (cursor.isNull(0)) null else cursor.getString(0)
+        }
+        val encrypted = storedPath?.let(::resolveEncryptedInput)
+        val stagingRoot = File(appContext.noBackupFilesDir, "research-imports").canonicalFile
+        val partial = File(stagingRoot, "$id.encpart").canonicalFile
+        require(partial.parentFile == stagingRoot) { "Invalid encrypted staging path" }
+        if (encrypted != null && encrypted.exists() && !encrypted.delete()) {
+            throw IllegalStateException("Encrypted input could not be deleted")
+        }
+        if (partial.exists() && !partial.delete()) {
+            throw IllegalStateException("Encrypted partial input could not be deleted")
+        }
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            db.delete("provenance", "job_id=?", arrayOf(id))
+            check(db.delete("jobs", "id=?", arrayOf(id)) == 1) {
+                "Research job metadata disappeared during deletion"
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+        return true
+    }
+
     fun recentJobs(limit: Int = 30): List<ResearchJob> {
         val result = mutableListOf<ResearchJob>()
         readableDatabase.rawQuery(

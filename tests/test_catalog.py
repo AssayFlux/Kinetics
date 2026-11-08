@@ -127,7 +127,8 @@ def test_pharmvar_tsv_import_is_release_and_checksum_pinned() -> None:
         license_id="CC-BY-SA-4.0",
     )
     assert len(definitions) == 2
-    variant = next(iter(definitions[0].variants))
+    allele_17 = next(item for item in definitions if item.haplotype == "CYP2C19*17")
+    variant = next(iter(allele_17.variants))
     match = match_pharmvar_haplotype(
         "CYP2C19", "NG_008384.3", [variant], definitions,
         phase_confirmed=True, call_complete=True,

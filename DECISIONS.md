@@ -127,3 +127,11 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Choice: Begin independently implementable S1 preparation in parallel with R1–R10. This supersedes the earlier sequencing prohibition only to the extent of non-dependent work.
 - Consequences: Deterministic structure-view payload preparation and its contract/tests may proceed. Full WebView rendering remains dependent on R1 WebView/runtime feasibility and exact third-party license review. S2–S5 retain all scientific, model-license, node-security and benchmark gates. No phase is complete by this decision; no validation, clinical, patient-data or release gate is waived.
 - Approver: Project owner, explicit instruction in chat on 2026-11-08.
+
+
+## D-013 — Owner-supplied application UI reference designs (2026-11-08)
+- Context: Owner added two visual reference assets to the repository: `Assets/App UI - Dashboard Design.jpg` and `Assets/App UI - Login Page Design.jpg`. The owner states these represent the design language they like and wants the Kinetics application UI to follow that language.
+- Choice: Treat both images as first-class owner-supplied visual references for the Kinetics product UI. Apply their visual language consistently across dashboard, authentication/onboarding, navigation, cards, typography, spacing, colour, iconography and interaction patterns where the references provide evidence. Preserve the original image files unchanged. Scientific workflow clarity, accessibility, responsive behaviour, offline-first operation and existing brand-asset constraints remain mandatory.
+- Boundary: Do not infer detailed visual properties from filenames or replace the reference designs with the existing generic theme proposals. The binary assets are present in the repository, but direct visual inspection is still required before extracting exact tokens or declaring a visual match. The final implementation must be reviewed against the images and validated with real screenshots across supported window classes.
+- Approver: Owner explicitly confirmed this preference in project conversation on 2026-11-08.
+- Evidence: The two repository assets listed above; visual comparison and screenshot evidence pending.

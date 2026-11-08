@@ -964,3 +964,23 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 
 ### Next step
 Continue integrated implementation only where correctness can be supported by source, pinned reference data and explicit licensing. Preserve unvalidated capabilities as implemented-but-unvalidated; do not claim R1–R10 complete until their exit evidence exists.
+
+
+## 2026-11-08 — R2 Keystore key-loss preservation increment (direct main)
+**Phase:** Track R / R2 storage recovery
+**Objective:** Prevent silent key regeneration and make completed encrypted records visibly recoverable when the Android Keystore alias is definitely absent.
+
+### Done
+- Added a tri-state Android Keystore alias probe: present, definitely absent, or unavailable/unknown. An unavailable Keystore is not treated as key loss.
+- On startup, definite alias absence moves completed encrypted records with stored ciphertext into `recovery_required`.
+- Preserved encrypted files and provenance; no replacement key is generated and no ciphertext is deleted automatically.
+- Exposed the recovery-required state in the research job list and made it ineligible for ordinary resume/export actions.
+- Updated the R2 roadmap and implementation notes.
+
+### Limits / validation status
+- This is safe failure-state handling, not cryptographic recovery. If the original Android Keystore key is permanently lost, AES-GCM ciphertext cannot be decrypted; only restoring the original key/device backup can recover it.
+- Partial-import key-loss recovery, orphan reconciliation, interrupted SAF export cleanup and migration fixtures remain open.
+- No tests, lint, Gradle build, APK/AAB build, runtime probe or Android device/emulator validation were run, per owner instruction.
+
+### Current gate
+R2 remains in progress. The source change is committed directly to `main`; Android compilation and on-device verification are still required before calling this behavior complete.

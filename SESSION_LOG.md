@@ -1276,3 +1276,10 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - This does not bundle NumPy/SciPy into Android and does not establish mobile feasibility.
 - Synthetic data and SciPy's independent numerical implementation are not experimental ground truth.
 - No independent wet-lab dataset, calibrated uncertainty, or R3 exit gate is claimed; registry evidence remains none.
+
+
+## 2026-11-08 — S6 loader-backed local exact-search integration
+- Changed the verified pack loader to return its declared sequence type alongside the immutable metadata and parsed records.
+- Added `search_local_fasta_reference`, which verifies the on-disk manifest and payload before passing records into the exact-only DNA/RNA/protein triage primitive.
+- Added an end-to-end regression test asserting content-hash provenance and that exact hits still do not establish novelty.
+- Similarity search, homology/family/domain annotation and calibrated thresholds remain unimplemented; evidence level remains none.

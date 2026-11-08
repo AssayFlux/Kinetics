@@ -237,6 +237,7 @@ def welch_differential_expression(
         raw[position]["q_value"] = running
     return raw
 
+
 def _solve_wls(matrix: list[list[float]], vector: list[float]) -> list[float]:
     n = len(vector)
     a = [matrix[i][:] + [vector[i]] for i in range(n)]
@@ -351,11 +352,10 @@ def negative_binomial_differential_expression(
         iterations = 0
         try:
             for iterations in range(1, 101):
-                weights, z, mus = [], [], []
+                weights, z = [], []
                 for j in range(n):
                     eta = min(30.0, sum(design[j][k] * beta[k] for k in range(p)) + offsets[j])
                     mu = max(exp(eta), 1e-10)
-                    mus.append(mu)
                     weights.append(mu / (1.0 + alpha * mu))
                     z.append(eta + (y[j] - mu) / mu - offsets[j])
                 information = [[sum(design[j][a] * weights[j] * design[j][b] for j in range(n))

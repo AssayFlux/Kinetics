@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Local-only Android arm64 debug build. This script is never invoked by GitHub Actions.
+# Reproducible Android arm64 debug APK/AAB build for Linux x86_64 hosts (local or GitHub Actions).
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -165,4 +165,4 @@ python "$ROOT_DIR/scripts/check_android_elf_alignment.py" "$APK" "$AAB"
 echo "[6/6] Record local artifact hashes and sizes"
 ls -lh "$APK" "$AAB"
 sha256sum "$APK" "$AAB"
-echo "LOCAL BUILD COMPLETE. No emulator or physical-device test was run."
+echo "ANDROID ARM64 BUILD COMPLETE. No emulator or physical-device test was run."

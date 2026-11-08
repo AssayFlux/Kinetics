@@ -1,7 +1,8 @@
-"""Small recursive-descent Newick parser and tree utilities."""
+"""Newick parsing and distance-based phylogenetic tree utilities."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from math import isfinite
 
 
 @dataclass
@@ -14,17 +15,35 @@ class Node:
 class _Parser:
     def __init__(self, source: str) -> None:
         self.tokens: list[str] = []
-        token = ""
-        for char in source.strip():
-            if char in "(),:;":
-                if token.strip():
-                    self.tokens.append(token.strip())
+        token: list[str] = []
+        quoted = False
+        index = 0
+        while index < len(source.strip()):
+            char = source.strip()[index]
+            if char == "'":
+                if quoted and index + 1 < len(source.strip()) and source.strip()[index + 1] == "'":
+                    token.append("'")
+                    index += 2
+                    continue
+                quoted = not quoted
+                index += 1
+                continue
+            if not quoted and char in "(),:;":
+                if token:
+                    value = "".join(token).strip()
+                    if value:
+                        self.tokens.append(value)
+                    token = []
                 self.tokens.append(char)
-                token = ""
             else:
-                token += char
-        if token.strip():
-            self.tokens.append(token.strip())
+                token.append(char)
+            index += 1
+        if quoted:
+            raise ValueError("Unterminated quoted Newick label")
+        if token:
+            value = "".join(token).strip()
+            if value:
+                self.tokens.append(value)
         self.index = 0
 
     def peek(self) -> str | None:
@@ -57,12 +76,14 @@ class _Parser:
                 node.length = float(raw_length)
             except ValueError as exc:
                 raise ValueError(f"Invalid branch length: {raw_length}") from exc
-            if node.length < 0:
-                raise ValueError("Negative branch lengths are not supported")
+            if not isfinite(node.length) or node.length < 0:
+                raise ValueError("Branch lengths must be finite and non-negative")
         return node
 
 
 def parse_newick(source: str) -> Node:
+    if not source.strip():
+        raise ValueError("Newick tree cannot be empty")
     parser = _Parser(source)
     root = parser.subtree()
     if parser.pop() != ";" or parser.peek() is not None:
@@ -102,25 +123,24 @@ def _walk(node: Node):
         yield from _walk(child)
 
 
-
 def upgma(distance_matrix: list[list[float]], labels: list[str]) -> Node:
-    """Construct a rooted UPGMA tree from a symmetric distance matrix."""
+    """Construct a rooted UPGMA tree from a finite symmetric distance matrix."""
     size = len(labels)
     if size < 2 or len(distance_matrix) != size or len(set(labels)) != size:
         raise ValueError("Need at least two unique labels and a square matrix")
     if any(len(row) != size for row in distance_matrix):
         raise ValueError("Distance matrix must be square")
     for i in range(size):
-        if abs(distance_matrix[i][i]) > 1e-12:
-            raise ValueError("Distance matrix diagonal must be zero")
+        if not isfinite(distance_matrix[i][i]) or abs(distance_matrix[i][i]) > 1e-12:
+            raise ValueError("Distance matrix diagonal must be finite and zero")
         for j in range(size):
             value = distance_matrix[i][j]
-            if value < 0 or abs(value - distance_matrix[j][i]) > 1e-9:
-                raise ValueError("Distances must be non-negative and symmetric")
+            if not isfinite(value) or value < 0 or abs(value - distance_matrix[j][i]) > 1e-9:
+                raise ValueError("Distances must be finite, non-negative and symmetric")
     clusters: dict[int, tuple[Node, list[int], float]] = {
         i: (Node(name=labels[i]), [i], 0.0) for i in range(size)
     }
-    distances = {(i, j): distance_matrix[i][j] for i in range(size) for j in range(i+1, size)}
+    distances = {(i, j): distance_matrix[i][j] for i in range(size) for j in range(i + 1, size)}
     next_id = size
     while len(clusters) > 1:
         pair = min(distances, key=lambda key: distances[key])

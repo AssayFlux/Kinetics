@@ -73,7 +73,10 @@ import sys, zipfile
 with zipfile.ZipFile(sys.argv[1]) as archive:
     archive.extractall(sys.argv[2])
 PY
+  # Python's zipfile extraction does not reliably restore Unix executable bits.
+  chmod +x "$GRADLE_BIN"
   printf '%s\n' "$GRADLE_SHA256" > "$GRADLE_MARKER"
+fi
 fi
 "$GRADLE_BIN" --version | grep -q "Gradle $GRADLE_VERSION" || fail "Pinned Gradle $GRADLE_VERSION unavailable."
 

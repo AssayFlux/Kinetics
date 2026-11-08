@@ -85,6 +85,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
     var deleteTarget by remember { mutableStateOf<ResearchJob?>(null) }
     val scope = rememberCoroutineScope()
     var pendingExportJob by remember { mutableStateOf<String?>(null) }
+    var pendingProvenanceExportJob by remember { mutableStateOf<String?>(null) }
     val exportPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/octet-stream"),
     ) { uri ->
@@ -124,6 +125,44 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
                         },
                     )
                 }
+            }
+        }
+    }
+
+    val provenanceExportPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json"),
+    ) { uri ->
+        val jobId = pendingProvenanceExportJob
+        pendingProvenanceExportJob = null
+        if (uri != null && jobId != null) {
+            scope.launch {
+                notice = "Exporting import provenance..."
+                val result = withContext(Dispatchers.IO) {
+                    runCatching {
+                        val json = store.provenanceJson(jobId)
+                            ?: error("No provenance record exists for this job")
+                        val output = activity.contentResolver.openOutputStream(uri, "wt")
+                            ?: error("Selected provenance destination could not be opened")
+                        output.use { stream ->
+                            stream.write(json.toByteArray(Charsets.UTF_8))
+                            stream.flush()
+                        }
+                    }
+                }
+                notice = result.fold(
+                    { "Import provenance JSON exported. The source URI and input contents are not included." },
+                    { error ->
+                        val removed = runCatching {
+                            android.provider.DocumentsContract.deleteDocument(activity.contentResolver, uri)
+                        }.getOrDefault(false)
+                        val detail = error.message ?: error.javaClass.simpleName
+                        if (removed) {
+                            "Provenance export failed: $detail. The incomplete destination was removed."
+                        } else {
+                            "Provenance export failed: $detail. The destination may be partial; delete it manually before retrying."
+                        }
+                    },
+                )
             }
         }
     }
@@ -280,6 +319,10 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
         onExport = { job ->
             pendingExportJob = job.id
             exportPicker.launch(job.inputName.substringAfterLast('/').take(120).ifBlank { "kinetics-research-export.bin" })
+        },
+        onExportProvenance = { job ->
+            pendingProvenanceExportJob = job.id
+            provenanceExportPicker.launch("kinetics-provenance-${job.id}.json")
         },
         themeFamily = themeFamily,
         onThemeFamilyChange = { selected ->

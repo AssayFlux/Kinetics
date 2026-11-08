@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.io.File
 import java.util.UUID
+import org.json.JSONObject
 
 data class ResearchJob(
     val id: String,
@@ -363,6 +364,54 @@ class ResearchStore(context: Context) :
             db.endTransaction()
         }
         return true
+    }
+
+
+    /**
+     * Build a portable, machine-readable import-provenance record.
+     * Source URI and encrypted storage path are deliberately excluded from export.
+     */
+    fun provenanceJson(id: String): String? {
+        return readableDatabase.rawQuery(
+            """SELECT j.id,j.input_name,j.state,j.sha256,j.byte_count,j.created_at,j.updated_at,
+                      p.tool_id,p.tool_version,p.input_sha256,p.parameters_json,p.created_at
+               FROM jobs j INNER JOIN provenance p ON p.job_id=j.id
+               WHERE j.id=?""".trimIndent(),
+            arrayOf(id),
+        ).use { cursor ->
+            if (!cursor.moveToFirst()) {
+                null
+            } else {
+                val rawParameters = cursor.getString(10)
+                val parameters = runCatching { JSONObject(rawParameters) }
+                    .getOrElse { JSONObject().put("unparsed_parameters_json", rawParameters) }
+                val job = JSONObject()
+                    .put("id", cursor.getString(0))
+                    .put("input_name", cursor.getString(1))
+                    .put("state", cursor.getString(2))
+                    .put("input_sha256", if (cursor.isNull(3)) JSONObject.NULL else cursor.getString(3))
+                    .put("byte_count", if (cursor.isNull(4)) JSONObject.NULL else cursor.getLong(4))
+                    .put("created_at_epoch_ms", cursor.getLong(5))
+                    .put("updated_at_epoch_ms", cursor.getLong(6))
+                val provenance = JSONObject()
+                    .put("tool_id", cursor.getString(7))
+                    .put("tool_version", cursor.getString(8))
+                    .put("input_sha256", cursor.getString(9))
+                    .put("parameters", parameters)
+                    .put("recorded_at_epoch_ms", cursor.getLong(11))
+                JSONObject()
+                    .put("schema", "org.assayflux.kinetics.provenance")
+                    .put("schema_version", 1)
+                    .put("record_type", "import")
+                    .put("job", job)
+                    .put("provenance", provenance)
+                    .put(
+                        "scope_note",
+                        "Import provenance only. This record does not represent a scientific analysis result.",
+                    )
+                    .toString(2)
+            }
+        }
     }
 
     fun recentJobs(limit: Int = 30): List<ResearchJob> {

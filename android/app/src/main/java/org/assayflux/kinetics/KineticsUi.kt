@@ -44,6 +44,7 @@ internal fun KineticsAppShell(
     onImport: () -> Unit, onRefresh: () -> Unit, onRunRuntime: () -> Unit,
     onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
+    onExportProvenance: (ResearchJob) -> Unit,
     themeFamily: String, onThemeFamilyChange: (String) -> Unit,
     biometricEnabled: Boolean, biometricAvailable: Boolean,
     onBiometricChange: (Boolean) -> Unit,
@@ -82,8 +83,8 @@ internal fun KineticsAppShell(
             fun Screen(modifier: Modifier) {
                 when (tab) {
                     KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
-                        onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, modifier)
-                    KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, modifier)
+                        onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, modifier)
+                    KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, modifier)
                     KineticsTab.Explore -> ExploreScreen(modifier)
                     KineticsTab.Settings -> SettingsScreen(
                         runtimeReport, onRunRuntime, onRefresh, themeFamily, onThemeFamilyChange,
@@ -177,7 +178,8 @@ private fun HomeScreen(
     jobs: List<ResearchJob>, notice: String, runtime: String?, themeFamily: String, onImport: () -> Unit,
     onRuntime: () -> Unit, onOpenWork: () -> Unit,
     onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
-    onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit, modifier: Modifier,
+    onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
+    onExportProvenance: (ResearchJob) -> Unit, modifier: Modifier,
 ) {
     val active = jobs.count { it.state in listOf("queued", "running", "cancel_requested") }
     val done = jobs.count { it.state == "succeeded" }
@@ -205,7 +207,7 @@ private fun HomeScreen(
             }
             item { Section("Recent activity", "View all", onOpenWork) }
             if (jobs.isEmpty()) item { Empty("Your workspace is clear", "Import a research file to create your first job.") }
-            else items(jobs.take(4), key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport) }
+            else items(jobs.take(4), key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance) }
             item {
                 Section("Device health", "Run checks", onRuntime)
                 OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
@@ -361,7 +363,8 @@ private fun Section(title: String, action: String, onClick: () -> Unit) {
 private fun WorkScreen(
     jobs: List<ResearchJob>, onImport: () -> Unit, onCancel: (ResearchJob) -> Unit,
     onResume: (ResearchJob) -> Unit, onDelete: (ResearchJob) -> Unit,
-    onExport: (ResearchJob) -> Unit, modifier: Modifier,
+    onExport: (ResearchJob) -> Unit, onExportProvenance: (ResearchJob) -> Unit,
+    modifier: Modifier,
 ) {
     var query by remember { mutableStateOf("") }
     var filter by remember { mutableStateOf("All") }
@@ -388,14 +391,15 @@ private fun WorkScreen(
             }
             item { Button(onClick = onImport, Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp)) { Text("+  Import new data") } }
             if (filtered.isEmpty()) item { Empty("No matching research jobs", "Try another search or import a dataset to begin.") }
-            else items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport) }
+            else items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance) }
         }
     }
 }
 
 @Composable
 private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
-                    onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit) {
+                    onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
+                    onExportProvenance: (ResearchJob) -> Unit) {
     val active = job.state in listOf("queued", "running", "cancel_requested")
     val success = job.state == "succeeded"
     val issue = job.state in listOf("failed", "recovery_required")
@@ -459,6 +463,14 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
                             job.provenanceParametersJson?.let {
                                 Text("Parameters: $it", style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            TextButton(
+                                onClick = { onExportProvenance(job) },
+                                modifier = Modifier.semantics {
+                                    contentDescription = "Export import provenance as JSON"
+                                },
+                            ) {
+                                Text("Export provenance JSON")
                             }
                         }
                     }

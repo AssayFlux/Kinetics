@@ -58,3 +58,15 @@ def test_numbering_gaps_and_conflicting_residue_identity_abstain() -> None:
         map_exact_chain_sequence(
             "A", [atom(1, "ALA", 10), atom(2, "GLY", 10)], chain_id="A",
         )
+
+
+def test_mapping_enforces_query_and_structure_residue_limits() -> None:
+    atoms = [atom(1, "ALA", 1), atom(2, "GLY", 2)]
+    with pytest.raises(ValueError, match="query sequence exceeds"):
+        map_exact_chain_sequence("AG", atoms, chain_id="A", max_query_residues=1)
+    with pytest.raises(ValueError, match="structure chain exceeds"):
+        map_exact_chain_sequence(
+            "AG", atoms, chain_id="A", max_structure_residues=1,
+        )
+    with pytest.raises(ValueError, match="must be positive"):
+        map_exact_chain_sequence("A", atoms, chain_id="A", max_structure_residues=0)

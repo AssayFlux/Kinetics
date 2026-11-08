@@ -151,3 +151,36 @@ def test_pharmvar_tsv_rejects_checksum_and_incomplete_phase() -> None:
             source_url="https://www.pharmvar.org/download", source_sha256="0" * 64,
             license_id="CC-BY-SA-4.0",
         )
+
+
+def test_gene_catalogue_coverage_report_is_descriptive_and_has_no_fake_denominator() -> None:
+    from kinetics.catalog import gene_catalogue_coverage_report
+
+    rows = [
+        "\t".join([
+            "9606", "1", "GENE1", "-", "-", "-", "1", "1p", "description",
+            "protein-coding", "GENE1", "Gene one", "Official", "-", "20250101", "gene",
+        ]),
+        "\t".join([
+            "10090", "2", "GENE2", "-", "-", "-", "-", "-", "-", "ncRNA",
+            "-", "-", "-", "-", "20250101", "gene",
+        ]),
+    ]
+    entries = list(iter_ncbi_gene_info(rows, source_release="fixture-1"))
+    report = gene_catalogue_coverage_report(entries)
+    assert report["entry_count"] == 2
+    assert report["taxonomy_counts"] == {"10090": 1, "9606": 1}
+    assert report["gene_type_counts"] == {"ncRNA": 1, "protein-coding": 1}
+    assert report["coverage_percentage"] is None
+    assert report["coverage_denominator"] is None
+    assert report["scope"] == "supplied_catalogue_snapshot_only"
+
+
+def test_gene_catalogue_coverage_report_enforces_bounds() -> None:
+    from kinetics.catalog import gene_catalogue_coverage_report
+
+    entry = next(iter_ncbi_gene_info([
+        "\t".join(["9606", "1", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "20250101", "gene"])
+    ], source_release="fixture"))
+    with pytest.raises(ValueError, match="max_entries"):
+        gene_catalogue_coverage_report([entry, entry], max_entries=1)

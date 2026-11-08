@@ -220,3 +220,12 @@ Build and static package evidence is green. R1 is **not complete**. Outstanding:
 - Android artifact gate reported the owner-directed local-only build/test boundary.
 - `bash -n scripts/build_android_local.sh` passed.
 - No APK/AAB build, emulator or Android runtime test was run in this workflow, as instructed.
+
+
+## Host-only source CI run 42428935274 — 2026-11-08
+
+- Workflow: https://github.com/AssayFlux/Kinetics/actions/runs/42428935274
+- Commit: `6580e4b254aafa09da4543b490b7af4b457d9637`.
+- Pre-commit configuration, Ruff, mypy, registry validation and all 11 unit tests passed.
+- Reproduction stub, owner-directed local-only Android artifact gate and local build-script `bash -n` syntax check passed.
+- No APK/AAB build or Android runtime test was run in GitHub Actions.

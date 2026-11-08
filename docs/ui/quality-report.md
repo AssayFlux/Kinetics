@@ -16,6 +16,6 @@
 | Performance | Macrobenchmark/Perfetto on named low-end arm64 device | NOT RUN | — |
 | Robustness | Soak test; process death/rotation/resize state | NOT RUN | — |
 | Usability | Consented scientist task study | NOT RUN | — |
-| Consistency | Token-only styling; CI lint | NOT IMPLEMENTED | — |
+| Consistency | Token-only styling; CI lint | TOKEN GENERATION + REPRODUCIBILITY CHECK ADDED; hard-coded value lint NOT IMPLEMENTED | `scripts/gen_design_tokens.py`; CI pending |
 
 No “best”, WCAG-conformant, accessible, device-responsive, performant or production-ready claim is permitted until evidence is attached. A successful APK build is not a UI quality pass.

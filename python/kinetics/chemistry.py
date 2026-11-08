@@ -369,6 +369,6 @@ def iter_sdf_records(text: str) -> Iterator[dict[str, object]]:
         if not block.strip():
             continue
         try:
-            yield parse_sdf_record(block)
+            yield parse_sdf_record(block.strip())
         except ValueError as exc:
             raise ValueError(f"SDF record {record_number}: {exc}") from exc

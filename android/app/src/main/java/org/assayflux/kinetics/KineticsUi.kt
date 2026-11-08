@@ -24,11 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.assayflux.designsystem.KineticsTokens
 
-private val Teal = Color(0xFF36D6C3)
-private val Ink = Color(0xFF101B2B)
-private val Muted = Color(0xFF9AAFC5)
-private val LightTeal = Color(0xFF087F78)
+private val Teal = KineticsTokens.ObsidianCyan.primary
+private val Ink = Color(0xFF071018)
+private val LightTeal = KineticsTokens.PorcelainBlue.primary
 
 internal enum class KineticsTab(val label: String, val glyph: String) {
     Home("Home", "⌂"), Work("Work", "▤"), Explore("Explore", "⌕"), Settings("Settings", "⚙")
@@ -43,10 +43,26 @@ internal fun KineticsAppShell(
 ) {
     var tab by rememberSaveable { mutableStateOf(KineticsTab.Home) }
     var themeFamily by rememberSaveable { mutableStateOf("dark") }
-    val scheme = when (themeFamily) {
-        "light" -> lightColorScheme(primary = Color(0xFF315D91), secondary = Color(0xFF6685AD), background = Color(0xFFF7FAFF), surface = Color.White, onSurface = Color(0xFF14253B), onBackground = Color(0xFF14253B), surfaceVariant = Color(0xFFEAF1FA), onSurfaceVariant = Color(0xFF52647A), outline = Color(0xFFCBD7E5))
-        "neon" -> darkColorScheme(primary = Color(0xFF00F5FF), onPrimary = Color(0xFF071018), secondary = Color(0xFFFF3DF2), background = Color(0xFF080611), surface = Color(0xFF110D20), onSurface = Color(0xFFF5F1FF), onBackground = Color(0xFFF5F1FF), surfaceVariant = Color(0xFF1C1530), onSurfaceVariant = Color(0xFFB6AFC9), outline = Color(0xFF44305E))
-        else -> darkColorScheme(primary = Color(0xFF39D7E8), onPrimary = Color(0xFF071018), secondary = Color(0xFF6B9CFF), background = Color(0xFF070B12), surface = Color(0xFF0E1521), onSurface = Color(0xFFEAF3FF), onBackground = Color(0xFFEAF3FF), surfaceVariant = Color(0xFF151F2E), onSurfaceVariant = Color(0xFF9AADC4), outline = Color(0xFF2A3B50))
+    val palette = when (themeFamily) {
+        "light" -> KineticsTokens.PorcelainBlue
+        "neon" -> KineticsTokens.Cyberpunk
+        else -> KineticsTokens.ObsidianCyan
+    }
+    val scheme = if (themeFamily == "light") {
+        lightColorScheme(
+            primary = palette.primary, secondary = palette.secondary, tertiary = palette.tertiary,
+            background = palette.background, surface = palette.surface, onSurface = palette.text,
+            onBackground = palette.text, surfaceVariant = palette.surface_alt,
+            onSurfaceVariant = palette.muted, outline = palette.outline,
+        )
+    } else {
+        darkColorScheme(
+            primary = palette.primary, onPrimary = palette.background,
+            secondary = palette.secondary, tertiary = palette.tertiary,
+            background = palette.background, surface = palette.surface, onSurface = palette.text,
+            onBackground = palette.text, surfaceVariant = palette.surface_alt,
+            onSurfaceVariant = palette.muted, outline = palette.outline,
+        )
     }
     MaterialTheme(colorScheme = scheme) {
         BoxWithConstraints(Modifier.fillMaxSize()) {

@@ -919,3 +919,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R3 independent numerical reference harness
 - Expanded Michaelis–Menten output with local Jacobian covariance approximations, standard errors, leverage, standardized residuals, Cook's distance, Durbin–Watson, residual sign runs, condition-number and search-bound warnings. These are descriptive approximations, not validated inferential statistics.
 - Added a reproducible host validation harness comparing noise-free and seeded Gaussian-noise synthetic fits with SciPy curve_fit, recording SciPy/NumPy versions and explicit tolerances. The harness was not executed; no validation pass is claimed. Experimental reference datasets remain required.
+
+
+### R2 explicit local deletion flow
+- Added a user-confirmed delete action for terminal imports. It removes the finalized encrypted KDAT, encrypted partial staging, legacy plaintext staging (if present), provenance row and job row. Canonical directory checks constrain deletions to app-private research storage.
+- The UI explicitly warns that exported copies cannot be recalled and flash-storage secure erasure is not guaranteed. No Android build/tests were run.

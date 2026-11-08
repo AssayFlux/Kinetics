@@ -39,7 +39,7 @@
 - Reject unknown encrypted-file versions and authentication failures; never silently downgrade.
 - Do not load executable code or native libraries from data packs.
 - Do not upload research content or telemetry.
-- Do not claim secure deletion on flash storage; document logical deletion limitations.
+- Do not claim secure deletion on flash storage; the explicit delete flow removes app-visible encrypted files and metadata but cannot guarantee physical erasure or revoke copies previously exported.
 - Clinical workflows remain disabled.
 
 ## Required next assessment

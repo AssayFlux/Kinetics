@@ -85,3 +85,10 @@ def test_variant_normalization_rejects_non_literal_or_ambiguous_alleles(
 
     with pytest.raises(ValueError):
         normalize_small_variant("chr1", 1, ref, alt, "ACGT")
+
+
+def test_sam_allows_missing_qualities_and_checks_cigar_query_consumption() -> None:
+    valid = parse_sam("read1\t0\tchr1\t1\t60\t2M1I1S\t*\t0\t0\tACGT\t*")
+    assert valid[0].sequence == "ACGT"
+    with pytest.raises(ValueError, match="CIGAR query length"):
+        parse_sam("read1\t0\tchr1\t1\t60\t4M\t*\t0\t0\tACG\t*")

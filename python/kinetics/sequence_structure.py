@@ -6,7 +6,6 @@ or infer missing/disordered residues.
 """
 from __future__ import annotations
 
-from collections import defaultdict
 from typing import Iterable
 
 from .structure import Atom
@@ -93,11 +92,11 @@ def map_exact_chain_sequence(
         {
             "query_position_1based": start + index + 1,
             "chain_id": chain_id,
-            "structure_residue_number": residue_key[0],
-            "residue_name": residue_key[1],
+            "structure_residue_number": residue_number,
+            "residue_name": residue_name,
             "amino_acid": amino_acid,
         }
-        for index, ((residue_key, _), amino_acid) in enumerate(ordered)
+        for index, ((residue_number, residue_name), amino_acid) in enumerate(ordered)
     ]
     return {
         "status": "exact_unique_match",

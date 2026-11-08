@@ -280,7 +280,7 @@ def iter_bam_records(source: BinaryIO) -> Iterator[SamRecord]:
             raise ValueError("BAM query name exceeds record block")
         query_name_raw = block[cursor:cursor + name_length]
         cursor += name_length
-        if query_name_raw[-1:] != b"\\x00":
+        if query_name_raw[-1:] != b"\x00":
             raise ValueError("BAM query name is not NUL-terminated")
         query_name = query_name_raw[:-1].decode("utf-8", errors="strict")
 

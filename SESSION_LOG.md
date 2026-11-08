@@ -984,3 +984,25 @@ Continue integrated implementation only where correctness can be supported by so
 
 ### Current gate
 R2 remains in progress. The source change is committed directly to `main`; Android compilation and on-device verification are still required before calling this behavior complete.
+
+
+## 2026-11-08 — Session 15: Local build host guard and SAF export cleanup
+**Phase:** Track R / integrated R1–R10 implementation  
+**Objective:** Prepare an honest local-build handoff and harden the SAF export failure path.
+
+### Done
+- Confirmed current `main` at `e3993decda7c433f7017dc94fc79c194b978728d` before this work.
+- Added an early host check to `scripts/build_android_local.sh`. Termux/Android, non-Linux and non-x86_64 hosts now stop before toolchain downloads or cache mutation with an actionable error.
+- Updated `docs/local-android-build.md`: current pinned build route requires Linux x86_64 or x86_64 WSL2; Termux on an Android/aarch64 phone is not supported as the build host. Termux may still be used after the APK exists for transfer, installation and log collection.
+- Hardened the SAF export flow: use truncate mode; on export failure, attempt provider-level deletion of the incomplete SAF document and accurately report whether deletion succeeded or manual cleanup is required.
+- Updated the R2 plan to describe the provider-dependent cleanup behavior and its limitations.
+
+### Not validated
+- No APK/AAB was built.
+- No Termux command, Android runtime probe, SAF provider, emulator or physical-device test was run.
+- No tests or static checks were run under the owner-directed test-later policy.
+- SAF deletion remains provider-dependent; no universal rollback is claimed.
+- Track R1–R10 remain in progress; no phase or Track R exit is claimed.
+
+### Next
+Continue R1–R10 source integration and close the remaining code-level gaps. Once the owner has a supported Linux x86_64 build host, run the pinned local build script; use the resulting APK for the owner-directed device-test campaign.

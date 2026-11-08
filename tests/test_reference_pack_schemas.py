@@ -50,3 +50,23 @@ def test_public_candidate_sources_are_explicitly_unapproved_and_non_patient() ->
     for candidate in catalog["candidate_sources"]:
         assert candidate["license_review_status"] == "verify_before_intake"
         assert candidate["patient_data"] is False
+
+
+def test_admet_candidate_catalog_is_metadata_only_and_unapproved() -> None:
+    root = Path(__file__).resolve().parents[1]
+    catalog = yaml.safe_load(
+        (root / "data" / "admet-source-catalog.yaml").read_text(encoding="utf-8")
+    )
+    schema = json.loads(
+        (root / "api" / "admet-source-catalog.schema.json").read_text(encoding="utf-8")
+    )
+    assert catalog["data_classification"] == "public_non_patient_only"
+    assert catalog["entries"] == []
+    assert catalog["candidate_sources"]
+    item_schema = schema["properties"]["candidate_sources"]["items"]["properties"]
+    assert item_schema["license_review_status"]["const"] == "verify_before_intake"
+    assert item_schema["patient_data"]["const"] is False
+    assert schema["properties"]["entries"]["maxItems"] == 0
+    for source in catalog["candidate_sources"]:
+        assert source["license_review_status"] == "verify_before_intake"
+        assert source["patient_data"] is False

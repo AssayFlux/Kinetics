@@ -62,9 +62,16 @@ fi
 if [[ ! -x "$GRADLE_BIN" || "$GRADLE_MARKER_VALID" != "true" ]]; then
   mkdir -p "$GRADLE_CACHE_DIR"
   archive="$GRADLE_CACHE_DIR/gradle-$GRADLE_VERSION-bin.zip"
-  curl --fail --location --retry 3 \
-    "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
-    --output "$archive"
+  # Prefer Gradle's direct distribution CDN; the services.gradle.org redirect
+  # can traverse GitHub release assets and intermittently return gateway errors.
+  if ! curl --fail --location --retry 3 --retry-all-errors \
+    "https://downloads.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
+    --output "$archive"; then
+    rm -f "$archive"
+    curl --fail --location --retry 3 --retry-all-errors \
+      "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
+      --output "$archive"
+  fi
   actual="$(sha256sum "$archive" | awk '{print $1}')"
   [[ "$actual" == "$GRADLE_SHA256" ]] || fail "Gradle distribution checksum mismatch: $actual"
   rm -rf "$GRADLE_CACHE_DIR/gradle-$GRADLE_VERSION"

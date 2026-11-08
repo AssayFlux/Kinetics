@@ -399,6 +399,7 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
     val active = job.state in listOf("queued", "running", "cancel_requested")
     val success = job.state == "succeeded"
     val issue = job.state in listOf("failed", "recovery_required")
+    var provenanceExpanded by rememberSaveable(job.id) { mutableStateOf(false) }
     OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -422,6 +423,49 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
             if (job.state == "recovery_required") Text(
                 "Encrypted data is preserved. If its original Keystore key is lost, creating a replacement key cannot decrypt it.",
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+            if (job.provenanceToolId != null) {
+                TextButton(
+                    onClick = { provenanceExpanded = !provenanceExpanded },
+                    modifier = Modifier.semantics {
+                        contentDescription = if (provenanceExpanded) {
+                            "Hide import provenance"
+                        } else {
+                            "Inspect import provenance"
+                        }
+                    },
+                ) {
+                    Text(if (provenanceExpanded) "Hide provenance" else "Inspect provenance")
+                }
+                if (provenanceExpanded) {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(14.dp),
+                    ) {
+                        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text("IMPORT PROVENANCE", style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                            Text("Tool: ${job.provenanceToolId}", style = MaterialTheme.typography.bodySmall)
+                            Text("Version: ${job.provenanceToolVersion ?: "unknown"}",
+                                style = MaterialTheme.typography.bodySmall)
+                            job.provenanceCreatedAt?.let {
+                                val recorded = android.text.format.DateFormat
+                                    .getDateTimeInstance(android.text.format.DateFormat.MEDIUM,
+                                        android.text.format.DateFormat.SHORT)
+                                    .format(java.util.Date(it))
+                                Text("Recorded: $recorded", style = MaterialTheme.typography.bodySmall)
+                            }
+                            job.sha256?.let {
+                                Text("Input SHA-256: $it", style = MaterialTheme.typography.labelSmall)
+                            }
+                            job.provenanceParametersJson?.let {
+                                Text("Parameters: $it", style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                    }
+                }
+            }
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                 if (active) OutlinedButton(onClick = { onCancel(job) }) { Text("Cancel") }
                 if (job.state == "cancelled" || job.state == "failed") OutlinedButton(onClick = { onResume(job) }) { Text("Resume") }

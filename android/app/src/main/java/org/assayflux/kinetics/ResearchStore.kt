@@ -13,6 +13,10 @@ data class ResearchJob(
     val state: String,
     val sha256: String?,
     val message: String?,
+    val provenanceToolId: String? = null,
+    val provenanceToolVersion: String? = null,
+    val provenanceParametersJson: String? = null,
+    val provenanceCreatedAt: Long? = null,
 )
 
 data class RecoverableImport(val id: String, val uri: String)
@@ -364,14 +368,24 @@ class ResearchStore(context: Context) :
     fun recentJobs(limit: Int = 30): List<ResearchJob> {
         val result = mutableListOf<ResearchJob>()
         readableDatabase.rawQuery(
-            "SELECT id,input_name,state,sha256,message FROM jobs ORDER BY created_at DESC LIMIT ?",
+            """SELECT j.id,j.input_name,j.state,j.sha256,j.message,
+                      p.tool_id,p.tool_version,p.parameters_json,p.created_at
+               FROM jobs j
+               LEFT JOIN provenance p ON p.job_id=j.id
+               ORDER BY j.created_at DESC LIMIT ?""".trimIndent(),
             arrayOf(limit.coerceIn(1, 100).toString()),
         ).use { cursor ->
             while (cursor.moveToNext()) {
                 result += ResearchJob(
-                    cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                    if (cursor.isNull(3)) null else cursor.getString(3),
-                    if (cursor.isNull(4)) null else cursor.getString(4),
+                    id = cursor.getString(0),
+                    inputName = cursor.getString(1),
+                    state = cursor.getString(2),
+                    sha256 = if (cursor.isNull(3)) null else cursor.getString(3),
+                    message = if (cursor.isNull(4)) null else cursor.getString(4),
+                    provenanceToolId = if (cursor.isNull(5)) null else cursor.getString(5),
+                    provenanceToolVersion = if (cursor.isNull(6)) null else cursor.getString(6),
+                    provenanceParametersJson = if (cursor.isNull(7)) null else cursor.getString(7),
+                    provenanceCreatedAt = if (cursor.isNull(8)) null else cursor.getLong(8),
                 )
             }
         }

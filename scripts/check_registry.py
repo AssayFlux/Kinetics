@@ -153,7 +153,8 @@ def validate_registry(data: Any) -> list[str]:
             if collection == "ui_screens" and status == "implemented":
                 if item.get("accessibility_check") != "passed":
                     errors.append(
-                        f"{collection} {identifier}: implemented requires a passed accessibility check"
+                        f"{collection} {identifier}: implemented requires a passed "
+                        "accessibility check"
                     )
                 matrix = item.get("device_matrix")
                 if not isinstance(matrix, list) or not matrix:

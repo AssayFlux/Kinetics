@@ -13,10 +13,19 @@ import androidx.fragment.app.FragmentActivity
  */
 internal object BiometricUnlock {
     fun canAuthenticate(activity: FragmentActivity): Boolean {
-        val authenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG or
-            BiometricManager.Authenticators.DEVICE_CREDENTIAL
-        return BiometricManager.from(activity).canAuthenticate(authenticators) ==
-            BiometricManager.BIOMETRIC_SUCCESS
+        val biometricReady = BiometricManager.from(activity).canAuthenticate(
+            BiometricManager.Authenticators.BIOMETRIC_STRONG,
+        ) == BiometricManager.BIOMETRIC_SUCCESS
+        val credentialReady = activity.getSystemService(android.app.KeyguardManager::class.java)
+            ?.isDeviceSecure == true
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val authenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                BiometricManager.Authenticators.DEVICE_CREDENTIAL
+            BiometricManager.from(activity).canAuthenticate(authenticators) ==
+                BiometricManager.BIOMETRIC_SUCCESS
+        } else {
+            biometricReady || credentialReady
+        }
     }
 
     fun authenticate(

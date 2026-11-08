@@ -589,3 +589,8 @@ security_features:
     status: implemented
     implementation: python/kinetics/sequence_structure.py
     evidence_level: none
+  - id: genes.catalogue_coverage_report
+    name: Source-snapshot gene catalogue composition and annotation completeness report
+    status: implemented
+    implementation: python/kinetics/catalog.py
+    evidence_level: none

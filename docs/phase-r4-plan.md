@@ -6,7 +6,7 @@
 - FASTA/FASTQ parsing, including a streaming FASTA iterator and wrapped FASTQ sequence and quality lines.
 - Sequence statistics, reverse complement, transcription, k-mer counting and global pairwise alignment.
 - FASTQ quality summaries and explicit-offset terminal quality trimming.
-- SAM and VCF text parsing with mandatory-field and scalar validation.\n- Reference-checked minimal/left normalization for literal biallelic A/C/G/T small variants.
+- SAM and VCF text parsing with mandatory-field and scalar validation; SAM validation also checks CIGAR query consumption and permits missing QUAL when SEQ is present.\n- Reference-checked minimal/left normalization for literal biallelic A/C/G/T small variants.
 - Future: BAM/CRAM, robust VCF normalization/decomposition, adapter trimming, paired-read handling, indexed access and Rust acceleration.
 
 ## Current source

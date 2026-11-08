@@ -836,3 +836,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R3 uncertainty increment
 - Added a seeded paired nonparametric bootstrap helper for Michaelis–Menten parameter percentile intervals, with fixed search bounds and explicit assumptions/limitations. Added the helper to the public package exports and capability registry, plus a deterministic regression-test case.
 - No tests were executed. The intervals are exploratory and remain subject to reference validation, identifiability assessment and scientific review.
+
+
+### R4 SAM semantics follow-up
+- Corrected SAM handling so SEQ may be present while QUAL is `*`, as allowed for missing quality data; QUAL must remain `*` when SEQ is unavailable. Present QUAL values still require matching length and printable characters.
+- Added CIGAR query-consuming operation validation against SEQ length, plus regression-test source for both cases. No tests were run.

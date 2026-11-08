@@ -109,7 +109,7 @@ At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase
 
 ## Owner authorization — integrated R1–R10 implementation (2026-11-08)
 - The owner explicitly directed Engineering to implement Research Platform R1 through R10 as one integrated delivery, rather than stopping after R1 to request permission to begin R2/R3.
-- Build-first / test-later: prepare the first APK build locally before the later testing campaign. Do not add APK/AAB builds or Android emulator/device tests to GitHub Actions.
+- Build-first / test-later: after the initial local-build preference, the owner explicitly authorized GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated source/JVM checks. Emulator and physical-device tests remain separate and are not run in CI.
 - This changes implementation sequencing only. It does not authorize false validation claims, bypass third-party license review, enable clinical/patient workflows, or waive scientific/device/security/release exit criteria.
 - See docs/research-platform-implementation.md for the current implementation inventory and unfinished scope.
 

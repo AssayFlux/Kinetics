@@ -25,7 +25,7 @@ Simple alignment, graph fingerprints, protein pI estimates and kinetic grid fitt
 
 ## Build-first / test-later policy
 
-- First APK build is local, not in GitHub Actions.
-- No Android emulator/device testing is scheduled in GitHub Actions.
-- Source checks are manual-dispatch only; no push/PR workflow is configured during the build-first/test-later phase. They are not a substitute for the later device-validation campaign.
+- The owner subsequently authorized GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated source checks plus Android JVM unit tests.
+- No Android emulator/device testing is scheduled in GitHub Actions. Physical-device, screenshot and accessibility campaigns remain separate.
+- CI is triggered by repository updates and validates the exact committed source snapshot. A green CI run is required for a verified artifact; CI does not substitute for the later device-validation campaign.
 - Do not publish an AAB or claim release readiness until R10 and the owner release gate are complete.

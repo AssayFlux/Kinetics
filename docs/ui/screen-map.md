@@ -4,7 +4,7 @@
 
 | Screen ID | Screen | Registry capability | Current status |
 |---|---|---|---|
-| ui.home | Home dashboard / import entry | ui.home | implemented; device/accessibility proof pending |
+| ui.home | Home dashboard / import entry | ui.home | source present; proof pending |
 | ui.work | Work / job list and actions | ui.work | source present; registry gate/tests pending |
 | ui.explore | Scientific capability catalogue | ui.explore | source present; registry gate/tests pending |
 | ui.settings | Settings / theme family and diagnostics | ui.settings | partial; registry gate pending |
@@ -29,5 +29,6 @@
 | ui.node | Remote node setup | ui.node | planned |
 | ui.security | Security/privacy centre | ui.security | planned |
 | ui.about | About/licenses | ui.about | planned |
+| ui.component_gallery | Development component gallery | ui.component_gallery | composable present; debug route and proof pending |
 
 Explore describes capability maturity; it is not a promise that all research tools can run from Android UI. Tool availability must be driven by the registry and a real dispatcher.

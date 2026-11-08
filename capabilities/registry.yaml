@@ -368,9 +368,28 @@ ui_screens:
     accessibility_check: not-run
     device_matrix: not-run
     device_verified: false
+  - id: ui.component_gallery
+    name: "Development component gallery"
+    track: UI
+    status: planned
+    tests: []
+    accessibility_check: not-run
+    device_matrix: not-run
+    device_verified: false
+
 ui_settings:
   - id: setting.appearance_theme
     schema_key: appearance.theme
+    track: UI
+    status: planned
+    tests: []
+  - id: setting.appearance_theme_family
+    schema_key: appearance.theme_family
+    track: UI
+    status: planned
+    tests: []
+  - id: setting.appearance_font_family
+    schema_key: appearance.font_family
     track: UI
     status: planned
     tests: []

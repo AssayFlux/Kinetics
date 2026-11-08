@@ -86,6 +86,31 @@ def generate(root: Path = ROOT) -> dict[str, object]:
             add(name, constraint.strip() or "UNPINNED", "pypi",
                 f"pkg:pypi/{name}")
 
+    local_build = (root / "scripts/build_android_local.sh").read_text(encoding="utf-8")
+    rust_toolchain = (root / "rust-toolchain.toml").read_text(encoding="utf-8")
+    app_build = gradle_app
+    def pinned(pattern: str, source: str, label: str) -> str:
+        match = re.search(pattern, source)
+        if not match:
+            raise ValueError(f"Missing pinned toolchain input: {label}")
+        return match.group(1)
+
+    gradle_version = pinned(r'GRADLE_VERSION="([^"]+)"', local_build, "Gradle")
+    ndk_version = pinned(r'NDK_VERSION="([^"]+)"', local_build, "Android NDK")
+    build_tools = pinned(r'BUILD_TOOLS_VERSION="([^"]+)"', local_build, "Android Build Tools")
+    python_target = pinned(r'PYTHON_TARGET="([^"]+)"', local_build, "Python")
+    rust_version = pinned(r'channel = "([^"]+)"', rust_toolchain, "Rust")
+    sdk_platform = pinned(r'compileSdk = ([0-9]+)', app_build, "Android SDK platform")
+    cmake_version = pinned(r'version = "([^"]+)"', app_build, "CMake")
+    add("Gradle", gradle_version, "build-tool", f"pkg:generic/gradle@{gradle_version}")
+    add("Android NDK", ndk_version, "build-tool", f"pkg:generic/android-ndk@{ndk_version}")
+    add("Android Build Tools", build_tools, "build-tool", f"pkg:generic/android-build-tools@{build_tools}")
+    add("Android SDK Platform", sdk_platform, "build-tool", f"pkg:generic/android-sdk-platform@{sdk_platform}")
+    add("CMake", cmake_version, "build-tool", f"pkg:generic/cmake@{cmake_version}")
+    add("Python host", python_target.split("-")[0], "build-tool", f"pkg:generic/python@{python_target.split('-')[0]}")
+    add("Rust toolchain", rust_version, "build-tool", f"pkg:generic/rust@{rust_version}")
+    add("JDK", "17 (patch/vendor not pinned)", "build-tool")
+
     cargo = root / "android/native-rust/Cargo.toml"
     if cargo.is_file():
         section = ""

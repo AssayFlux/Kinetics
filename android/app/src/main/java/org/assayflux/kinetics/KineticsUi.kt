@@ -52,9 +52,9 @@ internal fun KineticsAppShell(
         BoxWithConstraints(Modifier.fillMaxSize()) {
             // Classify the app window, not the physical device. These are the
             // current Android adaptive breakpoints recorded in docs/ui/verified-specs.md.
-            val compactHeight = maxHeight < 480.dp
-            val useDrawer = maxWidth >= 1200.dp
-            val useRail = maxWidth >= 600.dp || compactHeight
+            val navigationMode = classifyNavigationMode(maxWidth.value, maxHeight.value)
+            val useDrawer = navigationMode == NavigationMode.Drawer
+            val useRail = navigationMode == NavigationMode.Rail
 
             @Composable
             fun Screen(modifier: Modifier) {
@@ -135,13 +135,16 @@ internal fun KineticsAppShell(
 
 @Composable
 private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    Column(modifier.fillMaxSize().padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+      Column(Modifier.fillMaxWidth().widthIn(max = 840.dp).padding(horizontal = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(Modifier.padding(top = 20.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             Text(eyebrow.uppercase(), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
             Text(title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
             Text(subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
         }
         Box(Modifier.weight(1f).fillMaxWidth()) { content() }
+      }
     }
 }
 

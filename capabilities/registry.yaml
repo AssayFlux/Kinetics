@@ -16,6 +16,11 @@ tools:
     status: implemented
     implementation: python/kinetics/sequence_pack.py
     evidence_level: none
+  - id: sequence.local_fasta_exact_search
+    name: Verified local FASTA pack loading followed by exact-only DNA/RNA/protein triage
+    status: implemented
+    implementation: python/kinetics/sequence_pack.py
+    evidence_level: none
   - id: sequence.fastq
     name: FASTQ parsing
     status: implemented

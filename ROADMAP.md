@@ -42,7 +42,7 @@ v0.1.0 = R0–R3.
 | S3 | Variant mapping, interface and pocket analysis | S2, variant evidence | Capability validation; evidence not verdict | not-started | Engineering + Validation | TBD |
 | S4 | Node prediction with approved models/confidence and experimental comparison | Node security, code/weights licenses | Reproducible benchmark and limitations | not-started | Engineering + Validation | TBD |
 | S5 | Rendering/export and structure benchmark | S1–S4 as applicable | Benchmark-generated figures | not-started | Engineering + Validation | TBD |
-| S6 | Unknown-sequence triage, protein family/domain/motif search and evidence-ranked annotation | R4; versioned local reference packs | Curated positive/negative fixtures, reference concordance, calibrated thresholds, resource bounds | in-progress — JSON evidence contract plus bounded exact full-length local reference triage implemented with resource caps, pack provenance/hash checks, deterministic hit evidence and no-hit abstention; evidence_level remains none pending validation | Engineering + Validation | 2026-11-08 |
+| S6 | Unknown-sequence triage, protein family/domain/motif search and evidence-ranked annotation | R4; versioned local reference packs | Curated positive/negative fixtures, reference concordance, calibrated thresholds, resource bounds | in-progress — JSON evidence contract, exact full-length triage and bounded local FASTA ingestion with byte-level SHA-256 verification, strict manifest/schema, duplicate/alphabet checks and record/residue/byte caps; no homology or novelty inference; evidence_level remains none pending validation | Engineering + Validation | 2026-11-08 |
 | S7 | Prokaryotic and eukaryotic genome annotation/gene discovery pipelines | R4; organism-specific curated genomes | Independent gene-boundary/function metrics, coordinate correctness, coverage and resource benchmarks | planned | Engineering + Validation | TBD |
 | S8 | Non-standard genetic-code investigation and translation-table candidate inference | S6–S7; organism-specific truth sets | Independent reference validation, confusion matrices, calibrated abstention and ambiguous-case tests | planned | Engineering + Validation | TBD |
 | S9 | Protein sequence/domain/family intelligence and sequence-to-structure mapping | S1, S6, R5; licensed reference sets | Independent annotation comparisons, residue-mapping tests and model-vs-experiment provenance | planned | Engineering + Validation | TBD |
@@ -63,6 +63,8 @@ The owner authorized R, S, I and P work to proceed simultaneously on 2026-11-08,
 
 ## Track P — Precision medicine (PGx first)
 Hard gate: no patient-related feature before P0; early research uses public test data only.
+
+Public-data preparation increment: `data/public-dataset-catalog.yaml` is an intentionally empty, metadata-only inventory with a strict schema at `api/public-dataset-catalog.schema.json`. Entries require explicit license-review status and `patient_data: false`; this does not authorize data intake or lift P0.
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |
 |---|---|---|---|---|---|---|
 | P0 | Intended use; legal/ethics/regulatory advice; advisers identified; QMS approach | G1–G3 planning | Written gate packet and owner approval; no patient feature before pass | blocked | Owner + qualified advisers | TBD |

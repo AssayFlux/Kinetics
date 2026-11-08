@@ -95,6 +95,9 @@ object LocalCrypto {
                     output.fd.sync()
                 }
             }
+            if (destination.exists()) {
+                check(destination.delete()) { "Previous decrypted output could not be replaced" }
+            }
             check(temporary.renameTo(destination)) { "Decrypted file could not be finalized" }
         } catch (error: Exception) {
             temporary.delete()

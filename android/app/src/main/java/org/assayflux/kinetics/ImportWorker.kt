@@ -21,6 +21,11 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
         val store = ResearchStore(applicationContext)
         val stagingDirectory = File(applicationContext.noBackupFilesDir, "research-imports")
             .apply { mkdirs() }
+        val legacyPlaintextPartial = File(stagingDirectory, "$jobId.part")
+        if (legacyPlaintextPartial.exists() && !legacyPlaintextPartial.delete()) {
+            store.updateJob(jobId, "failed", message = "Legacy plaintext staging file could not be removed")
+            return Result.failure()
+        }
         val partial = File(stagingDirectory, "$jobId.encpart")
         store.updateJob(jobId, "running")
 

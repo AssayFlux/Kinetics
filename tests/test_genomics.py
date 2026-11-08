@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+from pathlib import Path
 
 from kinetics.genomics import fastq_quality_summary, parse_sam, parse_vcf
 
@@ -121,7 +122,7 @@ def test_bam_binary_record_core_fields_decode_from_gzip_stream() -> None:
 
 
 
-def test_optional_htslib_adapter_reads_bam_and_requires_local_reference_for_cram(tmp_path) -> None:
+def test_optional_htslib_adapter_reads_bam_and_requires_local_reference_for_cram(tmp_path: Path) -> None:
     pysam = pytest.importorskip("pysam")
     from kinetics.genomics_htslib import iter_alignment_records
 
@@ -145,5 +146,6 @@ def test_optional_htslib_adapter_reads_bam_and_requires_local_reference_for_cram
     assert decoded[0].cigar == "4M"
 
     cram_path = tmp_path / "fixture.cram"
+    cram_path.touch()
     with pytest.raises(ValueError, match="local reference"):
         list(iter_alignment_records(cram_path))

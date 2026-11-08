@@ -13,12 +13,12 @@ Establish whether the approved Android-native architecture can support the requi
 
 ## Owner instruction — build and test workflow
 
-Effective 2026-11-08:
-- GitHub Actions must not build APK/AAB artifacts and must not boot or test Android emulators.
-- GitHub Actions remains for host-side Python, registry, lint, type and unit-test checks only.
-- The debug APK is to be built locally when the owner is ready. Physical-device testing is deferred until the owner chooses to perform it.
-- Historical GitHub build artifacts and their static inspection records remain historical evidence; they are not a reason to restore Android build/test jobs to GitHub Actions.
-- Do not claim an APK has been freshly built locally, or that Android runtime/device tests passed, unless the actual local build/logs are supplied and inspected.
+Updated 2026-11-08 with explicit owner authorization:
+- GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts and run repository automated checks, including Android JVM unit-test tasks and static APK/ELF alignment checks.
+- The Actions Android build runs on a pinned Linux x86_64 host toolchain, not on the owner's ARM64 phone. It is a reproducible build/test lane, not a claim that Termux can host the build.
+- Physical-device testing remains a separate required activity. CI success does not establish app launch, JNI/Python runtime behavior, SAF behavior, background execution or device compatibility on the owner's phone.
+- Keep exact run URLs/IDs, source SHA, toolchain versions, logs, artifact hashes/sizes and test results in the feasibility record.
+- Never describe a CI build as a local Termux build or claim physical-device tests passed without actual device evidence.
 
 ## Required feasibility work
 

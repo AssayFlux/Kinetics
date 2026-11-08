@@ -51,8 +51,9 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                     }
                     val length = input.readInt()
                     if (length !in MIN_ENCRYPTED_CHUNK..MAX_ENCRYPTED_CHUNK) {
-                        partial.delete()
-                        throw IllegalStateException("Encrypted staging record has an invalid length")
+                        throw IllegalStateException(
+                            "Encrypted staging record has an invalid length; ciphertext was preserved",
+                        )
                     }
                     if (input.length() - input.filePointer < length) {
                         input.setLength(lastGoodOffset)
@@ -63,17 +64,21 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                     val plaintext = try {
                         LocalCrypto.decrypt(encrypted, LocalCrypto.associatedData(chunkContext, chunkIndex))
                     } catch (error: Exception) {
-                        partial.delete()
-                        throw IllegalStateException("Encrypted staging authentication failed; restart import", error)
+                        throw IllegalStateException(
+                            "Encrypted staging authentication failed; ciphertext was preserved",
+                            error,
+                        )
                     }
                     if (plaintext.isEmpty()) {
-                        partial.delete()
-                        throw IllegalStateException("Encrypted staging contains an empty chunk")
+                        throw IllegalStateException(
+                            "Encrypted staging contains an empty chunk; ciphertext was preserved",
+                        )
                     }
                     byteCount += plaintext.size
                     if (byteCount > MAX_IMPORT_BYTES) {
-                        partial.delete()
-                        throw IllegalArgumentException("Partial input exceeds the 512 MiB import limit")
+                        throw IllegalArgumentException(
+                            "Partial input exceeds the 512 MiB import limit; encrypted data was preserved",
+                        )
                     }
                     digest.update(plaintext)
                     partialPrefixDigest.update(plaintext)
@@ -100,9 +105,9 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                     verifiedBytes += count
                 }
                 if (!MessageDigest.isEqual(partialPrefixDigest.digest(), sourcePrefixDigest.digest())) {
-                    partial.delete()
                     throw IllegalStateException(
-                        "Source content changed since partial import; encrypted partial discarded and full restart required",
+                        "Source content changed since partial import; encrypted partial was preserved. " +
+                            "Start a new import to use the changed source",
                     )
                 }
 
@@ -144,7 +149,11 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                 if (!file.renameTo(partial)) file.delete()
             }
             val detail = error.message ?: error.javaClass.simpleName
-            val state = if (detail.startsWith("Encrypted staging header is invalid")) {
+            val state = if (
+                detail.startsWith("Encrypted staging") ||
+                detail.startsWith("Source content changed") ||
+                detail.startsWith("Partial input exceeds")
+            ) {
                 "recovery_required"
             } else {
                 "failed"

@@ -13,7 +13,7 @@
 - R7: Newick parsing with quoted labels and finite branch-length checks, leaf listing, patristic distance and UPGMA clustering with finite distance validation.
 - R8: CPM/CLR normalization, finite-input-checked Pearson correlation, log2 fold change, cross-omics correlation, logistic growth and Shannon/Gini-Simpson diversity. Statistically sound differential-expression and multi-omics inference remain open.
 - R9: streaming NCBI Gene gene_info importer now preserves the complete 16-column annotation record, including taxonomy, GeneID, symbols, synonyms, cross-references, chromosome, map location, gene type, nomenclature, designations, source and release metadata. The catalogue is expandable and not represented as exhaustive.
-- R10: capability registry validation now checks that implementation paths exist inside the repository. Automated CI execution has been changed to manual dispatch to honor the build-first/test-later instruction; release/security/privacy hardening remains incomplete.
+- R10: capability registry validation now checks that implementation paths exist inside the repository. A static Android guard checks offline permissions, backup/cleartext settings, pinned SDK/NDK/ABI, 16 KB linker flags and absence of Android build/device tasks in GitHub Actions. Automated CI is manual-dispatch only under the build-first/test-later instruction; release/security/privacy hardening remains incomplete.
 
 The capability registry distinguishes source-implemented from validated. Current entries are implemented with no validation evidence; none is marked validated or device-verified.
 

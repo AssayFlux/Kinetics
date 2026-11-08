@@ -515,6 +515,56 @@ private fun Dot(color: Color) {
 }
 
 @Composable
+internal fun BiometricLockScreen(error: String?, onRetry: () -> Unit) {
+    val palette = KineticsTokens.KineticsLightClassic
+    MaterialTheme(
+        colorScheme = lightColorScheme(
+            primary = palette.primary,
+            secondary = palette.secondary,
+            background = palette.background,
+            surface = palette.surface,
+            onSurface = palette.text,
+            onBackground = palette.text,
+            surfaceVariant = palette.surfaceAlt,
+            onSurfaceVariant = palette.muted,
+            outline = palette.outline,
+        ),
+    ) {
+        Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            Column(
+                Modifier.fillMaxSize().padding(28.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text("KINETICS", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, letterSpacing = 2.sp)
+                Spacer(Modifier.height(22.dp))
+                Text("Welcome back", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "Unlock this local research workspace with your enrolled biometric or device screen credential.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Spacer(Modifier.height(24.dp))
+                error?.let {
+                    Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    Spacer(Modifier.height(12.dp))
+                }
+                Button(onClick = onRetry, Modifier.fillMaxWidth().height(52.dp), shape = RoundedCornerShape(16.dp)) {
+                    Text("Authenticate to unlock")
+                }
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    "This is a device-local app lock, not an online account sign-in. Android handles biometric data.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun Footer() {
     Text("KINETICS  •  RESEARCH MODE ONLY  •  NOT FOR CLINICAL USE",
         Modifier.fillMaxWidth().padding(vertical = 8.dp), color = MaterialTheme.colorScheme.onSurfaceVariant,

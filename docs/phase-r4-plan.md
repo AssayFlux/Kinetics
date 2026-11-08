@@ -1,19 +1,29 @@
 # R4 — Genomics and sequence analysis
 
-**Status:** In progress. Source implementation is not scientific validation or device verification.
+**Status:** In progress. Source implementation and Android CI build evidence are not independent scientific validation or device verification.
 
 ## Scope
 - FASTA/FASTQ parsing, including a streaming FASTA iterator and wrapped FASTQ sequence and quality lines.
 - Sequence statistics, reverse complement, transcription, k-mer counting and global pairwise alignment.
 - FASTQ quality summaries and explicit-offset terminal quality trimming.
-- SAM and VCF text parsing with mandatory-field and scalar validation; SAM validation also checks CIGAR query consumption and permits missing QUAL when SEQ is present.\n- Reference-checked minimal/left normalization for literal biallelic A/C/G/T small variants.
-- Added a bounded lazy BAM core-field decoder for gzip/BGZF-compatible BAM streams; auxiliary tags are skipped. CRAM, robust VCF normalization/decomposition, adapter trimming, paired-read handling, indexed access and Rust acceleration remain future work.
+- SAM and VCF text parsing with mandatory-field and scalar validation; SAM validation also checks CIGAR query consumption and permits missing QUAL when SEQ is present.
+- Reference-checked minimal/left normalization for literal biallelic A/C/G/T small variants.
+- Bounded lazy BAM core-field decoder for gzip/BGZF-compatible BAM streams; optional host-side pysam/HTSlib adapter for BAM/CRAM with explicit local reference for CRAM.
+- Android Explore integration: bounded FASTA QC (record length, GC fraction and ambiguous-symbol count) and bounded FASTQ read-quality summary (explicit Phred+33/Phred+64, read/base counts, mean Phred and Q20/Q30 fractions) through the embedded Python adapter. These are local analysis cards, not yet the full SAF-import → durable job → result/provenance/export workflow.
 
 ## Current source
-Implemented in `python/kinetics/sequence.py` and `python/kinetics/genomics.py`. Regression-test source is in `tests/test_research_primitives.py` and `tests/test_genomics.py`. The streaming iterator is exported as `kinetics.iter_fasta_records`; the reference normalizer is exported as `kinetics.normalize_small_variant`.
+- Domain workflows: `python/kinetics/sequence.py`, `python/kinetics/genomics.py`, `python/kinetics/workflows.py`.
+- Android bridge: `android/app/src/main/python/kinetics_probe.py` and `android/app/src/main/java/org/assayflux/kinetics/SequenceQcRunner.kt`.
+- Explore UI: `android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt`.
+- Regression tests: `tests/test_research_primitives.py`, `tests/test_genomics.py`, `tests/test_fasta_workflow.py`.
+- Exact Android CI evidence for the FASTA/FASTQ cards: [run #2033](https://github.com/AssayFlux/Kinetics/actions/runs/42484179938), source `037befa8e9d22099e250dd22d3c4d772a6457034`.
 
 ## Limitations
-- The FASTA text convenience function materializes its returned records; use the iterator API for large inputs.\n- BAM decoder exposes core SAM-like fields only and currently materializes each compressed BAM record block (bounded to 64 MiB); auxiliary tags are skipped. CRAM remains unsupported and requires a reviewed htslib/CRAM engine.
+- FASTQ Phred offset is explicit user input; no encoding inference is performed.
+- Android text-card inputs are capped at 1,000,000 characters; the Python workflow also caps reads and aggregate bases. The current UI does not provide a large-file streaming FASTQ import path.
+- No adapter detection/trimming, sliding-window trimming, paired-read rescue, variant calling or clinical interpretation is performed by these QC cards.
+- FASTA text convenience function materializes its returned records; use the iterator API for large inputs.
+- BAM decoder exposes core SAM-like fields only and currently materializes each compressed BAM record block (bounded to 64 MiB); auxiliary tags are skipped. CRAM remains unsupported in Android and requires a reviewed htslib/CRAM engine.
 - Terminal trimming is not adapter trimming or sliding-window quality trimming.
 - VCF parsing does not yet normalize/decompose records automatically. The separate normalizer handles only reference-checked biallelic literal A/C/G/T small variants; symbolic alleles, breakends, multi-allelic decomposition, phasing and variant interpretation remain unsupported.
 - Global alignment is not a high-throughput mapper.

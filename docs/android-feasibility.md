@@ -229,3 +229,10 @@ Build and static package evidence is green. R1 is **not complete**. Outstanding:
 - Pre-commit configuration, Ruff, mypy, registry validation and all 11 unit tests passed.
 - Reproduction stub, owner-directed local-only Android artifact gate and local build-script `bash -n` syntax check passed.
 - No APK/AAB build or Android runtime test was run in GitHub Actions.
+
+
+## ELF checker hardening — 2026-11-08
+
+The repository's static ELF checker was strengthened after source audit. It now validates ELF64 little-endian version 1, AArch64 machine type, program-header bounds and entry sizes, presence of PT_LOAD segments, minimum 16 KB alignment for every load segment, power-of-two alignment, and the ELF congruence requirement that p_offset and p_vaddr match modulo p_align. Synthetic regression tests cover a valid 16 KB segment, insufficient alignment, incongruent offsets, wrong architecture and missing load segments.
+
+Host-only CI run 42429935581 passed on commit e1560a3f74165a770438000a650a83019a01432d: Ruff, mypy (8 source files), registry validation, all 15 unit tests, reproduction stub, local Android build-script syntax check and owner-directed Android artifact gate. This is host-side checker validation only; it does not add fresh APK evidence or runtime/device evidence. R1 remains in progress.

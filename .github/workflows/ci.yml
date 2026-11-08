@@ -101,7 +101,8 @@ jobs:
 
   android-arm64-build:
     name: Android arm64 debug APK/AAB build and package tests
-    runs-on: ubuntu-latest
+    # Keep the pinned Python 3.11.17 build host on the stable Ubuntu 24.04 image.
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4

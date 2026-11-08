@@ -4,6 +4,8 @@ settings:
   - key: appearance.theme
     type: enum
     values: [system, light, dark, amoled, high_contrast_light, high_contrast_dark, dynamic, brand, custom_seed, lab]
+    theme_families: [light, dark, neon]
+    default_family: dark
     default: system
     scope: device
     security_class: ordinary
@@ -15,6 +17,22 @@ settings:
     scope: device
     security_class: ordinary
     ui_location: Settings/Appearance
+    status: planned
+  - key: appearance.theme_family
+    type: enum
+    values: [light, dark, neon]
+    default: dark
+    scope: device
+    security_class: ordinary
+    ui_location: Settings/Appearance
+    status: planned
+  - key: appearance.font_family
+    type: enum
+    values: [inter, roboto, ibm_plex_sans, source_sans_3, noto_sans, manrope, plus_jakarta_sans, sora, space_grotesk, exo_2, rajdhani, orbitron, oxanium, michroma, audiowide, cinzel, cormorant_garamond, eb_garamond, libre_baskerville, merriweather, roboto_slab, ibm_plex_mono, jetbrains_mono, fira_code, source_code_pro, atkinson_hyperlegible]
+    default: inter
+    scope: device
+    security_class: ordinary
+    ui_location: Settings/Appearance/Typography
     status: planned
   - key: appearance.corner_style
     type: enum

@@ -1,6 +1,6 @@
 <escape>{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://assayflux.org/schemas/kinetics.structure-view.v1.json",
+  "$id": "urn:kinetics:structure-view:v1",
   "title": "Kinetics offline structure viewer payload",
   "type": "object",
   "additionalProperties": false,

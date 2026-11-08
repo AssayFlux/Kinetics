@@ -69,11 +69,11 @@ def _largest_symmetric_eigenvector(matrix: list[list[float]]) -> list[float]:
         values[q][q] = aqq + tangent * apq
         values[p][q] = values[q][p] = 0.0
         for k in range(size):
-            if k in (p, q):
-                continue
-            vkp, vkq = values[k][p], values[k][q]
-            values[k][p] = values[p][k] = cosine * vkp - sine * vkq
-            values[k][q] = values[q][k] = sine * vkp + cosine * vkq
+            if k not in (p, q):
+                vkp, vkq = values[k][p], values[k][q]
+                values[k][p] = values[p][k] = cosine * vkp - sine * vkq
+                values[k][q] = values[q][k] = sine * vkp + cosine * vkq
+            # Eigenvectors are rotated for every row, including p and q.
             vkp, vkq = vectors[k][p], vectors[k][q]
             vectors[k][p] = cosine * vkp - sine * vkq
             vectors[k][q] = sine * vkp + cosine * vkq
@@ -214,13 +214,13 @@ def parse_mmcif(text: str, *, include_hetero: bool = False) -> list[Atom]:
 
         def field(row: list[str], *names: str, default: str = "") -> str:
             for name in names:
-                position = columns.get("_atom_site." + name)
+                position = columns.get(("_atom_site." + name).lower())
                 if position is not None and row[position] not in {".", "?"}:
                     return row[position]
             return default
 
         required = ("type_symbol", "Cartn_x", "Cartn_y", "Cartn_z")
-        if any("_atom_site." + name not in columns for name in required):
+        if any(("_atom_site." + name).lower() not in columns for name in required):
             raise ValueError("mmCIF atom_site loop lacks required element/coordinate columns")
         for offset in range(0, len(values), len(tags)):
             row = values[offset:offset + len(tags)]

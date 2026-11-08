@@ -63,7 +63,7 @@ R3 is complete only when the three workflow families are implemented and registe
 
 ## Regression-test baseline — 2026-11-08
 
-Added host regression coverage for FASTA/FASTQ, IUPAC reverse complement/transcription, sequence statistics/k-mers, Needleman–Wunsch alignment output, peptide mass/pI and unsupported residues, Michaelis–Menten/inhibition equations, and a synthetic Michaelis–Menten parameter-recovery case. Host CI run 1594 passed all 28 tests. These tests establish current code behavior only; they are not independent scientific validation. Independent references/datasets, confidence intervals, residual diagnostics, AIC/BIC, unit handling, fit identifiability, external concordance, Android runtime and device benchmarks remain outstanding. The current log-grid estimator explicitly returns no confidence intervals.
+Added host regression coverage for FASTA/FASTQ, IUPAC reverse complement/transcription, sequence statistics/k-mers, Needleman–Wunsch alignment output, peptide mass/pI and unsupported residues, Michaelis–Menten/inhibition equations, and a synthetic Michaelis–Menten parameter-recovery case. Host CI run 1594 passed all 28 tests. These tests establish current code behavior only; they are not independent scientific validation. Independent references/datasets, reference-calibrated uncertainty, residual diagnostics, AIC/BIC, unit handling, fit identifiability, external concordance, Android runtime and device benchmarks remain outstanding. The base log-grid estimator returns no intervals; a separate paired-bootstrap helper now provides exploratory percentile intervals.
 
 
 ### R3 continued source increment — paired bootstrap intervals

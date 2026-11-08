@@ -86,15 +86,6 @@ tools:
     status: implemented
     implementation: python/kinetics/omics.py
     evidence_level: none
-engines: []
-data_packs: []
-domains: []
-device_logs: []
-validation_records: []
-claims: []
-clinical_gate:
-  enabled: false
-  part12_evidence: []
   - id: genomics.variant_normalization
     name: Reference-checked left normalization for biallelic small variants
     status: implemented
@@ -105,3 +96,12 @@ clinical_gate:
     status: implemented
     implementation: python/kinetics/kinetics.py
     evidence_level: none
+engines: []
+data_packs: []
+domains: []
+device_logs: []
+validation_records: []
+claims: []
+clinical_gate:
+  enabled: false
+  part12_evidence: []

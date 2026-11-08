@@ -125,3 +125,38 @@ def test_rdkit_reference_sanity_fixture_script() -> None:
     assert result["overall_pass"] is True
     assert result["engine"]["engine"] == "RDKit"
     assert all(item["pass"] for item in result["results"])
+
+
+def test_sdf_stream_parses_incrementally_and_enforces_record_budgets() -> None:
+    from kinetics.chemistry import iter_sdf_stream
+
+    counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
+    atom_line = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
+    record = ["carbon", "Kinetics", "", counts, atom_line, "M  END"]
+    source = iter(record + ["$$$$"] + record)
+    parsed = list(iter_sdf_stream(source, max_records=2))
+    assert len(parsed) == 2
+    assert all(item["formula"] == "C" for item in parsed)
+
+    with pytest.raises(ValueError, match="max_records"):
+        list(iter_sdf_stream(iter(record + ["$$$$"] + record), max_records=1))
+    with pytest.raises(ValueError, match="max_record_chars"):
+        list(iter_sdf_stream(iter(record), max_record_chars=10))
+    with pytest.raises(ValueError, match="max_total_chars"):
+        list(iter_sdf_stream(iter(record), max_total_chars=10))
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"max_records": True},
+        {"max_records": 1.5},
+        {"max_record_chars": False},
+        {"max_total_chars": 1.5},
+    ],
+)
+def test_sdf_stream_rejects_non_integer_budgets(kwargs: dict[str, object]) -> None:
+    from kinetics.chemistry import iter_sdf_stream
+
+    with pytest.raises(ValueError, match="positive integer"):
+        list(iter_sdf_stream(iter([]), **kwargs))

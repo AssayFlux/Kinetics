@@ -13,7 +13,7 @@ from .chemistry import (
 )
 from .genomics import (\n    SamRecord, fastq_quality_summary, normalize_small_variant, parse_sam, parse_vcf,\n)
 from .kinetics import (
-    eadie_hofstee, fit_michaelis_menten, hanes_woolf, inhibition_rate,
+    bootstrap_michaelis_menten, eadie_hofstee, fit_michaelis_menten, hanes_woolf, inhibition_rate,
     lineweaver_burk, michaelis_menten,
 )
 from .molecular import primer_properties, scan_spcas9_ngg
@@ -31,7 +31,7 @@ from .sequence import (
 from .structure import Atom, contact_pairs, parse_mmcif, parse_pdb, rmsd
 
 __all__ = [
-    "Atom", "GeneEntry", "Node", "SamRecord", "SequenceRecord",
+    "Atom", "GeneEntry", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate",

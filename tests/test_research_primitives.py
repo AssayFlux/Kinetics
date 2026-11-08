@@ -176,3 +176,22 @@ def test_fasta_iterator_streams_records_from_line_iterable() -> None:
     )
     second = next(records)
     assert (second.identifier, second.sequence) == ("second", "TTN")
+
+
+
+def test_michaelis_menten_bootstrap_intervals_are_seed_reproducible() -> None:
+    from kinetics.kinetics import bootstrap_michaelis_menten
+
+    substrates = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
+    rates = [100.0 * value / (10.0 + value) for value in substrates]
+    first = bootstrap_michaelis_menten(
+        substrates, rates, replicates=100, grid_size=10, seed=17,
+    )
+    second = bootstrap_michaelis_menten(
+        substrates, rates, replicates=100, grid_size=10, seed=17,
+    )
+    assert first == second
+    intervals = first["confidence_intervals"]
+    assert isinstance(intervals, dict)
+    assert intervals["vmax"][0] <= intervals["vmax"][1]
+    assert intervals["km"][0] <= intervals["km"][1]

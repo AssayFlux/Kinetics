@@ -100,3 +100,8 @@ clinical_gate:
     status: implemented
     implementation: python/kinetics/genomics.py
     evidence_level: none
+  - id: kinetics.bootstrap_intervals
+    name: Seeded paired-bootstrap intervals for exploratory Michaelis-Menten fits
+    status: implemented
+    implementation: python/kinetics/kinetics.py
+    evidence_level: none

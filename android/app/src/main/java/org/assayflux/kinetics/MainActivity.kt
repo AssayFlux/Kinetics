@@ -44,9 +44,13 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
     var notice by remember { mutableStateOf("Research Mode. Local files stay on this device.") }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
-            runCatching {
+            val persistentReadGrant = runCatching {
                 activity.contentResolver.takePersistableUriPermission(
                     uri, android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }.isSuccess
+            if (!persistentReadGrant) {
+                notice = "This document provider did not grant persistent read access. Choose a file from a provider that supports resumable access."
+                return@rememberLauncherForActivityResult
             }
             val id = UUID.randomUUID().toString()
             val name = uri.lastPathSegment ?: "Imported document"

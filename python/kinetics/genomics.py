@@ -265,7 +265,7 @@ def iter_bam_records(
         name_length = struct.unpack("<i", raw)[0]
         if not 2 <= name_length <= 1_000_000:
             raise ValueError("Invalid BAM reference name length")
-        if name_length + 4 > max_header_bytes - header_bytes:
+        if name_length + 8 > max_header_bytes - header_bytes:
             raise ValueError("BAM reference dictionary exceeds configured max_header_bytes")
         header_bytes += name_length + 8
         name = stream.read(name_length)

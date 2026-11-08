@@ -193,8 +193,8 @@ def test_bam_parser_enforces_record_and_total_base_limits() -> None:
 
     from kinetics.genomics import iter_bam_records
 
-    header = b"BAM\\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
-    header += struct.pack("<i", 5) + b"chr1\\x00" + struct.pack("<i", 1000)
+    header = b"BAM\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
+    header += struct.pack("<i", 5) + b"chr1\x00" + struct.pack("<i", 1000)
 
     def record(name: bytes, sequence: bytes = bytes([0x12, 0x48])) -> bytes:
         core = struct.pack(
@@ -206,7 +206,7 @@ def test_bam_parser_enforces_record_and_total_base_limits() -> None:
         block = core + name + cigar + sequence + qualities
         return struct.pack("<i", len(block)) + block
 
-    bam = header + record(b"r1\\x00") + record(b"r2\\x00")
+    bam = header + record(b"r1\x00") + record(b"r2\x00")
     with pytest.raises(ValueError, match="max_records"):
         list(iter_bam_records(io.BytesIO(gzip.compress(bam)), max_records=1))
 
@@ -240,8 +240,8 @@ def test_bam_parser_bounds_aggregate_header_and_reference_dictionary() -> None:
     from kinetics.genomics import iter_bam_records
 
     payload = (
-        b"BAM\\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
-        + struct.pack("<i", 5) + b"chr1\\x00" + struct.pack("<i", 1000)
+        b"BAM\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
+        + struct.pack("<i", 5) + b"chr1\x00" + struct.pack("<i", 1000)
     )
     with pytest.raises(ValueError, match="reference dictionary"):
         list(iter_bam_records(io.BytesIO(gzip.compress(payload)), max_header_bytes=12))

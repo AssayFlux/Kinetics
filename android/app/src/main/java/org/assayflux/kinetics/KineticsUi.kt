@@ -648,7 +648,7 @@ private fun FastaQcCard() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var fastaText by rememberSaveable {
-        mutableStateOf(">example_sequence\\nACGTACGTGCGTNNACGT\\n")
+        mutableStateOf(">example_sequence\nACGTACGTGCGTNNACGT\n")
     }
     var running by remember { mutableStateOf(false) }
     var result by remember { mutableStateOf<SequenceQcResult?>(null) }

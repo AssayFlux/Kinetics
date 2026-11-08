@@ -59,6 +59,18 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         if marker not in gradle:
             errors.append(message)
 
+    package_init = root / "python/kinetics/__init__.py"
+    runtime_probe = root / "android/app/src/main/python/kinetics_probe.py"
+    if not package_init.is_file():
+        errors.append("Repository kinetics Python package is missing")
+    try:
+        probe_source = runtime_probe.read_text(encoding="utf-8")
+    except OSError as exc:
+        errors.append(f"Embedded Python runtime probe could not be read: {exc}")
+        probe_source = ""
+    if "import kinetics" not in probe_source:
+        errors.append("Embedded Python runtime probe must import the packaged kinetics module")
+
     try:
         cmake = cmake_path.read_text(encoding="utf-8")
     except OSError as exc:

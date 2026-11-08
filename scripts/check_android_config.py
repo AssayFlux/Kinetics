@@ -95,9 +95,9 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         manifest_text = ""
     if 'android:allowBackup="false"' not in manifest_text:
         errors.append("Android backup must remain disabled for local research data")
-    if 'android:usesCleartextTraffic="false"' not in manifest:
+    if 'android:usesCleartextTraffic="false"' not in manifest_text:
         errors.append("Android cleartext traffic must remain disabled")
-    if "android.permission.INTERNET" in manifest:
+    if "android.permission.INTERNET" in manifest_text:
         errors.append("Android application must not request INTERNET permission")
 
     package_init = root / "python/kinetics/__init__.py"

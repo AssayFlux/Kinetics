@@ -99,11 +99,21 @@ def generate(root: Path = ROOT) -> dict[str, object]:
                 if match:
                     name, constraint = match.groups()
                     version = constraint.strip() or "UNPINNED"
+                    if version.startswith("=="):
+                        version = version[2:]
+                    key = (name.casefold(), version)
+                    was_declared_elsewhere = key in packages
                     add(name, version, "pypi", f"pkg:pypi/{name}")
-                    packages[(name.casefold(), version)]["comment"] = (
-                        f"ecosystem=pypi; host-only validation dependency from "
-                        f"{requirements_file.relative_to(root)}; not Android runtime"
-                    )
+                    if was_declared_elsewhere:
+                        packages[key]["comment"] += (
+                            f"; also used by host-only validation dependency from "
+                            f"{requirements_file.relative_to(root)}"
+                        )
+                    else:
+                        packages[key]["comment"] = (
+                            f"ecosystem=pypi; host-only validation dependency from "
+                            f"{requirements_file.relative_to(root)}; not Android runtime"
+                        )
 
     local_build = (root / "scripts/build_android_local.sh").read_text(encoding="utf-8")
     rust_toolchain = (root / "rust-toolchain.toml").read_text(encoding="utf-8")

@@ -258,12 +258,18 @@ class ResearchStore(context: Context) :
         val encrypted = storedPath?.let(::resolveEncryptedInput)
         val stagingRoot = File(appContext.noBackupFilesDir, "research-imports").canonicalFile
         val partial = File(stagingRoot, "$id.encpart").canonicalFile
-        require(partial.parentFile == stagingRoot) { "Invalid encrypted staging path" }
+        val legacyPlaintext = File(stagingRoot, "$id.part").canonicalFile
+        require(partial.parentFile == stagingRoot && legacyPlaintext.parentFile == stagingRoot) {
+            "Invalid import staging path"
+        }
         if (encrypted != null && encrypted.exists() && !encrypted.delete()) {
             throw IllegalStateException("Encrypted input could not be deleted")
         }
         if (partial.exists() && !partial.delete()) {
             throw IllegalStateException("Encrypted partial input could not be deleted")
+        }
+        if (legacyPlaintext.exists() && !legacyPlaintext.delete()) {
+            throw IllegalStateException("Legacy plaintext partial could not be deleted")
         }
         val db = writableDatabase
         db.beginTransaction()

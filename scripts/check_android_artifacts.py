@@ -1,25 +1,30 @@
 #!/usr/bin/env python3
-"""Report the owner-directed local-only Android build boundary in source CI."""
+"""Verify that the Android CI build produced non-empty APK and AAB artifacts."""
 
+from __future__ import annotations
+
+import hashlib
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ANDROID = ROOT / "android"
+EXPECTED = (
+    ANDROID / "app/build/outputs/apk/debug/app-debug.apk",
+    ANDROID / "app/build/outputs/bundle/debug/app-debug.aab",
+)
 
 
 def main() -> int:
-    artifacts = list(ANDROID.rglob("*.apk")) + list(ANDROID.rglob("*.aab"))
-    if not artifacts:
-        print(
-            "NOT RUN IN GITHUB ACTIONS by owner instruction: APK/AAB builds and "
-            "Android runtime tests are local-only. Use docs/local-android-build.md."
-        )
-        return 0
-    print(
-        "Android artifacts found in the checkout, but this source-only CI job "
-        "does not inspect or validate them. Use the local build procedure and "
-        "record the results in docs/android-feasibility.md."
-    )
+    missing = [path for path in EXPECTED if not path.is_file() or path.stat().st_size == 0]
+    if missing:
+        for path in missing:
+            print(f"ERROR: required Android artifact is missing or empty: {path}", file=sys.stderr)
+        return 1
+
+    for path in EXPECTED:
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        print(f"OK: {path.relative_to(ROOT)} size={path.stat().st_size} sha256={digest}")
     return 0
 
 

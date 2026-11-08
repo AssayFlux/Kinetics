@@ -789,3 +789,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R2 decryption resource boundary
 - Decryption now rejects empty authenticated chunks and caps materialized plaintext at the same 512 MiB limit as import, before writing beyond the cap.
 - The helper checks the output channel's current position before each plaintext write. This is source-only and has not been exercised on Android.
+
+
+### R9 large-catalogue search memory bound
+- Gene catalogue search now retains at most the requested result limit in exact and partial result buckets rather than accumulating every partial match from a full streamed NCBI catalogue. This avoids turning a streaming import into an unbounded search-result memory allocation.
+- No tests were run; all new tests remain queued for the later validation phase.

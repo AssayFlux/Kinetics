@@ -107,3 +107,21 @@ def test_rdkit_backend_rejects_invalid_molecules() -> None:
 
     with pytest.raises(ValueError):
         analyze_smiles("not a valid smiles string")
+
+
+def test_rdkit_reference_sanity_fixture_script() -> None:
+    pytest.importorskip("rdkit")
+    import json
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    completed = subprocess.run(
+        [sys.executable, str(root / "validation" / "chemistry_reference.py")],
+        cwd=root, check=True, capture_output=True, text=True,
+    )
+    result = json.loads(completed.stdout)
+    assert result["overall_pass"] is True
+    assert result["engine"]["engine"] == "RDKit"
+    assert all(item["pass"] for item in result["results"])

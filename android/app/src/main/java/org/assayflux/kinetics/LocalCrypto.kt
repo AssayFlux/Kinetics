@@ -4,7 +4,6 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import java.io.File
 import java.io.FileOutputStream
-import java.io.EOFException
 import java.io.RandomAccessFile
 import java.security.KeyStore
 import java.security.MessageDigest

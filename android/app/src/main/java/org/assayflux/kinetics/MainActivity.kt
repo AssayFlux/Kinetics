@@ -193,6 +193,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
     if (biometricEnabled && !biometricUnlocked) {
         BiometricLockScreen(
             error = biometricError,
+            themeFamily = themeFamily,
             onRetry = {
                 biometricError = null
                 BiometricUnlock.authenticate(

@@ -236,3 +236,14 @@ def substructure_match(
 def tanimoto(first: frozenset[str], second: frozenset[str]) -> float:
     union = first | second
     return len(first & second) / len(union) if union else 1.0
+
+
+def iter_sdf_records(text: str):
+    """Yield non-empty SDF records from a multi-record V2000 file."""
+    for record_number, block in enumerate(text.split("$$$$"), 1):
+        if not block.strip():
+            continue
+        try:
+            yield parse_sdf_record(block)
+        except ValueError as exc:
+            raise ValueError(f"SDF record {record_number}: {exc}") from exc

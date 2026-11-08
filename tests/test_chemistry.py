@@ -51,3 +51,15 @@ def test_substructure_search_has_a_hard_state_limit() -> None:
 def test_tanimoto_handles_empty_and_disjoint_fingerprints() -> None:
     assert tanimoto(frozenset(), frozenset()) == 1
     assert tanimoto(frozenset({"a"}), frozenset({"b"})) == 0
+
+
+def test_sdf_iterator_reads_multiple_records_and_skips_empty_blocks() -> None:
+    from kinetics.chemistry import iter_sdf_records
+
+    counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
+    atom = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
+    record = "\\n".join(["methane", "Kinetics", "", counts, atom, "M  END"])
+    parsed = list(iter_sdf_records(record + "\\n$$$$\\n\\n" + record + "\\n$$$$\\n"))
+    assert len(parsed) == 2
+    assert parsed[0]["formula"] == "C"
+    assert parsed[1]["atom_count"] == 1

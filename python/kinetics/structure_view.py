@@ -5,6 +5,7 @@ or assign quality/confidence labels.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 from math import isfinite
 from typing import Any, Iterable
@@ -22,7 +23,9 @@ def prepare_viewer_payload(
     max_atoms: int = 200_000,
 ) -> dict[str, Any]:
     """Build a deterministic, size-bounded atom payload in Angstrom coordinates."""
-    if not isinstance(source_format, str):\n        raise ValueError("source_format must be text")\n    normalized_format = source_format.lower().strip()
+    if not isinstance(source_format, str):
+        raise ValueError("source_format must be text")
+    normalized_format = source_format.lower().strip()
     if normalized_format not in SUPPORTED_SOURCE_FORMATS:
         raise ValueError("source_format must be 'pdb' or 'mmcif'")
     if isinstance(max_atoms, bool) or max_atoms < 1:

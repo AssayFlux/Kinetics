@@ -1,7 +1,9 @@
 """Source-attributed, expandable ingestion of the full NCBI Gene gene_info schema."""
 from __future__ import annotations
 
+import gzip
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable, Iterator
 
 
@@ -91,3 +93,16 @@ def validate_gene_catalog(entries: Iterable[GeneEntry]) -> None:
             raise ValueError(f"Unknown evidence status: {entry.evidence_status}")
         if entry.evidence_status == "validated":
             raise ValueError("A catalogue import cannot confer validated status")
+
+
+def iter_ncbi_gene_info_file(
+    path: str | Path, *, source_release: str,
+) -> Iterator[GeneEntry]:
+    """Stream plain or gzip-compressed NCBI gene_info without loading it into memory."""
+    source = Path(path)
+    if source.suffix.lower() == ".gz":
+        with gzip.open(source, "rt", encoding="utf-8", newline="") as handle:
+            yield from iter_ncbi_gene_info(handle, source_release=source_release)
+    else:
+        with source.open("rt", encoding="utf-8", newline="") as handle:
+            yield from iter_ncbi_gene_info(handle, source_release=source_release)

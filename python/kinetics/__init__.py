@@ -5,7 +5,9 @@ Source implementation does not imply independent scientific validation or clinic
 
 __version__ = "0.1.0"
 
-from .catalog import GeneEntry, iter_ncbi_gene_info, validate_gene_catalog
+from .catalog import (
+    GeneEntry, iter_ncbi_gene_info, iter_ncbi_gene_info_file, validate_gene_catalog,
+)
 from .chemistry import (
     graph_descriptors, parse_sdf_record, path_fingerprint, substructure_match, tanimoto,
 )
@@ -32,7 +34,7 @@ __all__ = [
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate",
-    "iter_ncbi_gene_info", "kmer_counts", "leaf_names", "lineweaver_burk",
+    "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "kmer_counts", "leaf_names", "lineweaver_burk",
     "log2_fold_change", "logistic_growth", "michaelis_menten",
     "needleman_wunsch", "parse_fasta", "parse_fastq", "parse_newick",
     "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",

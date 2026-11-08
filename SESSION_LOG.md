@@ -1364,3 +1364,11 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Gradle retrieval succeeded through the checksum-pinned multi-source fallback after prior HTTP 504 failures. This is the first successful build evidence for this integrated source state.
 - Boundaries: no emulator or physical-device install/runtime test was run; no cold-start, memory, thermal or offline runtime evidence exists. The declared SPDX inventory is not a complete resolved transitive/file-level license audit. R1 remains in progress and no production engine/bundling decision is made by this build.
 - The generated debug APK/AAB are available as workflow artifact `13611129700` (14-day retention) and were separately extracted for owner download in this conversation.
+
+
+## 2026-11-08 — R2 non-destructive encrypted orphan inventory
+- Added `EncryptedOrphanScanner` to identify finalized `.kdat` files without a matching database storage reference and `.encpart` files whose job is missing or already has finalized storage.
+- Scanner ignores symbolic links and non-regular files, reports path/type/size/modified time, and never deletes, renames, decrypts or otherwise modifies ciphertext.
+- Added `ResearchStore.encryptedOrphanInventory()` to compare app-private encrypted directories with durable job rows. The inventory is a review aid, not automatic cleanup or cryptographic recovery.
+- Added JVM tests covering unreferenced finalized files, missing-job partials, stale partials for completed jobs, active partial preservation, symlink exclusion and proof that reported files remain intact.
+- This advances the R2-14 implementation path only. Real app database integration, device inspection and the full R2 recovery matrix remain unverified; R2 stays in progress.

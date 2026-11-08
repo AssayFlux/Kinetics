@@ -1,0 +1,116 @@
+"""Regression tests for the initial Research Mode scientific primitives.
+
+These tests establish deterministic software behavior only. They are not
+independent scientific validation or a claim of domain accuracy.
+"""
+import math
+
+import pytest
+
+from kinetics import (
+    fit_michaelis_menten,
+    inhibition_rate,
+    kmer_counts,
+    michaelis_menten,
+    needleman_wunsch,
+    parse_fasta,
+    parse_fastq,
+    protein_descriptors,
+    reverse_complement,
+    sequence_statistics,
+    theoretical_pi,
+    transcribe,
+)
+from kinetics.sequence import validate_sequence
+
+
+def test_fasta_parsing_preserves_identifier_and_description() -> None:
+    records = parse_fasta(">seq-1 sample sequence\nacgt\nRYN\n")
+    assert len(records) == 1
+    assert (records[0].identifier, records[0].description, records[0].sequence) == (
+        "seq-1", "sample sequence", "ACGTRY N".replace(" ", "")
+    )
+
+
+@pytest.mark.parametrize("text", ["ACGT", ">\nACGT", ">a\n", ""])
+def test_fasta_rejects_invalid_or_empty_records(text: str) -> None:
+    with pytest.raises(ValueError):
+        parse_fasta(text)
+
+
+def test_fastq_parsing_checks_quality_length() -> None:
+    parsed = parse_fastq("@r1 comment\nACGT\n+\n!!!!\n")
+    assert parsed[0][0].identifier == "r1"
+    assert parsed[0][1] == "!!!!"
+    with pytest.raises(ValueError, match="length mismatch"):
+        parse_fastq("@r1\nACGT\n+\n!!!\n")
+
+
+def test_iupac_reverse_complement_and_transcription() -> None:
+    assert reverse_complement("ACGTRYMKSWBDHVN") == "NBDHVWSMKRYACGT"
+    assert transcribe("ACGTN") == "ACGUN"
+    with pytest.raises(ValueError):
+        validate_sequence("ACGTZ")
+
+
+def test_sequence_statistics_and_kmer_counts() -> None:
+    stats = sequence_statistics("ACGTN")
+    assert stats["length"] == 5
+    assert math.isclose(float(stats["gc_fraction"]), 0.4)
+    assert stats["ambiguous_count"] == 1
+    assert kmer_counts("AACNAA", 2) == {"AA": 2}
+    assert kmer_counts("AACNAA", 2, canonical_only=False) == {
+        "AA": 2, "AC": 1, "CN": 1, "NA": 1,
+    }
+
+
+def test_needleman_wunsch_returns_consistent_global_alignment() -> None:
+    result = needleman_wunsch("GATTACA", "GCATGCU", match=1, mismatch=-1, gap=-1)
+    a, b = str(result["aligned_a"]), str(result["aligned_b"])
+    assert len(a) == len(b)
+    assert a.replace("-", "") == "GATTACA"
+    assert b.replace("-", "") == "GCATGCU"
+    assert result["algorithm"] == "Needleman-Wunsch-linear-gap"
+    with pytest.raises(ValueError, match="memory-cell limit"):
+        needleman_wunsch("A" * 100, "A" * 100, max_cells=100)
+
+
+def test_protein_descriptors_are_explicit_about_assumptions() -> None:
+    result = protein_descriptors("ACDE")
+    assert result["length"] == 4
+    assert float(result["molecular_weight_da"]) > 400
+    assert 0 <= float(result["theoretical_pi"]) <= 14
+    assert len(result["assumptions"]) == 3
+    with pytest.raises(ValueError, match="Unsupported"):
+        protein_descriptors("ACDX")
+
+
+def test_theoretical_pi_handles_basic_and_acidic_sequences() -> None:
+    assert theoretical_pi("KKKK") > theoretical_pi("DDDD")
+
+
+def test_michaelis_menten_and_inhibition_models() -> None:
+    assert michaelis_menten(10, 100, 10) == 50
+    assert inhibition_rate(10, 10, 100, 10, 10, "competitive") == pytest.approx(100 / 3)
+    assert inhibition_rate(10, 10, 100, 10, 10, "noncompetitive") == pytest.approx(25)
+    assert inhibition_rate(10, 10, 100, 10, 10, "uncompetitive") == pytest.approx(100 * 10 / 30)
+    assert inhibition_rate(10, 10, 100, 10, 10, "mixed", 20) == pytest.approx(100 * 10 / 35)
+    with pytest.raises(ValueError):
+        michaelis_menten(-1, 10, 1)
+    with pytest.raises(ValueError, match="ki_uncompetitive"):
+        inhibition_rate(1, 1, 10, 1, 1, "mixed")
+
+
+def test_log_grid_fit_recovers_a_synthetic_parameter_region() -> None:
+    substrates = [1, 2, 5, 10, 20, 50, 100]
+    rates = [michaelis_menten(s, 120, 15) for s in substrates]
+    result = fit_michaelis_menten(
+        substrates, rates,
+        vmax_bounds=(100, 140), km_bounds=(10, 20), grid_size=300,
+    )
+    assert float(result["sse"]) >= 0
+    assert float(result["rmse"]) < 0.2
+    assert float(result["vmax"]) == pytest.approx(120, rel=0.02)
+    assert float(result["km"]) == pytest.approx(15, rel=0.03)
+    assert result["confidence_intervals"] is None
+    assert len(result["warnings"]) >= 2

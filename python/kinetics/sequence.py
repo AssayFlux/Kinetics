@@ -56,7 +56,7 @@ def parse_fastq(text: str) -> list[tuple[SequenceRecord, str]]:
     output = []
     for i in range(0, len(lines), 4):
         head, seq, plus, quality = lines[i:i+4]
-        if not head.startswith("@") or not plus.startswith("+"):
+        if not head.startswith("@") or not head[1:].strip() or not plus.startswith("+"):
             raise ValueError(f"FASTQ record {i//4+1}: invalid header or separator")
         seq = _normalise(seq)
         if len(seq) != len(quality):
@@ -106,12 +106,14 @@ def kmer_counts(sequence: str, k: int, *, canonical_only: bool = True) -> dict[s
     return dict(sorted(counts.items()))
 
 def needleman_wunsch(a: str, b: str, *, match: int = 2, mismatch: int = -1,
-                     gap: int = -2) -> dict[str, object]:
+                     gap: int = -2, max_cells: int = 4_000_000) -> dict[str, object]:
     """Global linear-gap alignment. Returns one deterministic optimal traceback."""
     x, y = _normalise(a), _normalise(b)
     if not x or not y:
         raise ValueError("Both sequences must be non-empty")
     rows, cols = len(x) + 1, len(y) + 1
+    if max_cells < 1 or rows * cols > max_cells:
+        raise ValueError("Alignment exceeds the configured memory-cell limit")
     score = [[0] * cols for _ in range(rows)]
     trace = [[""] * cols for _ in range(rows)]
     for i in range(1, rows):

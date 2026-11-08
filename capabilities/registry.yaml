@@ -26,6 +26,11 @@ tools:
     status: implemented
     implementation: python/kinetics/genetic_code.py
     evidence_level: none
+  - id: genome.orf_candidate_scan
+    name: Bounded six-frame complete ORF candidate enumeration
+    status: implemented
+    implementation: python/kinetics/orf.py
+    evidence_level: none
   - id: sequence.fastq
     name: FASTQ parsing
     status: implemented

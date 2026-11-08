@@ -169,3 +169,75 @@ def upgma(distance_matrix: list[list[float]], labels: list[str]) -> Node:
         clusters[next_id] = (merged, members, height)
         next_id += 1
     return next(iter(clusters.values()))[0]
+
+
+def neighbor_joining(distance_matrix: list[list[float]], labels: list[str]) -> Node:
+    """Build a neighbour-joining tree; rejects negative inferred limbs rather than clipping.
+
+    The distance matrix must contain finite, non-negative, symmetric distances with a
+    zero diagonal. Non-additive/noisy matrices can imply negative limbs; those inputs
+    are rejected and must not be silently altered.
+    """
+    size = len(labels)
+    if size < 2 or len(distance_matrix) != size or len(set(labels)) != size:
+        raise ValueError("Need at least two unique labels and a square matrix")
+    if any(len(row) != size for row in distance_matrix):
+        raise ValueError("Distance matrix must be square")
+    for i in range(size):
+        if not isfinite(distance_matrix[i][i]) or abs(distance_matrix[i][i]) > 1e-12:
+            raise ValueError("Distance matrix diagonal must be finite and zero")
+        for j in range(size):
+            value = distance_matrix[i][j]
+            if not isfinite(value) or value < 0 or abs(value - distance_matrix[j][i]) > 1e-9:
+                raise ValueError("Distances must be finite, non-negative and symmetric")
+    clusters: dict[int, Node] = {i: Node(name=labels[i]) for i in range(size)}
+    distances = {
+        (i, j): float(distance_matrix[i][j])
+        for i in range(size) for j in range(i + 1, size)
+    }
+    next_id = size
+    while len(clusters) > 2:
+        active = sorted(clusters)
+        count = len(active)
+        totals = {
+            i: sum(distances[tuple(sorted((i, j)))] for j in active if j != i)
+            for i in active
+        }
+        pair = min(
+            ((i, j) for pos, i in enumerate(active) for j in active[pos + 1:]),
+            key=lambda ij: ((count - 2) * distances[ij] - totals[ij[0]] - totals[ij[1]], ij),
+        )
+        first, second = pair
+        distance = distances[pair]
+        limb_first = 0.5 * distance + (totals[first] - totals[second]) / (2 * (count - 2))
+        limb_second = distance - limb_first
+        tolerance = 1e-10 * max(1.0, distance)
+        if limb_first < -tolerance or limb_second < -tolerance:
+            raise ValueError("Neighbour joining inferred a negative branch length")
+        parent = Node(children=[
+            Node(length=max(0.0, limb_first), children=[clusters[first]]),
+            Node(length=max(0.0, limb_second), children=[clusters[second]]),
+        ])
+        others = [item for item in active if item not in pair]
+        for item in others:
+            left = distances[tuple(sorted((first, item)))]
+            right = distances[tuple(sorted((second, item)))]
+            new_distance = 0.5 * (left + right - distance)
+            if not isfinite(new_distance) or new_distance < -tolerance:
+                raise ValueError("Neighbour joining inferred an invalid cluster distance")
+            distances[tuple(sorted((next_id, item)))] = max(0.0, new_distance)
+        for key in list(distances):
+            if first in key or second in key:
+                del distances[key]
+        del clusters[first]
+        del clusters[second]
+        clusters[next_id] = parent
+        next_id += 1
+
+    first, second = sorted(clusters)
+    final_distance = distances[tuple(sorted((first, second)))]
+    root = Node(children=[
+        Node(length=final_distance / 2.0, children=[clusters[first]]),
+        Node(length=final_distance / 2.0, children=[clusters[second]]),
+    ])
+    return root

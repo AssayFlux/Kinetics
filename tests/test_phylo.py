@@ -19,3 +19,25 @@ def test_newick_rejects_non_finite_negative_and_unterminated_values(source: str)
 def test_upgma_rejects_non_finite_distance_values() -> None:
     with pytest.raises(ValueError, match="finite"):
         upgma([[0.0, float("nan")], [float("nan"), 0.0]], ["a", "b"])
+
+
+def test_neighbor_joining_recovers_additive_three_taxon_distances() -> None:
+    from kinetics.phylo import neighbor_joining, patristic_distance
+
+    tree = neighbor_joining(
+        [[0.0, 2.0, 4.0], [2.0, 0.0, 4.0], [4.0, 4.0, 0.0]],
+        ["A", "B", "C"],
+    )
+    assert patristic_distance(tree, "A", "B") == pytest.approx(2.0)
+    assert patristic_distance(tree, "A", "C") == pytest.approx(4.0)
+    assert patristic_distance(tree, "B", "C") == pytest.approx(4.0)
+
+
+def test_neighbor_joining_rejects_negative_inferred_limb() -> None:
+    from kinetics.phylo import neighbor_joining
+
+    with pytest.raises(ValueError, match="negative branch"):
+        neighbor_joining(
+            [[0.0, 1.0, 10.0], [1.0, 0.0, 1.0], [10.0, 1.0, 0.0]],
+            ["A", "B", "C"],
+        )

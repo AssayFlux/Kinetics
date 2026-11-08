@@ -21,7 +21,7 @@ from .omics import (
     clr_transform, cpm, cross_omics_correlation, logistic_growth,
     log2_fold_change, pearson, shannon_diversity, simpson_diversity,\n    welch_differential_expression,
 )
-from .phylo import Node, leaf_names, parse_newick, patristic_distance, upgma
+from .phylo import Node, leaf_names, neighbor_joining, parse_newick, patristic_distance, upgma
 from .protein import protein_descriptors, theoretical_pi
 from .sequence import (
     SequenceRecord, kmer_counts, needleman_wunsch, parse_fasta, parse_fastq,
@@ -36,7 +36,7 @@ __all__ = [
     "graph_descriptors", "hanes_woolf", "inhibition_rate",
     "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "kmer_counts", "leaf_names", "lineweaver_burk",
     "log2_fold_change", "logistic_growth", "michaelis_menten",
-    "needleman_wunsch", "parse_fasta", "parse_fastq", "parse_newick",
+    "needleman_wunsch", "neighbor_joining", "parse_fasta", "parse_fastq", "parse_newick",
     "parse_mmcif", "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",
     "patristic_distance", "path_fingerprint", "pearson", "primer_properties",
     "protein_descriptors", "reverse_complement", "rmsd", "scan_spcas9_ngg",

@@ -59,3 +59,8 @@ Deliver a narrow but real v0.1 research alpha that demonstrates end-to-end scien
 R3 is complete only when the three workflow families are implemented and registered at the correct status; reference-based validation records and reproducible tests exist; offline workflows operate end-to-end through R2 infrastructure; provenance and export are inspectable; performance and device limitations are documented; all third-party licenses are reviewed; the alpha is installable on an owner-tested target device; and the owner explicitly approves the v0.1 gate.
 
 **Owner instruction (2026-11-08):** implement R1–R10 as one integrated delivery; do not stop implementation at R2. Preserve the R2 evidence/approval gate before v0.1 release.
+
+
+## Regression-test baseline — 2026-11-08
+
+Added host regression coverage for FASTA/FASTQ, IUPAC reverse complement/transcription, sequence statistics/k-mers, Needleman–Wunsch alignment output, peptide mass/pI and unsupported residues, Michaelis–Menten/inhibition equations, and a synthetic Michaelis–Menten parameter-recovery case. Host CI run 1594 passed all 28 tests. These tests establish current code behavior only; they are not independent scientific validation. Independent references/datasets, confidence intervals, residual diagnostics, AIC/BIC, unit handling, fit identifiability, external concordance, Android runtime and device benchmarks remain outstanding. The current log-grid estimator explicitly returns no confidence intervals.

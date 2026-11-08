@@ -104,10 +104,10 @@ def test_bam_binary_record_core_fields_decode_from_gzip_stream() -> None:
 
     from kinetics.genomics import iter_bam_records
 
-    header = b"BAM\\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
-    header += struct.pack("<i", 5) + b"chr1\\x00" + struct.pack("<i", 1000)
+    header = b"BAM\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
+    header += struct.pack("<i", 5) + b"chr1\x00" + struct.pack("<i", 1000)
     core = struct.pack("<iiIIiiii", 0, 9, (60 << 8) | 3, 1, 4, -1, -1, 0)
-    name = b"r1\\x00"
+    name = b"r1\x00"
     cigar = struct.pack("<I", (4 << 4) | 0)
     packed_sequence = bytes([0x12, 0x48])
     qualities = bytes([30, 30, 30, 30])

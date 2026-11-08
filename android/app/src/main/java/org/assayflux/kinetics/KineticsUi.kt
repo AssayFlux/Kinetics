@@ -1,5 +1,6 @@
 package org.assayflux.kinetics
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -23,11 +24,13 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.assayflux.designsystem.KineticsTokens
+import org.json.JSONArray
 
 private val Teal = KineticsTokens.KineticsDarkClassic.secondary
 private val Ink = Color(0xFF071018)
@@ -491,35 +494,140 @@ private fun StatePill(state: String) {
 }
 
 @Composable
-private fun ExploreScreen(modifier: Modifier) {
-    val groups = listOf(
-        Triple("Genomics & genetics", "FASTA/FASTQ, variants and gene annotation foundations.", "Parser and selected annotation primitives"),
-        Triple("Transcriptomics & omics", "Expression transforms, count-aware statistics and cross-omics exploration.", "Independent reference validation required"),
-        Triple("Protein & structure", "PDB/mmCIF parsing, contacts, RMSD and structural descriptors.", "Exploratory geometry; no validated molecular viewer"),
-        Triple("Chemistry", "SDF parsing, molecular graphs and descriptor foundations.", "Advanced features depend on optional engines"),
-        Triple("Phylogenetics", "Distance matrices, UPGMA, neighbour joining and bootstrap foundations.", "Likelihood/model selection remains future work"),
-        Triple("Kinetics & statistics", "Growth models, regression, uncertainty and diagnostics.", "Validation and calibration vary by method"),
-        Triple("Pharmacogenomics", "Gene reference data and conservative phased haplotype matching.", "No prescribing or treatment recommendations"),
-    )
-    Frame("Scientific toolkit", "Explore the science.", "A transparent catalogue of research capabilities and their maturity.", modifier) {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+private private data class CapabilityEntry(
+    val id: String,
+    val name: String,
+    val status: String,
+    val implementation: String,
+    val evidenceLevel: String,
+    val domain: String,
+)
+
+private fun loadCapabilityCatalogue(context: Context): List<CapabilityEntry> {
+    val source = context.assets.open("capability-catalog.json")
+        .bufferedReader(Charsets.UTF_8).use { it.readText() }
+    val tools = JSONArray(source)
+    return buildList {
+        for (index in 0 until tools.length()) {
+            val item = tools.getJSONObject(index)
+            add(
+                CapabilityEntry(
+                    id = item.getString("id"),
+                    name = item.getString("name"),
+                    status = item.getString("status"),
+                    implementation = item.getString("implementation"),
+                    evidenceLevel = item.getString("evidence_level"),
+                    domain = item.getString("domain"),
+                ),
+            )
+        }
+    }
+}
+
+@Composable
+fun ExploreScreen(modifier: Modifier) {
+    val context = LocalContext.current
+    val catalogue = remember(context) { runCatching { loadCapabilityCatalogue(context) } }
+    val entries = catalogue.getOrNull().orEmpty()
+    val groups = entries.groupBy { it.domain }.toList()
+    Frame(
+        "Scientific toolkit",
+        "Explore the science.",
+        "A live view of the repository capability registry and its evidence maturity.",
+        modifier,
+    ) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 24.dp),
+        ) {
             item {
-                Card(shape = RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Card(
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
+                ) {
+                    Column(
+                        Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
                         Text("Capability transparency", fontWeight = FontWeight.Bold)
-                        Text("A module is not runnable until its Android dispatcher, input contract and result viewer are connected. This catalogue does not claim that all listed methods are validated.",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            if (catalogue.isSuccess) {
+                                "${entries.size} registered source capabilities across ${groups.size} research areas. Registry status describes source implementation only; it does not imply an Android execution path or scientific validation."
+                            } else {
+                                "The capability catalogue could not be loaded. No capabilities are being presented as available."
+                            },
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
                     }
                 }
             }
-            items(groups) { (title, description, maturity) ->
+            if (catalogue.isFailure) {
+                item {
+                    OutlinedCard(Modifier.fillMaxWidth()) {
+                        Text(
+                            "Catalogue unavailable: ${catalogue.exceptionOrNull()?.message ?: "asset read failed"}",
+                            Modifier.padding(16.dp),
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    }
+                }
+            }
+            items(groups, key = { it.first }) { (domain, tools) ->
                 OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
-                        Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                        Text(description, style = MaterialTheme.typography.bodyMedium)
-                        HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = .5f))
-                        Text(maturity, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        InfoPill("Research foundations")
+                    Column(
+                        Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                domain,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            InfoPill("${tools.size} modules")
+                        }
+                        tools.forEachIndexed { index, tool ->
+                            if (index > 0) {
+                                HorizontalDivider(
+                                    color = MaterialTheme.colorScheme.outline.copy(alpha = .35f),
+                                )
+                            }
+                            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                                Text(tool.name, style = MaterialTheme.typography.bodyMedium)
+                                Text(
+                                    tool.id,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(7.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    InfoPill(
+                                        if (tool.status == "implemented") "Source implemented"
+                                        else tool.status.replaceFirstChar { it.uppercase() },
+                                    )
+                                    InfoPill(
+                                        if (tool.evidenceLevel == "none") "Not validated"
+                                        else tool.evidenceLevel,
+                                    )
+                                }
+                                Text(
+                                    tool.implementation,
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
                     }
                 }
             }

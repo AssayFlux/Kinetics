@@ -1,0 +1,306 @@
+[
+  {
+    "id": "sequence.fasta",
+    "name": "Streaming FASTA parsing and sequence statistics",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
+    "id": "sequence.exact_reference_search",
+    "name": "Bounded exact full-length local sequence reference triage with provenance and abstention",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence_reference.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
+    "id": "sequence.local_reference_pack_loader",
+    "name": "Content-addressed bounded local FASTA reference-pack ingestion",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence_pack.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
+    "id": "sequence.local_fasta_exact_search",
+    "name": "Verified local FASTA pack loading followed by exact-only DNA/RNA/protein triage",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence_pack.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
+    "id": "sequence.explicit_genetic_code_translation",
+    "name": "Explicit NCBI genetic-code translation for selected DNA/RNA coding sequences",
+    "status": "implemented",
+    "implementation": "python/kinetics/genetic_code.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
+    "id": "genome.orf_candidate_scan",
+    "name": "Bounded six-frame complete ORF candidate enumeration",
+    "status": "implemented",
+    "implementation": "python/kinetics/orf.py",
+    "evidence_level": "none",
+    "domain": "Genome analysis"
+  },
+  {
+    "id": "sequence.fastq",
+    "name": "FASTQ parsing",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
+    "id": "sequence.global_alignment",
+    "name": "Global pairwise alignment",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
+    "id": "genomics.sam_vcf",
+    "name": "SAM and VCF text parsing",
+    "status": "implemented",
+    "implementation": "python/kinetics/genomics.py",
+    "evidence_level": "none",
+    "domain": "Genomics"
+  },
+  {
+    "id": "protein.descriptors",
+    "name": "Protein composition, mass, hydropathy and estimated pI",
+    "status": "implemented",
+    "implementation": "python/kinetics/protein.py",
+    "evidence_level": "none",
+    "domain": "Protein analysis"
+  },
+  {
+    "id": "kinetics.michaelis_menten",
+    "name": "Michaelis-Menten model and exploratory fitting",
+    "status": "implemented",
+    "implementation": "python/kinetics/kinetics.py",
+    "evidence_level": "none",
+    "domain": "Kinetics & modelling"
+  },
+  {
+    "id": "structure.pdb_geometry",
+    "name": "PDB coordinates, contacts and unaligned RMSD",
+    "status": "implemented",
+    "implementation": "python/kinetics/structure.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "chemistry.sdf_graph",
+    "name": "SDF V2000/V3000 graph parsing and exploratory graph fingerprints",
+    "status": "implemented",
+    "implementation": "python/kinetics/chemistry.py",
+    "evidence_level": "none",
+    "domain": "Computational chemistry"
+  },
+  {
+    "id": "phylo.newick",
+    "name": "Newick parsing and patristic distance",
+    "status": "implemented",
+    "implementation": "python/kinetics/phylo.py",
+    "evidence_level": "none",
+    "domain": "Phylogenetics"
+  },
+  {
+    "id": "omics.normalisation",
+    "name": "CPM, CLR, fold change and correlation",
+    "status": "implemented",
+    "implementation": "python/kinetics/omics.py",
+    "evidence_level": "none",
+    "domain": "Omics & statistics"
+  },
+  {
+    "id": "microbiome.diversity",
+    "name": "Shannon and Simpson diversity",
+    "status": "implemented",
+    "implementation": "python/kinetics/omics.py",
+    "evidence_level": "none",
+    "domain": "Microbiome analysis"
+  },
+  {
+    "id": "genes.ncbi_catalogue",
+    "name": "Source-attributed NCBI Gene catalogue ingestion",
+    "status": "implemented",
+    "implementation": "python/kinetics/catalog.py",
+    "evidence_level": "none",
+    "domain": "Gene reference data"
+  },
+  {
+    "id": "molecular.primer_screen",
+    "name": "Primer property screening",
+    "status": "implemented",
+    "implementation": "python/kinetics/molecular.py",
+    "evidence_level": "none",
+    "domain": "Molecular biology"
+  },
+  {
+    "id": "molecular.crispr_pam",
+    "name": "SpCas9 NGG PAM scanning",
+    "status": "implemented",
+    "implementation": "python/kinetics/molecular.py",
+    "evidence_level": "none",
+    "domain": "Molecular biology"
+  },
+  {
+    "id": "phylo.upgma",
+    "name": "UPGMA clustering",
+    "status": "implemented",
+    "implementation": "python/kinetics/phylo.py",
+    "evidence_level": "none",
+    "domain": "Phylogenetics"
+  },
+  {
+    "id": "omics.logistic_growth",
+    "name": "Logistic growth model",
+    "status": "implemented",
+    "implementation": "python/kinetics/omics.py",
+    "evidence_level": "none",
+    "domain": "Omics & statistics"
+  },
+  {
+    "id": "omics.cross_correlation",
+    "name": "Cross-omics correlation matrix",
+    "status": "implemented",
+    "implementation": "python/kinetics/omics.py",
+    "evidence_level": "none",
+    "domain": "Omics & statistics"
+  },
+  {
+    "id": "genomics.variant_normalization",
+    "name": "Reference-checked left normalization for biallelic small variants",
+    "status": "implemented",
+    "implementation": "python/kinetics/genomics.py",
+    "evidence_level": "none",
+    "domain": "Genomics"
+  },
+  {
+    "id": "kinetics.bootstrap_intervals",
+    "name": "Seeded paired-bootstrap intervals for exploratory Michaelis-Menten fits",
+    "status": "implemented",
+    "implementation": "python/kinetics/kinetics.py",
+    "evidence_level": "none",
+    "domain": "Kinetics & modelling"
+  },
+  {
+    "id": "structure.sasa",
+    "name": "Approximate Shrake-Rupley solvent-accessible surface area",
+    "status": "implemented",
+    "implementation": "python/kinetics/structure.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "phylo.newick_export",
+    "name": "Deterministic Newick serialization with safe label quoting",
+    "status": "implemented",
+    "implementation": "python/kinetics/phylo.py",
+    "evidence_level": "none",
+    "domain": "Phylogenetics"
+  },
+  {
+    "id": "omics.nb2_glm",
+    "name": "Exploratory negative-binomial count GLM with numeric covariates",
+    "status": "implemented",
+    "implementation": "python/kinetics/omics.py",
+    "evidence_level": "none",
+    "domain": "Omics & statistics"
+  },
+  {
+    "id": "genomics.bam_core",
+    "name": "Streaming BAM core-field decoder",
+    "status": "implemented",
+    "implementation": "python/kinetics/genomics.py",
+    "evidence_level": "none",
+    "domain": "Genomics"
+  },
+  {
+    "id": "pgx.star_allele_definitions",
+    "name": "Versioned PGx star-allele definition ingestion and conservative phased matching",
+    "status": "implemented",
+    "implementation": "python/kinetics/pgx.py",
+    "evidence_level": "none",
+    "domain": "Pgx"
+  },
+  {
+    "id": "phylo.jukes_cantor_nj",
+    "name": "Jukes-Cantor nucleotide distances and neighbour-joining tree construction",
+    "status": "implemented",
+    "implementation": "python/kinetics/phylo.py",
+    "evidence_level": "none",
+    "domain": "Phylogenetics"
+  },
+  {
+    "id": "structure.interaction_candidates",
+    "name": "Distance-only hydrogen-bond, salt-bridge and disulfide candidate screening",
+    "status": "implemented",
+    "implementation": "python/kinetics/structure.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "chemistry.rdkit_adapter",
+    "name": "Optional RDKit sanitization, descriptors and Morgan fingerprints",
+    "status": "implemented",
+    "implementation": "python/kinetics/chemistry_rdkit.py",
+    "evidence_level": "none",
+    "domain": "Computational chemistry"
+  },
+  {
+    "id": "genomics.htslib_bam_cram",
+    "name": "Optional pysam/HTSlib indexed BAM and CRAM reader",
+    "status": "implemented",
+    "implementation": "python/kinetics/genomics_htslib.py",
+    "evidence_level": "none",
+    "domain": "Genomics"
+  },
+  {
+    "id": "pgx.pharmvar_tsv",
+    "name": "Release-pinned PharmVar TSV haplotype definitions with exact-reference matching",
+    "status": "implemented",
+    "implementation": "python/kinetics/pharmvar.py",
+    "evidence_level": "none",
+    "domain": "Pgx"
+  },
+  {
+    "id": "phylo.nj_site_bootstrap",
+    "name": "Seeded nonparametric site-bootstrap support for Jukes-Cantor neighbour joining",
+    "status": "implemented",
+    "implementation": "python/kinetics/phylo.py",
+    "evidence_level": "none",
+    "domain": "Phylogenetics"
+  },
+  {
+    "id": "structure.viewer_payload",
+    "name": "Bounded deterministic coordinate payload for offline structure viewers",
+    "status": "implemented",
+    "implementation": "python/kinetics/structure_view.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "structure.exact_sequence_mapping",
+    "name": "Conservative exact unique protein sequence-to-structure residue mapping",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence_structure.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "genes.catalogue_coverage_report",
+    "name": "Source-snapshot gene catalogue composition and annotation completeness report",
+    "status": "implemented",
+    "implementation": "python/kinetics/catalog.py",
+    "evidence_level": "none",
+    "domain": "Gene reference data"
+  }
+]

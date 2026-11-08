@@ -34,6 +34,8 @@ jobs:
         run: mypy scripts python/kinetics
       - name: Registry validation
         run: python scripts/check_registry.py
+      - name: Verify generated Android capability catalogue is reproducible
+        run: python scripts/gen_android_capability_catalog.py --check
       - name: Verify generated design tokens are reproducible
         run: |
           python scripts/gen_design_tokens.py

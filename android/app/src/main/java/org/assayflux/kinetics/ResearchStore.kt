@@ -41,7 +41,7 @@ class ResearchStore(context: Context) : SQLiteOpenHelper(context, "kinetics-rese
         }
         writableDatabase.update("jobs", values, "id=?", arrayOf(id))
     }
-    fun recordProvenance(id: String, hash: String) {
+    fun updateProgress(id: String, bytes: Long) {\n        val values = ContentValues().apply { put("byte_count", bytes); put("updated_at", System.currentTimeMillis()) }\n        writableDatabase.update("jobs", values, "id=?", arrayOf(id))\n    }\n    fun progress(id: String): Long {\n        readableDatabase.rawQuery("SELECT byte_count FROM jobs WHERE id=?", arrayOf(id)).use { cursor ->\n            return if (cursor.moveToFirst() && !cursor.isNull(0)) cursor.getLong(0) else 0L\n        }\n    }\n    fun recordProvenance(id: String, hash: String) {
         val values = ContentValues().apply {
             put("job_id", id); put("tool_id", "file-import-sha256")
             put("tool_version", "1"); put("input_sha256", hash)

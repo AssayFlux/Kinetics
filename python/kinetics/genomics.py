@@ -5,6 +5,7 @@ import re
 from dataclasses import dataclass
 from math import isfinite
 from statistics import mean
+from typing import BinaryIO, Iterator
 
 _CIGAR = re.compile(r"(?:[1-9][0-9]*[MIDNSHP=X])+")
 _DNA_IUPAC = set("=ACMGRSVTWYHKDBN")

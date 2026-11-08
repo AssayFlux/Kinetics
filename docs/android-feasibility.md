@@ -1,6 +1,6 @@
 # Android feasibility — R1 in progress
 
-**Current status (2026-11-08):** R1 remains IN PROGRESS. Fresh CI run #1721 (commit `342ae0fbbe82e32af28b5e17b77ba9f5b2c5f50c`) built the arm64 debug APK and AAB, verified APK/ELF 16 KB static alignment and uploaded artifacts. Its Android JVM test task was successful but reported no source tests at that commit. The APK SHA-256 is `d07068b6f4d39752d089e9785d7eb27abd6bd6821ed5a8afc32efc21c6fb49bb`; details are in [ci-build-evidence.md](ci-build-evidence.md). Android runtime/device tests, SciPy, a separately evaluated scientific engine, RDKit/alternative, offline viewer and performance measurements remain unresolved.
+**Current status (2026-11-08):** R1 remains IN PROGRESS. CI run #1770 (commit `3aa25710c6b4fcb566e67662ea0a5c9163093701`) completed the arm64 APK/AAB build, Android JVM unit-test task and artifact verification successfully. Its Python foundation job failed on a Ruff line-length error in the registry checker, which has since been fixed. The run's artifact upload was still running at the last check; its hashes and download URL must be read from the completed run before distributing it. The integrated design-system module is newer than this build and must pass its own build before its APK is treated as current. Android runtime/device tests, SciPy, a separately evaluated scientific engine, RDKit/alternative, offline viewer and performance measurements remain unresolved.
 
 **Owner build/test instruction (2026-11-08):** The owner explicitly authorized GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated checks including Android JVM unit tests. The build host is pinned Linux x86_64; this is not a Termux build. No emulator or physical-device test is run. Physical-device testing remains deferred until the owner is ready.
 
@@ -201,13 +201,13 @@ A device reporting page size 16384 is a 16 KB runtime target. A device reporting
 Build and static package evidence is green. R1 is **not complete**. Outstanding: 16 KB emulator runtime; Android arm64 physical-device runtime; Python/Biopython/NumPy runtime tests; Rust/C++ invocation; SciPy decision/packaging experiment; separate domain scientific engine evaluation; RDKit or alternative; offline Mol*/3Dmol.js; SAF import/background/cancellation; repeatable cold-start and peak RSS; Biopython file-level license audit and third-party redistribution review. No R1 go/no-go has been issued.
 
 
-## Owner workflow directive — 2026-11-08
+## Owner workflow directive — 2026-11-08 (latest instruction)
 
-- APK/AAB building is removed from GitHub Actions. The historical run records below are retained as immutable historical evidence.
-- Android emulator testing is removed from GitHub Actions. No automated emulator runtime pass is claimed.
-- Local debug APK build is the next build route when the owner is ready. Physical-device testing is deferred by owner instruction.
+- The owner initially preferred local-only APK building, then explicitly authorized GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated source and Android JVM unit tests. This later authorization supersedes the earlier local-only restriction.
+- Android emulator and physical-device testing remain outside GitHub Actions. No automated emulator or physical-device runtime pass is claimed.
+- The local build guide remains available at [docs/local-android-build.md](local-android-build.md), using [scripts/build_android_local.sh](../scripts/build_android_local.sh), for independent reproduction on a compatible host.
 - Device-dependent rows remain pending; they are not silently waived from R1 exit criteria.
-- The local build guide is [docs/local-android-build.md](local-android-build.md), using [scripts/build_android_local.sh](../scripts/build_android_local.sh). The local build must record the source commit, JDK/Gradle/AGP/Kotlin/SDK/NDK/CMake/Rust versions, dependency/wheel inputs, APK/AAB hashes and sizes, and build logs. If the custom Biopython wheel path cannot be reproduced locally, record that blocker instead of substituting an unverified package.
+- Every shared artifact must identify the exact commit SHA, build result, package hashes/sizes and build log. A build from an older commit is not a current build of newer source.
 
 
 ## Host-only source CI run 42428857132 — 2026-11-08

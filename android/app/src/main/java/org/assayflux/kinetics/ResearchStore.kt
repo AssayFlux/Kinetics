@@ -94,7 +94,7 @@ class ResearchStore(context: Context) :
                 put("tool_id", "file-import-encrypt-sha256")
                 put("tool_version", "2")
                 put("input_sha256", hash)
-                put("parameters_json", """{"encryption":"AES-256-GCM","storage":"app-private-no-backup"}""")
+                put("parameters_json", """{"encryption":"AES-256-GCM","format":"chunked-v1","aad":"job-id+chunk-index","storage":"app-private-no-backup"}""")
                 put("created_at", System.currentTimeMillis())
             }
             db.insertWithOnConflict(
@@ -116,15 +116,16 @@ class ResearchStore(context: Context) :
 
     /** Materialize an authenticated temporary plaintext copy for a caller-controlled analysis/export. */
     fun materializeStoredInput(id: String, destination: File): Boolean {
-        readableDatabase.rawQuery(
+        val stored = readableDatabase.rawQuery(
             "SELECT storage_path,sha256 FROM jobs WHERE id=?", arrayOf(id),
         ).use { cursor ->
-            if (!cursor.moveToFirst() || cursor.isNull(0) || cursor.isNull(1)) return false
-            LocalCrypto.decryptChunkedFile(
-                File(cursor.getString(0)), destination, "kinetics-import:$id", cursor.getString(1),
-            )
-            return true
-        }
+            if (!cursor.moveToFirst() || cursor.isNull(0) || cursor.isNull(1)) null
+            else Pair(cursor.getString(0), cursor.getString(1))
+        } ?: return false
+        LocalCrypto.decryptChunkedFile(
+            File(stored.first), destination, "kinetics-import:$id", stored.second,
+        )
+        return true
     }
 
     fun updateProgress(id: String, bytes: Long) {

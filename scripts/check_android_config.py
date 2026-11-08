@@ -89,11 +89,11 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
 
     manifest_path = root / "android/app/src/main/AndroidManifest.xml"
     try:
-        manifest = manifest_path.read_text(encoding="utf-8")
+        manifest_text = manifest_path.read_text(encoding="utf-8")
     except OSError as exc:
         errors.append(f"Android manifest could not be read: {exc}")
-        manifest = ""
-    if 'android:allowBackup="false"' not in manifest:
+        manifest_text = ""
+    if 'android:allowBackup="false"' not in manifest_text:
         errors.append("Android backup must remain disabled for local research data")
     if 'android:usesCleartextTraffic="false"' not in manifest:
         errors.append("Android cleartext traffic must remain disabled")

@@ -1,44 +1,43 @@
 # Verified Android and Material specifications
 
-**Verified:** 2026-11-08. Re-check before each release; platform guidance can change.
+**Checked:** 2026-11-08 against Android Developers documentation. Re-check before every release.
 
-## Window size classes
-Android Developers currently documents width classes:
-- Compact: <600dp
-- Medium: 600dp to <840dp
-- Expanded: 840dp to <1200dp
-- Large: 1200dp to <1600dp
-- Extra-large: ≥1600dp
+## App-window size classes
 
-Height classes:
-- Compact: <480dp
-- Medium: 480dp to <900dp
-- Expanded: ≥900dp
+Android currently defines width breakpoints as compact (<600dp), medium (600–<840dp), expanded (840–<1200dp), large (1200–<1600dp), and extra-large (≥1600dp). Height classes are compact (<480dp), medium (480–<900dp), and expanded (≥900dp). Classification is based on the app window, not the physical device; it changes with rotation, fold/unfold and multi-window.
 
-Classes are based on the app window, not device labels; they can change during rotation, folding and multi-window. Use both width and height when compact height makes multi-pane layouts impractical.
+Kinetics now evaluates live Compose window constraints. Navigation maps compact portrait windows to a bottom bar; medium/expanded and compact-height windows to a rail; and large/extra-large windows (≥1200dp) to a permanent drawer. Readable content is capped at 840dp. JVM boundary tests cover the classifier, but device rendering is not verified.
 
 Sources:
 - https://developer.android.com/develop/ui/views/layout/use-window-size-classes
 - https://developer.android.com/develop/adaptive-apps/guides/use-window-size-classes
 
 ## Adaptive navigation
-Android Developers documents `NavigationSuiteScaffold` in the Material 3 adaptive navigation suite library. Compact windows can use a navigation bar and expanded windows a navigation rail; exact behavior depends on adaptive window information and current library version.
+
+Android documents `NavigationSuiteScaffold` in the Material 3 adaptive navigation suite. Kinetics currently uses stable Material 3 NavigationBar, NavigationRail and PermanentNavigationDrawer components with a window classifier, rather than NavigationSuiteScaffold. WindowManager fold posture/hinge support is not integrated. Do not describe the current shell as fold-aware.
 
 Source:
 - https://developer.android.com/develop/adaptive-apps/guides/build-adaptive-navigation
 
-## Edge-to-edge
-On Android 15+ devices, apps targeting SDK 35+ are edge-to-edge by default. Content can draw behind status/navigation bars; apply and test insets, cutouts, IME and navigation-mode behavior. Material 3 components may handle some insets, but this must be checked for the actual scaffold and nested content.
+## Accessibility and touch targets
+
+Android recommends interactive targets at least 48×48dp. This is a design target, not evidence of a TalkBack or WCAG pass. Status pills are non-interactive and expose state descriptions; navigation controls use Material components. Manual TalkBack, Switch Access, contrast, large-text and display-size checks remain outstanding.
+
+Source:
+- https://developer.android.com/guide/topics/ui/accessibility
+
+## Edge-to-edge and predictive back
+
+The app targets SDK 36. Edge-to-edge, system-bar/IME/cutout insets and predictive-back behavior must be verified on actual devices and navigation modes. No device pass is claimed.
 
 Sources:
 - https://developer.android.com/develop/ui/views/layout/edge-to-edge
-- https://developer.android.com/about/versions/15/behavior-changes-15
+- https://developer.android.com/design/ui/mobile/guides/patterns/predictive-back
 
-## Not yet verified / deliberately not frozen
-- Exact Material 3 navigation bar/rail dimensions and icon/adaptive-icon safe-zone values.
-- Splash screen asset constraints and Play Store icon/feature graphic specifications.
+## Not yet verified
+- WindowManager fold features, hinge avoidance and tabletop/book posture.
+- Exact Material 3 navigation dimensions and adaptive-icon safe-zone values.
+- Splash screen, Play Store icon and feature graphic specifications.
 - Target SDK / Play policy requirements at release time.
-- Biometric, StrongBox, Play Integrity and notification permission behavior for the selected minimum/target SDK.
-- Accessibility and performance budgets; these require measurement on the named low-end device.
-
-Do not treat the owner's dp values as current platform mandates until individually confirmed.
+- Biometric, StrongBox, Play Integrity and notification permission behavior.
+- Accessibility and performance budgets on a named low-end device.

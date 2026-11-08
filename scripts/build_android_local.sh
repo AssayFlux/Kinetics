@@ -39,7 +39,8 @@ java -version 2>&1 | grep -q '17\.' || fail "Use JDK 17."
 
 # Fetch a checksum-pinned Gradle distribution rather than trusting a host-installed gradle.
 GRADLE_BIN="$GRADLE_CACHE_DIR/gradle-$GRADLE_VERSION/bin/gradle"
-if [[ ! -x "$GRADLE_BIN" ]]; then
+GRADLE_MARKER="$GRADLE_CACHE_DIR/.gradle-$GRADLE_VERSION.sha256"
+if [[ ! -x "$GRADLE_BIN" || ! -f "$GRADLE_MARKER" || "$(cat "$GRADLE_MARKER")" != "$GRADLE_SHA256" ]]; then
   mkdir -p "$GRADLE_CACHE_DIR"
   archive="$GRADLE_CACHE_DIR/gradle-$GRADLE_VERSION-bin.zip"
   curl --fail --location --retry 3 \
@@ -47,11 +48,13 @@ if [[ ! -x "$GRADLE_BIN" ]]; then
     --output "$archive"
   actual="$(sha256sum "$archive" | awk '{print $1}')"
   [[ "$actual" == "$GRADLE_SHA256" ]] || fail "Gradle distribution checksum mismatch: $actual"
+  rm -rf "$GRADLE_CACHE_DIR/gradle-$GRADLE_VERSION"
   python - "$archive" "$GRADLE_CACHE_DIR" <<'PY'
 import sys, zipfile
 with zipfile.ZipFile(sys.argv[1]) as archive:
     archive.extractall(sys.argv[2])
 PY
+  printf '%s\n' "$GRADLE_SHA256" > "$GRADLE_MARKER"
 fi
 "$GRADLE_BIN" --version | grep -q "Gradle $GRADLE_VERSION" || fail "Pinned Gradle $GRADLE_VERSION unavailable."
 

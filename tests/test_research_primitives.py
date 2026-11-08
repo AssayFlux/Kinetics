@@ -79,7 +79,7 @@ def test_protein_descriptors_are_explicit_about_assumptions() -> None:
     assert float(result["molecular_weight_da"]) == pytest.approx(364.37586, abs=1e-5)
     assert 0 <= float(result["theoretical_pi"]) <= 14
     assert len(result["assumptions"]) == 3
-    with pytest.raises(ValueError, match="Unsupported"):
+    with pytest.raises(ValueError, match="Invalid symbols"):
         protein_descriptors("ACDX")
 
 

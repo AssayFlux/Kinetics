@@ -124,8 +124,6 @@ def test_structural_interaction_candidates_use_explicit_geometry() -> None:
         Atom(2, "OD1", "ASP", "B", 2, 3.0, 0.0, 0.0, "O"),
         Atom(3, "SG", "CYS", "A", 3, 10.0, 0.0, 0.0, "S"),
         Atom(4, "SG", "CYS", "B", 4, 12.0, 0.0, 0.0, "S"),
-        Atom(5, "N", "ALA", "A", 5, 20.0, 0.0, 0.0, "N"),
-        Atom(6, "O", "GLY", "B", 6, 23.0, 0.0, 0.0, "O"),
     ]
     result = interaction_candidates(atoms)
     assert len(result["salt_bridge_candidates"]) == 1

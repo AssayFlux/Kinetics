@@ -1,0 +1,25 @@
+# R10 — Hardening, performance, security and release readiness
+
+**Status:** In progress. No release or device-support claim is implied.
+
+## Scope
+- Offline-by-default manifest and network permission review.
+- Android Keystore encryption, app-private storage, backup exclusion and data lifecycle.
+- Registry integrity, provenance, reproducible builds and dependency/license inventory.
+- Accessibility, crash recovery, migration safety, process-death handling and threat modelling.
+- Performance, memory, battery and thermal benchmarks on named devices.
+- Release signing, SBOM, vulnerability review, privacy documentation and release checklist.
+
+## Current source
+- `scripts/check_registry.py` validates capability references, implementation paths, evidence status, validation records, device logs and clinical gates.
+- `scripts/check_android_config.py` checks offline manifest settings, pinned SDK/NDK/ABI, 16 KB linker alignment and CI's manual-only no-APK/no-device-test boundary.
+- `scripts/build_android_local.sh` is the owner-directed local build path. GitHub Actions do not build APK/AAB or run emulator/device tests.
+
+## Outstanding
+- Local APK/AAB build and artifact inspection.
+- Runtime, migration, crash/process-death and Moto G54 5G verification.
+- Accessibility audit, performance/memory/thermal benchmarks, security threat model, dependency/SBOM and license review.
+- Release signing and privacy/data-deletion evidence.
+
+## Exit evidence
+All checks reproducible from a clean checkout; independent security review; dated device logs; measured benchmarks; signed release artifacts and owner acceptance. Never mark device-verified or validated without matching registry evidence.

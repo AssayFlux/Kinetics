@@ -779,3 +779,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - **R7:** added neighbour-joining distance-tree inference. It validates the matrix and rejects negative inferred limbs rather than silently clipping or changing branch lengths.
 - **R1/R2:** extended the manual on-device runtime probe to check Android Keystore AES-GCM round-trip and rejection of mismatched authenticated metadata, in addition to the existing embedded-Python and C++/Rust smoke probes.
 - Added source-level regression cases and updated the implementation inventory/roadmap. No tests or Android build/runtime commands were run in this pass.
+
+
+### R4–R10 controlled delivery plans
+- Added individual phase plans for R4 genomics, R5 structural biology, R6 computational chemistry, R7 phylogenetics, R8 omics, R9 gene catalogue/PGx foundations and R10 hardening.
+- Each plan distinguishes source implementation from scientific validation and device verification, records current limitations, and defines evidence-based exit criteria. R9 explicitly retains the P0/adviser gate; R10 records local-only APK/AAB and device verification.

@@ -234,3 +234,92 @@ def parse_mmcif(text: str, *, include_hetero: bool = False) -> list[Atom]:
     if not atoms:
         raise ValueError("No supported mmCIF atom_site coordinates")
     return atoms
+
+_VDW_RADII = {
+    "H": 1.20, "C": 1.70, "N": 1.55, "O": 1.52, "F": 1.47,
+    "P": 1.80, "S": 1.80, "CL": 1.75, "BR": 1.85, "I": 1.98,
+}
+
+
+def solvent_accessible_surface_area(
+    atoms: Iterable[Atom], *, probe_radius: float = 1.4, sphere_points: int = 96,
+) -> dict[str, object]:
+    """Estimate per-atom and total SASA using deterministic Shrake-Rupley sampling.
+
+    This geometric approximation uses element van der Waals radii and a spherical
+    solvent probe. It does not add hydrogens, assign atom-specific radii, or infer
+    residue-level relative accessibility.
+    """
+    points = list(atoms)
+    if not points or len(points) > 2000:
+        raise ValueError("SASA requires 1..2000 atoms")
+    if not isfinite(probe_radius) or probe_radius <= 0:
+        raise ValueError("Probe radius must be finite and positive")
+    if not isinstance(sphere_points, int) or not 12 <= sphere_points <= 4096:
+        raise ValueError("sphere_points must be an integer between 12 and 4096")
+
+    radii: list[float] = []
+    coordinates: list[tuple[float, float, float]] = []
+    for atom in points:
+        element = atom.element.strip().upper()
+        if element not in _VDW_RADII:
+            raise ValueError(f"Unsupported atom element for SASA: {element or '<blank>'}")
+        coordinate = (atom.x, atom.y, atom.z)
+        if not all(isfinite(value) for value in coordinate):
+            raise ValueError("SASA coordinates must be finite")
+        radii.append(_VDW_RADII[element])
+        coordinates.append(coordinate)
+
+    # Fibonacci sphere gives deterministic, approximately uniform surface samples.
+    offset = 2.0 / sphere_points
+    increment = 3.141592653589793 * (3.0 - sqrt(5.0))
+    unit_points: list[tuple[float, float, float]] = []
+    for index in range(sphere_points):
+        y = ((index * offset) - 1.0) + offset / 2.0
+        radial = sqrt(max(0.0, 1.0 - y * y))
+        angle = index * increment
+        unit_points.append((radial * __import__("math").cos(angle), y,
+                            radial * __import__("math").sin(angle)))
+
+    expanded = [radius + probe_radius for radius in radii]
+    neighbours: list[list[int]] = [[] for _ in points]
+    for first in range(len(points)):
+        for second in range(first + 1, len(points)):
+            delta = tuple(coordinates[first][axis] - coordinates[second][axis] for axis in range(3))
+            threshold = expanded[first] + expanded[second]
+            if sum(value * value for value in delta) < threshold * threshold:
+                neighbours[first].append(second)
+                neighbours[second].append(first)
+
+    per_atom: list[dict[str, float | int]] = []
+    total_area = 0.0
+    for index, center in enumerate(coordinates):
+        radius = expanded[index]
+        exposed = 0
+        for unit in unit_points:
+            surface = tuple(center[axis] + radius * unit[axis] for axis in range(3))
+            occluded = False
+            for neighbour in neighbours[index]:
+                delta = tuple(surface[axis] - coordinates[neighbour][axis] for axis in range(3))
+                if sum(value * value for value in delta) < expanded[neighbour] ** 2:
+                    occluded = True
+                    break
+            if not occluded:
+                exposed += 1
+        area = 4.0 * 3.141592653589793 * radius * radius * exposed / sphere_points
+        total_area += area
+        per_atom.append({"serial": points[index].serial, "area_angstrom2": area})
+
+    return {
+        "total_area_angstrom2": total_area,
+        "per_atom": per_atom,
+        "algorithm": "Shrake-Rupley with deterministic Fibonacci sphere points",
+        "probe_radius_angstrom": probe_radius,
+        "sphere_points": sphere_points,
+        "warnings": [
+            "Approximate surface area depends on sphere-point resolution",
+            "Uses generic element radii; no hydrogens or atom-specific radii are inferred",
+            "No residue-level relative accessibility or biological assembly is calculated",
+        ],
+    }
+

@@ -56,7 +56,9 @@ def inspect_elf(name: str, payload: bytes) -> dict[str, object]:
             failures.append(f"PT_LOAD[{segment['index']}] p_align={alignment} is below 16 KB")
             continue
         if alignment & (alignment - 1):
-            failures.append(f"PT_LOAD[{segment['index']}] p_align={alignment} is not a power of two")
+            failures.append(
+                f"PT_LOAD[{segment['index']}] p_align={alignment} is not a power of two"
+            )
         if segment["file_offset"] % alignment != segment["virtual_address"] % alignment:
             failures.append(
                 f"PT_LOAD[{segment['index']}] p_offset and p_vaddr are not congruent modulo p_align"

@@ -2,6 +2,8 @@
     <application
         android:allowBackup="false"
         android:label="Kinetics Research"
+        android:icon="@drawable/ic_kinetics"
+        android:roundIcon="@drawable/ic_kinetics"
         android:supportsRtl="true"
         android:usesCleartextTraffic="false"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">

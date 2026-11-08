@@ -1,4 +1,35 @@
 schema_version: 1
 purpose: "Metadata-only inventory of candidate public datasets; no dataset payloads or patient records."
 data_classification: public_non_patient_only
+# Candidate sources are discovery leads only. They are not approved for intake,
+# redistribution, interpretation or clinical use until license and governance review.
+candidate_sources:
+  - source_id: ncbi-gene
+    title: "NCBI Gene"
+    source_url: "https://www.ncbi.nlm.nih.gov/gene/"
+    candidate_use: "Gene identifiers, source-attributed gene metadata and cross-reference coverage"
+    license_review_status: verify_before_intake
+    patient_data: false
+    notes: "Verify source-specific terms, attribution, update cadence and redistribution conditions before any data retrieval."
+  - source_id: pharmvar
+    title: "PharmVar"
+    source_url: "https://www.pharmvar.org/"
+    candidate_use: "Versioned pharmacogene star-allele nomenclature and definitions"
+    license_review_status: verify_before_intake
+    patient_data: false
+    notes: "Do not assume downloadable content is freely redistributable; verify exact release and terms."
+  - source_id: clinvar
+    title: "NCBI ClinVar"
+    source_url: "https://www.ncbi.nlm.nih.gov/clinvar/"
+    candidate_use: "Public variant assertion metadata for future curated research fixtures"
+    license_review_status: verify_before_intake
+    patient_data: false
+    notes: "Submission-level provenance and assertion limitations must be retained; no patient-level records."
+  - source_id: cpic
+    title: "Clinical Pharmacogenetics Implementation Consortium"
+    source_url: "https://cpicpgx.org/"
+    candidate_use: "Guideline metadata and versioned recommendation references"
+    license_review_status: verify_before_intake
+    patient_data: false
+    notes: "Guideline text, tables and derived content require explicit reuse/redistribution review."
 entries: []

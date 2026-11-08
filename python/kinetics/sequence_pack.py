@@ -10,11 +10,24 @@ import io
 import json
 import os
 import stat
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, cast
 
 from kinetics.sequence import SequenceRecord, iter_fasta_records, validate_sequence
-from kinetics.sequence_reference import ReferencePack, SequenceType, _alphabet
+from kinetics.sequence_reference import (
+    ReferencePack,
+    SequenceType,
+    _alphabet,
+    exact_reference_search,
+)
+
+
+@dataclass(frozen=True)
+class LoadedReferencePack:
+    metadata: ReferencePack
+    sequence_type: SequenceType
+    records: tuple[SequenceRecord, ...]
 
 
 DEFAULT_MAX_PACK_BYTES = 250_000_000
@@ -93,7 +106,7 @@ def load_local_fasta_reference_pack(
     max_manifest_bytes: int = DEFAULT_MAX_MANIFEST_BYTES,
     max_records: int = DEFAULT_MAX_RECORDS,
     max_total_residues: int = DEFAULT_MAX_TOTAL_RESIDUES,
-) -> tuple[ReferencePack, list[SequenceRecord]]:
+) -> LoadedReferencePack:
     """Load a local FASTA pack only after verifying manifest provenance and bytes.
 
     The same open file descriptor is hashed, parsed, and hashed again to detect
@@ -149,4 +162,33 @@ def load_local_fasta_reference_pack(
         raise ValueError(f"Cannot read reference FASTA: {exc}") from exc
     if not records:
         raise ValueError("Reference FASTA contains no records")
-    return pack, records
+    return LoadedReferencePack(pack, sequence_type, tuple(records))
+
+
+def search_local_fasta_reference(
+    query: str,
+    fasta_path: str | Path,
+    manifest_path: str | Path,
+    *,
+    max_pack_bytes: int = DEFAULT_MAX_PACK_BYTES,
+    max_manifest_bytes: int = DEFAULT_MAX_MANIFEST_BYTES,
+    max_records: int = DEFAULT_MAX_RECORDS,
+    max_total_residues: int = DEFAULT_MAX_TOTAL_RESIDUES,
+) -> dict[str, object]:
+    """Verify a local FASTA pack, then run exact-only search with its declared alphabet."""
+    loaded = load_local_fasta_reference_pack(
+        fasta_path,
+        manifest_path,
+        max_pack_bytes=max_pack_bytes,
+        max_manifest_bytes=max_manifest_bytes,
+        max_records=max_records,
+        max_total_residues=max_total_residues,
+    )
+    return exact_reference_search(
+        query,
+        loaded.records,
+        sequence_type=loaded.sequence_type,
+        reference_pack=loaded.metadata,
+        max_records=max_records,
+        max_total_residues=max_total_residues,
+    )

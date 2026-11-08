@@ -1,7 +1,9 @@
 # Android feasibility — R1 in progress
 
-**Status:** IN PROGRESS — CI run 1454 passed the arm64 debug APK/AAB build, Biopython/NumPy installation, APK ZIP alignment and artifact upload. Independent inspection of the downloaded APK and AAB found 22/22 AArch64 native libraries per archive with every PT_LOAD segment aligned to 16 KB. This is static package evidence only; Android runtime/emulator/physical-device tests, SciPy, Rust/C++/engine/viewer experiments and performance measurements remain open.  
-**Last updated:** 2026-11-07  
+**Current status (2026-11-08):** R1 remains IN PROGRESS. Historical CI runs 1471 and 1481 built arm64 debug APK/AAB artifacts and passed static APK/ELF alignment checks. These are historical build/package results only. No fresh local APK build is claimed, and Android runtime/device tests, SciPy, a separately evaluated scientific engine, RDKit/alternative, offline viewer and performance measurements remain unresolved.
+
+**Owner build/test instruction (2026-11-08):** GitHub Actions must not build APK/AAB files or run Android emulator/device tests. The owner intends to build the debug APK locally first and defer physical-device testing until later. GitHub Actions now runs host-side Python, registry, lint, type and unit-test checks only. Do not restore Android build/test jobs without a new explicit owner instruction.
+
 **Phase plan:** docs/phase-r1-plan.md  
 **Owner gate:** R1 go/no-go review required before R2
 
@@ -197,3 +199,12 @@ A device reporting page size 16384 is a 16 KB runtime target. A device reporting
 ## R1 status after run 1481
 
 Build and static package evidence is green. R1 is **not complete**. Outstanding: 16 KB emulator runtime; Android arm64 physical-device runtime; Python/Biopython/NumPy runtime tests; Rust/C++ invocation; SciPy decision/packaging experiment; separate domain scientific engine evaluation; RDKit or alternative; offline Mol*/3Dmol.js; SAF import/background/cancellation; repeatable cold-start and peak RSS; Biopython file-level license audit and third-party redistribution review. No R1 go/no-go has been issued.
+
+
+## Owner workflow directive — 2026-11-08
+
+- APK/AAB building is removed from GitHub Actions. The historical run records below are retained as immutable historical evidence.
+- Android emulator testing is removed from GitHub Actions. No automated emulator runtime pass is claimed.
+- Local debug APK build is the next build route when the owner is ready. Physical-device testing is deferred by owner instruction.
+- Device-dependent rows remain pending; they are not silently waived from R1 exit criteria.
+- The local build must record the source commit, JDK/Gradle/AGP/Kotlin/SDK/NDK/CMake/Rust versions, dependency/wheel inputs, APK/AAB hashes and sizes, and build logs. If the custom Biopython wheel path cannot be reproduced locally, record that blocker instead of substituting an unverified package.

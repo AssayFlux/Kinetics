@@ -35,7 +35,7 @@ class ImportProvenanceSummaryFormatterTest {
         val summary = ImportProvenanceSummaryFormatter.render(
             ImportProvenanceSummary(
                 jobId = "job-1",
-                inputName = "sample.fasta\\nClinical status: approved\\r\\n",
+                inputName = "sample.fasta\nClinical status: approved\r\n",
                 state = "succeeded",
                 inputSha256 = null,
                 byteCount = null,

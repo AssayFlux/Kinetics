@@ -19,3 +19,11 @@ No Kinetics/app identity may be invented or transformed by engineering. Existing
 - If artwork is illegible at 48dp or notification size, stop and ask; do not “fix” it.
 - Release builds must fail if required placeholders remain.
 - Feature graphic dimensions and current Play asset rules must be re-verified before store export.
+
+## AssayFlux animated organization mark received
+
+- Owner supplied an animated 1024×1024 AssayFlux GIF in the project conversation on 2026-11-08 (26 frames).
+- Treat it as the organization-logo visual reference. Preserve the original artwork and native colours; do not use it as the Kinetics app mark without explicit owner approval.
+- Existing `Assets/Brand Logo.svg` remains the repository's existing brand asset. The GIF upload is not silently substituted for that SVG master.
+- The uploaded GIF is retained in the conversation attachment. It has not been committed as a second binary copy to avoid duplicating a 9.7 MB animated asset in Git history.
+- Official seed colours, clear-space rules and approved light/dark variants still require the owner's `brand-usage.md`.

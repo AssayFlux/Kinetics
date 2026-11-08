@@ -40,15 +40,22 @@ def parse_sam(text: str) -> list[SamRecord]:
         cigar, sequence, quality = fields[5], fields[9], fields[10]
         if cigar != "*" and not _CIGAR.fullmatch(cigar):
             raise ValueError(f"SAM line {line_number}: malformed CIGAR")
-        if (sequence == "*") != (quality == "*"):
-            raise ValueError(f"SAM line {line_number}: SEQ and QUAL must both be '*' or both present")
+        if sequence == "*" and quality != "*":
+            raise ValueError(f"SAM line {line_number}: QUAL must be '*' when SEQ is unavailable")
         if sequence != "*":
             if any(base not in _DNA_IUPAC for base in sequence.upper()):
                 raise ValueError(f"SAM line {line_number}: invalid SEQ symbol")
-            if len(sequence) != len(quality):
+            if quality != "*" and len(sequence) != len(quality):
                 raise ValueError(f"SAM line {line_number}: sequence/quality length mismatch")
-            if any(not 33 <= ord(char) <= 126 for char in quality):
+            if quality != "*" and any(not 33 <= ord(char) <= 126 for char in quality):
                 raise ValueError(f"SAM line {line_number}: invalid QUAL character")
+            if cigar != "*":
+                query_length = sum(
+                    int(length) for length, operation in re.findall(r"([1-9][0-9]*)([MIDNSHP=X])", cigar)
+                    if operation in {"M", "I", "S", "=", "X"}
+                )
+                if query_length != len(sequence):
+                    raise ValueError(f"SAM line {line_number}: CIGAR query length does not match SEQ")
         for tag in fields[11:]:
             parts = tag.split(":", 2)
             if len(parts) != 3 or not re.fullmatch(r"[A-Za-z][A-Za-z0-9]", parts[0]):

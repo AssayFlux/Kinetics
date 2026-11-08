@@ -880,3 +880,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Added a provenance-gated JSON definition pack parser and typed VariantKey / StarAlleleDefinition / AlleleMatch models, with pinned source release, HTTPS source, license and genome build metadata.
 - Added conservative matching for already phased, explicitly complete haplotypes only; incomplete/unphased inputs no-call and tied best definitions remain ambiguous. No phasing, CNV, structural variant, diplotype, phenotype or clinical interpretation is inferred.
 - Added regression-test source and registry/docs updates. No authoritative PGx datasets were imported because licensing/release review is still required. No tests were run.
+
+
+### R7 Jukes-Cantor model-distance increment
+- Added Jukes-Cantor 1969 nucleotide distance with pairwise deletion, minimum-site guard and explicit saturation rejection, plus neighbour joining from aligned DNA sequences using those corrected distances.
+- Exported both APIs, added regression-test source and updated capability registry/phase docs. This is model-corrected distance inference, not ML/Bayesian tree search; no rate heterogeneity, bootstrap or independent reference concordance. No tests were run.

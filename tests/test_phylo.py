@@ -54,3 +54,27 @@ def test_newick_serializer_round_trips_quoted_labels_and_branch_lengths() -> Non
     assert patristic_distance(original, "A", "B B") == pytest.approx(
         patristic_distance(restored, "A", "B B")
     )
+
+
+
+def test_jukes_cantor_distance_and_model_based_alignment_tree() -> None:
+    from kinetics.phylo import jukes_cantor_distance, neighbor_joining_from_alignment
+
+    result = jukes_cantor_distance("A" * 40, "A" * 39 + "G", minimum_sites=30)
+    assert result["distance"] > 0
+    assert result["comparable_sites"] == 40
+    tree = neighbor_joining_from_alignment({
+        "A": "A" * 40,
+        "B": "A" * 39 + "G",
+        "C": "A" * 38 + "GG",
+    }, minimum_sites=30)
+    assert set(leaf_names(tree)) == {"A", "B", "C"}
+
+
+def test_jukes_cantor_rejects_saturation_and_insufficient_sites() -> None:
+    from kinetics.phylo import jukes_cantor_distance
+
+    with pytest.raises(ValueError, match="saturated"):
+        jukes_cantor_distance("A" * 20, "C" * 20, minimum_sites=20)
+    with pytest.raises(ValueError, match="Too few"):
+        jukes_cantor_distance("NNNN", "AAAA", minimum_sites=1)

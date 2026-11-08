@@ -25,7 +25,7 @@ from .omics import (
     log2_fold_change, pearson, shannon_diversity, simpson_diversity,
     welch_differential_expression,
 )
-from .phylo import Node, leaf_names, neighbor_joining, parse_newick, patristic_distance, to_newick, upgma
+from .phylo import Node, leaf_names, jukes_cantor_distance, neighbor_joining, neighbor_joining_from_alignment, parse_newick, patristic_distance, to_newick, upgma
 from .pgx import AlleleMatch, StarAlleleDefinition, VariantKey, match_phased_haplotype, parse_star_allele_definitions
 from .protein import protein_descriptors, theoretical_pi
 from .sequence import (
@@ -41,9 +41,9 @@ __all__ = [
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate",
-    "iter_bam_records", "iter_fasta_records", "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk", "match_phased_haplotype", "parse_star_allele_definitions",
+    "iter_bam_records", "iter_fasta_records", "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "jukes_cantor_distance", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk", "match_phased_haplotype", "parse_star_allele_definitions",
     "log2_fold_change", "logistic_growth", "michaelis_menten", "normalize_small_variant",
-    "needleman_wunsch", "neighbor_joining", "negative_binomial_differential_expression", "parse_fasta", "parse_fastq", "parse_newick",
+    "needleman_wunsch", "neighbor_joining", "neighbor_joining_from_alignment", "negative_binomial_differential_expression", "parse_fasta", "parse_fastq", "parse_newick",
     "parse_mmcif", "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",
     "patristic_distance", "path_fingerprint", "pearson", "primer_properties",
     "protein_descriptors", "reverse_complement", "rmsd", "scan_spcas9_ngg",

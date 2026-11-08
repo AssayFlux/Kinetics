@@ -17,3 +17,8 @@ Implemented in `python/kinetics/phylo.py`. Non-finite/negative input distances a
 
 ## Exit evidence
 Published reference matrices/trees, independent topology and branch-length concordance, tie/degenerate cases, large-tree performance, provenance and offline visualization tests.
+
+
+### R7 model-based distance increment
+
+Added Jukes–Cantor 1969 nucleotide distance estimation with pairwise deletion of ambiguous/gap columns, minimum comparable-site requirements and explicit saturation rejection. Added a neighbour-joining-from-alignment entry point that constructs a model-corrected distance matrix before tree inference. This is a simple substitution model, not maximum likelihood or Bayesian inference; it has no rate heterogeneity, codon model, bootstrap or model selection. Regression-test source was added but not executed.

@@ -121,6 +121,11 @@ tools:
     status: implemented
     implementation: python/kinetics/pgx.py
     evidence_level: none
+  - id: phylo.jukes_cantor_nj
+    name: Jukes-Cantor nucleotide distances and neighbour-joining tree construction
+    status: implemented
+    implementation: python/kinetics/phylo.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

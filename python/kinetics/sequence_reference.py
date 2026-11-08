@@ -6,11 +6,12 @@ or a calibrated homology/family classifier. A no-hit is never novelty evidence.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from io import BytesIO, TextIOWrapper
 from hashlib import sha256
 from typing import Iterable, Literal
 from urllib.parse import urlparse
 
-from kinetics.sequence import DNA, PROTEIN, RNA, SequenceRecord, validate_sequence
+from kinetics.sequence import DNA, PROTEIN, RNA, SequenceRecord, iter_fasta_records, validate_sequence
 
 SequenceType = Literal["DNA", "RNA", "protein"]
 
@@ -152,3 +153,52 @@ def exact_reference_search(
             "Reference pack license, version and hash are caller-supplied and must be independently verified",
         ],
     }
+
+
+
+def exact_reference_search_fasta(
+    query: str,
+    fasta_bytes: bytes,
+    *,
+    sequence_type: SequenceType,
+    reference_pack: ReferencePack,
+    max_fasta_bytes: int = 512 * 1024 * 1024,
+    max_records: int = 100_000,
+    max_total_residues: int = 50_000_000,
+    max_query_residues: int = 5_000_000,
+) -> dict[str, object]:
+    """Verify exact FASTA bytes against pack provenance, then search records.
+
+    The byte digest is computed from the supplied raw payload before UTF-8
+    decoding. FASTA records are parsed incrementally; no homology or novelty
+    inference is performed. The caller remains responsible for acquiring the
+    bytes under the source's licence and pinning the correct release.
+    """
+    reference_pack.validate()
+    if not isinstance(fasta_bytes, bytes):
+        raise TypeError("fasta_bytes must be bytes")
+    if (
+        not isinstance(max_fasta_bytes, int)
+        or isinstance(max_fasta_bytes, bool)
+        or max_fasta_bytes < 1
+    ):
+        raise ValueError("max_fasta_bytes must be a positive integer")
+    if len(fasta_bytes) > max_fasta_bytes:
+        raise ValueError("FASTA payload exceeds max_fasta_bytes limit")
+    actual_sha256 = sha256(fasta_bytes).hexdigest()
+    if actual_sha256 != reference_pack.content_sha256:
+        raise ValueError("FASTA payload SHA-256 does not match reference-pack metadata")
+    try:
+        stream = TextIOWrapper(BytesIO(fasta_bytes), encoding="utf-8", errors="strict")
+        records = iter_fasta_records(stream)
+        return exact_reference_search(
+            query,
+            records,
+            sequence_type=sequence_type,
+            reference_pack=reference_pack,
+            max_records=max_records,
+            max_total_residues=max_total_residues,
+            max_query_residues=max_query_residues,
+        )
+    except UnicodeDecodeError as exc:
+        raise ValueError("FASTA payload must be valid UTF-8 text") from exc

@@ -236,3 +236,159 @@ def welch_differential_expression(
         running = min(running, adjusted)
         raw[position]["q_value"] = running
     return raw
+
+def _solve_wls(matrix: list[list[float]], vector: list[float]) -> list[float]:
+    n = len(vector)
+    a = [matrix[i][:] + [vector[i]] for i in range(n)]
+    scale = max(abs(x) for row in matrix for x in row)
+    if scale == 0:
+        raise ValueError("Rank-deficient design matrix")
+    for col in range(n):
+        pivot = max(range(col, n), key=lambda r: abs(a[r][col]))
+        if abs(a[pivot][col]) <= scale * 1e-12:
+            raise ValueError("Rank-deficient or ill-conditioned design matrix")
+        a[col], a[pivot] = a[pivot], a[col]
+        d = a[col][col]
+        a[col] = [x / d for x in a[col]]
+        for r in range(n):
+            if r != col:
+                factor = a[r][col]
+                a[r] = [x - factor * y for x, y in zip(a[r], a[col])]
+    return [a[i][-1] for i in range(n)]
+
+
+def _invert_wls(matrix: list[list[float]]) -> list[list[float]]:
+    n = len(matrix)
+    cols = []
+    for j in range(n):
+        unit = [0.0] * n
+        unit[j] = 1.0
+        cols.append(_solve_wls(matrix, unit))
+    return [[cols[j][i] for j in range(n)] for i in range(n)]
+
+
+def negative_binomial_differential_expression(
+    counts: list[list[int | float]], condition: list[int], *,
+    covariates: list[list[float]] | None = None,
+    feature_ids: list[str] | None = None,
+) -> list[dict[str, float | str | bool | int]]:
+    """Exploratory NB2 log-link GLM with numeric covariates and Wald tests.
+
+    Counts are raw non-negative integers (features x independent samples).
+    Condition is 0/1; numeric covariates are caller-encoded, including reference-
+    coded batch indicators. Uses median-of-ratios size factors when possible,
+    otherwise library-size factors, and unmoderated per-feature moment dispersions.
+    Wald p-values are asymptotic normal approximations; no repeated-measures,
+    empirical-Bayes dispersion shrinkage or small-sample correction is claimed.
+    """
+    from math import erfc
+
+    if not counts or not counts[0]:
+        raise ValueError("Count matrix must be non-empty")
+    n = len(counts[0])
+    if n < 4 or len(condition) != n or set(condition) != {0, 1}:
+        raise ValueError("Need >=4 samples and a 0/1 condition containing both groups")
+    if any(len(row) != n for row in counts):
+        raise ValueError("Count matrix must be rectangular")
+    flat = [float(x) for row in counts for x in row]
+    _finite(flat, "Raw counts")
+    if any(x < 0 or not x.is_integer() for x in flat):
+        raise ValueError("NB2 requires non-negative integer raw counts")
+    covariates = covariates or []
+    if any(len(row) != n for row in covariates):
+        raise ValueError("Covariate rows must match sample count")
+    _finite([float(x) for row in covariates for x in row], "Covariates")
+    p = 2 + len(covariates)
+    if n <= p:
+        raise ValueError("Insufficient residual degrees of freedom")
+    if feature_ids is None:
+        feature_ids = [str(i) for i in range(len(counts))]
+    if len(feature_ids) != len(counts) or len(set(feature_ids)) != len(feature_ids):
+        raise ValueError("Feature IDs must be unique and match feature rows")
+
+    libraries = [sum(float(row[j]) for row in counts) for j in range(n)]
+    if any(x <= 0 for x in libraries):
+        raise ValueError("Every sample must have a non-zero library size")
+    ratios = [[] for _ in range(n)]
+    for row in counts:
+        values = [float(x) for x in row]
+        if all(x > 0 for x in values):
+            gm = exp(sum(log(x) for x in values) / n)
+            for j in range(n):
+                ratios[j].append(values[j] / gm)
+    def median(xs: list[float]) -> float:
+        xs = sorted(xs)
+        m = len(xs) // 2
+        return xs[m] if len(xs) % 2 else (xs[m - 1] + xs[m]) / 2
+    if all(ratios):
+        factors = [median(row) for row in ratios]
+    else:
+        gm = exp(sum(log(x) for x in libraries) / n)
+        factors = [x / gm for x in libraries]
+    gm_f = exp(sum(log(x) for x in factors) / n)
+    factors = [x / gm_f for x in factors]
+    offsets = [log(x) for x in factors]
+    design = [[1.0, float(condition[j])] + [float(row[j]) for row in covariates] for j in range(n)]
+    results: list[dict[str, float | str | bool | int]] = []
+
+    for feature, row in zip(feature_ids, counts):
+        y = [float(x) for x in row]
+        norm = [y[j] / factors[j] for j in range(n)]
+        mean = sum(norm) / n
+        variance = sum((x - mean) ** 2 for x in norm) / (n - 1)
+        alpha = min(10.0, max(1e-8, (variance - mean) / max(mean * mean, 1e-12)))
+        beta = [0.0] * p
+        beta[0] = log((sum(y) + 0.5) / n) - sum(offsets) / n
+        converged = False
+        information = [[0.0] * p for _ in range(p)]
+        warning = ""
+        iterations = 0
+        try:
+            for iterations in range(1, 101):
+                weights, z, mus = [], [], []
+                for j in range(n):
+                    eta = min(30.0, sum(design[j][k] * beta[k] for k in range(p)) + offsets[j])
+                    mu = max(exp(eta), 1e-10)
+                    mus.append(mu)
+                    weights.append(mu / (1.0 + alpha * mu))
+                    z.append(eta + (y[j] - mu) / mu - offsets[j])
+                information = [[sum(design[j][a] * weights[j] * design[j][b] for j in range(n))
+                                for b in range(p)] for a in range(p)]
+                score = [sum(design[j][a] * weights[j] *
+                             (z[j] - sum(design[j][k] * beta[k] for k in range(p)))
+                             for j in range(n)) for a in range(p)]
+                delta = _solve_wls(information, score)
+                beta = [beta[k] + delta[k] for k in range(p)]
+                if not all(isfinite(x) for x in beta):
+                    raise ValueError("Non-finite NB2 coefficients")
+                if max(abs(x) for x in delta) < 1e-8:
+                    converged = True
+                    break
+            covariance = _invert_wls(information)
+            se = sqrt(max(0.0, covariance[1][1]))
+            zstat = beta[1] / se if se > 0 else (0.0 if beta[1] == 0 else float("inf"))
+            pvalue = 1.0 if zstat == 0 else (0.0 if not isfinite(zstat) else erfc(abs(zstat) / sqrt(2)))
+            if not converged:
+                warning = "IRLS did not converge within 100 iterations"
+            lfc = beta[1] / log(2)
+        except (ValueError, ArithmeticError, OverflowError) as error:
+            se, zstat, pvalue, lfc = float("nan"), float("nan"), 1.0, float("nan")
+            converged, warning, iterations = False, str(error), 0
+        results.append({
+            "feature_id": feature, "log2_fold_change": lfc, "condition_coefficient": beta[1],
+            "standard_error": se, "wald_z": zstat, "p_value": pvalue,
+            "dispersion": alpha, "converged": converged, "iterations": iterations,
+            "warning": warning,
+        })
+
+    order = sorted(range(len(results)), key=lambda i: float(results[i]["p_value"]))
+    q = [1.0] * len(results)
+    running = 1.0
+    for k in range(len(order) - 1, -1, -1):
+        i = order[k]
+        running = min(running, float(results[i]["p_value"]) * len(order) / (k + 1))
+        q[i] = min(1.0, running)
+    for i, result in enumerate(results):
+        result["q_value"] = q[i]
+    return results
+

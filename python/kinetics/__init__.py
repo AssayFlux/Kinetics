@@ -30,7 +30,9 @@ from .sequence import (
     SequenceRecord, iter_fasta_records, kmer_counts, needleman_wunsch, parse_fasta, parse_fastq,
     reverse_complement, sequence_statistics, transcribe, trim_fastq_ends,
 )
-from .structure import Atom, contact_pairs, parse_mmcif, parse_pdb, rmsd, solvent_accessible_surface_area
+from .structure import (
+    Atom, contact_pairs, parse_mmcif, parse_pdb, rmsd, solvent_accessible_surface_area,
+)
 
 __all__ = [
     "Atom", "GeneEntry", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",

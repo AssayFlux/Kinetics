@@ -846,3 +846,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R6 V3000 source increment
 - Added conservative V3000 atom/bond graph parsing with counts, unique atom/bond identifiers, coordinate finiteness, bond references and duplicate-edge validation. The existing multi-record SDF iterator now dispatches both V2000 and supported V3000 records.
 - Added a basic V3000 regression fixture and updated R6 registry/plan. Stereochemistry and additional V3000 atom/bond attributes remain uninterpreted; this is not production cheminformatics. No tests were run.
+
+
+### R5 approximate SASA source increment
+- Added deterministic Shrake–Rupley solvent-accessible surface area using generic element van der Waals radii and Fibonacci sphere sampling, with atom-count, probe-radius and point-resolution limits.
+- Exported the API, added regression-test source for single-atom area, occlusion and invalid inputs, and updated the R5 capability registry/plan. It omits hydrogens, atom-specific radii, residue-level relative accessibility and biological assemblies. No tests were run; reference concordance remains required.

@@ -31,8 +31,8 @@ class DataPackManager(context: Context) {
             sha256 = value.getString("sha256").lowercase(),
             sizeBytes = value.getLong("size_bytes"),
         )
-        require(manifest.id.matches(Regex("[A-Za-z0-9._-]{1,80}"))) { "Invalid pack id" }
-        require(manifest.version.matches(Regex("[A-Za-z0-9._-]{1,80}"))) { "Invalid pack version" }
+        require(manifest.id.matches(Regex("[A-Za-z0-9._-]{1,80}")) && manifest.id !in setOf(".", "..")) { "Invalid pack id" }
+        require(manifest.version.matches(Regex("[A-Za-z0-9._-]{1,80}")) && manifest.version !in setOf(".", "..")) { "Invalid pack version" }
         require(manifest.source.startsWith("https://"))
         require(manifest.license.isNotBlank()) { "License metadata is mandatory" }
         require(manifest.sha256.matches(Regex("[a-f0-9]{64}"))) { "Invalid SHA-256" }
@@ -54,7 +54,7 @@ class DataPackManager(context: Context) {
         require(source.isFile && source.length() == manifest.sizeBytes) { "Pack size mismatch" }
 
         val destinationDir = File(root, manifest.id).apply { mkdirs() }
-        val temporary = File(destinationDir, manifest.version + ".tmp")
+        val temporary = File.createTempFile("pack-" + manifest.version + "-", ".tmp", destinationDir)
         val destination = File(destinationDir, manifest.version + ".data")
         require(!destination.exists()) { "This pack version is already installed" }
         temporary.delete()

@@ -185,3 +185,49 @@ def test_bam_parser_rejects_truncated_and_out_of_bounds_streams(
 
     with pytest.raises(ValueError, match=message):
         list(iter_bam_records(io.BytesIO(gzip.compress(payload))))
+
+
+def test_bam_parser_enforces_record_and_total_base_limits() -> None:
+    import gzip
+    import io
+
+    from kinetics.genomics import iter_bam_records
+
+    header = b"BAM\\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
+    header += struct.pack("<i", 5) + b"chr1\\x00" + struct.pack("<i", 1000)
+
+    def record(name: bytes, sequence: bytes = bytes([0x12, 0x48])) -> bytes:
+        core = struct.pack(
+            "<iiIIiiii", 0, 0, (60 << 8) | len(name), (1 << 16) | 1,
+            4, -1, -1, 0,
+        )
+        cigar = struct.pack("<I", (4 << 4) | 0)
+        qualities = bytes([30, 30, 30, 30])
+        block = core + name + cigar + sequence + qualities
+        return struct.pack("<i", len(block)) + block
+
+    bam = header + record(b"r1\\x00") + record(b"r2\\x00")
+    with pytest.raises(ValueError, match="max_records"):
+        list(iter_bam_records(io.BytesIO(gzip.compress(bam)), max_records=1))
+
+    with pytest.raises(ValueError, match="max_total_bases"):
+        list(iter_bam_records(io.BytesIO(gzip.compress(bam)), max_total_bases=7))
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"max_records": 0},
+        {"max_records": True},
+        {"max_total_bases": 0},
+        {"max_total_bases": False},
+    ],
+)
+def test_bam_parser_rejects_invalid_resource_limits(kwargs: dict[str, object]) -> None:
+    import gzip
+    import io
+
+    from kinetics.genomics import iter_bam_records
+
+    with pytest.raises(ValueError, match="positive integer"):
+        list(iter_bam_records(io.BytesIO(gzip.compress(b"NOPE")), **kwargs))

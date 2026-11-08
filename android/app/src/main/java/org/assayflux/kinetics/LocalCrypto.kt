@@ -106,6 +106,62 @@ object LocalCrypto {
         }
     }
 
+    /**
+     * Export a verified encrypted input to a caller-owned SAF stream.
+     * A full authentication/hash pass completes before any plaintext is written.
+     * The second pass re-authenticates each chunk while streaming output.
+     */
+    fun decryptChunkedFileToStream(
+        source: File, destination: java.io.OutputStream, context: String, expectedSha256: String,
+    ) {
+        require(source.isFile) { "Encrypted source file does not exist" }
+        require(expectedSha256.matches(Regex("[a-fA-F0-9]{64}"))) { "Expected SHA-256 is invalid" }
+
+        fun readChunks(write: (ByteArray) -> Unit): String {
+            val digest = MessageDigest.getInstance("SHA-256")
+            var total = 0L
+            RandomAccessFile(source, "r").use { input ->
+                val magic = ByteArray(FILE_MAGIC.size)
+                input.readFully(magic)
+                require(magic.contentEquals(FILE_MAGIC)) { "Unsupported encrypted file format" }
+                require(input.readUnsignedByte() == FILE_FORMAT_VERSION) {
+                    "Unsupported encrypted file version"
+                }
+                var chunkIndex = 0L
+                while (input.filePointer < input.length()) {
+                    require(input.length() - input.filePointer >= 4) { "Encrypted chunk header is truncated" }
+                    val length = input.readInt()
+                    require(length in (IV_BYTES + TAG_BYTES)..(CHUNK_BYTES + IV_BYTES + TAG_BYTES)) {
+                        "Encrypted chunk length is invalid"
+                    }
+                    require(input.length() - input.filePointer >= length) {
+                        "Encrypted chunk payload is truncated"
+                    }
+                    val payload = ByteArray(length)
+                    input.readFully(payload)
+                    val plaintext = decrypt(payload, associatedData(context, chunkIndex))
+                    require(plaintext.isNotEmpty()) { "Encrypted file contains an empty chunk" }
+                    total += plaintext.size
+                    require(total <= MAX_FILE_BYTES) { "Decrypted research input exceeds the 512 MiB limit" }
+                    digest.update(plaintext)
+                    write(plaintext)
+                    chunkIndex++
+                }
+            }
+            return digest.digest().joinToString("") { "%02x".format(it) }
+        }
+
+        val verifiedHash = readChunks { }
+        require(verifiedHash.equals(expectedSha256, ignoreCase = true)) {
+            "Decrypted input SHA-256 does not match recorded provenance"
+        }
+        val secondPassHash = readChunks(destination::write)
+        require(secondPassHash.equals(expectedSha256, ignoreCase = true)) {
+            "Encrypted input changed during export"
+        }
+        destination.flush()
+    }
+
     fun decryptChunkedFile(
         source: File, destination: File, context: String, expectedSha256: String,
     ) {

@@ -84,3 +84,8 @@ The current source prototype requires persistable SAF read access before schedul
 ### R2 continued source hardening — 2026-11-08
 
 The data-pack installer now revalidates programmatically supplied manifest fields (including rejecting dot-segment IDs/versions), uses a unique app-private temporary file, hashes the exact byte stream while copying it, checks declared size and checksum before finalization, and refuses an already-installed version. This closes the prior separate hash-then-copy time-of-check/time-of-use gap. The store also removes only stale, uniquely-prefixed plaintext analysis cache files older than 24 hours at startup, and empty imports are rejected. These remain source-only changes; Android compilation, concurrency, filesystem atomicity, crash recovery and device behavior are unverified.
+
+
+### R2 SAF export and schema migration increment — 2026-11-08
+
+Added a user-mediated Storage Access Framework CreateDocument export path for completed imports. Export streams authenticated AES-GCM chunks directly to the chosen destination without creating a plaintext cache file. It performs a complete authentication and SHA-256 pass before releasing plaintext, then authenticates again while streaming to detect source changes. Added a v2-to-v3 SQLite migration that adds export metadata and a provenance index. This source path is not yet Android-compiled or exercised against real SAF providers; provider partial-file cleanup, process death during export, migration fixtures, key invalidation and full lifecycle recovery remain verification gates.

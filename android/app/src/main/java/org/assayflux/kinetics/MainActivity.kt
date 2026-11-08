@@ -53,6 +53,33 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
     var notice by remember { mutableStateOf("Research Mode. Local files stay on this device.") }
     var runtimeReport by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    var pendingExportJob by remember { mutableStateOf<String?>(null) }
+    val exportPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/octet-stream"),
+    ) { uri ->
+        val jobId = pendingExportJob
+        pendingExportJob = null
+        if (uri != null && jobId != null) {
+            scope.launch {
+                notice = "Exporting verified research input..."
+                val result = withContext(Dispatchers.IO) {
+                    runCatching {
+                        val output = activity.contentResolver.openOutputStream(uri, "w")
+                            ?: error("Selected export destination could not be opened")
+                        output.use { stream ->
+                            check(store.exportStoredInput(jobId, stream)) {
+                                "No completed encrypted input exists for this job"
+                            }
+                        }
+                    }
+                }
+                notice = result.fold(
+                    { "Verified research input exported successfully." },
+                    { "Export failed: ${it.message ?: it.javaClass.simpleName}" },
+                )
+            }
+        }
+    }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             val persistentReadGrant = runCatching {
@@ -165,6 +192,12 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                             Text("State: ${job.state}")
                             job.sha256?.let { Text("SHA-256: $it") }
                             job.message?.let { Text(it) }
+                            if (job.state == "succeeded" && job.sha256 != null) {
+                                Button(onClick = {
+                                    pendingExportJob = job.id
+                                    exportPicker.launch(job.inputName.substringAfterLast('/').take(120).ifBlank { "kinetics-research-export.bin" })
+                                }) { Text("Export original file") }
+                            }
                             if (job.state == "queued" || job.state == "running" || job.state == "cancel_requested") {
                                 Button(onClick = {
                                     store.updateJob(job.id, "cancel_requested")

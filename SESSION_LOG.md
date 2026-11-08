@@ -856,3 +856,10 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R7 Newick export increment
 - Added deterministic Newick serialization with safe quoting of labels containing whitespace or delimiters, finite/non-negative branch-length validation and cycle rejection.
 - Exported the API, added a quoted-label/branch-length round-trip regression case and updated the R7 capability registry/plan. No tests were run; tree inference remains distance-based and needs reference concordance/bootstrap/model-based methods.
+
+
+### R2 SAF export and schema migration increment
+- Added a two-pass LocalCrypto.decryptChunkedFileToStream: first pass authenticates every AES-GCM chunk and verifies recorded SHA-256 without writing plaintext; second pass authenticates again while streaming to the caller-owned output stream.
+- Added ResearchStore.exportStoredInput for completed imports only and a Compose SAF CreateDocument action. Export uses the user's selected destination and does not materialize a plaintext cache file.
+- Added SQLite schema version 3 migration for export metadata and a provenance timestamp index.
+- No Android compilation or tests were run. SAF provider failure/partial-file behavior, migration fixtures, process death, key loss and export cancellation still need dedicated verification.

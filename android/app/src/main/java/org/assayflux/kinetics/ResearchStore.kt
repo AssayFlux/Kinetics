@@ -65,6 +65,10 @@ class ResearchStore(context: Context) :
         if (oldVersion < 2) {
             db.execSQL("ALTER TABLE jobs ADD COLUMN storage_path TEXT")
         }
+        if (oldVersion < 3) {
+            db.execSQL("ALTER TABLE jobs ADD COLUMN exported_at INTEGER")
+            db.execSQL("CREATE INDEX IF NOT EXISTS provenance_created_at_idx ON provenance(created_at DESC)")
+        }
     }
 
     fun createJob(id: String, name: String, uri: String) {
@@ -154,6 +158,21 @@ class ResearchStore(context: Context) :
         return true
     }
 
+    /** Stream an authenticated, hash-verified input to a caller-selected SAF output stream. */
+    fun exportStoredInput(id: String, destination: java.io.OutputStream): Boolean {
+        val stored = readableDatabase.rawQuery(
+            "SELECT storage_path,sha256 FROM jobs WHERE id=? AND state='succeeded'",
+            arrayOf(id),
+        ).use { cursor ->
+            if (!cursor.moveToFirst() || cursor.isNull(0) || cursor.isNull(1)) null
+            else Pair(cursor.getString(0), cursor.getString(1))
+        } ?: return false
+        LocalCrypto.decryptChunkedFileToStream(
+            File(stored.first), destination, "kinetics-import:$id", stored.second,
+        )
+        return true
+    }
+
     /** Run a local analysis callback and always remove its plaintext cache file. */
     fun <T> withStoredInput(id: String, action: (File) -> T): T? {
         val temporary = File(appContext.cacheDir, "kinetics-analysis-" + UUID.randomUUID() + ".tmp")
@@ -207,7 +226,7 @@ class ResearchStore(context: Context) :
     }
 
     companion object {
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 3
         private const val PLAINTEXT_CACHE_PREFIX = "kinetics-analysis-"
         private const val PLAINTEXT_CACHE_MAX_AGE_MS = 24L * 60L * 60L * 1000L
     }

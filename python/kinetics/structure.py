@@ -130,8 +130,22 @@ def rmsd(reference: Iterable[Atom], mobile: Iterable[Atom], *, superpose: bool =
 
     target_center = tuple(sum(point[i] for point in target) / len(target) for i in range(3))
     moving_center = tuple(sum(point[i] for point in moving) / len(moving) for i in range(3))
-    target_centered = [tuple(point[i] - target_center[i] for i in range(3)) for point in target]
-    moving_centered = [tuple(point[i] - moving_center[i] for i in range(3)) for point in moving]
+    target_centered: list[tuple[float, float, float]] = [
+        (
+            point[0] - target_center[0],
+            point[1] - target_center[1],
+            point[2] - target_center[2],
+        )
+        for point in target
+    ]
+    moving_centered: list[tuple[float, float, float]] = [
+        (
+            point[0] - moving_center[0],
+            point[1] - moving_center[1],
+            point[2] - moving_center[2],
+        )
+        for point in moving
+    ]
     rotation = _optimal_rotation(moving_centered, target_centered)
     squared = 0.0
     for point, expected in zip(moving_centered, target_centered):

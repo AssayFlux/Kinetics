@@ -53,6 +53,7 @@ def exact_reference_search(
     reference_pack: ReferencePack,
     max_records: int = 100_000,
     max_total_residues: int = 50_000_000,
+    max_query_residues: int = 5_000_000,
 ) -> dict[str, object]:
     """Return exact full-length matches and a provenance-complete abstaining result."""
     reference_pack.validate()
@@ -62,8 +63,16 @@ def exact_reference_search(
     if not normalized_query:
         raise ValueError("Query sequence must not be empty")
     validate_sequence(normalized_query, _alphabet(sequence_type))
-    if max_records < 1 or max_total_residues < 1:
-        raise ValueError("Search resource limits must be positive")
+    limits = {
+        "max_records": max_records,
+        "max_total_residues": max_total_residues,
+        "max_query_residues": max_query_residues,
+    }
+    for name, value in limits.items():
+        if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+            raise ValueError(f"{name} must be a positive integer")
+    if len(normalized_query) > max_query_residues:
+        raise ValueError("Query sequence exceeds max_query_residues limit")
 
     query_hash = sha256(normalized_query.encode("ascii")).hexdigest()
     hits: list[dict[str, object]] = []
@@ -115,6 +124,7 @@ def exact_reference_search(
                 "similarity_search": False,
                 "max_records": max_records,
                 "max_total_residues": max_total_residues,
+                "max_query_residues": max_query_residues,
             },
             "reference_packs": [{
                 "name": reference_pack.name,

@@ -74,3 +74,8 @@ Build the usable, offline-first Android application foundation on top of the R1-
 R2 is complete only when the app shell, SQLite, SAF, provenance, cancellable/resumable jobs, registry and pack manager work together; required automated tests pass; the owner can import a file, run/cancel/recover a job, inspect provenance and export results on a real target device; security/privacy review findings are resolved or accepted; and the owner explicitly approves the R2 exit gate.
 
 **Owner instruction (2026-11-08):** implement R1–R10 as one integrated delivery; do not stop implementation at R1. Preserve the R1 go/no-go as an evidence/phase-exit gate, not as a reason to defer downstream coding.
+
+
+## Implementation hardening note — 2026-11-08
+
+The current source prototype now requires persistable SAF read permission before scheduling an import, stages partial data under app-private no-backup storage, verifies the existing source prefix before resume, discards stale partials when the source changes, and enables SQLite foreign-key enforcement for provenance. Host CI does not compile Android sources. These changes remain unverified on Android; schema migrations, encrypted storage integration, crash/process-death tests, SAF provider edge cases, export/recovery and owner-device execution remain required before R2 exit.

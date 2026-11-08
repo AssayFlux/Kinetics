@@ -61,6 +61,31 @@ tools:
     status: implemented
     implementation: python/kinetics/catalog.py
     evidence_level: none
+  - id: molecular.primer_screen
+    name: Primer property screening
+    status: implemented
+    implementation: python/kinetics/molecular.py
+    evidence_level: none
+  - id: molecular.crispr_pam
+    name: SpCas9 NGG PAM scanning
+    status: implemented
+    implementation: python/kinetics/molecular.py
+    evidence_level: none
+  - id: phylo.upgma
+    name: UPGMA clustering
+    status: implemented
+    implementation: python/kinetics/phylo.py
+    evidence_level: none
+  - id: omics.logistic_growth
+    name: Logistic growth model
+    status: implemented
+    implementation: python/kinetics/omics.py
+    evidence_level: none
+  - id: omics.cross_correlation
+    name: Cross-omics correlation matrix
+    status: implemented
+    implementation: python/kinetics/omics.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

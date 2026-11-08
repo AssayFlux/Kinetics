@@ -1339,3 +1339,10 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Declared direct-dependency SPDX inventory generation passed.
 - Android build host setup reached Python 3.11.17, JDK 17, Rust 1.88.0 and Android NDK 28.2.13676358, but Gradle distribution retrieval returned repeated HTTP 504 responses before compilation began; no APK/AAB was produced.
 - Added a checksum-verified direct `downloads.gradle.org` distribution URL with `services.gradle.org` fallback. This is a network-resilience change, not evidence of a successful build; the next CI run must verify it.
+
+
+## 2026-11-08 — CI checkpoint #1885 (S7 included)
+- Python foundation completed successfully on commit `6312f74528f1c4aefe2f033de76611352f0a10b2`: Ruff passed, strict mypy reported no issues in 30 source files, and `153 passed, 4 skipped` tests.
+- Pinned SciPy/Biopython reference comparisons, RDKit descriptor sanity fixtures, and direct-dependency SPDX generation all completed successfully.
+- The newly added six-frame ORF scanner and its strand/coordinate/table-specific tests are included in the passing Python suite.
+- Android build was still running when this checkpoint was recorded; no build success is claimed here.

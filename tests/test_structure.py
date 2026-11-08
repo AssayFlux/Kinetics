@@ -36,3 +36,53 @@ def test_rmsd_requires_equal_non_empty_coordinate_sets() -> None:
 def test_rmsd_and_contact_cutoff_reject_non_finite_values() -> None:
     with pytest.raises(ValueError, match="finite"):
         rmsd([atom(1, float("nan"), 0, 0)], [atom(1, 0, 0, 0)])
+
+
+def test_mmcif_atom_site_loop_parses_coordinates_and_altloc() -> None:
+    from kinetics.structure import parse_mmcif
+
+    cif = """data_demo
+loop_
+_atom_site.group_PDB
+_atom_site.id
+_atom_site.type_symbol
+_atom_site.label_atom_id
+_atom_site.label_comp_id
+_atom_site.label_asym_id
+_atom_site.label_seq_id
+_atom_site.label_alt_id
+_atom_site.Cartn_x
+_atom_site.Cartn_y
+_atom_site.Cartn_z
+ATOM 1 C CA GLY A 1 . 0.0 0.0 0.0
+ATOM 2 C CA GLY A 1 B 9.0 9.0 9.0
+ATOM 3 N N GLY A 1 A 1.0 0.0 0.0
+#
+"""
+    atoms = parse_mmcif(cif)
+    assert len(atoms) == 2
+    assert atoms[0].name == "CA"
+    assert atoms[1].element == "N"
+    assert atoms[1].x == 1.0
+
+
+def test_mmcif_rejects_non_finite_coordinates() -> None:
+    from kinetics.structure import parse_mmcif
+
+    cif = """data_demo
+loop_
+_atom_site.group_PDB
+_atom_site.id
+_atom_site.type_symbol
+_atom_site.label_atom_id
+_atom_site.label_comp_id
+_atom_site.label_asym_id
+_atom_site.label_seq_id
+_atom_site.Cartn_x
+_atom_site.Cartn_y
+_atom_site.Cartn_z
+ATOM 1 C CA GLY A 1 NaN 0.0 0.0
+#
+"""
+    with pytest.raises(ValueError, match="finite"):
+        parse_mmcif(cif)

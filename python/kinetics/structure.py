@@ -152,3 +152,85 @@ def contact_pairs(atoms: Iterable[Atom], cutoff_angstrom: float = 8.0) -> list[t
             if distance <= cutoff_angstrom:
                 result.append((i, j, distance))
     return result
+
+
+def parse_mmcif(text: str, *, include_hetero: bool = False) -> list[Atom]:
+    """Parse the mmCIF _atom_site loop into the shared Atom model.
+
+    Coordinates and identifiers are read from label_* fields with auth_* fallbacks.
+    An mmCIF parser is not a full chemical-component or symmetry interpreter.
+    """
+    import shlex
+
+    lexer = shlex.shlex(text, posix=True)
+    lexer.whitespace_split = True
+    lexer.commenters = "#"
+    tokens = list(lexer)
+    atoms: list[Atom] = []
+    index = 0
+    while index < len(tokens):
+        if tokens[index].lower() != "loop_":
+            index += 1
+            continue
+        index += 1
+        tags: list[str] = []
+        while index < len(tokens) and tokens[index].startswith("_"):
+            tags.append(tokens[index].lower())
+            index += 1
+        if not tags:
+            continue
+        values: list[str] = []
+        while index < len(tokens):
+            token = tokens[index]
+            if token.lower() in {"loop_", "stop_"} or token.lower().startswith(("data_", "save_")):
+                break
+            if token.startswith("_") and len(values) % len(tags) == 0:
+                break
+            values.append(token)
+            index += 1
+        if not any(tag.startswith("_atom_site.") for tag in tags):
+            continue
+        if len(values) % len(tags):
+            raise ValueError("mmCIF atom_site loop has an incomplete row")
+        columns = {tag: position for position, tag in enumerate(tags)}
+
+        def field(row: list[str], *names: str, default: str = "") -> str:
+            for name in names:
+                position = columns.get("_atom_site." + name)
+                if position is not None and row[position] not in {".", "?"}:
+                    return row[position]
+            return default
+
+        required = ("type_symbol", "Cartn_x", "Cartn_y", "Cartn_z")
+        if any("_atom_site." + name not in columns for name in required):
+            raise ValueError("mmCIF atom_site loop lacks required element/coordinate columns")
+        for offset in range(0, len(values), len(tags)):
+            row = values[offset:offset + len(tags)]
+            group = field(row, "group_PDB", default="ATOM").upper()
+            if group != "ATOM" and not (include_hetero and group == "HETATM"):
+                continue
+            alternate = field(row, "label_alt_id", "auth_alt_id", default="")
+            if alternate not in {"", "A"}:
+                continue
+            try:
+                serial = int(field(row, "id", default=str(len(atoms) + 1)))
+                residue_number = int(field(row, "label_seq_id", "auth_seq_id", default="0"))
+                x = float(field(row, "Cartn_x"))
+                y = float(field(row, "Cartn_y"))
+                z = float(field(row, "Cartn_z"))
+            except ValueError as exc:
+                raise ValueError("mmCIF atom_site loop contains an invalid numeric field") from exc
+            if not all(isfinite(value) for value in (x, y, z)):
+                raise ValueError("mmCIF coordinates must be finite")
+            atoms.append(Atom(
+                serial=serial,
+                name=field(row, "label_atom_id", "auth_atom_id"),
+                residue=field(row, "label_comp_id", "auth_comp_id"),
+                chain=field(row, "label_asym_id", "auth_asym_id"),
+                residue_number=residue_number,
+                x=x, y=y, z=z,
+                element=field(row, "type_symbol").upper(),
+            ))
+    if not atoms:
+        raise ValueError("No supported mmCIF atom_site coordinates")
+    return atoms

@@ -1,15 +1,18 @@
-name: Kinetics source validation CI
+name: Kinetics validation and Android build
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: kinetics-source-ci-${{ github.ref }}
+  group: kinetics-validation-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   python-foundations:
     name: Python foundation, registry and tests
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -38,6 +41,58 @@ jobs:
         run: python scripts/check_android_artifacts.py
       - name: Check local Android build script syntax
         run: bash -n scripts/build_android_local.sh
-# Owner instruction (2026-11-08): GitHub Actions must not build APK/AAB files
-# or boot/test Android emulators. Build the debug APK locally when requested;
-# physical-device testing is deferred until the owner is ready.
+
+  android-arm64-build:
+    name: Android arm64 debug APK/AAB build and package tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Set up exact Python build host
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11.17"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install pinned Android SDK components
+        run: |
+          sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358" "cmake;3.22.1"
+          yes | sdkmanager --licenses
+      - name: Install host build utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y patchelf
+      - name: Set up Rust and Android target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android
+      - name: Record build environment
+        run: |
+          java -version
+          python --version
+          rustc --version
+          cargo --version
+          "$ANDROID_HOME/ndk/28.2.13676358/toolchains/llvm/prebuilt/linux-x86_64/bin/clang" --version
+      - name: Build arm64 APK/AAB and verify package alignment
+        run: |
+          chmod +x scripts/build_android_local.sh
+          scripts/build_android_local.sh 2>&1 | tee android-build.log
+      - name: Run Android JVM unit-test task
+        working-directory: android
+        run: "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon --stacktrace :app:testDebugUnitTest
+      - name: Upload debug APK, AAB and build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kinetics-android-arm64-debug-${{ github.sha }}
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/bundle/debug/app-debug.aab
+            android-build.log
+          if-no-files-found: warn
+          retention-days: 14

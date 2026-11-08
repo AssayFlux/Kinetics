@@ -24,3 +24,10 @@ A signed owner decision; jurisdiction-specific legal review; ethics/IRB determin
 ## Publication boundary
 
 Public-data research still requires dataset licences, citation, provenance, bias analysis and reproducibility. Public availability does not automatically grant redistribution rights or remove ethical obligations. Any manuscript must distinguish exploratory computational findings from validated biological or clinical conclusions.
+
+
+## Candidate public source inventory (not approved for intake)
+
+The metadata-only `data/public-dataset-catalog.yaml` now separates candidate source discovery from acquired dataset records. Candidate sources include NCBI Gene, PharmVar, ClinVar and CPIC. Every candidate is explicitly marked `verify_before_intake` and `patient_data: false`; this is not a license approval, data download, or permission to use patient records.
+
+Before adding an acquired entry, pin its exact release/accession, inspect and record the governing license and attribution requirements, retrieve only permitted non-patient content, compute SHA-256 over the exact bytes, document retrieval time and intended research use, and review known bias/limitations. P0 remains blocked. No genotype-to-phenotype interpretation, individual report, guideline recommendation or clinical workflow is implemented by this inventory.

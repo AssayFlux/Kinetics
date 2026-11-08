@@ -1,8 +1,8 @@
 # Android feasibility — R1 in progress
 
-**Current status (2026-11-08):** R1 remains IN PROGRESS. Historical CI runs 1471 and 1481 built arm64 debug APK/AAB artifacts and passed static APK/ELF alignment checks. These are historical build/package results only. No fresh local APK build is claimed, and Android runtime/device tests, SciPy, a separately evaluated scientific engine, RDKit/alternative, offline viewer and performance measurements remain unresolved.
+**Current status (2026-11-08):** R1 remains IN PROGRESS. Fresh CI run #1650 (commit `b5a591aa2b0545188409eacc0eb76043b4143fb8`) built the arm64 debug APK and AAB, verified APK/ELF 16 KB alignment, ran Android JVM unit tests, and uploaded the artifacts. Exact hashes, sizes, toolchain and test boundaries are recorded in [ci-build-evidence.md](ci-build-evidence.md). Android runtime/device tests, SciPy, a separately evaluated scientific engine, RDKit/alternative, offline viewer and performance measurements remain unresolved.
 
-**Owner build/test instruction (2026-11-08):** GitHub Actions must not build APK/AAB files or run Android emulator/device tests. The owner intends to build the debug APK locally first and defer physical-device testing until later. GitHub Actions now runs host-side Python, registry, lint, type and unit-test checks only. Do not restore Android build/test jobs without a new explicit owner instruction.
+**Owner build/test instruction (2026-11-08):** The owner explicitly authorized GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated checks including Android JVM unit tests. The build host is pinned Linux x86_64; this is not a Termux build. No emulator or physical-device test is run. Physical-device testing remains deferred until the owner is ready.
 
 **Phase plan:** docs/phase-r1-plan.md  
 **Owner gate:** R1 go/no-go review required before R2

@@ -10,10 +10,10 @@ Kinetics is an offline-first, Android-native scientific workbench under active d
 - [docs/origin/KINETICS_MASTER.md](docs/origin/KINETICS_MASTER.md) — historical master specification.
 
 ## Current status
-- R0 foundations are complete. R1–R10 are all in progress; none is represented as complete. Phase plans and the integrated implementation inventory document implemented source and outstanding exit evidence.
-- Research Mode is the only mode intended for public builds.
-- R1 has historical Android arm64 cross-build/static-package evidence. GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts, run Android JVM unit tests and verify package alignment. No current successful run is claimed until a workflow completes with jobs and retained artifacts.
-- GitHub Actions runs host-side source checks and an arm64 APK/AAB build lane. The build lane does not run an emulator or physical-device tests. See [docs/phase-r1-plan.md](docs/phase-r1-plan.md).
+- R0 foundations are owner-accepted and complete. R1–R10 remain in progress; none is represented as complete. Phase plans document source implementation separately from validation and exit evidence.
+- Research Mode is the only mode intended for public builds. Clinical/patient workflows remain disabled and gated.
+- Latest verified CI run: [run #1650](https://github.com/AssayFlux/Kinetics/actions/runs/42450892141), commit `b5a591aa2b0545188409eacc0eb76043b4143fb8`. Python checks/tests and Android arm64 debug APK/AAB build, package-alignment verification and JVM unit tests passed.
+- The CI build lane does not run an emulator or physical-device tests. The APK/AAB are unsigned debug artifacts; no app launch, SAF, lifecycle, scientific runtime, cold-start or memory claim is made. See [docs/android-feasibility.md](docs/android-feasibility.md) and [docs/ci-build-evidence.md](docs/ci-build-evidence.md).
 - No scientific capability is claimed as validated; no clinical functionality or patient-data workflow is authorized.
 - Project code is licensed under Apache-2.0. Third-party dependencies retain their own licenses; see [docs/third-party.md](docs/third-party.md).
 
@@ -22,7 +22,7 @@ Requires Python 3.10+.
 ```bash
 python -m pip install -r requirements-dev.txt
 ruff check scripts tests
-mypy scripts tests
+mypy scripts python/kinetics
 python scripts/check_registry.py
 pytest
 scripts/reproduce-all

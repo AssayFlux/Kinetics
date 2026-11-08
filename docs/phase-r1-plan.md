@@ -1,7 +1,7 @@
 # R1 — Android and scientific-stack feasibility
 
 **Roadmap item:** Track R / R1  
-**Status:** IN PROGRESS — historical cross-build/static-package evidence exists; complete runtime and scientific feasibility evidence does not  
+**Status:** IN PROGRESS — fresh CI arm64 APK/AAB build, static alignment checks and JVM unit tests passed; runtime/scientific feasibility remains open  
 **Owner:** Engineering + Project owner  
 **Started:** 2026-11-07  
 **Depends on:** R0 foundation and approved direction baseline  
@@ -14,7 +14,7 @@ Establish whether the approved Android-native architecture can support the requi
 ## Owner instruction — build and test workflow
 
 Updated 2026-11-08 with explicit owner authorization:
-- GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts and run repository automated checks, including Android JVM unit-test tasks and static APK/ELF alignment checks.
+- GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts and run repository automated checks, including Android JVM unit-test tasks and static APK/ELF alignment checks. Latest successful run #1650 is recorded in docs/ci-build-evidence.md.
 - The Actions Android build runs on a pinned Linux x86_64 host toolchain, not on the owner's ARM64 phone. It is a reproducible build/test lane, not a claim that Termux can host the build.
 - Physical-device testing remains a separate required activity. CI success does not establish app launch, JNI/Python runtime behavior, SAF behavior, background execution or device compatibility on the owner's phone.
 - Keep exact run URLs/IDs, source SHA, toolchain versions, logs, artifact hashes/sizes and test results in the feasibility record.

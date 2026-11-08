@@ -1,6 +1,6 @@
 # R0 — Foundations phase plan
 **Roadmap item:** Track R / R0  
-**Status:** R0 implementation and automated checks complete; awaiting owner acceptance of exit gate  
+**Status:** DONE — owner accepted the R0 exit on 2026-11-07; integrated regression evidence is recorded in docs/ci-build-evidence.md  
 **Owner:** Engineering + Project owner  
 **Date:** 2026-11-07
 

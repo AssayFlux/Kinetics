@@ -1006,3 +1006,21 @@ R2 remains in progress. The source change is committed directly to `main`; Andro
 
 ### Next
 Continue R1–R10 source integration and close the remaining code-level gaps. Once the owner has a supported Linux x86_64 build host, run the pinned local build script; use the resulting APK for the owner-directed device-test campaign.
+
+
+## 2026-11-08 — Integrated R-track build and regression evidence
+**Scope:** R0–R10 integrated implementation campaign; CI build-first authorization.
+
+### Verified
+- Latest successful GitHub Actions run: [#1650](https://github.com/AssayFlux/Kinetics/actions/runs/42450892141), source commit `b5a591aa2b0545188409eacc0eb76043b4143fb8`.
+- Python foundation job passed: pre-commit configuration, Ruff, production-code mypy, registry validation, Android configuration guardrails, pytest, reproduction stub and build-script syntax.
+- Android arm64 build job passed: pinned Linux x86_64/JDK 17/Python 3.11.17/Android SDK 36/NDK 28.2.13676358/Rust target; custom Biopython arm64 wheel packaging; APK/AAB build; static ELF/APK alignment checks; Android JVM unit tests; artifact verification.
+- APK SHA-256: `10896f91f622e979a1155c19263f825ccf5ee15e386d39ea1a56f28dd34c6056`, size 66,786,657 bytes.
+- AAB SHA-256: `21aa978efcb65ad1e6040a398d1faf7fe1bc6c06d895fe12603860130d4a6ffa`, size 38,153,856 bytes.
+- Uploaded artifact archive SHA-256: `9c32298574d2d7081274daaee5ae63828103cf47adbfbd19b0bc7d0db476867d`.
+- Build log explicitly states no emulator or physical-device test was run.
+
+### Boundaries / remaining
+- CI green is not R1–R10 completion. R1 runtime/engine feasibility; R2 SAF, migration, crash and Keystore verification; R3 independent scientific validation; R4–R9 reference concordance, broader engines/data coverage and benchmarks; R10 transitive SBOM/licensing, security/accessibility review, device/performance tests and signing remain gated.
+- R0 remains done by owner acceptance; this campaign adds regression evidence without reopening its historical gate.
+- No clinical/patient workflow, validated scientific capability, device support or release claim is made.

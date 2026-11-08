@@ -75,3 +75,12 @@ END
         "biopython_pairwise_alignment_score": float(alignment.score),
         "numpy_linalg_norm": norm,
     }
+
+
+def analyze_fasta(text: str) -> str:
+    """Bounded JSON adapter for the registry-backed local FASTA QC workflow."""
+    import json
+
+    from kinetics.workflows import analyze_fasta_text
+
+    return json.dumps(analyze_fasta_text(text), ensure_ascii=False, sort_keys=True)

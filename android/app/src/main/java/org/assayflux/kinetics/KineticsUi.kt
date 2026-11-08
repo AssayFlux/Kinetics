@@ -13,6 +13,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -565,6 +568,9 @@ fun ExploreScreen(modifier: Modifier) {
                     }
                 }
             }
+            if (entries.any { it.id == "sequence.fasta" && it.status == "implemented" }) {
+                item { FastaQcCard() }
+            }
             if (catalogue.isFailure) {
                 item {
                     OutlinedCard(Modifier.fillMaxWidth()) {
@@ -631,6 +637,82 @@ fun ExploreScreen(modifier: Modifier) {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun FastaQcCard() {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var fastaText by rememberSaveable {
+        mutableStateOf(">example_sequence\\nACGTACGTGCGTNNACGT\\n")
+    }
+    var running by remember { mutableStateOf(false) }
+    var result by remember { mutableStateOf<SequenceQcResult?>(null) }
+    var error by remember { mutableStateOf<String?>(null) }
+
+    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text("FASTA quick quality check", style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold)
+            Text("Run the registered local FASTA parser and basic sequence statistics. Input stays on this device.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            OutlinedTextField(
+                value = fastaText,
+                onValueChange = {
+                    if (it.length <= SequenceQcRunner.MAX_INPUT_CHARS) {
+                        fastaText = it
+                        error = null
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("FASTA input") },
+                minLines = 4,
+                maxLines = 8,
+                supportingText = { Text("Up to 1,000,000 characters · multiple records supported") },
+            )
+            Button(
+                onClick = {
+                    running = true
+                    error = null
+                    result = null
+                    scope.launch {
+                        val outcome = withContext(Dispatchers.IO) {
+                            runCatching { SequenceQcRunner.analyze(context, fastaText) }
+                        }
+                        outcome.onSuccess { result = it }
+                            .onFailure { error = it.message ?: "FASTA analysis failed" }
+                        running = false
+                    }
+                },
+                enabled = !running && fastaText.isNotBlank(),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(if (running) "Analysing…" else "Analyse FASTA")
+            }
+            error?.let {
+                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+            }
+            result?.let { summary ->
+                HorizontalDivider()
+                Text("${summary.recordCount} records · ${summary.totalBases} total bases",
+                    fontWeight = FontWeight.SemiBold)
+                summary.records.forEach { record ->
+                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(record.identifier, style = MaterialTheme.typography.labelLarge,
+                            maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text("${record.length} bases · ${String.format(java.util.Locale.ROOT, "%.2f", record.gcPercent)}% GC (all symbols) · ${record.ambiguousCount} non-ACGT symbols",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+                Text("Basic QC only. No sequence identity, function, pathogenicity or clinical interpretation is inferred. Independent biological validation is not claimed.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

@@ -36,7 +36,9 @@ def inspect_elf(name: str, payload: bytes) -> dict[str, object]:
         offset = phoff + index * phentsize
         if struct.unpack_from("<I", payload, offset)[0] != PT_LOAD:
             continue
-        file_offset, virtual_address, alignment = struct.unpack_from("<QQ", payload, offset + 8)[0], struct.unpack_from("<Q", payload, offset + 16)[0], struct.unpack_from("<Q", payload, offset + 48)[0]
+        file_offset = struct.unpack_from("<Q", payload, offset + 8)[0]
+        virtual_address = struct.unpack_from("<Q", payload, offset + 16)[0]
+        alignment = struct.unpack_from("<Q", payload, offset + 48)[0]
         segments.append({
             "index": index,
             "file_offset": file_offset,

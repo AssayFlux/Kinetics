@@ -10,9 +10,8 @@ import java.io.FileOutputStream
 import java.security.MessageDigest
 
 /**
- * Streams a user-selected document into app-private, no-backup storage.
- * A resumed import verifies that the source prefix still matches the retained
- * partial file before appending, preventing a mixed-version input hash.
+ * Streams a user-selected document into app-private no-backup staging.
+ * Finalized imports are AES-GCM encrypted; resumptions verify source-prefix continuity.
  */
 class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(context, parameters) {
     override fun doWork(): Result {
@@ -26,6 +25,7 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
         store.updateJob(jobId, "running")
 
         var byteCount = 0L
+        var encryptedOutput: File? = null
         return try {
             val digest = MessageDigest.getInstance("SHA-256")
             val partialPrefixDigest = MessageDigest.getInstance("SHA-256")
@@ -53,23 +53,20 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                 val sourcePrefixDigest = MessageDigest.getInstance("SHA-256")
                 var verifiedBytes = 0L
                 val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-
-                // Re-read and hash the source prefix rather than trusting skip(), so a
-                // changed document cannot silently be appended to an old partial file.
                 while (verifiedBytes < byteCount) {
                     if (isStopped) return markCancelled(store, jobId, partial, byteCount)
                     val wanted = minOf(buffer.size.toLong(), byteCount - verifiedBytes).toInt()
                     val count = input.read(buffer, 0, wanted)
-                    if (count < 0) {
-                        throw IllegalStateException("Source became shorter during resume")
-                    }
+                    if (count < 0) throw IllegalStateException("Source became shorter during resume")
                     sourcePrefixDigest.update(buffer, 0, count)
                     verifiedBytes += count
                 }
 
                 if (!MessageDigest.isEqual(partialPrefixDigest.digest(), sourcePrefixDigest.digest())) {
                     partial.delete()
-                    throw IllegalStateException("Source content changed since the partial import; partial data discarded and a full restart is required")
+                    throw IllegalStateException(
+                        "Source content changed since partial import; partial data discarded and full restart required",
+                    )
                 }
 
                 FileOutputStream(partial, true).use { output ->
@@ -103,14 +100,26 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
             }
 
             val hash = digest.digest().joinToString("") { "%02x".format(it) }
-            store.updateJob(
-                jobId, "succeeded", hash, byteCount,
-                "Imported and hashed; no scientific analysis performed",
-            )
-            store.recordProvenance(jobId, hash)
-            check(partial.delete()) { "Imported file could not be finalized/removed from staging" }
+            val encryptedDirectory = File(applicationContext.noBackupFilesDir, "research-inputs")
+                .apply { mkdirs() }
+            val temporary = File(encryptedDirectory, "$jobId.kdat.tmp")
+            val destination = File(encryptedDirectory, "$jobId.kdat")
+            LocalCrypto.encryptFile(partial, temporary)
+            check(temporary.renameTo(destination)) { "Encrypted import could not be finalized" }
+            encryptedOutput = destination
+
+            // Commit metadata/provenance before deleting the resumable plaintext staging file.
+            store.completeImport(jobId, hash, byteCount, destination.absolutePath)
+            if (!partial.delete()) {
+                store.updateJob(
+                    jobId, "succeeded", message =
+                        "Encrypted import saved; plaintext staging cleanup needs retry",
+                )
+            }
+            encryptedOutput = null
             Result.success()
         } catch (error: Exception) {
+            encryptedOutput?.delete()
             store.updateJob(
                 jobId, "failed", bytes = partial.length().coerceAtLeast(byteCount),
                 message = error.message ?: error.javaClass.simpleName,
@@ -120,15 +129,12 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
     }
 
     private fun markCancelled(
-        store: ResearchStore,
-        jobId: String,
-        partial: File,
-        byteCount: Long,
+        store: ResearchStore, jobId: String, partial: File, byteCount: Long,
     ): Result {
         store.updateProgress(jobId, partial.length().coerceAtLeast(byteCount))
         store.updateJob(
             jobId, "cancelled", bytes = partial.length().coerceAtLeast(byteCount),
-            message = "Partial import retained in app-private no-backup storage; resume is available",
+            message = "Partial import retained in app-private no-backup staging; resume is available",
         )
         return Result.failure()
     }

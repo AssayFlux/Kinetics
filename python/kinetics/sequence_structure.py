@@ -98,9 +98,7 @@ def map_exact_chain_sequence(
         if position < 0:
             break
         positions.append(position)
-        if len(positions) > 1:
-            break
-        # Advance one residue so overlapping exact occurrences are also detected.
+        # Advance one residue so every overlapping exact occurrence is reported.
         search_from = position + 1
     if not positions:
         return {

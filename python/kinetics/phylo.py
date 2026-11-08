@@ -1,6 +1,7 @@
 """Newick parsing and distance-based phylogenetic tree utilities."""
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from math import isfinite
 
@@ -17,11 +18,12 @@ class _Parser:
         self.tokens: list[str] = []
         token: list[str] = []
         quoted = False
+        text = source.strip()
         index = 0
-        while index < len(source.strip()):
-            char = source.strip()[index]
+        while index < len(text):
+            char = text[index]
             if char == "'":
-                if quoted and index + 1 < len(source.strip()) and source.strip()[index + 1] == "'":
+                if quoted and index + 1 < len(text) and text[index + 1] == "'":
                     token.append("'")
                     index += 2
                     continue
@@ -117,7 +119,7 @@ def patristic_distance(root: Node, first: str, second: str) -> float:
     return a[-1][1] + b[-1][1] - 2 * (a[common - 1][1] if common else 0.0)
 
 
-def _walk(node: Node):
+def _walk(node: Node) -> Iterator[Node]:
     yield node
     for child in node.children:
         yield from _walk(child)

@@ -68,7 +68,10 @@ def main() -> int:
     for variant in ("brand-logo.svg", "brand-logo-light.svg", "brand-logo-dark.svg"):
         cairosvg.svg2png(url=str(BRAND / variant), write_to=str(output / (Path(variant).stem + ".png")))
     print(f"Generated owner-authorized raster outputs in {output.relative_to(ROOT)}")
-    print("Adaptive icon XML, splash, report/PDF and feature-graphic composition still require platform-specific review.")
+    print(
+        "Adaptive icon XML, splash, report/PDF and feature-graphic composition "
+        "still require platform-specific review."
+    )
     return 0
 
 if __name__ == "__main__":

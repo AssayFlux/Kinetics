@@ -8,7 +8,7 @@ No third-party scientific engine, model or database is approved for product bund
 
 Before adoption, pin an exact version/revision; record canonical source and upstream license; assess redistribution, modification, attribution, patent and network obligations; flag GPL/AGPL or restrictive terms for explicit owner review; record data provenance, consent and update policy.
 
-The project license decision is Apache-2.0 (D-001); the canonical LICENSE grant file is still pending. This file does not grant a license or approve a component for product distribution.
+The project license decision is Apache-2.0 (D-001), and the canonical LICENSE text is present at the repository root. This does not approve any third-party component for product distribution.
 
 
 ## R1 candidates reviewed by desk research (not adopted)
@@ -25,7 +25,7 @@ References:
 - https://chaquo.com/chaquopy/license/
 - https://github.com/chaquo/chaquopy/blob/master/LICENSE.txt
 
-No R1 candidate is approved for bundling by this entry. GPL/AGPL and other restrictive terms remain subject to explicit owner review. The project's own license is Apache-2.0 by owner decision D-001; the canonical LICENSE grant file remains pending.
+No R1 candidate is approved for bundling by this entry. GPL/AGPL and other restrictive terms remain subject to explicit owner review. The project's own license is Apache-2.0 by owner decision D-001; the canonical LICENSE grant file is present.
 
 
 Biopython references:

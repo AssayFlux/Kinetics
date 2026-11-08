@@ -53,3 +53,25 @@ def test_viewer_payload_rejects_nonfinite_coordinates_and_bad_annotations() -> N
 def test_viewer_payload_serializer_rejects_unknown_schema() -> None:
     with pytest.raises(ValueError, match="schema"):
         serialize_viewer_payload({"schema": "future"})
+
+
+def test_preparation_record_is_reproducible_and_content_addressed() -> None:
+    source = b"PDB fixture bytes"
+    payload = prepare_viewer_payload([atom()], source_format="pdb")
+    record = build_preparation_record(source, payload, parser_version="kinetics-pdb-1")
+    assert record["record_schema"] == "kinetics.structure-preparation.v1"
+    assert record["source_bytes"] == len(source)
+    assert len(record["source_sha256"]) == 64
+    assert len(record["payload_sha256"]) == 64
+    assert record["atom_count"] == 1
+    assert record == build_preparation_record(source, payload, parser_version="kinetics-pdb-1")
+
+
+def test_preparation_record_rejects_invalid_metadata() -> None:
+    payload = prepare_viewer_payload([atom()], source_format="pdb")
+    with pytest.raises(ValueError, match="source_bytes"):
+        build_preparation_record(b"", payload, parser_version="1")
+    with pytest.raises(ValueError, match="parser_version"):
+        build_preparation_record(b"x", payload, parser_version=" ")
+    with pytest.raises(ValueError, match="dropped_record_count"):
+        build_preparation_record(b"x", payload, parser_version="1", dropped_record_count=-1)

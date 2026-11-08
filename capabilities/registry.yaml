@@ -146,6 +146,12 @@ tools:
     status: implemented
     implementation: python/kinetics/pharmvar.py
     evidence_level: none
+  - id: phylo.nj_site_bootstrap
+    name: Seeded nonparametric site-bootstrap support for Jukes-Cantor neighbour joining
+    status: implemented
+    implementation: python/kinetics/phylo.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []
@@ -155,8 +161,3 @@ claims: []
 clinical_gate:
   enabled: false
   part12_evidence: []
-  - id: phylo.nj_site_bootstrap
-    name: Seeded nonparametric site-bootstrap support for Jukes-Cantor neighbour joining
-    status: implemented
-    implementation: python/kinetics/phylo.py
-    evidence_level: none

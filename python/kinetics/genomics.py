@@ -22,7 +22,7 @@ def parse_sam(text: str) -> list[SamRecord]:
     for line_number, line in enumerate(text.splitlines(), 1):
         if not line or line.startswith("@"):
             continue
-        fields = line.split("\\t")
+        fields = line.split("\t")
         if len(fields) < 11:
             raise ValueError(f"SAM line {line_number}: expected at least 11 fields")
         try:
@@ -46,14 +46,14 @@ def parse_vcf(text: str) -> list[dict[str, object]]:
         if not line or line.startswith("##"):
             continue
         if line.startswith("#CHROM"):
-            samples = line.split("\\t")[9:]
+            samples = line.split("\t")[9:]
             header_seen = True
             continue
         if line.startswith("#"):
             continue
         if not header_seen:
             raise ValueError("VCF data encountered before #CHROM header")
-        fields = line.split("\\t")
+        fields = line.split("\t")
         if len(fields) < 8:
             raise ValueError(f"VCF line {line_number}: expected at least 8 columns")
         try:

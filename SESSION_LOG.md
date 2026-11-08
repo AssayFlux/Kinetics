@@ -1240,3 +1240,25 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Add content-addressed reference-pack ingestion and deterministic index persistence with licensing manifest validation.
 - Add independently sourced positive/negative sequence fixtures before assigning validation evidence.
 - Continue R1/R2 runtime/recovery closure, R3 reference comparisons and P0-gated public-data inventory.
+
+
+## 2026-11-08 — S6 verified local reference-pack ingestion and P-track catalogue foundation
+**Phase:** Track S / S6 and Track P / public-data-only preparation
+
+### Committed
+- Added `python/kinetics/sequence_pack.py` to load local FASTA reference packs from a strict JSON manifest.
+- The loader verifies the manifest SHA-256 against the actual FASTA bytes, hashes the same open file descriptor again after parsing, and rejects content changes during ingestion.
+- Added bounded manifest and FASTA byte reads, regular-file/symlink checks, record and residue limits, duplicate-ID rejection, and DNA/RNA/protein alphabet validation.
+- Added `api/local-reference-pack.schema.json`, loader regression tests, and a registry capability with `evidence_level: none`.
+- Added an intentionally empty public non-patient dataset catalogue, its strict schema, and intake rules requiring explicit license review, version/accession, retrieval time, SHA-256 and a false patient-data flag.
+
+### Limits and gates
+- Manifest license strings are provenance metadata, not a legal determination; each exact dataset/license/use still requires human review.
+- No reference dataset payloads are bundled or downloaded. Synthetic fixtures only.
+- The local loader is FASTA-only; no archive extraction, network fetching, similarity search, homology, gene function or novelty inference.
+- P0 remains blocked. The P catalogue is metadata-only; no patient data, interpretation, clinical feature or Clinical Mode is authorized.
+- S6 remains `evidence_level: none` until independent positive/negative reference validation and calibrated methods exist.
+
+### Next
+- Integrate loader-backed exact search, then add independently sourced reference fixtures and negative controls.
+- Continue R1/R2 runtime, lifecycle, recovery and licensing evidence; R3 independent numerical comparisons; I1 pinned RDKit validation; S7–S9 only where data/engine dependencies permit.

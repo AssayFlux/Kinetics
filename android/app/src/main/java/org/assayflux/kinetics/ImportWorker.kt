@@ -38,8 +38,10 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
             var chunkIndex = 0L
 
             // Restore the plaintext digest by authenticating each retained encrypted chunk.
+            LocalCrypto.ensureChunkedFileHeader(partial)
             RandomAccessFile(partial, "rw").use { input ->
-                var lastGoodOffset = 0L
+                input.seek(LocalCrypto.HEADER_BYTES)
+                var lastGoodOffset = LocalCrypto.HEADER_BYTES
                 while (input.filePointer < input.length()) {
                     if (isStopped) return markCancelled(store, jobId, partial, byteCount)
                     val remaining = input.length() - input.filePointer

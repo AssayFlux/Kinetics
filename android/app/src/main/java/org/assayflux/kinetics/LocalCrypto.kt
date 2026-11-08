@@ -21,6 +21,9 @@ object LocalCrypto {
     private const val TAG_BITS = TAG_BYTES * 8
     const val CHUNK_BYTES = 4 * 1024 * 1024
     private const val MAX_FILE_BYTES = 512L * 1024L * 1024L
+    private val FILE_MAGIC = byteArrayOf(0x4b, 0x44, 0x41, 0x54)
+    const val HEADER_BYTES = 5L
+    private const val FILE_FORMAT_VERSION = 2
 
     private fun key(): SecretKey {
         val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
@@ -64,6 +67,34 @@ object LocalCrypto {
         return cipher.doFinal(encrypted)
     }
 
+    /** Create or validate the explicit KDAT v2 container header before appending chunks. */
+    fun ensureChunkedFileHeader(file: File) {
+        RandomAccessFile(file, "rw").use { output ->
+            if (output.length() == 0L) {
+                output.write(FILE_MAGIC)
+                output.writeByte(FILE_FORMAT_VERSION)
+                output.fd.sync()
+                return
+            }
+            try {
+                val magic = ByteArray(FILE_MAGIC.size)
+                output.seek(0)
+                output.readFully(magic)
+                require(magic.contentEquals(FILE_MAGIC)) { "Unsupported encrypted file format" }
+                require(output.readUnsignedByte() == FILE_FORMAT_VERSION) {
+                    "Unsupported encrypted file version"
+                }
+            } catch (_: Exception) {
+                // Legacy or torn staging files cannot be safely resumed with v2 AAD.
+                output.setLength(0)
+                output.seek(0)
+                output.write(FILE_MAGIC)
+                output.writeByte(FILE_FORMAT_VERSION)
+                output.fd.sync()
+            }
+        }
+    }
+
     fun appendEncryptedChunk(file: File, plainText: ByteArray, associatedData: ByteArray) {
         require(plainText.isNotEmpty()) { "Encrypted chunks cannot be empty" }
         val payload = encrypt(plainText, associatedData)
@@ -85,6 +116,12 @@ object LocalCrypto {
         val digest = MessageDigest.getInstance("SHA-256")
         try {
             RandomAccessFile(source, "r").use { input ->
+                val magic = ByteArray(FILE_MAGIC.size)
+                input.readFully(magic)
+                require(magic.contentEquals(FILE_MAGIC)) { "Unsupported encrypted file format" }
+                require(input.readUnsignedByte() == FILE_FORMAT_VERSION) {
+                    "Unsupported encrypted file version"
+                }
                 FileOutputStream(temporary, false).use { output ->
                     var chunkIndex = 0L
                     while (input.filePointer < input.length()) {

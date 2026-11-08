@@ -86,6 +86,25 @@ def generate(root: Path = ROOT) -> dict[str, object]:
             add(name, constraint.strip() or "UNPINNED", "pypi",
                 f"pkg:pypi/{name}")
 
+    validation_dir = root / "validation"
+    if validation_dir.is_dir():
+        for requirements_file in sorted(validation_dir.glob("requirements-*.txt")):
+            for line in requirements_file.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if not line or line.startswith("#") or line.startswith(("-", "http")):
+                    continue
+                match = re.match(
+                    r"([A-Za-z0-9_.-]+)(?:\\[[^]]+\\])?\\s*(.*)", line,
+                )
+                if match:
+                    name, constraint = match.groups()
+                    version = constraint.strip() or "UNPINNED"
+                    add(name, version, "pypi", f"pkg:pypi/{name}")
+                    packages[(name.casefold(), version)]["comment"] = (
+                        f"ecosystem=pypi; host-only validation dependency from "
+                        f"{requirements_file.relative_to(root)}; not Android runtime"
+                    )
+
     local_build = (root / "scripts/build_android_local.sh").read_text(encoding="utf-8")
     rust_toolchain = (root / "rust-toolchain.toml").read_text(encoding="utf-8")
     app_build = gradle_app

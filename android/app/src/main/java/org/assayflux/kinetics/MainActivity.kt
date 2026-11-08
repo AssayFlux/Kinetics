@@ -162,125 +162,80 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
         jobs = store.recentJobs()
         onDispose { workInfos.removeObserver(observer) }
     }
-    MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxSize().padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(
-                    "Kinetics Research Workbench",
-                    modifier = Modifier.semantics {
-                        contentDescription = "Kinetics Research Workbench home"
-                    },
-                    style = MaterialTheme.typography.headlineSmall,
-                )
-                Text(
-                    "Research Mode only • Offline-first • No clinical use",
-                    modifier = Modifier.semantics {
-                        contentDescription = "Research Mode only. Offline first. Not for clinical use."
-                    },
-                )
-                Text(notice)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(onClick = { picker.launch(arrayOf("*/*")) }) { Text("Import research file") }
-                    Button(onClick = { jobs = store.recentJobs() }) { Text("Refresh") }
-                }
-                Button(onClick = {
-                    scope.launch {
-                        runtimeReport = "Running local Python and native runtime probes..."
-                        runtimeReport = withContext(Dispatchers.IO) {
-                            val python = runCatching { PythonProbe.report(activity) }
-                                .getOrElse { "FAILED: ${it.message ?: it.javaClass.simpleName}" }
-                            val native = runCatching {
-                                val probe = NativeProbe()
-                                val cpp = probe.cppSumSquares(3.0, 4.0)
-                                val rust = probe.rustSumSquares(3.0, 4.0)
-                                check(kotlin.math.abs(cpp - 25.0) < 1e-9) { "C++ JNI result mismatch" }
-                                check(kotlin.math.abs(rust - 25.0) < 1e-9) { "Rust FFI result mismatch" }
-                                val aad = LocalCrypto.associatedData("runtime-probe", 0)
-                                val plaintext = "kinetics-keystore-probe".toByteArray()
-                                val encrypted = LocalCrypto.encrypt(plaintext, aad)
-                                check(LocalCrypto.decrypt(encrypted, aad).contentEquals(plaintext)) {
-                                    "Android Keystore AES-GCM roundtrip mismatch"
-                                }
-                                val wrongAadRejected = runCatching {
-                                    LocalCrypto.decrypt(encrypted, LocalCrypto.associatedData("wrong-job", 0))
-                                }.isFailure
-                                check(wrongAadRejected) { "AES-GCM did not reject mismatched authenticated metadata" }
-                                val cryptoDir = File(activity.cacheDir, "kinetics-crypto-probe").apply { mkdirs() }
-                                val encryptedFile = File(cryptoDir, "probe.kdat")
-                                val plaintextFile = File(cryptoDir, "probe.txt")
-                                try {
-                                    LocalCrypto.ensureChunkedFileHeader(encryptedFile)
-                                    LocalCrypto.appendEncryptedChunk(encryptedFile, plaintext, aad)
-                                    val hash = MessageDigest.getInstance("SHA-256").digest(plaintext)
-                                        .joinToString("") { "%02x".format(it) }
-                                    LocalCrypto.decryptChunkedFile(
-                                        encryptedFile, plaintextFile, "runtime-probe", hash,
-                                    )
-                                    check(plaintextFile.readBytes().contentEquals(plaintext)) {
-                                        "Versioned encrypted-file roundtrip mismatch"
-                                    }
-                                } finally {
-                                    encryptedFile.delete()
-                                    plaintextFile.delete()
-                                    cryptoDir.delete()
-                                }
-                                "C++ JNI: $cpp; Rust FFI: $rust; Keystore AES-GCM + versioned file roundtrip: passed"
-                            }.getOrElse { "FAILED: ${it.message ?: it.javaClass.simpleName}" }
-                            "Python probe:\n$python\nNative probe: $native"
+    KineticsAppShell(
+        jobs = jobs,
+        notice = notice,
+        runtimeReport = runtimeReport,
+        onImport = { picker.launch(arrayOf("*/*")) },
+        onRefresh = { jobs = store.recentJobs() },
+        onRunRuntime = {
+            scope.launch {
+                runtimeReport = "Running local Python and native runtime probes..."
+                runtimeReport = withContext(Dispatchers.IO) {
+                    val python = runCatching { PythonProbe.report(activity) }
+                        .getOrElse { "FAILED: ${it.message ?: it.javaClass.simpleName}" }
+                    val native = runCatching {
+                        val probe = NativeProbe()
+                        val cpp = probe.cppSumSquares(3.0, 4.0)
+                        val rust = probe.rustSumSquares(3.0, 4.0)
+                        check(kotlin.math.abs(cpp - 25.0) < 1e-9) { "C++ JNI result mismatch" }
+                        check(kotlin.math.abs(rust - 25.0) < 1e-9) { "Rust FFI result mismatch" }
+                        val aad = LocalCrypto.associatedData("runtime-probe", 0)
+                        val plaintext = "kinetics-keystore-probe".toByteArray()
+                        val encrypted = LocalCrypto.encrypt(plaintext, aad)
+                        check(LocalCrypto.decrypt(encrypted, aad).contentEquals(plaintext)) {
+                            "Android Keystore AES-GCM roundtrip mismatch"
                         }
-                    }
-                }) { Text("Run local runtime probes") }
-                runtimeReport?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
-                Text("Recent jobs", style = MaterialTheme.typography.titleMedium)
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(jobs, key = { it.id }) { job ->
-                        Column(
-                            modifier = Modifier.semantics(mergeDescendants = true) {
-                                contentDescription = "Research import: " + job.inputName +
-                                    ". State: " + job.state + "."
-                            },
-                        ) {
-                            Text(job.inputName, style = MaterialTheme.typography.bodyLarge)
-                            Text("State: ${job.state}")
-                            job.sha256?.let { Text("SHA-256: $it") }
-                            job.message?.let { Text(it) }
-                            if (job.state == "succeeded" || job.state == "failed" || job.state == "cancelled" || job.state == "recovery_required") {
-                                TextButton(onClick = { deleteTarget = job }) { Text("Delete local data") }
+                        val wrongAadRejected = runCatching {
+                            LocalCrypto.decrypt(encrypted, LocalCrypto.associatedData("wrong-job", 0))
+                        }.isFailure
+                        check(wrongAadRejected) { "AES-GCM did not reject mismatched authenticated metadata" }
+                        val cryptoDir = File(activity.cacheDir, "kinetics-crypto-probe").apply { mkdirs() }
+                        val encryptedFile = File(cryptoDir, "probe.kdat")
+                        val plaintextFile = File(cryptoDir, "probe.txt")
+                        try {
+                            LocalCrypto.ensureChunkedFileHeader(encryptedFile)
+                            LocalCrypto.appendEncryptedChunk(encryptedFile, plaintext, aad)
+                            val hash = MessageDigest.getInstance("SHA-256").digest(plaintext)
+                                .joinToString("") { "%02x".format(it) }
+                            LocalCrypto.decryptChunkedFile(encryptedFile, plaintextFile, "runtime-probe", hash)
+                            check(plaintextFile.readBytes().contentEquals(plaintext)) {
+                                "Versioned encrypted-file roundtrip mismatch"
                             }
-                            if (job.state == "succeeded" && job.sha256 != null) {
-                                Button(onClick = {
-                                    pendingExportJob = job.id
-                                    exportPicker.launch(job.inputName.substringAfterLast('/').take(120).ifBlank { "kinetics-research-export.bin" })
-                                }) { Text("Export original file") }
-                            }
-                            if (job.state == "queued" || job.state == "running" || job.state == "cancel_requested") {
-                                Button(onClick = {
-                                    store.updateJob(job.id, "cancel_requested")
-                                    WorkManager.getInstance(activity).cancelUniqueWork("import-" + job.id)
-                                    jobs = store.recentJobs()
-                                }) { Text("Cancel") }
-                            } else if (job.state == "cancelled" || job.state == "failed") {
-                                Button(onClick = {
-                                    val savedUri = store.inputUri(job.id)
-                                    if (savedUri != null) {
-                                        val request = OneTimeWorkRequestBuilder<ImportWorker>()
-                                            .setInputData(workDataOf(
-                                                ImportWorker.KEY_JOB_ID to job.id,
-                                                ImportWorker.KEY_URI to savedUri,
-                                            )).addTag("kinetics-import").build()
-                                        WorkManager.getInstance(activity).enqueueUniqueWork(
-                                            "import-" + job.id, ExistingWorkPolicy.REPLACE, request)
-                                        store.updateJob(job.id, "queued", message = "Resume queued")
-                                        jobs = store.recentJobs()
-                                    }
-                                }) { Text("Resume") }
-                            }
+                        } finally {
+                            encryptedFile.delete()
+                            plaintextFile.delete()
+                            cryptoDir.delete()
                         }
-                    }
+                        "C++ JNI: $cpp; Rust FFI: $rust; Keystore AES-GCM + versioned file roundtrip: passed"
+                    }.getOrElse { "FAILED: ${it.message ?: it.javaClass.simpleName}" }
+                    "Python probe:\n$python\nNative probe: $native"
                 }
             }
-        }
+        },
+        onCancel = { job ->
+            store.updateJob(job.id, "cancel_requested")
+            WorkManager.getInstance(activity).cancelUniqueWork("import-" + job.id)
+            jobs = store.recentJobs()
+        },
+        onResume = { job ->
+            val savedUri = store.inputUri(job.id)
+            if (savedUri != null) {
+                val request = OneTimeWorkRequestBuilder<ImportWorker>()
+                    .setInputData(workDataOf(ImportWorker.KEY_JOB_ID to job.id, ImportWorker.KEY_URI to savedUri))
+                    .addTag("kinetics-import").build()
+                WorkManager.getInstance(activity).enqueueUniqueWork(
+                    "import-" + job.id, ExistingWorkPolicy.REPLACE, request)
+                store.updateJob(job.id, "queued", message = "Resume queued")
+                jobs = store.recentJobs()
+            }
+        },
+        onDelete = { job -> deleteTarget = job },
+        onExport = { job ->
+            pendingExportJob = job.id
+            exportPicker.launch(job.inputName.substringAfterLast('/').take(120).ifBlank { "kinetics-research-export.bin" })
+        },
+    )
         deleteTarget?.let { target ->
             AlertDialog(
                 onDismissRequest = { deleteTarget = null },

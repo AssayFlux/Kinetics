@@ -9,56 +9,77 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.security.MessageDigest
 
+/**
+ * Streams a user-selected document into app-private, no-backup storage.
+ * A resumed import verifies that the source prefix still matches the retained
+ * partial file before appending, preventing a mixed-version input hash.
+ */
 class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(context, parameters) {
     override fun doWork(): Result {
         val jobId = inputData.getString(KEY_JOB_ID) ?: return Result.failure()
+        if (!jobId.matches(Regex("[A-Za-z0-9_-]{1,80}"))) return Result.failure()
         val uri = Uri.parse(inputData.getString(KEY_URI) ?: return Result.failure())
         val store = ResearchStore(applicationContext)
-        val partial = File(applicationContext.cacheDir, "kinetics-import-$jobId.part")
+        val importDirectory = File(applicationContext.noBackupFilesDir, "research-imports")
+            .apply { mkdirs() }
+        val partial = File(importDirectory, "$jobId.part")
         store.updateJob(jobId, "running")
+
+        var byteCount = 0L
         return try {
             val digest = MessageDigest.getInstance("SHA-256")
-            var byteCount = 0L
+            val partialPrefixDigest = MessageDigest.getInstance("SHA-256")
+
             if (partial.exists()) {
                 FileInputStream(partial).use { input ->
                     val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                     while (true) {
+                        if (isStopped) return markCancelled(store, jobId, partial, byteCount)
                         val count = input.read(buffer)
                         if (count < 0) break
                         byteCount += count
+                        if (byteCount > MAX_IMPORT_BYTES) {
+                            throw IllegalArgumentException("Partial input exceeds the 512 MiB import limit")
+                        }
                         digest.update(buffer, 0, count)
+                        partialPrefixDigest.update(buffer, 0, count)
                     }
                 }
             }
-            if (byteCount > MAX_IMPORT_BYTES) {
-                throw IllegalArgumentException("Partial input exceeds the 512 MiB import limit")
-            }
-            val input = applicationContext.contentResolver.openInputStream(uri)
+
+            val source = applicationContext.contentResolver.openInputStream(uri)
                 ?: throw IllegalStateException("Selected document could not be opened")
-            input.use { source ->
-                var skipped = 0L
-                while (skipped < byteCount) {
-                    val count = source.skip(byteCount - skipped)
-                    if (count <= 0) {
-                        if (source.read() < 0) throw IllegalStateException("Source changed or became shorter during resume")
-                        skipped++
-                    } else {
-                        skipped += count
+            source.use { input ->
+                val sourcePrefixDigest = MessageDigest.getInstance("SHA-256")
+                var verifiedBytes = 0L
+                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+
+                // Re-read and hash the source prefix rather than trusting skip(), so a
+                // changed document cannot silently be appended to an old partial file.
+                while (verifiedBytes < byteCount) {
+                    if (isStopped) return markCancelled(store, jobId, partial, byteCount)
+                    val wanted = minOf(buffer.size.toLong(), byteCount - verifiedBytes).toInt()
+                    val count = input.read(buffer, 0, wanted)
+                    if (count < 0) {
+                        throw IllegalStateException("Source became shorter during resume")
                     }
+                    sourcePrefixDigest.update(buffer, 0, count)
+                    verifiedBytes += count
                 }
+
+                if (!MessageDigest.isEqual(partialPrefixDigest.digest(), sourcePrefixDigest.digest())) {
+                    throw IllegalStateException("Source content changed since the partial import; restart required")
+                }
+
                 FileOutputStream(partial, true).use { output ->
-                    val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                     var sinceSync = 0L
                     while (true) {
                         if (isStopped) {
                             output.flush()
                             output.fd.sync()
-                            store.updateProgress(jobId, byteCount)
-                            store.updateJob(jobId, "cancelled", bytes = byteCount,
-                                message = "Partial import retained; resume is available")
-                            return Result.failure()
+                            return markCancelled(store, jobId, partial, byteCount)
                         }
-                        val count = source.read(buffer)
+                        val count = input.read(buffer)
                         if (count < 0) break
                         byteCount += count
                         if (byteCount > MAX_IMPORT_BYTES) {
@@ -79,20 +100,37 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                     output.fd.sync()
                 }
             }
+
             val hash = digest.digest().joinToString("") { "%02x".format(it) }
-            store.updateJob(jobId, "succeeded", hash, byteCount,
-                "Imported, resumed if needed, and hashed; no scientific analysis performed")
+            store.updateJob(
+                jobId, "succeeded", hash, byteCount,
+                "Imported and hashed; no scientific analysis performed",
+            )
             store.recordProvenance(jobId, hash)
-            partial.delete()
+            check(partial.delete()) { "Imported file could not be finalized/removed from staging" }
             Result.success()
         } catch (error: Exception) {
-            store.updateJob(jobId, "failed", bytes = byteCountOrZero(partial),
-                message = error.message ?: error.javaClass.simpleName)
+            store.updateJob(
+                jobId, "failed", bytes = partial.length().coerceAtLeast(byteCount),
+                message = error.message ?: error.javaClass.simpleName,
+            )
             Result.failure()
         }
     }
 
-    private fun byteCountOrZero(file: File): Long = if (file.exists()) file.length() else 0L
+    private fun markCancelled(
+        store: ResearchStore,
+        jobId: String,
+        partial: File,
+        byteCount: Long,
+    ): Result {
+        store.updateProgress(jobId, partial.length().coerceAtLeast(byteCount))
+        store.updateJob(
+            jobId, "cancelled", bytes = partial.length().coerceAtLeast(byteCount),
+            message = "Partial import retained in app-private no-backup storage; resume is available",
+        )
+        return Result.failure()
+    }
 
     companion object {
         const val KEY_JOB_ID = "job_id"

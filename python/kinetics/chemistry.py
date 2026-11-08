@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import hashlib
 from collections import Counter, defaultdict
+from collections.abc import Iterator
 from math import isfinite
 
 ATOMIC_MASS = {
@@ -98,7 +99,7 @@ def _parse_sdf_v3000(text: str) -> dict[str, object]:
     if len(atom_rows) != expected_atoms or len(bond_rows) != expected_bonds:
         raise ValueError("V3000 COUNTS do not match parsed atom/bond rows")
 
-    atoms = []
+    atoms: list[dict[str, float | str]] = []
     elements: Counter[str] = Counter()
     atom_index: dict[int, int] = {}
     for row in atom_rows:
@@ -116,7 +117,8 @@ def _parse_sdf_v3000(text: str) -> dict[str, object]:
         first_id, second_id, order = int(row[2]), int(row[3]), int(row[1])
         if first_id not in atom_index or second_id not in atom_index or first_id == second_id:
             raise ValueError("V3000 bond references an absent or identical atom")
-        pair = tuple(sorted((atom_index[first_id], atom_index[second_id])))
+        first_index, second_index = sorted((atom_index[first_id], atom_index[second_id]))
+        pair = (first_index, second_index)
         if pair in seen_pairs:
             raise ValueError("V3000 contains duplicate atom-pair bonds")
         seen_pairs.add(pair)
@@ -361,7 +363,7 @@ def tanimoto(first: frozenset[str], second: frozenset[str]) -> float:
     return len(first & second) / len(union) if union else 1.0
 
 
-def iter_sdf_records(text: str):
+def iter_sdf_records(text: str) -> Iterator[dict[str, object]]:
     """Yield non-empty SDF records from a multi-record V2000/V3000 file."""
     for record_number, block in enumerate(text.split("$$$$"), 1):
         if not block.strip():

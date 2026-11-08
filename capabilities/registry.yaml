@@ -6,6 +6,11 @@ tools:
     status: implemented
     implementation: python/kinetics/sequence.py
     evidence_level: none
+  - id: sequence.exact_reference_search
+    name: Bounded exact full-length local sequence reference triage with provenance and abstention
+    status: implemented
+    implementation: python/kinetics/sequence_reference.py
+    evidence_level: none
   - id: sequence.fastq
     name: FASTQ parsing
     status: implemented

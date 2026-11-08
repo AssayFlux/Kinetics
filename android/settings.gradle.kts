@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "KineticsFeasibility"
-include(":app")
+include(":app", ":designsystem")

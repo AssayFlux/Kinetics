@@ -940,3 +940,27 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R8 NB2 edge-case increment
 - Added an explicit all-zero-feature path to the exploratory NB2 GLM. Such features are retained with p=1 for transparent multiple-testing accounting, neutral coefficient placeholders, and a clear non-estimable warning; no artificial model fit is attempted.
 - Added regression-test source only. No tests or Android build were run.
+
+
+## 2026-11-08 — Integrated R1–R10 completion continuation: R7 bootstrap increment
+**Phase:** Track R / integrated implementation continuation
+**Objective:** Close a bounded remaining R7 capability gap without misrepresenting validation or bypassing the owner’s build-first/test-later instruction.
+
+### Done
+- Added seeded nonparametric alignment-site bootstrap support for the Jukes–Cantor + neighbour-joining workflow.
+- The API reports requested, successful and failed replicates; failed/saturated/invalid NJ replicates are not silently repaired and are excluded from the support denominator with explicit warnings.
+- Added split extraction, deterministic seed handling, input bounds and a public package export.
+- Added regression-test source for deterministic results, output bounds and invalid inputs.
+- Registered the source capability as implemented with no validation evidence.
+- Corrected R5 implementation documentation to reflect already-present approximate Shrake–Rupley SASA and distance-only interaction-candidate screening; secondary-structure assignment and reference validation remain open.
+- Updated R7 roadmap and implementation status to include JC+NJ and the new bootstrap primitive.
+- Opened draft PR #73: https://github.com/AssayFlux/Kinetics/pull/73
+
+### Not done / validation status
+- No tests, lint, type checks or scientific reference comparisons were run, in accordance with build-first/test-later.
+- No APK/AAB build or Android device/emulator test was run.
+- This bootstrap is distance-based exploratory support, not ML/Bayesian inference, rate heterogeneity, model selection or a validated phylogenetic pipeline.
+- R1–R10 are not complete. Outstanding platform gates include local Android build/runtime evidence, end-to-end scientific dispatch integration, key-loss recovery and device verification, independent reference validation, full BAM/CRAM Android integration, full mmCIF/secondary structure, production chemistry engine and licensing, ML/Bayesian phylogenetics, calibrated count-aware inference, comprehensive versioned gene/PGx packs, and R10 security/accessibility/performance/release evidence.
+
+### Next step
+Continue integrated implementation only where correctness can be supported by source, pinned reference data and explicit licensing. Preserve unvalidated capabilities as implemented-but-unvalidated; do not claim R1–R10 complete until their exit evidence exists.

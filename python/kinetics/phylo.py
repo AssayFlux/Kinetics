@@ -329,3 +329,117 @@ def neighbor_joining_from_alignment(
             matrix[i][j] = matrix[j][i] = float(result["distance"])
     return neighbor_joining(matrix, labels)
 
+def _canonical_split(side: set[str], all_labels: set[str]) -> tuple[str, ...] | None:
+    other = all_labels - side
+    if len(side) < 2 or len(other) < 2:
+        return None
+    left, right = tuple(sorted(side)), tuple(sorted(other))
+    return min(left, right)
+
+
+def _nontrivial_splits(root: Node) -> set[tuple[str, ...]]:
+    all_labels = set(leaf_names(root))
+    if len(all_labels) != sum(1 for node in _walk(root) if not node.children):
+        raise ValueError("Tree contains duplicate leaf labels")
+
+    splits: set[tuple[str, ...]] = set()
+
+    def visit(node: Node) -> set[str]:
+        if not node.children:
+            return {node.name}
+        descendants: set[str] = set()
+        for child in node.children:
+            descendants.update(visit(child))
+        split = _canonical_split(descendants, all_labels)
+        if split is not None:
+            splits.add(split)
+        return descendants
+
+    visit(root)
+    return splits
+
+
+def bootstrap_neighbor_joining_from_alignment(
+    sequences: dict[str, str], *, replicates: int = 100,
+    seed: int = 0, minimum_sites: int = 20,
+) -> dict[str, object]:
+    """Estimate unrooted NJ split support by nonparametric alignment-site bootstrap.
+
+    Each replicate samples alignment columns with replacement and reconstructs an
+    NJ tree using Jukes-Cantor pairwise distances. Replicates with insufficient
+    comparable sites, saturated distances, or invalid negative NJ limbs are counted
+    as failed and excluded from the support denominator. The returned success rate
+    makes this exclusion visible. This is exploratory support, not a model-selection
+    or maximum-likelihood bootstrap implementation.
+    """
+    import random
+
+    labels = list(sequences)
+    if len(labels) < 4 or len(set(labels)) != len(labels) or any(not label for label in labels):
+        raise ValueError("Bootstrap split support requires at least four unique labels")
+    aligned = [sequences[label].upper() for label in labels]
+    lengths = {len(sequence) for sequence in aligned}
+    if len(lengths) != 1 or not aligned[0]:
+        raise ValueError("All input sequences must have equal non-zero alignment length")
+    if not isinstance(replicates, int) or not 1 <= replicates <= 10000:
+        raise ValueError("replicates must be an integer between 1 and 10000")
+    if not isinstance(seed, int):
+        raise ValueError("seed must be an integer")
+    if not isinstance(minimum_sites, int) or minimum_sites < 1:
+        raise ValueError("minimum_sites must be a positive integer")
+
+    reference_tree = neighbor_joining_from_alignment(
+        sequences, minimum_sites=minimum_sites,
+    )
+    reference_splits = _nontrivial_splits(reference_tree)
+    if not reference_splits:
+        raise ValueError("Reference tree has no non-trivial unrooted splits")
+
+    rng = random.Random(seed)
+    alignment_length = len(aligned[0])
+    support = {split: 0 for split in reference_splits}
+    successful = 0
+    for _ in range(replicates):
+        columns = [rng.randrange(alignment_length) for _ in range(alignment_length)]
+        sampled = {
+            label: "".join(sequence[column] for column in columns)
+            for label, sequence in zip(labels, aligned)
+        }
+        try:
+            tree = neighbor_joining_from_alignment(
+                sampled, minimum_sites=minimum_sites,
+            )
+            splits = _nontrivial_splits(tree)
+        except ValueError:
+            continue
+        successful += 1
+        for split in reference_splits:
+            if split in splits:
+                support[split] += 1
+
+    if successful == 0:
+        raise ValueError("No bootstrap replicate produced a valid tree")
+    split_results = [
+        {
+            "taxa": list(split),
+            "support_count": count,
+            "support_percent": 100.0 * count / successful,
+        }
+        for split, count in sorted(support.items())
+    ]
+    return {
+        "tree": reference_tree,
+        "splits": split_results,
+        "requested_replicates": replicates,
+        "successful_replicates": successful,
+        "failed_replicates": replicates - successful,
+        "seed": seed,
+        "model": "Jukes-Cantor 1969 + neighbour joining",
+        "bootstrap": "nonparametric alignment-site resampling",
+        "warnings": [
+            "Support denominator includes only successfully reconstructed replicates",
+            "Failed replicates can bias support when failures are systematic",
+            "Distance-based exploratory support; not maximum-likelihood or Bayesian inference",
+            "Input must be a pre-aligned homologous nucleotide alignment",
+        ],
+    }

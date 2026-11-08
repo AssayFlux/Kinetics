@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import yaml
@@ -71,6 +71,16 @@ def validate_registry(data: Any) -> list[str]:
             errors.append(f"tool {tid}: invalid evidence_level {evidence!r}")
         if status == "implemented" and not tool.get("implementation"):
             errors.append(f"tool {tid}: implemented status requires implementation")
+        implementation = tool.get("implementation")
+        if implementation is not None:
+            if not isinstance(implementation, str) or not implementation.strip():
+                errors.append(f"tool {tid}: implementation must be a non-empty repository-relative path")
+            else:
+                relative = PurePosixPath(implementation)
+                if relative.is_absolute() or ".." in relative.parts:
+                    errors.append(f"tool {tid}: implementation path must stay inside the repository")
+                elif not (ROOT / Path(*relative.parts)).is_file():
+                    errors.append(f"tool {tid}: implementation file does not exist: {implementation}")
         references = (
             ("engine_ids", "engines"),
             ("data_pack_ids", "data_packs"),

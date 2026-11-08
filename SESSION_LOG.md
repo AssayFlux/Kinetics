@@ -831,3 +831,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Corrected the Chaquopy source-set configuration to use its documented `chaquopy.sourceSets` DSL and include the repository `python/` directory. The Android app will therefore package the actual `kinetics` modules rather than only the isolated probe module.
 - Extended the future on-device Python probe to import `kinetics`, run FASTA parsing and exercise the reference-checked variant normalizer.
 - Updated the static Android config guard and R1 documentation. This was a source-level integration correction; no Gradle build or Android runtime probe was executed. Chaquopy 17.2 documentation specifies `chaquopy.sourceSets` for additional Python source directories. <https://chaquo.com/chaquopy/doc/current/android.html>
+
+
+### R3 uncertainty increment
+- Added a seeded paired nonparametric bootstrap helper for Michaelis–Menten parameter percentile intervals, with fixed search bounds and explicit assumptions/limitations. Added the helper to the public package exports and capability registry, plus a deterministic regression-test case.
+- No tests were executed. The intervals are exploratory and remain subject to reference validation, identifiability assessment and scientific review.

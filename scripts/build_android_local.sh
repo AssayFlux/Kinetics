@@ -3,6 +3,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
 ANDROID_DIR="$ROOT_DIR/android"
 CHAQUOPY_VERSION="17.2.0"
 CHAQUOPY_COMMIT="1f63c93d8beaf7062fbe51888ab9235475df3bb8"
@@ -34,13 +35,17 @@ SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 [[ -x "$SDK_ROOT/build-tools/$BUILD_TOOLS_VERSION/zipalign" ]] || fail "Install Android build-tools $BUILD_TOOLS_VERSION."
 [[ -d "$SDK_ROOT/platforms/android-36" ]] || fail "Install Android SDK platform android-36."
 [[ -d "$SDK_ROOT/cmake/3.22.1" ]] || fail "Install Android CMake 3.22.1."
-python -c 'import sys; assert sys.version_info[:2] == (3, 11), sys.version' || fail "Use Python 3.11."
+python -c 'import sys; assert sys.version_info[:3] == (3, 11, 17), sys.version' || fail "Use Python 3.11.17 exactly."
 java -version 2>&1 | grep -q '17\.' || fail "Use JDK 17."
 
 # Fetch a checksum-pinned Gradle distribution rather than trusting a host-installed gradle.
 GRADLE_BIN="$GRADLE_CACHE_DIR/gradle-$GRADLE_VERSION/bin/gradle"
 GRADLE_MARKER="$GRADLE_CACHE_DIR/.gradle-$GRADLE_VERSION.sha256"
-if [[ ! -x "$GRADLE_BIN" || ! -f "$GRADLE_MARKER" || "$(cat "$GRADLE_MARKER")" != "$GRADLE_SHA256" ]]; then
+GRADLE_MARKER_VALID="false"
+if [[ -f "$GRADLE_MARKER" ]] && [[ "$(cat "$GRADLE_MARKER")" == "$GRADLE_SHA256" ]]; then
+  GRADLE_MARKER_VALID="true"
+fi
+if [[ ! -x "$GRADLE_BIN" || "$GRADLE_MARKER_VALID" != "true" ]]; then
   mkdir -p "$GRADLE_CACHE_DIR"
   archive="$GRADLE_CACHE_DIR/gradle-$GRADLE_VERSION-bin.zip"
   curl --fail --location --retry 3 \
@@ -64,7 +69,7 @@ export CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER="$NDK_BIN/aarch64-linux-android
 
 echo "[1/6] Build Rust arm64 static library"
 rustup target add aarch64-linux-android
-cargo build --manifest-path "$ANDROID_DIR/native-rust/Cargo.toml" --target aarch64-linux-android --release
+cargo build --locked --manifest-path "$ANDROID_DIR/native-rust/Cargo.toml" --target aarch64-linux-android --release
 
 echo "[2/6] Prepare pinned Chaquopy wheel builder"
 if [[ ! -d "$CHAQUOPY_DIR/.git" ]]; then

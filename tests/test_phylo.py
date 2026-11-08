@@ -66,7 +66,7 @@ def test_jukes_cantor_distance_and_model_based_alignment_tree() -> None:
     tree = neighbor_joining_from_alignment({
         "A": "A" * 40,
         "B": "A" * 39 + "G",
-        "C": "A" * 38 + "GG",
+        "C": "A" * 39 + "G",
     }, minimum_sites=30)
     assert set(leaf_names(tree)) == {"A", "B", "C"}
 
@@ -86,8 +86,8 @@ def test_site_bootstrap_neighbor_joining_is_seeded_and_reports_failures() -> Non
     alignment = {
         "A": "A" * 40 + "C" * 10,
         "B": "A" * 39 + "G" + "C" * 10,
-        "C": "A" * 38 + "GG" + "C" * 10,
-        "D": "A" * 37 + "GGG" + "C" * 10,
+        "C": "A" * 39 + "G" + "C" * 10,
+        "D": "A" * 39 + "G" + "C" * 10,
     }
     first = bootstrap_neighbor_joining_from_alignment(
         alignment, replicates=30, seed=19, minimum_sites=20,

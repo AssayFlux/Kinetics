@@ -34,6 +34,10 @@ jobs:
         run: mypy scripts python/kinetics
       - name: Registry validation
         run: python scripts/check_registry.py
+      - name: Verify generated design tokens are reproducible
+        run: |
+          python scripts/gen_design_tokens.py
+          git diff --exit-code -- android/designsystem/src/main/java/org/assayflux/designsystem/GeneratedTokens.kt web/viewers/src/styles/kinetics-tokens.css
       - name: Android offline/build-first configuration guardrails
         run: python scripts/check_android_config.py
       - name: Unit tests

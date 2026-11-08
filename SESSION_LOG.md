@@ -541,3 +541,26 @@ R1 remains IN PROGRESS. No R1 go/no-go has been issued and R2 remains blocked.
 
 ### Next step
 Continue R1 source-side feasibility work and prepare a reproducible local build route. Keep GitHub Actions free of APK/AAB build and Android runtime test jobs. Stop at the R1 owner go/no-go before starting R2.
+
+
+## 2026-11-08 — Session 21: Local Android build handoff and license file completion
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Make the owner-directed local build reproducible and close the previously approved project-license file task.
+
+### Done
+- Added `scripts/build_android_local.sh`, a local-only Linux/WSL2 arm64 debug APK/AAB build procedure using the pinned Rust, Chaquopy, Biopython and NumPy feasibility inputs.
+- Added `docs/local-android-build.md` with prerequisites, commands, expected outputs and explicit static-build/runtime evidence boundaries.
+- Added a host-side `bash -n` check for the local build script; this does not build an APK or run Android.
+- Added the canonical Apache License 2.0 text to the root `LICENSE`, following owner decision D-001 and the Apache Software Foundation's official license text.
+- Updated README, DECISIONS, ROADMAP and third-party register to reflect the Apache-2.0 grant file and local Android build workflow.
+- Corrected the malformed literal newline sequences in the third-party candidate table.
+
+### Validation boundary
+- GitHub Actions remains source-validation-only. Latest workflow run is pending at the time of this log entry; record its final outcome separately.
+- The local build script has not been executed on the owner's machine. No fresh local APK/AAB, runtime or device pass is claimed.
+- Historical run 1471/1481 build evidence remains static and historical only.
+
+### Remaining gates
+- R1 remains IN PROGRESS; SciPy, real scientific engine, RDKit/alternative, offline viewer, app runtime, SAF/lifecycle, performance and local APK build evidence remain open.
+- R2 and R3 remain NOT STARTED; their plans are prepared but their predecessor gates have not passed.
+- P0 remains blocked; no patient data or clinical features are authorized.

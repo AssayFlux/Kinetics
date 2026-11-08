@@ -323,3 +323,74 @@ def solvent_accessible_surface_area(
         ],
     }
 
+def interaction_candidates(
+    atoms: Iterable[Atom], *, hydrogen_bond_range: tuple[float, float] = (2.5, 3.5),
+    salt_bridge_cutoff: float = 4.0, disulfide_range: tuple[float, float] = (1.8, 2.3),
+) -> dict[str, object]:
+    """Report heavy-atom interaction candidates; geometric screening, not energetics."""
+    points = list(atoms)
+    if not points or len(points) > 100_000:
+        raise ValueError("Interaction analysis requires 1..100000 atoms")
+    for name, bounds in (("hydrogen_bond_range", hydrogen_bond_range), ("disulfide_range", disulfide_range)):
+        if len(bounds) != 2 or not all(isfinite(x) for x in bounds) or not 0 < bounds[0] < bounds[1]:
+            raise ValueError(f"{name} must be finite, positive and increasing")
+    if not isfinite(salt_bridge_cutoff) or salt_bridge_cutoff <= 0:
+        raise ValueError("salt_bridge_cutoff must be finite and positive")
+    if any(not all(isfinite(x) for x in (a.x, a.y, a.z)) for a in points):
+        raise ValueError("Atom coordinates must be finite")
+
+    def d(a: Atom, b: Atom) -> float:
+        return sqrt((a.x-b.x)**2 + (a.y-b.y)**2 + (a.z-b.z)**2)
+
+    def residue(a: Atom) -> tuple[str, int, str]:
+        return a.chain, a.residue_number, a.residue.upper()
+
+    nitrogens = [a for a in points if a.element.upper() == "N"]
+    oxygens = [a for a in points if a.element.upper() == "O"]
+    positive = [a for a in points if
+        (a.residue.upper() == "LYS" and a.name.strip().upper() == "NZ") or
+        (a.residue.upper() == "ARG" and a.name.strip().upper() in {"NE", "NH1", "NH2"})]
+    negative = [a for a in points if
+        (a.residue.upper() == "ASP" and a.name.strip().upper() in {"OD1", "OD2"}) or
+        (a.residue.upper() == "GLU" and a.name.strip().upper() in {"OE1", "OE2"})]
+    sulfurs = [a for a in points if a.residue.upper() in {"CYS", "CYX"}
+               and a.name.strip().upper() == "SG" and a.element.upper() == "S"]
+
+    hbonds = []
+    for donor in nitrogens:
+        for acceptor in oxygens:
+            if residue(donor) != residue(acceptor):
+                distance = d(donor, acceptor)
+                if hydrogen_bond_range[0] <= distance <= hydrogen_bond_range[1]:
+                    hbonds.append({"donor_serial_candidate": donor.serial,
+                                   "acceptor_serial_candidate": acceptor.serial,
+                                   "distance_angstrom": distance})
+    salt = []
+    for cation in positive:
+        for anion in negative:
+            if residue(cation) != residue(anion):
+                distance = d(cation, anion)
+                if distance <= salt_bridge_cutoff:
+                    salt.append({"positive_atom_serial": cation.serial,
+                                 "negative_atom_serial": anion.serial,
+                                 "distance_angstrom": distance})
+    disulfides = []
+    for index, first in enumerate(sulfurs):
+        for second in sulfurs[index + 1:]:
+            if residue(first) != residue(second):
+                distance = d(first, second)
+                if disulfide_range[0] <= distance <= disulfide_range[1]:
+                    disulfides.append({"first_sulfur_serial": first.serial,
+                                       "second_sulfur_serial": second.serial,
+                                       "distance_angstrom": distance})
+    return {
+        "hydrogen_bond_candidates": hbonds, "salt_bridge_candidates": salt,
+        "disulfide_candidates": disulfides,
+        "method": "distance-only heavy-atom geometric screening",
+        "warnings": [
+            "Hydrogen-bond candidates omit hydrogen positions and angular geometry",
+            "No protonation, tautomer, solvent, occupancy or alternate-conformation model",
+            "Salt-bridge and disulfide candidates require independent review",
+        ],
+    }
+

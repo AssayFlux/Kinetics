@@ -14,7 +14,7 @@ from .genomics import SamRecord
 
 def _pysam() -> Any:
     try:
-        import pysam
+        import pysam  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError(
             "pysam/HTSlib is unavailable; install an approved pinned pysam build "

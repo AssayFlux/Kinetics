@@ -122,14 +122,9 @@ def search_gene_catalog(
         raise ValueError("Taxonomy ID must contain digits only")
     exact: list[GeneEntry] = []
     partial: list[GeneEntry] = []
-    seen: set[tuple[str, str]] = set()
     for entry in entries:
         if tax_id is not None and entry.tax_id != tax_id:
             continue
-        key = (entry.tax_id, entry.gene_id)
-        if key in seen:
-            continue
-        seen.add(key)
         fields = (
             entry.gene_id, entry.symbol, entry.description, entry.locus_tag,
             entry.nomenclature_symbol, entry.nomenclature_full_name,
@@ -138,6 +133,8 @@ def search_gene_catalog(
         normalized = [field.casefold() for field in fields if field]
         if term in normalized:
             exact.append(entry)
-        elif any(term in field for field in normalized):
+            if len(exact) >= limit:
+                return exact
+        elif any(term in field for field in normalized) and len(partial) < limit:
             partial.append(entry)
-    return (exact + partial)[:limit]
+    return exact + partial[:max(0, limit - len(exact))]

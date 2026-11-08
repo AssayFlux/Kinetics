@@ -3,7 +3,7 @@
 **Status:** Owner-supplied specification, received 2026-11-08. Extends `docs/origin/KINETICS_MASTER.md`; does not replace it.  
 **Authority:** Follow the owner's Parts 0–14 exactly. Record implementation and evidence in `docs/ui/`, `design/`, `DECISIONS.md`, `ROADMAP.md`, `capabilities/registry.yaml` and `SESSION_LOG.md`.
 
-This file is the complete owner-supplied UI/UX master spec. It is preserved verbatim as supplied in the project conversation. The operationally adopted decisions, verified platform facts, implementation evidence and open gates are maintained in the linked living files.
+This root file is the tracked UI/UX specification index and adoption summary, not yet a verbatim transcription of the full owner message. The full Parts 0–14 were supplied in the project conversation on 2026-11-08; exact archival transcription remains an explicit open task. Do not treat this abbreviated index as permission to omit any owner requirement. Operational decisions, verified platform facts, implementation evidence and open gates are maintained in the linked living files.
 
 ## Non-negotiable rules
 1. “World's best” is an aspiration, never a claim. Quality claims require measured evidence.

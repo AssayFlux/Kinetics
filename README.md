@@ -26,7 +26,7 @@ Kinetics is an ambitious, modular platform for computational biology and in-sili
 
 ## Development dashboard
 
-<sub>Latest exact-source verification: [CI #2033](https://github.com/AssayFlux/Kinetics/actions/runs/42484179938) on `037befa` — 204 Python tests passed (4 skipped); ARM64 debug APK/AAB and package checks passed. Device runtime and independent scientific validation remain open.</sub>
+<sub>Latest exact-source verification: [CI #2039](https://github.com/AssayFlux/Kinetics/actions/runs/42493028735) on `79a24eb` — Python/registry, pinned scientific-reference, RDKit, SPDX and Android ARM64 APK/AAB/JVM checks passed. Physical-device runtime and independent experimental validation remain open. Device runtime and independent scientific validation remain open.</sub>
 
 
 The cards below summarise the state recorded in the project roadmap. “In progress” means implementation or preparation exists; it does **not** mean the phase has passed its exit gate.
@@ -37,7 +37,7 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 | **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1 and S6–S9 have bounded preparation/implementation; S2–S5 are not started; S10 remains gated | **In progress** |
 | **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1 has host-side descriptor/reference-fixture work; I4 is source-inventory preparation; I2, I3 and I5 are not started | **In progress** |
 | **P — Precision medicine** | PGx-first research pathway and future governance | Public-source metadata preparation only; P0 is blocked and P1–P7 have not started | **Gated / blocked** |
-| **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 design authority is active; Compose shell and selected settings/security work exist; complete screen and device verification remain open | **In progress** |
+| **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open | **In progress** |
 | **G — Governance** | Security, licensing, quality system, bias and publication evidence | Requirements and inventories are documented; formal reviews and evidence gates remain open | **In progress** |
 
 ## Track R · Research platform
@@ -113,12 +113,12 @@ Only source metadata is catalogued at this stage; no public dataset payloads hav
 
 | Evidence item | Latest recorded state |
 |---|---|
-| **Current source revision** | `d9d693040bf6ad83fdc01aca363dce7e3b5fb521` |
-| **Latest CI run** | [#2028 — failed at Android Kotlin compilation](https://github.com/AssayFlux/Kinetics/actions/runs/42480571753) |
-| **Failure** | `KineticsUi.kt`: invalid `@Composable private private data class CapabilityEntry`; corrected in the next source increment |
-| **Previous successful APK/AAB build** | [#2027 — commit `c3b0479`](https://github.com/AssayFlux/Kinetics/actions/runs/42479673744); older source, not the current revision |
-| **Current-revision APK/AAB** | Not available; run #2028 failed before Android packaging |
-| **Automated checks** | Python, registry, reference-fixture, RDKit sanity and SPDX jobs passed in #2028; Android compile/JVM/artifact checks were blocked by the Kotlin error |
+| **Current source revision** | `79a24eb00ec7beea30674a591361c2351beaa13d` |
+| **Latest CI run** | [#2039 — all five jobs successful](https://github.com/AssayFlux/Kinetics/actions/runs/42493028735) |
+| **Current build result** | ARM64 debug APK/AAB, package alignment, artifact hash verification and Android JVM unit-test task passed; Python/registry, pinned host reference, RDKit and SPDX jobs passed |
+| **APK / AAB** | APK 69,792,811 bytes · SHA-256 `7029555e9640fd920f22a67890fe921473582affd2538e8aaddd61a261c9e44e`; AAB 39,926,363 bytes · SHA-256 `dd6eb3cc6ddc97c9ed3036b4d6e0747c2e91ef2a6ee57f80eaa4e11e28b8cfa9` |
+| **Workflow artifact ZIP** | 79,991,103 bytes · SHA-256 `4b6211b80b9a50a773bdb38c20ee6f7026e327255844f1eeffeb696bc613d8cd` |
+| **Automated checks** | All five CI jobs passed on exact source commit `79a24eb`; Android build log reports `BUILD SUCCESSFUL` |
 | **Emulator / physical device** | Not verified; installation and runtime evidence remain outstanding |
 | **Independent scientific validation** | Not established for the platform's research capabilities |
 | **Release readiness** | Not ready; debug artifacts are not production-signed releases |

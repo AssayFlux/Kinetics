@@ -1631,3 +1631,40 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### Next increment
 - Continue document-first review before every code change. Prioritise the D-015 dashboard/login and owner-brand integration only after source/assets/theme/navigation architecture are audited; use actual app state and preserve original artwork.
 - Continue R/S/I/P work in dependency-safe parallel slices, each with tests, exact-source CI and updated registry/evidence records.
+
+
+## 2026-11-08 — Session 26: D-015 local lock screen and exact-source verification
+
+**Phase:** Track U / D-015; integrated R/S/I/P programme continues  
+**Objective:** Apply the approved adaptive visual system to the device-local lock screen, verify the exact source and reconcile evidence before the next UI increment.
+
+### Direction and documents reviewed before implementation
+- Re-read `NORTH_STAR.md`, `ROADMAP.md`, `DECISIONS.md`, prior session history, D-015 visual authority, UI screen map, R2 implementation/exit requirements, CI evidence and the affected Compose/activity/theme sources.
+- Reconfirmed D-016: every substantial increment must build and test; CI does not replace emulator or physical-device execution.
+- Reconfirmed that local biometric/device-credential app lock is not account authentication; no cloud account or biometric-template storage may be implied.
+
+### Implemented
+- Applied the selected Light Classic, Dark Classic or System-resolved palette and the current Kinetics typography system to the local biometric lock screen.
+- Added clear local-device-security and fallback explanation, an explicit retry action, responsive scrolling and accessible error presentation.
+- Preserved AndroidX BiometricPrompt behavior and its device-credential fallback; the UI does not receive or store biometric templates.
+- The lock screen remains a local app gate, not a cloud identity or account sign-in implementation.
+
+### Exact-source verification
+- Commit: `79a24eb00ec7beea30674a591361c2351beaa13d`.
+- CI: [run #2039 — success](https://github.com/AssayFlux/Kinetics/actions/runs/42493028735); all five jobs passed.
+- Android ARM64 debug APK/AAB build, package-alignment checks, artifact-hash verification and Android JVM unit-test task passed.
+- Python/registry tests, pinned host scientific-reference comparisons, pinned RDKit sanity fixtures and SPDX direct dependency inventory passed.
+- APK: 69,792,811 bytes; SHA-256 `7029555e9640fd920f22a67890fe921473582affd2538e8aaddd61a261c9e44e`.
+- AAB: 39,926,363 bytes; SHA-256 `dd6eb3cc6ddc97c9ed3036b4d6e0747c2e91ef2a6ee57f80eaa4e11e28b8cfa9`.
+- Artifact ZIP: 79,991,103 bytes; SHA-256 `4b6211b80b9a50a773bdb38c20ee6f7026e327255844f1eeffeb696bc613d8cd`.
+
+### Not done / evidence boundaries
+- No emulator or physical-device installation/runtime test has been performed for this revision.
+- No screenshot comparison against the owner-supplied dashboard/login JPGs or full D-015 six-screen implementation is claimed.
+- Original brand integration, profile/onboarding/account identity, secure key-recovery review, accessibility instrumentation and full R2 end-to-end lifecycle remain open.
+- Debug APK/AAB artifacts are not production-signed releases; scientific reference-fixture agreement is not experimental validation.
+- R1–R10, S and I retain their individual gates; P0 remains blocked.
+
+### Next increment
+- Remove the unreferenced pre-D-015 hero composable and its obsolete image/gradient dependencies only after confirming the dashboard call graph, then refine the live-data D-015 dashboard carousel without inventing jobs, metrics or branding.
+- Rebuild and test the exact next commit before accepting it as a baseline.

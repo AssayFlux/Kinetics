@@ -885,3 +885,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R7 Jukes-Cantor model-distance increment
 - Added Jukes-Cantor 1969 nucleotide distance with pairwise deletion, minimum-site guard and explicit saturation rejection, plus neighbour joining from aligned DNA sequences using those corrected distances.
 - Exported both APIs, added regression-test source and updated capability registry/phase docs. This is model-corrected distance inference, not ML/Bayesian tree search; no rate heterogeneity, bootstrap or independent reference concordance. No tests were run.
+
+
+### R5 interaction candidate increment
+- Added distance-only heavy-atom screening for N...O hydrogen-bond candidates, canonical Lys/Arg–Asp/Glu salt-bridge candidates and Cys/CYX SG disulfide candidates, with explicit geometric ranges and caveats.
+- Exported the API, added regression-test source and updated R5 registry/plan. Hydrogen-bond directionality, protonation, solvent, energetic scoring, alternate conformations and structural validation remain absent. No tests were run.

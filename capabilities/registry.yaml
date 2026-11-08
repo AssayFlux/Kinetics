@@ -126,6 +126,11 @@ tools:
     status: implemented
     implementation: python/kinetics/phylo.py
     evidence_level: none
+  - id: structure.interaction_candidates
+    name: Distance-only hydrogen-bond, salt-bridge and disulfide candidate screening
+    status: implemented
+    implementation: python/kinetics/structure.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

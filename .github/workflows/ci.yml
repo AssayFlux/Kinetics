@@ -7,7 +7,7 @@ permissions:
   contents: read
 concurrency:
   group: kinetics-validation-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   python-foundations:
     name: Python foundation, registry and tests
@@ -30,8 +30,8 @@ jobs:
           ruff check --fix --select I scripts tests
           ruff format scripts tests
           ruff check scripts tests
-      - name: Mypy
-        run: mypy scripts tests
+      - name: Mypy production code
+        run: mypy scripts python/kinetics
       - name: Registry validation
         run: python scripts/check_registry.py
       - name: Android offline/build-first configuration guardrails

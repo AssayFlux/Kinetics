@@ -1298,3 +1298,11 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added frame selection, RNA-to-DNA codon normalization, optional explicit trailing-partial-codon trimming, and strict CDS start/stop/internal-stop validation.
 - Added tests for alternative mitochondrial tables, bacterial/plastid table 11, alternative initiator handling and invalid/ambiguous inputs.
 - Registered the capability at `evidence_level: none`; no genetic-code inference, organism identification, gene finding or biological function claim is made.
+
+
+## 2026-11-08 — S8 independent codon-table reference comparison
+- Added a host-only Biopython 1.88 reference requirement and `validation/genetic_code_biopython_reference.py`.
+- The comparison checks all 64 codons plus start/stop codon sets for each implemented table (1, 2, 4, 5 and 11), and emits a machine-readable result.
+- Extended CI to upload both the synthetic SciPy kinetic comparison and genetic-code table comparison records.
+- Updated the SPDX generator so host-only requirements are inventoried while shared Android/host dependencies (Biopython 1.88) retain both contexts rather than being misclassified as host-only.
+- This checks implementation transcription against Biopython; it does not prove biological truth or infer any organism's genetic code. S8 evidence remains none.

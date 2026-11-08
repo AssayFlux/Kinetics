@@ -48,7 +48,7 @@ Record exact source revision, toolchain and dependency versions, license status,
 
 ## Device scope
 
-D-006 sets the target at Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low-end, mid-range and flagship test tiers. This is a target, not a verified compatibility claim. Owner device testing is intentionally deferred; keep those rows blocked until the owner supplies evidence.
+D-006 sets the target at Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low-end, mid-range and flagship test tiers. This is a target, not a verified compatibility claim. Owner identified a Motorola Moto G54 5G as the first physical test handset on 2026-11-08. Device testing remains deferred under the build-first / test-later instruction; keep those rows blocked until the local APK is built and the owner supplies actual device logs. Capture exact Android/API, SoC, RAM, ABI and page size from the connected phone.
 
 ## Deliverables
 

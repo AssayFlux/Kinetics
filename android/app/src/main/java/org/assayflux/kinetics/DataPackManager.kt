@@ -6,6 +6,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.security.MessageDigest
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 data class DataPackManifest(
     val id: String,
@@ -80,9 +82,11 @@ class DataPackManager(context: Context) {
             require(copied == manifest.sizeBytes) { "Pack size changed during installation" }
             val actual = digest.digest().joinToString("") { "%02x".format(it) }
             require(actual == manifest.sha256) { "Pack checksum mismatch" }
-            check(!destination.exists() && temporary.renameTo(destination)) {
-                "Atomic data-pack installation failed or version already exists"
-            }
+            check(!destination.exists()) { "This pack version is already installed" }
+            // Same-directory atomic rename: never expose a partially copied installed pack.
+            Files.move(
+                temporary.toPath(), destination.toPath(), StandardCopyOption.ATOMIC_MOVE,
+            )
             return destination
         } catch (error: Exception) {
             temporary.delete()

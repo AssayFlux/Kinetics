@@ -4,6 +4,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import java.io.File
 import java.io.FileOutputStream
+import java.io.EOFException
 import java.io.RandomAccessFile
 import java.security.KeyStore
 import java.security.MessageDigest
@@ -76,16 +77,16 @@ object LocalCrypto {
                 output.fd.sync()
                 return
             }
-            try {
+            val validHeader = try {
                 val magic = ByteArray(FILE_MAGIC.size)
                 output.seek(0)
                 output.readFully(magic)
-                require(magic.contentEquals(FILE_MAGIC)) { "Unsupported encrypted file format" }
-                require(output.readUnsignedByte() == FILE_FORMAT_VERSION) {
-                    "Unsupported encrypted file version"
-                }
-            } catch (_: Exception) {
-                // Legacy or torn staging files cannot be safely resumed with v2 AAD.
+                magic.contentEquals(FILE_MAGIC) && output.readUnsignedByte() == FILE_FORMAT_VERSION
+            } catch (_: EOFException) {
+                false
+            }
+            if (!validHeader) {
+                // Legacy, unknown or torn staging files cannot be safely resumed with v2 AAD.
                 output.setLength(0)
                 output.seek(0)
                 output.write(FILE_MAGIC)

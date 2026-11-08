@@ -25,6 +25,7 @@ def map_exact_chain_sequence(
     chain_id: str,
     max_query_residues: int = 1_000_000,
     max_structure_residues: int = 100_000,
+    max_atoms: int = 2_000_000,
 ) -> dict[str, object]:
     """Map a uniquely occurring exact chain sequence to a query protein sequence.
 
@@ -41,13 +42,20 @@ def map_exact_chain_sequence(
         raise ValueError("query sequence exceeds the configured residue limit")
     if max_structure_residues < 1:
         raise ValueError("max_structure_residues must be positive")
+    if max_atoms < 1:
+        raise ValueError("max_atoms must be positive")
     if not isinstance(chain_id, str) or not chain_id:
         raise ValueError("chain_id must be non-empty text")
 
-    selected_atoms = [atom for atom in atoms if atom.chain == chain_id]
     residues: dict[int, str] = {}
     residue_names: dict[int, str] = {}
-    for atom in selected_atoms:
+    atom_count = 0
+    for atom in atoms:
+        atom_count += 1
+        if atom_count > max_atoms:
+            raise ValueError("structure atom stream exceeds the configured atom limit")
+        if atom.chain != chain_id:
+            continue
         if atom.residue_number not in residues and len(residues) >= max_structure_residues:
             raise ValueError("structure chain exceeds the configured residue limit")
         residue_name = atom.residue.upper()

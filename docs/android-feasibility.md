@@ -9,9 +9,9 @@
 
 ## Current evidence boundary
 
-An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11, Biopython and NumPy for the current APK probe. SciPy is tracked separately as a required but currently unavailable R1 candidate. These are prototype dependencies only, not a production architecture or dependency approval.
+An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11, Biopython and NumPy for the isolated R1 APK probe. SciPy is tracked separately as a required but currently unavailable R1 candidate. These are prototype dependencies only, not a production architecture or dependency approval.
 
-Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. The current CI cross-build successfully creates a pinned Biopython 1.88 Android wheel (SHA-256 `cdf569ea13eb9314e43afeb9bbd3dbdbf95616d138f775a2e12e4cb7ba0cecbf`). Gradle consumed that wheel and NumPy 1.26.2 successfully after SciPy was removed from the immediate APK probe. It progressed through Python packaging, Android resource processing and stopped at Kotlin compilation because Java bytecode target 1.8 did not match Kotlin target 17. The build configuration is being aligned to JVM 17. SciPy remains an unresolved architecture requirement. No APK/AAB artifact exists yet.
+Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. Historical CI runs 1471 and 1481 subsequently built the arm64 debug APK/AAB after the JVM target mismatch was resolved. Their recorded hashes and static alignment checks are historical evidence only. The current owner instruction moves all future APK/AAB builds to the owner's local machine; GitHub Actions must not build or test Android artifacts. SciPy remains unresolved.
 
 No Android app runtime, emulator or physical-device result is yet accepted as validated. No successful on-device Python import, Rust app call, C++ JNI, scientific engine, RDKit, offline viewer, 16 KB runtime, startup, memory or device result is claimed.
 
@@ -104,7 +104,7 @@ D-006 is approved: target Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low
 
 ## Preliminary assessment (not a go/no-go; updated after CI run 1481)
 
-- The host-Python prerequisite, Biopython wheel build, JVM target mismatch and subsequent APK/AAB packaging blockers have been resolved in CI.
+- The host-Python prerequisite, Biopython wheel build, JVM target mismatch and APK/AAB packaging blockers were resolved in historical CI runs.
 - CI run 1481 successfully built the arm64 debug APK and AAB, built the pinned Biopython 1.88 arm64 wheel, compiled Rust and C++17 JNI, and passed APK ZIP plus static ELF 16 KB alignment checks. APK is 63 MiB; AAB is 36 MiB.
 - Static artifact inspection proves packaging/alignment only. It does not establish Android app launch, native calls, Python/Biopython/NumPy imports, 16 KB kernel runtime, cold-start, peak memory or physical-device compatibility.
 - SciPy is still unavailable in the current Chaquopy Android package path. No conclusion is yet possible about the complete intended architecture until the remaining R1 experiments are run.

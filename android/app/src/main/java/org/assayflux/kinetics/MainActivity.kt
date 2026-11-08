@@ -103,10 +103,36 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
         }
     }
     DisposableEffect(activity) {
-        val workInfos = WorkManager.getInstance(activity)
-            .getWorkInfosByTagLiveData("kinetics-import")
+        val manager = WorkManager.getInstance(activity)
+        // Recover imports interrupted by process death. KEEP prevents duplicate workers
+        // when WorkManager already has an unfinished unique job.
+        store.recoverableImports().forEach { pending ->
+            val uri = android.net.Uri.parse(pending.uri)
+            val hasReadGrant = activity.contentResolver.persistedUriPermissions.any {
+                it.uri == uri && it.isReadPermission
+            }
+            if (!hasReadGrant) {
+                store.updateJob(
+                    pending.id, "failed",
+                    message = "Recovery blocked: persistent document read permission was revoked",
+                )
+            } else {
+                val request = OneTimeWorkRequestBuilder<ImportWorker>()
+                    .setInputData(workDataOf(
+                        ImportWorker.KEY_JOB_ID to pending.id,
+                        ImportWorker.KEY_URI to pending.uri,
+                    ))
+                    .addTag("kinetics-import")
+                    .build()
+                manager.enqueueUniqueWork(
+                    "import-${pending.id}", ExistingWorkPolicy.KEEP, request,
+                )
+            }
+        }
+        val workInfos = manager.getWorkInfosByTagLiveData("kinetics-import")
         val observer = Observer<List<WorkInfo>> { jobs = store.recentJobs() }
         workInfos.observe(activity, observer)
+        jobs = store.recentJobs()
         onDispose { workInfos.removeObserver(observer) }
     }
     MaterialTheme {

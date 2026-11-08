@@ -15,6 +15,9 @@ data class ResearchJob(
     val message: String?,
 )
 
+data class RecoverableImport(val id: String, val uri: String)
+
+
 class ResearchStore(context: Context) :
     SQLiteOpenHelper(context, "kinetics-research.db", null, DATABASE_VERSION) {
 
@@ -206,6 +209,20 @@ class ResearchStore(context: Context) :
         ).use { cursor ->
             return if (cursor.moveToFirst()) cursor.getString(0) else null
         }
+    }
+
+    /** Imports left queued/running by process death; unique WorkManager names make re-enqueue idempotent. */
+    fun recoverableImports(): List<RecoverableImport> {
+        val result = mutableListOf<RecoverableImport>()
+        readableDatabase.rawQuery(
+            "SELECT id,input_uri FROM jobs WHERE state IN ('queued','running') ORDER BY created_at",
+            emptyArray(),
+        ).use { cursor ->
+            while (cursor.moveToNext()) {
+                result += RecoverableImport(cursor.getString(0), cursor.getString(1))
+            }
+        }
+        return result
     }
 
     fun recentJobs(limit: Int = 30): List<ResearchJob> {

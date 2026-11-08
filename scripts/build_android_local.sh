@@ -22,6 +22,16 @@ CHAQUOPY_DIR="${CHAQUOPY_DIR:-$HOME/.cache/kinetics/chaquopy-$CHAQUOPY_VERSION}"
 fail() { echo "ERROR: $*" >&2; exit 1; }
 need() { command -v "$1" >/dev/null 2>&1 || fail "Missing command: $1"; }
 
+# The pinned Chaquopy wheel-builder and NDK host tools are Linux x86_64 only.
+# Detect unsupported hosts before downloading toolchains or modifying caches.
+HOST_OS="$(uname -s)"
+HOST_ARCH="$(uname -m)"
+if [[ "${PREFIX:-}" == *com.termux* || -n "${TERMUX_VERSION:-}" ]]; then
+  fail "Termux on Android is not a supported APK-build host for this pinned toolchain. Build on Linux x86_64 or x86_64 WSL2; use Termux only for post-build device installation/log collection."
+fi
+[[ "$HOST_OS" == "Linux" ]] || fail "Unsupported build host: $HOST_OS. Use Linux x86_64 or x86_64 WSL2."
+[[ "$HOST_ARCH" == "x86_64" ]] || fail "Unsupported build-host architecture: $HOST_ARCH. The pinned Chaquopy/NDK toolchain requires x86_64."
+
 need java
 need python
 need git

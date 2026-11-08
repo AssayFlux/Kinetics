@@ -98,3 +98,44 @@ def test_exact_reference_search_bounds_query_and_validates_integer_limits() -> N
             "ATG", refs, sequence_type="DNA", reference_pack=pack,
             max_total_residues=1.5,
         )
+
+
+
+def test_fasta_reference_search_verifies_raw_bytes_and_emits_exact_hits() -> None:
+    from kinetics.sequence_reference import exact_reference_search_fasta
+
+    payload = b">ref-1 sample\\nACGT\\n>ref-2\\nTTTT\\n"
+    reference_pack = ReferencePack(
+        name="fixture-fasta", version="1", license="CC0-1.0",
+        source="https://example.org/fasta",
+        content_sha256=hashlib.sha256(payload).hexdigest(),
+    )
+    result = exact_reference_search_fasta(
+        "ACGT", payload, sequence_type="DNA", reference_pack=reference_pack,
+    )
+    assert [hit["reference_id"] for hit in result["hits"]] == ["ref-1"]
+    assert result["search"]["reference_packs"][0]["content_sha256"] == hashlib.sha256(payload).hexdigest()
+
+
+def test_fasta_reference_search_rejects_hash_mismatch_and_byte_budget() -> None:
+    from kinetics.sequence_reference import exact_reference_search_fasta
+
+    payload = b">ref-1\\nACGT\\n"
+    reference_pack = ReferencePack(
+        name="fixture-fasta", version="1", license="CC0-1.0",
+        source="https://example.org/fasta", content_sha256="a" * 64,
+    )
+    with pytest.raises(ValueError, match="SHA-256"):
+        exact_reference_search_fasta(
+            "ACGT", payload, sequence_type="DNA", reference_pack=reference_pack,
+        )
+    with pytest.raises(ValueError, match="max_fasta_bytes"):
+        exact_reference_search_fasta(
+            "ACGT", payload, sequence_type="DNA",
+            reference_pack=ReferencePack(
+                name="fixture-fasta", version="1", license="CC0-1.0",
+                source="https://example.org/fasta",
+                content_sha256=hashlib.sha256(payload).hexdigest(),
+            ),
+            max_fasta_bytes=4,
+        )

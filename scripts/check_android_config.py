@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static guardrails for the local-only Android build and offline app manifest."""
+"""Static guardrails for the authorized Android CI build and offline app manifest."""
 
 from __future__ import annotations
 
@@ -10,11 +10,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ANDROID_NS = "{http://schemas.android.com/apk/res/android}"
-FORBIDDEN_CI_TASKS = (
-    "assembleDebug", "assembleRelease", "bundleDebug", "bundleRelease",
-    "connectedAndroidTest", "managedDevice",
-)
-
 
 def validate_android_config(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
@@ -130,11 +125,16 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
     except OSError as exc:
         errors.append(f"GitHub workflow could not be read: {exc}")
         workflow = ""
-    for task in FORBIDDEN_CI_TASKS:
-        if task in workflow:
-            errors.append(f"GitHub Actions must not invoke Android build/device task {task}")
+    for marker, message in (
+        ("android-arm64-build:", "GitHub Actions must include the authorized arm64 APK/AAB build job"),
+        ("scripts/build_android_local.sh", "Android CI must use the pinned repository build script"),
+        (":app:testDebugUnitTest", "Android CI must run the JVM unit-test task"),
+        ("actions/upload-artifact@v4", "Android CI must retain APK/AAB build evidence as artifacts"),
+    ):
+        if marker not in workflow:
+            errors.append(message)
     if "workflow_dispatch:" not in workflow:
-        errors.append("Android/source CI must remain manual-dispatch only during test deferral")
+        errors.append("Android CI must retain its manual-dispatch entry point")
     return errors
 
 

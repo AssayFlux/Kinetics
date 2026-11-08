@@ -49,27 +49,85 @@ internal fun KineticsAppShell(
         else -> darkColorScheme(primary = Color(0xFF39D7E8), onPrimary = Color(0xFF071018), secondary = Color(0xFF6B9CFF), background = Color(0xFF070B12), surface = Color(0xFF0E1521), onSurface = Color(0xFFEAF3FF), onBackground = Color(0xFFEAF3FF), surfaceVariant = Color(0xFF151F2E), onSurfaceVariant = Color(0xFF9AADC4), outline = Color(0xFF2A3B50))
     }
     MaterialTheme(colorScheme = scheme) {
-        Scaffold(
-            containerColor = MaterialTheme.colorScheme.background,
-            bottomBar = {
-                NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
-                    KineticsTab.entries.forEach { item ->
-                        NavigationBarItem(
-                            selected = tab == item, onClick = { tab = item },
-                            icon = { Text(item.glyph, fontSize = 20.sp, modifier = Modifier.semantics { contentDescription = item.label }) },
-                            label = { Text(item.label) },
-                        )
+        BoxWithConstraints(Modifier.fillMaxSize()) {
+            // Classify the app window, not the physical device. These are the
+            // current Android adaptive breakpoints recorded in docs/ui/verified-specs.md.
+            val compactHeight = maxHeight < 480.dp
+            val useDrawer = maxWidth >= 1200.dp
+            val useRail = maxWidth >= 600.dp || compactHeight
+
+            @Composable
+            fun Screen(modifier: Modifier) {
+                when (tab) {
+                    KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, themeFamily, onImport, onRefresh,
+                        onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, modifier)
+                    KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, modifier)
+                    KineticsTab.Explore -> ExploreScreen(modifier)
+                    KineticsTab.Settings -> SettingsScreen(runtimeReport, onRunRuntime, onRefresh, themeFamily,
+                        { themeFamily = it }, modifier)
+                }
+            }
+
+            @Composable
+            fun NavigationItems() {
+                KineticsTab.entries.forEach { item ->
+                    NavigationDrawerItem(
+                        selected = tab == item,
+                        onClick = { tab = item },
+                        icon = { Text(item.glyph, fontSize = 20.sp) },
+                        label = { Text(item.label) },
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                    )
+                }
+            }
+
+            when {
+                useDrawer -> PermanentNavigationDrawer(
+                    drawerContent = {
+                        PermanentDrawerSheet(Modifier.width(280.dp)) {
+                            Spacer(Modifier.height(24.dp))
+                            Text("KINETICS", modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+                                color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                            NavigationItems()
+                        }
+                    },
+                ) {
+                    Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
+                        Screen(Modifier.padding(padding))
                     }
                 }
-            },
-        ) { padding ->
-            when (tab) {
-                KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, themeFamily, onImport, onRefresh,
-                    onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport,
-                    Modifier.padding(padding))
-                KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, Modifier.padding(padding))
-                KineticsTab.Explore -> ExploreScreen(Modifier.padding(padding))
-                KineticsTab.Settings -> SettingsScreen(runtimeReport, onRunRuntime, onRefresh, themeFamily, { themeFamily = it }, Modifier.padding(padding))
+                useRail -> Row(Modifier.fillMaxSize()) {
+                    NavigationRail {
+                        Spacer(Modifier.height(12.dp))
+                        KineticsTab.entries.forEach { item ->
+                            NavigationRailItem(
+                                selected = tab == item,
+                                onClick = { tab = item },
+                                icon = { Text(item.glyph, fontSize = 20.sp) },
+                                label = { Text(item.label) },
+                                alwaysShowLabel = true,
+                            )
+                        }
+                    }
+                    Scaffold(
+                        modifier = Modifier.weight(1f),
+                        containerColor = MaterialTheme.colorScheme.background,
+                    ) { padding -> Screen(Modifier.padding(padding)) }
+                }
+                else -> Scaffold(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    bottomBar = {
+                        NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+                            KineticsTab.entries.forEach { item ->
+                                NavigationBarItem(
+                                    selected = tab == item, onClick = { tab = item },
+                                    icon = { Text(item.glyph, fontSize = 20.sp, modifier = Modifier.semantics { contentDescription = item.label }) },
+                                    label = { Text(item.label) },
+                                )
+                            }
+                        }
+                    },
+                ) { padding -> Screen(Modifier.padding(padding)) }
             }
         }
     }

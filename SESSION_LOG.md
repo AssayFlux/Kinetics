@@ -1095,3 +1095,31 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Replaced inert status chips with non-interactive state labels carrying TalkBack content descriptions.
 - Official Android window breakpoints and accessibility touch-target guidance recorded in docs/ui/verified-specs.md.
 - Device screenshots, TalkBack, contrast, 200% font scale, fold posture, performance and usability remain untested. No accessibility or device-responsiveness pass claimed.
+
+
+## 2026-11-08 — Session: Parallel R1–R10 closure and Track S1 start
+**Phase:** Track R integration + Track S1 preparation  
+**Objective:** Continue R1–R10 implementation while beginning independently implementable S1 work under the owner's explicit parallel-work authorization.
+
+### Done
+- Re-read ROADMAP, DECISIONS, SESSION_LOG, capability registry, current UI quality report, device matrix, third-party register and research implementation inventory.
+- Confirmed R1–R10 are still recorded in progress; did not convert source implementation or a successful debug build into phase-completion claims.
+- Added `python/kinetics/structure_view.py`: deterministic bounded structure-view payload preparation with explicit Angstrom units, finite-coordinate and annotation checks, duplicate serial rejection, atom ceiling and limitations.
+- Added `tests/test_structure_view.py` for deterministic serialization and negative input cases.
+- Registered `structure.viewer_payload` with evidence_level none.
+- Added versioned `api/structure-view-payload.schema.json` and `docs/track-s/structure-viewer-contract.md`.
+- Updated ROADMAP and DECISIONS with D-009: S1 preparation may proceed in parallel; WebView renderer and dependent S work remain gated by their dependencies.
+
+### Not done / gates retained
+- New Track S1 code has not yet been run through CI; no S1 renderer or third-party viewer bundle is present.
+- R1 device/runtime, native engine, transitive license and performance evidence remain open.
+- R2 interruption/migration/SAF/security device tests remain open.
+- R3–R9 independent scientific validation and missing engine/data scope remain open.
+- R10 complete SBOM, security review, UI accessibility/device matrix and release hardening remain open.
+- Clinical/patient workflows remain disabled; no clinical claims are authorized.
+
+### Next
+- Run CI on the S1 preparation commit and fix any regressions.
+- Continue the highest-risk R1/R2 integration and independent scientific validation work across R3–R9.
+- Progress S1 viewer licensing and offline WebView integration only after confirming exact upstream assets and R1 runtime constraints.
+- Update the phase evidence and quality reports from actual test/device outputs only.

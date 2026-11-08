@@ -1386,3 +1386,10 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Kept `entries: []`: no dataset payload has been retrieved, no hash or retrieval date has been fabricated, and no license approval is claimed.
 - Added I4 discovery notes for PubChem BioAssay, ChEMBL, Tox21 and FDA DILIrank as candidate research sources only. Exact releases, endpoint quality, license terms and applicability must be reviewed before intake. No ADMET/PK/PD/PBPK model was selected or evaluated.
 - P0 remains blocked. No patient data, genotype interpretation, clinical recommendation, treatment/dosing output or clinical feature was enabled.
+
+
+## 2026-11-08 — S9 / I4 / P source-preparation checkpoint
+- S9 exact chain-sequence mapping implementation and tests are committed; mapping only occurs for a unique contiguous exact match of canonical residues and preserves structure residue numbering. Alignment, insertion codes, missing residues and variant/function interpretation remain unsupported.
+- I4 now has a candidate source inventory (PubChem BioAssay, ChEMBL, Tox21, FDA DILIrank) with explicit pre-intake review requirements; no dataset or model is approved, ingested or evaluated.
+- P metadata catalogue separates candidate discovery (NCBI Gene, PharmVar, ClinVar, CPIC) from acquired entries. Candidate schema requires `verify_before_intake` and `patient_data: false`; acquired entries remain empty. Added a YAML/schema regression test.
+- P0 remains blocked. No patient data, clinical interpretation or recommendations are enabled.

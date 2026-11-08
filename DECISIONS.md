@@ -12,7 +12,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-005 | 2026-11-07 | Gene-scope breadth | Approved strategic direction — both a comprehensive PGx gene panel and a broad cross-domain gene catalogue; exact inventories and rollout are staged by evidence | Project owner |
 | D-006 | 2026-11-07 | Target Android devices/minimum support matrix | Approved — Android 10+ (API 29), 64-bit ARM; low-end, mid-range and flagship test tiers | Project owner |
 | D-007 | 2026-11-07 | Source-master archival | Resolved operationally — reconstructed from owner's complete chat-supplied master at docs/origin/KINETICS_MASTER.md; not represented as a Git move | Owner instruction |
-| D-008 | 2026-11-07 | Authorization to execute R1–R3 | Approved — proceed sequentially, subject to each phase's evidence, safety and exit gates; not a waiver or completion sign-off | Project owner |
+| D-008 | 2026-11-07 | Authorization to execute R1–R3 | Approved — proceed sequentially, subject to each phase's evidence, safety and exit gates; not a waiver or completion sign-off | Project owner |\n| D-009 | 2026-11-08 | Parallel Track S implementation sequencing | Approved — begin independently implementable S1 preparation while R1–R10 continue; dependent rendering and S2–S5 gates remain | Project owner |
 
 ## D-000 — Direction baseline (approved)
 - Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.
@@ -118,3 +118,11 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Choice: Implement live app-window classification in Compose and use Material 3 NavigationBar, NavigationRail and PermanentNavigationDrawer. Compact portrait uses bottom bar; medium/expanded and compact-height windows use rail; large/extra-large (≥1200dp) uses permanent drawer. Readable content is capped at 840dp.
 - Deviation: NavigationSuiteScaffold and WindowManager fold-posture APIs are not yet integrated. This is temporary; no fold-aware or hinge-safe claim is permitted. Extend after adaptive-library compatibility and posture tests are verified.
 - Evidence: WindowLayout.kt and WindowLayoutTest.kt; CI build/test pending. Device matrix remains NOT RUN.
+
+
+## D-009 — Parallel Track S implementation sequencing (approved)
+- Date: 2026-11-08.
+- Context: Owner explicitly directed completion of R1–R10 and commencement of Track S without another approval pause.
+- Choice: Begin independently implementable S1 preparation in parallel with R1–R10. This supersedes the earlier sequencing prohibition only to the extent of non-dependent work.
+- Consequences: Deterministic structure-view payload preparation and its contract/tests may proceed. Full WebView rendering remains dependent on R1 WebView/runtime feasibility and exact third-party license review. S2–S5 retain all scientific, model-license, node-security and benchmark gates. No phase is complete by this decision; no validation, clinical, patient-data or release gate is waived.
+- Approver: Project owner, explicit instruction in chat on 2026-11-08.

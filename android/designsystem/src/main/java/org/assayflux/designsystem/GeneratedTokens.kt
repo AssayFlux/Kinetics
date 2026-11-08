@@ -21,6 +21,17 @@ object KineticsTokens {
     const val minTouchTargetDp = 48
     const val targetGapDp = 8
     const val maxReadableContentDp = 840
+    val KineticsLightClassic = KineticsPalette(
+        background = Color(0xFFFBF4E6),
+        surface = Color(0xFFFFFDF8),
+        surfaceAlt = Color(0xFFF7E6C8),
+        text = Color(0xFF2B1B14),
+        muted = Color(0xFF5A4638),
+        primary = Color(0xFF7B1E34),
+        secondary = Color(0xFF146C70),
+        tertiary = Color(0xFFD9A441),
+        outline = Color(0xFFE6D3A8)
+    )
     val PorcelainBlue = KineticsPalette(
         background = Color(0xFFF7FAFF),
         surface = Color(0xFFFFFFFF),
@@ -64,6 +75,17 @@ object KineticsTokens {
         secondary = Color(0xFFBD8B6C),
         tertiary = Color(0xFFE2C4A9),
         outline = Color(0xFFE4D8CC)
+    )
+    val KineticsDarkClassic = KineticsPalette(
+        background = Color(0xFF120E18),
+        surface = Color(0xFF1E1726),
+        surfaceAlt = Color(0xFF3B2547),
+        text = Color(0xFFF2E8D5),
+        muted = Color(0xFFB8A9C9),
+        primary = Color(0xFFE3B655),
+        secondary = Color(0xFF4FB3B0),
+        tertiary = Color(0xFFE58A9B),
+        outline = Color(0xFF3A2F4A)
     )
     val ObsidianCyan = KineticsPalette(
         background = Color(0xFF070B12),

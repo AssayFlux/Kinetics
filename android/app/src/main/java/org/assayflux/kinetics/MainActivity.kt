@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,7 +29,10 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import java.util.UUID
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +46,8 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
     val store = remember { ResearchStore(activity) }
     var jobs by remember { mutableStateOf(store.recentJobs()) }
     var notice by remember { mutableStateOf("Research Mode. Local files stay on this device.") }
+    var runtimeReport by remember { mutableStateOf<String?>(null) }
+    val scope = rememberCoroutineScope()
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
             val persistentReadGrant = runCatching {
@@ -81,6 +87,25 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                     Button(onClick = { picker.launch(arrayOf("*/*")) }) { Text("Import research file") }
                     Button(onClick = { jobs = store.recentJobs() }) { Text("Refresh") }
                 }
+                Button(onClick = {
+                    scope.launch {
+                        runtimeReport = "Running local Python and native runtime probes..."
+                        runtimeReport = withContext(Dispatchers.IO) {
+                            val python = runCatching { PythonProbe.report(activity) }
+                                .getOrElse { "FAILED: ${it.message ?: it.javaClass.simpleName}" }
+                            val native = runCatching {
+                                val probe = NativeProbe()
+                                val cpp = probe.cppSumSquares(3.0, 4.0)
+                                val rust = probe.rustSumSquares(3.0, 4.0)
+                                check(kotlin.math.abs(cpp - 25.0) < 1e-9) { "C++ JNI result mismatch" }
+                                check(kotlin.math.abs(rust - 25.0) < 1e-9) { "Rust FFI result mismatch" }
+                                "C++ JNI: $cpp; Rust FFI: $rust"
+                            }.getOrElse { "FAILED: ${it.message ?: it.javaClass.simpleName}" }
+                            "Python probe:\n$python\nNative probe: $native"
+                        }
+                    }
+                }) { Text("Run local runtime probes") }
+                runtimeReport?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
                 Text("Recent jobs", style = MaterialTheme.typography.titleMedium)
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(jobs, key = { it.id }) { job ->

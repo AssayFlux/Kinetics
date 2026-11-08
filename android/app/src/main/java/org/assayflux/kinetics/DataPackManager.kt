@@ -40,29 +40,54 @@ class DataPackManager(context: Context) {
         return manifest
     }
 
+    @Synchronized
     fun install(source: File, manifest: DataPackManifest): File {
-        require(source.isFile && source.length() == manifest.sizeBytes) { "Pack size mismatch" }
-        val digest = MessageDigest.getInstance("SHA-256")
-        FileInputStream(source).use { input ->
-            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-            while (true) {
-                val count = input.read(buffer)
-                if (count < 0) break
-                digest.update(buffer, 0, count)
-            }
+        // Revalidate even programmatically-created manifests: callers must not be able
+        // to bypass parseManifest and escape the private data-pack directory.
+        require(manifest.id.matches(Regex("[A-Za-z0-9._-]{1,80}"))) { "Invalid pack id" }
+        require(manifest.version.matches(Regex("[A-Za-z0-9._-]{1,80}"))) { "Invalid pack version" }
+        require(manifest.source.startsWith("https://") && manifest.license.isNotBlank()) {
+            "Pack source and license metadata are mandatory"
         }
-        val actual = digest.digest().joinToString("") { "%02x".format(it) }
-        require(actual == manifest.sha256) { "Pack checksum mismatch" }
+        require(manifest.sha256.matches(Regex("[a-f0-9]{64}"))) { "Invalid SHA-256" }
+        require(manifest.sizeBytes in 1..maximumPackBytes) { "Pack size outside permitted range" }
+        require(source.isFile && source.length() == manifest.sizeBytes) { "Pack size mismatch" }
+
         val destinationDir = File(root, manifest.id).apply { mkdirs() }
         val temporary = File(destinationDir, manifest.version + ".tmp")
         val destination = File(destinationDir, manifest.version + ".data")
-        FileInputStream(source).use { input ->
-            FileOutputStream(temporary).use { output ->
-                input.copyTo(output)
-                output.fd.sync()
+        require(!destination.exists()) { "This pack version is already installed" }
+        temporary.delete()
+        val digest = MessageDigest.getInstance("SHA-256")
+        var copied = 0L
+        try {
+            // Hash the exact byte stream being installed to close the hash/copy TOCTOU gap.
+            FileInputStream(source).use { input ->
+                FileOutputStream(temporary, false).use { output ->
+                    val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                    while (true) {
+                        val count = input.read(buffer)
+                        if (count < 0) break
+                        copied += count
+                        require(copied <= manifest.sizeBytes && copied <= maximumPackBytes) {
+                            "Pack grew beyond its declared size"
+                        }
+                        digest.update(buffer, 0, count)
+                        output.write(buffer, 0, count)
+                    }
+                    output.fd.sync()
+                }
             }
+            require(copied == manifest.sizeBytes) { "Pack size changed during installation" }
+            val actual = digest.digest().joinToString("") { "%02x".format(it) }
+            require(actual == manifest.sha256) { "Pack checksum mismatch" }
+            check(!destination.exists() && temporary.renameTo(destination)) {
+                "Atomic data-pack installation failed or version already exists"
+            }
+            return destination
+        } catch (error: Exception) {
+            temporary.delete()
+            throw error
         }
-        check(temporary.renameTo(destination)) { "Atomic data-pack installation failed" }
-        return destination
     }
 }

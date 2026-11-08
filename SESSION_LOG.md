@@ -593,3 +593,34 @@ Continue R1 source-side feasibility work and prepare a reproducible local build 
 
 ### Gate
 R1 remains IN PROGRESS. Host-side source CI success does not close Android build/runtime/scientific feasibility criteria. R2/R3 remain gated and not started.
+
+
+## 2026-11-08 — Session 14: Research platform R1–R10 execution mandate
+**Phase:** Track R / R1 (in progress; R2–R10 remain dependency-gated)  
+**Objective:** Begin a careful, evidence-led execution pass across the Research Platform track without weakening owner-approved phase gates.
+
+### Owner instruction
+- Owner instructed: complete Research Platform R1 through R10 carefully; no shortcuts or unsupported completion claims.
+- Existing build policy remains: no APK/AAB builds or Android emulator tests in GitHub Actions; local build first, physical-device testing deferred by owner.
+- Existing sequential phase gates remain binding. R2 requires R1 evidence and explicit go/no-go; R3 requires R2 exit approval; later work packages retain their listed dependencies and governance gates.
+
+### Repository audit and corrections
+- Re-read ROADMAP, NORTH_STAR, DECISIONS, R1/R2/R3 plans, local Android build guide, third-party register and Android feasibility record.
+- Confirmed R1 is still incomplete; R2/R3 are planned but not started.
+- Corrected ROADMAP's stale statement that the Apache-2.0 LICENSE file remained to be added.
+- Corrected ROADMAP R10 wording so it does not imply GitHub Actions APK builds, which the owner explicitly prohibited.
+- Corrected stale Android feasibility chronology that incorrectly said no APK/AAB had ever been produced after historical CI runs 1471/1481.
+
+### Commits
+- `4f3a86a4bfc2587e7fb815a1a3fd29111538e503` — reconcile Research Platform roadmap and release-channel/build policy.
+- `eb587564a0e921e6184ac1d2180c1b1f9bbb0b35` — reconcile Android feasibility chronology and local-only build policy.
+
+### Validation and limitations
+- Documentation edits only; no application source changes or new tests were performed in this session.
+- No fresh local APK/AAB build, Android runtime/device test, scientific validation or R1 go/no-go is claimed.
+- R1's documented technical and owner-device blockers remain open. R2–R10 are not marked complete or started ahead of their dependency gates.
+
+### Next work
+- Perform a source-level R1 audit of Android Gradle configuration, Python probe, Rust FFI, C++ JNI, native alignment checker and local build script; fix verified defects and add host-side tests where possible.
+- Continue engine, offline viewer, lifecycle, security and licensing investigations with pinned evidence.
+- Update phase and roadmap status only when each exit criterion has supporting evidence.

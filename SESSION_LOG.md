@@ -799,3 +799,9 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R10 accessibility increment
 - Added Compose semantics descriptions for the research workbench heading, Research Mode notice and merged research-job/state summaries. This improves screen-reader context but is not a full WCAG/accessibility audit.
 - R10 remains in progress; no device accessibility test was run.
+
+
+### R2 encrypted-container format versioning
+- Added an explicit `KDAT` magic plus format-version byte to the encrypted container. Import resume validates the header and resets incompatible legacy/torn staging data before re-reading the source; finalized-file materialization rejects unknown formats.
+- Chunk ordinal and job ID remain authenticated as AES-GCM AAD. The metadata now identifies the corresponding chunked-v2 format unambiguously.
+- This is not a migration path for previously finalized v1 encrypted imports; those require an explicit recovery/migration design. No Android build or test was run.

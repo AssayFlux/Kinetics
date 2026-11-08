@@ -449,10 +449,8 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
                             Text("Version: ${job.provenanceToolVersion ?: "unknown"}",
                                 style = MaterialTheme.typography.bodySmall)
                             job.provenanceCreatedAt?.let {
-                                val recorded = java.text.DateFormat
-                                    .getDateTimeInstance(java.text.DateFormat.MEDIUM,
-                                        java.text.DateFormat.SHORT)
-                                    .format(java.util.Date(it))
+                                val recorded = java.time.format.DateTimeFormatter.ISO_INSTANT
+                                    .format(java.time.Instant.ofEpochMilli(it))
                                 Text("Recorded: $recorded", style = MaterialTheme.typography.bodySmall)
                             }
                             job.sha256?.let {

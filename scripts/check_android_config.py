@@ -48,6 +48,7 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         errors.append(f"Android Gradle config could not be read: {exc}")
         gradle = ""
     required_gradle = {
+        'python.srcDir("../../python")': "Android app must package the repository's kinetics Python modules",
         'minSdk = 29': "Android minimum SDK must remain API 29",
         'targetSdk = 36': "Android target SDK must remain explicitly pinned to API 36",
         'ndkVersion = "28.2.13676358"': "Android NDK version must match the local build script",

@@ -35,6 +35,13 @@ android {
         compose = true
     }
 
+    // Package the repository's actual research modules into the embedded Python runtime.
+    sourceSets {
+        getByName("main") {
+            python.srcDir("../../python")
+        }
+    }
+
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")

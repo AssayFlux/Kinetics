@@ -135,3 +135,13 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Boundary: Do not infer detailed visual properties from filenames or replace the reference designs with the existing generic theme proposals. The binary assets are present in the repository, but direct visual inspection is still required before extracting exact tokens or declaring a visual match. The final implementation must be reviewed against the images and validated with real screenshots across supported window classes.
 - Approver: Owner explicitly confirmed this preference in project conversation on 2026-11-08.
 - Evidence: The two repository assets listed above; visual comparison and screenshot evidence pending.
+
+
+## D-014 — Light classic visual direction and calligraphic typography (2026-11-08)
+- Context: Owner clarified that the dashboard reference's colours are placeholders only, selected a light classic interface, and requested designed calligraphic typography.
+- Choice: Set the product's intended default visual direction to Light Classic. Preserve the reference's composition and component language (rounded hero region, prominent carousel, spacious cards, simple top controls and clear content hierarchy), but do not copy its pastel palette. Use a restrained classic scientific palette with light neutral surfaces, dark readable text and a controlled navy/teal accent system; exact colour tokens remain subject to contrast and screenshot validation.
+- Typography proposal for implementation: Allura as a limited calligraphic brand signature/wordmark accent; Cormorant Garamond for selected editorial display headings; Inter for navigation, controls and body copy; JetBrains Mono for sequences, identifiers, code and scientific values. Do not use script typography for dense content, controls, labels, tables or scientific notation.
+- Licensing and accessibility: These are font-family candidates, not approved bundled binaries. Verify exact upstream releases, licence texts, glyph coverage, weights, file size, rendering and contrast before packaging. Provide accessible sans-serif fallbacks. Do not claim visual completion until real app screenshots are reviewed against the owner's references.
+- Supersedes: D-010/D-011 only for the default visual theme and typography direction; it does not remove the option to offer dark themes. D-013's owner-supplied layout references remain primary.
+- Approver: Project owner, explicit selection/request in chat on 2026-11-08.
+- Evidence: Owner dashboard reference image and chat instruction; login reference and screenshot comparison remain pending.

@@ -35,6 +35,8 @@ jobs:
         run: scripts/reproduce-all
       - name: Android artifact gate status
         run: python scripts/check_android_artifacts.py
+      - name: Check local Android build script syntax
+        run: bash -n scripts/build_android_local.sh
 # Owner instruction (2026-11-08): GitHub Actions must not build APK/AAB files
 # or boot/test Android emulators. Build the debug APK locally when requested;
 # physical-device testing is deferred until the owner is ready.

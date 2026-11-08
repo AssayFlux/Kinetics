@@ -39,3 +39,6 @@ Candidate public sources for future evidence mapping are recorded below. This is
 | FDA DILIrank | Published drug-induced liver injury classification resource | Version, source provenance and reuse terms review required |
 
 No source has been downloaded, licensed, curated, or approved by this inventory. No ADMET/PK/PD/PBPK prediction model is selected. Before intake, record the exact release, original source URL, license text and review decision, SHA-256, endpoint definitions, units, assay context, exclusions, missingness, applicability domain and intended non-clinical use. Any future model requires leakage-controlled splits, external validation, calibration/uncertainty, out-of-domain abstention and bias review. No dosing, treatment or patient-level prediction is permitted.
+
+
+Machine-readable I4 preparation: `data/admet-source-catalog.yaml` and `api/admet-source-catalog.schema.json` record PubChem BioAssay, ChEMBL and Tox21 as candidates only. The schema requires `verify_before_intake`, `patient_data: false`, and currently prohibits acquired data entries (`maxItems: 0`). Exact releases, license review and endpoint curation must precede any intake.

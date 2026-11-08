@@ -49,9 +49,12 @@ def find_orf_candidates(
                 if codon in code.stops:
                     for start in open_starts:
                         coding_sequence = oriented[start:position + 3]
-                        protein = translate_coding_sequence(
+                        translated = translate_coding_sequence(
                             coding_sequence, table_id=table_id, cds=True,
                         )["protein"]
+                        if not isinstance(translated, str):
+                            raise RuntimeError("Genetic-code translator returned a non-string protein")
+                        protein = translated
                         if len(protein) < min_protein_length:
                             continue
                         if len(orfs) >= max_orfs:

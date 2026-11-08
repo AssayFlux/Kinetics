@@ -512,3 +512,32 @@ R1 remains IN PROGRESS. No R1 go/no-go has been issued and R2 remains blocked.
 
 ### Next action
 - Continue R1 runtime validation using a 16 KB Android emulator and collect physical-device identity/logs from the owner. Resolve or explicitly scope the remaining scientific/runtime and licensing items before requesting R1 go/no-go.
+
+
+## 2026-11-08 — Session 20: Owner-directed local Android build workflow and R1–R3 plans
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Apply the owner's instruction to keep APK builds and Android runtime testing out of GitHub Actions, while preparing gated R1–R3 execution plans.
+
+### Done
+- Owner explicitly directed: do not build APKs in GitHub Actions and do not run GitHub-hosted Android testing; build locally first and defer device testing.
+- Removed the Android arm64 APK/AAB build and Android emulator job from `.github/workflows/ci.yml`. Host-side Python, registry, lint, type and unit-test checks remain.
+- Rewrote the R1 phase plan to distinguish historical CI build evidence from the required future local build and owner-device evidence.
+- Added detailed, explicitly gated R2 and R3 phase plans. These are plans only; neither phase has started.
+- Corrected the third-party register's malformed literal newline separators.
+- Updated ROADMAP to reflect the local-build route and explicit R1/R2/R3 gates.
+
+### Evidence and validation boundary
+- Historical CI runs 1471 and 1481 remain recorded as successful cross-build/static-package evidence. No fresh local APK build is claimed.
+- The previously running Android emulator job is no longer part of the workflow and may have been cancelled by the workflow change; no emulator pass is claimed.
+- Python host-side CI is retained. Its next result must be checked after these documentation/workflow commits.
+- No Android runtime, physical-device, SciPy, standalone scientific engine, RDKit/alternative, offline viewer or performance pass is claimed.
+
+### Not done / blockers
+- R1 remains in progress; local APK build and remaining feasibility evidence are outstanding.
+- R2 remains not started until the R1 evidence matrix and explicit owner go/no-go are complete.
+- R3 remains not started until R2 exit evidence and approval.
+- Canonical Apache-2.0 LICENSE grant file remains outstanding.
+- No patient-data or clinical work is authorized; P0 remains blocked.
+
+### Next step
+Continue R1 source-side feasibility work and prepare a reproducible local build route. Keep GitHub Actions free of APK/AAB build and Android runtime test jobs. Stop at the R1 owner go/no-go before starting R2.

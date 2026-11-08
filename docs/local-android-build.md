@@ -1,6 +1,6 @@
 # Local Android arm64 debug build
 
-This is the owner-directed build route. **GitHub Actions does not build APK/AAB files or run Android emulator tests.** Run this procedure on a Linux x86_64 machine or Linux x86_64 WSL2 environment when ready. It builds locally and performs static package checks only; it does not install or run the app.
+This is the owner-directed build route. **GitHub Actions does not build APK/AAB files or run Android emulator tests.** Run this procedure on a Linux x86_64 machine or Linux x86_64 WSL2 environment. It builds locally and performs static package checks only; it does not install or run the app.\n\n> **Termux warning:** Termux running directly on an Android phone is not a supported build host for the current pinned toolchain. The build requires Linux x86_64 host binaries (including the NDK `linux-x86_64` toolchain and pinned Chaquopy wheel builder). Android Termux normally reports an Android/aarch64 host, and `proot-distro` on the same phone does not turn it into x86_64 Linux. The build script now detects Termux and unsupported OS/architectures immediately, before downloads or cache changes. Do not try to work around this by substituting random Gradle, NDK, Python wheels or native binaries.
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ This is the owner-directed build route. **GitHub Actions does not build APK/AAB 
 - Set `ANDROID_HOME` (or `ANDROID_SDK_ROOT`) to the Android SDK root.
 - Enough disk space for the Android toolchain, Chaquopy source/target and native build outputs.
 
-Install the Android SDK components with Android Studio SDK Manager or `sdkmanager`. Accept the Android SDK licences. Confirm `java -version`, `gradle --version`, `python --version`, `rustc --version` and `cargo --version` before starting.
+Install the Android SDK components with Android Studio SDK Manager or `sdkmanager`. Accept the Android SDK licences. The build script downloads and verifies its own Gradle 8.13 distribution; it requires **Python 3.11.17 exactly**. Confirm `java -version`, `python --version`, `rustc --version` and `cargo --version` before starting.\n\nIf your only computer is an Android phone, use a separate Linux x86_64 computer or x86_64 WSL2 machine for the build. Termux remains useful after the build to transfer/open the APK, install it through Android's package installer, and collect logs; it is not the build host for this script.
 
 ## Build
 

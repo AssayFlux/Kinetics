@@ -116,6 +116,11 @@ tools:
     status: implemented
     implementation: python/kinetics/genomics.py
     evidence_level: none
+  - id: pgx.star_allele_definitions
+    name: Versioned PGx star-allele definition ingestion and conservative phased matching
+    status: implemented
+    implementation: python/kinetics/pgx.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

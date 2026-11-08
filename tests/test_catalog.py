@@ -55,3 +55,54 @@ def test_gene_catalog_searches_synonyms_and_nomenclature_with_taxonomy_filter() 
     assert search_gene_catalog(entries, "7157", tax_id="10090") == []
     with pytest.raises(ValueError, match="cannot be empty"):
         search_gene_catalog(entries, " ")
+
+
+
+def test_pgx_definition_pack_requires_pinned_source_and_matches_only_complete_phase() -> None:
+    import json
+
+    from kinetics.pgx import VariantKey, match_phased_haplotype, parse_star_allele_definitions
+
+    pack = {
+        "schema_version": 1, "genome_build": "GRCh38",
+        "source": {"name": "Reviewed PGx source fixture", "release": "fixture-1",
+                   "url": "https://example.org/fixture", "license": "CC-BY-4.0"},
+        "definitions": [{
+            "id": "CYP2C19-17-def-1", "gene": "CYP2C19", "star_allele": "*17",
+            "required_variants": [{"chromosome": "10", "position": 94781859, "ref": "C", "alt": "T"}],
+            "excluded_variants": [],
+        }],
+    }
+    definitions = parse_star_allele_definitions(json.dumps(pack), expected_source_release="fixture-1")
+    variant = VariantKey("GRCh38", "10", 94781859, "C", "T")
+    incomplete = match_phased_haplotype(
+        "CYP2C19", [variant], definitions, genome_build="GRCh38", phase_confirmed=True,
+    )
+    assert incomplete.status == "no_call_incomplete"
+    matched = match_phased_haplotype(
+        "CYP2C19", [variant], definitions, genome_build="GRCh38",
+        phase_confirmed=True, call_complete=True,
+    )
+    assert matched.status == "matched"
+    assert matched.star_allele == "*17"
+
+
+def test_pgx_definition_pack_rejects_release_mismatch_and_unphased_call() -> None:
+    import json
+
+    from kinetics.pgx import match_phased_haplotype, parse_star_allele_definitions
+
+    pack = {
+        "schema_version": 1, "genome_build": "GRCh38",
+        "source": {"name": "fixture", "release": "v1", "url": "https://example.org", "license": "MIT"},
+        "definitions": [{"id": "d1", "gene": "GENE1", "star_allele": "*1",
+                         "required_variants": [], "excluded_variants": []}],
+    }
+    with pytest.raises(ValueError, match="pinned release"):
+        parse_star_allele_definitions(json.dumps(pack), expected_source_release="v2")
+    definitions = parse_star_allele_definitions(json.dumps(pack))
+    result = match_phased_haplotype(
+        "GENE1", [], definitions, genome_build="GRCh38", phase_confirmed=False,
+        call_complete=True,
+    )
+    assert result.status == "no_call_unphased"

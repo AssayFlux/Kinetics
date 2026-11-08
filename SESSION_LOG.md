@@ -874,3 +874,9 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R4 BAM core decoder increment
 - Added a lazy gzip/BGZF-compatible BAM decoder for reference dictionary and core alignment fields (query name, flags, reference, position, MAPQ, CIGAR, sequence and qualities). It bounds header/record blocks, validates record lengths, CIGAR operation codes, sequence packing, qualities and reference IDs.
 - Exported the iterator and added a synthetic binary-record fixture. Auxiliary tags are skipped; CRAM is not implemented; no indexed region access or large-file benchmarks are claimed. No tests were run.
+
+
+### R9 PGx definition foundation increment
+- Added a provenance-gated JSON definition pack parser and typed VariantKey / StarAlleleDefinition / AlleleMatch models, with pinned source release, HTTPS source, license and genome build metadata.
+- Added conservative matching for already phased, explicitly complete haplotypes only; incomplete/unphased inputs no-call and tied best definitions remain ambiguous. No phasing, CNV, structural variant, diplotype, phenotype or clinical interpretation is inferred.
+- Added regression-test source and registry/docs updates. No authoritative PGx datasets were imported because licensing/release review is still required. No tests were run.

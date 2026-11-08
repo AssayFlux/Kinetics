@@ -19,3 +19,8 @@ Implemented in `python/kinetics/catalog.py`. Catalogue ingestion does not elevat
 
 ## Exit evidence
 Versioned source packs, checksums/licenses, taxonomy and nomenclature coverage reports, allele-definition concordance against approved reference datasets, ancestry/fairness analysis, independent review and provenance.
+
+
+### R9 PGx foundation increment
+
+Added a versioned JSON star-allele definition schema with mandatory source name/release/HTTPS URL/license/genome build, normalized literal small-variant keys, required/excluded variant sets and duplicate-definition checks. Added conservative matching for a caller-supplied, fully phased and explicitly complete haplotype; incomplete or unphased calls produce no-call statuses, and tied best definitions remain ambiguous. This is infrastructure only: no PharmVar/CPIC/PharmGKB source data has been imported or licensed, no gene inventory is claimed comprehensive, and there is no diplotype/phenotype translation or clinical recommendation.

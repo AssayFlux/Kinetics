@@ -54,3 +54,8 @@ RDKit references:
 - https://github.com/rdkit/rdkit
 - https://github.com/rdkit/rdkit/blob/master/license.txt
 - https://www.rdkit.org/docs/Install.html
+
+
+## PGx data governance — source gate
+
+No PharmVar, PharmGKB, CPIC or other PGx content is currently bundled. Before importing definitions or guideline content, record the exact release/download URL, retrieval date, checksum, genome build, schema mapping, attribution and redistribution terms. Review each source's current terms rather than assuming that publicly viewable content is freely redistributable. Keep allele-definition data distinct from clinical guideline recommendations; require independent curator review and release-specific concordance before marking any entry validated. No patient-level interpretation is enabled.

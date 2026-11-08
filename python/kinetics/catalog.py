@@ -95,6 +95,58 @@ def validate_gene_catalog(entries: Iterable[GeneEntry]) -> None:
             raise ValueError("A catalogue import cannot confer validated status")
 
 
+
+def gene_catalogue_coverage_report(
+    entries: Iterable[GeneEntry], *, max_entries: int = 1_000_000,
+) -> dict[str, object]:
+    """Summarize imported catalogue composition without implying genome-wide coverage.
+
+    Counts are descriptive of the supplied snapshot only. No denominator or
+    completeness percentage is invented because the expected gene universe is
+    organism-, release- and feature-policy-dependent.
+    """
+    if isinstance(max_entries, bool) or not isinstance(max_entries, int) or max_entries < 1:
+        raise ValueError("max_entries must be a positive integer")
+    snapshot: list[GeneEntry] = []
+    for entry in entries:
+        if len(snapshot) >= max_entries:
+            raise ValueError("Gene catalogue exceeds max_entries")
+        snapshot.append(entry)
+    validate_gene_catalog(snapshot)
+
+    by_taxonomy: dict[str, int] = {}
+    by_gene_type: dict[str, int] = {}
+    by_release: dict[str, int] = {}
+    missing: dict[str, int] = {
+        "description": 0, "chromosome": 0, "map_location": 0,
+        "gene_type": 0, "nomenclature_symbol": 0,
+    }
+    for entry in snapshot:
+        by_taxonomy[entry.tax_id] = by_taxonomy.get(entry.tax_id, 0) + 1
+        gene_type = entry.gene_type or "unspecified"
+        by_gene_type[gene_type] = by_gene_type.get(gene_type, 0) + 1
+        by_release[entry.source_release] = by_release.get(entry.source_release, 0) + 1
+        for field in missing:
+            if not getattr(entry, field):
+                missing[field] += 1
+    return {
+        "schema_version": 1,
+        "scope": "supplied_catalogue_snapshot_only",
+        "entry_count": len(snapshot),
+        "taxonomy_counts": dict(sorted(by_taxonomy.items())),
+        "gene_type_counts": dict(sorted(by_gene_type.items())),
+        "source_release_counts": dict(sorted(by_release.items())),
+        "missing_annotation_counts": dict(sorted(missing.items())),
+        "coverage_percentage": None,
+        "coverage_denominator": None,
+        "limitations": [
+            "No completeness percentage is calculated without an independently defined expected gene universe.",
+            "Counts describe only the supplied source release and imported records.",
+            "Catalogue presence does not imply assay, caller, interpretation or clinical validation.",
+        ],
+    }
+
+
 def iter_ncbi_gene_info_file(
     path: str | Path, *, source_release: str,
 ) -> Iterator[GeneEntry]:

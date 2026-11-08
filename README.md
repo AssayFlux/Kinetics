@@ -42,3 +42,7 @@ Research outputs must carry provenance, uncertainty and limitations. Computation
 
 ## License
 Original Kinetics project code is licensed under Apache-2.0; see [LICENSE](LICENSE). Third-party dependencies, engines, models and data packs retain their own terms and require separate review.
+
+
+## Current UI design
+The owner-approved Light Classic visual system and implementation requirements are documented in [`docs/ui/kinetics-visual-design-system.md`](docs/ui/kinetics-visual-design-system.md). D-015 supersedes prior visual proposals; implementation and validation remain in progress.

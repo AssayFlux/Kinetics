@@ -1346,3 +1346,12 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Pinned SciPy/Biopython reference comparisons, RDKit descriptor sanity fixtures, and direct-dependency SPDX generation all completed successfully.
 - The newly added six-frame ORF scanner and its strand/coordinate/table-specific tests are included in the passing Python suite.
 - Android build was still running when this checkpoint was recorded; no build success is claimed here.
+
+
+## 2026-11-08 — R1 mirror fallback after repeated Gradle CDN gateway failures
+- CI run #1899 passed Python foundation (`159 passed, 4 skipped`), strict mypy (30 source files), SciPy/Biopython, RDKit and SPDX jobs.
+- Android setup succeeded with the separately pinned host CPython 3.11.18, JDK 17, Android SDK/NDK and Rust toolchain.
+- Gradle 8.13 retrieval still failed because both official distribution endpoints returned HTTP 504 before compilation. No APK/AAB was produced.
+- Added an Aliyun Gradle distribution mirror as a final transport fallback. The build script accepts the downloaded archive only if its SHA-256 matches the pre-recorded Gradle 8.13 digest; no alternate Gradle version or unverified bytes are accepted.
+- Added a content-filtered Kotlin Maven mirror for compiler artifacts. Mirror integrity and transitive dependency review remain open; this is build infrastructure only.
+- Awaiting a new CI run to verify both mirror paths. R1 remains open.

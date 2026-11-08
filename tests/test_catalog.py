@@ -66,7 +66,7 @@ def test_pgx_definition_pack_requires_pinned_source_and_matches_only_complete_ph
     pack = {
         "schema_version": 1, "genome_build": "GRCh38",
         "source": {"name": "Reviewed PGx source fixture", "release": "fixture-1",
-                   "url": "https://example.org/fixture", "license": "CC-BY-4.0"},
+                   "url": "https://example.org/fixture", "sha256": "a" * 64, "license": "CC-BY-4.0"},
         "definitions": [{
             "id": "CYP2C19-17-def-1", "gene": "CYP2C19", "star_allele": "*17",
             "required_variants": [{"chromosome": "10", "position": 94781859, "ref": "C", "alt": "T"}],
@@ -94,7 +94,7 @@ def test_pgx_definition_pack_rejects_release_mismatch_and_unphased_call() -> Non
 
     pack = {
         "schema_version": 1, "genome_build": "GRCh38",
-        "source": {"name": "fixture", "release": "v1", "url": "https://example.org", "license": "MIT"},
+        "source": {"name": "fixture", "release": "v1", "url": "https://example.org", "sha256": "b" * 64, "license": "MIT"},
         "definitions": [{"id": "d1", "gene": "GENE1", "star_allele": "*1",
                          "required_variants": [], "excluded_variants": []}],
     }

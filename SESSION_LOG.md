@@ -897,3 +897,5 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Extended the Android static guard to check wrapper checksum and local build source pins. Updated dependency register with toolchain versions and explicitly noted that the NumPy wheel checksum and complete transitive dependency/license inventory remain open.
 
 - Added initial security/privacy threat model, accessibility verification protocol and explicit NOT RELEASE READY checklist. These are plans and controls, not independent review or passed audit evidence.
+
+- Hardened PGx pack import to require the expected release identifier and a 64-hex source checksum; VariantKey normalizes REF/ALT to uppercase and rejects non-integer positions.

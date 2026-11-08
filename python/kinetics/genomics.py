@@ -139,3 +139,59 @@ def fastq_quality_summary(qualities: list[str], *, offset: int = 33) -> dict[str
         "q20_fraction": sum(score >= 20 for score in scores) / len(scores),
         "q30_fraction": sum(score >= 30 for score in scores) / len(scores),
     }
+
+def normalize_small_variant(
+    chrom: str, position: int, ref: str, alt: str, reference_sequence: str,
+) -> dict[str, object]:
+    """Validate and left-normalize one biallelic small variant against a reference.
+
+    Coordinates are 1-based. Only literal A/C/G/T alleles are accepted; symbolic,
+    spanning-deletion, breakend and multi-allelic records require dedicated handling.
+    This helper does not perform transcript mapping or variant interpretation.
+    """
+    if not chrom or position < 1:
+        raise ValueError("Chromosome and positive 1-based position are required")
+    reference = reference_sequence.upper()
+    ref_allele, alt_allele = ref.upper(), alt.upper()
+    if not reference or any(base not in "ACGTN" for base in reference):
+        raise ValueError("Reference sequence must contain only A/C/G/T/N")
+    if not ref_allele or not alt_allele or any(
+        base not in "ACGT" for base in ref_allele + alt_allele
+    ):
+        raise ValueError("REF and ALT must be non-empty literal A/C/G/T alleles")
+    if ref_allele == alt_allele:
+        raise ValueError("REF and ALT must differ")
+    start = position - 1
+    end = start + len(ref_allele)
+    if end > len(reference):
+        raise ValueError("Variant REF extends beyond supplied reference sequence")
+    if reference[start:end] != ref_allele:
+        raise ValueError("Variant REF does not match supplied reference sequence")
+
+    # Trim shared suffix and prefix while preserving an anchor base in each allele.
+    while len(ref_allele) > 1 and len(alt_allele) > 1 and ref_allele[-1] == alt_allele[-1]:
+        ref_allele, alt_allele = ref_allele[:-1], alt_allele[:-1]
+    while len(ref_allele) > 1 and len(alt_allele) > 1 and ref_allele[0] == alt_allele[0]:
+        ref_allele, alt_allele = ref_allele[1:], alt_allele[1:]
+        start += 1
+
+    # For repeat-associated indels, rotate the anchored alleles left across
+    # matching preceding reference bases. Re-check the reference at every step.
+    if len(ref_allele) != len(alt_allele):
+        while start > 0 and ref_allele[-1] == alt_allele[-1]:
+            previous = reference[start - 1]
+            if previous != ref_allele[-1]:
+                break
+            ref_allele = previous + ref_allele[:-1]
+            alt_allele = previous + alt_allele[:-1]
+            start -= 1
+
+    return {
+        "chrom": chrom,
+        "pos": start + 1,
+        "ref": ref_allele,
+        "alt": alt_allele,
+        "normalization": "minimal-left-aligned-biallelic-small-variant",
+        "reference_checked": True,
+    }
+

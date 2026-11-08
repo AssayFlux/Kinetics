@@ -17,3 +17,14 @@ evidence. NumPy and SciPy are validation-host dependencies only and are not
 added to the Android application. The registry evidence level remains
 `none` until independent experimental reference datasets and a reviewed
 validation protocol are completed.
+
+
+## Pinned host-side chemistry sanity fixtures
+
+The CI job installs the exact host-only RDKit version from
+`validation/requirements-rdkit.txt`, runs
+`validation/chemistry_reference.py`, and uploads its JSON result. The fixture
+set covers ethanol and benzene identity/formula/basic descriptor expectations.
+It is an engineering sanity check, not an independent curated chemical
+benchmark, ADMET or biological-activity validation, and does not validate
+Android chemistry feasibility. RDKit remains outside the Android app.

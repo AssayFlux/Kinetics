@@ -85,7 +85,7 @@ private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Mo
             Text(title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
             Text(subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
         }
-        content()
+        Box(Modifier.weight(1f).fillMaxWidth()) { content() }
     }
 }
 

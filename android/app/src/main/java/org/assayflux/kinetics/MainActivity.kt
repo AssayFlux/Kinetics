@@ -85,6 +85,28 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                             Text("State: ${job.state}")
                             job.sha256?.let { Text("SHA-256: $it") }
                             job.message?.let { Text(it) }
+                            if (job.state == "queued" || job.state == "running" || job.state == "cancel_requested") {
+                                Button(onClick = {
+                                    store.updateJob(job.id, "cancel_requested")
+                                    WorkManager.getInstance(activity).cancelUniqueWork("import-" + job.id)
+                                    jobs = store.recentJobs()
+                                }) { Text("Cancel") }
+                            } else if (job.state == "cancelled" || job.state == "failed") {
+                                Button(onClick = {
+                                    val savedUri = store.inputUri(job.id)
+                                    if (savedUri != null) {
+                                        val request = OneTimeWorkRequestBuilder<ImportWorker>()
+                                            .setInputData(workDataOf(
+                                                ImportWorker.KEY_JOB_ID to job.id,
+                                                ImportWorker.KEY_URI to savedUri,
+                                            )).addTag("kinetics-import").build()
+                                        WorkManager.getInstance(activity).enqueueUniqueWork(
+                                            "import-" + job.id, ExistingWorkPolicy.REPLACE, request)
+                                        store.updateJob(job.id, "queued", message = "Resume queued")
+                                        jobs = store.recentJobs()
+                                    }
+                                }) { Text("Resume") }
+                            }
                         }
                     }
                 }

@@ -28,7 +28,7 @@ def prepare_viewer_payload(
     normalized_format = source_format.lower().strip()
     if normalized_format not in SUPPORTED_SOURCE_FORMATS:
         raise ValueError("source_format must be 'pdb' or 'mmcif'")
-    if isinstance(max_atoms, bool) or max_atoms < 1:
+    if isinstance(max_atoms, bool) or not isinstance(max_atoms, int) or max_atoms < 1:
         raise ValueError("max_atoms must be a positive integer")
 
     records: list[dict[str, Any]] = []

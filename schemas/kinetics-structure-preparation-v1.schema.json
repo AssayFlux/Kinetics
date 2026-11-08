@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.org/schemas/kinetics-structure-preparation-v1.schema.json",
+  "title": "Kinetics structure preparation provenance",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_schema", "source_sha256", "source_bytes", "source_format",
+    "parser_version", "payload_sha256", "payload_schema", "atom_count",
+    "dropped_record_count", "coordinate_unit", "limitations"
+  ],
+  "properties": {
+    "record_schema": { "const": "kinetics.structure-preparation.v1" },
+    "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "source_bytes": { "type": "integer", "minimum": 1 },
+    "source_format": { "enum": ["pdb", "mmcif"] },
+    "parser_version": { "type": "string", "minLength": 1 },
+    "payload_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "payload_schema": { "const": "kinetics.structure-view.v1" },
+    "atom_count": { "type": "integer", "minimum": 1, "maximum": 200000 },
+    "dropped_record_count": { "type": "integer", "minimum": 0 },
+    "coordinate_unit": { "const": "angstrom" },
+    "limitations": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}

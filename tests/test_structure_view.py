@@ -76,3 +76,9 @@ def test_preparation_record_rejects_invalid_metadata() -> None:
         build_preparation_record(b"x", payload, parser_version=" ")
     with pytest.raises(ValueError, match="dropped_record_count"):
         build_preparation_record(b"x", payload, parser_version="1", dropped_record_count=-1)
+
+
+def test_viewer_payload_rejects_non_integer_or_boolean_atom_limits() -> None:
+    for invalid_limit in (True, 1.5, "10"):
+        with pytest.raises(ValueError, match="max_atoms"):
+            prepare_viewer_payload([atom()], source_format="pdb", max_atoms=invalid_limit)  # type: ignore[arg-type]

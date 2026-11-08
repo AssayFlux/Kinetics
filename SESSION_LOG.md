@@ -1322,3 +1322,11 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Android arm64 job failed before build execution because setup-python could not download the pinned Python 3.11.17 build host (HTTP 504 from the hosted toolchain download). This is an infrastructure/setup failure, not a compile or test failure; no APK/AAB artifact was produced in that run.
 - Changed the Android build runner from `ubuntu-latest` to `ubuntu-24.04` to stabilize the pinned host environment. Awaiting the subsequent workflow run before claiming a build result.
 - Scientific reference job success is limited to synthetic numerical agreement and codon-table transcription conformance; no experimental truth, biological validation or S8 genetic-code inference is established.
+
+
+## 2026-11-08 — S7 bounded six-frame ORF candidate scanner
+- Added `python/kinetics/orf.py` to enumerate complete start-to-stop ORF candidates on both strands and all three frames using an explicitly selected NCBI genetic code.
+- Retains nested starts, reports 0-based half-open coordinates on the supplied sequence, maps reverse-strand intervals back to input coordinates, and enforces a maximum ORF count.
+- Added regression tests for forward/reverse coordinates, nested ORFs, alternative-table stop behavior, ambiguity rejection and resource limits.
+- Registered as implemented with `evidence_level: none`.
+- This is a heuristic candidate enumerator only. It is not a prokaryotic gene caller or eukaryotic annotation pipeline; it does not model promoters, RBS, introns, splice sites, transcripts, operons, gene function or genetic-code inference.

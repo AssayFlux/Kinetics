@@ -21,7 +21,6 @@ from kinetics import (
     theoretical_pi,
     transcribe,
 )
-from kinetics.sequence import validate_sequence
 
 
 def test_fasta_parsing_preserves_identifier_and_description() -> None:
@@ -50,7 +49,7 @@ def test_iupac_reverse_complement_and_transcription() -> None:
     assert reverse_complement("ACGTRYMKSWBDHVN") == "NBDHVWSMKRYACGT"
     assert transcribe("ACGTN") == "ACGUN"
     with pytest.raises(ValueError):
-        validate_sequence("ACGTZ")
+        reverse_complement("ACGTZ")
 
 
 def test_sequence_statistics_and_kmer_counts() -> None:

@@ -3,18 +3,75 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "Kinetics declared direct dependencies",
-  "documentNamespace": "https://assayflux.github.io/Kinetics/sbom/source-dependencies-2026-11-08-79c05f698da10ed6e1f6e81c404d2856af7b5af4",
+  "documentNamespace": "https://assayflux.github.io/Kinetics/sbom/source-dependencies-2026-11-08-4b637e724586d3c192678010f61675d8aba61af5",
   "creationInfo": {
     "creators": [
       "Tool: kinetics-source-sbom-generator"
     ],
-    "created": "2026-11-08T03:10:00Z",
-    "comment": "Static direct-dependency inventory generated from the checked-in source manifests. Not a resolved transitive release SBOM."
+    "created": "2026-11-08T03:15:00Z",
+    "comment": "Static direct-dependency and pinned build-toolchain inventory; not a resolved transitive release SBOM."
   },
   "packages": [
     {
-      "name": "androidx.activity:activity-compose",
+      "name": "Android Build Tools",
       "SPDXID": "SPDXRef-Package-1",
+      "versionInfo": "36.0.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "ecosystem=build-tool; declared toolchain input",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/android-build-tools@36.0.0"
+        }
+      ]
+    },
+    {
+      "name": "Android NDK",
+      "SPDXID": "SPDXRef-Package-2",
+      "versionInfo": "28.2.13676358",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "ecosystem=build-tool; declared toolchain input",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/android-ndk@28.2.13676358"
+        }
+      ]
+    },
+    {
+      "name": "Android SDK Platform",
+      "SPDXID": "SPDXRef-Package-3",
+      "versionInfo": "36",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "ecosystem=build-tool; declared toolchain input",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/android-sdk-platform@36"
+        }
+      ]
+    },
+    {
+      "name": "androidx.activity:activity-compose",
+      "SPDXID": "SPDXRef-Package-4",
       "versionInfo": "1.11.0",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -33,7 +90,7 @@
     },
     {
       "name": "androidx.compose:compose-bom",
-      "SPDXID": "SPDXRef-Package-2",
+      "SPDXID": "SPDXRef-Package-5",
       "versionInfo": "2025.10.01",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -52,7 +109,7 @@
     },
     {
       "name": "androidx.compose.material3:material3",
-      "SPDXID": "SPDXRef-Package-3",
+      "SPDXID": "SPDXRef-Package-6",
       "versionInfo": "managed-by-compose-bom-2025.10.01",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -71,7 +128,7 @@
     },
     {
       "name": "androidx.compose.ui:ui",
-      "SPDXID": "SPDXRef-Package-4",
+      "SPDXID": "SPDXRef-Package-7",
       "versionInfo": "managed-by-compose-bom-2025.10.01",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -90,7 +147,7 @@
     },
     {
       "name": "androidx.compose.ui:ui-tooling",
-      "SPDXID": "SPDXRef-Package-5",
+      "SPDXID": "SPDXRef-Package-8",
       "versionInfo": "managed-by-compose-bom-2025.10.01",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -109,7 +166,7 @@
     },
     {
       "name": "androidx.compose.ui:ui-tooling-preview",
-      "SPDXID": "SPDXRef-Package-6",
+      "SPDXID": "SPDXRef-Package-9",
       "versionInfo": "managed-by-compose-bom-2025.10.01",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -128,7 +185,7 @@
     },
     {
       "name": "androidx.work:work-runtime-ktx",
-      "SPDXID": "SPDXRef-Package-7",
+      "SPDXID": "SPDXRef-Package-10",
       "versionInfo": "2.10.1",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -147,7 +204,7 @@
     },
     {
       "name": "biopython",
-      "SPDXID": "SPDXRef-Package-8",
+      "SPDXID": "SPDXRef-Package-11",
       "versionInfo": "1.88",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -165,8 +222,27 @@
       ]
     },
     {
+      "name": "CMake",
+      "SPDXID": "SPDXRef-Package-12",
+      "versionInfo": "3.22.1",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "ecosystem=build-tool; declared toolchain input",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/cmake@3.22.1"
+        }
+      ]
+    },
+    {
       "name": "com.android.application",
-      "SPDXID": "SPDXRef-Package-9",
+      "SPDXID": "SPDXRef-Package-13",
       "versionInfo": "8.13.2",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -185,7 +261,7 @@
     },
     {
       "name": "com.chaquo.python",
-      "SPDXID": "SPDXRef-Package-10",
+      "SPDXID": "SPDXRef-Package-14",
       "versionInfo": "17.2.0",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -203,8 +279,39 @@
       ]
     },
     {
+      "name": "Gradle",
+      "SPDXID": "SPDXRef-Package-15",
+      "versionInfo": "8.13",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "ecosystem=build-tool; declared toolchain input",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/gradle@8.13"
+        }
+      ]
+    },
+    {
+      "name": "JDK",
+      "SPDXID": "SPDXRef-Package-16",
+      "versionInfo": "17 (patch/vendor not pinned)",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "ecosystem=build-tool; declared toolchain input"
+    },
+    {
       "name": "junit:junit",
-      "SPDXID": "SPDXRef-Package-11",
+      "SPDXID": "SPDXRef-Package-17",
       "versionInfo": "4.13.2",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -223,7 +330,7 @@
     },
     {
       "name": "mypy",
-      "SPDXID": "SPDXRef-Package-12",
+      "SPDXID": "SPDXRef-Package-18",
       "versionInfo": ">=1.10,<2",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -242,7 +349,7 @@
     },
     {
       "name": "numpy",
-      "SPDXID": "SPDXRef-Package-13",
+      "SPDXID": "SPDXRef-Package-19",
       "versionInfo": "1.26.2",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -261,7 +368,7 @@
     },
     {
       "name": "org.jetbrains.kotlin.android",
-      "SPDXID": "SPDXRef-Package-14",
+      "SPDXID": "SPDXRef-Package-20",
       "versionInfo": "2.2.21",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -280,7 +387,7 @@
     },
     {
       "name": "org.jetbrains.kotlin.plugin.compose",
-      "SPDXID": "SPDXRef-Package-15",
+      "SPDXID": "SPDXRef-Package-21",
       "versionInfo": "2.2.21",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -299,7 +406,7 @@
     },
     {
       "name": "pre-commit",
-      "SPDXID": "SPDXRef-Package-16",
+      "SPDXID": "SPDXRef-Package-22",
       "versionInfo": ">=3.8,<5",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -318,7 +425,7 @@
     },
     {
       "name": "pytest",
-      "SPDXID": "SPDXRef-Package-17",
+      "SPDXID": "SPDXRef-Package-23",
       "versionInfo": ">=8,<9",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -336,8 +443,27 @@
       ]
     },
     {
+      "name": "Python host",
+      "SPDXID": "SPDXRef-Package-24",
+      "versionInfo": "3.11.17",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "ecosystem=build-tool; declared toolchain input",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/python@3.11.17"
+        }
+      ]
+    },
+    {
       "name": "PyYAML",
-      "SPDXID": "SPDXRef-Package-18",
+      "SPDXID": "SPDXRef-Package-25",
       "versionInfo": ">=6,<7",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -356,7 +482,7 @@
     },
     {
       "name": "ruff",
-      "SPDXID": "SPDXRef-Package-19",
+      "SPDXID": "SPDXRef-Package-26",
       "versionInfo": ">=0.6,<1",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -374,8 +500,27 @@
       ]
     },
     {
+      "name": "Rust toolchain",
+      "SPDXID": "SPDXRef-Package-27",
+      "versionInfo": "1.88.0",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "NOASSERTION",
+      "copyrightText": "NOASSERTION",
+      "primaryPackagePurpose": "LIBRARY",
+      "comment": "ecosystem=build-tool; declared toolchain input",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "pkg:generic/rust@1.88.0"
+        }
+      ]
+    },
+    {
       "name": "setuptools",
-      "SPDXID": "SPDXRef-Package-20",
+      "SPDXID": "SPDXRef-Package-28",
       "versionInfo": ">=68",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -394,7 +539,7 @@
     },
     {
       "name": "types-PyYAML",
-      "SPDXID": "SPDXRef-Package-21",
+      "SPDXID": "SPDXRef-Package-29",
       "versionInfo": ">=6,<7",
       "downloadLocation": "NOASSERTION",
       "filesAnalyzed": false,
@@ -517,14 +662,54 @@
       "spdxElementId": "SPDXRef-DOCUMENT",
       "relationshipType": "DESCRIBES",
       "relatedSpdxElement": "SPDXRef-Package-21"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-22"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-23"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-24"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-25"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-26"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-27"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-28"
+    },
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-Package-29"
     }
   ],
   "annotations": [
     {
-      "annotationDate": "2026-11-08T03:10:00Z",
+      "annotationDate": "2026-11-08T03:15:00Z",
       "annotationType": "OTHER",
       "annotator": "Tool: kinetics-source-sbom-generator",
-      "comment": "Direct declarations only. Gradle BOM-managed modules have no resolved versions here. Transitive artifacts, exact resolved versions, checksums, file-level licenses and native binary contents are not included. Do not use as the final release SBOM."
+      "comment": "Direct declarations and pinned toolchain inputs only. Gradle BOM-managed modules and JDK patch/vendor are unresolved. Transitive artifacts, exact resolved versions, checksums, file-level licenses and native binary contents are not included. Do not use as the final release SBOM."
     }
   ]
 }

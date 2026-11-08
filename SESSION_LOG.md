@@ -1262,3 +1262,17 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 ### Next
 - Integrate loader-backed exact search, then add independently sourced reference fixtures and negative controls.
 - Continue R1/R2 runtime, lifecycle, recovery and licensing evidence; R3 independent numerical comparisons; I1 pinned RDKit validation; S7–S9 only where data/engine dependencies permit.
+
+
+## 2026-11-08 — R3 pinned synthetic SciPy comparison in CI
+**Phase:** Track R3, host-side numerical validation foundation
+
+### Committed
+- Added `validation/requirements-scipy.txt` with exact NumPy/SciPy versions for the host-only comparison environment; the dependency file records BSD-3-Clause license identifiers.
+- Added a dedicated CI job that runs the deterministic Michaelis–Menten comparison against `scipy.optimize.curve_fit` and uploads the machine-readable JSON result artifact.
+- Updated validation documentation and R3 roadmap status to distinguish synthetic numerical comparison from experimental validation.
+
+### Limits
+- This does not bundle NumPy/SciPy into Android and does not establish mobile feasibility.
+- Synthetic data and SciPy's independent numerical implementation are not experimental ground truth.
+- No independent wet-lab dataset, calibrated uncertainty, or R3 exit gate is claimed; registry evidence remains none.

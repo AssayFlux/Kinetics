@@ -7,6 +7,7 @@ import pytest
 from kinetics.structure import Atom
 from kinetics.structure_view import (
     PAYLOAD_SCHEMA,
+    build_preparation_record,
     prepare_viewer_payload,
     serialize_viewer_payload,
 )

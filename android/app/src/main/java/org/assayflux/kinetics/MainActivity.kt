@@ -16,7 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,11 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import java.util.UUID
+import androidx.lifecycle.Observer
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -66,15 +67,16 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                 .addTag("kinetics-import").build()
             WorkManager.getInstance(activity).enqueueUniqueWork(
                 "import-$id", ExistingWorkPolicy.KEEP, request)
-            notice = "Import queued. The file will be streamed and hashed in the background."
+            notice = "Import queued. The file will be streamed, encrypted at rest and hashed in the background."
             jobs = store.recentJobs()
         }
     }
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(1000)
-            jobs = store.recentJobs()
-        }
+    DisposableEffect(activity) {
+        val workInfos = WorkManager.getInstance(activity)
+            .getWorkInfosByTagLiveData("kinetics-import")
+        val observer = Observer<List<WorkInfo>> { jobs = store.recentJobs() }
+        workInfos.observe(activity, observer)
+        onDispose { workInfos.removeObserver(observer) }
     }
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {

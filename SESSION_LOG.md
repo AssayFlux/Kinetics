@@ -825,3 +825,9 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Added `normalize_small_variant` for reference-checked minimal/left normalization of biallelic literal A/C/G/T small variants. Symbolic alleles, breakends, multiallelic decomposition and interpretation remain explicitly unsupported.
 - Exported both APIs, added regression-test source, updated the capability registry and phase documentation.
 - No tests or Android build were run. R4 remains in progress pending tests, reference concordance, BAM/CRAM and large-file/device evidence.
+
+
+### R1 embedded-package integration follow-up (2026-11-08)
+- Corrected the Chaquopy source-set configuration to use its documented `chaquopy.sourceSets` DSL and include the repository `python/` directory. The Android app will therefore package the actual `kinetics` modules rather than only the isolated probe module.
+- Extended the future on-device Python probe to import `kinetics`, run FASTA parsing and exercise the reference-checked variant normalizer.
+- Updated the static Android config guard and R1 documentation. This was a source-level integration correction; no Gradle build or Android runtime probe was executed. Chaquopy 17.2 documentation specifies `chaquopy.sourceSets` for additional Python source directories. <https://chaquo.com/chaquopy/doc/current/android.html>

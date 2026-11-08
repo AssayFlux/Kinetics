@@ -64,7 +64,7 @@ internal fun KineticsAppShell(
             },
         ) { padding ->
             when (tab) {
-                KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, onImport, onRefresh,
+                KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, themeFamily, onImport, onRefresh,
                     onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport,
                     Modifier.padding(padding))
                 KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, Modifier.padding(padding))
@@ -89,7 +89,7 @@ private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Mo
 
 @Composable
 private fun HomeScreen(
-    jobs: List<ResearchJob>, notice: String, runtime: String?, onImport: () -> Unit,
+    jobs: List<ResearchJob>, notice: String, runtime: String?, themeFamily: String, onImport: () -> Unit,
     onRefresh: () -> Unit, onRuntime: () -> Unit, onOpenWork: () -> Unit,
     onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit, modifier: Modifier,
@@ -135,8 +135,7 @@ private fun HomeScreen(
 @Composable
 private fun HeroCard(onImport: () -> Unit, themeFamily: String) {
     val dark = themeFamily != "light"
-    val shape = RoundedCornerShape(28.dp)
-    Card(Modifier.fillMaxWidth(), shape = shape,
+    Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = if (dark) Color(0xFF0B1724) else Color(0xFFE8F0F8))) {
         Box {
             Image(

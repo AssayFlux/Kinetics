@@ -32,6 +32,9 @@ This roadmap operationalises the archived master. A phase is complete only when 
 v0.1.0 = R0–R3.
 
 ## Track S — Structure excellence
+
+**Sequencing gate (owner direction, 2026-11-08):** Track S must not begin until every R1–R10 exit criterion is evidenced, the Research Platform integration is coherent, and the owner accepts the Track R completion gate. Existing R5 structural-analysis code remains part of Track R and may be completed there; it does not authorize starting Track S early.
+
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |
 |---|---|---|---|---|---|---|
 | S1 | Offline Mol*/3Dmol.js, structure loading/preparation log | R1 WebView, R2, license review | Offline tests and preparation provenance | not-started | Engineering | TBD |

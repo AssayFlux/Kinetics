@@ -126,6 +126,23 @@ def generate(root: Path = ROOT) -> dict[str, object]:
     ordered = sorted(packages.values(), key=lambda item: str(item["name"]).casefold())
     for index, package in enumerate(ordered, 1):
         package["SPDXID"] = f"SPDXRef-Package-{index}"
+    biopython_license = root / "android/app/src/main/assets/third-party/BIOPYTHON-LICENSE.txt"
+    extracted_licenses = []
+    if biopython_license.is_file():
+        biopython_package = next(
+            (item for item in ordered if str(item["name"]).casefold() == "biopython"), None
+        )
+        if biopython_package is not None:
+            biopython_package["licenseDeclared"] = "LicenseRef-Biopython-License-Agreement"
+            extracted_licenses.append({
+                "licenseId": "LicenseRef-Biopython-License-Agreement",
+                "name": "Biopython License Agreement",
+                "extractedText": biopython_license.read_text(encoding="utf-8"),
+                "comment": (
+                    "Biopython 1.88 LICENSE states this is the default license unless "
+                    "individual file headers say otherwise; some files are dual licensed."
+                ),
+            })
     identity = "\n".join(
         f"{item['name']}@{item['versionInfo']}" for item in ordered
     )
@@ -141,6 +158,7 @@ def generate(root: Path = ROOT) -> dict[str, object]:
             "comment": "Static declared-dependency inventory; not a resolved transitive release SBOM.",
         },
         "packages": ordered,
+        "hasExtractedLicensingInfos": extracted_licenses,
         "relationships": [{
             "spdxElementId": "SPDXRef-DOCUMENT", "relationshipType": "DESCRIBES",
             "relatedSpdxElement": item["SPDXID"],

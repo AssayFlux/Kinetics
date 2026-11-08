@@ -101,7 +101,17 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                                 val rust = probe.rustSumSquares(3.0, 4.0)
                                 check(kotlin.math.abs(cpp - 25.0) < 1e-9) { "C++ JNI result mismatch" }
                                 check(kotlin.math.abs(rust - 25.0) < 1e-9) { "Rust FFI result mismatch" }
-                                "C++ JNI: $cpp; Rust FFI: $rust"
+                                val aad = LocalCrypto.associatedData("runtime-probe", 0)
+                                val plaintext = "kinetics-keystore-probe".toByteArray()
+                                val encrypted = LocalCrypto.encrypt(plaintext, aad)
+                                check(LocalCrypto.decrypt(encrypted, aad).contentEquals(plaintext)) {
+                                    "Android Keystore AES-GCM roundtrip mismatch"
+                                }
+                                val wrongAadRejected = runCatching {
+                                    LocalCrypto.decrypt(encrypted, LocalCrypto.associatedData("wrong-job", 0))
+                                }.isFailure
+                                check(wrongAadRejected) { "AES-GCM did not reject mismatched authenticated metadata" }
+                                "C++ JNI: $cpp; Rust FFI: $rust; Keystore AES-GCM + AAD: passed"
                             }.getOrElse { "FAILED: ${it.message ?: it.javaClass.simpleName}" }
                             "Python probe:\n$python\nNative probe: $native"
                         }

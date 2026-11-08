@@ -1,47 +1,26 @@
-# KINETICS — UI/UX Master Specification
+# KINETICS — UI/UX master specification index
 
-**Status:** Owner-supplied specification, received 2026-11-08. Extends `docs/origin/KINETICS_MASTER.md`; does not replace it.  
-**Authority:** Follow the owner's Parts 0–14 exactly. Record implementation and evidence in `docs/ui/`, `design/`, `DECISIONS.md`, `ROADMAP.md`, `capabilities/registry.yaml` and `SESSION_LOG.md`.
+**Current visual authority:** `docs/ui/kinetics-visual-design-system.md`  
+**Owner decision:** D-015, approved 2026-11-08.  
+**Status:** Visual direction approved; implementation and evidence in progress.
 
-This root file is the tracked UI/UX specification index and adoption summary, not yet a verbatim transcription of the full owner message. The full Parts 0–14 were supplied in the project conversation on 2026-11-08; exact archival transcription remains an explicit open task. Do not treat this abbreviated index as permission to omit any owner requirement. Operational decisions, verified platform facts, implementation evidence and open gates are maintained in the linked living files.
+This file is an index, not a competing design specification. Follow the canonical design system above for all current visual/UI instructions. Follow `NORTH_STAR.md`, `ROADMAP.md`, `DECISIONS.md`, capability registry, security/privacy policy and phase gates for product scope, architecture, data, safety and research claims.
 
-## Non-negotiable rules
-1. “World's best” is an aspiration, never a claim. Quality claims require measured evidence.
-2. Every screen, setting and security feature must map to a capability or schema entry.
-3. No scientific logic in Compose/WebView. UI calls a typed orchestrator.
-4. Verify Android/Material guidance and record sources in `docs/ui/verified-specs.md`.
-5. Unspecified choices are conservative and logged in `DECISIONS.md`.
-6. Brand assets belong to the owner. Do not invent, redraw, recolour, or improve them.
+## Current approved design at a glance
+- Light Classic default: warm ivory/cream, deep maroon, restrained gold and peacock teal.
+- Coherent Dark Classic and System appearance options.
+- Refined rounded cards, spacious layout and a prominent horizontal workspace carousel with partially visible adjacent cards.
+- Splash, authentication, dashboard, navigation drawer, profile/settings and appearance screens.
+- Great Vibes (limited brand-script candidate), Cormorant Garamond display, IBM Plex Sans functional UI, IBM Plex Mono scientific data; licensing and glyph verification before bundling.
+- Optional culturally attributed Indian classical/folk-inspired motif system; implementation only after its cultural, accessibility, contrast, privacy and testing gates.
+- Native Jetpack Compose, actual capabilities/data only, preserve owner assets unchanged.
 
-## Parts
-- Part 0 — Rules for the assistant
-- Part 1 — Brand assets and owner-supplied asset contract
-- Part 2 — Design principles and measurable quality bars
-- Part 3 — Device and window matrix
-- Part 4 — Responsive layout system
-- Part 5 — Navigation and screen map
-- Part 6 — Screen outlines
-- Part 7 — Design tokens and theming
-- Part 8 — Settings catalogue
-- Part 9 — Security and privacy UI/enforcement
-- Part 10 — Frontend/backend wiring
-- Part 11 — Accessibility and performance budgets
-- Part 12 — Mandatory repository records
-- Part 13 — Track U roadmap and approval gates
-- Part 14 — First UI session
+## Retired UI-only directions
+Earlier dark-futuristic/Obsidian Cyan, neon palette proposals, generic three-direction selection gate and previous typography/palette combinations are superseded by D-015. Historical details remain in `DECISIONS.md` for auditability and must not be treated as current instructions.
 
-## Owner-specified numerical starting points
-Use the values in the supplied specification only as starting values. The verified current Android window-size classes are recorded in `docs/ui/verified-specs.md`. In particular, compact <600dp, medium 600–840dp, expanded 840–1200dp, large 1200–1600dp, extra-large ≥1600dp; compact height <480dp, medium 480–900dp, expanded ≥900dp. Do not equate a device category with a window class.
-
-## Brand asset contract
-Required owner inputs and release-blocking placeholders are listed in `assets/brand/README.md`. The existing repository file `Assets/Brand Logo.svg` is preserved and is not assumed to be the approved master or an app logo.
-
-## U0 gate
-Engineering may implement U0 foundations and repair the existing UI build. Do not lock a final visual direction or claim UI quality bars passed until the owner selects a direction and the required measurements exist. Present three directions with real gallery screenshots when the app build and gallery are working; then stop for the owner's choice.
-
-## Full source
-The complete owner-supplied message in this project conversation is the authoritative detailed source for Parts 0–14. This file records the scope and rules without silently converting aspirations into implementation claims.
-
-
-## Additive prompt reconciliation
-The latest owner UI master prompt is captured in `docs/ui/owner-master-prompt-addendum.md`. It is additive only: the archived master, approved decisions, capability registry, verified Android constraints and existing UI roadmap win wherever requirements overlap or conflict. No existing screens, tokens, fonts or logo assets are replaced by the addendum.
+## Source and evidence
+- Canonical design, tokens, screen requirements, accessibility, asset constraints, implementation sequence and acceptance checklist: `docs/ui/kinetics-visual-design-system.md`.
+- Semantic token source: `design/tokens.json`.
+- Decision history: `DECISIONS.md`.
+- Implementation and verification status: `docs/ui/ui-spec.md`, `SESSION_LOG.md`, `ROADMAP.md`.
+- The six-screen concept image reviewed in chat is a visual reference only, not an app screenshot or proof of implementation.

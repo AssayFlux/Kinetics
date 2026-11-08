@@ -9,8 +9,9 @@ internal enum class NavigationMode { BottomBar, Rail, Drawer }
 internal fun classifyNavigationMode(widthDp: Float, heightDp: Float): NavigationMode {
     require(widthDp >= 0f && heightDp >= 0f) { "Window dimensions cannot be negative" }
     return when {
+        heightDp < 480f -> NavigationMode.Rail
         widthDp >= 1200f -> NavigationMode.Drawer
-        widthDp >= 600f || heightDp < 480f -> NavigationMode.Rail
+        widthDp >= 600f -> NavigationMode.Rail
         else -> NavigationMode.BottomBar
     }
 }

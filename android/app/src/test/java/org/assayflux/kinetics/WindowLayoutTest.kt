@@ -22,6 +22,7 @@ class WindowLayoutTest {
         assertEquals(NavigationMode.Rail, classifyNavigationMode(1199f, 900f))
         assertEquals(NavigationMode.Drawer, classifyNavigationMode(1200f, 900f))
         assertEquals(NavigationMode.Drawer, classifyNavigationMode(1600f, 1000f))
+        assertEquals(NavigationMode.Rail, classifyNavigationMode(1600f, 400f))
     }
 
     @Test(expected = IllegalArgumentException::class)

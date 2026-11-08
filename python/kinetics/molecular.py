@@ -1,12 +1,14 @@
 """Transparent PCR/CRISPR sequence utilities; not a clinical or wet-lab substitute."""
 from __future__ import annotations
 
+from typing import cast
+
 from .sequence import DNA, _normalise, validate_sequence
 
 _WALLACE = {"A": 2.0, "T": 2.0, "G": 4.0, "C": 4.0}
 
 
-def primer_properties(sequence: str) -> dict[str, float | int | bool]:
+def primer_properties(sequence: str) -> dict[str, float | int | bool | str]:
     seq = _normalise(sequence)
     validate_sequence(seq, DNA)
     if not 15 <= len(seq) <= 40:
@@ -45,4 +47,4 @@ def scan_spcas9_ngg(sequence: str, *, strand: str = "both") -> list[dict[str, ob
             if len(pam) == 3 and pam[1:] == "GG":
                 start = len(seq) - (index + 3)
                 results.append({"strand": "-", "start": start, "end": start + 3, "pam": pam})
-    return sorted(results, key=lambda item: (int(item["start"]), str(item["strand"])))
+    return sorted(results, key=lambda item: (cast(int, item["start"]), str(item["strand"])))

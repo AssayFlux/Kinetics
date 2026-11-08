@@ -37,8 +37,6 @@ jobs:
         run: pytest
       - name: Reproduction stub
         run: scripts/reproduce-all
-      - name: Android artifact gate status
-        run: python scripts/check_android_artifacts.py
       - name: Check local Android build script syntax
         run: bash -n scripts/build_android_local.sh
 
@@ -85,6 +83,8 @@ jobs:
       - name: Run Android JVM unit-test task
         working-directory: android
         run: "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon --stacktrace :app:testDebugUnitTest
+      - name: Verify APK/AAB artifacts and record hashes
+        run: python scripts/check_android_artifacts.py
       - name: Upload debug APK, AAB and build log
         if: always()
         uses: actions/upload-artifact@v4

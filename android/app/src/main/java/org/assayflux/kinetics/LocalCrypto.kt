@@ -23,7 +23,7 @@ object LocalCrypto {
     const val CHUNK_BYTES = 4 * 1024 * 1024
     private const val MAX_FILE_BYTES = 512L * 1024L * 1024L
     private val FILE_MAGIC = byteArrayOf(0x4b, 0x44, 0x41, 0x54)
-    const val HEADER_BYTES = 5L
+    const val HEADER_BYTES = KdatFileHeader.HEADER_BYTES
     private const val FILE_FORMAT_VERSION = 2
 
     private fun key(createIfMissing: Boolean): SecretKey {
@@ -85,33 +85,8 @@ object LocalCrypto {
         return cipher.doFinal(encrypted)
     }
 
-    /** Create or validate the explicit KDAT v2 container header before appending chunks. */
-    fun ensureChunkedFileHeader(file: File) {
-        RandomAccessFile(file, "rw").use { output ->
-            if (output.length() == 0L) {
-                output.write(FILE_MAGIC)
-                output.writeByte(FILE_FORMAT_VERSION)
-                output.fd.sync()
-                return
-            }
-            val validHeader = try {
-                val magic = ByteArray(FILE_MAGIC.size)
-                output.seek(0)
-                output.readFully(magic)
-                magic.contentEquals(FILE_MAGIC) && output.readUnsignedByte() == FILE_FORMAT_VERSION
-            } catch (_: EOFException) {
-                false
-            }
-            if (!validHeader) {
-                // Never truncate a non-empty unknown/corrupt file: it may contain ciphertext
-                // that cannot be safely resumed but must still be preserved for recovery.
-                throw IllegalStateException(
-                    "Encrypted staging header is invalid; ciphertext was preserved. " +
-                        "Start a new import rather than overwriting this partial file",
-                )
-            }
-        }
-    }
+    /** Initialize a new KDAT v2 file without truncating non-empty invalid ciphertext. */
+    fun ensureChunkedFileHeader(file: File) = KdatFileHeader.ensure(file)
 
     fun appendEncryptedChunk(file: File, plainText: ByteArray, associatedData: ByteArray) {
         require(plainText.isNotEmpty()) { "Encrypted chunks cannot be empty" }

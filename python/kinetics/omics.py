@@ -329,6 +329,12 @@ def negative_binomial_differential_expression(
     factors = [x / gm_f for x in factors]
     offsets = [log(x) for x in factors]
     design = [[1.0, float(condition[j])] + [float(row[j]) for row in covariates] for j in range(n)]
+    design_information = [
+        [sum(sample[row] * sample[column] for sample in design) for column in range(p)]
+        for row in range(p)
+    ]
+    # Reject confounded/aliased condition and batch designs before feature-wise fitting.
+    _solve_wls(design_information, [0.0] * p)
     results: list[dict[str, float | str | bool | int]] = []
 
     for feature, row in zip(feature_ids, counts):

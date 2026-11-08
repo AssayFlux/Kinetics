@@ -24,3 +24,8 @@ Versioned source packs, checksums/licenses, taxonomy and nomenclature coverage r
 ### R9 PGx foundation increment
 
 Added a versioned JSON star-allele definition schema with mandatory source name/release/HTTPS URL/SHA-256/license/genome build, with the exact release required at import time, normalized literal small-variant keys, required/excluded variant sets and duplicate-definition checks. Added conservative matching for a caller-supplied, fully phased and explicitly complete haplotype; incomplete or unphased calls produce no-call statuses, and tied best definitions remain ambiguous. This is infrastructure only: no PharmVar/CPIC/PharmGKB source data has been imported or licensed, no gene inventory is claimed comprehensive, and there is no diplotype/phenotype translation or clinical recommendation.
+
+
+### PGx definition foundation
+
+Versioned allele-definition JSON ingestion now requires a pinned source release, source URL, SHA-256, license and genome build. Matching requires an explicitly complete and already phased haplotype. No authoritative PGx content is bundled; gene coverage is not comprehensive and diplotype/phenotype translation is not implemented.

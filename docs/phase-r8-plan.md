@@ -23,3 +23,8 @@ Independent synthetic and public reference datasets; null calibration, power, fa
 ### R8 count-model source increment
 
 Added an exploratory NB2 log-link GLM for raw integer counts with condition effect, numeric covariates (including caller-encoded batch dummy variables), median-of-ratios size factors when possible, library-size fallback, per-feature method-of-moments dispersion, IRLS fitting, Wald tests and BH q-values. This is not a DESeq2/edgeR replacement: dispersion is not moderated/shrunk, p-values are asymptotic, repeated measures and robust outlier handling are absent, and the model requires independent samples with a full-rank design. Regression-test source was added but not executed. Independent simulation/reference calibration is mandatory before validation status.
+
+
+### Count-aware model increment
+
+An exploratory NB2 log-link GLM now accepts raw integer counts, size factors, numeric covariates and caller-encoded batch indicators. It uses unmoderated per-feature moment dispersion and asymptotic Wald tests with BH correction. It is not DESeq2/edgeR-equivalent and is not validated for small-sample inference, repeated measures or outlier-heavy designs.

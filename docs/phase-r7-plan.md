@@ -22,3 +22,8 @@ Published reference matrices/trees, independent topology and branch-length conco
 ### R7 model-based distance increment
 
 Added Jukes–Cantor 1969 nucleotide distance estimation with pairwise deletion of ambiguous/gap columns, minimum comparable-site requirements and explicit saturation rejection. Added a neighbour-joining-from-alignment entry point that constructs a model-corrected distance matrix before tree inference. This is a simple substitution model, not maximum likelihood or Bayesian inference; it has no rate heterogeneity, codon model, bootstrap or model selection. Regression-test source was added but not executed.
+
+
+### Model-corrected nucleotide distances
+
+Jukes–Cantor 1969 distances with pairwise deletion and saturation rejection now feed neighbour joining from aligned DNA sequences. This is a simple distance correction, not maximum-likelihood/Bayesian inference, rate heterogeneity, model selection or bootstrap support.

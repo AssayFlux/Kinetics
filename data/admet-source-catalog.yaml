@@ -1,0 +1,35 @@
+schema_version: 1
+purpose: "Candidate source inventory for future non-clinical ADMET/PK/PD/PBPK research; no data payloads or model weights."
+data_classification: public_non_patient_only
+candidate_sources:
+  - source_id: pubchem-bioassay
+    title: "PubChem BioAssay"
+    source_url: "https://pubchem.ncbi.nlm.nih.gov/"
+    candidate_use: "Assay records and compound activity observations for endpoint-specific curation"
+    license_review_status: verify_before_intake
+    patient_data: false
+    review_requirements:
+      - "Verify source-specific data-use and redistribution terms for the exact record set."
+      - "Preserve assay identifier, protocol, units, target, organism, confidence and depositor provenance."
+      - "Do not pool heterogeneous assays without endpoint harmonization."
+  - source_id: chembl
+    title: "ChEMBL"
+    source_url: "https://www.ebi.ac.uk/chembl/"
+    candidate_use: "Curated bioactivity measurements and compound-target relationships"
+    license_review_status: verify_before_intake
+    patient_data: false
+    review_requirements:
+      - "Pin exact release and verify current database license and attribution."
+      - "Preserve assay type, relation operator, units, target confidence and source citations."
+      - "Assess duplicate measurements, censoring and assay heterogeneity."
+  - source_id: tox21
+    title: "Tox21"
+    source_url: "https://ntp.niehs.nih.gov/whatwestudy/tox21"
+    candidate_use: "Public high-throughput toxicity screening endpoints"
+    license_review_status: verify_before_intake
+    patient_data: false
+    review_requirements:
+      - "Pin exact screening release and verify reuse terms and assay metadata."
+      - "Retain endpoint-specific protocol, concentration range and inactive/active definitions."
+      - "Evaluate assay interference, class imbalance and applicability domain."
+entries: []

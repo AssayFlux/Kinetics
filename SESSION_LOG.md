@@ -580,3 +580,16 @@ Continue R1 source-side feasibility work and prepare a reproducible local build 
 ### Remaining status
 - R1 remains IN PROGRESS; the local build and remaining Android/scientific feasibility evidence are not yet available.
 - R2 and R3 remain NOT STARTED pending predecessor gates.
+
+
+## 2026-11-08 — Session 23: Final source-only CI rerun
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Verify the final Android artifact-gate wording and local build-script prerequisite corrections.
+
+### Validated
+- Workflow run 42428935274 completed successfully on commit `6580e4b254aafa09da4543b490b7af4b457d9637`: https://github.com/AssayFlux/Kinetics/actions/runs/42428935274
+- Pre-commit configuration, Ruff, mypy, registry validation, all 11 unit tests, reproduction stub, local-only Android artifact gate and `bash -n scripts/build_android_local.sh` passed.
+- This run did not build APK/AAB files and did not run Android emulators or devices.
+
+### Gate
+R1 remains IN PROGRESS. Host-side source CI success does not close Android build/runtime/scientific feasibility criteria. R2/R3 remain gated and not started.

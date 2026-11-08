@@ -805,3 +805,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Added an explicit `KDAT` magic plus format-version byte to the encrypted container. Import resume validates the header and resets incompatible legacy/torn staging data before re-reading the source; finalized-file materialization rejects unknown formats.
 - Chunk ordinal and job ID remain authenticated as AES-GCM AAD. The metadata now identifies the corresponding chunked-v2 format unambiguously.
 - This is not a migration path for previously finalized v1 encrypted imports; those require an explicit recovery/migration design. No Android build or test was run.
+
+
+### R1/R2 versioned-container runtime probe
+- Extended the manual Android runtime probe to create a KDAT v2 encrypted file, append an authenticated chunk, decrypt it through the production reader, verify SHA-256 and byte-for-byte output, and remove the temporary probe files.
+- This is a future on-device check only; the probe has not been built or executed.

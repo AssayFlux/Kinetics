@@ -1565,3 +1565,28 @@ Audit current Compose screens, token generator, settings persistence and asset i
 3. Integrate the supplied owner brand asset without altering its artwork; verify layout, contrast and typography against the approved design references.
 4. Add registry-backed capability browsing and connect only tools with real input contracts, dispatchers and result viewers.
 5. Continue R1–R10 and S/I/P work in parallel, retaining explicit validation, licensing, privacy, biosafety and publication gates.
+
+
+## 2026-11-08 — Session 24: Registry catalogue integration and Android compile repair
+**Objective:** Continue the integrated R/S/I/P programme, correct the Explore catalogue integration and align the active UI implementation with D-015.
+
+### Implemented in source
+- Connected Explore to the generated capability catalogue derived from `capabilities/registry.yaml`. The screen is a registry-backed catalogue only; it does not yet dispatch research tools or imply that every listed capability is runnable.
+- Corrected the Kotlin declaration defect that blocked Android compilation (`@Composable private private data class` on a data class).
+- Removed the generic K badge from the hero and moved its visual treatment toward D-015's maroon/gold Light Classic and deep-plum Dark Classic language. This is an incremental style correction, not completion of the owner-reference redesign.
+- Corrected the design-token metadata's stale `selected_direction` value to `kinetics_light_classic`, consistent with D-015.
+
+### Build evidence at session start
+- CI run [#2028](https://github.com/AssayFlux/Kinetics/actions/runs/42480571753), commit `d9d693040bf6ad83fdc01aca363dce7e3b5fb521`, failed during Android Kotlin compilation at the invalid `CapabilityEntry` declaration. Python, registry, scientific fixture, RDKit sanity and SPDX jobs passed; Android JVM and artifact packaging did not run.
+- Previous run [#2027](https://github.com/AssayFlux/Kinetics/actions/runs/42479673744), commit `c3b047914d2ed729062cb2415591aaee1cc6a564`, built an arm64 debug APK/AAB and passed package checks. Those artifacts predate the current Explore changes and are not current-build evidence.
+- No emulator or physical-device installation/runtime verification is claimed.
+
+### UI design analysis and remaining work
+- Current authority remains D-015 in `docs/ui/kinetics-visual-design-system.md`; the supplied reference assets are `Assets/App UI - Dashboard Design.jpg` and `Assets/App UI - Login Page Design.jpg`. They are source references, not proof of implementation.
+- The active app still lacks the complete owner-directed splash/login/onboarding/profile flow and full brand-asset integration. The present biometric screen is a device-local app lock, not account authentication.
+- Explore remains catalogue-only. A tool becomes launchable only after a real input contract, dispatcher, typed result, viewer, provenance and tests are connected.
+- The S/I/P scientific, licensing, data, safety and governance gates remain active; no unsupported clinical or biological claims are introduced.
+
+### Next verification
+- Run CI on this correction; only report an APK/AAB after the exact new commit builds and artifact checks pass.
+- Continue the next end-to-end research workflow and the D-015 screen implementation; test each increment rather than accumulating unverified work.

@@ -1,28 +1,27 @@
 # CI build evidence — 2026-11-08
 
-## Latest successful integrated run
+## Latest source revision
 
 - Repository: [AssayFlux/Kinetics](https://github.com/AssayFlux/Kinetics)
-- Workflow run: [#1650](https://github.com/AssayFlux/Kinetics/actions/runs/42450892141)
-- Source commit: `b5a591aa2b0545188409eacc0eb76043b4143fb8`
-- Result: both jobs succeeded (Python foundation/tests and Android arm64 build/JVM tests).
-- Build host: GitHub Actions Linux x86_64; JDK 17; Python 3.11.17; Android SDK 36; NDK 28.2.13676358; CMake 3.22.1; Rust stable with `aarch64-linux-android`.
-- Artifact archive: `kinetics-android-arm64-debug-b5a591aa2b0545188409eacc0eb76043b4143fb8` (76,660,231 bytes; archive SHA-256 `9c32298574d2d7081274daaee5ae63828103cf47adbfbd19b0bc7d0db476867d`).
+- Source commit: `d9d693040bf6ad83fdc01aca363dce7e3b5fb521`
+- Workflow: [run #2028 — failed](https://github.com/AssayFlux/Kinetics/actions/runs/42480571753)
+- Failure: Android Kotlin compilation in `android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt`, where `CapabilityEntry` was incorrectly declared as `@Composable private private data class`.
+- Passed before the Android failure: Python foundation/tests, registry checks/catalogue generation, pinned scientific-reference comparisons, RDKit descriptor sanity fixtures and SPDX source inventory.
+- Not run because compilation failed: Android JVM tests, APK/AAB packaging and artifact checks.
+- No APK/AAB exists for this source revision.
 
-## Individual outputs
+## Previous successful build (not current source)
 
-| Output | Size (bytes) | SHA-256 |
-|---|---:|---|
-| `app-debug.apk` | 66,786,657 | `10896f91f622e979a1155c19263f825ccf5ee15e386d39ea1a56f28dd34c6056` |
-| `app-debug.aab` | 38,153,856 | `21aa978efcb65ad1e6040a398d1faf7fe1bc6c06d895fe12603860130d4a6ffa` |
+- Workflow: [run #2027](https://github.com/AssayFlux/Kinetics/actions/runs/42479673744)
+- Source commit: `c3b047914d2ed729062cb2415591aaee1cc6a564`
+- Result: arm64 debug APK/AAB built and package alignment checks passed.
+- This artifact predates commit #2028 and must not be presented as containing the current Explore catalogue changes or later UI work.
 
-The APK/AAB were built, inspected and uploaded by the workflow. The AAB's native ELF load segments were checked for 16 KB alignment; APK ZIP alignment was checked. Android JVM unit tests passed.
+## Verification boundaries
 
-## What this evidence does not establish
+- No emulator or physical-device installation/runtime evidence is recorded.
+- CI compilation does not prove launch, embedded Python import, JNI invocation, SAF lifecycle, WorkManager process-death recovery, Keystore behavior, cold-start or peak-memory performance.
+- Debug artifacts are not signed release builds.
+- Build success and unit tests do not establish independent scientific validity, complete dependency licensing or clinical suitability.
 
-- No emulator or physical-device test was run.
-- No app launch, embedded Python runtime import on Android, JNI invocation on device, SAF workflow, WorkManager process-death recovery, Keystore behavior, cold-start or peak-memory measurement is claimed.
-- This is an unsigned debug build, not a signed release or Play-ready artifact.
-- Build success does not validate scientific correctness, production dependency licensing, or device support.
-
-Reproduce from a clean checkout using `scripts/build_android_local.sh` on the pinned Linux x86_64 host setup documented in `docs/local-android-build.md`, then run the Android JVM task and `python scripts/check_android_artifacts.py`.
+D-016 requires every substantial increment to be built, regression-tested and inspected before acceptance. Record exact source SHA, workflow, toolchain, artifact hash, test results and device details; explicitly mark unavailable evidence as not run or blocked.

@@ -337,44 +337,46 @@ private fun WorkspaceCarousel(
 @Composable
 private fun HeroCard(onImport: () -> Unit, themeFamily: String) {
     val dark = themeFamily != "light"
+    val heroSurface = if (dark) Color(0xFF2A1530) else Color(0xFF7B1E34)
+    val heroText = Color(0xFFFFFDF8)
     Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = if (dark) Color(0xFF0B1724) else Color(0xFFE8F0F8))) {
+        colors = CardDefaults.cardColors(containerColor = heroSurface)) {
         Box {
             Image(
                 painter = painterResource(R.drawable.kinetics_background),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.matchParentSize().alpha(if (dark) 0.42f else 0.14f),
+                modifier = Modifier.matchParentSize().alpha(if (dark) 0.10f else 0.08f),
             )
             Box(
                 Modifier.matchParentSize().background(
                     Brush.verticalGradient(
                         listOf(
-                            if (dark) Color(0xCC07111E) else Color(0xBFEAF2FA),
-                            if (dark) Color(0xF207111E) else Color(0xF2EAF2FA),
+                            heroSurface.copy(alpha = 0.72f),
+                            heroSurface.copy(alpha = 0.96f),
                         )
                     )
                 )
             )
             Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(13.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(36.dp).clip(RoundedCornerShape(12.dp)).background(if (dark) Teal else LightTeal), contentAlignment = Alignment.Center) {
-                    Text("K", color = Color.White, fontWeight = FontWeight.Black, fontSize = 21.sp)
-                }
-                Spacer(Modifier.width(10.dp))
-                Text("KINETICS  /  RESEARCH OS", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
+                Text("KINETICS", color = heroText, style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
+                Spacer(Modifier.width(8.dp))
+                Text("RESEARCH WORKSPACE", color = heroText.copy(alpha = 0.82f),
+                    style = MaterialTheme.typography.labelSmall)
                 Spacer(Modifier.weight(1f))
                 InfoPill("LOCAL FIRST")
             }
-            Text("Your data. Your science. Your device.", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Text("Your data. Your science. Your device.", color = heroText, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             Text("Bring in research data and prepare a reproducible analysis workspace. Files are encrypted locally during import.",
                 color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
             Button(onClick = onImport, Modifier.fillMaxWidth().height(54.dp), shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = if (dark) Teal else LightTeal)) {
-                Text("+   Import research data", fontWeight = FontWeight.Bold, color = if (dark) Ink else Color.White)
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD9A441), contentColor = Color(0xFF2B1B14))) {
+                Text("+   Import research data", fontWeight = FontWeight.Bold)
             }
             Text("FASTA  ·  FASTQ  ·  PDB/mmCIF  ·  SDF  ·  Other files",
-                style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                style = MaterialTheme.typography.labelSmall, color = heroText.copy(alpha = 0.88f))
             }
         }
     }
@@ -493,8 +495,7 @@ private fun StatePill(state: String) {
     }
 }
 
-@Composable
-private private data class CapabilityEntry(
+private data class CapabilityEntry(
     val id: String,
     val name: String,
     val status: String,

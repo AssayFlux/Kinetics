@@ -5,7 +5,7 @@
 | Screen ID | Screen | Registry capability | Current status |
 |---|---|---|---|
 | ui.home | Home dashboard / import entry | ui.home | source present; proof pending |
-| ui.work | Work / job list and actions | ui.work | source present; registry gate/tests pending |
+| ui.work | Work / job list and actions | ui.work | source present; registry-backed browse-only catalogue; dispatcher not connected |
 | ui.explore | Scientific capability catalogue | ui.explore | source present; registry gate/tests pending |
 | ui.settings | Settings / theme family and diagnostics | ui.settings | partial; registry gate pending |
 | ui.domains | Domain browser/detail | ui.domains | planned |
@@ -39,11 +39,11 @@ Explore describes capability maturity; it is not a promise that all research too
 | ui.splash | Brand splash | Owner assets, platform launch behavior, no artificial delay | planned |
 | ui.auth | Local app-lock/authentication boundary | Honest local-vs-account distinction, secure fallback and recovery | not implemented |
 | ui.biometric | Biometric unlock | AndroidX BiometricPrompt, enrollment/capability checks, Keystore-backed operation, lockout and recovery | source implemented; CI/device verification and recovery review pending |
-| ui.dashboard | D-015 dashboard | Real workspace carousel, owner brand, truthful live data and empty states | horizontal workspace carousel source added; owner-brand integration and screenshot/device verification pending |
+| ui.dashboard | D-015 dashboard | Real workspace carousel, owner brand, truthful live data and empty states | horizontal workspace carousel source added; D-015 visual refinement, owner-brand integration and screenshot/device verification pending |
 | ui.navigation | Navigation/drawer | Every destination navigates or is explicitly unavailable | partial; four destinations only |
 | ui.profile | Profile and security | Real local profile/preferences/security actions; no fabricated account | planned |
 | ui.appearance | Appearance | Persistent Light/Dark/System selection; no inert controls | persistent preference source implemented; CI/device verification pending |
-| ui.explore | Scientific capability catalogue | Registry-backed availability and clear maturity | informational catalogue; launch/dispatch not connected |
+| ui.explore | Scientific capability catalogue | Registry-backed availability and clear maturity | registry-backed catalogue; tool launch/dispatch/result viewer not connected |
 | ui.work | Work/job list | Real import/job lifecycle actions | implemented source; test and device evidence required |
 
 D-016 acceptance applies to every row: a screen is not complete until its actions, persistence, accessibility and relevant tests are demonstrated on the exact tested artifact.

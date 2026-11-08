@@ -9,7 +9,7 @@
 
 Kinetics is a refined, premium scientific research workspace with a subtle Indian-inspired visual identity. It should feel calm, confident, welcoming and scientifically rigorous—not a generic futuristic console, pastel template or ornamental lifestyle app.
 
-The owner-approved visual concept is the six-screen showcase reviewed in chat on 2026-11-08: splash, login, dashboard, navigation drawer, profile/settings and appearance. It is a direction reference, not a pixel-perfect source file. Implement the same visual language in the real app, preserving actual workflows and capabilities.
+The owner-approved visual direction is represented by the supplied repository references `Assets/App UI - Dashboard Design.jpg` and `Assets/App UI - Login Page Design.jpg`, alongside the six-screen showcase (splash, login, dashboard, navigation drawer, profile/settings and appearance) reviewed on 2026-11-08. Treat these as the owner's visual references, not screenshots of the running app or a pixel-perfect specification. Analyse their composition and apply the D-015 visual language in the real app while preserving actual workflows and capabilities.
 
 ## 2. Core visual language
 

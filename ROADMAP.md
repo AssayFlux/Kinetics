@@ -1,5 +1,5 @@
 # Kinetics — Roadmap
-**Status:** Owner-approved baseline; R0 done; integrated R1–R10 implementation in progress; build-first / test-later owner direction recorded  
+**Status:** Owner-approved baseline; R0 done; integrated R1–R10 implementation in progress; D-016 build-and-test-each-increment cycle active  
 **Last updated:** 2026-11-08  
 **Statuses:** not-started | in-progress | blocked | done | dropped  
 **Owners:** Project owner = repository owner; Engineering = implementation contributor. Dates are review/target dates, not completion claims.
@@ -11,7 +11,7 @@ This roadmap operationalises the archived master. A phase is complete only when 
 - The owner-approved direction baseline and reconstructed historical master are present; NORTH_STAR was not changed.
 - Repository skeleton, capability registry/checker/tests, reproduction stub, pre-commit configuration, CI and governance metadata are committed.
 - R0 accepted by the owner when they authorised R1 on 2026-11-07. CI evidence: [R0 workflow run](https://github.com/AssayFlux/Kinetics/actions/runs/42378815901).
-- On 2026-11-08 the owner directed one integrated R1–R10 implementation delivery, with the first local Android build before the later testing campaign. Engineering must not stop at R1 to request permission to begin downstream implementation. Implementation may proceed across the R track, while scientific, licensing, device, privacy and release gates remain in force. The owner subsequently authorized GitHub Actions to build unsigned arm64 debug APK/AAB artifacts, run automated checks and Android JVM unit tests; emulator and physical-device tests remain separate. D-006 remains a target, not a verified support claim.
+- On 2026-11-08 the owner directed one integrated R1–R10 implementation delivery. Engineering must not stop at R1 to request permission to begin downstream implementation. Implementation may proceed across R/S/I/P, while scientific, licensing, device, privacy, safety and release gates remain in force. D-016 requires every substantial increment to be built and tested before it is accepted as the next baseline; build success does not replace runtime, scientific or device validation. GitHub Actions builds unsigned arm64 debug APK/AAB artifacts and runs automated checks/JVM tests; emulator and physical-device tests remain separate. D-006 remains a target, not a verified support claim.
 - D-005 is approved as a broad strategic direction: build both a comprehensive, expandable PGx gene panel and a broad cross-domain gene catalogue. Treat PGx as a specialised workstream within the wider catalogue, with separate evidence and validation gates. The earlier six-gene list is not a scope limit; exact inventories and rollout waves remain evidence-led. No exhaustive coverage or PGx implementation is claimed. D-004 is approved: defer clinical-adviser recruitment until the research platform is more mature (target review after R3); P0 and all patient/clinical work remain blocked until qualified advisers and all other prerequisites are in place. D-003 (publication strategy) is approved: multiple papers over time, beginning with an evidence-backed platform/software-methods paper after R1–R3 readiness, followed by independently validated domain papers. D-001 (project license) is approved as Apache-2.0; D-002 sets a global long-term ambition including future clinical use, subject to jurisdiction-by-jurisdiction advice and approvals. The canonical Apache-2.0 LICENSE grant file is present at the repository root; the third-party dependency audit remains open.
 
 ## Track R — Research platform
@@ -120,7 +120,7 @@ At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase
 
 ## Owner authorization — integrated R1–R10 implementation (2026-11-08)
 - The owner explicitly directed Engineering to implement Research Platform R1 through R10 as one integrated delivery, rather than stopping after R1 to request permission to begin R2/R3.
-- Build-first / test-later: after the initial local-build preference, the owner explicitly authorized GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated source/JVM checks. Emulator and physical-device tests remain separate and are not run in CI.
+- D-016 integrated cycle: implement a substantial vertical slice, build the exact revision, run relevant automated and scientific-reference tests, inspect the artifact, exercise the app on available emulator/device targets, fix defects, and record what was and was not verified. Do not defer all testing to a later campaign.
 - This changes implementation sequencing only. It does not authorize false validation claims, bypass third-party license review, enable clinical/patient workflows, or waive scientific/device/security/release exit criteria.
 - See docs/research-platform-implementation.md for the current implementation inventory and unfinished scope.
 
@@ -151,7 +151,7 @@ U0 visual direction: owner authorized best-judgement completion; Obsidian Cyan i
 
 ## Integrated implementation and verification cycle — owner direction (2026-11-08)
 
-The owner requires substantial implementation followed by a complete test campaign, then another implementation-and-test cycle. This supersedes any interpretation of earlier build-first/test-later sequencing. Build substantial increments, but test every increment before accepting it as the next baseline.
+The owner requires substantial implementation and verification as one continuous cycle. This supersedes earlier build-first/test-later interpretations. Build substantial increments, test each increment before accepting it as the next baseline, and continue R/S/I/P in parallel where dependencies permit.
 
 ### Mandatory cycle
 1. Plan and inspect: read NORTH_STAR, ROADMAP, DECISIONS and the latest SESSION_LOG; inspect source, assets, registry, dependencies and tests. Map changes to roadmap items.

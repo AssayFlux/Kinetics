@@ -19,7 +19,7 @@ Kinetics is an ambitious, modular platform for computational biology and in-sili
 | **Primary mode** | Research Mode only |
 | **Engineering scope** | R1–R10, developed as one integrated platform |
 | **Parallel research** | S — Structure & discovery · I — In-silico laboratory · P — Precision medicine preparation |
-| **User experience** | D-015 Light Classic visual direction; native Compose implementation in progress |
+| **User experience** | D-015 Light Classic visual direction; supplied dashboard/login references recorded; Compose redesign in progress |
 | **Build channel** | GitHub Actions · unsigned arm64 debug APK/AAB |
 | **Validation state** | Source tests and CI evidence are distinct from device and independent scientific validation |
 | **Publication** | Methods-paper preparation only; results must come from reproducible evidence |
@@ -110,24 +110,17 @@ Only source metadata is catalogued at this stage; no public dataset payloads hav
 
 | Evidence item | Latest recorded state |
 |---|---|
-| **Current source revision** | `244dddb682af37d14fe9228add9b51b8ae44a8ae` |
-| **Latest CI run** | [#2020 — pending](https://github.com/AssayFlux/Kinetics/actions/runs/42477665109) |
-| **Current-revision APK/AAB** | Not yet confirmed; do not treat an older artifact as containing the latest UI/security changes |
-| **Automated checks** | Awaiting the current workflow result |
-| **Android emulator / physical device** | Not verified by CI; installation and runtime evidence remain outstanding |
-| **Independent scientific validation** | Not yet established for the platform's research capabilities |
-| **Release readiness** | Not ready; unsigned debug builds are development artifacts, not production releases |
+| **Current source revision** | `d9d693040bf6ad83fdc01aca363dce7e3b5fb521` |
+| **Latest CI run** | [#2028 — failed at Android Kotlin compilation](https://github.com/AssayFlux/Kinetics/actions/runs/42480571753) |
+| **Failure** | `KineticsUi.kt`: invalid `@Composable private private data class CapabilityEntry`; corrected in the next source increment |
+| **Previous successful APK/AAB build** | [#2027 — commit `c3b0479`](https://github.com/AssayFlux/Kinetics/actions/runs/42479673744); older source, not the current revision |
+| **Current-revision APK/AAB** | Not available; run #2028 failed before Android packaging |
+| **Automated checks** | Python, registry, reference-fixture, RDKit sanity and SPDX jobs passed in #2028; Android compile/JVM/artifact checks were blocked by the Kotlin error |
+| **Emulator / physical device** | Not verified; installation and runtime evidence remain outstanding |
+| **Independent scientific validation** | Not established for the platform's research capabilities |
+| **Release readiness** | Not ready; debug artifacts are not production-signed releases |
 
-Every substantial implementation cycle follows the same loop:
-
-1. Implement a meaningful, roadmap-aligned slice.
-2. Build APK/AAB from the exact source revision.
-3. Run relevant automated regression, security, schema and scientific tests.
-4. Install and inspect the exact build on supported Android environments.
-5. Record failures, fix them and repeat the build-and-test cycle.
-6. Publish evidence with commit, workflow, artifact hash, environment and limitations.
-
-A missing device, reference dataset or external approval is recorded as **not run / blocked**, never as a pass.
+Every substantial implementation cycle follows D-016: implement a meaningful vertical slice, build the exact revision, run relevant automated and scientific-reference tests, inspect the artifact, exercise it on available Android targets, fix failures and record exact evidence. Missing device access, reference data or external approval is recorded as **not run / blocked**, never as a pass.
 
 ## Research integrity & publication
 

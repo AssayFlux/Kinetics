@@ -7,13 +7,18 @@ def michaelis_menten(substrate: float, vmax: float, km: float) -> float:
     return vmax*substrate/(km+substrate)
 
 def inhibition_rate(substrate: float, inhibitor: float, vmax: float, km: float,
-                    ki: float, mode: str) -> float:
+                    ki: float, mode: str, ki_uncompetitive: float | None = None) -> float:
     if inhibitor < 0 or ki <= 0: raise ValueError("Require inhibitor>=0 and Ki>0")
     alpha=1+inhibitor/ki
     if mode=="competitive": return vmax*substrate/(alpha*km+substrate)
     if mode=="uncompetitive": return vmax*substrate/(km+alpha*substrate)
     if mode=="noncompetitive": return (vmax/alpha)*substrate/(km+substrate)
-    raise ValueError("mode must be competitive, uncompetitive or noncompetitive")
+    if mode=="mixed":
+        if ki_uncompetitive is None or ki_uncompetitive <= 0:
+            raise ValueError("mixed inhibition requires ki_uncompetitive>0")
+        alpha_prime=1+inhibitor/ki_uncompetitive
+        return vmax*substrate/(alpha*km+alpha_prime*substrate)
+    raise ValueError("mode must be competitive, uncompetitive, noncompetitive or mixed")
 
 def fit_michaelis_menten(substrates: list[float], rates: list[float], *,
                          vmax_bounds: tuple[float,float] | None = None,

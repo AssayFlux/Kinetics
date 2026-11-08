@@ -22,12 +22,14 @@ class VariantKey:
     def __post_init__(self) -> None:
         if not self.genome_build.strip() or not self.chromosome.strip():
             raise ValueError("Variant requires genome build and chromosome")
-        if self.position < 1:
-            raise ValueError("Variant position must be 1-based and positive")
-        if not self.reference or not self.alternate or self.reference == self.alternate:
+        if not isinstance(self.position, int) or isinstance(self.position, bool) or self.position < 1:
+            raise ValueError("Variant position must be a positive 1-based integer")
+        if not self.reference or not self.alternate or self.reference.upper() == self.alternate.upper():
             raise ValueError("Variant requires distinct non-empty REF and ALT alleles")
         if any(base not in "ACGT" for base in (self.reference + self.alternate).upper()):
             raise ValueError("Only normalized literal A/C/G/T variants are supported")
+        object.__setattr__(self, "reference", self.reference.upper())
+        object.__setattr__(self, "alternate", self.alternate.upper())
 
 
 @dataclass(frozen=True)
@@ -39,6 +41,7 @@ class StarAlleleDefinition:
     source_name: str
     source_release: str
     source_url: str
+    source_sha256: str
     license_id: str
     genome_build: str
     definition_id: str
@@ -54,7 +57,7 @@ class AlleleMatch:
 
 
 def parse_star_allele_definitions(
-    document: str, *, expected_source_release: str | None = None,
+    document: str, *, expected_source_release: str,
 ) -> list[StarAlleleDefinition]:
     """Load a JSON definition pack with mandatory source, build and license metadata."""
     try:
@@ -70,13 +73,16 @@ def parse_star_allele_definitions(
     source_release = source.get("release")
     source_url = source.get("url")
     license_id = source.get("license")
+    source_sha256 = source.get("sha256")
     genome_build = value.get("genome_build")
     if not all(isinstance(item, str) and item.strip() for item in
-               (source_name, source_release, source_url, license_id, genome_build)):
+               (source_name, source_release, source_url, source_sha256, license_id, genome_build)):
         raise ValueError("PGx source, release, URL, license and genome build are mandatory")
     if not source_url.startswith("https://"):
         raise ValueError("PGx source URL must use HTTPS")
-    if expected_source_release is not None and source_release != expected_source_release:
+    if not __import__("re").fullmatch(r"[a-fA-F0-9]{64}", source_sha256):
+        raise ValueError("PGx source SHA-256 must be 64 hexadecimal characters")
+    if source_release != expected_source_release:
         raise ValueError("PGx source release does not match the pinned release")
     raw_definitions = value.get("definitions")
     if not isinstance(raw_definitions, list) or not raw_definitions:
@@ -122,7 +128,7 @@ def parse_star_allele_definitions(
             raise ValueError("A variant cannot be both required and excluded")
         definitions.append(StarAlleleDefinition(
             gene, star, required, excluded, source_name, source_release,
-            source_url, license_id, genome_build, definition_id,
+            source_url, source_sha256.lower(), license_id, genome_build, definition_id,
         ))
     return definitions
 

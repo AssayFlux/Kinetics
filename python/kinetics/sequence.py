@@ -2,7 +2,7 @@
 from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass
-from typing import Iterable, Iterator
+from typing import Iterable
 
 DNA = frozenset("ACGTRYSWKMBDHVN")
 RNA = frozenset("ACGURYSWKMBDHVN")

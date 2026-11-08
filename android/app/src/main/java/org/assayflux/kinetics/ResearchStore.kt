@@ -233,6 +233,31 @@ class ResearchStore(context: Context) :
         }
     }
 
+    /**
+     * Preserve encrypted records when the Keystore alias is missing. Never create a replacement
+     * key or delete ciphertext automatically: the original data is unrecoverable without its key.
+     * Returns the number of completed jobs moved to the explicit recovery-required state.
+     */
+    fun markKeyLossRecoveryRequired(): Int {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            val values = ContentValues().apply {
+                put("state", "recovery_required")
+                put("message", "Encryption key is missing. Ciphertext is preserved; do not re-import over this record. Restore the original Android Keystore backup/device state if available, otherwise export is unavailable.")
+                put("updated_at", System.currentTimeMillis())
+            }
+            val changed = db.update(
+                "jobs", values,
+                "state='succeeded' AND storage_path IS NOT NULL", null,
+            )
+            db.setTransactionSuccessful()
+            return changed
+        } finally {
+            db.endTransaction()
+        }
+    }
+
     /** Imports left queued/running by process death; unique WorkManager names make re-enqueue idempotent. */
     fun recoverableImports(): List<RecoverableImport> {
         val result = mutableListOf<RecoverableImport>()

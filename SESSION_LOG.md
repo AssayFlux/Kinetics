@@ -1399,3 +1399,9 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added `gene_catalogue_coverage_report` for bounded summaries by taxonomy, gene type and source release, plus missing-annotation counts.
 - The report explicitly returns null completeness percentage/denominator because an expected gene universe must be independently defined; it does not claim genome-wide completeness or clinical coverage.
 - Added tests for multi-taxonomy counts, missing denominator semantics and entry bounds; registered the source capability with evidence_level none.
+
+
+## 2026-11-08 — I4 machine-readable candidate catalogue
+- Added metadata-only candidate source records for PubChem BioAssay, ChEMBL and Tox21 with endpoint-specific review requirements.
+- Added a strict schema requiring license status verify_before_intake, patient_data false and zero acquired entries. No data bytes, model weights, release IDs, license approvals or prediction results are claimed.
+- Added YAML/schema regression test. I4 remains preparation-only pending exact release, license, endpoint and validation review.

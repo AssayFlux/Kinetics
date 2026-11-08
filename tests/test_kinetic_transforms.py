@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import pytest
 from collections.abc import Callable
+
+import pytest
 
 from kinetics.kinetics import eadie_hofstee, hanes_woolf, lineweaver_burk
 

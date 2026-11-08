@@ -218,7 +218,7 @@ def iter_bam_records(source: BinaryIO) -> Iterator[SamRecord]:
     if not hasattr(source, "read"):
         raise TypeError("BAM source must be an open binary stream")
     stream = gzip.GzipFile(fileobj=source, mode="rb")
-    if stream.read(4) != b"BAM\\x01":
+    if stream.read(4) != b"BAM\x01":
         raise ValueError("Invalid BAM magic; input must be BGZF-compressed BAM")
     raw = stream.read(4)
     if len(raw) != 4:
@@ -245,7 +245,7 @@ def iter_bam_records(source: BinaryIO) -> Iterator[SamRecord]:
             raise ValueError("Invalid BAM reference name length")
         name = stream.read(name_length)
         raw = stream.read(4)
-        if len(name) != name_length or name[-1:] != b"\\x00" or len(raw) != 4:
+        if len(name) != name_length or name[-1:] != b"\x00" or len(raw) != 4:
             raise ValueError("Truncated or malformed BAM reference entry")
         references.append(name[:-1].decode("utf-8", errors="strict"))
         reference_length = struct.unpack("<i", raw)[0]

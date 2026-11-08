@@ -31,7 +31,7 @@ This roadmap operationalises the archived master. A phase is complete only when 
 
 v0.1.0 = R0–R3.
 
-## Track S — Structure excellence
+## Track S — Structure excellence, protein intelligence and discovery
 
 **Sequencing gate (updated by explicit owner instruction, 2026-11-08):** The owner has now explicitly authorized S-track implementation to begin in parallel with completion of R1–R10. This supersedes the earlier sequencing-only prohibition on starting S. Work may proceed only on independently safe S1 preparation that does not assume R1 WebView feasibility or unapproved third-party assets. Full offline rendering remains blocked on R1 WebView/runtime evidence and exact viewer/dependency license approval. S2–S5 retain their scientific, security, model-license and benchmark dependencies. This sequencing change does not mark any R phase complete, waive exit evidence, or authorize patient/clinical use.
 
@@ -42,6 +42,11 @@ v0.1.0 = R0–R3.
 | S3 | Variant mapping, interface and pocket analysis | S2, variant evidence | Capability validation; evidence not verdict | not-started | Engineering + Validation | TBD |
 | S4 | Node prediction with approved models/confidence and experimental comparison | Node security, code/weights licenses | Reproducible benchmark and limitations | not-started | Engineering + Validation | TBD |
 | S5 | Rendering/export and structure benchmark | S1–S4 as applicable | Benchmark-generated figures | not-started | Engineering + Validation | TBD |
+| S6 | Unknown-sequence triage, protein family/domain/motif search and evidence-ranked annotation | R4; versioned local reference packs | Curated positive/negative fixtures, reference concordance, calibrated thresholds, resource bounds | planned | Engineering + Validation | TBD |
+| S7 | Prokaryotic and eukaryotic genome annotation/gene discovery pipelines | R4; organism-specific curated genomes | Independent gene-boundary/function metrics, coordinate correctness, coverage and resource benchmarks | planned | Engineering + Validation | TBD |
+| S8 | Non-standard genetic-code investigation and translation-table candidate inference | S6–S7; organism-specific truth sets | Independent reference validation, confusion matrices, calibrated abstention and ambiguous-case tests | planned | Engineering + Validation | TBD |
+| S9 | Protein sequence/domain/family intelligence and sequence-to-structure mapping | S1, S6, R5; licensed reference sets | Independent annotation comparisons, residue-mapping tests and model-vs-experiment provenance | planned | Engineering + Validation | TBD |
+| S10 | Constrained de novo protein design research, candidate ranking and experimental validation workflow | Model/data license approval, secure compute/node, biosafety review, S6/S9 | Reproducible generation, held-out benchmarks, prospective wet-lab validation and owner approval | planned — model/license/compute/biosafety feasibility only until gates pass | Engineering + Validation + Owner | TBD |
 
 ## Track I — In-silico lab
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |

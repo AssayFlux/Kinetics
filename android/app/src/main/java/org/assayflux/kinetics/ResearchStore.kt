@@ -278,6 +278,36 @@ class ResearchStore(context: Context) :
         }
     }
 
+    /**
+     * Report encrypted files without a matching durable job/storage reference.
+     * Findings are inventory-only: this method never deletes or modifies ciphertext.
+     */
+    fun encryptedOrphanInventory(): List<EncryptedOrphanFile> {
+        val knownIds = mutableSetOf<String>()
+        val referencedPaths = mutableSetOf<String>()
+        val jobsWithFinalStorage = mutableSetOf<String>()
+        readableDatabase.rawQuery(
+            "SELECT id,storage_path FROM jobs", emptyArray(),
+        ).use { cursor ->
+            while (cursor.moveToNext()) {
+                val id = cursor.getString(0)
+                knownIds += id
+                if (!cursor.isNull(1)) {
+                    val path = cursor.getString(1)
+                    referencedPaths += runCatching { File(path).canonicalPath }.getOrDefault(path)
+                    jobsWithFinalStorage += id
+                }
+            }
+        }
+        return EncryptedOrphanScanner.scan(
+            finalizedDirectory = File(appContext.noBackupFilesDir, "research-inputs"),
+            stagingDirectory = File(appContext.noBackupFilesDir, "research-imports"),
+            referencedFinalPaths = referencedPaths,
+            knownJobIds = knownIds,
+            jobsWithFinalStorage = jobsWithFinalStorage,
+        )
+    }
+
     /** Imports left queued/running by process death; unique WorkManager names make re-enqueue idempotent. */
     fun recoverableImports(): List<RecoverableImport> {
         val result = mutableListOf<RecoverableImport>()

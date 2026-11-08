@@ -140,3 +140,14 @@ The embedded Chaquopy runtime target remains the separately pinned
 `3.11.17-0` distribution. The build host interpreter executes the wheel-builder
 scripts; the Chaquopy target controls the Android Python runtime ABI. They are
 recorded as separate SBOM entries and must not be conflated.
+
+
+## Kotlin compiler artifact mirror fallback (build infrastructure only)
+
+The Android settings add a content-filtered Maven Central mirror for the
+`org.jetbrains.kotlin` group before Maven Central. It is a build-time fallback
+for the Kotlin compiler artifacts whose Maven Central/GitHub delivery returned
+HTTP 504 during CI. The filter prevents unrelated dependencies from resolving
+through that mirror; Maven Central remains configured afterward. This does not
+add a runtime application dependency. Mirror trust, checksum verification and
+full transitive dependency auditing remain part of the R1 release gate.

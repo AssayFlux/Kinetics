@@ -9,6 +9,8 @@ def runtime_report():
 
     import Bio
     import numpy
+    import kinetics
+    from kinetics import normalize_small_variant, parse_fasta
     from Bio import SeqIO
     from Bio.Align import PairwiseAligner
     from Bio.PDB import PDBParser
@@ -21,6 +23,12 @@ def runtime_report():
     fasta = StringIO(">kinetics-r1-smoke\nACGTACGT\n")
     record = next(SeqIO.parse(fasta, "fasta"))
     assert str(record.seq) == "ACGTACGT"
+    package_record = parse_fasta(">workbench-smoke\nACGT\n")[0]
+    normalized_variant = normalize_small_variant("probe", 4, "A", "AA", "CAAAA")
+    assert package_record.sequence == "ACGT"
+    assert (normalized_variant["pos"], normalized_variant["ref"], normalized_variant["alt"]) == (
+        1, "C", "CA"
+    )
 
     pdb = """\
 ATOM      1  N   GLY A   1      11.104  13.207   9.123  1.00 20.00           N
@@ -55,6 +63,8 @@ END
 
     return {
         "python": sys.version,
+        "kinetics_workbench": kinetics.__version__,
+        "kinetics_package_smoke": package_record.sequence,
         "platform": platform.platform(),
         "biopython": Bio.__version__,
         "numpy": numpy.__version__,

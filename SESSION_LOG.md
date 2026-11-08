@@ -935,3 +935,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Replaced Biopython's mutable PyPI source fetch with a pinned immutable Biopython 1.88 Git commit, `git archive` source export and local Chaquopy recipe path. Added commit pin to static Android config guard.
 
 - Added the full Biopython upstream LICENSE text to Android assets and represented its custom license identifier/extracted text in SPDX; the SPDX package records the exact source commit. Static privacy guard now checks no INTERNET permission, backup disabled and cleartext disabled.
+
+
+### R8 NB2 edge-case increment
+- Added an explicit all-zero-feature path to the exploratory NB2 GLM. Such features are retained with p=1 for transparent multiple-testing accounting, neutral coefficient placeholders, and a clear non-estimable warning; no artificial model fit is attempted.
+- Added regression-test source only. No tests or Android build were run.

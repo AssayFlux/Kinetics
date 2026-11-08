@@ -28,3 +28,8 @@ Added an exploratory NB2 log-link GLM for raw integer counts with condition effe
 ### Count-aware model increment
 
 An exploratory NB2 log-link GLM now accepts raw integer counts, size factors, numeric covariates and caller-encoded batch indicators. It uses unmoderated per-feature moment dispersion and asymptotic Wald tests with BH correction. It is not DESeq2/edgeR-equivalent and is not validated for small-sample inference, repeated measures or outlier-heavy designs.
+
+
+### NB2 all-zero feature guard
+
+Features with all-zero raw counts are now retained in the tested family with p=1, neutral effect estimates and an explicit non-estimable warning, rather than attempting an artificial IRLS fit. A regression test is committed but remains unexecuted pending the requested test phase.

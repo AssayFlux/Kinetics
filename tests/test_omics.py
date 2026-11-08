@@ -78,3 +78,17 @@ def test_negative_binomial_glm_rejects_fractional_and_confounded_designs() -> No
             [0, 0, 1, 1],
             covariates=[[0, 0, 1, 1]],
         )
+
+
+
+def test_negative_binomial_glm_marks_all_zero_features_non_estimable() -> None:
+    from kinetics.omics import negative_binomial_differential_expression
+
+    result = negative_binomial_differential_expression(
+        [[0, 0, 0, 0, 0, 0], [10, 12, 11, 20, 22, 21]],
+        [0, 0, 0, 1, 1, 1],
+        feature_ids=["all_zero", "expressed"],
+    )
+    assert result[0]["p_value"] == 1.0
+    assert result[0]["log2_fold_change"] == 0.0
+    assert "not estimable" in result[0]["warning"]

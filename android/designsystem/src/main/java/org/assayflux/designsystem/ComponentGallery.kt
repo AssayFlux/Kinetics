@@ -54,7 +54,7 @@ fun KineticsComponentGallery() {
                     primary = palette.primary, secondary = palette.secondary,
                     background = palette.background, surface = palette.surface,
                     onSurface = palette.text, onBackground = palette.text,
-                    surfaceVariant = palette.surface_alt, onSurfaceVariant = palette.muted,
+                    surfaceVariant = palette.surfaceAlt, onSurfaceVariant = palette.muted,
                     outline = palette.outline,
                 )
             } else {
@@ -62,7 +62,7 @@ fun KineticsComponentGallery() {
                     primary = palette.primary, onPrimary = palette.background,
                     secondary = palette.secondary, background = palette.background,
                     surface = palette.surface, onSurface = palette.text,
-                    onBackground = palette.text, surfaceVariant = palette.surface_alt,
+                    onBackground = palette.text, surfaceVariant = palette.surfaceAlt,
                     onSurfaceVariant = palette.muted, outline = palette.outline,
                 )
             }

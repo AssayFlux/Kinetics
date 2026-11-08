@@ -52,7 +52,7 @@ internal fun KineticsAppShell(
         lightColorScheme(
             primary = palette.primary, secondary = palette.secondary, tertiary = palette.tertiary,
             background = palette.background, surface = palette.surface, onSurface = palette.text,
-            onBackground = palette.text, surfaceVariant = palette.surface_alt,
+            onBackground = palette.text, surfaceVariant = palette.surfaceAlt,
             onSurfaceVariant = palette.muted, outline = palette.outline,
         )
     } else {
@@ -60,7 +60,7 @@ internal fun KineticsAppShell(
             primary = palette.primary, onPrimary = palette.background,
             secondary = palette.secondary, tertiary = palette.tertiary,
             background = palette.background, surface = palette.surface, onSurface = palette.text,
-            onBackground = palette.text, surfaceVariant = palette.surface_alt,
+            onBackground = palette.text, surfaceVariant = palette.surfaceAlt,
             onSurfaceVariant = palette.muted, outline = palette.outline,
         )
     }

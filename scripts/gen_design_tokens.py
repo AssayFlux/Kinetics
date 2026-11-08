@@ -18,6 +18,11 @@ def identifier(value: str) -> str:
     return "".join(word[:1].upper() + word[1:] for word in words)
 
 
+def kotlin_property(value: str) -> str:
+    words = value.split("_")
+    return words[0] + "".join(word[:1].upper() + word[1:] for word in words[1:])
+
+
 def kotlin_source(data: dict) -> str:
     shared = data["shared"]
     lines = [
@@ -30,7 +35,7 @@ def kotlin_source(data: dict) -> str:
     ]
     for index, prop in enumerate(PROPERTIES):
         suffix = "," if index < len(PROPERTIES) - 1 else ""
-        lines.append(f"    val {prop}: Color{suffix}")
+        lines.append(f"    val {kotlin_property(prop)}: Color{suffix}")
     lines += [")", "", "object KineticsTokens {"]
     lines.append(f"    val spacingDp = listOf({', '.join(map(str, shared['spacing_dp']))})")
     lines.append(f"    val radiiDp = listOf({', '.join(map(str, shared['radii_dp']))})")
@@ -43,7 +48,7 @@ def kotlin_source(data: dict) -> str:
             for index, prop in enumerate(PROPERTIES):
                 color = palette[prop].removeprefix("#")
                 suffix = "," if index < len(PROPERTIES) - 1 else ""
-                lines.append(f"        {prop} = Color(0xFF{color}){suffix}")
+                lines.append(f"        {kotlin_property(prop)} = Color(0xFF{color}){suffix}")
             lines.append("    )")
     lines += ["}", ""]
     return "\n".join(lines)

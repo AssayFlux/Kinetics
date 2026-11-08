@@ -131,6 +131,11 @@ tools:
     status: implemented
     implementation: python/kinetics/structure.py
     evidence_level: none
+  - id: chemistry.rdkit_adapter
+    name: Optional RDKit sanitization, descriptors and Morgan fingerprints
+    status: implemented
+    implementation: python/kinetics/chemistry_rdkit.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

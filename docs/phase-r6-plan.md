@@ -5,7 +5,7 @@
 ## Scope
 - Multi-record SDF V2000 parsing and conservative V3000 atom/bond parsing with coordinate, identifier and bond validation.
 - Bounded graph descriptors, exact element/bond-order substructure matching and path fingerprints/Tanimoto similarity.
-- Future: approved production chemistry engine, stereochemistry, aromaticity, valence/sanitization, implicit hydrogens, protonation/tautomer handling, SMILES, substructure semantics, conformers and property calculations.
+- Added an optional RDKit adapter for sanitized SMILES/molblock parsing, canonical isomeric SMILES, standard descriptors and Morgan radius-2 fingerprints/Tanimoto. RDKit is not bundled in Android; Android ABI, transitive dependencies, version pin, binary size and license notices remain unapproved. Protonation/tautomer workflows, conformers and Android production integration remain open.
 
 ## Current source
 Implemented in `python/kinetics/chemistry.py`. Resource caps apply to substructure traversal and path fingerprints.

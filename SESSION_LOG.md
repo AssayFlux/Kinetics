@@ -904,3 +904,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R10 SBOM source inventory increment
 - Added a standard-library SPDX 2.3 generator for directly declared Android Gradle, Chaquopy Python, development Python and Rust dependencies. Unresolved/BOM-managed versions and license conclusions are marked NOASSERTION; the generator's annotation explicitly says it is not a resolved transitive release SBOM.
 - Updated release checklist and documentation so the static inventory cannot be mistaken for the final release SBOM.
+
+
+### R6 optional RDKit adapter increment
+- Added a lazy optional RDKit backend for sanitized SMILES/molblock parsing, canonical isomeric SMILES, formula/molecular-weight/LogP/TPSA/H-bond descriptors, chiral-centre reporting, Morgan fingerprints and Tanimoto similarity.
+- The adapter reports the active RDKit version and fails clearly when unavailable. It is not bundled in Android and has no product approval; exact release pin, transitive licenses, Android ABI/16 KB support and binary-size evaluation remain open. Added optional regression-test source guarded by importorskip; no tests were run.

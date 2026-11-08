@@ -74,3 +74,8 @@ No PharmVar, PharmGKB, CPIC or other PGx content is currently bundled. Before im
 ## SBOM generation
 
 Run `python scripts/generate_source_sbom.py --output sbom/source-dependencies.spdx.json` to create an SPDX 2.3 inventory of declared direct dependencies. This deliberately marks unresolved versions and license conclusions as NOASSERTION and does not include resolved transitive Gradle artifacts, downloaded wheel hashes, native binary contents or file-level license results. It is an engineering inventory only, not the final release SBOM. The release checklist still requires a fully resolved transitive SBOM.
+
+
+## RDKit adapter status
+
+An optional source adapter exists at python/kinetics/chemistry_rdkit.py. It imports RDKit lazily and reports the active engine version; it is not a bundled dependency and is not used by the Android app. Before adoption, pin an exact compatible release, capture the full transitive dependency graph, audit notices/licenses at file and binary level, evaluate Android arm64/16 KB compatibility and benchmark binary footprint. The core RDKit project license is BSD-3-Clause, but that does not settle the licenses of all bundled dependencies or contributed components.

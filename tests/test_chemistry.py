@@ -86,3 +86,24 @@ def test_sdf_v3000_parses_basic_atom_and_bond_graph() -> None:
     assert parsed["format"] == "V3000"
     assert parsed["formula"] == "C2"
     assert parsed["bonds"] == [(0, 1, 1)]
+
+
+
+def test_rdkit_backend_uses_sanitized_molecules_and_morgan_fingerprints() -> None:
+    pytest.importorskip("rdkit")
+    from kinetics.chemistry_rdkit import analyze_smiles, morgan_tanimoto
+
+    ethanol = analyze_smiles("CCO")
+    assert ethanol["engine"] == "RDKit"
+    assert ethanol["formula"] == "C2H6O"
+    assert ethanol["morgan_fingerprint"]["algorithm"] == "Morgan"
+    assert morgan_tanimoto("CCO", "CCO") == pytest.approx(1.0)
+    assert morgan_tanimoto("CCO", "CC") < 1.0
+
+
+def test_rdkit_backend_rejects_invalid_molecules() -> None:
+    pytest.importorskip("rdkit")
+    from kinetics.chemistry_rdkit import analyze_smiles
+
+    with pytest.raises(ValueError):
+        analyze_smiles("not a valid smiles string")

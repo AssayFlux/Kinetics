@@ -94,7 +94,7 @@ def generate(root: Path = ROOT) -> dict[str, object]:
                 if not line or line.startswith("#") or line.startswith(("-", "http")):
                     continue
                 match = re.match(
-                    r"([A-Za-z0-9_.-]+)(?:\\[[^]]+\\])?\\s*(.*)", line,
+                    r"([A-Za-z0-9_.-]+)(?:\[[^]]+\])?\s*(.*)", line,
                 )
                 if match:
                     name, constraint = match.groups()

@@ -28,6 +28,8 @@ jobs:
         run: mypy scripts tests
       - name: Registry validation
         run: python scripts/check_registry.py
+      - name: Android offline/build-first configuration guardrails
+        run: python scripts/check_android_config.py
       - name: Unit tests
         run: pytest
       - name: Reproduction stub

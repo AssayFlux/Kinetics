@@ -148,3 +148,27 @@ U0 visual direction: owner authorized best-judgement completion; Obsidian Cyan i
 - The owner explicitly instructed Engineering to complete R1–R10 and start Track S without waiting for another per-track approval.
 - This supersedes the previous sequencing prohibition only for independently implementable Track S preparation and implementation. S1 preparation has started; full rendering remains gated on R1 WebView/runtime evidence and exact third-party license approval.
 - S2–S5 remain dependent on their scientific reference sets, model/license decisions, node security and benchmark evidence. No scientific, device, production, clinical or release gate is waived.
+
+## Integrated implementation and verification cycle — owner direction (2026-11-08)
+
+The owner requires substantial implementation followed by a complete test campaign, then another implementation-and-test cycle. This supersedes any interpretation of earlier build-first/test-later sequencing. Build substantial increments, but test every increment before accepting it as the next baseline.
+
+### Mandatory cycle
+1. Plan and inspect: read NORTH_STAR, ROADMAP, DECISIONS and the latest SESSION_LOG; inspect source, assets, registry, dependencies and tests. Map changes to roadmap items.
+2. Implement a substantial vertical slice: include UI, domain/orchestration, persistence/security, capability registry and real user actions as applicable. No dead buttons, fake results, placeholder success or controls that merely change appearance without applying state.
+3. Build: run reproducible arm64 debug APK/AAB pipeline. Preserve exact source commit, toolchain, artifact hashes and logs. Compilation is only a build result.
+4. Test the affected system: Python/Rust/C++/Kotlin tests; Android JVM and instrumentation/UI tests; registry/schema/licence/security checks; migration/recovery/import/export; navigation/action coverage; accessibility/contrast/responsive screenshot checks; runtime probes and resource checks. Emulator and physical-device tests are separate. Unavailable tests are BLOCKED or NOT RUN, never PASS.
+5. Inspect the exact artifact: install and exercise the APK from that cycle; verify authentication/biometric flows, visible controls, navigation, persistence, offline behavior and crash-free paths. Record device/API/ABI, steps, expected/actual results, screenshots/logs and APK SHA-256. CI compilation is not an installed-app test.
+6. Fix and repeat: any failure returns to implementation; rerun affected tests and required regression suite. Do not accept a failing baseline.
+7. Record honestly: update roadmap, registry, validation manifests, UI quality report and session log. Distinguish implemented, automated-test-passed, reference-validated, emulator-verified and physical-device-verified.
+
+### Required UI and authentication scope
+- D-015 Light Classic is the sole active visual authority, with Dark Classic and System. Previous neon/Obsidian Cyan and earlier palettes are discontinued for active UI work and retained only as historical records.
+- Implement actual splash/onboarding, authentication, dashboard, navigation, profile/security and appearance flows in native Compose, using original owner-provided brand assets without destructive alteration.
+- No fictitious remote account service. Clearly distinguish local app-lock from account authentication.
+- Biometric unlock must use AndroidX BiometricPrompt, runtime capability/enrollment checks, explicit opt-in, secure credential fallback, lockout/error handling and Keystore-backed cryptographic protection where appropriate. Never store biometric templates or passwords.
+- Every visible option must perform a real action, open a real screen, or be explicitly disabled with a reason.
+- Research tools are runnable only with a real registry entry, input contract, dispatcher, result model/viewer and tests. Research Mode and non-clinical restrictions remain mandatory.
+
+### Tested-build acceptance
+A build may be called tested only when its exact artifact has a recorded successful build, applicable automated regression results and required install/runtime UI evidence. Device checks that cannot be performed remain explicit blockers. A debug APK is not a production release.

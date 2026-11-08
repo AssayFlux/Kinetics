@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/local-reference-pack.schema.json",
+  "title": "Kinetics local FASTA reference-pack manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "name",
+    "version",
+    "license",
+    "source",
+    "sequence_type",
+    "format",
+    "content_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "license": { "type": "string", "minLength": 1 },
+    "source": { "type": "string", "format": "uri", "pattern": "^(https?|doi):" },
+    "sequence_type": { "enum": ["DNA", "RNA", "protein"] },
+    "format": { "const": "fasta" },
+    "content_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

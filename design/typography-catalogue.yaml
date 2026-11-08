@@ -3,10 +3,13 @@ status: proposed catalogue; audit exact upstream font files and licence texts be
 selection_policy:
   distinct_families_only: true
   default_ui: Inter
+  brand_script: Allura (candidate; restricted to wordmark/brand accent)
+  display_serif: Cormorant Garamond (candidate; selected display headings only)
   default_scientific_monospace: JetBrains Mono
   system_fallback: sans-serif
   bundle_only_after_licence_audit: true
 families:
+  - {id: allura, family: Allura, category: calligraphic_display, style: elegant_script_wordmark_only, licence: OFL-1.1-candidate; verify exact upstream release}
   - {id: inter, family: Inter, category: official_ui, style: modern_neutral, licence: OFL-1.1-candidate}
   - {id: roboto, family: Roboto, category: official_ui, style: android_native, licence: Apache-2.0}
   - {id: ibm_plex_sans, family: IBM Plex Sans, category: official_ui, style: technical_professional, licence: OFL-1.1-candidate}
@@ -23,7 +26,7 @@ families:
   - {id: michroma, family: Michroma, category: futuristic, style: wide_technical_display, licence: OFL-1.1-candidate}
   - {id: audiowide, family: Audiowide, category: futuristic, style: sci_fi_display, licence: OFL-1.1-candidate}
   - {id: cinzel, family: Cinzel, category: certificate_serif, style: inscriptional, licence: OFL-1.1-candidate}
-  - {id: cormorant_garamond, family: Cormorant Garamond, category: certificate_serif, style: elegant_classical, licence: OFL-1.1-candidate}
+  - {id: cormorant_garamond, family: Cormorant Garamond, category: certificate_serif, style: elegant_classical_display_headings, licence: OFL-1.1-candidate}
   - {id: eb_garamond, family: EB Garamond, category: certificate_serif, style: formal_book, licence: OFL-1.1-candidate}
   - {id: libre_baskerville, family: Libre Baskerville, category: certificate_serif, style: formal_document, licence: OFL-1.1-candidate}
   - {id: merriweather, family: Merriweather, category: certificate_serif, style: readable_serif, licence: OFL-1.1-candidate}

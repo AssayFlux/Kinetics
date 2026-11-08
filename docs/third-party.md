@@ -123,3 +123,11 @@ a pinned Android prototype dependency; the validation requirement shares that
 version but does not approve any additional runtime dependency. The SPDX
 generator records both usage contexts. This check is not evidence of organism
 identification or genetic-code inference.
+
+
+## Host-only RDKit validation pin
+
+`validation/requirements-rdkit.txt` pins RDKit 2025.9.4 for the I1 descriptor
+sanity job only. The core RDKit project license is BSD-3-Clause, but this host
+wheel is not bundled in the Android app; transitive wheel components and their
+notices still require a complete audit before any distribution or product use.

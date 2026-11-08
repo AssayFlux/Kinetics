@@ -12,7 +12,7 @@ from .chemistry import (
     graph_descriptors, iter_sdf_records, parse_sdf_record, path_fingerprint, substructure_match, tanimoto,
 )
 from .genomics import (
-    SamRecord, fastq_quality_summary, normalize_small_variant, parse_sam, parse_vcf,
+    SamRecord, fastq_quality_summary, iter_bam_records, normalize_small_variant, parse_sam, parse_vcf,
 )
 from .kinetics import (
     bootstrap_michaelis_menten, eadie_hofstee, fit_michaelis_menten, hanes_woolf, inhibition_rate,
@@ -40,7 +40,7 @@ __all__ = [
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate",
-    "iter_fasta_records", "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk",
+    "iter_bam_records", "iter_fasta_records", "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk",
     "log2_fold_change", "logistic_growth", "michaelis_menten", "normalize_small_variant",
     "needleman_wunsch", "neighbor_joining", "negative_binomial_differential_expression", "parse_fasta", "parse_fastq", "parse_newick",
     "parse_mmcif", "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",

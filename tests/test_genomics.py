@@ -92,3 +92,29 @@ def test_sam_allows_missing_qualities_and_checks_cigar_query_consumption() -> No
     assert valid[0].sequence == "ACGT"
     with pytest.raises(ValueError, match="CIGAR query length"):
         parse_sam("read1\t0\tchr1\t1\t60\t4M\t*\t0\t0\tACG\t*")
+
+
+
+def test_bam_binary_record_core_fields_decode_from_gzip_stream() -> None:
+    import gzip
+    import io
+    import struct
+
+    from kinetics.genomics import iter_bam_records
+
+    header = b"BAM\\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
+    header += struct.pack("<i", 5) + b"chr1\\x00" + struct.pack("<i", 1000)
+    core = struct.pack("<iiIIiiii", 0, 9, (60 << 8) | 3, 1, 4, -1, -1, 0)
+    name = b"r1\\x00"
+    cigar = struct.pack("<I", (4 << 4) | 0)
+    packed_sequence = bytes([0x12, 0x48])
+    qualities = bytes([30, 30, 30, 30])
+    block = core + name + cigar + packed_sequence + qualities
+    bam = header + struct.pack("<i", len(block)) + block
+    records = list(iter_bam_records(io.BytesIO(gzip.compress(bam))))
+    assert len(records) == 1
+    assert records[0].query_name == "r1"
+    assert (records[0].reference, records[0].position, records[0].mapq) == ("chr1", 10, 60)
+    assert records[0].cigar == "4M"
+    assert records[0].sequence == "ACGT"
+    assert records[0].quality == "????"

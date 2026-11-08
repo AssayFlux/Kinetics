@@ -869,3 +869,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Added an exploratory NB2 log-link GLM for raw integer counts, with size-factor normalization, per-feature moment dispersion, IRLS, numeric covariates, Wald statistics and BH correction.
 - Design rank deficiencies and insufficient residual degrees of freedom are rejected. Regression-test source covers a condition effect, a balanced numeric batch covariate, fractional-count rejection and confounding rejection.
 - This is not equivalent to DESeq2/edgeR: no empirical-Bayes dispersion shrinkage, small-sample calibration, repeated-measures model or robust outlier procedure. No tests or reference simulations were run.
+
+
+### R4 BAM core decoder increment
+- Added a lazy gzip/BGZF-compatible BAM decoder for reference dictionary and core alignment fields (query name, flags, reference, position, MAPQ, CIGAR, sequence and qualities). It bounds header/record blocks, validates record lengths, CIGAR operation codes, sequence packing, qualities and reference IDs.
+- Exported the iterator and added a synthetic binary-record fixture. Auxiliary tags are skipped; CRAM is not implemented; no indexed region access or large-file benchmarks are claimed. No tests were run.

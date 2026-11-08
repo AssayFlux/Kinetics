@@ -7,13 +7,13 @@
 - Sequence statistics, reverse complement, transcription, k-mer counting and global pairwise alignment.
 - FASTQ quality summaries and explicit-offset terminal quality trimming.
 - SAM and VCF text parsing with mandatory-field and scalar validation; SAM validation also checks CIGAR query consumption and permits missing QUAL when SEQ is present.\n- Reference-checked minimal/left normalization for literal biallelic A/C/G/T small variants.
-- Future: BAM/CRAM, robust VCF normalization/decomposition, adapter trimming, paired-read handling, indexed access and Rust acceleration.
+- Added a bounded lazy BAM core-field decoder for gzip/BGZF-compatible BAM streams; auxiliary tags are skipped. CRAM, robust VCF normalization/decomposition, adapter trimming, paired-read handling, indexed access and Rust acceleration remain future work.
 
 ## Current source
 Implemented in `python/kinetics/sequence.py` and `python/kinetics/genomics.py`. Regression-test source is in `tests/test_research_primitives.py` and `tests/test_genomics.py`. The streaming iterator is exported as `kinetics.iter_fasta_records`; the reference normalizer is exported as `kinetics.normalize_small_variant`.
 
 ## Limitations
-- The FASTA text convenience function materializes its returned records; use the iterator API for large inputs.\n- No BAM/CRAM binary decoder.
+- The FASTA text convenience function materializes its returned records; use the iterator API for large inputs.\n- BAM decoder exposes core SAM-like fields only and currently materializes each compressed BAM record block (bounded to 64 MiB); auxiliary tags are skipped. CRAM remains unsupported and requires a reviewed htslib/CRAM engine.
 - Terminal trimming is not adapter trimming or sliding-window quality trimming.
 - VCF parsing does not yet normalize/decompose records automatically. The separate normalizer handles only reference-checked biallelic literal A/C/G/T small variants; symbolic alleles, breakends, multi-allelic decomposition, phasing and variant interpretation remain unsupported.
 - Global alignment is not a high-throughput mapper.

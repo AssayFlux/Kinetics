@@ -111,6 +111,11 @@ tools:
     status: implemented
     implementation: python/kinetics/omics.py
     evidence_level: none
+  - id: genomics.bam_core
+    name: Streaming BAM core-field decoder
+    status: implemented
+    implementation: python/kinetics/genomics.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

@@ -131,3 +131,12 @@ identification or genetic-code inference.
 sanity job only. The core RDKit project license is BSD-3-Clause, but this host
 wheel is not bundled in the Android app; transitive wheel components and their
 notices still require a complete audit before any distribution or product use.
+
+
+## Host Python versus embedded Python target
+
+The Android build host is pinned to CPython 3.11.18 on the Ubuntu 26.04 runner.
+The embedded Chaquopy runtime target remains the separately pinned
+`3.11.17-0` distribution. The build host interpreter executes the wheel-builder
+scripts; the Chaquopy target controls the Android Python runtime ABI. They are
+recorded as separate SBOM entries and must not be conflated.

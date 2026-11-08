@@ -1379,3 +1379,10 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Preserves query positions and structure residue numbers; repeated matches and no-hit cases abstain explicitly. Non-standard residues are rejected rather than silently coerced.
 - Added tests for unique mapping, repeated-match abstention, no-match, unsupported residue and invalid query/chain inputs.
 - Limitations: no alignment, gaps, missing/disordered residue repair, insertion-code handling, variant-effect analysis, homology or function inference. S9 remains in progress pending residue-number semantics, reference fixtures and independent validation.
+
+
+## 2026-11-08 — I4 and P public-source inventory preparation
+- Added a metadata-only candidate source inventory for NCBI Gene, PharmVar, ClinVar and CPIC. Candidate rows are explicitly marked `verify_before_intake` and `patient_data: false`; the schema rejects unreviewed candidates being represented as license-approved entries.
+- Kept `entries: []`: no dataset payload has been retrieved, no hash or retrieval date has been fabricated, and no license approval is claimed.
+- Added I4 discovery notes for PubChem BioAssay, ChEMBL, Tox21 and FDA DILIrank as candidate research sources only. Exact releases, endpoint quality, license terms and applicability must be reviewed before intake. No ADMET/PK/PD/PBPK model was selected or evaluated.
+- P0 remains blocked. No patient data, genotype interpretation, clinical recommendation, treatment/dosing output or clinical feature was enabled.

@@ -763,3 +763,11 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Added regression cases to the source tree; they were not executed under the test-later instruction.
 
 - R2 follow-up: AES-GCM chunk AAD now binds every chunk to its job ID and ordinal, preventing cross-job substitution/reordering; authenticated materialization verifies the recorded whole-file SHA-256 before publishing a temporary plaintext file. The chunk format is versioned separately. This remains uncompiled and untested.
+
+
+### R5, R8 and R9 continuation
+- **R5:** added an mmCIF `_atom_site` loop parser that maps coordinate records into the shared atom model, handles label/auth identifier fallbacks and alternate locations, and rejects incomplete/non-finite coordinate rows. It is not a full mmCIF dictionary, symmetry or biological-assembly implementation.
+- **R8:** added two-group Welch unequal-variance tests for pre-normalized/log-scale feature matrices, Student-t two-sided p-values, and Benjamini–Hochberg q-values across the supplied feature family. The API rejects malformed sample designs and duplicate feature IDs. It does not model raw-count distributions, covariates, batches, paired/repeated measures or study design; results remain exploratory.
+- **R9:** added bounded provenance-preserving catalogue search over GeneID, official symbol, synonyms, descriptions, nomenclature and cross-references, with optional taxonomy filtering. It does not supply PGx star alleles, haplotypes, diplotypes or clinical recommendations.
+- Added regression-test source for the new R5/R8/R9 paths; tests remain deliberately unexecuted during this build-first pass.
+- Updated the integrated implementation inventory and roadmap. R1–R10 remain in progress; source additions are not validation or device support evidence.

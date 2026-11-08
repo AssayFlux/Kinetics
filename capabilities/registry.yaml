@@ -173,17 +173,17 @@ ui_screens:
   - id: ui.work
     name: "Work and research job list"
     track: UI
-    status: implemented
+    status: planned
     tests: []
-    accessibility_check: not-audit
+    accessibility_check: not-run
     device_matrix: not-run
     device_verified: false
   - id: ui.explore
     name: "Scientific capability catalogue"
     track: UI
-    status: implemented
+    status: planned
     tests: []
-    accessibility_check: not-audit
+    accessibility_check: not-run
     device_matrix: not-run
     device_verified: false
   - id: ui.domains

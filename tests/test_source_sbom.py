@@ -16,3 +16,6 @@ def test_source_sbom_includes_host_only_validation_dependencies() -> None:
     assert "biopython" in packages
     assert "also used by host-only validation dependency" in packages["biopython"]["comment"]
     assert "not Android runtime" not in packages["biopython"]["comment"]
+    assert "rdkit" in packages
+    assert "validation/requirements-rdkit.txt" in packages["rdkit"]["comment"]
+    assert "not Android runtime" in packages["rdkit"]["comment"]

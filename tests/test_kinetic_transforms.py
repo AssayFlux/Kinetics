@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+from collections.abc import Callable
 
 from kinetics.kinetics import eadie_hofstee, hanes_woolf, lineweaver_burk
 
@@ -18,7 +19,9 @@ def test_kinetic_linearized_views_return_explicit_axes_and_warnings() -> None:
 
 
 @pytest.mark.parametrize("transform", [lineweaver_burk, eadie_hofstee, hanes_woolf])
-def test_kinetic_transforms_reject_zero_and_non_finite_values(transform) -> None:
+def test_kinetic_transforms_reject_zero_and_non_finite_values(
+    transform: Callable[[list[float], list[float]], dict[str, object]],
+) -> None:
     with pytest.raises(ValueError, match="strictly positive"):
         transform([0.0, 1.0], [1.0, 2.0])
     with pytest.raises(ValueError, match="finite"):

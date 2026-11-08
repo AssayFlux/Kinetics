@@ -90,6 +90,7 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                     val wanted = minOf(buffer.size.toLong(), byteCount - verifiedBytes).toInt()
                     val count = input.read(buffer, 0, wanted)
                     if (count < 0) throw IllegalStateException("Source became shorter during resume")
+                    if (count == 0) continue
                     sourcePrefixDigest.update(buffer, 0, count)
                     verifiedBytes += count
                 }

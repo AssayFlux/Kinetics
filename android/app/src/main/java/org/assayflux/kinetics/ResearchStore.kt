@@ -256,7 +256,7 @@ class ResearchStore(context: Context) :
             // authenticated staging file actually exists; never delete or reset it.
             val stagingRoot = File(appContext.noBackupFilesDir, "research-imports").canonicalFile
             stagingRoot.listFiles()
-                ?.filter { it.isFile && it.name.endsWith(".encpart") }
+                ?.filter { it.isFile && it.name.endsWith(".encpart") && it.length() > LocalCrypto.HEADER_BYTES }
                 ?.forEach { partial ->
                     val id = partial.name.removeSuffix(".encpart")
                     if (!id.matches(Regex("[A-Za-z0-9_-]{1,80}"))) return@forEach

@@ -23,6 +23,8 @@ def map_exact_chain_sequence(
     atoms: Iterable[Atom],
     *,
     chain_id: str,
+    max_query_residues: int = 1_000_000,
+    max_structure_residues: int = 100_000,
 ) -> dict[str, object]:
     """Map a uniquely occurring exact chain sequence to a query protein sequence.
 
@@ -35,6 +37,10 @@ def map_exact_chain_sequence(
     query = "".join(query_sequence.split()).upper()
     if not query or set(query) - set(THREE_TO_ONE.values()):
         raise ValueError("query_sequence must contain only the 20 canonical amino acids")
+    if max_query_residues < 1 or len(query) > max_query_residues:
+        raise ValueError("query sequence exceeds the configured residue limit")
+    if max_structure_residues < 1:
+        raise ValueError("max_structure_residues must be positive")
     if not isinstance(chain_id, str) or not chain_id:
         raise ValueError("chain_id must be non-empty text")
 
@@ -42,6 +48,8 @@ def map_exact_chain_sequence(
     residues: dict[int, str] = {}
     residue_names: dict[int, str] = {}
     for atom in selected_atoms:
+        if atom.residue_number not in residues and len(residues) >= max_structure_residues:
+            raise ValueError("structure chain exceeds the configured residue limit")
         residue_name = atom.residue.upper()
         amino_acid = THREE_TO_ONE.get(residue_name)
         if amino_acid is None:

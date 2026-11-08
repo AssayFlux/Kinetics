@@ -761,3 +761,5 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - FASTQ parser now accepts wrapped sequence and quality lines, validates separator identifiers and exact total quality length, and rejects invalid quality characters.
 - Added explicit terminal low-quality trimming with Phred-offset validation, minimum-length rejection and limitations (no adapter or sliding-window trimming).
 - Added regression cases to the source tree; they were not executed under the test-later instruction.
+
+- R2 follow-up: AES-GCM chunk AAD now binds every chunk to its job ID and ordinal, preventing cross-job substitution/reordering; authenticated materialization verifies the recorded whole-file SHA-256 before publishing a temporary plaintext file. The chunk format is versioned separately. This remains uncompiled and untested.

@@ -48,6 +48,10 @@ v0.1.0 = R0–R3.
 | S9 | Protein sequence/domain/family intelligence and sequence-to-structure mapping | S1, S6, R5; licensed reference sets | Independent annotation comparisons, residue-mapping tests and model-vs-experiment provenance | planned | Engineering + Validation | TBD |
 | S10 | Constrained de novo protein design research, candidate ranking and experimental validation workflow | Model/data license approval, secure compute/node, biosafety review, S6/S9 | Reproducible generation, held-out benchmarks, prospective wet-lab validation and owner approval | planned — model/license/compute/biosafety feasibility only until gates pass | Engineering + Validation + Owner | TBD |
 
+## Parallel execution and publication evidence
+
+The owner authorized R, S, I and P work to proceed simultaneously on 2026-11-08, subject to each phase dependency and hard gate. The execution protocol and paper-readiness requirements are recorded in [docs/parallel-track-execution.md](docs/parallel-track-execution.md). Manuscript preparation and claim/evidence ledger are in `paper/`; validation result contract is in `validation/RESULT-MANIFEST.md`. Paper 1 remains a candidate only after R1–R3 exit evidence and independent validation. P0 remains blocked; P-track work is restricted to non-patient public-data preparation until the formal gate passes.
+
 ## Track I — In-silico lab
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |
 |---|---|---|---|---|---|---|

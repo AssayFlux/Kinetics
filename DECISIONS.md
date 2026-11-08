@@ -111,3 +111,10 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Brand: Do not sample brand artwork for seed colours or alter the organization logo. The owner-provided astronaut background is used as supplied on the Home hero.
 - Consequences: Palette contrast/CVD validation, token generation, gallery screenshots, adaptive layouts and owner visual review remain U0 work. Any contrast failure must be fixed in tokens, not by changing the logo.
 - Approver: Owner authorized completion by best judgement in chat on 2026-11-08.
+
+
+## D-012 — Responsive shell implementation strategy (2026-11-08)
+- Context: The UI shell needs compact, medium, expanded and large-window navigation while preserving the current stable Material 3 dependency set.
+- Choice: Implement live app-window classification in Compose and use Material 3 NavigationBar, NavigationRail and PermanentNavigationDrawer. Compact portrait uses bottom bar; medium/expanded and compact-height windows use rail; large/extra-large (≥1200dp) uses permanent drawer. Readable content is capped at 840dp.
+- Deviation: NavigationSuiteScaffold and WindowManager fold-posture APIs are not yet integrated. This is temporary; no fold-aware or hinge-safe claim is permitted. Extend after adaptive-library compatibility and posture tests are verified.
+- Evidence: WindowLayout.kt and WindowLayoutTest.kt; CI build/test pending. Device matrix remains NOT RUN.

@@ -41,3 +41,7 @@ Engineering may implement U0 foundations and repair the existing UI build. Do no
 
 ## Full source
 The complete owner-supplied message in this project conversation is the authoritative detailed source for Parts 0–14. This file records the scope and rules without silently converting aspirations into implementation claims.
+
+
+## Additive prompt reconciliation
+The latest owner UI master prompt is captured in `docs/ui/owner-master-prompt-addendum.md`. It is additive only: the archived master, approved decisions, capability registry, verified Android constraints and existing UI roadmap win wherever requirements overlap or conflict. No existing screens, tokens, fonts or logo assets are replaced by the addendum.

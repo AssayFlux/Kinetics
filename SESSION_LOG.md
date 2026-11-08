@@ -1433,3 +1433,20 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added `docs/ui/owner-master-prompt-addendum.md` to capture only additive requirements: delicate visual treatment, motif manifest/pool and deterministic daily picker proposal, theme contrast automation, reduced-motion behavior, cultural respect, expanded screen-state requirements and corresponding test/README expectations.
 - Linked the addendum from README. No screens, tokens, fonts, logos or existing UI were replaced. Motif system and detailed visual implementation remain subject to reconciliation with the full master and Track U gates.
 - Owner's prompt proposes alternate font families; no typography change was made because existing approved repository decisions/catalogue take precedence. No font binaries were bundled.
+
+
+## 2026-11-08 — Owner approved new Kinetics visual system (D-015)
+**Objective:** Replace conflicting old UI instructions with the owner's newly approved six-screen visual direction while preserving historical decision auditability and all non-UI project gates.
+
+### Recorded
+- Owner explicitly approved the generated six-screen concept (splash, login, dashboard carousel, navigation drawer, profile/settings, appearance) and directed that the new design be documented and implemented carefully.
+- Added canonical `docs/ui/kinetics-visual-design-system.md` with Light Classic/Dark Classic palettes, typography roles, screen composition, motif provenance and deterministic picker requirements, accessibility, engineering constraints, implementation sequence and acceptance checklist.
+- D-015 added to `DECISIONS.md`; prior D-009 visual proposal gate, D-010/D-011 dark-first/Obsidian Cyan default and D-014 palette/typography proposal marked superseded for active UI direction. Historical records retained intentionally for auditability. D-012 responsive navigation and D-013 owner reference layout remain active where compatible.
+- `docs/ui/ui-spec.md`, root `KINETICS_UI_SPEC.md`, `design/tokens.json`, README and this session log updated to point to the new authority. Previous additive UI prompt is marked historical/superseded.
+
+### Not claimed
+- No app screen implementation, font binary bundling, motif assets, contrast pass, accessibility pass, screenshot test or device verification is claimed by this documentation change.
+- Generated concept art is not a screenshot of the running app. Actual logos remain byte-for-byte preserved; UI must use real registry-backed capabilities and actual app state only.
+
+### Next
+Audit current Compose screens, token generator, settings persistence and asset inventory; implement Light Classic semantic tokens and shared Compose components, then refine real screens in dependency order. Continue R1–R10, S, I and P implementation in parallel where dependencies permit; preserve all scientific, licensing, privacy, security, ethics and publication gates.

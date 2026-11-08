@@ -863,3 +863,9 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Added ResearchStore.exportStoredInput for completed imports only and a Compose SAF CreateDocument action. Export uses the user's selected destination and does not materialize a plaintext cache file.
 - Added SQLite schema version 3 migration for export metadata and a provenance timestamp index.
 - No Android compilation or tests were run. SAF provider failure/partial-file behavior, migration fixtures, process death, key loss and export cancellation still need dedicated verification.
+
+
+### R8 NB2 count GLM source increment
+- Added an exploratory NB2 log-link GLM for raw integer counts, with size-factor normalization, per-feature moment dispersion, IRLS, numeric covariates, Wald statistics and BH correction.
+- Design rank deficiencies and insufficient residual degrees of freedom are rejected. Regression-test source covers a condition effect, a balanced numeric batch covariate, fractional-count rejection and confounding rejection.
+- This is not equivalent to DESeq2/edgeR: no empirical-Bayes dispersion shrinkage, small-sample calibration, repeated-measures model or robust outlier procedure. No tests or reference simulations were run.

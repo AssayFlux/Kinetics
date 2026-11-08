@@ -18,3 +18,8 @@ Implemented in `python/kinetics/omics.py`. Inputs are checked for finite values 
 
 ## Exit evidence
 Independent synthetic and public reference datasets; null calibration, power, false-discovery and effect-size checks; covariate/design tests; reference-tool concordance; reproducible provenance and performance benchmarks.
+
+
+### R8 count-model source increment
+
+Added an exploratory NB2 log-link GLM for raw integer counts with condition effect, numeric covariates (including caller-encoded batch dummy variables), median-of-ratios size factors when possible, library-size fallback, per-feature method-of-moments dispersion, IRLS fitting, Wald tests and BH q-values. This is not a DESeq2/edgeR replacement: dispersion is not moderated/shrunk, p-values are asymptotic, repeated measures and robust outlier handling are absent, and the model requires independent samples with a full-rank design. Regression-test source was added but not executed. Independent simulation/reference calibration is mandatory before validation status.

@@ -46,3 +46,35 @@ def test_omics_rejects_zero_library_and_constant_correlation() -> None:
         cpm([[0, 1], [0, 2]])
     with pytest.raises(ValueError, match="constant"):
         pearson([1, 1, 1], [1, 2, 3])
+
+
+
+def test_negative_binomial_glm_accepts_raw_counts_and_covariates() -> None:
+    from kinetics.omics import negative_binomial_differential_expression
+
+    result = negative_binomial_differential_expression(
+        [
+            [90, 110, 95, 105, 100, 98, 102, 101],
+            [15, 18, 16, 17, 70, 75, 72, 78],
+        ],
+        [0, 0, 0, 0, 1, 1, 1, 1],
+        covariates=[[0, 1, 0, 1, 0, 1, 0, 1]],
+        feature_ids=["stable", "induced"],
+    )
+    assert len(result) == 2
+    assert result[1]["log2_fold_change"] > 0
+    assert 0 <= result[1]["q_value"] <= 1
+    assert result[1]["dispersion"] > 0
+
+
+def test_negative_binomial_glm_rejects_fractional_and_confounded_designs() -> None:
+    from kinetics.omics import negative_binomial_differential_expression
+
+    with pytest.raises(ValueError, match="integer"):
+        negative_binomial_differential_expression([[1, 2, 3, 4.5]], [0, 0, 1, 1])
+    with pytest.raises(ValueError, match="rank-deficient"):
+        negative_binomial_differential_expression(
+            [[10, 11, 20, 21], [4, 5, 8, 9]],
+            [0, 0, 1, 1],
+            covariates=[[0, 0, 1, 1]],
+        )

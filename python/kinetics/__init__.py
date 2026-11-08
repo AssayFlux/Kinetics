@@ -20,6 +20,7 @@ from .kinetics import (
 )
 from .molecular import primer_properties, scan_spcas9_ngg
 from .omics import (
+    negative_binomial_differential_expression,
     clr_transform, cpm, cross_omics_correlation, logistic_growth,
     log2_fold_change, pearson, shannon_diversity, simpson_diversity,
     welch_differential_expression,
@@ -41,7 +42,7 @@ __all__ = [
     "graph_descriptors", "hanes_woolf", "inhibition_rate",
     "iter_fasta_records", "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk",
     "log2_fold_change", "logistic_growth", "michaelis_menten", "normalize_small_variant",
-    "needleman_wunsch", "neighbor_joining", "parse_fasta", "parse_fastq", "parse_newick",
+    "needleman_wunsch", "neighbor_joining", "negative_binomial_differential_expression", "parse_fasta", "parse_fastq", "parse_newick",
     "parse_mmcif", "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",
     "patristic_distance", "path_fingerprint", "pearson", "primer_properties",
     "protein_descriptors", "reverse_complement", "rmsd", "scan_spcas9_ngg",

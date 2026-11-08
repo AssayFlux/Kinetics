@@ -1372,3 +1372,10 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added `ResearchStore.encryptedOrphanInventory()` to compare app-private encrypted directories with durable job rows. The inventory is a review aid, not automatic cleanup or cryptographic recovery.
 - Added JVM tests covering unreferenced finalized files, missing-job partials, stale partials for completed jobs, active partial preservation, symlink exclusion and proof that reported files remain intact.
 - This advances the R2-14 implementation path only. Real app database integration, device inspection and the full R2 recovery matrix remain unverified; R2 stays in progress.
+
+
+## 2026-11-08 — S9 conservative exact sequence-to-structure mapping
+- Added `map_exact_chain_sequence` for mapping a supplied protein sequence to a selected structure chain only when the observed standard-residue sequence has one unique contiguous exact occurrence.
+- Preserves query positions and structure residue numbers; repeated matches and no-hit cases abstain explicitly. Non-standard residues are rejected rather than silently coerced.
+- Added tests for unique mapping, repeated-match abstention, no-match, unsupported residue and invalid query/chain inputs.
+- Limitations: no alignment, gaps, missing/disordered residue repair, insertion-code handling, variant-effect analysis, homology or function inference. S9 remains in progress pending residue-number semantics, reference fixtures and independent validation.

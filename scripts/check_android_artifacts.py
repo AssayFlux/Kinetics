@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Report Android artifact checks as blocked until R1 creates real artifacts."""
+"""Report the owner-directed local-only Android build boundary in source CI."""
 
 from pathlib import Path
 
@@ -11,15 +11,16 @@ def main() -> int:
     artifacts = list(ANDROID.rglob("*.apk")) + list(ANDROID.rglob("*.aab"))
     if not artifacts:
         print(
-            "BLOCKED / NOT APPLICABLE in R0: no APK/AAB exists; "
-            "16 KB alignment and package-size checks require R1 toolchains and artifacts."
+            "NOT RUN IN GITHUB ACTIONS by owner instruction: APK/AAB builds and "
+            "Android runtime tests are local-only. Use docs/local-android-build.md."
         )
         return 0
     print(
-        "Android artifacts found, but alignment and package-size validation "
-        "is not implemented; artifact presence is not a pass."
+        "Android artifacts found in the checkout, but this source-only CI job "
+        "does not inspect or validate them. Use the local build procedure and "
+        "record the results in docs/android-feasibility.md."
     )
-    return 2
+    return 0
 
 
 if __name__ == "__main__":

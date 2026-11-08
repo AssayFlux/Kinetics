@@ -32,3 +32,46 @@ def formula(elements: Counter[str]) -> str:
     if "H" in elements: keys.append("H")
     keys.extend(sorted(k for k in elements if k not in ("C","H")))
     return "".join(k+(str(elements[k]) if elements[k]!=1 else "") for k in keys)
+
+
+# Deterministic graph-only fingerprints for exploratory similarity, not a validated
+# replacement for RDKit/Open Babel. Atom typing and stereochemistry are deliberately limited.
+def path_fingerprint(molecule: dict[str, object], *, max_path: int = 3) -> frozenset[str]:
+    import hashlib
+    from collections import defaultdict
+
+    if max_path < 1 or max_path > 6:
+        raise ValueError("max_path must be between 1 and 6")
+    atoms, bonds = molecule.get("atoms"), molecule.get("bonds")
+    if not isinstance(atoms, list) or not isinstance(bonds, list):
+        raise ValueError("Expected a molecule returned by parse_sdf_record")
+    adjacency: dict[int, list[tuple[int, int]]] = defaultdict(list)
+    for first, second, order in bonds:
+        adjacency[first].append((second, order))
+        adjacency[second].append((first, order))
+    features: set[str] = set()
+
+    def add_feature(value: str) -> None:
+        features.add(hashlib.sha256(value.encode("utf-8")).hexdigest()[:16])
+
+    for index, atom in enumerate(atoms):
+        start = str(atom["element"])
+        add_feature(start)
+
+        def walk(node: int, previous: int, path: tuple[str, ...], depth: int) -> None:
+            if depth >= max_path:
+                return
+            for neighbour, order in adjacency[node]:
+                if neighbour == previous:
+                    continue
+                feature = path + (f"-{order}-{atoms[neighbour]['element']}",)
+                add_feature("|".join(feature))
+                walk(neighbour, node, feature, depth + 1)
+
+        walk(index, -1, (start,), 0)
+    return frozenset(features)
+
+
+def tanimoto(first: frozenset[str], second: frozenset[str]) -> float:
+    union = first | second
+    return len(first & second) / len(union) if union else 1.0

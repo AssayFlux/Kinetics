@@ -25,3 +25,17 @@ Use public, appropriately licensed, non-patient datasets only during preparation
 ## Hard boundary
 
 P0 remains blocked. No patient data, human-subject recruitment, clinical interpretation, diagnosis, treatment recommendation or clinical mode until the project owner has approved documented legal, ethics, privacy/security and qualified-adviser prerequisites. No wording in this file waives that gate.
+
+
+## I4 — ADMET / PK / PD / PBPK source inventory (preparation only)
+
+Candidate public sources for future evidence mapping are recorded below. This is a discovery inventory, not an approved training set or validated model catalogue:
+
+| Source | Candidate research use | Intake status |
+|---|---|---|
+| PubChem BioAssay | Assay metadata and bioactivity observations | License, assay quality, provenance and release review required |
+| ChEMBL | Curated bioactivity records and target/compound links | Exact release and applicable terms review required |
+| Tox21 | Public high-throughput toxicity screening records | Exact release, assay endpoint and reuse terms review required |
+| FDA DILIrank | Published drug-induced liver injury classification resource | Version, source provenance and reuse terms review required |
+
+No source has been downloaded, licensed, curated, or approved by this inventory. No ADMET/PK/PD/PBPK prediction model is selected. Before intake, record the exact release, original source URL, license text and review decision, SHA-256, endpoint definitions, units, assay context, exclusions, missingness, applicability domain and intended non-clinical use. Any future model requires leakage-controlled splits, external validation, calibration/uncertainty, out-of-domain abstention and bias review. No dosing, treatment or patient-level prediction is permitted.

@@ -13,3 +13,10 @@
 - The app shell now consumes generated Obsidian Cyan, Porcelain Blue and Cyberpunk palettes. A development component-gallery composable and generated catalogue exist; a debug-only launch route and screenshot evidence remain open.
 - Responsive navigation, design-system gallery, generated Compose/CSS themes, full settings catalogue, security UI and all additional domain/tool screens remain open.
 - Quality evidence is recorded honestly in `quality-report.md` and `device-matrix.md`; neither is currently a pass.
+
+
+## Owner-supplied UI reference designs
+- Preferred design-language references: `Assets/App UI - Dashboard Design.jpg` and `Assets/App UI - Login Page Design.jpg` (owner supplied, preserved unchanged).
+- Treat these as the primary visual references when refining dashboard, authentication/onboarding and shared components. Existing Obsidian Cyan / Light / Neon token families are implementation starting points, not a substitute for the owner's reference language.
+- Extract exact visual properties only after inspecting the images; then record measurable tokens and compare actual app screenshots against both references. Maintain accessibility, adaptive-window, offline-first and brand-asset requirements.
+- Decision: D-013 in `DECISIONS.md`. Visual comparison evidence remains pending.

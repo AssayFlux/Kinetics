@@ -33,11 +33,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.assayflux.designsystem.KineticsTokens
+import org.assayflux.designsystem.KineticsTypography
+import org.assayflux.designsystem.KineticsScientificTextStyle
 import org.json.JSONArray
-
-private val Teal = KineticsTokens.KineticsDarkClassic.secondary
-private val Ink = Color(0xFF071018)
-private val LightTeal = KineticsTokens.KineticsLightClassic.primary
 
 internal enum class KineticsTab(val label: String, val glyph: String) {
     Home("Home", "⌂"), Work("Work", "▤"), Explore("Explore", "⌕"), Settings("Settings", "⚙")
@@ -75,7 +73,7 @@ internal fun KineticsAppShell(
             onSurfaceVariant = palette.muted, outline = palette.outline,
         )
     }
-    MaterialTheme(colorScheme = scheme) {
+    MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
         BoxWithConstraints(Modifier.fillMaxSize()) {
             // Classify the app window, not the physical device. These are the
             // current Android adaptive breakpoints recorded in docs/ui/verified-specs.md.
@@ -390,7 +388,7 @@ private fun Metric(label: String, value: String, modifier: Modifier) {
     OutlinedCard(modifier, shape = RoundedCornerShape(18.dp)) {
         Column(Modifier.padding(11.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold, maxLines = 1)
-            Text(value, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+            Text(value, style = KineticsScientificTextStyle.copy(fontSize = MaterialTheme.typography.headlineMedium.fontSize, fontWeight = FontWeight.Bold))
             Text("Research jobs", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1)
         }
     }
@@ -896,6 +894,7 @@ internal fun BiometricLockScreen(error: String?, onRetry: () -> Unit) {
             onSurfaceVariant = palette.muted,
             outline = palette.outline,
         ),
+        typography = KineticsTypography,
     ) {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             Column(

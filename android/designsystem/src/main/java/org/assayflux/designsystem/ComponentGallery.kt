@@ -61,7 +61,7 @@ fun KineticsComponentGallery() {
                     onSurfaceVariant = palette.muted, outline = palette.outline,
                 )
             }
-            MaterialTheme(colorScheme = scheme) {
+            MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
                 Card(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                     shape = RoundedCornerShape(20.dp),

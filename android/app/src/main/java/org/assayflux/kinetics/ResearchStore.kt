@@ -33,7 +33,7 @@ class ResearchStore(context: Context) :
         appContext.cacheDir.listFiles()
             ?.filter { file ->
                 file.isFile && file.name.startsWith(PLAINTEXT_CACHE_PREFIX) &&
-                    file.lastModified() in 1 until cutoff
+                    file.lastModified() > 0L && file.lastModified() < cutoff
             }
             ?.forEach { it.delete() }
     }

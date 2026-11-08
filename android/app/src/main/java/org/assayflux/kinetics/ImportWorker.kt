@@ -124,6 +124,7 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                 }
             }
 
+            require(byteCount > 0L) { "Empty research inputs are not accepted" }
             val hash = digest.digest().joinToString("") { "%02x".format(it) }
             val encryptedDirectory = File(applicationContext.noBackupFilesDir, "research-inputs")
                 .apply { mkdirs() }

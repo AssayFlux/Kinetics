@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify every packaged Android native library is 16 KB ELF-page compatible."""
+"""Verify packaged Android native libraries have 16 KB-compatible ELF load segments."""
 from __future__ import annotations
 
 import argparse
@@ -12,33 +12,59 @@ from pathlib import Path
 PAGE_ALIGNMENT = 16 * 1024
 EM_AARCH64 = 183
 PT_LOAD = 1
+ELF_HEADER_SIZE = 64
+PROGRAM_HEADER_SIZE = 56
 
 
 def inspect_elf(name: str, payload: bytes) -> dict[str, object]:
-    if payload[:4] != b"\x7fELF":
-        raise ValueError(f"{name}: not an ELF file")
-    if len(payload) < 64 or payload[4] != 2 or payload[5] != 1:
-        raise ValueError(f"{name}: expected ELF64 little-endian")
+    if len(payload) < ELF_HEADER_SIZE or payload[:4] != b"\\x7fELF":
+        raise ValueError(f"{name}: truncated or invalid ELF header")
+    if payload[4] != 2 or payload[5] != 1 or payload[6] != 1:
+        raise ValueError(f"{name}: expected ELF64 little-endian version 1")
     machine = struct.unpack_from("<H", payload, 18)[0]
     if machine != EM_AARCH64:
         raise ValueError(f"{name}: expected AArch64 (e_machine=183), got {machine}")
     phoff = struct.unpack_from("<Q", payload, 32)[0]
-    phentsize, phnum = struct.unpack_from("<HH", payload, 54)
-    if phentsize < 56 or phoff + phentsize * phnum > len(payload):
+    ehsize, phentsize, phnum = struct.unpack_from("<HHH", payload, 52)
+    if ehsize < ELF_HEADER_SIZE or phentsize < PROGRAM_HEADER_SIZE:
+        raise ValueError(f"{name}: invalid ELF/program-header entry size")
+    if phoff < ehsize or phoff + phentsize * phnum > len(payload):
         raise ValueError(f"{name}: invalid program-header table")
-    aligns: list[int] = []
+
+    segments: list[dict[str, int]] = []
     for index in range(phnum):
         offset = phoff + index * phentsize
-        if struct.unpack_from("<I", payload, offset)[0] == PT_LOAD:
-            aligns.append(struct.unpack_from("<Q", payload, offset + 48)[0])
-    if not aligns:
+        if struct.unpack_from("<I", payload, offset)[0] != PT_LOAD:
+            continue
+        file_offset, virtual_address, alignment = struct.unpack_from("<QQ", payload, offset + 8)[0], struct.unpack_from("<Q", payload, offset + 16)[0], struct.unpack_from("<Q", payload, offset + 48)[0]
+        segments.append({
+            "index": index,
+            "file_offset": file_offset,
+            "virtual_address": virtual_address,
+            "alignment": alignment,
+        })
+
+    if not segments:
         raise ValueError(f"{name}: no PT_LOAD segments")
-    minimum = min(aligns)
+
+    failures: list[str] = []
+    for segment in segments:
+        alignment = segment["alignment"]
+        if alignment < PAGE_ALIGNMENT:
+            failures.append(f"PT_LOAD[{segment['index']}] p_align={alignment} is below 16 KB")
+            continue
+        if alignment & (alignment - 1):
+            failures.append(f"PT_LOAD[{segment['index']}] p_align={alignment} is not a power of two")
+        if segment["file_offset"] % alignment != segment["virtual_address"] % alignment:
+            failures.append(
+                f"PT_LOAD[{segment['index']}] p_offset and p_vaddr are not congruent modulo p_align"
+            )
+
     return {
         "path": name,
-        "load_segment_alignments": sorted(set(aligns)),
-        "minimum_load_alignment": minimum,
-        "pass": minimum >= PAGE_ALIGNMENT,
+        "load_segments": segments,
+        "pass": not failures,
+        "failures": failures,
     }
 
 

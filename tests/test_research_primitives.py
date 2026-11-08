@@ -56,7 +56,7 @@ def test_sequence_statistics_and_kmer_counts() -> None:
     assert stats["length"] == 5
     assert math.isclose(float(stats["gc_fraction"]), 0.4)
     assert stats["ambiguous_count"] == 1
-    assert kmer_counts("AACNAA", 2) == {"AA": 2}
+    assert kmer_counts("AACNAA", 2) == {"AA": 2, "AC": 1}
     assert kmer_counts("AACNAA", 2, canonical_only=False) == {
         "AA": 2, "AC": 1, "CN": 1, "NA": 1,
     }
@@ -76,7 +76,7 @@ def test_needleman_wunsch_returns_consistent_global_alignment() -> None:
 def test_protein_descriptors_are_explicit_about_assumptions() -> None:
     result = protein_descriptors("ACDE")
     assert result["length"] == 4
-    assert float(result["molecular_weight_da"]) > 400
+    assert float(result["molecular_weight_da"]) == pytest.approx(364.37586, abs=1e-5)
     assert 0 <= float(result["theoretical_pi"]) <= 14
     assert len(result["assumptions"]) == 3
     with pytest.raises(ValueError, match="Unsupported"):

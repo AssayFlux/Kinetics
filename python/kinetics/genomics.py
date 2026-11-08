@@ -205,3 +205,127 @@ def normalize_small_variant(
         "reference_checked": True,
     }
 
+def iter_bam_records(source):
+    """Lazily decode the core fields of coordinate-independent BAM records.
+
+    BGZF is a concatenated gzip format, so Python's gzip reader handles its block
+    stream. Auxiliary tags are deliberately skipped, and CRAM is not supported.
+    The caller owns the binary source stream.
+    """
+    import gzip
+    import struct
+    from typing import BinaryIO, Iterator
+
+    if not hasattr(source, "read"):
+        raise TypeError("BAM source must be an open binary stream")
+    stream = gzip.GzipFile(fileobj=source, mode="rb")
+    if stream.read(4) != b"BAM\\x01":
+        raise ValueError("Invalid BAM magic; input must be BGZF-compressed BAM")
+    raw = stream.read(4)
+    if len(raw) != 4:
+        raise ValueError("Truncated BAM header text length")
+    text_length = struct.unpack("<i", raw)[0]
+    if text_length < 0 or text_length > 64 * 1024 * 1024:
+        raise ValueError("BAM header text length outside supported bounds")
+    header_text = stream.read(text_length)
+    if len(header_text) != text_length:
+        raise ValueError("Truncated BAM header text")
+    raw = stream.read(4)
+    if len(raw) != 4:
+        raise ValueError("Truncated BAM reference count")
+    reference_count = struct.unpack("<i", raw)[0]
+    if not 0 <= reference_count <= 1_000_000:
+        raise ValueError("BAM reference count outside supported bounds")
+    references: list[str] = []
+    for _ in range(reference_count):
+        raw = stream.read(4)
+        if len(raw) != 4:
+            raise ValueError("Truncated BAM reference name length")
+        name_length = struct.unpack("<i", raw)[0]
+        if not 2 <= name_length <= 1_000_000:
+            raise ValueError("Invalid BAM reference name length")
+        name = stream.read(name_length)
+        raw = stream.read(4)
+        if len(name) != name_length or name[-1:] != b"\\x00" or len(raw) != 4:
+            raise ValueError("Truncated or malformed BAM reference entry")
+        references.append(name[:-1].decode("utf-8", errors="strict"))
+        reference_length = struct.unpack("<i", raw)[0]
+        if reference_length < 0:
+            raise ValueError("Negative BAM reference length")
+
+    sequence_codes = "=ACMGRSVTWYHKDBN"
+    cigar_codes = "MIDNSHP=X"
+    while True:
+        raw = stream.read(4)
+        if not raw:
+            return
+        if len(raw) != 4:
+            raise ValueError("Truncated BAM record block size")
+        block_size = struct.unpack("<i", raw)[0]
+        if block_size < 32 or block_size > 64 * 1024 * 1024:
+            raise ValueError("BAM record block size outside supported bounds")
+        block = stream.read(block_size)
+        if len(block) != block_size:
+            raise ValueError("Truncated BAM record block")
+        ref_id, pos, bin_mq_nl, flag_nc, sequence_length, next_ref, next_pos, template_length = (
+            struct.unpack_from("<iiIIiiii", block, 0)
+        )
+        name_length = bin_mq_nl & 0xFF
+        mapq = (bin_mq_nl >> 8) & 0xFF
+        cigar_count = flag_nc & 0xFFFF
+        flag = (flag_nc >> 16) & 0xFFFF
+        if name_length < 2 or sequence_length < 0:
+            raise ValueError("Invalid BAM query name or sequence length")
+        cursor = 32
+        if cursor + name_length > block_size:
+            raise ValueError("BAM query name exceeds record block")
+        query_name_raw = block[cursor:cursor + name_length]
+        cursor += name_length
+        if query_name_raw[-1:] != b"\\x00":
+            raise ValueError("BAM query name is not NUL-terminated")
+        query_name = query_name_raw[:-1].decode("utf-8", errors="strict")
+
+        cigar_end = cursor + 4 * cigar_count
+        if cigar_end > block_size:
+            raise ValueError("BAM CIGAR exceeds record block")
+        cigar_parts = []
+        query_consumption = 0
+        for index in range(cigar_count):
+            encoded = struct.unpack_from("<I", block, cursor + index * 4)[0]
+            length, operation_code = encoded >> 4, encoded & 0xF
+            if length <= 0 or operation_code >= len(cigar_codes):
+                raise ValueError("Invalid BAM CIGAR operation")
+            operation = cigar_codes[operation_code]
+            cigar_parts.append(str(length) + operation)
+            if operation in "MIS=X":
+                query_consumption += length
+        cursor = cigar_end
+
+        packed_length = (sequence_length + 1) // 2
+        if cursor + packed_length + sequence_length > block_size:
+            raise ValueError("BAM sequence/quality exceeds record block")
+        packed = block[cursor:cursor + packed_length]
+        cursor += packed_length
+        sequence = "".join(
+            sequence_codes[(packed[i // 2] >> (4 if i % 2 == 0 else 0)) & 0xF]
+            for i in range(sequence_length)
+        )
+        qualities = block[cursor:cursor + sequence_length]
+        if qualities and all(value == 0xFF for value in qualities):
+            quality = "*"
+        elif any(value == 0xFF or value > 93 for value in qualities):
+            raise ValueError("Invalid BAM Phred quality array")
+        else:
+            quality = "".join(chr(value + 33) for value in qualities)
+        if cigar_parts and query_consumption != sequence_length:
+            raise ValueError("BAM CIGAR query length does not match sequence length")
+        if ref_id < -1 or ref_id >= len(references):
+            raise ValueError("BAM reference ID outside header dictionary")
+        if ref_id >= 0 and pos < 0:
+            raise ValueError("Mapped BAM record has negative position")
+        yield SamRecord(
+            query_name, flag, references[ref_id] if ref_id >= 0 else "*",
+            pos + 1 if pos >= 0 else 0, mapq,
+            "".join(cigar_parts) if cigar_parts else "*", sequence or "*", quality,
+        )
+

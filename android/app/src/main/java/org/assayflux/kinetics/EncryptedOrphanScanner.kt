@@ -29,12 +29,12 @@ object EncryptedOrphanScanner {
         jobsWithFinalStorage: Set<String>,
     ): List<EncryptedOrphanFile> {
         val findings = mutableListOf<EncryptedOrphanFile>()
-        scanDirectory(finalizedDirectory, "finalized", ".kdat") { file ->
+        scanDirectory(finalizedDirectory, ".kdat") { file ->
             if (file.canonicalPath !in referencedFinalPaths) {
                 findings += finding(file, "unreferenced_finalized")
             }
         }
-        scanDirectory(stagingDirectory, "partial", ".encpart") { file ->
+        scanDirectory(stagingDirectory, ".encpart") { file ->
             val jobId = file.name.removeSuffix(".encpart")
             if (!jobIdPattern.matches(jobId) ||
                 jobId !in knownJobIds || jobId in jobsWithFinalStorage
@@ -47,7 +47,6 @@ object EncryptedOrphanScanner {
 
     private fun scanDirectory(
         directory: File,
-        suffix: String,
         extension: String,
         inspect: (File) -> Unit,
     ) {

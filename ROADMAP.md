@@ -55,7 +55,7 @@ The owner authorized R, S, I and P work to proceed simultaneously on 2026-11-08,
 ## Track I — In-silico lab
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |
 |---|---|---|---|---|---|---|
-| I1 | Ligand prep, descriptors, drug-likeness | R1 chemistry/license | Correctness, limits, provenance | in-progress — optional host RDKit adapter now has version-recorded ethanol/benzene sanity fixtures and a reproducible JSON runner; no pinned RDKit validation environment, Android integration, ADMET or biological-activity validation claimed | Engineering + Validation | 2026-11-08 |
+| I1 | Ligand prep, descriptors, drug-likeness | R1 chemistry/license | Correctness, limits, provenance | in-progress — optional RDKit adapter now has a pinned host-only RDKit 2025.9.4 CI fixture job and JSON artifact for ethanol/benzene descriptor sanity; no independent chemistry benchmark, Android integration, ADMET or biological-activity validation claimed | Engineering + Validation | 2026-11-08 |
 | I2 | Node docking/virtual screening | Node, approved licenses | Redocking RMSD and decoy enrichment | not-started | Engineering + Validation | TBD |
 | I3 | Node MD | Node, engine/model/license | Stability, energy conservation, reference runs | not-started | Engineering + Validation | TBD |
 | I4 | ADMET and PK/PD/PBPK | Approved data/models | Held-out performance and applicability domain | not-started | Engineering + Validation | TBD |

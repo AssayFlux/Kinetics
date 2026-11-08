@@ -1355,3 +1355,12 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added an Aliyun Gradle distribution mirror as a final transport fallback. The build script accepts the downloaded archive only if its SHA-256 matches the pre-recorded Gradle 8.13 digest; no alternate Gradle version or unverified bytes are accepted.
 - Added a content-filtered Kotlin Maven mirror for compiler artifacts. Mirror integrity and transitive dependency review remain open; this is build infrastructure only.
 - Awaiting a new CI run to verify both mirror paths. R1 remains open.
+
+
+## 2026-11-08 — R1 first successful reproducible arm64 debug build (CI run #1904)
+- GitHub Actions run [#1904](https://github.com/AssayFlux/Kinetics/actions/runs/42465569625) completed successfully on commit `30d19ea2bec8a7ad0039eb48fa13ac6bfb6175ed`.
+- Built the arm64 debug APK (67,678,526 bytes; SHA-256 `0877bfe3331fc596dcaf440f8a659ddf5396c75484e172d2697bf2a7245269f6`) and debug AAB (38,860,218 bytes; SHA-256 `8ec29ece71ffbe3cef13ca3c25c759d4da958898cbdcde1e8ebad0c75b4db7cd`). Both artifacts passed the repository artifact size/integrity checker.
+- Android Gradle build and JVM unit-test task completed successfully. APK ZIP alignment and native ELF alignment checks completed in the build lane; pinned Python foundation, registry checks, Ruff, strict mypy, 159 passed / 4 skipped Python tests, SciPy/Biopython reference comparisons, RDKit descriptor sanity fixtures and SPDX inventory jobs also passed.
+- Gradle retrieval succeeded through the checksum-pinned multi-source fallback after prior HTTP 504 failures. This is the first successful build evidence for this integrated source state.
+- Boundaries: no emulator or physical-device install/runtime test was run; no cold-start, memory, thermal or offline runtime evidence exists. The declared SPDX inventory is not a complete resolved transitive/file-level license audit. R1 remains in progress and no production engine/bundling decision is made by this build.
+- The generated debug APK/AAB are available as workflow artifact `13611129700` (14-day retention) and were separately extracted for owner download in this conversation.

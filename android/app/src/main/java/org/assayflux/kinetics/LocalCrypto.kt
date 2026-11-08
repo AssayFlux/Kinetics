@@ -104,7 +104,10 @@ object LocalCrypto {
 
     fun appendEncryptedChunk(file: File, plainText: ByteArray, associatedData: ByteArray) {
         require(plainText.isNotEmpty()) { "Encrypted chunks cannot be empty" }
-        val firstChunk = file.length() <= HEADER_BYTES
+        require(file.isFile && file.length() >= HEADER_BYTES) {
+            "KDAT v2 file header must be initialized before appending encrypted chunks"
+        }
+        val firstChunk = file.length() == HEADER_BYTES
         val payload = encrypt(
             plainText, associatedData, createKeyIfMissing = firstChunk,
         )

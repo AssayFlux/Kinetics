@@ -5,9 +5,9 @@
 | Screen ID | Screen | Registry capability | Current status |
 |---|---|---|---|
 | ui.home | Home dashboard / import entry | ui.home | implemented; device/accessibility proof pending |
-| ui.work | Work / job list and actions | ui.work | implemented; detail/provenance incomplete |
-| ui.explore | Scientific capability catalogue | ui.explore | implemented; not an executable tool browser |
-| ui.settings | Settings / theme family and diagnostics | ui.settings | partial |
+| ui.work | Work / job list and actions | ui.work | source present; registry gate/tests pending |
+| ui.explore | Scientific capability catalogue | ui.explore | source present; registry gate/tests pending |
+| ui.settings | Settings / theme family and diagnostics | ui.settings | partial; registry gate pending |
 | ui.domains | Domain browser/detail | ui.domains | planned |
 | ui.tools | Tool search/favourites/runner | ui.tools | planned |
 | ui.data | Projects/imports/data packs | ui.data | planned |

@@ -54,7 +54,11 @@ def _validate_manifest(value: dict[str, Any]) -> tuple[ReferencePack, SequenceTy
         missing = sorted(required - set(value))
         extra = sorted(set(value) - required)
         raise ValueError(f"Manifest keys mismatch; missing={missing}, extra={extra}")
-    if value["schema_version"] != 1 or value["format"] != "fasta":
+    if (
+        type(value["schema_version"]) is not int
+        or value["schema_version"] != 1
+        or value["format"] != "fasta"
+    ):
         raise ValueError("Only schema_version 1 and FASTA reference packs are supported")
     raw_sequence_type = value["sequence_type"]
     if raw_sequence_type not in ("DNA", "RNA", "protein"):

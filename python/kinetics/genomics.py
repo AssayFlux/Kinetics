@@ -206,17 +206,32 @@ def normalize_small_variant(
         "reference_checked": True,
     }
 
-def iter_bam_records(source: BinaryIO) -> Iterator[SamRecord]:
-    """Lazily decode the core fields of coordinate-independent BAM records.
+def iter_bam_records(
+    source: BinaryIO, *, max_records: int = 10_000_000,
+    max_total_bases: int = 500_000_000,
+) -> Iterator[SamRecord]:
+    """Lazily decode core BAM fields under explicit record/base resource limits.
 
     BGZF is a concatenated gzip format, so Python's gzip reader handles its block
     stream. Auxiliary tags are deliberately skipped, and CRAM is not supported.
-    The caller owns the binary source stream.
+    The caller owns the binary source stream. Limits count decoded records and
+    query bases across the entire stream; exceeding either raises ValueError.
     """
+
     import gzip
     import struct
     if not hasattr(source, "read"):
         raise TypeError("BAM source must be an open binary stream")
+    if (
+        isinstance(max_records, bool) or not isinstance(max_records, int)
+        or max_records <= 0
+    ):
+        raise ValueError("max_records must be a positive integer")
+    if (
+        isinstance(max_total_bases, bool) or not isinstance(max_total_bases, int)
+        or max_total_bases <= 0
+    ):
+        raise ValueError("max_total_bases must be a positive integer")
     stream = gzip.GzipFile(fileobj=source, mode="rb")
     if stream.read(4) != b"BAM\x01":
         raise ValueError("Invalid BAM magic; input must be BGZF-compressed BAM")
@@ -254,6 +269,8 @@ def iter_bam_records(source: BinaryIO) -> Iterator[SamRecord]:
 
     sequence_codes = "=ACMGRSVTWYHKDBN"
     cigar_codes = "MIDNSHP=X"
+    record_count = 0
+    total_bases = 0
     while True:
         raw = stream.read(4)
         if not raw:
@@ -275,6 +292,10 @@ def iter_bam_records(source: BinaryIO) -> Iterator[SamRecord]:
         flag = (flag_nc >> 16) & 0xFFFF
         if name_length < 2 or sequence_length < 0:
             raise ValueError("Invalid BAM query name or sequence length")
+        if record_count >= max_records:
+            raise ValueError("BAM record count exceeds configured max_records")
+        if sequence_length > max_total_bases - total_bases:
+            raise ValueError("BAM query bases exceed configured max_total_bases")
         cursor = 32
         if cursor + name_length > block_size:
             raise ValueError("BAM query name exceeds record block")
@@ -322,6 +343,8 @@ def iter_bam_records(source: BinaryIO) -> Iterator[SamRecord]:
             raise ValueError("BAM reference ID outside header dictionary")
         if ref_id >= 0 and pos < 0:
             raise ValueError("Mapped BAM record has negative position")
+        record_count += 1
+        total_bases += sequence_length
         yield SamRecord(
             query_name, flag, references[ref_id] if ref_id >= 0 else "*",
             pos + 1 if pos >= 0 else 0, mapq,

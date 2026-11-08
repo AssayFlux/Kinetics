@@ -77,6 +77,7 @@ cargo build --locked --manifest-path "$ANDROID_DIR/native-rust/Cargo.toml" --tar
 
 echo "[2/6] Prepare pinned Chaquopy wheel builder"
 if [[ ! -d "$CHAQUOPY_DIR/.git" ]]; then
+  rm -rf "$CHAQUOPY_DIR"
   mkdir -p "$(dirname "$CHAQUOPY_DIR")"
   git clone --depth 1 --branch "$CHAQUOPY_VERSION" https://github.com/chaquo/chaquopy.git "$CHAQUOPY_DIR"
 fi
@@ -113,6 +114,7 @@ curl --fail --location --retry 3 \
 
 echo "[3/6] Cross-build pinned Biopython $BIOPYTHON_VERSION Android arm64 wheel"
 if [[ ! -d "$BIOPYTHON_DIR/.git" ]]; then
+  rm -rf "$BIOPYTHON_DIR"
   mkdir -p "$(dirname "$BIOPYTHON_DIR")"
   git clone --filter=blob:none --no-checkout https://github.com/biopython/biopython.git "$BIOPYTHON_DIR"
 fi

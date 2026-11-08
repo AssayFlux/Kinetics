@@ -43,8 +43,8 @@ def fit_michaelis_menten(
     """Exploratory log-grid fit; diagnostics are descriptive, not validation."""
     if len(substrates) != len(rates) or len(rates) < 3:
         raise ValueError("Need >=3 paired observations")
-    if grid_size < 10:
-        raise ValueError("grid_size must be >=10")
+    if not isinstance(grid_size, int) or isinstance(grid_size, bool) or not 10 <= grid_size <= 1000:
+        raise ValueError("grid_size must be an integer between 10 and 1000")
     if not all(isfinite(x) for x in [*substrates, *rates]):
         raise ValueError("Inputs must be finite")
     if any(x < 0 for x in [*substrates, *rates]):

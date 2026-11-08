@@ -1,6 +1,66 @@
-# Empty collections are intentional in R0; no scientific capability is validated.
+# Implemented means source code exists; validation/device status remains separate.
 schema_version: 1
-tools: []
+tools:
+  - id: sequence.fasta
+    name: FASTA parsing and sequence statistics
+    status: implemented
+    implementation: python/kinetics/sequence.py
+    evidence_level: none
+  - id: sequence.fastq
+    name: FASTQ parsing
+    status: implemented
+    implementation: python/kinetics/sequence.py
+    evidence_level: none
+  - id: sequence.global_alignment
+    name: Global pairwise alignment
+    status: implemented
+    implementation: python/kinetics/sequence.py
+    evidence_level: none
+  - id: genomics.sam_vcf
+    name: SAM and VCF text parsing
+    status: implemented
+    implementation: python/kinetics/genomics.py
+    evidence_level: none
+  - id: protein.descriptors
+    name: Protein composition, mass, hydropathy and estimated pI
+    status: implemented
+    implementation: python/kinetics/protein.py
+    evidence_level: none
+  - id: kinetics.michaelis_menten
+    name: Michaelis-Menten model and exploratory fitting
+    status: implemented
+    implementation: python/kinetics/kinetics.py
+    evidence_level: none
+  - id: structure.pdb_geometry
+    name: PDB coordinates, contacts and unaligned RMSD
+    status: implemented
+    implementation: python/kinetics/structure.py
+    evidence_level: none
+  - id: chemistry.sdf_graph
+    name: SDF V2000 parsing and exploratory graph fingerprints
+    status: implemented
+    implementation: python/kinetics/chemistry.py
+    evidence_level: none
+  - id: phylo.newick
+    name: Newick parsing and patristic distance
+    status: implemented
+    implementation: python/kinetics/phylo.py
+    evidence_level: none
+  - id: omics.normalisation
+    name: CPM, CLR, fold change and correlation
+    status: implemented
+    implementation: python/kinetics/omics.py
+    evidence_level: none
+  - id: microbiome.diversity
+    name: Shannon and Simpson diversity
+    status: implemented
+    implementation: python/kinetics/omics.py
+    evidence_level: none
+  - id: genes.ncbi_catalogue
+    name: Source-attributed NCBI Gene catalogue ingestion
+    status: implemented
+    implementation: python/kinetics/catalog.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

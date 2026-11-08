@@ -33,11 +33,11 @@ v0.1.0 = R0–R3.
 
 ## Track S — Structure excellence
 
-**Sequencing gate (owner direction, 2026-11-08):** Track S must not begin until every R1–R10 exit criterion is evidenced, the Research Platform integration is coherent, and the owner accepts the Track R completion gate. Existing R5 structural-analysis code remains part of Track R and may be completed there; it does not authorize starting Track S early.
+**Sequencing gate (updated by explicit owner instruction, 2026-11-08):** The owner has now explicitly authorized S-track implementation to begin in parallel with completion of R1–R10. This supersedes the earlier sequencing-only prohibition on starting S. Work may proceed only on independently safe S1 preparation that does not assume R1 WebView feasibility or unapproved third-party assets. Full offline rendering remains blocked on R1 WebView/runtime evidence and exact viewer/dependency license approval. S2–S5 retain their scientific, security, model-license and benchmark dependencies. This sequencing change does not mark any R phase complete, waive exit evidence, or authorize patient/clinical use.
 
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |
 |---|---|---|---|---|---|---|
-| S1 | Offline Mol*/3Dmol.js, structure loading/preparation log | R1 WebView, R2, license review | Offline tests and preparation provenance | not-started | Engineering | TBD |
+| S1 | Offline Mol*/3Dmol.js, structure loading/preparation log | R1 WebView, R2, license review | Offline tests and preparation provenance | in-progress — deterministic bounded coordinate payload + schema + tests committed; renderer, offline bundle, bridge and license review open | Engineering | 2026-11-08 |
 | S2 | Quality badges/metrics | S1, fixed PDB set | Benchmark concordance/tolerances | not-started | Engineering + Validation | TBD |
 | S3 | Variant mapping, interface and pocket analysis | S2, variant evidence | Capability validation; evidence not verdict | not-started | Engineering + Validation | TBD |
 | S4 | Node prediction with approved models/confidence and experimental comparison | Node security, code/weights licenses | Reproducible benchmark and limitations | not-started | Engineering + Validation | TBD |
@@ -131,3 +131,9 @@ U0 visual direction: owner authorized best-judgement completion; Obsidian Cyan i
 - Implemented live Compose window-based bottom navigation, rail and permanent drawer, including compact-height landscape rail and 840dp content width cap.
 - Added pure JVM boundary tests for navigation classification. Check CI against latest main SHA.
 - U1 remains open: NavigationSuiteScaffold/WindowManager posture support, universal search, Research Mode/connectivity chips, onboarding, full screen map and device matrix are not complete.
+
+
+### Owner authorization D-009 — begin Track S in parallel (2026-11-08)
+- The owner explicitly instructed Engineering to complete R1–R10 and start Track S without waiting for another per-track approval.
+- This supersedes the previous sequencing prohibition only for independently implementable Track S preparation and implementation. S1 preparation has started; full rendering remains gated on R1 WebView/runtime evidence and exact third-party license approval.
+- S2–S5 remain dependent on their scientific reference sets, model/license decisions, node security and benchmark evidence. No scientific, device, production, clinical or release gate is waived.

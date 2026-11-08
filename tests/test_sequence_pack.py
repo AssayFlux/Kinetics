@@ -5,7 +5,10 @@ import json
 
 import pytest
 
-from kinetics.sequence_pack import load_local_fasta_reference_pack
+from kinetics.sequence_pack import (
+    load_local_fasta_reference_pack,
+    search_local_fasta_reference,
+)
 
 
 def write_pack(tmp_path, fasta: bytes, **overrides):
@@ -30,9 +33,10 @@ def write_pack(tmp_path, fasta: bytes, **overrides):
 def test_local_pack_verifies_bytes_and_loads_records(tmp_path) -> None:
     fasta = b">gene-a example\nACGT\n>gene-b\nTTAA\n"
     fasta_path, manifest_path = write_pack(tmp_path, fasta)
-    pack, records = load_local_fasta_reference_pack(fasta_path, manifest_path)
-    assert pack.content_sha256 == hashlib.sha256(fasta).hexdigest()
-    assert [(record.identifier, record.sequence) for record in records] == [
+    loaded = load_local_fasta_reference_pack(fasta_path, manifest_path)
+    assert loaded.metadata.content_sha256 == hashlib.sha256(fasta).hexdigest()
+    assert loaded.sequence_type == "DNA"
+    assert [(record.identifier, record.sequence) for record in loaded.records] == [
         ("gene-a", "ACGT"), ("gene-b", "TTAA"),
     ]
 
@@ -83,3 +87,14 @@ def test_local_pack_rejects_duplicate_ids_invalid_alphabet_and_symlinks(tmp_path
     link_path.symlink_to(fasta_path)
     with pytest.raises(ValueError, match="symbolic link"):
         load_local_fasta_reference_pack(link_path, manifest_path)
+
+
+
+def test_local_pack_search_verifies_pack_and_returns_exact_evidence(tmp_path) -> None:
+    fasta_path, manifest_path = write_pack(tmp_path, b">gene-a\nACGT\n")
+    result = search_local_fasta_reference("ACGT", fasta_path, manifest_path)
+    assert result["hits"][0]["reference_id"] == "gene-a"
+    assert result["conclusion"]["novelty_status"] == "not_established"
+    assert result["search"]["reference_packs"][0]["content_sha256"] == hashlib.sha256(
+        b">gene-a\nACGT\n"
+    ).hexdigest()

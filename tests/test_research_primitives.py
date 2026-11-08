@@ -6,7 +6,6 @@ independent scientific validation or a claim of domain accuracy.
 import math
 
 import pytest
-
 from kinetics import (
     fit_michaelis_menten,
     inhibition_rate,

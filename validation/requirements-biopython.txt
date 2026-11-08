@@ -1,0 +1,3 @@
+# Host-only reference implementation; Biopython License Agreement applies.
+# This exact version matches the Android prototype source pin; it is not a new app dependency.
+biopython==1.88

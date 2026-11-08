@@ -6,19 +6,10 @@ independent scientific validation or a claim of domain accuracy.
 import math
 
 import pytest
-from kinetics import (  # type: ignore[import-untyped]
-    fit_michaelis_menten,
-    inhibition_rate,
-    kmer_counts,
-    michaelis_menten,
-    needleman_wunsch,
-    parse_fasta,
-    parse_fastq,
-    protein_descriptors,
-    reverse_complement,
-    sequence_statistics,
-    theoretical_pi,
-    transcribe,
+from kinetics import (
+    fit_michaelis_menten, inhibition_rate, kmer_counts, michaelis_menten,
+    needleman_wunsch, parse_fasta, parse_fastq, protein_descriptors,
+    reverse_complement, sequence_statistics, theoretical_pi, transcribe,
 )
 
 
@@ -112,3 +103,26 @@ def test_log_grid_fit_recovers_a_synthetic_parameter_region() -> None:
     assert float(result["km"]) == pytest.approx(15, rel=0.03)
     assert result["confidence_intervals"] is None
     assert len(result["warnings"]) >= 2
+    assert result["residual_sample_sd"] >= 0
+    assert result["aic"] is not None
+    assert result["bic"] is not None
+
+
+@pytest.mark.parametrize("bad", [float("nan"), float("inf"), float("-inf")])
+def test_kinetics_rejects_non_finite_inputs(bad: float) -> None:
+    with pytest.raises(ValueError, match="finite"):
+        michaelis_menten(bad, 10, 1)
+    with pytest.raises(ValueError, match="finite"):
+        inhibition_rate(1, 1, bad, 1, 1, "competitive")
+    with pytest.raises(ValueError, match="finite"):
+        fit_michaelis_menten([1, 2, bad], [1, 2, 3])
+
+
+def test_fit_reports_undefined_r_squared_and_information_criteria() -> None:
+    result = fit_michaelis_menten(
+        [1, 2, 3], [5, 5, 5], vmax_bounds=(5, 50), km_bounds=(0.1, 10),
+    )
+    assert result["r_squared"] is None
+    assert result["aic"] is None
+    assert result["bic"] is None
+    assert any("zero variance" in warning for warning in result["warnings"])

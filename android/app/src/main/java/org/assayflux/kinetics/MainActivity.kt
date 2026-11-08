@@ -107,6 +107,14 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
     }
     DisposableEffect(activity) {
         val manager = WorkManager.getInstance(activity)
+        // Detect definite Keystore key loss before exposing encrypted jobs. An unavailable
+        // Keystore is treated as unknown, never as proof that the key was deleted.
+        if (LocalCrypto.existingKeyStatus() == false) {
+            val affected = store.markKeyLossRecoveryRequired()
+            if (affected > 0) {
+                notice = "$affected encrypted record(s) require key recovery. Ciphertext was preserved."
+            }
+        }
         // Recover imports interrupted by process death. KEEP prevents duplicate workers
         // when WorkManager already has an unfinished unique job.
         store.recoverableImports().forEach { pending ->
@@ -221,7 +229,7 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                             Text("State: ${job.state}")
                             job.sha256?.let { Text("SHA-256: $it") }
                             job.message?.let { Text(it) }
-                            if (job.state == "succeeded" || job.state == "failed" || job.state == "cancelled") {
+                            if (job.state == "succeeded" || job.state == "failed" || job.state == "cancelled" || job.state == "recovery_required") {
                                 TextButton(onClick = { deleteTarget = job }) { Text("Delete local data") }
                             }
                             if (job.state == "succeeded" && job.sha256 != null) {

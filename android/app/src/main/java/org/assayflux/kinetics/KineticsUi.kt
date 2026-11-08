@@ -1,5 +1,6 @@
 package org.assayflux.kinetics
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,10 +12,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -94,7 +99,7 @@ private fun HomeScreen(
     val attention = jobs.count { it.state in listOf("failed", "recovery_required") }
     Frame("Your research workspace", "Good science starts here.", "A private, local-first environment for computational research.", modifier) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-            item { HeroCard(onImport) }
+            item { HeroCard(onImport, themeFamily) }
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(9.dp), modifier = Modifier.fillMaxWidth()) {
                     Metric("ACTIVE", active.toString(), Modifier.weight(1f))
@@ -128,11 +133,29 @@ private fun HomeScreen(
 }
 
 @Composable
-private fun HeroCard(onImport: () -> Unit) {
-    val dark = isSystemInDarkTheme()
-    Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = if (dark) Color(0xFF203A4C) else Color(0xFFE2F4F1))) {
-        Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(13.dp)) {
+private fun HeroCard(onImport: () -> Unit, themeFamily: String) {
+    val dark = themeFamily != "light"
+    val shape = RoundedCornerShape(28.dp)
+    Card(Modifier.fillMaxWidth(), shape = shape,
+        colors = CardDefaults.cardColors(containerColor = if (dark) Color(0xFF0B1724) else Color(0xFFE8F0F8))) {
+        Box {
+            Image(
+                painter = painterResource(R.drawable.kinetics_background),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.matchParentSize().alpha(if (dark) 0.42f else 0.14f),
+            )
+            Box(
+                Modifier.matchParentSize().background(
+                    Brush.verticalGradient(
+                        listOf(
+                            if (dark) Color(0xCC07111E) else Color(0xBFEAF2FA),
+                            if (dark) Color(0xF207111E) else Color(0xF2EAF2FA),
+                        )
+                    )
+                )
+            )
+            Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(13.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(36.dp).clip(RoundedCornerShape(12.dp)).background(if (dark) Teal else LightTeal), contentAlignment = Alignment.Center) {
                     Text("K", color = Color.White, fontWeight = FontWeight.Black, fontSize = 21.sp)
@@ -151,6 +174,7 @@ private fun HeroCard(onImport: () -> Unit) {
             }
             Text("FASTA  ·  FASTQ  ·  PDB/mmCIF  ·  SDF  ·  Other files",
                 style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
         }
     }
 }

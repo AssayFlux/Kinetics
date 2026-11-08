@@ -1393,3 +1393,9 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - I4 now has a candidate source inventory (PubChem BioAssay, ChEMBL, Tox21, FDA DILIrank) with explicit pre-intake review requirements; no dataset or model is approved, ingested or evaluated.
 - P metadata catalogue separates candidate discovery (NCBI Gene, PharmVar, ClinVar, CPIC) from acquired entries. Candidate schema requires `verify_before_intake` and `patient_data: false`; acquired entries remain empty. Added a YAML/schema regression test.
 - P0 remains blocked. No patient data, clinical interpretation or recommendations are enabled.
+
+
+## 2026-11-08 — R9 source-snapshot catalogue coverage reporting
+- Added `gene_catalogue_coverage_report` for bounded summaries by taxonomy, gene type and source release, plus missing-annotation counts.
+- The report explicitly returns null completeness percentage/denominator because an expected gene universe must be independently defined; it does not claim genome-wide completeness or clinical coverage.
+- Added tests for multi-taxonomy counts, missing denominator semantics and entry bounds; registered the source capability with evidence_level none.

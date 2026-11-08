@@ -16,7 +16,7 @@ def make_elf(
     include_load: bool = True,
 ) -> bytes:
     payload = bytearray(64 + 56)
-    payload[:7] = b"\\x7fELF\\x02\\x01\\x01"
+    payload[:7] = b"\x7fELF\x02\x01\x01"
     struct.pack_into("<H", payload, 18, machine)
     struct.pack_into("<Q", payload, 32, 64)
     struct.pack_into("<HHH", payload, 52, 64, 56, 1)

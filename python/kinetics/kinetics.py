@@ -115,3 +115,47 @@ def fit_michaelis_menten(
         ],
         "warnings": warnings,
     }
+
+
+def _validate_transform_data(
+    substrates: list[float], rates: list[float],
+) -> None:
+    if len(substrates) != len(rates) or len(rates) < 2:
+        raise ValueError("Need >=2 paired observations")
+    if not all(isfinite(value) for value in [*substrates, *rates]):
+        raise ValueError("Transform inputs must be finite")
+    if any(value <= 0 for value in [*substrates, *rates]):
+        raise ValueError("Linearized transforms require strictly positive S and v")
+
+
+def lineweaver_burk(substrates: list[float], rates: list[float]) -> dict[str, object]:
+    """Return reciprocal coordinates; error weighting is distorted by reciprocals."""
+    _validate_transform_data(substrates, rates)
+    return {
+        "x": [1.0 / value for value in substrates],
+        "y": [1.0 / value for value in rates],
+        "axes": ["1/[S]", "1/v"],
+        "warning": "Exploratory reciprocal transform; low-substrate errors are strongly amplified",
+    }
+
+
+def eadie_hofstee(substrates: list[float], rates: list[float]) -> dict[str, object]:
+    """Return Eadie-Hofstee coordinates; both axes contain the measured rate."""
+    _validate_transform_data(substrates, rates)
+    return {
+        "x": [rate / substrate for substrate, rate in zip(substrates, rates)],
+        "y": list(rates),
+        "axes": ["v/[S]", "v"],
+        "warning": "Exploratory transform; x and y share measured v and therefore correlated errors",
+    }
+
+
+def hanes_woolf(substrates: list[float], rates: list[float]) -> dict[str, object]:
+    """Return Hanes-Woolf coordinates; transformed errors remain heteroscedastic."""
+    _validate_transform_data(substrates, rates)
+    return {
+        "x": list(substrates),
+        "y": [substrate / rate for substrate, rate in zip(substrates, rates)],
+        "axes": ["[S]", "[S]/v"],
+        "warning": "Exploratory transform; transformed errors are not generally constant variance",
+    }

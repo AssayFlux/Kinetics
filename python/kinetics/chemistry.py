@@ -132,21 +132,34 @@ def graph_descriptors(molecule: dict[str, object]) -> dict[str, object]:
     }
 
 
-def path_fingerprint(molecule: dict[str, object], *, max_path: int = 3) -> frozenset[str]:
-    """Hash atom/bond paths up to max_path; exploratory, not an ECFP/RDKit equivalent."""
+def path_fingerprint(
+    molecule: dict[str, object], *, max_path: int = 3,
+    max_features: int = 1_000_000, max_walk_states: int = 2_000_000,
+) -> frozenset[str]:
+    """Hash atom/bond paths with explicit memory and traversal ceilings."""
     if max_path < 1 or max_path > 6:
         raise ValueError("max_path must be between 1 and 6")
+    if max_features < 1 or max_walk_states < 1:
+        raise ValueError("Fingerprint resource limits must be positive")
     atoms, adjacency = _graph(molecule)
     features: set[str] = set()
+    walk_states = 0
 
     def add_feature(value: str) -> None:
-        features.add(hashlib.sha256(value.encode("utf-8")).hexdigest()[:16])
+        feature = hashlib.sha256(value.encode("utf-8")).hexdigest()[:16]
+        if feature not in features and len(features) >= max_features:
+            raise ValueError("Fingerprint exceeded max_features")
+        features.add(feature)
 
     for index, atom in enumerate(atoms):
         start = str(atom["element"])
         add_feature(start)
 
         def walk(node: int, previous: int, path: tuple[str, ...], depth: int) -> None:
+            nonlocal walk_states
+            walk_states += 1
+            if walk_states > max_walk_states:
+                raise ValueError("Fingerprint exceeded max_walk_states")
             if depth >= max_path:
                 return
             for neighbour, order in adjacency[node]:

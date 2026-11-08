@@ -1,7 +1,6 @@
 package org.assayflux.kinetics
 
 import android.content.Context
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -21,14 +20,10 @@ import kotlinx.coroutines.withContext
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -86,7 +81,7 @@ internal fun KineticsAppShell(
             @Composable
             fun Screen(modifier: Modifier) {
                 when (tab) {
-                    KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport, onRefresh,
+                    KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
                         onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, modifier)
                     KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, modifier)
                     KineticsTab.Explore -> ExploreScreen(modifier)
@@ -180,7 +175,7 @@ private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Mo
 @Composable
 private fun HomeScreen(
     jobs: List<ResearchJob>, notice: String, runtime: String?, themeFamily: String, onImport: () -> Unit,
-    onRefresh: () -> Unit, onRuntime: () -> Unit, onOpenWork: () -> Unit,
+    onRuntime: () -> Unit, onOpenWork: () -> Unit,
     onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit, modifier: Modifier,
 ) {
@@ -191,6 +186,7 @@ private fun HomeScreen(
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
             item {
                 WorkspaceCarousel(
+                    isDark = themeFamily == "dark",
                     active = active,
                     complete = done,
                     attention = attention,
@@ -234,6 +230,7 @@ private fun HomeScreen(
 
 @Composable
 private fun WorkspaceCarousel(
+    isDark: Boolean,
     active: Int,
     complete: Int,
     attention: Int,
@@ -243,6 +240,9 @@ private fun WorkspaceCarousel(
     onRuntime: () -> Unit,
 ) {
     val pager = rememberPagerState(pageCount = { 3 })
+    val heroContainer = if (isDark) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary
+    val heroForeground = if (isDark) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary
+    val heroAction = if (isDark) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         HorizontalPager(
             state = pager,
@@ -255,7 +255,7 @@ private fun WorkspaceCarousel(
                     onClick = onImport,
                     modifier = Modifier.fillMaxWidth().height(218.dp),
                     shape = RoundedCornerShape(26.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                    colors = CardDefaults.cardColors(containerColor = heroContainer),
                 ) {
                     Column(
                         Modifier.fillMaxSize().padding(22.dp),
@@ -263,14 +263,14 @@ private fun WorkspaceCarousel(
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Text("KINETICS  /  RESEARCH WORKSPACE", style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = .78f), letterSpacing = 1.1.sp)
+                                color = heroForeground.copy(alpha = .78f), letterSpacing = 1.1.sp)
                             Text("Make room for discovery.", style = MaterialTheme.typography.headlineSmall,
-                                color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.SemiBold)
+                                color = heroForeground, fontWeight = FontWeight.SemiBold)
                             Text("Import a research input and create a protected local work item.",
-                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = .88f))
+                                style = MaterialTheme.typography.bodyMedium, color = heroForeground.copy(alpha = .88f))
                         }
                         Text("IMPORT RESEARCH INPUT  →", style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold)
+                            color = heroAction, fontWeight = FontWeight.Bold)
                     }
                 }
                 1 -> Card(
@@ -332,54 +332,6 @@ private fun WorkspaceCarousel(
                         .clip(RoundedCornerShape(50))
                         .background(if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun HeroCard(onImport: () -> Unit, themeFamily: String) {
-    val dark = themeFamily != "light"
-    val heroSurface = if (dark) Color(0xFF2A1530) else Color(0xFF7B1E34)
-    val heroText = Color(0xFFFFFDF8)
-    Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = heroSurface)) {
-        Box {
-            Image(
-                painter = painterResource(R.drawable.kinetics_background),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.matchParentSize().alpha(if (dark) 0.10f else 0.08f),
-            )
-            Box(
-                Modifier.matchParentSize().background(
-                    Brush.verticalGradient(
-                        listOf(
-                            heroSurface.copy(alpha = 0.72f),
-                            heroSurface.copy(alpha = 0.96f),
-                        )
-                    )
-                )
-            )
-            Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(13.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("KINETICS", color = heroText, style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
-                Spacer(Modifier.width(8.dp))
-                Text("RESEARCH WORKSPACE", color = heroText.copy(alpha = 0.82f),
-                    style = MaterialTheme.typography.labelSmall)
-                Spacer(Modifier.weight(1f))
-                InfoPill("LOCAL FIRST")
-            }
-            Text("Your data. Your science. Your device.", color = heroText, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-            Text("Bring in research data and prepare a reproducible analysis workspace. Files are encrypted locally during import.",
-                color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
-            Button(onClick = onImport, Modifier.fillMaxWidth().height(54.dp), shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD9A441), contentColor = Color(0xFF2B1B14))) {
-                Text("+   Import research data", fontWeight = FontWeight.Bold)
-            }
-            Text("FASTA  ·  FASTQ  ·  PDB/mmCIF  ·  SDF  ·  Other files",
-                style = MaterialTheme.typography.labelSmall, color = heroText.copy(alpha = 0.88f))
             }
         }
     }

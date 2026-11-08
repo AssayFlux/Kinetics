@@ -105,7 +105,7 @@ def generate(root: Path = ROOT) -> dict[str, object]:
                     was_declared_elsewhere = key in packages
                     add(name, version, "pypi", f"pkg:pypi/{name}")
                     if was_declared_elsewhere:
-                        packages[key]["comment"] += (
+                        packages[key]["comment"] = str(packages[key]["comment"]) + (
                             f"; also used by host-only validation dependency from "
                             f"{requirements_file.relative_to(root)}"
                         )

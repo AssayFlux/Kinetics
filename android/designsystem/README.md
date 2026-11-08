@@ -1,16 +1,17 @@
-# Kinetics Design System (U0 implementation skeleton)
+# Kinetics Design System
 
-**Selected visual direction:** Obsidian Cyan default, with Light and Neon families. This selection follows the owner's dark/futuristic preference and authorization to use best judgement. The palette alternatives remain in `design/tokens.json`.
+**Status:** skeleton; not a complete component library or gallery.
 
-Current app-specific Compose styling is still inline and is not yet generated from tokens. This module is not yet a complete component library or gallery.
+The app currently has a Compose shell with dark-first Obsidian Cyan, Light and Neon theme families. It includes the owner-supplied Home background, Home/Work/Explore/Settings, window-responsive navigation and a centred 840dp readable-content cap.
 
-Required before U0 exit:
+Current navigation uses stable Material 3 NavigationBar, NavigationRail and PermanentNavigationDrawer with a live app-window classifier. It is not yet NavigationSuiteScaffold or fold-posture aware.
+
+U0 exit still requires:
 - deterministic token generator for Compose Kotlin and CSS variables;
-- theme previews for compact, medium and expanded windows in light and dark modes;
-- reusable semantic status/tier components;
-- adaptive navigation scaffold and pane layouts;
-- component gallery with all components, themes and window sizes;
-- screenshot-test harness, accessibility checks and token-only styling lint;
-- owner-supplied logo treatment reviewed without altering source artwork.
+- reusable semantic status/tier, Research Mode and connectivity components;
+- adaptive navigation suite and fold/hinge posture support;
+- component gallery with every component/theme/window size;
+- screenshot-test harness, automated accessibility checks and token-only styling lint;
+- device evidence and owner-approved visual gate.
 
-Do not claim U0 complete until generated themes and gallery run and the owner-approved visual gate is recorded.
+Do not claim U0 complete until these run and are recorded.

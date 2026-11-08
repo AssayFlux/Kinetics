@@ -127,7 +127,8 @@ def generate(root: Path = ROOT) -> dict[str, object]:
     gradle_version = pinned(r'GRADLE_VERSION="([^"]+)"', local_build, "Gradle")
     ndk_version = pinned(r'NDK_VERSION="([^"]+)"', local_build, "Android NDK")
     build_tools = pinned(r'BUILD_TOOLS_VERSION="([^"]+)"', local_build, "Android Build Tools")
-    python_target = pinned(r'PYTHON_TARGET="([^"]+)"', local_build, "Python")
+    python_host = pinned(r'PYTHON_HOST_VERSION="([^"]+)"', local_build, "Python host")
+    python_target = pinned(r'PYTHON_TARGET="([^"]+)"', local_build, "Chaquopy Python target")
     rust_version = pinned(r'channel = "([^"]+)"', rust_toolchain, "Rust")
     sdk_platform = pinned(r'compileSdk = ([0-9]+)', app_build, "Android SDK platform")
     cmake_version = pinned(r'version = "([^"]+)"', app_build, "CMake")
@@ -136,7 +137,9 @@ def generate(root: Path = ROOT) -> dict[str, object]:
     add("Android Build Tools", build_tools, "build-tool", f"pkg:generic/android-build-tools@{build_tools}")
     add("Android SDK Platform", sdk_platform, "build-tool", f"pkg:generic/android-sdk-platform@{sdk_platform}")
     add("CMake", cmake_version, "build-tool", f"pkg:generic/cmake@{cmake_version}")
-    add("Python host", python_target.split("-")[0], "build-tool", f"pkg:generic/python@{python_target.split('-')[0]}")
+    add("Python host", python_host, "build-tool", f"pkg:generic/python@{python_host}")
+    add("Chaquopy Python target", python_target.split("-")[0], "runtime-target",
+        f"pkg:generic/python@{python_target.split('-')[0]}")
     add("Rust toolchain", rust_version, "build-tool", f"pkg:generic/rust@{rust_version}")
     add("JDK", "17 (patch/vendor not pinned)", "build-tool")
 

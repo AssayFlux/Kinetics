@@ -65,9 +65,9 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
         if (uri != null && jobId != null) {
             scope.launch {
                 notice = "Exporting verified research input..."
-                val result = withContext(Dispatchers.IO) {
-                    runCatching {
-                        val output = activity.contentResolver.openOutputStream(uri, "w")
+                notice = withContext(Dispatchers.IO) {
+                    val exportResult = runCatching {
+                        val output = activity.contentResolver.openOutputStream(uri, "wt")
                             ?: error("Selected export destination could not be opened")
                         output.use { stream ->
                             check(store.exportStoredInput(jobId, stream)) {
@@ -75,11 +75,27 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
                             }
                         }
                     }
+                    exportResult.fold(
+                        { "Verified research input exported successfully." },
+                        { error ->
+                            // SAF providers differ in whether they support document deletion.
+                            // Remove a failed partial export where possible; never claim cleanup
+                            // if the provider refuses or does not implement deletion.
+                            val removed = runCatching {
+                                android.provider.DocumentsContract.deleteDocument(
+                                    activity.contentResolver, uri,
+                                )
+                            }.getOrDefault(false)
+                            val detail = error.message ?: error.javaClass.simpleName
+                            if (removed) {
+                                "Export failed: $detail. The incomplete destination was removed."
+                            } else {
+                                "Export failed: $detail. The destination may contain partial data; " +
+                                    "delete that document manually before retrying."
+                            }
+                        },
+                    )
                 }
-                notice = result.fold(
-                    { "Verified research input exported successfully." },
-                    { "Export failed: ${it.message ?: it.javaClass.simpleName}" },
-                )
             }
         }
     }

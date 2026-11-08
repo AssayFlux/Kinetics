@@ -624,3 +624,30 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Perform a source-level R1 audit of Android Gradle configuration, Python probe, Rust FFI, C++ JNI, native alignment checker and local build script; fix verified defects and add host-side tests where possible.
 - Continue engine, offline viewer, lifecycle, security and licensing investigations with pinned evidence.
 - Update phase and roadmap status only when each exit criterion has supporting evidence.
+
+
+## Session 15 — R1 source audit and ELF checker hardening (2026-11-08)
+
+### Owner instruction
+- Owner approved continuation and reiterated the requirement to complete Research Platform R1–R10 carefully, without unsupported completion claims.
+- Continue in dependency order. R1 remains the active phase; R2 and R3 remain gated by their documented exit criteria and owner reviews. R4–R10 remain downstream roadmap packages.
+- Preserve the owner directive: no APK/AAB builds or Android emulator/device tests in GitHub Actions; local APK build and physical-device testing remain owner-controlled.
+
+### Work completed
+- Audited the R1 Android project layout, Gradle configuration, Kotlin probes, Python runtime probe, Rust FFI, C++ JNI and ELF checker.
+- Found that the prior ELF checker only compared minimum PT_LOAD p_align with 16 KB. It did not verify ELF program-header bounds/entry sizes, alignment power-of-two, or p_offset/p_vaddr congruence.
+- Hardened scripts/check_android_elf_alignment.py to validate ELF64 little-endian version 1, AArch64, program-header table bounds and sizes, PT_LOAD presence, each load segment's 16 KB minimum alignment, power-of-two alignment and p_offset/p_vaddr congruence.
+- Added tests/test_android_elf_alignment.py with synthetic valid and invalid ELF fixtures.
+- Corrected escaped byte literals after the first CI test run exposed the fixture-signature error. The failed run is retained as a test-driven correction, not hidden.
+
+### Verification
+- Host-only CI run 42429935581 passed on commit e1560a3f74165a770438000a650a83019a01432d.
+- Ruff passed; mypy passed with 8 source files; registry validation passed; all 15 unit tests passed; reproduction stub, local Android build-script syntax check and owner-directed Android artifact gate passed.
+- No APK/AAB was built, no emulator/device test was run, and no Android runtime result is claimed.
+
+### Remaining R1 blockers
+- Owner local build and build-log/artifact evidence.
+- Android runtime execution of Python/Biopython/NumPy and Rust/C++ JNI probes.
+- SciPy architecture decision/experiment; separate scientific engine evaluation; RDKit/alternative; offline structure viewer.
+- SAF import, background execution, cancellation/resume, cold-start and peak-memory evidence.
+- Complete dependency/source-file license audit and explicit owner R1 go/no-go.

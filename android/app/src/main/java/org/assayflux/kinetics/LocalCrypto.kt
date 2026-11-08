@@ -46,6 +46,17 @@ object LocalCrypto {
         return generator.generateKey()
     }
 
+    /**
+     * Tri-state check for startup recovery. False means the alias is definitely absent;
+     * null means the Android Keystore could not be inspected and must not trigger recovery actions.
+     */
+    fun existingKeyStatus(): Boolean? = try {
+        val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+        store.getKey(ALIAS, null) is SecretKey
+    } catch (_: Exception) {
+        null
+    }
+
     fun associatedData(context: String, chunkIndex: Long): ByteArray {
         require(context.isNotBlank() && chunkIndex >= 0) { "Invalid encrypted chunk identity" }
         return "$context:$chunkIndex".toByteArray(Charsets.UTF_8)

@@ -207,4 +207,4 @@ Build and static package evidence is green. R1 is **not complete**. Outstanding:
 - Android emulator testing is removed from GitHub Actions. No automated emulator runtime pass is claimed.
 - Local debug APK build is the next build route when the owner is ready. Physical-device testing is deferred by owner instruction.
 - Device-dependent rows remain pending; they are not silently waived from R1 exit criteria.
-- The local build must record the source commit, JDK/Gradle/AGP/Kotlin/SDK/NDK/CMake/Rust versions, dependency/wheel inputs, APK/AAB hashes and sizes, and build logs. If the custom Biopython wheel path cannot be reproduced locally, record that blocker instead of substituting an unverified package.
+- The local build guide is [docs/local-android-build.md](local-android-build.md), using [scripts/build_android_local.sh](../scripts/build_android_local.sh). The local build must record the source commit, JDK/Gradle/AGP/Kotlin/SDK/NDK/CMake/Rust versions, dependency/wheel inputs, APK/AAB hashes and sizes, and build logs. If the custom Biopython wheel path cannot be reproduced locally, record that blocker instead of substituting an unverified package.

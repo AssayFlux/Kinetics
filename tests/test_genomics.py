@@ -150,3 +150,43 @@ def test_optional_htslib_adapter_reads_bam_and_requires_local_reference_for_cram
     cram_path.touch()
     with pytest.raises(ValueError, match="local reference"):
         list(iter_alignment_records(cram_path))
+
+
+@pytest.mark.parametrize(
+    "payload, message",
+    [
+        (b"NOPE", "Invalid BAM magic"),
+        (b"BAM\\x01" + __import__("struct").pack("<i", -1), "header text length"),
+        (b"BAM\\x01" + __import__("struct").pack("<i", 0), "reference count"),
+        (
+            b"BAM\\x01" + __import__("struct").pack("<i", 0)
+            + __import__("struct").pack("<i", 1),
+            "reference name length",
+        ),
+        (
+            b"BAM\\x01" + __import__("struct").pack("<i", 0)
+            + __import__("struct").pack("<i", 0)
+            + __import__("struct").pack("<i", 31),
+            "record block size",
+        ),
+        (
+            b"BAM\\x01" + __import__("struct").pack("<i", 0)
+            + __import__("struct").pack("<i", 0)
+            + __import__("struct").pack("<i", 32) + b"short",
+            "Truncated BAM record block",
+        ),
+    ],
+)
+def test_bam_parser_rejects_truncated_and_out_of_bounds_streams(
+    payload: bytes, message: str,
+) -> None:
+    import gzip
+    import io
+    import struct
+
+    from kinetics.genomics import iter_bam_records
+
+    # Keep struct imported locally for the test data builders above explicit.
+    assert struct.pack("<i", 0) == b"\\x00\\x00\\x00\\x00"
+    with pytest.raises(ValueError, match=message):
+        list(iter_bam_records(io.BytesIO(gzip.compress(payload))))

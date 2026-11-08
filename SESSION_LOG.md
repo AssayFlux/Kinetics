@@ -1024,3 +1024,27 @@ Continue R1–R10 source integration and close the remaining code-level gaps. On
 - CI green is not R1–R10 completion. R1 runtime/engine feasibility; R2 SAF, migration, crash and Keystore verification; R3 independent scientific validation; R4–R9 reference concordance, broader engines/data coverage and benchmarks; R10 transitive SBOM/licensing, security/accessibility review, device/performance tests and signing remain gated.
 - R0 remains done by owner acceptance; this campaign adds regression evidence without reopening its historical gate.
 - No clinical/patient workflow, validated scientific capability, device support or release claim is made.
+
+
+
+## 2026-11-08 — UI/UX master specification and U0 foundations
+**Phase:** Track U / U0 in parallel with R0–R10  
+**Objective:** Adopt UI/UX contract, create U0 foundations and repair Compose build blocker.
+
+### Done
+- Added root `KINETICS_UI_SPEC.md` as the governing specification index.
+- Added three unapproved token directions, settings schema, owner brand asset checklist/placeholders, token generator, fail-closed brand script and design-system skeleton.
+- Added screen map, verified Android specs, device matrix, quality-report template, component catalogue placeholder and STRIDE threat-model draft.
+- Fixed Kotlin unmatched closing brace reported at `MainActivity.kt:272`.
+
+### Verified
+- Official Android window classes and edge-to-edge guidance are recorded in `docs/ui/verified-specs.md`.
+- Python foundation checks passed in run #1660 before the UI changes.
+
+### Not validated
+- The Kotlin fix still requires a fresh successful Android build.
+- No gallery screenshot, responsive layout, TalkBack, contrast, 200% font, device matrix, Macrobenchmark or usability result is claimed.
+- No visual direction or brand assets are approved. U0 remains in progress and must stop at owner choice.
+
+### Next
+Run Python/registry checks and Android build on the consolidated source. Complete exact full-text transcription of the owner spec and gallery screenshots before asking owner to choose.

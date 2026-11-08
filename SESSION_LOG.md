@@ -1123,3 +1123,33 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Continue the highest-risk R1/R2 integration and independent scientific validation work across R3–R9.
 - Progress S1 viewer licensing and offline WebView integration only after confirming exact upstream assets and R1 runtime constraints.
 - Update the phase evidence and quality reports from actual test/device outputs only.
+
+
+## 2026-11-08 — Session: Verified debug build and expanded Track S discovery scope
+**Phase:** Track R1–R10 integration + Track S1/S6–S10 planning and bounded preparation  
+**Objective:** Verify the integrated Android artifact, correct stale project status, and define the owner's requested unknown-sequence/genome/protein-design scope without implying it is already implemented.
+
+### Verified
+- GitHub Actions run #1792 completed successfully on `2f426d4b70a10c3ddf4c5acbd9fd961937effb1a`.
+- Python job passed Ruff lint/format, mypy across 26 production files, registry checks, reproducible token generation, Android guardrails and 119 tests (3 optional-dependency tests skipped).
+- Android job passed arm64 debug APK/AAB build, package alignment, artifact verification and `testDebugUnitTest`; the Gradle task completed successfully.
+- Artifact uploaded: [run #1792 artifact](https://github.com/AssayFlux/Kinetics/actions/runs/42460656392/artifacts/13610030667), 78,043,152-byte archive, SHA-256 `99a79072f6275ae9e69649222b2108452dd304d2d11445017df2a38e41ed6bd4`.
+- APK SHA-256: `21e29a2c78ba58ddd5601d67859dbb966f340c1ab0927a6c798f4cc50fe29324`; AAB SHA-256: `0b4bdbf87e3ec9c8dfcc0444f8dcbfab5d9b5922772f26e4c0dee2375bef04a5`.
+- Artifact is an unsigned debug build, expires 2026-11-22; CI did not run emulator or physical-device verification.
+
+### Track S planning added
+- Added `docs/track-s/discovery-and-design-roadmap.md` covering S6 unknown-sequence/protein-family intelligence, S7 genome annotation, S8 non-standard genetic-code investigation, S9 protein domain/structure intelligence and S10 constrained de novo protein design research.
+- Extended the Track S roadmap table with explicit dependencies and evidence gates. S10 remains feasibility/planning only until model/data licenses, compute security, biosafety review and experimental validation gates pass.
+- Updated README with the verified run/artifact and correct Track S parallel-work status; removed the stale run #1650 and stale NO-SOURCE JVM test claim.
+- Owner-supplied files are present under `Assets/`; `Assets/Kinetics.png` is actually JPEG-encoded despite its extension. Preserve originals and respect the exact-blob brand master; do not infer official brand colours or convert the animated logo without an approved use case.
+
+### Still open
+- APK installation, launch, SAF import/export, encrypted-storage lifecycle, runtime probes, screenshots, TalkBack, 200% font scale, accessibility, fold posture, performance and low-end device tests.
+- R1–R10 phase exit evidence, independent scientific reference validation, complete transitive SBOM/license review, security review and owner gates.
+- Track S6–S10 are plans, not implemented capabilities; no unknown-code inference, production genome annotation or de novo protein design claim is made.
+- No clinical/patient workflow or scientific validation claim is authorized.
+
+### Next
+- Continue R1/R2 runtime-critical and licensing/security evidence while improving R3–R9 reference validation.
+- Start S6 schema/reference-pack foundations and S1 viewer licensing/bridge only within approved dependencies.
+- Keep S10 model selection and generation blocked until its explicit gates are met.

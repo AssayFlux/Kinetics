@@ -38,11 +38,11 @@ Explore describes capability maturity; it is not a promise that all research too
 |---|---|---|---|
 | ui.splash | Brand splash | Owner assets, platform launch behavior, no artificial delay | planned |
 | ui.auth | Local app-lock/authentication boundary | Honest local-vs-account distinction, secure fallback and recovery | not implemented |
-| ui.biometric | Biometric unlock | AndroidX BiometricPrompt, enrollment/capability checks, Keystore-backed operation, lockout and recovery | not implemented |
-| ui.dashboard | D-015 dashboard | Real workspace carousel, owner brand, truthful live data and empty states | partial; old hero remains |
+| ui.biometric | Biometric unlock | AndroidX BiometricPrompt, enrollment/capability checks, Keystore-backed operation, lockout and recovery | source implemented; CI/device verification and recovery review pending |
+| ui.dashboard | D-015 dashboard | Real workspace carousel, owner brand, truthful live data and empty states | horizontal workspace carousel source added; owner-brand integration and screenshot/device verification pending |
 | ui.navigation | Navigation/drawer | Every destination navigates or is explicitly unavailable | partial; four destinations only |
 | ui.profile | Profile and security | Real local profile/preferences/security actions; no fabricated account | planned |
-| ui.appearance | Appearance | Persistent Light/Dark/System selection; no inert controls | partial; session-only state |
+| ui.appearance | Appearance | Persistent Light/Dark/System selection; no inert controls | persistent preference source implemented; CI/device verification pending |
 | ui.explore | Scientific capability catalogue | Registry-backed availability and clear maturity | informational catalogue; launch/dispatch not connected |
 | ui.work | Work/job list | Real import/job lifecycle actions | implemented source; test and device evidence required |
 

@@ -11,6 +11,11 @@ tools:
     status: implemented
     implementation: python/kinetics/sequence_reference.py
     evidence_level: none
+  - id: sequence.local_reference_pack_loader
+    name: Content-addressed bounded local FASTA reference-pack ingestion
+    status: implemented
+    implementation: python/kinetics/sequence_pack.py
+    evidence_level: none
   - id: sequence.fastq
     name: FASTQ parsing
     status: implemented

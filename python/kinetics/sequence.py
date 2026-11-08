@@ -2,7 +2,7 @@
 from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Iterator
 
 DNA = frozenset("ACGTRYSWKMBDHVN")
 RNA = frozenset("ACGURYSWKMBDHVN")
@@ -18,7 +18,7 @@ class SequenceRecord:
 def _normalise(sequence: str) -> str:
     return "".join(sequence.split()).upper()
 
-def iter_fasta_records(lines: Iterable[str]):
+def iter_fasta_records(lines: Iterable[str]) -> Iterator[SequenceRecord]:
     """Yield FASTA records incrementally from an iterable of text lines."""
     header: str | None = None
     chunks: list[str] = []

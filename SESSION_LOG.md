@@ -675,3 +675,11 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Android compile/runtime behavior, local APK build, native FFI/JNI execution, 16 KB runtime support, dependency redistribution, scientific concordance, memory/performance, security review and release readiness remain unverified.
 - Remaining substantial code scope includes BAM/CRAM, robust VCF normalization, mmCIF and advanced structure metrics, production chemistry/SMILES/stereochemistry, broader phylogenetic inference/search, differential-expression inference, multi-omics workflows, broad gene-domain annotations/data-pack rollout and full R10 accessibility/performance/crash/security/release automation.
 - R1–R10 are in progress, not complete. The implementation inventory is documented at docs/research-platform-implementation.md and release requirements at docs/release-hardening.md.
+
+
+### Continued integrated implementation
+- Added Android Keystore AES-256-GCM helper, data-pack manifest/checksum/size/license validation, and hardened pack ID/version path handling.
+- Extended SAF import worker with partial-file checkpointing, resumable continuation, SHA-256 continuity, 512 MiB cap, and cancel/resume controls in the app shell.
+- Added SAM/VCF text parsing, FASTQ quality summaries, NCBI Gene catalogue ingestion, primer screening, SpCas9 NGG PAM scanning, UPGMA clustering, logistic growth and cross-omics correlation.
+- Added an R10 release-hardening checklist and refreshed the integrated implementation inventory.
+- These additions are source implementation only; no test/build/Android runtime result is claimed.

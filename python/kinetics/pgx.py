@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, cast
 
 
 @dataclass(frozen=True, order=True)
@@ -67,18 +67,24 @@ def parse_star_allele_definitions(
         raise ValueError("PGx definition pack must be valid JSON") from error
     if not isinstance(value, dict) or value.get("schema_version") != 1:
         raise ValueError("Unsupported PGx definition schema version")
-    source = value.get("source")
-    if not isinstance(source, dict):
+    value = cast(dict[str, object], value)
+    source_raw = value.get("source")
+    if not isinstance(source_raw, dict):
         raise ValueError("PGx definition source metadata is mandatory")
-    source_name = source.get("name")
-    source_release = source.get("release")
-    source_url = source.get("url")
-    license_id = source.get("license")
-    source_sha256 = source.get("sha256")
-    genome_build = value.get("genome_build")
-    if not all(isinstance(item, str) and item.strip() for item in
-               (source_name, source_release, source_url, source_sha256, license_id, genome_build)):
-        raise ValueError("PGx source, release, URL, license and genome build are mandatory")
+    source = cast(dict[str, object], source_raw)
+
+    def required_string(data: dict[str, object], key: str) -> str:
+        item = data.get(key)
+        if not isinstance(item, str) or not item.strip():
+            raise ValueError(f"PGx definition requires non-empty {key}")
+        return item
+
+    source_name = required_string(source, "name")
+    source_release = required_string(source, "release")
+    source_url = required_string(source, "url")
+    license_id = required_string(source, "license")
+    source_sha256 = required_string(source, "sha256")
+    genome_build = required_string(value, "genome_build")
     if not source_url.startswith("https://"):
         raise ValueError("PGx source URL must use HTTPS")
     if not re.fullmatch(r"[a-fA-F0-9]{64}", source_sha256):
@@ -99,12 +105,16 @@ def parse_star_allele_definitions(
         for item in raw:
             if not isinstance(item, dict):
                 raise ValueError("Variant definition must be an object")
+            item_data = cast(dict[str, object], item)
+            position = item_data.get("position")
+            if not isinstance(position, int) or isinstance(position, bool):
+                raise ValueError("Variant position must be an integer")
             variant = VariantKey(
                 genome_build=genome_build,
-                chromosome=str(item.get("chromosome", "")),
-                position=item.get("position") if isinstance(item.get("position"), int) else 0,
-                reference=str(item.get("ref", "")).upper(),
-                alternate=str(item.get("alt", "")).upper(),
+                chromosome=str(item_data.get("chromosome", "")),
+                position=position,
+                reference=str(item_data.get("ref", "")).upper(),
+                alternate=str(item_data.get("alt", "")).upper(),
             )
             if variant in result:
                 raise ValueError("Duplicate variant in allele definition")
@@ -114,17 +124,18 @@ def parse_star_allele_definitions(
     for raw in raw_definitions:
         if not isinstance(raw, dict):
             raise ValueError("Allele definition must be an object")
-        gene, star, definition_id = raw.get("gene"), raw.get("star_allele"), raw.get("id")
-        if not all(isinstance(item, str) and item.strip() for item in (gene, star, definition_id)):
-            raise ValueError("Allele definition requires gene, star_allele and id")
+        raw_data = cast(dict[str, object], raw)
+        gene = required_string(raw_data, "gene")
+        star = required_string(raw_data, "star_allele")
+        definition_id = required_string(raw_data, "id")
         if not star.startswith("*"):
             raise ValueError("Star allele names must begin with '*'")
         key = (gene, star, definition_id)
         if key in seen:
             raise ValueError("Duplicate PGx allele definition identifier")
         seen.add(key)
-        required = variants(raw.get("required_variants", []))
-        excluded = variants(raw.get("excluded_variants", []))
+        required = variants(raw_data.get("required_variants", []))
+        excluded = variants(raw_data.get("excluded_variants", []))
         if required & excluded:
             raise ValueError("A variant cannot be both required and excluded")
         definitions.append(StarAlleleDefinition(

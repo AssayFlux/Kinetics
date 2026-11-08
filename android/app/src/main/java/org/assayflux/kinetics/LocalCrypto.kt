@@ -20,6 +20,7 @@ object LocalCrypto {
     private const val TAG_BYTES = 16
     private const val TAG_BITS = TAG_BYTES * 8
     const val CHUNK_BYTES = 4 * 1024 * 1024
+    private const val MAX_FILE_BYTES = 512L * 1024L * 1024L
 
     private fun key(): SecretKey {
         val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
@@ -99,6 +100,10 @@ object LocalCrypto {
                         val payload = ByteArray(length)
                         input.readFully(payload)
                         val plaintext = decrypt(payload, associatedData(context, chunkIndex))
+                        require(plaintext.isNotEmpty()) { "Encrypted file contains an empty chunk" }
+                        require(output.channel.position() + plaintext.size <= MAX_FILE_BYTES) {
+                            "Decrypted research input exceeds the 512 MiB limit"
+                        }
                         output.write(plaintext)
                         digest.update(plaintext)
                         chunkIndex++

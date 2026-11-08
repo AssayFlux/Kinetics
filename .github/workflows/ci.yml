@@ -49,6 +49,30 @@ jobs:
       - name: Check local Android build script syntax
         run: bash -n scripts/build_android_local.sh
 
+  scientific-reference-validation:
+    name: Pinned host-side scientific reference comparisons
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python validation host
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: validation/requirements-scipy.txt
+      - name: Install pinned host-only numerical reference dependencies
+        run: python -m pip install -r validation/requirements-scipy.txt
+      - name: Compare exploratory Michaelis-Menten fit with SciPy
+        run: PYTHONPATH=python python validation/kinetics_scipy_reference.py > kinetics-scipy-reference-result.json
+      - name: Upload synthetic numerical comparison record
+        uses: actions/upload-artifact@v4
+        with:
+          name: kinetics-scipy-reference-${{ github.sha }}
+          path: kinetics-scipy-reference-result.json
+          if-no-files-found: error
+          retention-days: 90
+
   android-arm64-build:
     name: Android arm64 debug APK/AAB build and package tests
     runs-on: ubuntu-latest

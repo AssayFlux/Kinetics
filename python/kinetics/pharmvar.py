@@ -107,11 +107,11 @@ def parse_pharmvar_tsv(
         "type": ("varianttype", "type"),
     }
     selected: dict[str, str] = {}
-    for key, candidates in aliases.items():
+    for field_name, candidates in aliases.items():
         found = next((columns[normalize(candidate)] for candidate in candidates
                       if normalize(candidate) in columns), None)
         if found is None:
-            raise ValueError(f"PharmVar TSV is missing required {key} column")
+            raise ValueError(f"PharmVar TSV is missing required {field_name} column")
         selected[key] = found
 
     grouped: dict[tuple[str, str, str], list[PharmVarVariant]] = {}

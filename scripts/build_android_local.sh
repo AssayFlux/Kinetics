@@ -25,6 +25,7 @@ need() { command -v "$1" >/dev/null 2>&1 || fail "Missing command: $1"; }
 need java
 need python
 need git
+need tar
 need curl
 need cargo
 need rustup

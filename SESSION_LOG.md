@@ -929,3 +929,5 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R9 PharmVar TSV source adapter increment
 - Added a release- and byte-checksum-pinned importer for PharmVar's documented nine-column TSV haplotype/variant format. It preserves the source reference accession/coordinate system, handles the REFERENCE sentinel and matches only exact complete already-phased haplotype variant sets.
 - Added parser/matcher test source and exported APIs. No live bulk PharmVar dataset was downloaded or bundled; no CYP2D6 CNV/hybrid, structural variation, phasing, diplotype or phenotype translation is claimed. Current PharmVar version and license are documented with source links; terms/release must be rechecked at every import. No tests were run.
+
+- Pinned Python host version to 3.11.17, Rust toolchain to 1.88.0 with arm64 Android target, committed Cargo.lock and changed local native build to cargo --locked. Extended static Android guard to verify the Python/Rust pins.

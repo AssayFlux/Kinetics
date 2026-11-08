@@ -79,6 +79,7 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         'CHAQUOPY_COMMIT="1f63c93d8beaf7062fbe51888ab9235475df3bb8"',
         'GRADLE_SHA256="20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78"',
         'NDK_VERSION="28.2.13676358"',
+        'PYTHON_TARGET="3.11.17-0"',
     ):
         if marker not in build_source:
             errors.append(f"Local build inputs must remain pinned: {marker}")

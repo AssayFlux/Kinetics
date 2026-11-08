@@ -161,3 +161,18 @@ def test_fastq_terminal_trimming_rejects_invalid_quality_and_short_reads() -> No
     assert trim_fastq_ends(record, "!!!!", minimum_quality=20, minimum_length=3) is None
     with pytest.raises(ValueError, match="Phred offset"):
         trim_fastq_ends(record, "IIII", phred_offset=0)
+
+
+
+def test_fasta_iterator_streams_records_from_line_iterable() -> None:
+    from io import StringIO
+
+    from kinetics.sequence import iter_fasta_records
+
+    records = iter_fasta_records(StringIO(">first description\nACG\n>second\nTTN\n"))
+    first = next(records)
+    assert (first.identifier, first.sequence, first.description) == (
+        "first", "ACG", "description"
+    )
+    second = next(records)
+    assert (second.identifier, second.sequence) == ("second", "TTN")

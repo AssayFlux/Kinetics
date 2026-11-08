@@ -25,7 +25,7 @@ from .omics import (
 from .phylo import Node, leaf_names, neighbor_joining, parse_newick, patristic_distance, upgma
 from .protein import protein_descriptors, theoretical_pi
 from .sequence import (
-    SequenceRecord, kmer_counts, needleman_wunsch, parse_fasta, parse_fastq,
+    SequenceRecord, iter_fasta_records, kmer_counts, needleman_wunsch, parse_fasta, parse_fastq,
     reverse_complement, sequence_statistics, transcribe, trim_fastq_ends,
 )
 from .structure import Atom, contact_pairs, parse_mmcif, parse_pdb, rmsd
@@ -35,7 +35,7 @@ __all__ = [
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate",
-    "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk",
+    "iter_fasta_records", "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk",
     "log2_fold_change", "logistic_growth", "michaelis_menten", "normalize_small_variant",
     "needleman_wunsch", "neighbor_joining", "parse_fasta", "parse_fastq", "parse_newick",
     "parse_mmcif", "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",

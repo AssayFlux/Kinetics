@@ -3,7 +3,7 @@
 **Status:** In progress. Source implementation is not scientific validation or device verification.
 
 ## Scope
-- FASTA/FASTQ parsing, including wrapped FASTQ sequence and quality lines.
+- FASTA/FASTQ parsing, including a streaming FASTA iterator and wrapped FASTQ sequence and quality lines.
 - Sequence statistics, reverse complement, transcription, k-mer counting and global pairwise alignment.
 - FASTQ quality summaries and explicit-offset terminal quality trimming.
 - SAM and VCF text parsing with mandatory-field and scalar validation.\n- Reference-checked minimal/left normalization for literal biallelic A/C/G/T small variants.
@@ -13,7 +13,7 @@
 Implemented in `python/kinetics/sequence.py` and `python/kinetics/genomics.py`. Regression-test source is in `tests/test_research_primitives.py` and `tests/test_genomics.py`.
 
 ## Limitations
-- No BAM/CRAM binary decoder.
+- The FASTA text convenience function materializes its returned records; use the iterator API for large inputs.\n- No BAM/CRAM binary decoder.
 - Terminal trimming is not adapter trimming or sliding-window quality trimming.
 - VCF parsing does not yet normalize/decompose records automatically. The separate normalizer handles only reference-checked biallelic literal A/C/G/T small variants; symbolic alleles, breakends, multi-allelic decomposition, phasing and variant interpretation remain unsupported.
 - Global alignment is not a high-throughput mapper.

@@ -91,13 +91,75 @@ def fit_michaelis_menten(
         aic = likelihood_term + 2 * 3  # Vmax, Km and residual variance
         bic = likelihood_term + 3 * log(n)
 
+    # Local Jacobian diagnostics for the two fitted parameters. These are
+    # descriptive linear approximations, not validated confidence intervals.
+    jacobian = [
+        (substrate / (km + substrate), -vmax * substrate / ((km + substrate) ** 2))
+        for substrate in substrates
+    ]
+    j11 = sum(row[0] * row[0] for row in jacobian)
+    j12 = sum(row[0] * row[1] for row in jacobian)
+    j22 = sum(row[1] * row[1] for row in jacobian)
+    determinant = j11 * j22 - j12 * j12
+    covariance = None
+    standard_errors = None
+    leverage: list[float] = []
+    standardized_residuals: list[float] = []
+    cooks_distance: list[float] = []
+    condition_number = None
+    if determinant > 1e-24 and n > 2:
+        inverse = ((j22 / determinant, -j12 / determinant),
+                   (-j12 / determinant, j11 / determinant))
+        residual_variance = sse / (n - 2)
+        covariance = [
+            [residual_variance * inverse[0][0], residual_variance * inverse[0][1]],
+            [residual_variance * inverse[1][0], residual_variance * inverse[1][1]],
+        ]
+        standard_errors = [sqrt(max(0.0, covariance[0][0])),
+                           sqrt(max(0.0, covariance[1][1]))]
+        trace = j11 + j22
+        discriminant = sqrt(max(0.0, trace * trace - 4.0 * determinant))
+        largest = (trace + discriminant) / 2.0
+        smallest = (trace - discriminant) / 2.0
+        condition_number = None if smallest <= 0 else largest / smallest
+        for row, residual in zip(jacobian, residuals):
+            h = (inverse[0][0] * row[0] ** 2 +
+                 2.0 * inverse[0][1] * row[0] * row[1] +
+                 inverse[1][1] * row[1] ** 2)
+            h = min(1.0, max(0.0, h))
+            leverage.append(h)
+            denominator = sqrt(max(residual_variance * (1.0 - h), 1e-30))
+            standardized = residual / denominator
+            standardized_residuals.append(standardized)
+            cooks_distance.append(
+                (standardized ** 2) * h / max(2.0 * (1.0 - h), 1e-12)
+            )
+
+    residual_differences = sum(
+        (residuals[index] - residuals[index - 1]) ** 2
+        for index in range(1, n)
+    )
+    durbin_watson = None if sse == 0 else residual_differences / sse
+    residual_signs = [1 if value > 0 else -1 for value in residuals if value != 0]
+    residual_runs = 0 if not residual_signs else 1 + sum(
+        residual_signs[index] != residual_signs[index - 1]
+        for index in range(1, len(residual_signs))
+    )
+    bound_tolerance = 1e-6
+    vmax_at_bound = min(abs(vmax - vlo), abs(vmax - vhi)) <= bound_tolerance * max(1.0, abs(vmax))
+    km_at_bound = min(abs(km - klo), abs(km - khi)) <= bound_tolerance * max(1.0, abs(km))
+
     warnings = [
-        "No confidence intervals calculated",
+        "No validated confidence intervals calculated; use bootstrap only as exploratory uncertainty",
         "Grid search is approximate; the optimum may lie between grid points",
-        "Inspect residual structure and parameter identifiability",
+        "Jacobian covariance, leverage and Cook's distance are local Gaussian least-squares approximations",
         "AIC/BIC assume independent observations and constant Gaussian variance",
         "Concentration and rate units must be consistent; units are not inferred",
     ]
+    if condition_number is None or condition_number > 1e12:
+        warnings.append("Kinetic parameters may be weakly identifiable over the supplied substrate range")
+    if vmax_at_bound or km_at_bound:
+        warnings.append("At least one fitted parameter lies on a search boundary; expand/review bounds")
     if r_squared is None:
         warnings.append("R-squared is undefined because observed rates have zero variance")
     if aic is None:
@@ -109,6 +171,21 @@ def fit_michaelis_menten(
         "residuals": residuals, "residual_mean": residual_mean,
         "residual_sample_sd": residual_sd, "r_squared": r_squared,
         "aic": aic, "bic": bic,
+        "parameter_standard_errors_local_approximation": standard_errors,
+        "parameter_covariance_local_approximation": covariance,
+        "identifiability": {
+            "jacobian_information_determinant": determinant,
+            "jacobian_condition_number": condition_number,
+            "vmax_at_search_bound": vmax_at_bound,
+            "km_at_search_bound": km_at_bound,
+        },
+        "residual_diagnostics": {
+            "standardized_residuals_local_approximation": standardized_residuals,
+            "leverage": leverage,
+            "cooks_distance": cooks_distance,
+            "durbin_watson": durbin_watson,
+            "residual_sign_runs": residual_runs,
+        },
         "information_criteria_assumptions": [
             "independent observations", "constant Gaussian residual variance",
             "two fitted kinetic parameters plus residual variance",

@@ -1,6 +1,6 @@
 # Kinetics
 
-Kinetics is an offline-first, Android-native scientific workbench under active development. The repository has completed R0 foundations and is progressing through R1 Android/scientific-stack feasibility. It is not yet a validated scientific application or v0.1 release.
+Kinetics is an offline-first, Android-native scientific workbench under active development. R0 foundations are complete; Research Platform R1–R10 remain in progress. Source implementations exist across several phases, but required integration, scientific validation, licensing, Android verification and release evidence are still outstanding. Track S is deliberately sequenced after the complete R-track exit gate. Kinetics is not yet a validated scientific application or v0.1 release.
 
 ## Project direction
 - [NORTH_STAR.md](NORTH_STAR.md) — mission, scope and guardrails.
@@ -10,9 +10,9 @@ Kinetics is an offline-first, Android-native scientific workbench under active d
 - [docs/origin/KINETICS_MASTER.md](docs/origin/KINETICS_MASTER.md) — historical master specification.
 
 ## Current status
-- R0 foundations are complete; R1 is in progress. R2 and R3 are gated and have plans under `docs/phase-r2-plan.md` and `docs/phase-r3-plan.md`.
+- R0 foundations are complete. R1–R10 are all in progress; none is represented as complete. Phase plans and the integrated implementation inventory document implemented source and outstanding exit evidence.
 - Research Mode is the only mode intended for public builds.
-- R1 has historical Android arm64 cross-build/static-package evidence, but no current local APK build or Android runtime/device validation is claimed.
+- R1 has historical Android arm64 cross-build/static-package evidence, but no current local APK build or Android runtime/device validation is claimed. The owner-directed local build and later device-test campaign remain outstanding.
 - GitHub Actions runs host-side source checks only; it does not build APK/AAB files or run Android emulators. See [docs/phase-r1-plan.md](docs/phase-r1-plan.md).
 - No scientific capability is claimed as validated; no clinical functionality or patient-data workflow is authorized.
 - Project code is licensed under Apache-2.0. Third-party dependencies retain their own licenses; see [docs/third-party.md](docs/third-party.md).

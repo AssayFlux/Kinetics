@@ -784,3 +784,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R4–R10 controlled delivery plans
 - Added individual phase plans for R4 genomics, R5 structural biology, R6 computational chemistry, R7 phylogenetics, R8 omics, R9 gene catalogue/PGx foundations and R10 hardening.
 - Each plan distinguishes source implementation from scientific validation and device verification, records current limitations, and defines evidence-based exit criteria. R9 explicitly retains the P0/adviser gate; R10 records local-only APK/AAB and device verification.
+
+
+### R2 decryption resource boundary
+- Decryption now rejects empty authenticated chunks and caps materialized plaintext at the same 512 MiB limit as import, before writing beyond the cap.
+- The helper checks the output channel's current position before each plaintext write. This is source-only and has not been exercised on Android.

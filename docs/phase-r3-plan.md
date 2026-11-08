@@ -69,3 +69,8 @@ Added host regression coverage for FASTA/FASTQ, IUPAC reverse complement/transcr
 ### R3 continued source increment — paired bootstrap intervals
 
 Added a deterministic, seeded paired nonparametric bootstrap percentile-interval helper for the exploratory Michaelis–Menten grid fit. It fixes the parameter search bounds across replicates, reports successful/requested replicate counts, and emits explicit IID, grid-resolution, identifiability and model-misspecification caveats. It is not a replacement for independent reference validation or a validated uncertainty model. Regression-test source was added but not executed under the build-first/test-later instruction.
+
+
+### Independent-reference harness
+
+Added a reproducible host-side comparison script using SciPy's bounded trust-region reflective curve_fit as an independent numerical reference for noise-free and seeded Gaussian-noise synthetic Michaelis–Menten datasets. It records versions, parameters, covariance diagonals, tolerances and local residual/identifiability diagnostics. It has not been run; no validation result is claimed, and external experimental reference data remain outstanding.

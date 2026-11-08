@@ -195,3 +195,15 @@ def test_michaelis_menten_bootstrap_intervals_are_seed_reproducible() -> None:
     assert isinstance(intervals, dict)
     assert intervals["vmax"][0] <= intervals["vmax"][1]
     assert intervals["km"][0] <= intervals["km"][1]
+
+
+def test_michaelis_menten_fit_exposes_residual_and_identifiability_diagnostics() -> None:
+    from kinetics.kinetics import fit_michaelis_menten
+
+    substrates = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
+    rates = [100.0 * value / (10.0 + value) for value in substrates]
+    result = fit_michaelis_menten(substrates, rates, grid_size=80)
+    diagnostics = result["residual_diagnostics"]
+    assert len(diagnostics["leverage"]) == len(substrates)
+    assert len(diagnostics["cooks_distance"]) == len(substrates)
+    assert result["identifiability"]["jacobian_information_determinant"] > 0

@@ -914,3 +914,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R4 optional HTSlib adapter increment
 - Added a lazy pysam/HTSlib streaming adapter for BAM and CRAM, with indexed region reads, coordinate conversion and explicit local FASTA requirement for CRAM. No remote reference fallback is enabled.
 - Exported the API, registered the optional engine, documented the license/ABI review gate and added optional BAM adapter regression-test source. pysam/HTSlib is not bundled in Android; no CRAM/HTSlib tests were run.
+
+
+### R3 independent numerical reference harness
+- Expanded Michaelis–Menten output with local Jacobian covariance approximations, standard errors, leverage, standardized residuals, Cook's distance, Durbin–Watson, residual sign runs, condition-number and search-bound warnings. These are descriptive approximations, not validated inferential statistics.
+- Added a reproducible host validation harness comparing noise-free and seeded Gaussian-noise synthetic fits with SciPy curve_fit, recording SciPy/NumPy versions and explicit tolerances. The harness was not executed; no validation pass is claimed. Experimental reference datasets remain required.

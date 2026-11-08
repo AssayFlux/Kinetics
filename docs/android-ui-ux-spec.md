@@ -1,6 +1,6 @@
-# Kinetics Android UI/UX specification
+# Kinetics Android UI/UX specification — interaction requirements
 
-**Status:** Design baseline — implementation and usability validation still required.
+**Status:** Historical interaction baseline; current visual direction is D-015 in `docs/ui/kinetics-visual-design-system.md`. Where visual wording conflicts, D-015 supersedes this document. Implementation and usability validation remain required.
 **Product boundary:** Research Mode only. This interface is not for diagnosis, treatment, patient management or clinical decision support.
 
 ## Product principles
@@ -55,13 +55,11 @@ Bottom navigation (four destinations):
 - Accessibility: system font scaling and theme/high-contrast behavior.
 - About: app version, source revision, licenses, research-only disclaimer.
 
-## Visual language
+## Visual language — superseded by D-015
 
-- Material 3 foundations with a restrained scientific-workbench feel.
-- Deep ink/navy surfaces, teal/blue action accents, neutral cards and restrained amber/red status accents.
-- Rounded cards, clear section hierarchy, generous whitespace, compact but readable data rows.
-- No decorative charts without data; all scientific plots must include units, axes, method and provenance.
-- Light and dark themes; respect system setting.
+Use the canonical D-015 visual system in `docs/ui/kinetics-visual-design-system.md`: Light Classic warm ivory/cream, deep maroon, restrained gold and peacock teal; coherent Dark Classic and System modes; spacious rounded surfaces; central horizontal workspace carousel with adjacent cards peeking and pagination; and role-based display/UI/scientific typography. Do not use the older deep-ink/navy and teal/blue palette as the active product direction. Preserve owner assets byte-for-byte. No font binaries or motifs are enabled until their licence, glyph, attribution, contrast and rendering gates pass.
+
+Interaction requirements in this document remain active where compatible: real import/job actions, no fake results, Research Mode only, accessible controls, honest progress/recovery/export states, and no runnable tool without a real dispatcher.
 
 ## Delivery sequence
 

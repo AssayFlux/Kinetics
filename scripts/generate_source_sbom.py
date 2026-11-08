@@ -158,7 +158,10 @@ def generate(root: Path = ROOT) -> dict[str, object]:
         "creationInfo": {
             "creators": ["Tool: kinetics-source-sbom-generator"],
             "created": now,
-            "comment": "Static declared-dependency inventory; not a resolved transitive release SBOM.",
+            "comment": (
+                "Static declared-dependency inventory; not a resolved transitive "
+                "release SBOM."
+            ),
         },
         "packages": ordered,
         "hasExtractedLicensingInfos": extracted_licenses,
@@ -172,7 +175,8 @@ def generate(root: Path = ROOT) -> dict[str, object]:
             "comment": (
                 "Direct declarations only. Gradle BOM-managed modules are not resolved here. "
                 "Transitive artifacts, exact resolved versions, checksums, file-level licenses "
-                "and native binary contents are not included. Do not use as the final release SBOM."
+                "and native binary contents are not included. Do not use this as the "
+                    "final release SBOM."
             ),
         }],
     }

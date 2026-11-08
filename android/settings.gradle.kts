@@ -1,11 +1,8 @@
 pluginManagement {
     repositories {
         google()
-        // Filtered Central mirror fallback for Kotlin compiler artifacts; Maven Central remains next.
-        maven {
-            url = uri("https://maven.wso2.org/nexus/content/repositories/central/")
-            content { includeGroup("org.jetbrains.kotlin") }
-        }
+        // Maven Central is the canonical source; avoid a flaky third-party mirror
+        // that can fail dependency resolution before Gradle reaches Central.
         mavenCentral()
         gradlePluginPortal()
     }
@@ -14,11 +11,6 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
-        // Filtered Central mirror fallback for Kotlin compiler artifacts; Maven Central remains next.
-        maven {
-            url = uri("https://maven.wso2.org/nexus/content/repositories/central/")
-            content { includeGroup("org.jetbrains.kotlin") }
-        }
         mavenCentral()
     }
 }

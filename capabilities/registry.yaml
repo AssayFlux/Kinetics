@@ -584,3 +584,8 @@ security_features:
     track: G
     status: planned
     tests: []
+  - id: structure.exact_sequence_mapping
+    name: Conservative exact unique protein sequence-to-structure residue mapping
+    status: implemented
+    implementation: python/kinetics/sequence_structure.py
+    evidence_level: none

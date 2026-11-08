@@ -68,4 +68,4 @@ Turn Kinetics into a research workbench that can investigate unfamiliar DNA/RNA/
 
 - Existing source foundations include FASTA/FASTQ parsing, basic sequence operations, protein properties, limited PDB/mmCIF atom-site parsing, structure-analysis primitives and a deterministic structure-viewer payload contract.
 - These foundations do **not** constitute production genome annotation, comprehensive unknown-gene discovery, non-standard genetic-code inference, advanced structure prediction or de novo protein design.
-- S6–S10 are planned work packages until their source, tests, reference evidence and exit gates are recorded individually.
+- S6–S8 now have bounded implementations and tests, while S9 has a conservative exact residue-mapping primitive. These remain in-progress research work packages until source, tests, reference evidence and exit gates are recorded individually; S10 remains feasibility-only and generation-gated.

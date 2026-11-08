@@ -30,7 +30,8 @@ def generate(root: Path = ROOT) -> dict[str, object]:
             "versionInfo": version, "downloadLocation": "NOASSERTION",
             "filesAnalyzed": False, "licenseConcluded": "NOASSERTION",
             "licenseDeclared": "NOASSERTION", "copyrightText": "NOASSERTION",
-            "primaryPackagePurpose": "APPLICATION",
+            "primaryPackagePurpose": "LIBRARY",
+            "comment": f"ecosystem={ecosystem}; declared dependency only",
         }
         if purl:
             item["externalRefs"] = [{
@@ -55,12 +56,6 @@ def generate(root: Path = ROOT) -> dict[str, object]:
 
     bom = re.search(r'compose-bom:([0-9.]+)', gradle_app)
     bom_version = bom.group(1) if bom else "NOASSERTION"
-    for configuration, group, artifact in re.findall(
-        r'(?:implementation|debugImplementation|testImplementation|androidTestImplementation)\("([A-Za-z0-9_.-]+):([A-Za-z0-9_.-]+)"\)',
-        gradle_app,
-    ) if False else []:
-        pass
-
     for group, artifact in re.findall(
         r'(?:implementation|debugImplementation|testImplementation|androidTestImplementation)\("([A-Za-z0-9_.-]+):([A-Za-z0-9_.-]+)"\)',
         gradle_app,

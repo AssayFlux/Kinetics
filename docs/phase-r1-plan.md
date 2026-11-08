@@ -5,7 +5,7 @@
 **Owner:** Engineering + Project owner  
 **Started:** 2026-11-07  
 **Depends on:** R0 foundation and approved direction baseline  
-**Exit gate:** Evidence-backed feasibility matrix and explicit owner go/no-go before R2
+**Exit gate:** Evidence-backed feasibility matrix and explicit owner go/no-go before declaring R1 validated or opening Track S. Owner has authorized parallel R1–R10 implementation.
 
 ## Objective
 
@@ -14,7 +14,7 @@ Establish whether the approved Android-native architecture can support the requi
 ## Owner instruction — build and test workflow
 
 Updated 2026-11-08 with explicit owner authorization:
-- GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts and run repository automated checks, including Android JVM unit-test tasks and static APK/ELF alignment checks. Latest successful run #1650 is recorded in docs/ci-build-evidence.md.
+- GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts and run repository automated checks, including Android JVM unit-test tasks and static APK/ELF alignment checks. Latest successful build run #1721 is recorded in docs/ci-build-evidence.md; the JVM test task was NO-SOURCE at that commit. A new responsive navigation unit test is now present and must pass in a subsequent run.
 - The Actions Android build runs on a pinned Linux x86_64 host toolchain, not on the owner's ARM64 phone. It is a reproducible build/test lane, not a claim that Termux can host the build.
 - Physical-device testing remains a separate required activity. CI success does not establish app launch, JNI/Python runtime behavior, SAF behavior, background execution or device compatibility on the owner's phone.
 - Keep exact run URLs/IDs, source SHA, toolchain versions, logs, artifact hashes/sizes and test results in the feasibility record.

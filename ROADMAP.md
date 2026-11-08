@@ -112,3 +112,16 @@ At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase
 - Build-first / test-later: prepare the first APK build locally before the later testing campaign. Do not add APK/AAB builds or Android emulator/device tests to GitHub Actions.
 - This changes implementation sequencing only. It does not authorize false validation claims, bypass third-party license review, enable clinical/patient workflows, or waive scientific/device/security/release exit criteria.
 - See docs/research-platform-implementation.md for the current implementation inventory and unfinished scope.
+
+## Track U — User interface (owner specification 2026-11-08)
+| ID | Scope | Dependency | Exit gate | Status |
+|---|---|---|---|---|
+| U0 | Tokens, brand contract/placeholders, generator, design-system skeleton/gallery, lint and screenshot harness | R0 | Three directions shown from a working gallery; owner selects; placeholders flagged; tokens compile to Compose/CSS | in-progress |
+| U1 | Adaptive shell, search, Research Mode/status/tier chips, onboarding, schema settings | R2 | Full device/window matrix passed | not-started |
+| U2 | App/vault lock, FLAG_SECURE, Recents, encrypted settings, consent, inventory, threat model | R2 | Security tests pass; threat model owner-reviewed | not-started |
+| U3 | Tool runner, sequence viewer, kinetics lab, results/provenance and branded export | R3 | TalkBack and 200% font-scale pass | not-started |
+| U4 | Mol*/3Dmol.js bridge, alignment/tree/chart/chemistry viewers | S1–S3 | Low-end-device performance budgets met | not-started |
+| U5 | Genomics, PGx Research Mode and in-silico screens | P1–P3, I2–I4 | Clinical wording adviser-reviewed before release | not-started |
+| U6 | Settings, themes, localisation/RTL, motion/haptics, usability and quality report | U1–U5 | All quality bars measured and recorded | not-started |
+
+U0 visual direction is an owner gate. Precision Lab, Field Notes and Dark Instrument in `design/tokens.json` are proposals only. No direction is selected. Gallery screenshots await a working build/gallery. Owner brand assets are mandatory; placeholders block release.

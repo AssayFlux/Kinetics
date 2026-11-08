@@ -1,0 +1,4 @@
+# Host-only numerical cross-check dependencies; not bundled in the Android application.
+# NumPy: BSD-3-Clause. SciPy: BSD-3-Clause.
+numpy==2.2.6
+scipy==1.15.3

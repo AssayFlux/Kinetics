@@ -683,3 +683,21 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Added SAM/VCF text parsing, FASTQ quality summaries, NCBI Gene catalogue ingestion, primer screening, SpCas9 NGG PAM scanning, UPGMA clustering, logistic growth and cross-omics correlation.
 - Added an R10 release-hardening checklist and refreshed the integrated implementation inventory.
 - These additions are source implementation only; no test/build/Android runtime result is claimed.
+
+
+## Session 17 — Moto G54 5G target recorded; Android build-source defect corrected (2026-11-08)
+
+### Owner input
+- Owner supplied Motorola Moto G54 5G as the available physical test handset.
+- Recorded it as the first planned R1 physical-device target in `docs/android-feasibility.md` and `docs/phase-r1-plan.md`. Exact device properties must be collected from the connected phone; no model-spec assumptions or compatibility claim are made.
+- Build-first / test-later remains the active owner directive. GitHub Actions remains host-source-validation only; APK/AAB build and device tests are local and later.
+
+### Source audit correction
+- Audited `android/app/build.gradle.kts` and found a literal escaped newline joining the WorkManager dependency and JUnit test dependency, which makes the Kotlin DSL source malformed.
+- Corrected the declaration into two actual Gradle lines in commit `1cce915dc8386e0ca7d819b896edba2a73bb4127`.
+- This is a source-level correction only. No Gradle build or APK/AAB build was run here, so the correction is not yet build-verified.
+
+### Current phase state
+- R1 remains in progress: local build and later Moto G54 5G runtime evidence remain outstanding; SciPy, domain scientific engine, RDKit/alternative, offline molecular viewer, lifecycle/SAF and licensing questions remain open.
+- R2/R3 source implementation is underway as part of the owner-authorized integrated R1–R10 delivery; their integration tests, device verification and exit approvals remain incomplete.
+- No clinical/patient workflows are enabled. No phase is marked complete by this session.

@@ -1330,3 +1330,12 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added regression tests for forward/reverse coordinates, nested ORFs, alternative-table stop behavior, ambiguity rejection and resource limits.
 - Registered as implemented with `evidence_level: none`.
 - This is a heuristic candidate enumerator only. It is not a prokaryotic gene caller or eukaryotic annotation pipeline; it does not model promoters, RBS, introns, splice sites, transcripts, operons, gene function or genetic-code inference.
+
+
+## 2026-11-08 — CI checkpoint #1877 and Gradle distribution fallback
+- Python foundation completed successfully: Ruff checks, strict mypy, registry validation and `148 passed, 4 skipped` tests.
+- Pinned SciPy/NumPy and Biopython reference job passed and uploaded both synthetic kinetic and five-table codon comparison records.
+- Pinned RDKit 2025.9.4 ethanol/benzene descriptor sanity job passed and uploaded its JSON record.
+- Declared direct-dependency SPDX inventory generation passed.
+- Android build host setup reached Python 3.11.17, JDK 17, Rust 1.88.0 and Android NDK 28.2.13676358, but Gradle distribution retrieval returned repeated HTTP 504 responses before compilation began; no APK/AAB was produced.
+- Added a checksum-verified direct `downloads.gradle.org` distribution URL with `services.gradle.org` fallback. This is a network-resilience change, not evidence of a successful build; the next CI run must verify it.

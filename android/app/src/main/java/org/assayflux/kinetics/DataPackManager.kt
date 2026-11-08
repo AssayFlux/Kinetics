@@ -44,8 +44,8 @@ class DataPackManager(context: Context) {
     fun install(source: File, manifest: DataPackManifest): File {
         // Revalidate even programmatically-created manifests: callers must not be able
         // to bypass parseManifest and escape the private data-pack directory.
-        require(manifest.id.matches(Regex("[A-Za-z0-9._-]{1,80}"))) { "Invalid pack id" }
-        require(manifest.version.matches(Regex("[A-Za-z0-9._-]{1,80}"))) { "Invalid pack version" }
+        require(manifest.id.matches(Regex("[A-Za-z0-9._-]{1,80}")) && manifest.id !in setOf(".", "..")) { "Invalid pack id" }
+        require(manifest.version.matches(Regex("[A-Za-z0-9._-]{1,80}")) && manifest.version !in setOf(".", "..")) { "Invalid pack version" }
         require(manifest.source.startsWith("https://") && manifest.license.isNotBlank()) {
             "Pack source and license metadata are mandatory"
         }
@@ -54,10 +54,9 @@ class DataPackManager(context: Context) {
         require(source.isFile && source.length() == manifest.sizeBytes) { "Pack size mismatch" }
 
         val destinationDir = File(root, manifest.id).apply { mkdirs() }
-        val temporary = File.createTempFile("pack-" + manifest.version + "-", ".tmp", destinationDir)
         val destination = File(destinationDir, manifest.version + ".data")
         require(!destination.exists()) { "This pack version is already installed" }
-        temporary.delete()
+        val temporary = File.createTempFile("pack-" + manifest.version + "-", ".tmp", destinationDir)
         val digest = MessageDigest.getInstance("SHA-256")
         var copied = 0L
         try {

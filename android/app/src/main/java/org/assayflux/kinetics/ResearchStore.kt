@@ -63,6 +63,12 @@ class ResearchStore(context: Context) : SQLiteOpenHelper(context, "kinetics-rese
         }
         writableDatabase.insertWithOnConflict("provenance", null, values, SQLiteDatabase.CONFLICT_REPLACE)
     }
+    fun inputUri(id: String): String? {
+        readableDatabase.rawQuery("SELECT input_uri FROM jobs WHERE id=?", arrayOf(id)).use { cursor ->
+            return if (cursor.moveToFirst()) cursor.getString(0) else null
+        }
+    }
+
     fun recentJobs(limit: Int = 30): List<ResearchJob> {
         val result = mutableListOf<ResearchJob>()
         readableDatabase.rawQuery(

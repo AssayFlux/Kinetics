@@ -1291,3 +1291,10 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Updated the third-party register to distinguish host validation dependencies from Android runtime packages and retain `NOASSERTION` where exact license conclusions/transitive artifacts remain unaudited.
 - In R2, changed user cancellation to persist `cancelled` after requesting WorkManager cancellation, avoiding a permanently active `cancel_requested` state when a queued worker never starts. Added a detailed SAF/encryption/recovery device verification matrix; none of those device scenarios is claimed passed.
 - R1 remains open pending full resolved/transitive dependency and binary/file-level license audit, engine decisions and physical-device runtime/performance evidence.
+
+
+## 2026-11-08 — S8 explicit genetic-code translation foundation
+- Added `python/kinetics/genetic_code.py` with explicit NCBI translation tables 1, 2, 4, 5 and 11, including table-specific start and stop codons.
+- Added frame selection, RNA-to-DNA codon normalization, optional explicit trailing-partial-codon trimming, and strict CDS start/stop/internal-stop validation.
+- Added tests for alternative mitochondrial tables, bacterial/plastid table 11, alternative initiator handling and invalid/ambiguous inputs.
+- Registered the capability at `evidence_level: none`; no genetic-code inference, organism identification, gene finding or biological function claim is made.

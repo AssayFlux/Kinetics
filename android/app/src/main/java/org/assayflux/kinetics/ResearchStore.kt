@@ -51,7 +51,7 @@ class ResearchStore(context: Context) :
             """CREATE TABLE jobs (
                 id TEXT PRIMARY KEY NOT NULL, input_name TEXT NOT NULL, input_uri TEXT NOT NULL,
                 state TEXT NOT NULL, sha256 TEXT, byte_count INTEGER, message TEXT,
-                storage_path TEXT, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL
+                storage_path TEXT, exported_at INTEGER, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL
             )""".trimIndent(),
         )
         db.execSQL(
@@ -187,6 +187,13 @@ class ResearchStore(context: Context) :
         LocalCrypto.decryptChunkedFileToStream(
             resolveEncryptedInput(stored.first), destination, "kinetics-import:$id", stored.second,
         )
+        val exported = ContentValues().apply {
+            put("exported_at", System.currentTimeMillis())
+            put("updated_at", System.currentTimeMillis())
+        }
+        check(writableDatabase.update("jobs", exported, "id=?", arrayOf(id)) == 1) {
+            "Exported job metadata disappeared"
+        }
         return true
     }
 

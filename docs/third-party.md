@@ -111,3 +111,15 @@ are not Android runtime dependencies. The CI workflow uploads the regenerated
 direct-dependency inventory for each commit. License conclusions remain
 `NOASSERTION` until exact upstream notices and all transitive artifacts are
 reviewed; this artifact is not the release SBOM.
+
+
+## S8 translation-table reference check
+
+The pinned host-only Biopython 1.88 comparison in
+`validation/requirements-biopython.txt` and
+`validation/genetic_code_biopython_reference.py` checks all 64 codons and the
+start/stop sets for the five explicitly implemented tables. Biopython is already
+a pinned Android prototype dependency; the validation requirement shares that
+version but does not approve any additional runtime dependency. The SPDX
+generator records both usage contexts. This check is not evidence of organism
+identification or genetic-code inference.

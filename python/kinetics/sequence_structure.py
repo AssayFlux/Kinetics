@@ -38,22 +38,36 @@ def map_exact_chain_sequence(
     if not isinstance(chain_id, str) or not chain_id:
         raise ValueError("chain_id must be non-empty text")
 
-    residues: dict[tuple[int, str], str] = {}
-    for atom in atoms:
-        if atom.chain != chain_id:
-            continue
-        key = (atom.residue_number, atom.residue.upper())
-        amino_acid = THREE_TO_ONE.get(key[1])
+    selected_atoms = [atom for atom in atoms if atom.chain == chain_id]
+    residues: dict[int, str] = {}
+    for atom in selected_atoms:
+        residue_name = atom.residue.upper()
+        amino_acid = THREE_TO_ONE.get(residue_name)
         if amino_acid is None:
             raise ValueError(
-                f"Unsupported/non-standard residue {key[1]} in chain {chain_id}; mapping abstained"
+                f"Unsupported/non-standard residue {residue_name} in chain {chain_id}; mapping abstained"
             )
-        previous = residues.setdefault(key, amino_acid)
+        previous = residues.setdefault(atom.residue_number, amino_acid)
         if previous != amino_acid:
             raise ValueError("Conflicting residue identity at one chain position")
-    ordered = sorted(residues.items(), key=lambda item: (item[0][0], item[0][1]))
+    ordered = sorted(residues.items())
     if not ordered:
         raise ValueError(f"No canonical residues found for chain {chain_id}")
+    if any(
+        current_number != previous_number + 1
+        for (previous_number, _), (current_number, _) in zip(ordered, ordered[1:])
+    ):
+        return {
+            "status": "noncontiguous_structure_numbering",
+            "chain_id": chain_id,
+            "observed_chain_sequence": "".join(amino_acid for _, amino_acid in ordered),
+            "query_length": len(query),
+            "mapped_residues": [],
+            "limitations": [
+                "Residue numbering gaps are not repaired or assumed to be contiguous.",
+                "No alignment, missing-residue reconstruction or insertion-code conversion is performed.",
+            ],
+        }
 
     observed = "".join(amino_acid for _, amino_acid in ordered)
     positions = [
@@ -93,10 +107,13 @@ def map_exact_chain_sequence(
             "query_position_1based": start + index + 1,
             "chain_id": chain_id,
             "structure_residue_number": residue_number,
-            "residue_name": residue_name,
+            "residue_name": next(
+                atom.residue.upper() for atom in selected_atoms
+                if atom.residue_number == residue_number
+            ),
             "amino_acid": amino_acid,
         }
-        for index, ((residue_number, residue_name), amino_acid) in enumerate(ordered)
+        for index, (residue_number, amino_acid) in enumerate(ordered)
     ]
     return {
         "status": "exact_unique_match",

@@ -216,8 +216,13 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
             }
         },
         onCancel = { job ->
-            store.updateJob(job.id, "cancel_requested")
             WorkManager.getInstance(activity).cancelUniqueWork("import-" + job.id)
+            // Persist a resumable terminal state even if a queued worker never starts
+            // and therefore cannot observe isStopped or call its cancellation handler.
+            store.updateJob(
+                job.id, "cancelled",
+                message = "Cancellation requested. Any encrypted partial input is retained and may be resumed.",
+            )
             jobs = store.recentJobs()
         },
         onResume = { job ->

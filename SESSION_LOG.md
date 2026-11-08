@@ -1472,3 +1472,19 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### Remaining
 - Verify the latest complete CI run including token reproducibility, Python tests, Kotlin compilation, APK/AAB package checks and Android JVM tests.
 - Continue the approved R/S/I/P tracks against their roadmap dependencies and gates.
+
+
+## 2026-11-08 — Session 19: Bound exact-reference search and correct S6 evidence claims
+**Phase:** Track S / R1–R10 integration  
+**Objective:** Prevent unbounded query allocation and make roadmap claims match the actual reference-search implementation.
+
+### Done
+- Added a configurable 5,000,000-residue default query ceiling to exact full-length reference search.
+- Made all exact-search resource budgets require positive integers; booleans and fractional values are rejected.
+- Included the query ceiling in the returned search parameters for reproducibility.
+- Added regression tests for oversized queries and invalid integer budgets.
+- Corrected the S6 roadmap statement: the current primitive accepts caller-supplied pack metadata and does not independently verify reference-pack bytes, license, or release. Similarity/homology search and novelty inference remain unimplemented.
+
+### Validation
+- The source and tests are committed. CI run #1993 is pending at this log update; no new test pass is claimed.
+- Exact-only matching remains a conservative triage primitive; no gene/protein function, family, clinical interpretation, or novelty conclusion is produced.

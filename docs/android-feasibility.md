@@ -208,3 +208,15 @@ Build and static package evidence is green. R1 is **not complete**. Outstanding:
 - Local debug APK build is the next build route when the owner is ready. Physical-device testing is deferred by owner instruction.
 - Device-dependent rows remain pending; they are not silently waived from R1 exit criteria.
 - The local build guide is [docs/local-android-build.md](local-android-build.md), using [scripts/build_android_local.sh](../scripts/build_android_local.sh). The local build must record the source commit, JDK/Gradle/AGP/Kotlin/SDK/NDK/CMake/Rust versions, dependency/wheel inputs, APK/AAB hashes and sizes, and build logs. If the custom Biopython wheel path cannot be reproduced locally, record that blocker instead of substituting an unverified package.
+
+
+## Host-only source CI run 42428857132 — 2026-11-08
+
+- Workflow: https://github.com/AssayFlux/Kinetics/actions/runs/42428857132
+- Commit: `aeaeee1b2f8075ce944cf1092f3d0d14c676aa70`.
+- Python foundation job completed successfully.
+- Pre-commit configuration validation, Ruff, mypy (7 source files), registry validation and all 11 unit tests passed.
+- Reproduction stub ran and correctly reported no reproduction jobs registered.
+- Android artifact gate reported the owner-directed local-only build/test boundary.
+- `bash -n scripts/build_android_local.sh` passed.
+- No APK/AAB build, emulator or Android runtime test was run in this workflow, as instructed.

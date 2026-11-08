@@ -728,3 +728,30 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - R2 remains implementation in progress; required integration tests, migration/recovery, encryption-at-rest integration, provenance export and real-device workflow remain incomplete.
 - R3 remains implementation in progress; independent reference validation, confidence intervals/residual diagnostics, units/model identifiability, validation records and device benchmarks remain incomplete.
 - No R1/R2/R3 phase is marked complete; no clinical/patient capability is enabled.
+
+
+## Session 19 — integrated R1–R10 implementation increment (2026-11-08)
+
+### Owner direction followed
+- Continued implementation directly on `main`; no branch was created.
+- Kept GitHub Actions from automatically running checks on pushes or pull requests. The existing host validation workflow is now manual-dispatch only. No APK/AAB or Android emulator/device job was added.
+- No tests were run and no APK/AAB was built in this session, in accordance with build-first / test-later.
+
+### Source changes committed
+- **R1:** pinned Android NDK 28.2.13676358 in Gradle to match the local build script; added an in-app manual probe for embedded Python/Biopython/NumPy/SciPy reporting and C++ JNI/Rust FFI smoke calls. This is a probe path, not evidence that the Android runtime has passed.
+- **R2:** upgraded SQLite schema to v2 with a migration and transactional final import/provenance update. SAF imports are staged as independently authenticated AES-256-GCM chunks using an Android Keystore key, including resumable source-prefix verification and recovery from an incomplete final record. Final imported data remains encrypted in app-private no-backup storage. Added a chunked decrypt-to-temporary-file helper and removed legacy plaintext staging before new imports. Export/analysis integration, key-loss recovery, migration tests and device verification remain open.
+- **R3:** added finite-value guards, residual mean/sample dispersion, R-squared and assumption-qualified Gaussian least-squares AIC/BIC to the exploratory Michaelis–Menten fit. Added warned Lineweaver–Burk, Eadie–Hofstee and Hanes–Woolf coordinate transforms. Confidence intervals, identifiability and independent reference validation remain open.
+- **R4:** strengthened SAM mandatory-field, CIGAR, sequence/quality and optional-tag validation; strengthened VCF header, column-count, position and QUAL validation.
+- **R5:** added a Horn-quaternion rigid-body RMSD superposition path and finite-coordinate checks. mmCIF and advanced structure metrics remain open.
+- **R6:** strengthened SDF V2000 atom/bond parsing; added graph descriptors, bounded exact element/bond-order substructure matching, and hard limits for path-fingerprint traversal/features. Production stereochemistry/aromaticity/tautomer handling and an approved chemistry engine remain open.
+- **R7:** added quoted Newick labels, finite/non-negative branch-length checks and finite UPGMA distance validation.
+- **R8:** added finite-value validation throughout exploratory omics primitives and made Simpson diversity explicitly Gini–Simpson (1 - sum of squared relative abundances). Differential-expression inference and broader multi-omics remain open.
+- **R9:** expanded NCBI Gene ingestion to all 16 gene_info columns and added streaming from plain or gzip-compressed files. This is a broad expandable catalogue import, not a claim of exhaustive domain annotation or a validated PGx panel.
+- **R10:** registry checks now require implementation paths to exist inside the repository; periodic one-second UI polling was replaced with WorkManager LiveData observation. Full accessibility, performance, crash, threat-model, licensing and release hardening remain open.
+- Updated the integrated implementation inventory and roadmap to reflect these source changes without marking any phase complete.
+
+### Verification state
+- All changes above are source commits only. No tests, lint, type checks, Gradle build, APK/AAB build, Android runtime probe, Moto G54 5G install, scientific reference comparison or device benchmark was run.
+- The previous 28-test host result remains the historical baseline for the earlier source revision only; it does not verify these new commits.
+- R1–R10 remain in progress. The remaining scope includes Android build/runtime evidence, full export and recovery integration, BAM/CRAM, VCF normalization, mmCIF/advanced structure metrics, production chemistry and approved engines, broader phylogenetic inference/search/viewers, statistically sound differential expression, PGx allele/diplotype implementation and data packs, and full R10 release hardening.
+- Clinical mode remains disabled; no patient workflow or patient data is enabled.

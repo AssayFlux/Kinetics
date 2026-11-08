@@ -247,7 +247,7 @@ def _solve_wls(matrix: list[list[float]], vector: list[float]) -> list[float]:
     for col in range(n):
         pivot = max(range(col, n), key=lambda r: abs(a[r][col]))
         if abs(a[pivot][col]) <= scale * 1e-12:
-            raise ValueError("Rank-deficient or ill-conditioned design matrix")
+            raise ValueError("rank-deficient or ill-conditioned design matrix")
         a[col], a[pivot] = a[pivot], a[col]
         d = a[col][col]
         a[col] = [x / d for x in a[col]]

@@ -1,7 +1,7 @@
 package org.assayflux.kinetics
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -20,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +43,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -51,7 +52,32 @@ class MainActivity : ComponentActivity() {
 }
 
 @androidx.compose.runtime.Composable
-private fun KineticsResearchHome(activity: ComponentActivity) {
+private fun KineticsResearchHome(activity: FragmentActivity) {
+    val preferences = remember {
+        activity.getSharedPreferences("kinetics_preferences", android.content.Context.MODE_PRIVATE)
+    }
+    var themeFamily by remember {
+        mutableStateOf(preferences.getString("theme_family", "light") ?: "light")
+    }
+    var biometricEnabled by remember {
+        mutableStateOf(preferences.getBoolean("biometric_unlock_enabled", false))
+    }
+    var biometricUnlocked by remember { mutableStateOf(!biometricEnabled) }
+    var biometricError by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(biometricEnabled) {
+        if (biometricEnabled) {
+            biometricUnlocked = false
+            biometricError = null
+            BiometricUnlock.authenticate(
+                activity,
+                onSuccess = { biometricUnlocked = true; biometricError = null },
+                onError = { biometricError = it },
+            )
+        } else {
+            biometricUnlocked = true
+            biometricError = null
+        }
+    }
     val store = remember { ResearchStore(activity) }
     var jobs by remember { mutableStateOf(store.recentJobs()) }
     var notice by remember { mutableStateOf("Research Mode. Local files stay on this device.") }
@@ -164,7 +190,19 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
         jobs = store.recentJobs()
         onDispose { workInfos.removeObserver(observer) }
     }
-    KineticsAppShell(
+    if (biometricEnabled && !biometricUnlocked) {
+        BiometricLockScreen(
+            error = biometricError,
+            onRetry = {
+                biometricError = null
+                BiometricUnlock.authenticate(
+                    activity,
+                    onSuccess = { biometricUnlocked = true; biometricError = null },
+                    onError = { biometricError = it },
+                )
+            },
+        )
+    } else KineticsAppShell(
         jobs = jobs,
         notice = notice,
         runtimeReport = runtimeReport,
@@ -241,6 +279,21 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
         onExport = { job ->
             pendingExportJob = job.id
             exportPicker.launch(job.inputName.substringAfterLast('/').take(120).ifBlank { "kinetics-research-export.bin" })
+        },
+        themeFamily = themeFamily,
+        onThemeFamilyChange = { selected ->
+            preferences.edit().putString("theme_family", selected).apply()
+            themeFamily = selected
+        },
+        biometricEnabled = biometricEnabled,
+        biometricAvailable = BiometricUnlock.canAuthenticate(activity),
+        onBiometricChange = { enabled ->
+            if (!enabled || BiometricUnlock.canAuthenticate(activity)) {
+                preferences.edit().putBoolean("biometric_unlock_enabled", enabled).apply()
+                biometricEnabled = enabled
+            } else {
+                notice = "Biometric app unlock cannot be enabled: enroll a supported biometric or device credential first."
+            }
         },
     )
         deleteTarget?.let { target ->

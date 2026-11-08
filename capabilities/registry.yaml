@@ -136,6 +136,11 @@ tools:
     status: implemented
     implementation: python/kinetics/chemistry_rdkit.py
     evidence_level: none
+  - id: genomics.htslib_bam_cram
+    name: Optional pysam/HTSlib indexed BAM and CRAM reader
+    status: implemented
+    implementation: python/kinetics/genomics_htslib.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

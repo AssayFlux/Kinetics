@@ -118,3 +118,32 @@ def test_bam_binary_record_core_fields_decode_from_gzip_stream() -> None:
     assert records[0].cigar == "4M"
     assert records[0].sequence == "ACGT"
     assert records[0].quality == "????"
+
+
+
+def test_optional_htslib_adapter_reads_bam_and_requires_local_reference_for_cram(tmp_path) -> None:
+    pysam = pytest.importorskip("pysam")
+    from kinetics.genomics_htslib import iter_alignment_records
+
+    bam_path = tmp_path / "fixture.bam"
+    header = {"HD": {"VN": "1.6"}, "SQ": [{"SN": "chr1", "LN": 1000}]}
+    with pysam.AlignmentFile(str(bam_path), "wb", header=header) as output:
+        record = pysam.AlignedSegment()
+        record.query_name = "read1"
+        record.query_sequence = "ACGT"
+        record.flag = 0
+        record.reference_id = 0
+        record.reference_start = 9
+        record.mapping_quality = 60
+        record.cigar = ((0, 4),)
+        record.query_qualities = pysam.qualitystring_to_array("????")
+        output.write(record)
+    pysam.index(str(bam_path))
+    decoded = list(iter_alignment_records(bam_path, region=("chr1", 10, 10)))
+    assert decoded[0].sequence == "ACGT"
+    assert decoded[0].position == 10
+    assert decoded[0].cigar == "4M"
+
+    cram_path = tmp_path / "fixture.cram"
+    with pytest.raises(ValueError, match="local reference"):
+        list(iter_alignment_records(cram_path))

@@ -79,3 +79,8 @@ Run `python scripts/generate_source_sbom.py --output sbom/source-dependencies.sp
 ## RDKit adapter status
 
 An optional source adapter exists at python/kinetics/chemistry_rdkit.py. It imports RDKit lazily and reports the active engine version; it is not a bundled dependency and is not used by the Android app. Before adoption, pin an exact compatible release, capture the full transitive dependency graph, audit notices/licenses at file and binary level, evaluate Android arm64/16 KB compatibility and benchmark binary footprint. The core RDKit project license is BSD-3-Clause, but that does not settle the licenses of all bundled dependencies or contributed components.
+
+
+## HTSlib/pysam adapter status
+
+A lazy host-side adapter at python/kinetics/genomics_htslib.py supports streaming BAM/CRAM through pysam/HTSlib. CRAM requires a local reference FASTA; remote reference retrieval is not enabled. pysam/HTSlib is not an Android dependency. Before adoption, pin exact pysam/HTSlib releases, audit bundled htslib/zlib and platform-specific licenses, verify native arm64 and 16 KB compatibility, and measure binary footprint. No Android bundling approval is implied.

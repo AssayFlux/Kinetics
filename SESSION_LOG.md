@@ -909,3 +909,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R6 optional RDKit adapter increment
 - Added a lazy optional RDKit backend for sanitized SMILES/molblock parsing, canonical isomeric SMILES, formula/molecular-weight/LogP/TPSA/H-bond descriptors, chiral-centre reporting, Morgan fingerprints and Tanimoto similarity.
 - The adapter reports the active RDKit version and fails clearly when unavailable. It is not bundled in Android and has no product approval; exact release pin, transitive licenses, Android ABI/16 KB support and binary-size evaluation remain open. Added optional regression-test source guarded by importorskip; no tests were run.
+
+
+### R4 optional HTSlib adapter increment
+- Added a lazy pysam/HTSlib streaming adapter for BAM and CRAM, with indexed region reads, coordinate conversion and explicit local FASTA requirement for CRAM. No remote reference fallback is enabled.
+- Exported the API, registered the optional engine, documented the license/ABI review gate and added optional BAM adapter regression-test source. pysam/HTSlib is not bundled in Android; no CRAM/HTSlib tests were run.

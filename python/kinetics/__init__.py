@@ -12,6 +12,7 @@ from .chemistry_rdkit import analyze_molblock, analyze_smiles, morgan_tanimoto, 
 from .chemistry import (
     graph_descriptors, iter_sdf_records, parse_sdf_record, path_fingerprint, substructure_match, tanimoto,
 )
+from .genomics_htslib import iter_alignment_records
 from .genomics import (
     SamRecord, fastq_quality_summary, iter_bam_records, normalize_small_variant, parse_sam, parse_vcf,
 )
@@ -42,7 +43,7 @@ __all__ = [
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate",
-    "interaction_candidates", "iter_bam_records", "iter_fasta_records", "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "jukes_cantor_distance", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk", "match_phased_haplotype", "parse_star_allele_definitions",
+    "iter_alignment_records", "interaction_candidates", "iter_bam_records", "iter_fasta_records", "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "jukes_cantor_distance", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk", "match_phased_haplotype", "parse_star_allele_definitions",
     "log2_fold_change", "logistic_growth", "michaelis_menten", "normalize_small_variant",
     "needleman_wunsch", "neighbor_joining", "neighbor_joining_from_alignment", "negative_binomial_differential_expression", "parse_fasta", "parse_fastq", "parse_newick",
     "parse_mmcif", "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",

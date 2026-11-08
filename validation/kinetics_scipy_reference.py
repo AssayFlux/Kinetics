@@ -51,8 +51,12 @@ def run() -> dict[str, object]:
             substrates, rates, vmax_bounds=bounds[0], km_bounds=bounds[1],
             grid_size=400,
         )
-        vmax_relative_error = abs(float(local["vmax"]) - scipy_parameters[0]) / abs(scipy_parameters[0])
-        km_relative_error = abs(float(local["km"]) - scipy_parameters[1]) / abs(scipy_parameters[1])
+        vmax_relative_error = float(
+            abs(float(local["vmax"]) - scipy_parameters[0]) / abs(scipy_parameters[0])
+        )
+        km_relative_error = float(
+            abs(float(local["km"]) - scipy_parameters[1]) / abs(scipy_parameters[1])
+        )
         scenarios.append({
             "scenario": name,
             "known_parameters": {"vmax": true_vmax, "km": true_km},
@@ -65,7 +69,7 @@ def run() -> dict[str, object]:
                 "vmax": vmax_relative_error, "km": km_relative_error,
             },
             "tolerance": tolerance,
-            "pass": max(vmax_relative_error, km_relative_error) <= tolerance,
+            "pass": bool(max(vmax_relative_error, km_relative_error) <= tolerance),
             "local_residual_diagnostics": local["residual_diagnostics"],
             "local_identifiability": local["identifiability"],
         })

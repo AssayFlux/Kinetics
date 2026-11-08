@@ -1179,3 +1179,22 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Complete transitive SBOM/license inventory, model/database/asset licenses, security and node threat-model review.
 - Qualified adviser/legal/ethics gate packet for P0; no patient data.
 - Manuscript results, figures and claims remain empty until generated from reproducible validation records.
+
+
+## 2026-11-08 — I1 chemistry reference-sanity increment
+**Phase:** Track I / I1, parallel with R/S/P work
+
+### Committed
+- Added `validation/chemistry-reference-fixtures.json` with small-molecule identity and descriptor sanity expectations for ethanol and benzene.
+- Added `validation/chemistry_reference.py`, which runs the fixtures through the optional RDKit adapter, records the active RDKit version, checks formulas/graph counts/basic descriptors within explicit tolerances, and emits machine-readable JSON.
+- Extended `tests/test_chemistry.py` with an optional-dependency integration test for the runner. The test skips when RDKit is not installed.
+
+### Boundaries
+- These fixtures are engineering sanity checks, not an independently curated chemical benchmark or ADMET validation.
+- RDKit is not yet pinned in a reproducible validation environment and is not bundled in the Android app.
+- No ligand preparation, protonation/tautomer handling, biological activity, ADMET, PK/PD, docking or clinical prediction is validated.
+- CI outcome for these commits is pending; no test pass is claimed until the workflow completes.
+
+### Next
+- Pin and review the host RDKit distribution/license, execute the fixture job in a controlled environment, and add independent reference materials before increasing I1 evidence status.
+- Continue S6 sequence evidence implementation and R1/R2 runtime/security closure; keep P0 blocked.

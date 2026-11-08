@@ -1533,3 +1533,35 @@ Audit current Compose screens, token generator, settings persistence and asset i
 4. Persist appearance settings and make exposed controls functional or explicitly unavailable.
 5. Add UI/action/instrumentation coverage, build arm64 artifact, run regression suite, inspect screenshots and install/run on emulator/device when available.
 6. Repeat the same cycle for remaining R/S/I/P workstreams while preserving scientific, licensing, privacy and ethics gates.
+
+## 2026-11-08 — Session 23: Regression repair and D-015 dashboard increment
+**Phase:** R/S/I/P parallel programme; Android UI and build verification  
+**Objective:** Resolve CI regressions, advance the approved Light Classic dashboard, and keep implementation evidence synchronized.
+
+### Done
+- Corrected the streamed SDF parser to preserve blank molfile header lines and normalize line endings as actual newline characters.
+- Corrected exact protein-chain matching to enumerate every overlapping occurrence instead of truncating the ambiguity report.
+- Added a D-015 horizontal workspace carousel with three real-data panels: import entry, job counts/navigation, and device runtime diagnostics. The carousel uses actual job counts and runtime output; no placeholder metrics or fabricated activity were added.
+- Updated the UI screen map: biometric prompt/capability source is present, Light/Dark/System preference persistence is present, and dashboard carousel source is present. Brand integration, secure recovery review, screenshot inspection and device verification remain open.
+- Updated this session record and linked all work to the active masterplan and D-016 test cycle.
+
+### Validated
+- CI run #2023 exposed the initial regressions: 190 passed, 4 skipped, 2 failed.
+- After the first fixes, CI run #2023 reported 191 passed, 4 skipped, 1 failed; the remaining failure identified the escaped-newline defect.
+- CI run #2024 on source commit `b7bcf4c` reports Python foundation tests successful (196 collected; all passed), pinned scientific reference comparisons successful, RDKit descriptor sanity fixtures successful, and SPDX source inventory successful.
+- The Android arm64 APK/AAB job in run #2024 was still in progress at the time of this entry.
+- D-015 carousel source is committed in `99eba82`; current queued CI run #2026 includes the carousel and UI screen-map update. No build/test result is claimed for that UI commit yet.
+
+### Not done / blockers
+- No physical-device or emulator installation/runtime evidence is available.
+- Android UI screenshot/accessibility checks remain outstanding; current CI builds and runs JVM unit tests, not instrumentation UI tests.
+- Owner-supplied logo integration, audited typeface packaging, splash/onboarding/profile screens, and full D-015 screen completion remain open.
+- Explore is still informational; registry-to-dispatcher-to-result-viewer integration remains open.
+- Biometric unlock is a device-local app gate, not a cloud identity or biometric-bound data-encryption key. Recovery and device-level verification remain required.
+
+### Next cycle
+1. Complete the queued arm64 build and JVM tests for the carousel source.
+2. Fix any Kotlin/Compose build or runtime defects and repeat the complete CI cycle.
+3. Integrate the supplied owner brand asset without altering its artwork; verify layout, contrast and typography against the approved design references.
+4. Add registry-backed capability browsing and connect only tools with real input contracts, dispatchers and result viewers.
+5. Continue R1–R10 and S/I/P work in parallel, retaining explicit validation, licensing, privacy, biosafety and publication gates.

@@ -150,6 +150,16 @@ def validate_registry(data: Any) -> list[str]:
                 errors.append(f"{collection} {identifier}: tests must be a list")
             if status == "implemented" and not tests:
                 errors.append(f"{collection} {identifier}: implemented requires test references")
+            if collection == "ui_screens" and status == "implemented":
+                if item.get("accessibility_check") != "passed":
+                    errors.append(
+                        f"{collection} {identifier}: implemented requires a passed accessibility check"
+                    )
+                matrix = item.get("device_matrix")
+                if not isinstance(matrix, list) or not matrix:
+                    errors.append(
+                        f"{collection} {identifier}: implemented requires device-matrix evidence"
+                    )
 
     settings_path = ROOT / "design" / "settings-schema.yaml"
     try:

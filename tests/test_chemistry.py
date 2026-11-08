@@ -63,3 +63,26 @@ def test_sdf_iterator_reads_multiple_records_and_skips_empty_blocks() -> None:
     assert len(parsed) == 2
     assert parsed[0]["formula"] == "C"
     assert parsed[1]["atom_count"] == 1
+
+
+
+def test_sdf_v3000_parses_basic_atom_and_bond_graph() -> None:
+    block = "\n".join([
+        "ethane", "Kinetics", "",
+        "  0  0  0     0  0            999 V3000",
+        "M  V30 BEGIN CTAB",
+        "M  V30 COUNTS 2 1 0 0 0",
+        "M  V30 BEGIN ATOM",
+        "M  V30 1 C 0.0 0.0 0.0 0",
+        "M  V30 2 C 1.5 0.0 0.0 0",
+        "M  V30 END ATOM",
+        "M  V30 BEGIN BOND",
+        "M  V30 1 1 1 2",
+        "M  V30 END BOND",
+        "M  V30 END CTAB",
+        "M  END",
+    ])
+    parsed = parse_sdf_record(block)
+    assert parsed["format"] == "V3000"
+    assert parsed["formula"] == "C2"
+    assert parsed["bonds"] == [(0, 1, 1)]

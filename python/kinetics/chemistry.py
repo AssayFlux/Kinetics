@@ -362,7 +362,7 @@ def tanimoto(first: frozenset[str], second: frozenset[str]) -> float:
 
 
 def iter_sdf_records(text: str):
-    """Yield non-empty SDF records from a multi-record V2000 file."""
+    """Yield non-empty SDF records from a multi-record V2000/V3000 file."""
     for record_number, block in enumerate(text.split("$$$$"), 1):
         if not block.strip():
             continue

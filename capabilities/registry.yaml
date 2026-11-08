@@ -37,7 +37,7 @@ tools:
     implementation: python/kinetics/structure.py
     evidence_level: none
   - id: chemistry.sdf_graph
-    name: SDF V2000 parsing and exploratory graph fingerprints
+    name: SDF V2000/V3000 graph parsing and exploratory graph fingerprints
     status: implemented
     implementation: python/kinetics/chemistry.py
     evidence_level: none

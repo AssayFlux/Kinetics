@@ -1,7 +1,6 @@
 package org.assayflux.kinetics
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,20 +36,13 @@ internal fun KineticsAppShell(
     onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
 ) {
-    var tab by remember { mutableStateOf(KineticsTab.Home) }
-    val dark = isSystemInDarkTheme()
-    val scheme = if (dark) darkColorScheme(
-        primary = Teal, onPrimary = Ink, secondary = Color(0xFF8CBFFF),
-        background = Ink, surface = Color(0xFF19283B), onSurface = Color(0xFFEAF1F8),
-        onBackground = Color(0xFFEAF1F8), surfaceVariant = Color(0xFF24364B),
-        onSurfaceVariant = Muted, outline = Color(0xFF40546B),
-    ) else lightColorScheme(
-        primary = LightTeal, secondary = Color(0xFF315F9A),
-        background = Color(0xFFF6F8FC), surface = Color.White,
-        onSurface = Color(0xFF18263A), onBackground = Color(0xFF18263A),
-        surfaceVariant = Color(0xFFF1F5F9), onSurfaceVariant = Color(0xFF52647A),
-        outline = Color(0xFFD8E1EB),
-    )
+    var tab by rememberSaveable { mutableStateOf(KineticsTab.Home) }
+    var themeFamily by rememberSaveable { mutableStateOf("dark") }
+    val scheme = when (themeFamily) {
+        "light" -> lightColorScheme(primary = Color(0xFF315D91), secondary = Color(0xFF6685AD), background = Color(0xFFF7FAFF), surface = Color.White, onSurface = Color(0xFF14253B), onBackground = Color(0xFF14253B), surfaceVariant = Color(0xFFEAF1FA), onSurfaceVariant = Color(0xFF52647A), outline = Color(0xFFCBD7E5))
+        "neon" -> darkColorScheme(primary = Color(0xFF00F5FF), onPrimary = Color(0xFF071018), secondary = Color(0xFFFF3DF2), background = Color(0xFF080611), surface = Color(0xFF110D20), onSurface = Color(0xFFF5F1FF), onBackground = Color(0xFFF5F1FF), surfaceVariant = Color(0xFF1C1530), onSurfaceVariant = Color(0xFFB6AFC9), outline = Color(0xFF44305E))
+        else -> darkColorScheme(primary = Color(0xFF39D7E8), onPrimary = Color(0xFF071018), secondary = Color(0xFF6B9CFF), background = Color(0xFF070B12), surface = Color(0xFF0E1521), onSurface = Color(0xFFEAF3FF), onBackground = Color(0xFFEAF3FF), surfaceVariant = Color(0xFF151F2E), onSurfaceVariant = Color(0xFF9AADC4), outline = Color(0xFF2A3B50))
+    }
     MaterialTheme(colorScheme = scheme) {
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
@@ -71,7 +64,7 @@ internal fun KineticsAppShell(
                     Modifier.padding(padding))
                 KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, Modifier.padding(padding))
                 KineticsTab.Explore -> ExploreScreen(Modifier.padding(padding))
-                KineticsTab.Settings -> SettingsScreen(runtimeReport, onRunRuntime, onRefresh, Modifier.padding(padding))
+                KineticsTab.Settings -> SettingsScreen(runtimeReport, onRunRuntime, onRefresh, themeFamily, { themeFamily = it }, Modifier.padding(padding))
             }
         }
     }
@@ -305,9 +298,17 @@ private fun ExploreScreen(modifier: Modifier) {
 }
 
 @Composable
-private fun SettingsScreen(runtime: String?, onRuntime: () -> Unit, onRefresh: () -> Unit, modifier: Modifier) {
+private fun SettingsScreen(runtime: String?, onRuntime: () -> Unit, onRefresh: () -> Unit, themeFamily: String, onThemeFamilyChange: (String) -> Unit, modifier: Modifier) {
     Frame("Workspace controls", "Settings & diagnostics.", "Understand the device, local data and privacy boundary.", modifier) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+            item { SettingGroup("APPEARANCE · THEME FAMILY", "Choose a visual family. Dark is the default; selection survives activity recreation.") {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    listOf("light" to "Light", "dark" to "Dark", "neon" to "Neon").forEach { (key, label) ->
+                        FilterChip(selected = themeFamily == key, onClick = { onThemeFamilyChange(key) }, label = { Text(label) }, modifier = Modifier.weight(1f))
+                    }
+                }
+                Text("26 distinct font families are catalogued; font files remain gated on licence and accessibility review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            } }
             item { SettingGroup("DEVICE RUNTIME", "Python 3.11 and native runtime probes execute locally.") {
                 Button(onRuntime, Modifier.fillMaxWidth()) { Text("Run runtime diagnostics") }
                 runtime?.let { Text(it, style = MaterialTheme.typography.bodySmall) }

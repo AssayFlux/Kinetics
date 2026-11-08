@@ -10,7 +10,7 @@ import argparse
 import hashlib
 import json
 import re
-import tomllib
+import tomli as tomllib
 from datetime import datetime, timezone
 from pathlib import Path
 

@@ -1,9 +1,9 @@
 # R2 — Android application foundation
 
 **Roadmap item:** Track R / R2  
-**Status:** NOT STARTED — plan prepared; implementation is gated  
+**Status:** IMPLEMENTATION IN PROGRESS — integrated R1–R10 delivery authorized; verification and phase exit remain gated  
 **Owner:** Engineering  
-**Depends on:** R1 evidence complete and explicit owner-approved R1 go/no-go  
+**Depends on:** R1 architecture findings inform implementation; R1 evidence/go-no-go remains required before R2 exit and production readiness  
 **Exit gate:** On-device import, cancellable/resumable job, provenance inspection and owner approval
 
 ## Objective
@@ -73,4 +73,4 @@ Build the usable, offline-first Android application foundation on top of the R1-
 
 R2 is complete only when the app shell, SQLite, SAF, provenance, cancellable/resumable jobs, registry and pack manager work together; required automated tests pass; the owner can import a file, run/cancel/recover a job, inspect provenance and export results on a real target device; security/privacy review findings are resolved or accepted; and the owner explicitly approves the R2 exit gate.
 
-**Do not start R2 implementation until R1 go/no-go is explicitly approved.**
+**Owner instruction (2026-11-08):** implement R1–R10 as one integrated delivery; do not stop implementation at R1. Preserve the R1 go/no-go as an evidence/phase-exit gate, not as a reason to defer downstream coding.

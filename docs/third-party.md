@@ -59,3 +59,13 @@ RDKit references:
 ## PGx data governance — source gate
 
 No PharmVar, PharmGKB, CPIC or other PGx content is currently bundled. Before importing definitions or guideline content, record the exact release/download URL, retrieval date, checksum, genome build, schema mapping, attribution and redistribution terms. Review each source's current terms rather than assuming that publicly viewable content is freely redistributable. Keep allele-definition data distinct from clinical guideline recommendations; require independent curator review and release-specific concordance before marking any entry validated. No patient-level interpretation is enabled.
+
+
+## Reproducible local build toolchain pins
+
+- Gradle 8.13 binary distribution SHA-256: 20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78 (official Gradle checksum reference).
+- Chaquopy 17.2.0 source commit: 1f63c93d8beaf7062fbe51888ab9235475df3bb8.
+- Android Gradle Plugin 8.13.2; Kotlin 2.2.21; NDK 28.2.13676358; JDK 17; SDK platform 36; Build Tools 36.0.0; CMake 3.22.1.
+- Biopython 1.88 and NumPy 1.26.2 are pinned in the prototype. The custom Biopython wheel build is source-pinned, but the downloaded NumPy wheel still needs an independently pinned checksum and a current 16 KB page-size compatibility review.
+- These pins improve reproducibility; they do not constitute a full dependency lock, transitive license audit, SBOM or local build-success claim.
+- Gradle checksum source: https://gradle.org/release-checksums/

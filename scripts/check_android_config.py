@@ -59,6 +59,30 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         if marker not in gradle:
             errors.append(message)
 
+    wrapper_properties = root / "android/gradle/wrapper/gradle-wrapper.properties"
+    try:
+        wrapper = wrapper_properties.read_text(encoding="utf-8")
+    except OSError as exc:
+        errors.append(f"Gradle wrapper properties could not be read: {exc}")
+        wrapper = ""
+    if "gradle-8.13-bin.zip" not in wrapper:
+        errors.append("Gradle wrapper distribution must be pinned to 8.13")
+    if "distributionSha256Sum=20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78" not in wrapper:
+        errors.append("Gradle wrapper must verify the official Gradle 8.13 SHA-256")
+    local_build = root / "scripts/build_android_local.sh"
+    try:
+        build_source = local_build.read_text(encoding="utf-8")
+    except OSError as exc:
+        errors.append(f"Local Android build script could not be read: {exc}")
+        build_source = ""
+    for marker in (
+        'CHAQUOPY_COMMIT="1f63c93d8beaf7062fbe51888ab9235475df3bb8"',
+        'GRADLE_SHA256="20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78"',
+        'NDK_VERSION="28.2.13676358"',
+    ):
+        if marker not in build_source:
+            errors.append(f"Local build inputs must remain pinned: {marker}")
+
     package_init = root / "python/kinetics/__init__.py"
     runtime_probe = root / "android/app/src/main/python/kinetics_probe.py"
     if not package_init.is_file():

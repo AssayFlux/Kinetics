@@ -890,3 +890,10 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R5 interaction candidate increment
 - Added distance-only heavy-atom screening for N...O hydrogen-bond candidates, canonical Lys/Arg–Asp/Glu salt-bridge candidates and Cys/CYX SG disulfide candidates, with explicit geometric ranges and caveats.
 - Exported the API, added regression-test source and updated R5 registry/plan. Hydrogen-bond directionality, protonation, solvent, energetic scoring, alternate conformations and structural validation remain absent. No tests were run.
+
+
+### R10 build reproducibility and governance increment
+- Pinned Gradle 8.13 binary SHA-256 in wrapper properties and local build script; pinned Chaquopy 17.2.0 to its immutable source commit. The local script now downloads and verifies Gradle rather than relying on an arbitrary host-installed Gradle.
+- Extended the Android static guard to check wrapper checksum and local build source pins. Updated dependency register with toolchain versions and explicitly noted that the NumPy wheel checksum and complete transitive dependency/license inventory remain open.
+
+- Added initial security/privacy threat model, accessibility verification protocol and explicit NOT RELEASE READY checklist. These are plans and controls, not independent review or passed audit evidence.

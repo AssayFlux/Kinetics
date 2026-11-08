@@ -8,9 +8,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "design" / "tokens.json"
-KOTLIN = ROOT / "android" / "designsystem" / "src" / "main" / "java" / "org" / "assayflux" / "designsystem" / "GeneratedTokens.kt"
+KOTLIN = (
+    ROOT / "android" / "designsystem" / "src" / "main" / "java"
+    / "org" / "assayflux" / "designsystem" / "GeneratedTokens.kt"
+)
 CSS = ROOT / "web" / "viewers" / "src" / "styles" / "kinetics-tokens.css"
-PROPERTIES = ("background", "surface", "surface_alt", "text", "muted", "primary", "secondary", "tertiary", "outline")
+PROPERTIES = (
+    "background", "surface", "surface_alt", "text", "muted",
+    "primary", "secondary", "tertiary", "outline",
+)
 
 
 def identifier(value: str) -> str:
@@ -67,7 +73,11 @@ def css_source(data: dict) -> str:
     for family in ("light", "dark", "neon"):
         for palette in data["theme_families"][family]["themes"]:
             for prop in PROPERTIES:
-                lines.append(f"  --kinetics-{palette['id'].replace('_', '-')}-{prop.replace('_', '-')}: {palette[prop]};")
+                palette_name = palette["id"].replace("_", "-")
+                property_name = prop.replace("_", "-")
+                lines.append(
+                    f"  --kinetics-{palette_name}-{property_name}: {palette[prop]};"
+                )
     lines += ["}", ""]
     return "\n".join(lines)
 

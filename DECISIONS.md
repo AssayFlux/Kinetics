@@ -93,3 +93,13 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Security: Offline-only/no automatic cloud backup are conservative proposals; app lock/vault lock/panic wipe remain review items. Clinical mode remains disabled.
 - Consequences: U0 records tokens, schema, asset contract, threat-model draft, verified platform facts and quality/device templates. Stop after presenting three working gallery directions for owner choice.
 - Approver: Owner authorised execution; visual-direction and security-default sub-gates remain open.
+
+
+## D-010 — Dark-first visual preference and theme-family scope (2026-11-08)
+- Context: Owner supplied the AssayFlux animated organization logo and requested a futuristic dark design, with selectable light, dark and neon palette families and 20+ distinct fonts.
+- Choice: Record dark-first/futuristic as the preferred direction; provide 4 light, 5 dark and 4 neon palette proposals and 26 distinct font-family candidates. Initial Compose shell defaults to dark and exposes Light/Dark/Neon selection.
+- Not approved: No final palette, exact seed colour, font family bundle, app-logo treatment or design-system direction is locked. The U0 visual gate remains open for owner review.
+- Brand constraint: Preserve the uploaded organization logo artwork; no recolouring, redraw, sampling or derivative app mark. Existing `Assets/Brand Logo.svg` remains unchanged.
+- Consequences: Theme token generator, contrast/CVD audits, exact font licence audit, durable settings persistence and compact/medium/expanded gallery previews remain required. Font catalogue entries are candidates, not proof of redistribution rights.
+- Approver: Owner supplied the direction in chat on 2026-11-08; final U0 visual choice is pending.
+- Evidence: `design/tokens.json`, `design/typography-catalogue.yaml`, `docs/ui/theme-proposals.md`, `assets/design-previews/`.

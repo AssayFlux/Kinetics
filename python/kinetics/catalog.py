@@ -22,10 +22,10 @@ def iter_ncbi_gene_info(lines: Iterable[str], *, source_release: str) -> Iterato
     if not source_release.strip():
         raise ValueError("Pin the NCBI gene_info release/date before import")
     for line_number, raw in enumerate(lines, 1):
-        line = raw.rstrip("\\r\\n")
+        line = raw.rstrip("\r\n")
         if not line or line.startswith("#"):
             continue
-        fields = line.split("\\t")
+        fields = line.split("\t")
         if len(fields) < 9:
             raise ValueError(f"gene_info line {line_number}: expected at least 9 columns")
         tax_id, gene_id, symbol, _, synonyms, _, _, _, description = fields[:9]

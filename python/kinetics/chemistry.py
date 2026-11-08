@@ -372,3 +372,71 @@ def iter_sdf_records(text: str) -> Iterator[dict[str, object]]:
             yield parse_sdf_record(block.strip())
         except ValueError as exc:
             raise ValueError(f"SDF record {record_number}: {exc}") from exc
+
+
+def iter_sdf_stream(
+    lines: Iterator[str] | object,
+    *,
+    max_records: int = 100_000,
+    max_record_chars: int = 16 * 1024 * 1024,
+    max_total_chars: int = 1024 * 1024 * 1024,
+) -> Iterator[dict[str, object]]:
+    """Parse SDF text incrementally with record and aggregate character budgets.
+
+    The input is an iterable of text lines. One record is buffered at a time;
+    this avoids materializing an entire potentially large SDF file in memory.
+    The character budgets are conservative text-size bounds, not byte-accurate
+    memory measurements. V2000/V3000 parser limitations still apply.
+    """
+    from collections.abc import Iterable
+
+    for name, limit in (
+        ("max_records", max_records),
+        ("max_record_chars", max_record_chars),
+        ("max_total_chars", max_total_chars),
+    ):
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:
+            raise ValueError(f"{name} must be a positive integer")
+    if not isinstance(lines, Iterable):
+        raise TypeError("lines must be an iterable of text lines")
+
+    record_lines: list[str] = []
+    record_chars = 0
+    total_chars = 0
+    record_count = 0
+
+    def parse_buffer() -> dict[str, object]:
+        nonlocal record_count, record_chars, record_lines
+        block = "".join(record_lines).strip()
+        record_lines = []
+        record_chars = 0
+        if not block:
+            return {}
+        record_count += 1
+        if record_count > max_records:
+            raise ValueError("SDF stream exceeds max_records")
+        try:
+            return parse_sdf_record(block)
+        except ValueError as exc:
+            raise ValueError(f"SDF record {record_count}: {exc}") from exc
+
+    for line_number, line in enumerate(lines, 1):
+        if not isinstance(line, str):
+            raise TypeError(f"SDF line {line_number} must be text")
+        line_size = len(line)
+        total_chars += line_size
+        if total_chars > max_total_chars:
+            raise ValueError("SDF stream exceeds max_total_chars")
+        if line.strip() == "$$$$":
+            parsed = parse_buffer()
+            if parsed:
+                yield parsed
+            continue
+        record_chars += line_size
+        if record_chars > max_record_chars:
+            raise ValueError("SDF record exceeds max_record_chars")
+        record_lines.append(line if line.endswith("\\n") else line + "\\n")
+
+    parsed = parse_buffer()
+    if parsed:
+        yield parsed

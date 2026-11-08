@@ -1048,3 +1048,29 @@ Continue R1–R10 source integration and close the remaining code-level gaps. On
 
 ### Next
 Run Python/registry checks and Android build on the consolidated source. Complete exact full-text transcription of the owner spec and gallery screenshots before asking owner to choose.
+
+## 2026-11-08 — Dark-first futuristic theme and typography proposals
+**Phase:** Track U / U0, parallel with R0–R10  
+**Owner direction:** Dark-first futuristic scientific workbench; selectable light, dark and neon theme families.
+
+### Done
+- Inspected the owner-supplied AssayFlux animated logo GIF (1024×1024, 26 frames). Existing repository brand SVG was left unchanged; no redraw, recolour or inferred seed colours.
+- Added 13 palette proposals to `design/tokens.json`: 4 light, 5 dark and 4 neon combinations.
+- Added three palette preview SVGs under `assets/design-previews/`.
+- Added 26 distinct font-family candidates in `design/typography-catalogue.yaml`, spanning professional UI, futuristic, stylish, certificate/serif, monospace and accessibility roles.
+- Extended settings schema with theme-family and font-family entries.
+- Added a dark-default Light/Dark/Neon selector to the Compose shell. Selection survives activity recreation; durable settings persistence is not yet wired.
+- Added `docs/ui/theme-proposals.md`, recorded owner preference in `DECISIONS.md`, updated Track U roadmap, and documented the animated logo asset boundary.
+
+### Build evidence / limits
+- Run #1700 Android arm64 APK/AAB build and package checks succeeded; Python foundation job failed only on a line-length lint error in `scripts/gen_brand_assets.py`.
+- Fixed the lint line in commit `9ead9f15a23e28117abb3b999f3fa93a05a15c7d`.
+- Run #1701 (older source snapshot) still had the pre-fix lint failure; Android build step was still running when this entry was written.
+- Consolidated run #1712 is queued and is expected to validate the updated source; its result is not yet known.
+- No emulator, physical-device, screenshot, contrast, TalkBack, 200% font-scale, CVD, performance or usability pass is claimed.
+- Candidate font files are not bundled; exact version/licence, language, size and accessibility checks remain.
+- Palette previews are proposals; contrast and colour-vision checks remain.
+- Theme selector currently uses inline Compose colours. Token-to-Compose/CSS generation and migration to generated tokens remain unfinished.
+
+### Gate
+Owner has specified dark-first/futuristic as the intended direction. Exact default dark palette and the complete design-system/gallery approval remain open. U0 is not complete.

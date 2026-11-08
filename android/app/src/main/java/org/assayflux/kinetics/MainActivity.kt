@@ -269,4 +269,3 @@ private fun KineticsResearchHome(activity: ComponentActivity) {
             )
         }
     }
-}

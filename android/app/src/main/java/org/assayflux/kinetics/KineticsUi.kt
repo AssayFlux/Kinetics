@@ -199,17 +199,21 @@ private fun WorkScreen(
         }
     }
     Frame("Research activity", "Your work, organized.", "Track imports, inspect integrity and manage local files.", modifier) {
-        OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), singleLine = true,
-            shape = RoundedCornerShape(16.dp), label = { Text("Search research jobs") })
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            listOf("All", "Active", "Complete", "Attention").forEach {
-                FilterChip(filter == it, { filter = it }, label = { Text(it) })
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+            item {
+                OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), singleLine = true,
+                    shape = RoundedCornerShape(16.dp), label = { Text("Search research jobs") })
             }
-        }
-        Button(onClick = onImport, Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp)) { Text("+  Import new data") }
-        if (filtered.isEmpty()) Empty("No matching research jobs", "Try another search or import a dataset to begin.")
-        else LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-            items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport) }
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    listOf("All", "Active", "Complete", "Attention").forEach {
+                        FilterChip(filter == it, { filter = it }, label = { Text(it) })
+                    }
+                }
+            }
+            item { Button(onClick = onImport, Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp)) { Text("+  Import new data") } }
+            if (filtered.isEmpty()) item { Empty("No matching research jobs", "Try another search or import a dataset to begin.") }
+            else items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport) }
         }
     }
 }

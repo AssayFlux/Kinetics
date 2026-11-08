@@ -82,3 +82,30 @@ def test_mapping_streams_and_bounds_total_atom_input() -> None:
         map_exact_chain_sequence("AG", atoms(), chain_id="A", max_atoms=2)
     with pytest.raises(ValueError, match="max_atoms must be positive"):
         map_exact_chain_sequence("A", [atom(1, "ALA", 1)], chain_id="A", max_atoms=0)
+
+
+
+@pytest.mark.parametrize(
+    "parameter,value",
+    [
+        ("max_query_residues", True),
+        ("max_query_residues", 1.5),
+        ("max_structure_residues", False),
+        ("max_structure_residues", 1.5),
+        ("max_atoms", True),
+        ("max_atoms", 2.5),
+    ],
+)
+def test_mapping_rejects_non_integer_resource_limits(parameter: str, value: object) -> None:
+    with pytest.raises(ValueError, match="positive integer"):
+        map_exact_chain_sequence(
+            "A", [atom(1, "ALA", 1)], chain_id="A", **{parameter: value},
+        )
+
+
+def test_mapping_detects_overlapping_exact_occurrences() -> None:
+    result = map_exact_chain_sequence(
+        "AAAA", [atom(1, "ALA", 1), atom(2, "ALA", 2)], chain_id="A",
+    )
+    assert result["status"] == "ambiguous_exact_match"
+    assert result["candidate_query_starts_1based"] == [1, 2, 3]

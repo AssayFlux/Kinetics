@@ -771,3 +771,11 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - **R9:** added bounded provenance-preserving catalogue search over GeneID, official symbol, synonyms, descriptions, nomenclature and cross-references, with optional taxonomy filtering. It does not supply PGx star alleles, haplotypes, diplotypes or clinical recommendations.
 - Added regression-test source for the new R5/R8/R9 paths; tests remain deliberately unexecuted during this build-first pass.
 - Updated the integrated implementation inventory and roadmap. R1–R10 remain in progress; source additions are not validation or device support evidence.
+
+
+### R2, R6 and R7 continuation; R1 probe improvement
+- **R2:** decrypted analysis materialization is now restricted to the app-private cache. Added a callback helper which removes the temporary plaintext file in a `finally` block. This narrows accidental plaintext exposure; crash/power-loss cleanup and a complete SAF export pipeline still need implementation and verification.
+- **R6:** added a multi-record SDF V2000 iterator which reports record-number context on malformed records. This does not add stereochemical or production chemistry semantics.
+- **R7:** added neighbour-joining distance-tree inference. It validates the matrix and rejects negative inferred limbs rather than silently clipping or changing branch lengths.
+- **R1/R2:** extended the manual on-device runtime probe to check Android Keystore AES-GCM round-trip and rejection of mismatched authenticated metadata, in addition to the existing embedded-Python and C++/Rust smoke probes.
+- Added source-level regression cases and updated the implementation inventory/roadmap. No tests or Android build/runtime commands were run in this pass.

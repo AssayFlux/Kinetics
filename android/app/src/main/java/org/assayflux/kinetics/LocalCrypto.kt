@@ -59,7 +59,7 @@ object LocalCrypto {
 
     fun associatedData(context: String, chunkIndex: Long): ByteArray {
         require(context.isNotBlank() && chunkIndex >= 0) { "Invalid encrypted chunk identity" }
-        return "$context:$chunkIndex".toByteArray(Charsets.UTF_8)
+        return ChunkIdentity.associatedData(context, chunkIndex)
     }
 
     fun encrypt(

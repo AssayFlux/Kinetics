@@ -52,4 +52,7 @@ identify reading frames/strands, establish gene function, or support every NCBI
 translation table. A short unknown sequence or a no-hit is not evidence of a
 novel genetic code. Candidate inference remains blocked until organism-specific
 positive/negative truth sets, independent comparisons, calibrated confusion
-matrices and abstention criteria are available.
+matrices and abstention criteria are available. The host-only
+`validation/genetic_code_biopython_reference.py` comparison exhaustively checks
+the five implemented tables against Biopython 1.88; it is a transcription
+conformance check, not biological validation or inference.

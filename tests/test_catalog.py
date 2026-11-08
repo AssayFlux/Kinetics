@@ -100,7 +100,7 @@ def test_pgx_definition_pack_rejects_release_mismatch_and_unphased_call() -> Non
     }
     with pytest.raises(ValueError, match="pinned release"):
         parse_star_allele_definitions(json.dumps(pack), expected_source_release="v2")
-    definitions = parse_star_allele_definitions(json.dumps(pack))
+    definitions = parse_star_allele_definitions(json.dumps(pack), expected_source_release="v1")
     result = match_phased_haplotype(
         "GENE1", [], definitions, genome_build="GRCh38", phase_confirmed=False,
         call_complete=True,

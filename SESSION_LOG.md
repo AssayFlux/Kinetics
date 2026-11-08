@@ -1405,3 +1405,10 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added metadata-only candidate source records for PubChem BioAssay, ChEMBL and Tox21 with endpoint-specific review requirements.
 - Added a strict schema requiring license status verify_before_intake, patient_data false and zero acquired entries. No data bytes, model weights, release IDs, license approvals or prediction results are claimed.
 - Added YAML/schema regression test. I4 remains preparation-only pending exact release, license, endpoint and validation review.
+
+
+## 2026-11-08 — S9 bounded residue mapping hardening
+- Added configurable limits for query sequence length (default 1,000,000 residues) and observed structure-chain residues (default 100,000).
+- The structure residue cap is enforced while consuming the atom iterable, preventing unbounded materialization of a chain. Invalid/non-positive limits fail explicitly.
+- Added regression tests for query and structure caps. Exact unique mapping and abstention semantics are unchanged.
+- Automated CI run #1943 passed immediately before this hardening on commit `06c48d24a429`; the new commits are awaiting their own CI validation. S9 remains in progress.

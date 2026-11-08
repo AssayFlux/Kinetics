@@ -92,9 +92,9 @@ class ResearchStore(context: Context) :
             val provenance = ContentValues().apply {
                 put("job_id", id)
                 put("tool_id", "file-import-encrypt-sha256")
-                put("tool_version", "2")
+                put("tool_version", "3")
                 put("input_sha256", hash)
-                put("parameters_json", """{"encryption":"AES-256-GCM","format":"chunked-v1","aad":"job-id+chunk-index","storage":"app-private-no-backup"}""")
+                put("parameters_json", """{"encryption":"AES-256-GCM","format":"chunked-v2","aad":"job-id+chunk-index","storage":"app-private-no-backup"}""")
                 put("created_at", System.currentTimeMillis())
             }
             db.insertWithOnConflict(

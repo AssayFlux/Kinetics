@@ -24,7 +24,7 @@ from .omics import (
     log2_fold_change, pearson, shannon_diversity, simpson_diversity,
     welch_differential_expression,
 )
-from .phylo import Node, leaf_names, neighbor_joining, parse_newick, patristic_distance, upgma
+from .phylo import Node, leaf_names, neighbor_joining, parse_newick, patristic_distance, to_newick, upgma
 from .protein import protein_descriptors, theoretical_pi
 from .sequence import (
     SequenceRecord, iter_fasta_records, kmer_counts, needleman_wunsch, parse_fasta, parse_fastq,
@@ -46,6 +46,6 @@ __all__ = [
     "patristic_distance", "path_fingerprint", "pearson", "primer_properties",
     "protein_descriptors", "reverse_complement", "rmsd", "scan_spcas9_ngg",
     "sequence_statistics", "solvent_accessible_surface_area", "shannon_diversity", "trim_fastq_ends", "simpson_diversity",
-    "substructure_match", "tanimoto", "theoretical_pi", "transcribe", "upgma",
+    "substructure_match", "tanimoto", "theoretical_pi", "to_newick", "transcribe", "upgma",
     "search_gene_catalog", "validate_gene_catalog", "welch_differential_expression",
 ]

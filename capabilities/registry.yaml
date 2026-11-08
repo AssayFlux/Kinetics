@@ -101,6 +101,11 @@ tools:
     status: implemented
     implementation: python/kinetics/structure.py
     evidence_level: none
+  - id: phylo.newick_export
+    name: Deterministic Newick serialization with safe label quoting
+    status: implemented
+    implementation: python/kinetics/phylo.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

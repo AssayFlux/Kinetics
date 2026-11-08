@@ -41,3 +41,16 @@ def test_neighbor_joining_rejects_negative_inferred_limb() -> None:
             [[0.0, 1.0, 10.0], [1.0, 0.0, 1.0], [10.0, 1.0, 0.0]],
             ["A", "B", "C"],
         )
+
+
+
+def test_newick_serializer_round_trips_quoted_labels_and_branch_lengths() -> None:
+    from kinetics.phylo import parse_newick, patristic_distance, to_newick
+
+    original = parse_newick("((A:0.1,'B B':0.2)clade:0.3,C:0);")
+    serialized = to_newick(original)
+    restored = parse_newick(serialized)
+    assert leaf_names(restored) == ["A", "B B", "C"]
+    assert patristic_distance(original, "A", "B B") == pytest.approx(
+        patristic_distance(restored, "A", "B B")
+    )

@@ -851,3 +851,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R5 approximate SASA source increment
 - Added deterministic Shrake–Rupley solvent-accessible surface area using generic element van der Waals radii and Fibonacci sphere sampling, with atom-count, probe-radius and point-resolution limits.
 - Exported the API, added regression-test source for single-atom area, occlusion and invalid inputs, and updated the R5 capability registry/plan. It omits hydrogens, atom-specific radii, residue-level relative accessibility and biological assemblies. No tests were run; reference concordance remains required.
+
+
+### R7 Newick export increment
+- Added deterministic Newick serialization with safe quoting of labels containing whitespace or delimiters, finite/non-negative branch-length validation and cycle rejection.
+- Exported the API, added a quoted-label/branch-length round-trip regression case and updated the R7 capability registry/plan. No tests were run; tree inference remains distance-based and needs reference concordance/bootstrap/model-based methods.

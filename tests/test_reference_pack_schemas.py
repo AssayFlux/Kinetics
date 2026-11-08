@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+
+import yaml
 from pathlib import Path
 
 
@@ -29,3 +31,22 @@ def test_public_dataset_catalog_is_empty_and_non_patient_by_default() -> None:
     )
     assert schema["properties"]["data_classification"]["const"] == "public_non_patient_only"
     assert schema["properties"]["entries"]["items"]["properties"]["patient_data"]["const"] is False
+
+
+def test_public_candidate_sources_are_explicitly_unapproved_and_non_patient() -> None:
+    root = Path(__file__).resolve().parents[1]
+    catalog = yaml.safe_load(
+        (root / "data" / "public-dataset-catalog.yaml").read_text(encoding="utf-8")
+    )
+    schema = json.loads(
+        (root / "api" / "public-dataset-catalog.schema.json").read_text(encoding="utf-8")
+    )
+    assert catalog["entries"] == []
+    assert catalog["data_classification"] == "public_non_patient_only"
+    assert catalog["candidate_sources"]
+    candidate_schema = schema["properties"]["candidate_sources"]["items"]
+    assert candidate_schema["properties"]["license_review_status"]["const"] == "verify_before_intake"
+    assert candidate_schema["properties"]["patient_data"]["const"] is False
+    for candidate in catalog["candidate_sources"]:
+        assert candidate["license_review_status"] == "verify_before_intake"
+        assert candidate["patient_data"] is False

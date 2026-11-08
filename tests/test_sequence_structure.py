@@ -70,3 +70,15 @@ def test_mapping_enforces_query_and_structure_residue_limits() -> None:
         )
     with pytest.raises(ValueError, match="must be positive"):
         map_exact_chain_sequence("A", atoms, chain_id="A", max_structure_residues=0)
+
+
+def test_mapping_streams_and_bounds_total_atom_input() -> None:
+    def atoms():
+        yield atom(1, "ALA", 1, "B")
+        yield atom(2, "ALA", 1, "A")
+        yield atom(3, "GLY", 2, "A")
+
+    with pytest.raises(ValueError, match="atom stream exceeds"):
+        map_exact_chain_sequence("AG", atoms(), chain_id="A", max_atoms=2)
+    with pytest.raises(ValueError, match="max_atoms must be positive"):
+        map_exact_chain_sequence("A", [atom(1, "ALA", 1)], chain_id="A", max_atoms=0)

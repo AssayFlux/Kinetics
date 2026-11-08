@@ -19,3 +19,5 @@ def test_source_sbom_includes_host_only_validation_dependencies() -> None:
     assert "rdkit" in packages
     assert "validation/requirements-rdkit.txt" in packages["rdkit"]["comment"]
     assert "not Android runtime" in packages["rdkit"]["comment"]
+    assert packages["python host"]["versionInfo"] == "3.11.18"
+    assert packages["chaquopy python target"]["versionInfo"] == "3.11.17-0"

@@ -50,20 +50,57 @@ def _fasta_record(header: str, chunks: list[str]) -> SequenceRecord:
     return SequenceRecord(fields[0], seq, fields[1] if len(fields) > 1 else "")
 
 def parse_fastq(text: str) -> list[tuple[SequenceRecord, str]]:
-    lines = [line.rstrip("\r") for line in text.splitlines() if line.strip()]
-    if len(lines) % 4:
-        raise ValueError("FASTQ must contain complete four-line records")
-    output = []
-    for i in range(0, len(lines), 4):
-        head, seq, plus, quality = lines[i:i+4]
-        if not head.startswith("@") or not head[1:].strip() or not plus.startswith("+"):
-            raise ValueError(f"FASTQ record {i//4+1}: invalid header or separator")
-        seq = _normalise(seq)
-        if len(seq) != len(quality):
-            raise ValueError(f"FASTQ record {i//4+1}: sequence/quality length mismatch")
-        if not seq:
-            raise ValueError(f"FASTQ record {i//4+1}: empty sequence")
-        output.append((SequenceRecord(head[1:].split()[0], seq, head[1:]), quality))
+    """Parse wrapped FASTQ sequence and quality lines with exact length matching."""
+    lines = text.splitlines()
+    output: list[tuple[SequenceRecord, str]] = []
+    index = 0
+    while index < len(lines):
+        while index < len(lines) and not lines[index].strip():
+            index += 1
+        if index >= len(lines):
+            break
+        header = lines[index]
+        if not header.startswith("@") or not header[1:].strip():
+            raise ValueError(f"FASTQ line {index + 1}: invalid record header")
+        header_fields = header[1:].split(maxsplit=1)
+        identifier = header_fields[0]
+        description = header_fields[1] if len(header_fields) > 1 else ""
+        index += 1
+
+        sequence_chunks: list[str] = []
+        while index < len(lines) and not lines[index].startswith("+"):
+            if not lines[index].strip():
+                raise ValueError(f"FASTQ line {index + 1}: empty sequence line")
+            sequence_chunks.append(lines[index].strip())
+            index += 1
+        if index >= len(lines):
+            raise ValueError(f"FASTQ record {identifier!r}: missing '+' separator")
+        plus = lines[index]
+        plus_identifier = plus[1:].strip().split(maxsplit=1)
+        if plus_identifier and plus_identifier[0] != identifier:
+            raise ValueError(f"FASTQ record {identifier!r}: separator identifier mismatch")
+        index += 1
+
+        sequence = _normalise("".join(sequence_chunks))
+        if not sequence:
+            raise ValueError(f"FASTQ record {identifier!r}: empty sequence")
+        quality_chunks: list[str] = []
+        quality_length = 0
+        while index < len(lines) and quality_length < len(sequence):
+            quality = lines[index]
+            if not quality:
+                raise ValueError(f"FASTQ line {index + 1}: empty quality line")
+            quality_chunks.append(quality)
+            quality_length += len(quality)
+            index += 1
+        if quality_length != len(sequence):
+            raise ValueError(
+                f"FASTQ record {identifier!r}: sequence/quality length mismatch"
+            )
+        quality = "".join(quality_chunks)
+        if any(not 33 <= ord(char) <= 126 for char in quality):
+            raise ValueError(f"FASTQ record {identifier!r}: invalid quality character")
+        output.append((SequenceRecord(identifier, sequence, description), quality))
     if not output:
         raise ValueError("FASTQ contains no records")
     return output

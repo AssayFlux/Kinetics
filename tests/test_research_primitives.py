@@ -126,3 +126,15 @@ def test_fit_reports_undefined_r_squared_and_information_criteria() -> None:
     assert result["aic"] is None
     assert result["bic"] is None
     assert any("zero variance" in warning for warning in result["warnings"])
+
+
+def test_fastq_parser_supports_wrapped_sequence_and_quality_lines() -> None:
+    parsed = parse_fastq("@wrapped description\nACG\nTN\n+wrapped\n!!\n!!!\n")
+    assert parsed[0][0].sequence == "ACGTN"
+    assert parsed[0][0].description == "description"
+    assert parsed[0][1] == "!!!!!"
+
+
+def test_fastq_parser_rejects_plus_identifier_mismatch() -> None:
+    with pytest.raises(ValueError, match="separator identifier mismatch"):
+        parse_fastq("@read-a\nACGT\n+read-b\n!!!!\n")

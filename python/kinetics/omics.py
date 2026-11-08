@@ -310,7 +310,7 @@ def negative_binomial_differential_expression(
     libraries = [sum(float(row[j]) for row in counts) for j in range(n)]
     if any(x <= 0 for x in libraries):
         raise ValueError("Every sample must have a non-zero library size")
-    ratios = [[] for _ in range(n)]
+    ratios: list[list[float]] = [[] for _ in range(n)]
     for row in counts:
         values = [float(x) for x in row]
         if all(x > 0 for x in values):

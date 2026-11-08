@@ -242,15 +242,35 @@ class ResearchStore(context: Context) :
         val db = writableDatabase
         db.beginTransaction()
         try {
-            val values = ContentValues().apply {
+            val completedValues = ContentValues().apply {
                 put("state", "recovery_required")
-                put("message", "Encryption key is missing. Ciphertext is preserved; do not re-import over this record. Restore the original Android Keystore backup/device state if available, otherwise export is unavailable.")
+                put("message", "Encryption key is missing. Completed ciphertext is preserved; do not overwrite this record. Restore the original Android Keystore backup/device state if available, otherwise export is unavailable.")
                 put("updated_at", System.currentTimeMillis())
             }
-            val changed = db.update(
-                "jobs", values,
+            var changed = db.update(
+                "jobs", completedValues,
                 "state='succeeded' AND storage_path IS NOT NULL", null,
             )
+
+            // Encrypted partials also depend on the lost key. Mark only jobs whose
+            // authenticated staging file actually exists; never delete or reset it.
+            val stagingRoot = File(appContext.noBackupFilesDir, "research-imports").canonicalFile
+            stagingRoot.listFiles()
+                ?.filter { it.isFile && it.name.endsWith(".encpart") }
+                ?.forEach { partial ->
+                    val id = partial.name.removeSuffix(".encpart")
+                    if (!id.matches(Regex("[A-Za-z0-9_-]{1,80}"))) return@forEach
+                    val partialValues = ContentValues().apply {
+                        put("state", "recovery_required")
+                        put("message", "Encrypted partial import is preserved, but its Keystore key is missing and it cannot be resumed. Re-import the original source as a new job after confirming the source is still available.")
+                        put("updated_at", System.currentTimeMillis())
+                    }
+                    changed += db.update(
+                        "jobs", partialValues,
+                        "id=? AND storage_path IS NULL AND state IN ('queued','running','cancelled','failed')",
+                        arrayOf(id),
+                    )
+                }
             db.setTransactionSuccessful()
             return changed
         } finally {

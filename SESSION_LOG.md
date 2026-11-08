@@ -651,3 +651,27 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - SciPy architecture decision/experiment; separate scientific engine evaluation; RDKit/alternative; offline structure viewer.
 - SAF import, background execution, cancellation/resume, cold-start and peak-memory evidence.
 - Complete dependency/source-file license audit and explicit owner R1 go/no-go.
+
+
+## Session 16 — Integrated R1–R10 implementation delivery (2026-11-08)
+
+### Owner direction
+- Owner corrected the execution approach: implement Research Platform R1–R10 as one integrated delivery; prepare the first local Android build before the later testing campaign.
+- Do not stop at R1 or R2 to ask permission to start downstream implementation.
+- GitHub Actions must not build APK/AAB or run Android emulator/device tests. The first Android build is local. Later testing is a separate owner-directed stage.
+- This changes implementation sequencing, not scientific validation, licensing, clinical, privacy, security or release exit criteria.
+
+### Source implementation added
+- Python research package now includes sequence/FASTA/FASTQ parsing, statistics, reverse complement, transcription, k-mers and global alignment; protein composition/mass/hydropathy/pI estimate; Michaelis–Menten and inhibition models plus exploratory log-grid fitting; PDB coordinate parsing, contacts and unaligned RMSD; SDF V2000 parsing and exploratory graph fingerprints/Tanimoto; Newick parsing and patristic distances; SAM/VCF text parsing and FASTQ quality summary; CPM/CLR, correlation, fold change and Shannon/Simpson diversity.
+- Added streaming NCBI Gene gene_info ingestion with taxon, GeneID, symbols, synonyms, source and release provenance. Catalogue imports cannot confer validated status.
+- Configured the Python package layout and public exports.
+- Capability registry now lists initial source-implemented tools with evidence_level=none; no tool is marked validated/device-verified.
+- Android shell now provides Research Mode, SAF document import, SQLite job/provenance metadata, WorkManager background streaming/hash import, cancellation and resumable partial-file checkpoints.
+- Added Android Keystore AES-256-GCM helper and a data-only pack manager with manifest/source/license/size/SHA-256 checks.
+- Added R10 release-hardening checklist and integrated R1–R10 implementation inventory; updated roadmap and R2/R3 plans to reflect the owner's integrated-delivery instruction.
+
+### Explicitly not claimed
+- No tests were intentionally run in this implementation pass and no APK/AAB was built. GitHub source CI may be triggered by repository pushes; no Android build/device job was added.
+- Android compile/runtime behavior, local APK build, native FFI/JNI execution, 16 KB runtime support, dependency redistribution, scientific concordance, memory/performance, security review and release readiness remain unverified.
+- Remaining substantial code scope includes BAM/CRAM, robust VCF normalization, mmCIF and advanced structure metrics, production chemistry/SMILES/stereochemistry, broader phylogenetic inference/search, differential-expression inference, multi-omics workflows, broad gene-domain annotations/data-pack rollout and full R10 accessibility/performance/crash/security/release automation.
+- R1–R10 are in progress, not complete. The implementation inventory is documented at docs/research-platform-implementation.md and release requirements at docs/release-hardening.md.

@@ -1,6 +1,8 @@
 package org.assayflux.kinetics
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -181,7 +183,17 @@ private fun HomeScreen(
     val attention = jobs.count { it.state in listOf("failed", "recovery_required") }
     Frame("Your research workspace", "Good science starts here.", "A private, local-first environment for computational research.", modifier) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-            item { HeroCard(onImport, themeFamily) }
+            item {
+                WorkspaceCarousel(
+                    active = active,
+                    complete = done,
+                    attention = attention,
+                    runtime = runtime,
+                    onImport = onImport,
+                    onOpenWork = onOpenWork,
+                    onRuntime = onRuntime,
+                )
+            }
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(9.dp), modifier = Modifier.fillMaxWidth()) {
                     Metric("ACTIVE", active.toString(), Modifier.weight(1f))
@@ -210,6 +222,111 @@ private fun HomeScreen(
             }
             item { Notice(notice) }
             item { Footer() }
+        }
+    }
+}
+
+@Composable
+private fun WorkspaceCarousel(
+    active: Int,
+    complete: Int,
+    attention: Int,
+    runtime: String?,
+    onImport: () -> Unit,
+    onOpenWork: () -> Unit,
+    onRuntime: () -> Unit,
+) {
+    val pager = rememberPagerState(pageCount = { 3 })
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        HorizontalPager(
+            state = pager,
+            contentPadding = PaddingValues(horizontal = 30.dp),
+            pageSpacing = 12.dp,
+            modifier = Modifier.fillMaxWidth(),
+        ) { page ->
+            when (page) {
+                0 -> Card(
+                    onClick = onImport,
+                    modifier = Modifier.fillMaxWidth().height(218.dp),
+                    shape = RoundedCornerShape(26.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+                ) {
+                    Column(
+                        Modifier.fillMaxSize().padding(22.dp),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("KINETICS  /  RESEARCH WORKSPACE", style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = .78f), letterSpacing = 1.1.sp)
+                            Text("Make room for discovery.", style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.SemiBold)
+                            Text("Import a research input and create a protected local work item.",
+                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = .88f))
+                        }
+                        Text("IMPORT RESEARCH INPUT  →", style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold)
+                    }
+                }
+                1 -> Card(
+                    onClick = onOpenWork,
+                    modifier = Modifier.fillMaxWidth().height(218.dp),
+                    shape = RoundedCornerShape(26.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                ) {
+                    Column(
+                        Modifier.fillMaxSize().padding(22.dp),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("YOUR WORK", style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.primary, letterSpacing = 1.1.sp)
+                            Text("Research, in motion.", style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
+                            Text("$active active  ·  $complete complete  ·  $attention need attention",
+                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        Text("OPEN WORKSPACE  →", style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                    }
+                }
+                else -> Card(
+                    onClick = onRuntime,
+                    modifier = Modifier.fillMaxWidth().height(218.dp),
+                    shape = RoundedCornerShape(26.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                ) {
+                    Column(
+                        Modifier.fillMaxSize().padding(22.dp),
+                        verticalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("DEVICE READINESS", style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.secondary, letterSpacing = 1.1.sp)
+                            Text("Know your instruments.", style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
+                            Text(runtime ?: "Run local checks for embedded Python, native engines and encrypted storage.",
+                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 3, overflow = TextOverflow.Ellipsis)
+                        }
+                        Text("RUN RUNTIME CHECKS  →", style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            repeat(3) { index ->
+                val selected = pager.currentPage == index
+                Box(
+                    Modifier.padding(horizontal = 4.dp).size(width = if (selected) 22.dp else 7.dp, height = 7.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
+                )
+            }
         }
     }
 }

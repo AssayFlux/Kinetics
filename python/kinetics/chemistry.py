@@ -15,10 +15,133 @@ ATOMIC_MASS = {
 }
 
 
+def _parse_sdf_v3000(text: str) -> dict[str, object]:
+    """Parse the conservative V3000 atom/bond subset; stereochemical attributes are not interpreted."""
+    import shlex
+
+    atom_rows: list[list[str]] = []
+    bond_rows: list[list[str]] = []
+    atom_ids: set[int] = set()
+    bond_ids: set[int] = set()
+    expected_atoms: int | None = None
+    expected_bonds: int | None = None
+    section = ""
+    saw_ctab = False
+    saw_end = False
+    pending = ""
+
+    for line_number, raw in enumerate(text.splitlines(), 1):
+        line = raw.strip()
+        if line == "M  END":
+            saw_end = True
+            break
+        if not line.startswith("M  V30 "):
+            continue
+        payload = pending + line[7:]
+        if payload.endswith("-"):
+            pending = payload[:-1]
+            continue
+        pending = ""
+        try:
+            tokens = shlex.split(payload)
+        except ValueError as exc:
+            raise ValueError(f"V3000 line {line_number}: malformed quoted field") from exc
+        if not tokens:
+            continue
+        if tokens[:2] == ["BEGIN", "CTAB"]:
+            saw_ctab = True
+        elif tokens[:2] == ["END", "CTAB"]:
+            section = ""
+        elif tokens[:2] == ["BEGIN", "ATOM"]:
+            section = "ATOM"
+        elif tokens[:2] == ["END", "ATOM"]:
+            section = ""
+        elif tokens[:2] == ["BEGIN", "BOND"]:
+            section = "BOND"
+        elif tokens[:2] == ["END", "BOND"]:
+            section = ""
+        elif tokens[0] == "COUNTS":
+            if len(tokens) < 3:
+                raise ValueError("V3000 COUNTS line is incomplete")
+            try:
+                expected_atoms, expected_bonds = int(tokens[1]), int(tokens[2])
+            except ValueError as exc:
+                raise ValueError("V3000 COUNTS values must be integers") from exc
+            if expected_atoms < 1 or expected_atoms > 100_000 or not 0 <= expected_bonds <= 200_000:
+                raise ValueError("V3000 atom/bond count outside supported limits")
+        elif section == "ATOM":
+            if len(tokens) < 6:
+                raise ValueError(f"V3000 line {line_number}: incomplete atom row")
+            try:
+                atom_id = int(tokens[0])
+                coordinates = tuple(float(value) for value in tokens[2:5])
+            except ValueError as exc:
+                raise ValueError(f"V3000 line {line_number}: invalid atom identifier or coordinates") from exc
+            if atom_id < 1 or atom_id in atom_ids or not all(isfinite(value) for value in coordinates):
+                raise ValueError(f"V3000 line {line_number}: duplicate/invalid atom identifier or coordinates")
+            atom_ids.add(atom_id)
+            atom_rows.append([str(atom_id), tokens[1].upper(), *[str(value) for value in coordinates]])
+        elif section == "BOND":
+            if len(tokens) < 4:
+                raise ValueError(f"V3000 line {line_number}: incomplete bond row")
+            try:
+                bond_id, order, first, second = map(int, tokens[:4])
+            except ValueError as exc:
+                raise ValueError(f"V3000 line {line_number}: invalid bond field") from exc
+            if bond_id < 1 or bond_id in bond_ids or order not in (1, 2, 3, 4):
+                raise ValueError(f"V3000 line {line_number}: duplicate bond ID or unsupported bond order")
+            bond_ids.add(bond_id)
+            bond_rows.append([str(bond_id), str(order), str(first), str(second)])
+
+    if pending or not saw_ctab or not saw_end or expected_atoms is None or expected_bonds is None:
+        raise ValueError("V3000 CTAB/counts/end markers are incomplete")
+    if len(atom_rows) != expected_atoms or len(bond_rows) != expected_bonds:
+        raise ValueError("V3000 COUNTS do not match parsed atom/bond rows")
+
+    atoms = []
+    elements: Counter[str] = Counter()
+    atom_index: dict[int, int] = {}
+    for row in atom_rows:
+        atom_id, symbol = int(row[0]), row[1]
+        if symbol not in ATOMIC_MASS:
+            raise ValueError(f"Unsupported V3000 element: {symbol}")
+        x, y, z = map(float, row[2:5])
+        atom_index[atom_id] = len(atoms)
+        atoms.append({"x": x, "y": y, "z": z, "element": symbol})
+        elements[symbol] += 1
+
+    bonds = []
+    seen_pairs: set[tuple[int, int]] = set()
+    for row in bond_rows:
+        first_id, second_id, order = int(row[2]), int(row[3]), int(row[1])
+        if first_id not in atom_index or second_id not in atom_index or first_id == second_id:
+            raise ValueError("V3000 bond references an absent or identical atom")
+        pair = tuple(sorted((atom_index[first_id], atom_index[second_id])))
+        if pair in seen_pairs:
+            raise ValueError("V3000 contains duplicate atom-pair bonds")
+        seen_pairs.add(pair)
+        bonds.append((atom_index[first_id], atom_index[second_id], order))
+
+    return {
+        "atoms": atoms, "bonds": bonds, "atom_count": len(atoms), "bond_count": len(bonds),
+        "formula": formula(elements),
+        "molecular_weight": sum(ATOMIC_MASS[element] * count for element, count in elements.items()),
+        "format": "V3000",
+        "limitations": [
+            "V3000 atom/bond subset only", "Stereochemical and atom/bond attributes are not interpreted",
+            "No protonation/tautomer normalization", "Implicit hydrogens are not inferred",
+        ],
+    }
+
+
 def parse_sdf_record(text: str) -> dict[str, object]:
     lines = text.splitlines()
-    if len(lines) < 4 or "V2000" not in lines[3]:
-        raise ValueError("Only molfile V2000 is supported")
+    if len(lines) < 4:
+        raise ValueError("Molfile header is incomplete")
+    if "V3000" in lines[3]:
+        return _parse_sdf_v3000(text)
+    if "V2000" not in lines[3]:
+        raise ValueError("Only molfile V2000 and supported V3000 atom/bond records are supported")
     try:
         atom_count, bond_count = int(lines[3][0:3]), int(lines[3][3:6])
     except ValueError as exc:

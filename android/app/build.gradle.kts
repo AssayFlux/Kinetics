@@ -35,13 +35,6 @@ android {
         compose = true
     }
 
-    // Package the repository's actual research modules into the embedded Python runtime.
-    sourceSets {
-        getByName("main") {
-            python.srcDir("../../python")
-        }
-    }
-
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
@@ -61,6 +54,12 @@ android {
 }
 
 chaquopy {
+    // Include the repository package in the embedded Python source set.
+    sourceSets {
+        getByName("main") {
+            srcDir("../../python")
+        }
+    }
     defaultConfig {
         version = "3.11"
         pip {

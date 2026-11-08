@@ -1,6 +1,6 @@
 # Kinetics
 
-Kinetics is planned as an offline-first, Android-native scientific workbench. The repository is at **R0 Foundations**; this is an infrastructure scaffold, not a functioning scientific application.
+Kinetics is an offline-first, Android-native scientific workbench under active development. The repository has completed R0 foundations and is progressing through R1 Android/scientific-stack feasibility. It is not yet a validated scientific application or v0.1 release.
 
 ## Project direction
 - [NORTH_STAR.md](NORTH_STAR.md) — mission, scope and guardrails.
@@ -10,12 +10,14 @@ Kinetics is planned as an offline-first, Android-native scientific workbench. Th
 - [docs/origin/KINETICS_MASTER.md](docs/origin/KINETICS_MASTER.md) — historical master specification.
 
 ## Current status
+- R0 foundations are complete; R1 is in progress. R2 and R3 are gated and have plans under `docs/phase-r2-plan.md` and `docs/phase-r3-plan.md`.
 - Research Mode is the only mode intended for public builds.
-- No scientific capability is claimed as implemented or validated.
-- No Android build, device verification, clinical functionality or patient-data workflow exists.
-- No project license has been selected; see [DECISIONS.md](DECISIONS.md).
+- R1 has historical Android arm64 cross-build/static-package evidence, but no current local APK build or Android runtime/device validation is claimed.
+- GitHub Actions runs host-side source checks only; it does not build APK/AAB files or run Android emulators. See [docs/phase-r1-plan.md](docs/phase-r1-plan.md).
+- No scientific capability is claimed as validated; no clinical functionality or patient-data workflow is authorized.
+- Project code is licensed under Apache-2.0. Third-party dependencies retain their own licenses; see [docs/third-party.md](docs/third-party.md).
 
-## R0 developer checks
+## Developer checks
 Requires Python 3.10+.
 ```bash
 python -m pip install -r requirements-dev.txt

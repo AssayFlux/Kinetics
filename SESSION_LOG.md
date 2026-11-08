@@ -1590,3 +1590,44 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### Next verification
 - Run CI on this correction; only report an APK/AAB after the exact new commit builds and artifact checks pass.
 - Continue the next end-to-end research workflow and the D-015 screen implementation; test each increment rather than accumulating unverified work.
+
+
+## 2026-11-08 — Session 25: FASTQ Android integration, build repair and document reconciliation
+
+**Phase:** R4 vertical slice; D-015 UI implementation; R/S/I/P parallel delivery  
+**Objective:** Follow D-016 document-first planning, connect bounded FASTQ quality analysis to Android Explore, verify the exact source, and reconcile the roadmap/UI/evidence records before the next implementation increment.
+
+### Direction and documents reviewed before this increment
+- Read `NORTH_STAR.md`, `ROADMAP.md`, `DECISIONS.md`, the latest session history and `docs/origin/KINETICS_MASTER.md`.
+- Read the parallel-track execution protocol, integrated research-platform inventory, architecture boundary, R1–R4 phase plans, S discovery roadmap, I research boundaries, P public-data-only preparation, D-015 visual system, screen map and D-016 build/test requirements.
+- Reconfirmed: R/S/I/P may proceed concurrently only where dependencies permit; scientific, license, security, P0, biosafety and device gates remain binding. Compose is presentation-only; domain algorithms remain in Python/Rust/C++. D-015 is the sole active UI authority.
+
+### Implemented and verified
+- Bounded FASTQ quality workflow uses the existing wrapped FASTQ parser and quality-summary primitive.
+- Requires explicit Phred+33 or Phred+64 selection; encoding is never inferred.
+- Enforces character, read-count and total-base limits; reports read/base totals, mean Phred, Q20/Q30 fractions and a compact per-read preview.
+- Connected through Chaquopy to a native Compose Explore card beside FASTA QC.
+- Added regression tests for multi-read summaries, explicit encoding, invalid quality lengths and resource limits.
+- Corrected the FASTQ sample/fixture line-ending defect after run #2032 failed the Python test job.
+
+### Exact-source verification
+- Commit: `037befa8e9d22099e250dd22d3c4d772a6457034`.
+- CI: [run #2033 — success](https://github.com/AssayFlux/Kinetics/actions/runs/42484179938).
+- Python: 204 passed, 4 skipped.
+- Pinned scientific-reference comparisons, RDKit descriptor sanity fixtures and SPDX direct inventory: passed.
+- ARM64 debug APK/AAB build, static package alignment and Android JVM unit-test task: passed.
+- APK SHA-256: `c902baada3c912e8ae5a166173e96e731c555b43ec2236031a8456c489ea990e`; size 69,793,535 bytes.
+- AAB SHA-256: `f224d81850d1cb2858233ef9f82f7ed96969fc40712a96144e5b7757382c4f4d`; size 39,922,964 bytes.
+- Uploaded workflow ZIP SHA-256: `20c8e277605afab518f1f7cbb33fbabb71b8da3b9dfed504aab91f3b95caa22a`. This is not the APK/AAB digest.
+- Docs-only follow-up commit `ecc1d50` synchronizes the R1/R4 plans, UI screen map and CI evidence with this result.
+
+### Not done / evidence boundaries
+- No emulator or physical-device install/runtime evidence; Chaquopy runtime behavior on the target handset remains unverified.
+- The FASTA/FASTQ cards are not yet SAF-backed streaming import, durable cancellable jobs, provenance persistence, result viewer or export workflows.
+- The supplied dashboard/login reference JPGs and brand assets are present in the repository, but the running app has not been visually compared against them. D-015 implementation remains incomplete.
+- No independent wet-lab/experimental validation is claimed. Host software reference comparisons are not experimental truth.
+- R1–R10, S, I and P remain open according to their separate exit gates; P0 remains blocked.
+
+### Next increment
+- Continue document-first review before every code change. Prioritise the D-015 dashboard/login and owner-brand integration only after source/assets/theme/navigation architecture are audited; use actual app state and preserve original artwork.
+- Continue R/S/I/P work in dependency-safe parallel slices, each with tests, exact-source CI and updated registry/evidence records.

@@ -26,6 +26,9 @@ Kinetics is an ambitious, modular platform for computational biology and in-sili
 
 ## Development dashboard
 
+<sub>Latest exact-source verification: [CI #2033](https://github.com/AssayFlux/Kinetics/actions/runs/42484179938) on `037befa` — 204 Python tests passed (4 skipped); ARM64 debug APK/AAB and package checks passed. Device runtime and independent scientific validation remain open.</sub>
+
+
 The cards below summarise the state recorded in the project roadmap. “In progress” means implementation or preparation exists; it does **not** mean the phase has passed its exit gate.
 
 | Track | Focus | Progress recorded | Overall state |

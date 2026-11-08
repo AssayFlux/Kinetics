@@ -98,3 +98,5 @@ PharmVar documents bulk database downloads containing per-gene haplotype TSV, FA
 ## Biopython license notice
 
 Biopython 1.88 is built from immutable source commit d7e4b8b19399668b09442a5b35765d9186b5f665. Its upstream LICENSE states the default license is the Biopython License Agreement, with some individual files dual-licensed under that agreement or BSD-3-Clause. The complete upstream LICENSE is reproduced in android/app/src/main/assets/third-party/BIOPYTHON-LICENSE.txt for the app's binary distribution notice. Individual file headers and all other runtime/transitive dependencies still require review.
+
+- Biopython source pin: https://github.com/biopython/biopython/commit/d7e4b8b19399668b09442a5b35765d9186b5f665 (release 1.88). PyPI release page lists the sdist checksum, but the Android build uses the exact Git source commit rather than a mutable package index lookup.

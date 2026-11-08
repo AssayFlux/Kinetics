@@ -3,12 +3,12 @@
   "dataLicense": "CC0-1.0",
   "SPDXID": "SPDXRef-DOCUMENT",
   "name": "Kinetics declared direct dependencies",
-  "documentNamespace": "https://assayflux.github.io/Kinetics/sbom/source-dependencies-2026-11-08-bio-license",
+  "documentNamespace": "https://assayflux.github.io/Kinetics/sbom/source-dependencies-2026-11-08-bio-sourcepin",
   "creationInfo": {
     "creators": [
       "Tool: kinetics-source-sbom-generator"
     ],
-    "created": "2026-11-08T03:22:00Z",
+    "created": "2026-11-08T03:25:00Z",
     "comment": "Static direct-dependency and pinned build-toolchain inventory; not a resolved transitive release SBOM."
   },
   "packages": [
@@ -219,7 +219,8 @@
           "referenceType": "purl",
           "referenceLocator": "pkg:pypi/biopython@1.88"
         }
-      ]
+      ],
+      "sourceInfo": "Built from Biopython Git commit d7e4b8b19399668b09442a5b35765d9186b5f665"
     },
     {
       "name": "CMake",

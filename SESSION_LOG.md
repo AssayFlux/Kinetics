@@ -933,3 +933,5 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Pinned Python host version to 3.11.17, Rust toolchain to 1.88.0 with arm64 Android target, committed Cargo.lock and changed local native build to cargo --locked. Extended static Android guard to verify the Python/Rust pins.
 
 - Replaced Biopython's mutable PyPI source fetch with a pinned immutable Biopython 1.88 Git commit, `git archive` source export and local Chaquopy recipe path. Added commit pin to static Android config guard.
+
+- Added the full Biopython upstream LICENSE text to Android assets and represented its custom license identifier/extracted text in SPDX; the SPDX package records the exact source commit. Static privacy guard now checks no INTERNET permission, backup disabled and cleartext disabled.

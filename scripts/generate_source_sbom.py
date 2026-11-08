@@ -134,6 +134,9 @@ def generate(root: Path = ROOT) -> dict[str, object]:
         )
         if biopython_package is not None:
             biopython_package["licenseDeclared"] = "LicenseRef-Biopython-License-Agreement"
+            biopython_package["sourceInfo"] = (
+                "Built from Biopython Git commit d7e4b8b19399668b09442a5b35765d9186b5f665"
+            )
             extracted_licenses.append({
                 "licenseId": "LicenseRef-Biopython-License-Agreement",
                 "name": "Biopython License Agreement",

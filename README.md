@@ -12,8 +12,8 @@ Kinetics is an offline-first, Android-native scientific workbench under active d
 ## Current status
 - R0 foundations are complete. R1–R10 are all in progress; none is represented as complete. Phase plans and the integrated implementation inventory document implemented source and outstanding exit evidence.
 - Research Mode is the only mode intended for public builds.
-- R1 has historical Android arm64 cross-build/static-package evidence, but no current local APK build or Android runtime/device validation is claimed. The owner-directed local build and later device-test campaign remain outstanding.
-- GitHub Actions runs host-side source checks only; it does not build APK/AAB files or run Android emulators. See [docs/phase-r1-plan.md](docs/phase-r1-plan.md).
+- R1 has historical Android arm64 cross-build/static-package evidence. GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts, run Android JVM unit tests and verify package alignment. No current successful run is claimed until a workflow completes with jobs and retained artifacts.
+- GitHub Actions runs host-side source checks and an arm64 APK/AAB build lane. The build lane does not run an emulator or physical-device tests. See [docs/phase-r1-plan.md](docs/phase-r1-plan.md).
 - No scientific capability is claimed as validated; no clinical functionality or patient-data workflow is authorized.
 - Project code is licensed under Apache-2.0. Third-party dependencies retain their own licenses; see [docs/third-party.md](docs/third-party.md).
 
@@ -28,10 +28,10 @@ pytest
 scripts/reproduce-all
 python scripts/check_android_artifacts.py
 ```
-The reproduction command reports that no evidence jobs are registered. The Android artifact gate explicitly reports that APK/AAB build and runtime checks are local-only by owner instruction. Green source CI does not imply Android, scientific or device validation.
+The reproduction command reports that no evidence jobs are registered. The Android artifact verifier requires non-empty APK/AAB outputs and records their SHA-256 hashes. Green CI does not imply Android runtime, scientific or physical-device validation.
 
 ## Local Android build
-When ready, use the owner-run [local Android build guide](docs/local-android-build.md) and `scripts/build_android_local.sh`. GitHub Actions deliberately does not build APK/AAB files or run Android emulators.
+For a reproducible Linux x86_64 build, use the [local Android build guide](docs/local-android-build.md) and `scripts/build_android_local.sh`; the same script runs in the authorized GitHub Actions build job. Neither lane runs Android emulators or physical-device tests.
 
 ## Scope and safety
 Research outputs must carry provenance, uncertainty and limitations. Computational predictions are not experimental proof. Kinetics does not autonomously diagnose, prescribe, dose or make emergency decisions. No patient-related feature may be developed before P0 and applicable approvals.

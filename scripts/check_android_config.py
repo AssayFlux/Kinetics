@@ -83,6 +83,13 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         if marker not in build_source:
             errors.append(f"Local build inputs must remain pinned: {marker}")
 
+    rust_toolchain = root / "rust-toolchain.toml"
+    cargo_lock = root / "android/native-rust/Cargo.lock"
+    if not rust_toolchain.is_file() or 'channel = "1.88.0"' not in rust_toolchain.read_text(encoding="utf-8"):
+        errors.append("Native Rust toolchain must be pinned to 1.88.0")
+    if not cargo_lock.is_file():
+        errors.append("Native Rust Cargo.lock is required for --locked builds")
+
     package_init = root / "python/kinetics/__init__.py"
     runtime_probe = root / "android/app/src/main/python/kinetics_probe.py"
     if not package_init.is_file():

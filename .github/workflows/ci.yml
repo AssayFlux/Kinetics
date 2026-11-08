@@ -38,6 +38,8 @@ jobs:
         run: |
           python scripts/gen_design_tokens.py
           git diff --exit-code -- android/designsystem/src/main/java/org/assayflux/designsystem/GeneratedTokens.kt web/viewers/src/styles/kinetics-tokens.css
+          python scripts/gen_component_catalogue.py
+          git diff --exit-code -- docs/ui/component-catalogue.md
       - name: Android offline/build-first configuration guardrails
         run: python scripts/check_android_config.py
       - name: Unit tests

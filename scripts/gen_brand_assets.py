@@ -55,7 +55,7 @@ def main() -> int:
         print("Owner brand inputs present; no generated outputs requested.")
         return 0
     try:
-        import cairosvg
+        import cairosvg  # type: ignore[import-not-found]
     except ImportError:
         print("Install the pinned CairoSVG build dependency to generate raster assets.", file=sys.stderr)
         return 2

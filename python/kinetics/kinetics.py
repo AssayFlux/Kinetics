@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from math import isfinite, log, sqrt
+from typing import cast
 
 
 def michaelis_menten(substrate: float, vmax: float, km: float) -> float:
@@ -279,8 +280,8 @@ def bootstrap_michaelis_menten(
             )
         except ValueError:
             continue
-        vmax_samples.append(float(fitted["vmax"]))
-        km_samples.append(float(fitted["km"]))
+        vmax_samples.append(cast(float, fitted["vmax"]))
+        km_samples.append(cast(float, fitted["km"]))
 
     minimum_successes = max(50, int(replicates * 0.8))
     if len(vmax_samples) < minimum_successes:

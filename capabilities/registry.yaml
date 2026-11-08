@@ -152,6 +152,12 @@ tools:
     implementation: python/kinetics/phylo.py
     evidence_level: none
 
+  - id: structure.viewer_payload
+    name: Bounded deterministic coordinate payload for offline structure viewers
+    status: implemented
+    implementation: python/kinetics/structure_view.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

@@ -69,9 +69,15 @@ if [[ ! -x "$GRADLE_BIN" || "$GRADLE_MARKER_VALID" != "true" ]]; then
     "https://downloads.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
     --output "$archive"; then
     rm -f "$archive"
-    curl --fail --location --retry 3 --retry-all-errors \
+    if ! curl --fail --location --retry 3 --retry-all-errors \
       "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
-      --output "$archive"
+      --output "$archive"; then
+      rm -f "$archive"
+      # Third-party mirror is accepted only after the same pinned SHA-256 check below.
+      curl --fail --location --retry 3 --retry-all-errors \
+        "https://mirrors.aliyun.com/gradle/distributions/v${GRADLE_VERSION}.0/gradle-$GRADLE_VERSION-bin.zip" \
+        --output "$archive"
+    fi
   fi
   actual="$(sha256sum "$archive" | awk '{print $1}')"
   [[ "$actual" == "$GRADLE_SHA256" ]] || fail "Gradle distribution checksum mismatch: $actual"

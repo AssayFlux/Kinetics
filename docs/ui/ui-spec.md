@@ -28,3 +28,22 @@ The generated six-screen concept is a visual reference, not a running-app screen
 
 ## Required next work
 Follow the inventory → semantic tokens → shared Compose primitives → real-data screen refinement → optional motif system → screenshot/contrast/accessibility tests → owner review sequence in the canonical design system.
+
+## Supersession and implementation enforcement — D-016
+Old active design directions are discontinued. Do not implement or restore neon, Obsidian Cyan or pre-D-015 palettes. They remain historical records only. D-015 is the sole active design authority.
+
+The required real-app destinations are splash/onboarding, authentication, dashboard, navigation, profile/security and appearance. They must use actual app state and original owner-supplied assets. Approved concept art is not evidence that a screen exists.
+
+### Authentication and biometric acceptance
+- No invented cloud account, remote identity provider or server-side sign-in.
+- Clearly label local app lock separately from account authentication.
+- Use AndroidX BiometricPrompt with device capability/enrollment checks, explicit opt-in, secure credential fallback, lockout/error handling, lifecycle-safe invocation and Keystore-backed key use where appropriate.
+- Never collect, persist or process biometric templates. Never report success unless the cryptographic/authentication operation succeeds.
+- Define first-run, disabled biometrics, no enrollment, unavailable hardware, temporary/permanent lockout, credential fallback, key invalidation and recovery behavior.
+- Provide a user-visible way to disable biometric unlock and recover access without destroying encrypted research data.
+
+### Working-control acceptance
+Tests must prove each interactive element's state transition, navigation, persistence or platform action. Inert decorative controls are unacceptable. Planned/unavailable capabilities must be visibly identified and cannot be presented as runnable. Theme selection must persist across process death and restart. Profile/security settings must be backed by implemented storage and actions.
+
+### Build/test cycle
+Every substantial increment must be built, regression-tested and inspected before acceptance. Record exact commit, APK/AAB hash, workflow, test commands/results, screenshots and device details. Never claim all systems work based on compilation alone. See ROADMAP and DECISIONS D-016.

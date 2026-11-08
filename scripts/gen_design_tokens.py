@@ -75,9 +75,8 @@ def css_source(data: dict) -> str:
             for prop in PROPERTIES:
                 palette_name = palette["id"].replace("_", "-")
                 property_name = prop.replace("_", "-")
-                lines.append(
-                    f"  --kinetics-{palette_name}-{property_name}: {palette[prop]};"
-                )
+                css_name = f"--kinetics-{palette_name}-{property_name}"
+                lines.append(f"  {css_name}: {palette[prop]};")
     lines += ["}", ""]
     return "\n".join(lines)
 

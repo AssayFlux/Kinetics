@@ -226,7 +226,7 @@ def iter_bam_records(source: BinaryIO) -> Iterator[SamRecord]:
     text_length = struct.unpack("<i", raw)[0]
     if text_length < 0 or text_length > 64 * 1024 * 1024:
         raise ValueError("BAM header text length outside supported bounds")
-    _header_text = stream.read(text_length)
+    header_text = stream.read(text_length)
     if len(header_text) != text_length:
         raise ValueError("Truncated BAM header text")
     raw = stream.read(4)

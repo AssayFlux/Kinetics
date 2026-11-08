@@ -89,3 +89,8 @@ The data-pack installer now revalidates programmatically supplied manifest field
 ### R2 SAF export and schema migration increment — 2026-11-08
 
 Added a user-mediated Storage Access Framework CreateDocument export path for completed imports. Export streams authenticated AES-GCM chunks directly to the chosen destination without creating a plaintext cache file. It performs a complete authentication and SHA-256 pass before releasing plaintext, then authenticates again while streaming to detect source changes. Added a v2-to-v3 SQLite migration that adds export metadata and a provenance index. This source path is not yet Android-compiled or exercised against real SAF providers; provider partial-file cleanup, process death during export, migration fixtures, key invalidation and full lifecycle recovery remain verification gates.
+
+
+### SAF export failure cleanup — 2026-11-08
+
+The Android export flow now opens newly created SAF destinations in truncate mode and, if authenticated decryption/hash verification or stream writing fails, attempts to delete the incomplete document through `DocumentsContract.deleteDocument`. The UI reports whether the provider confirmed deletion. If the provider does not support deletion, it explicitly warns that a partial destination may remain and must be removed manually before retrying. This is best-effort provider-dependent cleanup, not a guarantee of secure erasure or universal SAF rollback. Device/provider tests remain outstanding.

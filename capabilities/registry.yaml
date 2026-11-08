@@ -171,9 +171,9 @@ ui_screens:
   - id: ui.home
     name: "Home dashboard"
     track: UI
-    status: implemented
-    tests: [android/app/src/test/java/org/assayflux/kinetics/WindowLayoutTest.kt]
-    accessibility_check: partial-not-audit
+    status: planned
+    tests: []
+    accessibility_check: not-run
     device_matrix: not-run
     device_verified: false
   - id: ui.work

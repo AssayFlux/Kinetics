@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "validation_id": "i1-rdkit-basic-reference-2026-11-08",
+  "purpose": "Sanity fixtures for a host RDKit adapter; not a validated ADMET or biological-activity benchmark.",
+  "reference_basis": "Canonical small-molecule identities and elementary formula/descriptor invariants; descriptor expectations are version-sensitive.",
+  "tolerances": {
+    "molecular_weight_da": 0.002,
+    "exact_molecular_weight_da": 0.002,
+    "tpsa_angstrom2": 0.02,
+    "crippen_logp": 0.03
+  },
+  "molecules": [
+    {
+      "id": "ethanol",
+      "smiles": "CCO",
+      "expected": {
+        "formula": "C2H6O",
+        "atom_count": 3,
+        "bond_count": 2,
+        "ring_count": 0,
+        "h_bond_donors": 1,
+        "h_bond_acceptors": 1,
+        "rotatable_bonds": 0,
+        "molecular_weight": 46.069,
+        "exact_molecular_weight": 46.0419,
+        "tpsa_angstrom2": 20.23,
+        "crippen_logp": -0.0014
+      }
+    },
+    {
+      "id": "benzene",
+      "smiles": "c1ccccc1",
+      "expected": {
+        "formula": "C6H6",
+        "atom_count": 6,
+        "bond_count": 6,
+        "ring_count": 1,
+        "h_bond_donors": 0,
+        "h_bond_acceptors": 0,
+        "rotatable_bonds": 0,
+        "molecular_weight": 78.114,
+        "exact_molecular_weight": 78.0470,
+        "tpsa_angstrom2": 0.0,
+        "crippen_logp": 1.6866
+      }
+    }
+  ],
+  "limitations": [
+    "These are parser/descriptor sanity checks, not an independently curated chemical benchmark.",
+    "RDKit version and descriptor implementation must be recorded with every run.",
+    "No protonation, tautomer, stereoisomer, conformer, biological activity, ADMET, PK/PD or clinical inference is validated.",
+    "A passing fixture does not validate the Android chemistry runtime."
+  ]
+}

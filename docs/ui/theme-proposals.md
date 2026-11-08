@@ -1,6 +1,6 @@
 # Kinetics theme and typography proposals
 
-**Status:** Owner preference recorded; visual direction and exact palette remain unapproved. U0 gate is open.
+**Status:** Owner authorized best-judgement completion; Obsidian Cyan is selected as the default dark direction. U0 remains open pending token generation, gallery and validation.
 
 ## Owner's direction
 - Dark-first, futuristic, premium scientific workbench.

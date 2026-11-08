@@ -1074,3 +1074,16 @@ Run Python/registry checks and Android build on the consolidated source. Complet
 
 ### Gate
 Owner has specified dark-first/futuristic as the intended direction. Exact default dark palette and the complete design-system/gallery approval remain open. U0 is not complete.
+
+
+## 2026-11-08 — Owner artwork integration and CI repair
+**Phase:** Track U / U0 in parallel with R0–R10
+
+- Located the user's named assets in the Kinetics repository under `Assets/`.
+- Inspected `Assets/Kinetics.png`: the bytes are JPEG despite the .png suffix. Preserved the original and copied its exact Git blob to `android/app/src/main/res/drawable-nodpi/kinetics_background.jpg`; Compose Home hero now displays it with a restrained dark overlay (light family uses a lighter overlay).
+- Copied the exact owner organization-logo SVG blob from `Assets/Brand Logo.svg` to `assets/brand/brand-logo.svg`. No edit, conversion, recolouring or optimization. Updated brand instructions; official colours, clear space, variants and usage rules remain unconfirmed. App-logo placeholders still block release builds.
+- Owner authorized the implementation team to choose a visual direction. Recorded Obsidian Cyan as the default dark direction in D-011; Light and Neon remain selectable alternatives.
+- Fixed mypy's optional CairoSVG import error using a targeted missing-import ignore; the import remains optional and is only loaded when raster generation is requested.
+- Run #1717 Python foundation job passed: Ruff checks, mypy (24 source files), registry validation, and pytest (111 passed, 3 skipped).
+- Android APK/AAB build for run #1717 remained in progress at log time. It predates the final Home-background Compose integration and brand master copy. Run #1721 is queued for the current source; final debug APK availability is not yet established.
+- No device, emulator, screenshot, TalkBack, contrast/CVD, font-scale, performance or usability test is claimed.

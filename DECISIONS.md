@@ -103,3 +103,11 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Consequences: Theme token generator, contrast/CVD audits, exact font licence audit, durable settings persistence and compact/medium/expanded gallery previews remain required. Font catalogue entries are candidates, not proof of redistribution rights.
 - Approver: Owner supplied the direction in chat on 2026-11-08; final U0 visual choice is pending.
 - Evidence: `design/tokens.json`, `design/typography-catalogue.yaml`, `docs/ui/theme-proposals.md`, `assets/design-previews/`.
+
+
+## D-011 — Select Obsidian Cyan as the default UI direction (2026-11-08)
+- Context: Owner requested a futuristic dark UI, light/dark/neon theme families, and then authorized us to complete the visual design using best judgement.
+- Choice: Use Obsidian Cyan as the default dark-first direction: near-black/navy surfaces, cyan primary actions, electric-blue secondary accents and restrained mint status accents. Retain Light and Neon as selectable alternatives. This is an implementation choice under the owner's broad authorization, not a claim of measured superiority.
+- Brand: Do not sample brand artwork for seed colours or alter the organization logo. The owner-provided astronaut background is used as supplied on the Home hero.
+- Consequences: Palette contrast/CVD validation, token generation, gallery screenshots, adaptive layouts and owner visual review remain U0 work. Any contrast failure must be fixed in tokens, not by changing the logo.
+- Approver: Owner authorized completion by best judgement in chat on 2026-11-08.

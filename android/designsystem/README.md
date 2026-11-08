@@ -1,13 +1,16 @@
-# Kinetics Design System (U0 skeleton)
+# Kinetics Design System (U0 implementation skeleton)
 
-This module is intentionally a skeleton until the owner chooses one of the three visual directions and supplies brand assets. `design/tokens.json` is the single source of truth. Generated Kotlin/CSS must not be edited manually.
+**Selected visual direction:** Obsidian Cyan default, with Light and Neon families. This selection follows the owner's dark/futuristic preference and authorization to use best judgement. The palette alternatives remain in `design/tokens.json`.
+
+Current app-specific Compose styling is still inline and is not yet generated from tokens. This module is not yet a complete component library or gallery.
 
 Required before U0 exit:
-- token generator and deterministic check mode;
-- Material 3 theme generated from the selected token set;
+- deterministic token generator for Compose Kotlin and CSS variables;
+- theme previews for compact, medium and expanded windows in light and dark modes;
 - reusable semantic status/tier components;
-- adaptive navigation scaffold;
-- component gallery showing each component across themes and compact/medium/expanded layouts;
-- screenshot test harness and token lint.
+- adaptive navigation scaffold and pane layouts;
+- component gallery with all components, themes and window sizes;
+- screenshot-test harness, accessibility checks and token-only styling lint;
+- owner-supplied logo treatment reviewed without altering source artwork.
 
-No final visual direction is approved. Do not import app-specific hard-coded colours into this module.
+Do not claim U0 complete until generated themes and gallery run and the owner-approved visual gate is recorded.

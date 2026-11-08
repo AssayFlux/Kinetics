@@ -28,7 +28,7 @@ pytest
 scripts/reproduce-all
 python scripts/check_android_artifacts.py
 ```
-The reproduction command reports that no evidence jobs are registered. Android artifact checks report blocked/not applicable until R1 creates real artifacts. Green R0 CI does not imply Android, scientific or device validation.
+The reproduction command reports that no evidence jobs are registered. The Android artifact gate explicitly reports that APK/AAB build and runtime checks are local-only by owner instruction. Green source CI does not imply Android, scientific or device validation.
 
 ## Local Android build
 When ready, use the owner-run [local Android build guide](docs/local-android-build.md) and `scripts/build_android_local.sh`. GitHub Actions deliberately does not build APK/AAB files or run Android emulators.

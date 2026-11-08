@@ -151,3 +151,10 @@ HTTP 504 during CI. The filter prevents unrelated dependencies from resolving
 through that mirror; Maven Central remains configured afterward. This does not
 add a runtime application dependency. Mirror trust, checksum verification and
 full transitive dependency auditing remain part of the R1 release gate.
+
+
+The Gradle 8.13 build script now tries the official direct distribution CDN,
+then the official services URL, then an Aliyun mirror for the same version.
+Every downloaded archive must match the pre-recorded Gradle 8.13 SHA-256 before
+extraction. The mirror is a transport fallback only; it cannot change the
+accepted archive bytes.

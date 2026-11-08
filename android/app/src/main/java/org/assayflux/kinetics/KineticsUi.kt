@@ -571,6 +571,9 @@ fun ExploreScreen(modifier: Modifier) {
             if (entries.any { it.id == "sequence.fasta" && it.status == "implemented" }) {
                 item { FastaQcCard() }
             }
+            if (entries.any { it.id == "sequence.fastq" && it.status == "implemented" }) {
+                item { FastqQcCard() }
+            }
             if (catalogue.isFailure) {
                 item {
                     OutlinedCard(Modifier.fillMaxWidth()) {
@@ -713,6 +716,62 @@ private fun FastaQcCard() {
                 Text("Basic QC only. No sequence identity, function, pathogenicity or clinical interpretation is inferred. Independent biological validation is not claimed.",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun FastqQcCard() {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var input by rememberSaveable { mutableStateOf("@read_1\\nACGTACGT\\n+\\nIIII!!!!\\n") }
+    var offset by rememberSaveable { mutableIntStateOf(33) }
+    var running by remember { mutableStateOf(false) }
+    var result by remember { mutableStateOf<FastqQcResult?>(null) }
+    var error by remember { mutableStateOf<String?>(null) }
+    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text("FASTQ read-quality check", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text("Wrapped FASTQ parsing. Quality encoding must be selected explicitly; it is never guessed.",
+                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            OutlinedTextField(value = input, onValueChange = {
+                if (it.length <= SequenceQcRunner.MAX_INPUT_CHARS) { input = it; error = null }
+            }, modifier = Modifier.fillMaxWidth(), label = { Text("FASTQ input") },
+                minLines = 4, maxLines = 8,
+                supportingText = { Text("Up to 1,000,000 characters · wrapped reads supported") })
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChip(selected = offset == 33, onClick = { offset = 33; result = null }, label = { Text("Phred+33") })
+                FilterChip(selected = offset == 64, onClick = { offset = 64; result = null }, label = { Text("Phred+64") })
+            }
+            Button(onClick = {
+                running = true; error = null; result = null
+                scope.launch {
+                    val outcome = withContext(Dispatchers.IO) {
+                        runCatching { SequenceQcRunner.analyzeFastq(context, input, offset) }
+                    }
+                    outcome.onSuccess { result = it }.onFailure { error = it.message ?: "FASTQ analysis failed" }
+                    running = false
+                }
+            }, enabled = !running && input.isNotBlank(), modifier = Modifier.fillMaxWidth()) {
+                Text(if (running) "Analysing…" else "Analyse FASTQ")
+            }
+            error?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+            result?.let { summary ->
+                HorizontalDivider()
+                Text("${summary.recordCount} reads · ${summary.totalBases} bases · Phred+${summary.phredOffset}",
+                    fontWeight = FontWeight.SemiBold)
+                Text("Mean Q ${String.format(java.util.Locale.ROOT, "%.2f", summary.meanPhred)} · Q20 ${String.format(java.util.Locale.ROOT, "%.1f", summary.q20Fraction * 100)}% · Q30 ${String.format(java.util.Locale.ROOT, "%.1f", summary.q30Fraction * 100)}%",
+                    style = MaterialTheme.typography.bodySmall)
+                summary.reads.take(20).forEach { read ->
+                    Text("${read.identifier}: ${read.length} bases · mean Q ${String.format(java.util.Locale.ROOT, "%.2f", read.meanPhred)}",
+                        style = MaterialTheme.typography.labelSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
+                if (summary.reads.size > 20) Text("${summary.reads.size - 20} additional reads omitted from this preview.",
+                    style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Quality summary only. No adapter detection/trimming, variant calling or clinical conclusions.",
+                    style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

@@ -84,3 +84,11 @@ def analyze_fasta(text: str) -> str:
     from kinetics.workflows import analyze_fasta_text
 
     return json.dumps(analyze_fasta_text(text), ensure_ascii=False, sort_keys=True)
+
+
+def analyze_fastq(text: str, phred_offset: int) -> str:
+    """Bounded JSON adapter for FASTQ read-quality summaries."""
+    import json
+    from kinetics.workflows import analyze_fastq_text
+    return json.dumps(analyze_fastq_text(text, phred_offset=phred_offset),
+                      ensure_ascii=False, sort_keys=True)

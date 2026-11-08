@@ -18,8 +18,35 @@ internal data class SequenceQcResult(
     val records: List<SequenceQcRecord>,
 )
 
+internal data class FastqReadQc(val identifier: String, val length: Int,
+    val meanPhred: Double, val q20Fraction: Double, val q30Fraction: Double)
+
+internal data class FastqQcResult(val recordCount: Int, val totalBases: Int,
+    val phredOffset: Int, val meanPhred: Double, val q20Fraction: Double,
+    val q30Fraction: Double, val reads: List<FastqReadQc>)
+
 internal object SequenceQcRunner {
     const val MAX_INPUT_CHARS = 1_000_000
+
+    fun analyzeFastq(context: Context, fastqText: String, phredOffset: Int): FastqQcResult {
+        require(fastqText.isNotBlank()) { "Enter FASTQ records before analysis." }
+        require(fastqText.length <= MAX_INPUT_CHARS) { "FASTQ input exceeds the 1,000,000-character limit." }
+        require(phredOffset == 33 || phredOffset == 64) { "Select Phred+33 or Phred+64 explicitly." }
+        if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
+        val json = Python.getInstance().getModule("kinetics_probe")
+            .callAttr("analyze_fastq", fastqText, phredOffset).toString()
+        val root = JSONObject(json)
+        val array = root.getJSONArray("reads")
+        val reads = (0 until array.length()).map { i ->
+            val item = array.getJSONObject(i)
+            FastqReadQc(item.getString("identifier"), item.getInt("length"),
+                item.getDouble("mean_phred"), item.getDouble("q20_fraction"),
+                item.getDouble("q30_fraction"))
+        }
+        return FastqQcResult(root.getInt("record_count"), root.getInt("total_bases"),
+            root.getInt("phred_offset"), root.getDouble("mean_phred"),
+            root.getDouble("q20_fraction"), root.getDouble("q30_fraction"), reads)
+    }
 
     fun analyze(context: Context, fastaText: String): SequenceQcResult {
         require(fastaText.isNotBlank()) { "Enter FASTA records before analysis." }

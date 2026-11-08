@@ -899,3 +899,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - Added initial security/privacy threat model, accessibility verification protocol and explicit NOT RELEASE READY checklist. These are plans and controls, not independent review or passed audit evidence.
 
 - Hardened PGx pack import to require the expected release identifier and a 64-hex source checksum; VariantKey normalizes REF/ALT to uppercase and rejects non-integer positions.
+
+
+### R10 SBOM source inventory increment
+- Added a standard-library SPDX 2.3 generator for directly declared Android Gradle, Chaquopy Python, development Python and Rust dependencies. Unresolved/BOM-managed versions and license conclusions are marked NOASSERTION; the generator's annotation explicitly says it is not a resolved transitive release SBOM.
+- Updated release checklist and documentation so the static inventory cannot be mistaken for the final release SBOM.

@@ -11,7 +11,7 @@
 - Release signing, SBOM, vulnerability review, privacy documentation and release checklist.
 
 ## Current source
-- `scripts/check_registry.py` validates capability references, implementation paths, evidence status, validation records, device logs and clinical gates.
+- `scripts/check_registry.py` validates capability references, implementation paths, evidence status, validation records, device logs and clinical gates. `scripts/generate_source_sbom.py` emits an SPDX 2.3 inventory of declared direct dependencies with unresolved/transitive items explicitly marked NOASSERTION.
 - `scripts/check_android_config.py` checks offline manifest settings, pinned SDK/NDK/ABI, 16 KB linker alignment and CI's manual-only no-APK/no-device-test boundary.
 - `scripts/build_android_local.sh` is the owner-directed local build path. Gradle 8.13 is SHA-256 pinned and the Chaquopy 17.2.0 source commit is pinned; the static guard verifies these pins. GitHub Actions do not build APK/AAB or run emulator/device tests.
 - The Compose home and research-job list expose screen-reader descriptions for the home/status and merged job/state summaries; this is an initial accessibility affordance, not a completed accessibility audit.

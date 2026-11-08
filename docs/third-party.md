@@ -69,3 +69,8 @@ No PharmVar, PharmGKB, CPIC or other PGx content is currently bundled. Before im
 - Biopython 1.88 and NumPy 1.26.2 are pinned in the prototype. The custom Biopython wheel build is source-pinned, but the downloaded NumPy wheel still needs an independently pinned checksum and a current 16 KB page-size compatibility review.
 - These pins improve reproducibility; they do not constitute a full dependency lock, transitive license audit, SBOM or local build-success claim.
 - Gradle checksum source: https://gradle.org/release-checksums/
+
+
+## SBOM generation
+
+Run `python scripts/generate_source_sbom.py --output sbom/source-dependencies.spdx.json` to create an SPDX 2.3 inventory of declared direct dependencies. This deliberately marks unresolved versions and license conclusions as NOASSERTION and does not include resolved transitive Gradle artifacts, downloaded wheel hashes, native binary contents or file-level license results. It is an engineering inventory only, not the final release SBOM. The release checklist still requires a fully resolved transitive SBOM.

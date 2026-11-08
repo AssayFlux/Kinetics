@@ -27,3 +27,7 @@ Added Jukes–Cantor 1969 nucleotide distance estimation with pairwise deletion 
 ### Model-corrected nucleotide distances
 
 Jukes–Cantor 1969 distances with pairwise deletion and saturation rejection now feed neighbour joining from aligned DNA sequences. This is a simple distance correction, not maximum-likelihood/Bayesian inference, rate heterogeneity, model selection or bootstrap support.
+
+### Nonparametric site-bootstrap increment
+
+Added deterministic, seeded alignment-column resampling for Jukes-Cantor + neighbour-joining split support. Reports requested, successful and failed replicate counts and computes support only over successful trees; invalid/saturated/negative-limb replicates are not silently repaired. This remains an exploratory distance-bootstrap utility, not maximum-likelihood/Bayesian inference. Independent reference concordance and execution of the regression tests remain required.

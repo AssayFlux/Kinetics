@@ -50,7 +50,7 @@ SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 [[ -x "$SDK_ROOT/build-tools/$BUILD_TOOLS_VERSION/zipalign" ]] || fail "Install Android build-tools $BUILD_TOOLS_VERSION."
 [[ -d "$SDK_ROOT/platforms/android-36" ]] || fail "Install Android SDK platform android-36."
 [[ -d "$SDK_ROOT/cmake/3.22.1" ]] || fail "Install Android CMake 3.22.1."
-python -c 'import sys; assert sys.version_info[:3] == (3, 11, 18), sys.version' || fail "Use Python 3.11.18 exactly for the host build tools."
+[[ "$(python -c 'import sys; print(".".join(map(str, sys.version_info[:3])))')" == "$PYTHON_HOST_VERSION" ]] || fail "Use Python $PYTHON_HOST_VERSION exactly for the host build tools."
 java -version 2>&1 | grep -q '17\.' || fail "Use JDK 17."
 
 # Fetch a checksum-pinned Gradle distribution rather than trusting a host-installed gradle.

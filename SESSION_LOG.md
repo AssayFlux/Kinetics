@@ -1306,3 +1306,10 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Extended CI to upload both the synthetic SciPy kinetic comparison and genetic-code table comparison records.
 - Updated the SPDX generator so host-only requirements are inventoried while shared Android/host dependencies (Biopython 1.88) retain both contexts rather than being misclassified as host-only.
 - This checks implementation transcription against Biopython; it does not prove biological truth or infer any organism's genetic code. S8 evidence remains none.
+
+
+## 2026-11-08 — I1 pinned RDKit host-side sanity validation
+- Added `validation/requirements-rdkit.txt` pinning RDKit 2025.9.4 for host-only fixture execution.
+- Added a separate CI job that runs the ethanol/benzene descriptor sanity harness and uploads a machine-readable JSON record.
+- The dependency inventory generator includes the RDKit validation pin as host-only; it is not bundled in Android.
+- This is a descriptor/parser sanity check against RDKit, not an independent chemical benchmark, ADMET, biological-activity, docking, PK/PD or clinical validation.

@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from typing import Iterable
 
 
-@dataclass(frozen=True, order=True)
+@dataclass(frozen=True)
 class PharmVarVariant:
     reference_accession: str
     start: int
@@ -30,10 +30,18 @@ class PharmVarVariant:
             raise ValueError("PharmVar variant coordinates must be integers")
         if self.start < 1 or self.stop < self.start:
             raise ValueError("PharmVar variant coordinates must be positive and ordered")
-        if not self.reference_allele or not self.variant_allele:
-            raise ValueError("PharmVar variant requires REF and ALT")
+        if not self.reference_allele or not self.variant_allele or not self.variant_type.strip():
+            raise ValueError("PharmVar variant requires REF, ALT and variant type")
         if self.reference_allele.upper() == "REFERENCE" or self.variant_allele == ".":
             raise ValueError("Reference-haplotype sentinel is not a variant record")
+        allowed = set("ACGTN-")
+        if any(base not in allowed for base in (self.reference_allele + self.variant_allele).upper()):
+            raise ValueError("PharmVar allele strings contain unsupported symbols")
+        object.__setattr__(self, "reference_allele", self.reference_allele.upper())
+        object.__setattr__(self, "variant_allele", self.variant_allele.upper())
+        object.__setattr__(self, "variant_type", self.variant_type.casefold())
+        if self.rsid == "." or self.rsid == "":
+            object.__setattr__(self, "rsid", None)
 
 
 @dataclass(frozen=True)
@@ -120,6 +128,8 @@ def parse_pharmvar_tsv(
         if ref.upper() == "REFERENCE" and alt == ".":
             if key in grouped and grouped[key]:
                 raise ValueError(f"PharmVar TSV line {line_number}: reference sentinel conflicts with variants")
+            if key in reference_groups:
+                raise ValueError(f"PharmVar TSV line {line_number}: duplicate reference sentinel")
             reference_groups.add(key)
             grouped.setdefault(key, [])
             continue

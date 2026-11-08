@@ -1450,3 +1450,25 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 
 ### Next
 Audit current Compose screens, token generator, settings persistence and asset inventory; implement Light Classic semantic tokens and shared Compose components, then refine real screens in dependency order. Continue R1–R10, S, I and P implementation in parallel where dependencies permit; preserve all scientific, licensing, privacy, security, ethics and publication gates.
+
+
+## 2026-11-08 — Session 18: D-015 CI repair and S7 resource hardening
+**Phase:** Integrated R1–R10 with parallel S/I/P preparation  
+**Objective:** Restore deterministic design-token generation, align the active theme metadata with D-015, and bound ORF candidate scanning.
+
+### Done
+- Committed generated Compose and WebView token outputs for Light Classic and Dark Classic so the generator's reproducibility check can compare the checked-in files against its output.
+- Repaired the malformed typography catalogue selection-policy line and removed the duplicate display-serif entry.
+- Aligned design token metadata with the approved Light Classic default and Dark/System appearance; other catalogue palettes are not active UI selections.
+- Added explicit S7 ORF scan limits: maximum genome bases, maximum simultaneously open starts per frame, and maximum emitted ORFs. Included the effective limits in result provenance.
+- Added regression tests for over-limit sequence length, open-start accumulation and invalid resource limits.
+
+### Validation status
+- Previous latest CI run #1982 failed because generated token outputs were not committed and Android compilation could not resolve the new palette symbols. The generated output commits address the first defect and supply the missing symbols; a later CI run must verify both.
+- CI run #1983 was started before the WebView CSS output was committed and failed the reproducibility step on that earlier commit; it is not evidence for the complete fix.
+- Newer CI runs are queued/pending at this log update. No passing build or test result is claimed for the latest changes.
+- S7 remains an ORF candidate enumerator, not a prokaryotic/eukaryotic gene annotation pipeline. No gene function, organism identity or genetic code is inferred.
+
+### Remaining
+- Verify the latest complete CI run including token reproducibility, Python tests, Kotlin compilation, APK/AAB package checks and Android JVM tests.
+- Continue the approved R/S/I/P tracks against their roadmap dependencies and gates.

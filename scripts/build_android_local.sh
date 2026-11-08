@@ -22,6 +22,8 @@ need cargo
 need rustup
 need gradle
 need patchelf
+need patch
+need patch
 
 [[ -n "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}" ]] || fail "Set ANDROID_HOME or ANDROID_SDK_ROOT."
 SDK_ROOT="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"

@@ -12,6 +12,8 @@ def find_orf_candidates(
     table_id: int = 11,
     min_protein_length: int = 30,
     max_orfs: int = 10_000,
+    max_sequence_bases: int = 100_000_000,
+    max_open_starts: int = 100_000,
 ) -> dict[str, object]:
     """Enumerate complete start-to-stop ORFs on both strands and all frames.
 
@@ -28,9 +30,15 @@ def find_orf_candidates(
         raise ValueError("min_protein_length must be a positive integer")
     if not isinstance(max_orfs, int) or isinstance(max_orfs, bool) or max_orfs < 1:
         raise ValueError("max_orfs must be a positive integer")
+    if not isinstance(max_sequence_bases, int) or isinstance(max_sequence_bases, bool) or max_sequence_bases < 1:
+        raise ValueError("max_sequence_bases must be a positive integer")
+    if not isinstance(max_open_starts, int) or isinstance(max_open_starts, bool) or max_open_starts < 1:
+        raise ValueError("max_open_starts must be a positive integer")
     dna = "".join(sequence.split()).upper().replace("U", "T")
     if not dna:
         raise ValueError("Genome sequence must not be empty")
+    if len(dna) > max_sequence_bases:
+        raise ValueError("Genome sequence exceeds max_sequence_bases")
     invalid = sorted(set(dna) - set("ACGT"))
     if invalid:
         raise ValueError(f"ORF scan requires unambiguous DNA/RNA bases: {''.join(invalid)}")
@@ -45,6 +53,8 @@ def find_orf_candidates(
             for position in range(frame, len(oriented) - 2, 3):
                 codon = oriented[position:position + 3]
                 if codon in code.starts:
+                    if len(open_starts) >= max_open_starts:
+                        raise ValueError("Open ORF start count exceeds max_open_starts")
                     open_starts.append(position)
                 if codon in code.stops:
                     for start in open_starts:
@@ -86,6 +96,11 @@ def find_orf_candidates(
         "table_name": code.name,
         "coordinate_system": "0-based half-open on normalized input sequence",
         "min_protein_length": min_protein_length,
+        "resource_limits": {
+            "max_orfs": max_orfs,
+            "max_sequence_bases": max_sequence_bases,
+            "max_open_starts_per_frame": max_open_starts,
+        },
         "orf_count": len(orfs),
         "orfs": orfs,
         "limitations": [

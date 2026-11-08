@@ -1488,3 +1488,10 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### Validation
 - The source and tests are committed. CI run #1993 is pending at this log update; no new test pass is claimed.
 - Exact-only matching remains a conservative triage primitive; no gene/protein function, family, clinical interpretation, or novelty conclusion is produced.
+
+## Session 20 — 2026-11-08
+- Confirmed CI run #1999 passed all five jobs: Python foundation/tests, SPDX inventory, RDKit descriptor sanity fixtures, pinned scientific-reference comparisons, and Android ARM64 debug APK/AAB build/package checks.
+- S9: hardened sequence-to-structure mapping resource limits to require positive integers (reject booleans and floats); replaced repeated full substring slicing with early-stop string search that also detects overlapping repeated exact matches; added regression tests for invalid caps and overlap ambiguity.
+- Commits: `eaa532e` (implementation), `aef4501` (tests). CI for these commits is pending.
+- Remaining S9 gates: alignment/gap handling, insertion-code-aware residue identity, licensed domain/family references, curated independent structure mappings and benchmark concordance.
+- R/S/I/P remain active. No device-runtime, independent biological/chemical validation, dataset license approval, P0 clearance or paper submission readiness is inferred from CI.

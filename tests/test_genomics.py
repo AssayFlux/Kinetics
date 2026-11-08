@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import pytest
 from pathlib import Path
+
+import pytest
 
 from kinetics.genomics import fastq_quality_summary, parse_sam, parse_vcf
 

@@ -701,3 +701,30 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 - R1 remains in progress: local build and later Moto G54 5G runtime evidence remain outstanding; SciPy, domain scientific engine, RDKit/alternative, offline molecular viewer, lifecycle/SAF and licensing questions remain open.
 - R2/R3 source implementation is underway as part of the owner-authorized integrated R1–R10 delivery; their integration tests, device verification and exit approvals remain incomplete.
 - No clinical/patient workflows are enabled. No phase is marked complete by this session.
+
+
+## Session 18 — R2 import durability and R3 regression baseline (2026-11-08)
+
+### R2 source hardening
+- Changed resumable import staging from cache storage to app-private `noBackupFilesDir/research-imports`, so Android cache eviction does not silently destroy a checkpoint and imported material is excluded from normal app backup.
+- Resume now re-reads and hashes the source prefix and compares it with the retained partial file before appending. If the source changed, the stale partial is discarded and the user must restart the import rather than receiving a hash for a mixed-version file.
+- WorkManager import now rejects unsafe job IDs and reports durable checkpoint state. MainActivity now requires a persistable SAF read grant before enqueueing background/resumable work; it no longer silently ignores a missing grant.
+- Enabled SQLite foreign-key enforcement for job/provenance references.
+- These are source changes only; Android compilation, WorkManager process-death behavior and device runtime remain unverified.
+
+### R3 regression coverage
+- Added `tests/test_research_primitives.py` covering FASTA/FASTQ parsing and malformed records, IUPAC reverse complement/transcription, sequence statistics and k-mer counts, Needleman–Wunsch output consistency/memory cap, peptide mass/pI/unsupported residues, Michaelis–Menten and four inhibition rate equations, and synthetic parameter-region recovery for the log-grid fit.
+- Tests are regression/unit tests only. They do not constitute independent scientific validation, reference concordance, statistical uncertainty analysis or device performance evidence.
+- The first test runs exposed three incorrect test expectations (k-mer window count, peptide mass threshold and error-message match); each was corrected against the current algorithm output. No underlying algorithm change was made for those expectation mismatches.
+- The attempt to lint the entire scientific package surfaced 90 existing style violations across the package; broad automated rewriting was not applied. CI retains Ruff/mypy checks on scripts and tests; scientific package formatting/type cleanup remains an explicit debt item. The test module marks the currently untyped research package import as ignored for mypy.
+
+### Host validation
+- Host-only CI run 1594 passed on commit `71bb2474dec3f94f3868d5ac9ad4cf441fc25f1b`: pre-commit config, editable package install, Ruff for scripts/tests, mypy for scripts/tests, registry check, all 28 tests, reproduction stub, owner-directed local Android artifact gate and local build-script shell syntax.
+- CI run: https://github.com/AssayFlux/Kinetics/actions/runs/42431967869
+- No APK/AAB build, Android runtime, emulator, Moto G54 5G, scientific engine, SciPy, RDKit or viewer test was run.
+
+### Phase status
+- R1 remains IN PROGRESS. Local APK build and later owner device campaign remain outstanding; Moto G54 5G is the selected first handset, not a verified device.
+- R2 remains implementation in progress; required integration tests, migration/recovery, encryption-at-rest integration, provenance export and real-device workflow remain incomplete.
+- R3 remains implementation in progress; independent reference validation, confidence intervals/residual diagnostics, units/model identifiability, validation records and device benchmarks remain incomplete.
+- No R1/R2/R3 phase is marked complete; no clinical/patient capability is enabled.

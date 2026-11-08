@@ -564,3 +564,19 @@ Continue R1 source-side feasibility work and prepare a reproducible local build 
 - R1 remains IN PROGRESS; SciPy, real scientific engine, RDKit/alternative, offline viewer, app runtime, SAF/lifecycle, performance and local APK build evidence remain open.
 - R2 and R3 remain NOT STARTED; their plans are prepared but their predecessor gates have not passed.
 - P0 remains blocked; no patient data or clinical features are authorized.
+
+
+## 2026-11-08 — Session 22: Host-only CI verification after workflow change
+**Phase:** Track R / R1 Android feasibility (in progress)  
+**Objective:** Verify the source-only CI workflow after removing GitHub-hosted Android builds and tests.
+
+### Validated
+- Workflow run 42428857132 on commit `aeaeee1b2f8075ce944cf1092f3d0d14c676aa70` completed successfully: https://github.com/AssayFlux/Kinetics/actions/runs/42428857132
+- Ruff passed; mypy passed with no issues in 7 source files; registry validation passed; all 11 unit tests passed.
+- Reproduction stub ran and correctly reported no registered evidence jobs.
+- The local Android build script passed `bash -n` syntax validation.
+- No APK/AAB build or Android emulator/runtime test ran in GitHub Actions.
+
+### Remaining status
+- R1 remains IN PROGRESS; the local build and remaining Android/scientific feasibility evidence are not yet available.
+- R2 and R3 remain NOT STARTED pending predecessor gates.

@@ -1,7 +1,7 @@
 """Transparent exploratory count-table normalisation and omics statistics."""
 from __future__ import annotations
 
-from math import exp, isfinite, log, log2, sqrt
+from math import exp, isfinite, log, log1p, log2, sqrt
 
 
 def _finite(values: list[float], label: str) -> None:
@@ -121,3 +121,118 @@ def cross_omics_correlation(
     if any(len(row) != sample_count for row in first + second):
         raise ValueError("All features must share the same sample order and count")
     return [[pearson(left, right) for right in second] for left in first]
+
+
+def _beta_continued_fraction(a: float, b: float, x: float) -> float:
+    """Modified Lentz continued fraction for the incomplete beta function."""
+    max_iterations, epsilon, tiny = 300, 3e-14, 1e-300
+    qab, qap, qam = a + b, a + 1.0, a - 1.0
+    c, d = 1.0, 1.0 - qab * x / qap
+    if abs(d) < tiny:
+        d = tiny
+    d = 1.0 / d
+    h = d
+    for m in range(1, max_iterations + 1):
+        m2 = 2 * m
+        aa = m * (b - m) * x / ((qam + m2) * (a + m2))
+        d = 1.0 + aa * d
+        if abs(d) < tiny:
+            d = tiny
+        c = 1.0 + aa / c
+        if abs(c) < tiny:
+            c = tiny
+        d = 1.0 / d
+        h *= d * c
+        aa = -(a + m) * (qab + m) * x / ((a + m2) * (qap + m2))
+        d = 1.0 + aa * d
+        if abs(d) < tiny:
+            d = tiny
+        c = 1.0 + aa / c
+        if abs(c) < tiny:
+            c = tiny
+        d = 1.0 / d
+        delta = d * c
+        h *= delta
+        if abs(delta - 1.0) < epsilon:
+            return h
+    raise ArithmeticError("Incomplete beta continued fraction did not converge")
+
+
+def _regularized_beta(x: float, a: float, b: float) -> float:
+    if x <= 0:
+        return 0.0
+    if x >= 1:
+        return 1.0
+    from math import lgamma
+
+    front = exp(lgamma(a + b) - lgamma(a) - lgamma(b) + a * log(x) + b * log1p(-x))
+    if x < (a + 1.0) / (a + b + 2.0):
+        return front * _beta_continued_fraction(a, b, x) / a
+    return 1.0 - front * _beta_continued_fraction(b, a, 1.0 - x) / b
+
+
+def _student_two_sided_p(statistic: float, degrees_freedom: float) -> float:
+    if degrees_freedom <= 0 or not isfinite(degrees_freedom):
+        raise ValueError("Welch degrees of freedom must be finite and positive")
+    x = degrees_freedom / (degrees_freedom + statistic * statistic)
+    return min(1.0, max(0.0, _regularized_beta(x, degrees_freedom / 2.0, 0.5)))
+
+
+def welch_differential_expression(
+    values: list[list[float]], group_a: list[int], group_b: list[int], *,
+    feature_ids: list[str] | None = None,
+) -> list[dict[str, float | str]]:
+    """Exploratory two-group Welch tests on pre-normalized/log-scale feature values.
+
+    Rows are features and columns are independent biological samples. This function
+    does not normalize counts, model covariates/batches, or correct for study design.
+    Benjamini-Hochberg q-values are returned across the supplied feature family.
+    """
+    if not values or not values[0] or not group_a or not group_b:
+        raise ValueError("Feature matrix and both sample groups must be non-empty")
+    width = len(values[0])
+    if any(len(row) != width for row in values):
+        raise ValueError("Feature matrix must be rectangular")
+    if len(group_a) < 2 or len(group_b) < 2:
+        raise ValueError("Welch testing requires at least two samples per group")
+    indices = group_a + group_b
+    if len(set(indices)) != len(indices) or any(index < 0 or index >= width for index in indices):
+        raise ValueError("Sample indices must be unique, disjoint and within matrix bounds")
+    if feature_ids is None:
+        feature_ids = [str(index) for index in range(len(values))]
+    if len(feature_ids) != len(values) or len(set(feature_ids)) != len(feature_ids):
+        raise ValueError("Feature identifiers must be unique and match matrix rows")
+    _finite([value for row in values for value in row], "Differential-expression values")
+
+    raw: list[dict[str, float | str]] = []
+    for index, row in enumerate(values):
+        left = [row[i] for i in group_a]
+        right = [row[i] for i in group_b]
+        mean_a, mean_b = sum(left) / len(left), sum(right) / len(right)
+        var_a = sum((x - mean_a) ** 2 for x in left) / (len(left) - 1)
+        var_b = sum((x - mean_b) ** 2 for x in right) / (len(right) - 1)
+        term_a, term_b = var_a / len(left), var_b / len(right)
+        standard_error = sqrt(term_a + term_b)
+        difference = mean_a - mean_b
+        if standard_error == 0:
+            statistic, p_value = (0.0, 1.0) if difference == 0 else (float("inf"), 0.0)
+        else:
+            statistic = difference / standard_error
+            denominator = term_a * term_a / (len(left) - 1) + term_b * term_b / (len(right) - 1)
+            degrees = (term_a + term_b) ** 2 / denominator
+            p_value = _student_two_sided_p(abs(statistic), degrees)
+        raw.append({
+            "feature_id": feature_ids[index], "mean_group_a": mean_a,
+            "mean_group_b": mean_b, "difference": difference,
+            "welch_t": statistic, "p_value": p_value, "q_value": 1.0,
+        })
+
+    order = sorted(range(len(raw)), key=lambda i: float(raw[i]["p_value"]))
+    running = 1.0
+    count = len(raw)
+    for rank_index in range(count - 1, -1, -1):
+        position = order[rank_index]
+        adjusted = min(1.0, float(raw[position]["p_value"]) * count / (rank_index + 1))
+        running = min(running, adjusted)
+        raw[position]["q_value"] = running
+    return raw

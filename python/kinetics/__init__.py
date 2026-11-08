@@ -19,7 +19,7 @@ from .kinetics import (
 from .molecular import primer_properties, scan_spcas9_ngg
 from .omics import (
     clr_transform, cpm, cross_omics_correlation, logistic_growth,
-    log2_fold_change, pearson, shannon_diversity, simpson_diversity,
+    log2_fold_change, pearson, shannon_diversity, simpson_diversity,\n    welch_differential_expression,
 )
 from .phylo import Node, leaf_names, parse_newick, patristic_distance, upgma
 from .protein import protein_descriptors, theoretical_pi
@@ -42,5 +42,5 @@ __all__ = [
     "protein_descriptors", "reverse_complement", "rmsd", "scan_spcas9_ngg",
     "sequence_statistics", "shannon_diversity", "trim_fastq_ends", "simpson_diversity",
     "substructure_match", "tanimoto", "theoretical_pi", "transcribe", "upgma",
-    "validate_gene_catalog",
+    "validate_gene_catalog", "welch_differential_expression",
 ]

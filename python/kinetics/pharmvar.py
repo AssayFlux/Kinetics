@@ -112,7 +112,7 @@ def parse_pharmvar_tsv(
                       if normalize(candidate) in columns), None)
         if found is None:
             raise ValueError(f"PharmVar TSV is missing required {field_name} column")
-        selected[key] = found
+        selected[field_name] = found
 
     grouped: dict[tuple[str, str, str], list[PharmVarVariant]] = {}
     reference_groups: set[tuple[str, str, str]] = set()
@@ -126,7 +126,7 @@ def parse_pharmvar_tsv(
         ref = (row.get(selected["ref"]) or "").strip()
         alt = (row.get(selected["alt"]) or "").strip()
         if ref.upper() == "REFERENCE" and alt == ".":
-            if group_key in grouped and grouped[key]:
+            if group_key in grouped and grouped[group_key]:
                 raise ValueError(f"PharmVar TSV line {line_number}: reference sentinel conflicts with variants")
             if group_key in reference_groups:
                 raise ValueError(f"PharmVar TSV line {line_number}: duplicate reference sentinel")

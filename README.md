@@ -9,6 +9,7 @@ Kinetics is an offline-first, Android-native scientific workbench under active d
 - [SESSION_LOG.md](SESSION_LOG.md) — evidence-based session history.
 - [docs/origin/KINETICS_MASTER.md](docs/origin/KINETICS_MASTER.md) — historical master specification.
 - [Track S discovery and design roadmap](docs/track-s/discovery-and-design-roadmap.md) — unknown-sequence analysis, genome annotation, genetic-code investigation and protein design.
+- [Owner UI master-prompt addendum](docs/ui/owner-master-prompt-addendum.md) — additive motif, cultural-respect, contrast, motion, accessibility and screen-composition requirements; existing master/decisions remain authoritative.
 
 ## Current status
 - R0 foundations are owner-accepted and complete. R1–R10 remain in progress; none is represented as complete. Source implementation is reported separately from scientific validation and exit evidence.

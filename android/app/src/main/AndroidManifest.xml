@@ -5,7 +5,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="false"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
-        <activity
+        <activity android:windowSoftInputMode="adjustResize"
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

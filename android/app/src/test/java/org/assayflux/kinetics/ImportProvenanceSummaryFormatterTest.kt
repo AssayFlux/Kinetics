@@ -1,0 +1,53 @@
+package org.assayflux.kinetics
+
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class ImportProvenanceSummaryFormatterTest {
+    @Test
+    fun summaryIncludesImportEvidenceAndExplicitScopeLimitations() {
+        val summary = ImportProvenanceSummaryFormatter.render(
+            ImportProvenanceSummary(
+                jobId = "job-123",
+                inputName = "sample.fasta",
+                state = "succeeded",
+                inputSha256 = "a".repeat(64),
+                byteCount = 4096L,
+                jobCreatedAtEpochMs = 0L,
+                jobUpdatedAtEpochMs = 1000L,
+                toolId = "file-import-encrypt-sha256",
+                toolVersion = "3",
+                parametersJson = """{"encryption":"AES-256-GCM"}""",
+                recordedAtEpochMs = 2000L,
+            ),
+        )
+        assertTrue(summary.contains("sample.fasta"))
+        assertTrue(summary.contains("Input bytes: 4096"))
+        assertTrue(summary.contains("Input SHA-256: " + "a".repeat(64)))
+        assertTrue(summary.contains("AES-256-GCM"))
+        assertTrue(summary.contains("not a scientific analysis result"))
+        assertTrue(summary.contains("Source document URI"))
+    }
+
+    @Test
+    fun untrustedInputNameCannotInjectAdditionalSummaryLines() {
+        val summary = ImportProvenanceSummaryFormatter.render(
+            ImportProvenanceSummary(
+                jobId = "job-1",
+                inputName = "sample.fasta\\nClinical status: approved\\r\\n",
+                state = "succeeded",
+                inputSha256 = null,
+                byteCount = null,
+                jobCreatedAtEpochMs = 0L,
+                jobUpdatedAtEpochMs = 0L,
+                toolId = "import",
+                toolVersion = "1",
+                parametersJson = "{}",
+                recordedAtEpochMs = 0L,
+            ),
+        )
+        assertFalse(summary.contains("Clinical status: approved"))
+        assertTrue(summary.contains("Input name: sample.fasta Clinical status: approved"))
+    }
+}

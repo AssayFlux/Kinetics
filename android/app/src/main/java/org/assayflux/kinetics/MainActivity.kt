@@ -86,6 +86,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
     val scope = rememberCoroutineScope()
     var pendingExportJob by remember { mutableStateOf<String?>(null) }
     var pendingProvenanceExportJob by remember { mutableStateOf<String?>(null) }
+    var pendingProvenanceSummaryJob by remember { mutableStateOf<String?>(null) }
     val exportPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/octet-stream"),
     ) { uri ->
@@ -160,6 +161,44 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
                             "Provenance export failed: $detail. The incomplete destination was removed."
                         } else {
                             "Provenance export failed: $detail. The destination may be partial; delete it manually before retrying."
+                        }
+                    },
+                )
+            }
+        }
+    }
+
+    val provenanceSummaryPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("text/plain"),
+    ) { uri ->
+        val jobId = pendingProvenanceSummaryJob
+        pendingProvenanceSummaryJob = null
+        if (uri != null && jobId != null) {
+            scope.launch {
+                notice = "Exporting human-readable provenance summary..."
+                val result = withContext(Dispatchers.IO) {
+                    runCatching {
+                        val summary = store.provenanceSummary(jobId)
+                            ?: error("No provenance record exists for this job")
+                        val output = activity.contentResolver.openOutputStream(uri, "wt")
+                            ?: error("Selected summary destination could not be opened")
+                        output.use { stream ->
+                            stream.write(summary.toByteArray(Charsets.UTF_8))
+                            stream.flush()
+                        }
+                    }
+                }
+                notice = result.fold(
+                    { "Human-readable provenance summary exported. Source URI and input contents are excluded." },
+                    { error ->
+                        val removed = runCatching {
+                            android.provider.DocumentsContract.deleteDocument(activity.contentResolver, uri)
+                        }.getOrDefault(false)
+                        val detail = error.message ?: error.javaClass.simpleName
+                        if (removed) {
+                            "Summary export failed: $detail. The incomplete destination was removed."
+                        } else {
+                            "Summary export failed: $detail. The destination may be partial; delete it manually before retrying."
                         }
                     },
                 )
@@ -323,6 +362,10 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
         onExportProvenance = { job ->
             pendingProvenanceExportJob = job.id
             provenanceExportPicker.launch("kinetics-provenance-${job.id}.json")
+        },
+        onExportProvenanceSummary = { job ->
+            pendingProvenanceSummaryJob = job.id
+            provenanceSummaryPicker.launch("kinetics-provenance-${job.id}.txt")
         },
         themeFamily = themeFamily,
         onThemeFamilyChange = { selected ->

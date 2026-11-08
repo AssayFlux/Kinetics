@@ -414,6 +414,31 @@ class ResearchStore(context: Context) :
         }
     }
 
+    fun provenanceSummary(id: String): String? {
+        val record = readableDatabase.rawQuery(
+            """SELECT j.id,j.input_name,j.state,j.sha256,j.byte_count,j.created_at,j.updated_at,
+                      p.tool_id,p.tool_version,p.parameters_json,p.created_at
+               FROM jobs j INNER JOIN provenance p ON p.job_id=j.id
+               WHERE j.id=?""".trimIndent(),
+            arrayOf(id),
+        ).use { cursor ->
+            if (!cursor.moveToFirst()) null else ImportProvenanceSummary(
+                jobId = cursor.getString(0),
+                inputName = cursor.getString(1),
+                state = cursor.getString(2),
+                inputSha256 = if (cursor.isNull(3)) null else cursor.getString(3),
+                byteCount = if (cursor.isNull(4)) null else cursor.getLong(4),
+                jobCreatedAtEpochMs = cursor.getLong(5),
+                jobUpdatedAtEpochMs = cursor.getLong(6),
+                toolId = cursor.getString(7),
+                toolVersion = cursor.getString(8),
+                parametersJson = cursor.getString(9),
+                recordedAtEpochMs = cursor.getLong(10),
+            )
+        } ?: return null
+        return ImportProvenanceSummaryFormatter.render(record)
+    }
+
     fun recentJobs(limit: Int = 30): List<ResearchJob> {
         val result = mutableListOf<ResearchJob>()
         readableDatabase.rawQuery(

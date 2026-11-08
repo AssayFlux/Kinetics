@@ -120,7 +120,7 @@ def test_kinetics_rejects_non_finite_inputs(bad: float) -> None:
 
 def test_fit_reports_undefined_r_squared_and_information_criteria() -> None:
     result = fit_michaelis_menten(
-        [1, 2, 3], [5, 5, 5], vmax_bounds=(5, 50), km_bounds=(0.1, 10),
+        [1, 1, 1], [5, 5, 5], vmax_bounds=(10, 20), km_bounds=(1, 2),
     )
     assert result["r_squared"] is None
     assert result["aic"] is None

@@ -45,3 +45,16 @@ def test_mapping_validates_sequence_and_chain() -> None:
         map_exact_chain_sequence("ABZ", [atom(1, "ALA", 1)], chain_id="A")
     with pytest.raises(ValueError, match="chain_id"):
         map_exact_chain_sequence("A", [atom(1, "ALA", 1)], chain_id="")
+
+
+def test_numbering_gaps_and_conflicting_residue_identity_abstain() -> None:
+    gap = map_exact_chain_sequence(
+        "AGSV", [atom(1, "ALA", 10), atom(2, "GLY", 12)], chain_id="A",
+    )
+    assert gap["status"] == "noncontiguous_structure_numbering"
+    assert gap["mapped_residues"] == []
+
+    with pytest.raises(ValueError, match="Conflicting residue identity"):
+        map_exact_chain_sequence(
+            "A", [atom(1, "ALA", 10), atom(2, "GLY", 10)], chain_id="A",
+        )

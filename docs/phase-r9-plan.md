@@ -29,3 +29,8 @@ Added a versioned JSON star-allele definition schema with mandatory source name/
 ### PGx definition foundation
 
 Versioned allele-definition JSON ingestion now requires a pinned source release, source URL, SHA-256, license and genome build. Matching requires an explicitly complete and already phased haplotype. No authoritative PGx content is bundled; gene coverage is not comprehensive and diplotype/phenotype translation is not implemented.
+
+
+### PharmVar source adapter
+
+Added a parser for PharmVar's documented nine-column TSV haplotype/variant format. It verifies the original TSV byte-stream SHA-256, requires an exact pinned database release, preserves RefSeqGene/LRG/chromosome reference accessions and 1-based sequence coordinates, handles the explicit REFERENCE/*1 sentinel and matches only exact, complete, already phased variant sets. It does not remap locus coordinates to GRCh37/GRCh38, infer phase/CNV/hybrid alleles or translate diplotypes/phenotypes. No bulk PharmVar dataset has yet been downloaded or bundled.

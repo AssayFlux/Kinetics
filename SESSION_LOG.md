@@ -924,3 +924,8 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R2 explicit local deletion flow
 - Added a user-confirmed delete action for terminal imports. It removes the finalized encrypted KDAT, encrypted partial staging, legacy plaintext staging (if present), provenance row and job row. Canonical directory checks constrain deletions to app-private research storage.
 - The UI explicitly warns that exported copies cannot be recalled and flash-storage secure erasure is not guaranteed. No Android build/tests were run.
+
+
+### R9 PharmVar TSV source adapter increment
+- Added a release- and byte-checksum-pinned importer for PharmVar's documented nine-column TSV haplotype/variant format. It preserves the source reference accession/coordinate system, handles the REFERENCE sentinel and matches only exact complete already-phased haplotype variant sets.
+- Added parser/matcher test source and exported APIs. No live bulk PharmVar dataset was downloaded or bundled; no CYP2D6 CNV/hybrid, structural variation, phasing, diplotype or phenotype translation is claimed. Current PharmVar version and license are documented with source links; terms/release must be rechecked at every import. No tests were run.

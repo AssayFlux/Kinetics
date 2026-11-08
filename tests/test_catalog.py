@@ -106,3 +106,47 @@ def test_pgx_definition_pack_rejects_release_mismatch_and_unphased_call() -> Non
         call_complete=True,
     )
     assert result.status == "no_call_unphased"
+
+
+
+def test_pharmvar_tsv_import_is_release_and_checksum_pinned() -> None:
+    import hashlib
+
+    from kinetics.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
+
+    tsv = (
+        "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"
+        "Variant Stop\tReference Allele\tVariant Allele\tVariant Type\n"
+        "CYP2C19*17\tCYP2C19\trs12248560\tNG_008384.3\t991\t991\tC\tT\tsubstitution\n"
+        "CYP2C19*1\tCYP2C19\t.\tNG_008384.3\t.\t.\tREFERENCE\t.\treference\n"
+    )
+    digest = hashlib.sha256(tsv.encode("utf-8")).hexdigest()
+    definitions = parse_pharmvar_tsv(
+        tsv, source_release="6.2.29", expected_release="6.2.29",
+        source_url="https://www.pharmvar.org/download", source_sha256=digest,
+        license_id="CC-BY-SA-4.0",
+    )
+    assert len(definitions) == 2
+    variant = next(iter(definitions[0].variants))
+    match = match_pharmvar_haplotype(
+        "CYP2C19", "NG_008384.3", [variant], definitions,
+        phase_confirmed=True, call_complete=True,
+    )
+    assert match.status == "matched"
+    assert match.haplotype == "CYP2C19*17"
+
+
+def test_pharmvar_tsv_rejects_checksum_and_incomplete_phase() -> None:
+    from kinetics.pharmvar import parse_pharmvar_tsv
+
+    tsv = (
+        "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"
+        "Variant Stop\tReference Allele\tVariant Allele\tVariant Type\n"
+        "GENE*1\tGENE\t.\tNG_000001.1\t.\t.\tREFERENCE\t.\treference\n"
+    )
+    with pytest.raises(ValueError, match="SHA-256"):
+        parse_pharmvar_tsv(
+            tsv, source_release="6.2.29", expected_release="6.2.29",
+            source_url="https://www.pharmvar.org/download", source_sha256="0" * 64,
+            license_id="CC-BY-SA-4.0",
+        )

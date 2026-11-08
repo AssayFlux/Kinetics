@@ -28,6 +28,7 @@ from .omics import (
     welch_differential_expression,
 )
 from .phylo import Node, leaf_names, jukes_cantor_distance, neighbor_joining, neighbor_joining_from_alignment, parse_newick, patristic_distance, to_newick, upgma
+from .pharmvar import (PharmVarAlleleDefinition, PharmVarMatch, PharmVarVariant, match_pharmvar_haplotype, parse_pharmvar_tsv)
 from .pgx import AlleleMatch, StarAlleleDefinition, VariantKey, match_phased_haplotype, parse_star_allele_definitions
 from .protein import protein_descriptors, theoretical_pi
 from .sequence import (
@@ -39,7 +40,7 @@ from .structure import (
 )
 
 __all__ = [
-    "analyze_molblock", "analyze_smiles", "morgan_tanimoto", "rdkit_backend_info", "AlleleMatch", "Atom", "GeneEntry", "StarAlleleDefinition", "VariantKey", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
+    "analyze_molblock", "analyze_smiles", "morgan_tanimoto", "rdkit_backend_info", "PharmVarAlleleDefinition", "PharmVarMatch", "PharmVarVariant", "match_pharmvar_haplotype", "parse_pharmvar_tsv", "AlleleMatch", "Atom", "GeneEntry", "StarAlleleDefinition", "VariantKey", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate",

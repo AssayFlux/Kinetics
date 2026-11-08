@@ -141,6 +141,11 @@ tools:
     status: implemented
     implementation: python/kinetics/genomics_htslib.py
     evidence_level: none
+  - id: pgx.pharmvar_tsv
+    name: Release-pinned PharmVar TSV haplotype definitions with exact-reference matching
+    status: implemented
+    implementation: python/kinetics/pharmvar.py
+    evidence_level: none
 engines: []
 data_packs: []
 domains: []

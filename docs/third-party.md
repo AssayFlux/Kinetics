@@ -84,3 +84,8 @@ An optional source adapter exists at python/kinetics/chemistry_rdkit.py. It impo
 ## HTSlib/pysam adapter status
 
 A lazy host-side adapter at python/kinetics/genomics_htslib.py supports streaming BAM/CRAM through pysam/HTSlib. CRAM requires a local reference FASTA; remote reference retrieval is not enabled. pysam/HTSlib is not an Android dependency. Before adoption, pin exact pysam/HTSlib releases, audit bundled htslib/zlib and platform-specific licenses, verify native arm64 and 16 KB compatibility, and measure binary footprint. No Android bundling approval is implied.
+
+
+## PharmVar data source review
+
+PharmVar documents bulk database downloads containing per-gene haplotype TSV, FASTA and VCF files. Its TSV records are one row per haplotype/variant and coordinates are relative to the stated reference sequence; reference/*1 alleles use a special REFERENCE sentinel. The PharmVar data source is identified in HL7 terminology as CC BY-SA 4.0; retain attribution and ShareAlike terms in any separately distributed PharmVar data pack. Current PharmVar site version observed during this review: 6.2.29 (last updated 2026-09-22). Structural rearrangements and large deletions are not included in the downloadable allele definitions described on the download page. Recheck the live source release, terms and gene-specific change logs before each import.

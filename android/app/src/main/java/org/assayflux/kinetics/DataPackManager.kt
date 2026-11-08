@@ -32,7 +32,8 @@ class DataPackManager(context: Context) {
             sizeBytes = value.getLong("size_bytes"),
         )
         require(manifest.id.matches(Regex("[A-Za-z0-9._-]{1,80}"))) { "Invalid pack id" }
-        require(manifest.version.isNotBlank() && manifest.source.startsWith("https://"))
+        require(manifest.version.matches(Regex("[A-Za-z0-9._-]{1,80}"))) { "Invalid pack version" }
+        require(manifest.source.startsWith("https://"))
         require(manifest.license.isNotBlank()) { "License metadata is mandatory" }
         require(manifest.sha256.matches(Regex("[a-f0-9]{64}"))) { "Invalid SHA-256" }
         require(manifest.sizeBytes in 1..maximumPackBytes) { "Pack size outside permitted range" }

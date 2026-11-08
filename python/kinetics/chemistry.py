@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import hashlib
 from collections import Counter, defaultdict
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from math import isfinite
 
 ATOMIC_MASS = {
@@ -375,7 +375,7 @@ def iter_sdf_records(text: str) -> Iterator[dict[str, object]]:
 
 
 def iter_sdf_stream(
-    lines: Iterator[str] | object,
+    lines: Iterable[str],
     *,
     max_records: int = 100_000,
     max_record_chars: int = 16 * 1024 * 1024,
@@ -388,8 +388,6 @@ def iter_sdf_stream(
     The character budgets are conservative text-size bounds, not byte-accurate
     memory measurements. V2000/V3000 parser limitations still apply.
     """
-    from collections.abc import Iterable
-
     for name, limit in (
         ("max_records", max_records),
         ("max_record_chars", max_record_chars),

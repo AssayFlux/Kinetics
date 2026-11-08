@@ -20,3 +20,12 @@
 - Treat these as the primary visual references when refining dashboard, authentication/onboarding and shared components. Existing Obsidian Cyan / Light / Neon token families are implementation starting points, not a substitute for the owner's reference language.
 - Extract exact visual properties only after inspecting the images; then record measurable tokens and compare actual app screenshots against both references. Maintain accessibility, adaptive-window, offline-first and brand-asset requirements.
 - Decision: D-013 in `DECISIONS.md`. Visual comparison evidence remains pending.
+
+
+## Owner-confirmed visual direction — 2026-11-08
+- Default: Light Classic. The pastel colours in the dashboard reference are placeholders and must not be copied.
+- Preserve the reference's layout language: rounded large hero/container, central horizontal carousel with partially visible adjacent cards, simple top controls, pagination dots, spacious stacked cards and generous whitespace.
+- Colour direction: restrained classic scientific palette (light neutral canvas, white surfaces, deep navy/slate text, restrained teal/blue accents). Exact tokens remain pending contrast checks and owner screenshot review.
+- Typography proposal: Allura only for a limited calligraphic brand signature/wordmark; Cormorant Garamond for selected display headings; Inter for all functional/body UI; JetBrains Mono for scientific data and code. Script fonts must never be used for dense scientific content or controls.
+- Font binaries remain unbundled until exact licence, version, glyph coverage, weights, file size and rendering are verified. Use accessible sans-serif fallbacks.
+- D-014 records the owner decision. This direction supersedes the previous dark-first default, but dark theme availability may remain.

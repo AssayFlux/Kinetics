@@ -145,3 +145,16 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 - Supersedes: D-010/D-011 only for the default visual theme and typography direction; it does not remove the option to offer dark themes. D-013's owner-supplied layout references remain primary.
 - Approver: Project owner, explicit selection/request in chat on 2026-11-08.
 - Evidence: Owner dashboard reference image and chat instruction; login reference and screenshot comparison remain pending.
+
+
+## D-015 — Owner-approved Kinetics Light Classic visual system (2026-11-08)
+- Context: Owner reviewed the six-screen visual concept (splash, login, dashboard carousel, navigation drawer, profile and appearance) and explicitly approved it with “Love it” and directed that the new design be documented and implemented carefully.
+- Choice: Adopt the visual system in `docs/ui/kinetics-visual-design-system.md` as the current product UI authority. Light Classic is the default: warm ivory/cream, deep maroon, restrained gold and peacock teal; retain a coherent Dark Classic and System appearance. Preserve the reference composition: rounded surfaces, prominent central horizontal workspace carousel with adjacent cards peeking, pagination, generous spacing and stacked real-data cards. Use culturally respectful, attributed motifs only after their dedicated evidence gates.
+- Typography roles: Great Vibes (limited brand-script candidate only if no existing logo wordmark), Cormorant Garamond (display headings), IBM Plex Sans (functional UI/body), IBM Plex Mono (scientific data/code); Indic-script fallback must be verified. Font binaries remain subject to exact version/licence/glyph/size/offline verification before bundling.
+- Constraints: Existing Compose architecture, capability registry, real-data-only UI, owner logo bytes, accessibility, privacy, security, offline-first policy, research-only public mode and all R/S/I/P gates remain in force. The generated showcase is concept art, not implementation or screenshot evidence.
+- Supersedes: D-009's unresolved three-proposal visual gate; D-010/D-011's dark-futuristic/Obsidian-Cyan default and neon-first direction; D-014's Light Classic navy/teal palette and Allura/Inter/JetBrains Mono typography proposal where inconsistent with D-015. D-012 responsive shell strategy and D-013 owner layout references remain active where compatible. Earlier entries remain in the log for audit history, not as current UI instructions.
+- Approver: Project owner, explicit visual approval and implementation instruction in chat on 2026-11-08.
+- Evidence: Owner-approved concept review in project conversation; canonical specification at `docs/ui/kinetics-visual-design-system.md`. Implementation, screenshots, contrast and device validation remain open.
+
+## UI decision supersession register
+The following historical decisions are retained for auditability but are no longer active design instructions: D-009 (three-proposal visual gate), D-010 (dark-first preference), D-011 (Obsidian Cyan default), and D-014 (previous Light Classic palette/type proposal). D-015 is the current visual authority. D-012 adaptive navigation and D-013 owner layout-reference decisions remain active unless specifically contradicted by D-015.

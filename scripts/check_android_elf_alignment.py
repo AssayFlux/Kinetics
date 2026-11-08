@@ -17,7 +17,7 @@ PROGRAM_HEADER_SIZE = 56
 
 
 def inspect_elf(name: str, payload: bytes) -> dict[str, object]:
-    if len(payload) < ELF_HEADER_SIZE or payload[:4] != b"\\x7fELF":
+    if len(payload) < ELF_HEADER_SIZE or payload[:4] != b"\x7fELF":
         raise ValueError(f"{name}: truncated or invalid ELF header")
     if payload[4] != 2 or payload[5] != 1 or payload[6] != 1:
         raise ValueError(f"{name}: expected ELF64 little-endian version 1")

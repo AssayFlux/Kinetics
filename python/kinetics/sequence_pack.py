@@ -33,7 +33,10 @@ def _read_manifest(path: Path, *, max_bytes: int) -> dict[str, Any]:
     if not stat.S_ISREG(metadata.st_mode) or metadata.st_size > max_bytes:
         raise ValueError("Reference manifest must be a regular file within the size limit")
     try:
-        raw = path.read_bytes()
+        with path.open("rb") as handle:
+            raw = handle.read(max_bytes + 1)
+        if len(raw) > max_bytes:
+            raise ValueError("Reference manifest exceeds max_manifest_bytes")
         value = json.loads(raw.decode("utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise ValueError(f"Invalid reference manifest: {exc}") from exc

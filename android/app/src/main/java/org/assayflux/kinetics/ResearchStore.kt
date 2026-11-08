@@ -20,6 +20,24 @@ class ResearchStore(context: Context) :
 
     private val appContext = context.applicationContext
 
+    init {
+        cleanupStalePlaintextCache()
+    }
+
+    /**
+     * Recover plaintext analysis temporaries left by abrupt process death.
+     * Only this app's uniquely-prefixed cache files older than 24 hours are eligible.
+     */
+    private fun cleanupStalePlaintextCache() {
+        val cutoff = System.currentTimeMillis() - PLAINTEXT_CACHE_MAX_AGE_MS
+        appContext.cacheDir.listFiles()
+            ?.filter { file ->
+                file.isFile && file.name.startsWith(PLAINTEXT_CACHE_PREFIX) &&
+                    file.lastModified() in 1 until cutoff
+            }
+            ?.forEach { it.delete() }
+    }
+
     override fun onConfigure(db: SQLiteDatabase) {
         super.onConfigure(db)
         db.setForeignKeyConstraintsEnabled(true)
@@ -190,5 +208,7 @@ class ResearchStore(context: Context) :
 
     companion object {
         private const val DATABASE_VERSION = 2
+        private const val PLAINTEXT_CACHE_PREFIX = "kinetics-analysis-"
+        private const val PLAINTEXT_CACHE_MAX_AGE_MS = 24L * 60L * 60L * 1000L
     }
 }

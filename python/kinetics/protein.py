@@ -1,7 +1,6 @@
 """Protein sequence descriptors with explicit assumptions and ambiguity handling."""
 from __future__ import annotations
 from collections import Counter
-from math import log10
 from .sequence import PROTEIN, _normalise, validate_sequence
 
 AA_MASS = {"A":71.0788,"R":156.1875,"N":114.1038,"D":115.0886,"C":103.1388,"E":129.1155,

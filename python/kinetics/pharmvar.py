@@ -8,6 +8,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import io
+import re
 from dataclasses import dataclass
 from typing import Iterable
 
@@ -58,7 +59,7 @@ class PharmVarMatch:
 
 
 def parse_pharmvar_tsv(
-    document: str, *, source_release: str, source_url: str,
+    document: str | bytes, *, source_release: str, source_url: str,
     source_sha256: str, license_id: str,
     expected_release: str,
 ) -> list[PharmVarAlleleDefinition]:
@@ -67,11 +68,15 @@ def parse_pharmvar_tsv(
         raise ValueError("PharmVar release does not match the pinned expected release")
     if not source_url.startswith("https://") or not license_id.strip():
         raise ValueError("PharmVar source HTTPS URL and license identifier are mandatory")
-    actual_hash = hashlib.sha256(document.encode("utf-8")).hexdigest()
+    if not re.fullmatch(r"[a-fA-F0-9]{64}", source_sha256):
+        raise ValueError("PharmVar source SHA-256 must be 64 hexadecimal characters")
+    raw_bytes = document if isinstance(document, bytes) else document.encode("utf-8")
+    actual_hash = hashlib.sha256(raw_bytes).hexdigest()
     if actual_hash.lower() != source_sha256.lower():
         raise ValueError("PharmVar TSV SHA-256 does not match the pinned source checksum")
+    text = raw_bytes.decode("utf-8-sig", errors="strict")
 
-    lines = [line for line in document.splitlines() if line.strip() and not line.lstrip().startswith("#")]
+    lines = [line for line in text.splitlines() if line.strip() and not line.lstrip().startswith("#")]
     if len(lines) < 2:
         raise ValueError("PharmVar TSV must contain a header and at least one data row")
     reader = csv.DictReader(io.StringIO("\n".join(lines)), delimiter="\t")

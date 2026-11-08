@@ -7,6 +7,9 @@ cd "$ROOT_DIR"
 ANDROID_DIR="$ROOT_DIR/android"
 CHAQUOPY_VERSION="17.2.0"
 CHAQUOPY_COMMIT="1f63c93d8beaf7062fbe51888ab9235475df3bb8"
+BIOPYTHON_VERSION="1.88"
+BIOPYTHON_COMMIT="d7e4b8b19399668b09442a5b35765d9186b5f665"
+BIOPYTHON_DIR="${BIOPYTHON_DIR:-$HOME/.cache/kinetics/biopython-$BIOPYTHON_VERSION}"
 GRADLE_VERSION="8.13"
 GRADLE_SHA256="20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78"
 GRADLE_CACHE_DIR="${GRADLE_CACHE_DIR:-$HOME/.cache/kinetics/gradle-$GRADLE_VERSION}"
@@ -107,9 +110,31 @@ curl --fail --location --retry 3 \
   "https://chaquo.com/pypi-13.1/numpy/$NUMPY_WHEEL" \
   --output "server/pypi/dist/numpy/$NUMPY_WHEEL"
 
-echo "[3/6] Cross-build Biopython 1.88 Android arm64 wheel"
+echo "[3/6] Cross-build pinned Biopython $BIOPYTHON_VERSION Android arm64 wheel"
+if [[ ! -d "$BIOPYTHON_DIR/.git" ]]; then
+  mkdir -p "$(dirname "$BIOPYTHON_DIR")"
+  git clone --filter=blob:none --no-checkout https://github.com/biopython/biopython.git "$BIOPYTHON_DIR"
+fi
+git -C "$BIOPYTHON_DIR" fetch --depth 1 origin "$BIOPYTHON_COMMIT"
+git -C "$BIOPYTHON_DIR" checkout --detach "$BIOPYTHON_COMMIT"
+[[ "$(git -C "$BIOPYTHON_DIR" rev-parse HEAD)" == "$BIOPYTHON_COMMIT" ]] || fail "Biopython source revision differs from the pinned commit."
+BIOPYTHON_SOURCE_DIR="$BIOPYTHON_DIR/source"
+rm -rf "$BIOPYTHON_SOURCE_DIR"
+mkdir -p "$BIOPYTHON_SOURCE_DIR"
+git -C "$BIOPYTHON_DIR" archive "$BIOPYTHON_COMMIT" | tar -x -C "$BIOPYTHON_SOURCE_DIR"
+BIOPYTHON_RECIPE="$CHAQUOPY_DIR/server/pypi/kinetics-biopython-recipe"
+rm -rf "$BIOPYTHON_RECIPE"
+mkdir -p "$BIOPYTHON_RECIPE"
+cp "$ANDROID_DIR/biopython-wheel/meta.yaml" "$BIOPYTHON_RECIPE/meta.yaml"
+python - "$BIOPYTHON_RECIPE/meta.yaml" "$BIOPYTHON_SOURCE_DIR" <<'PY'
+import json, sys
+from pathlib import Path
+recipe = Path(sys.argv[1])
+source = json.dumps(str(Path(sys.argv[2]).resolve()))
+recipe.write_text(recipe.read_text() + f"\nsource:\n  path: {source}\n")
+PY
 cd "$CHAQUOPY_DIR/server/pypi"
-python build-wheel.py --python 3.11 --abi arm64-v8a "$ANDROID_DIR/biopython-wheel"
+python build-wheel.py --python 3.11 --abi arm64-v8a "$BIOPYTHON_RECIPE"
 mkdir -p "$ANDROID_DIR/app/libs/python-wheels"
 cp dist/biopython/*.whl "$ANDROID_DIR/app/libs/python-wheels/"
 

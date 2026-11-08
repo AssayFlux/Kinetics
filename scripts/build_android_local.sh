@@ -23,14 +23,14 @@ need rustup
 need gradle
 need patchelf
 need patch
-need patch
 
 [[ -n "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}" ]] || fail "Set ANDROID_HOME or ANDROID_SDK_ROOT."
-SDK_ROOT="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 [[ -d "$SDK_ROOT/ndk/$NDK_VERSION" ]] || fail "Install Android NDK $NDK_VERSION under $SDK_ROOT/ndk."
 [[ -x "$SDK_ROOT/build-tools/$BUILD_TOOLS_VERSION/zipalign" ]] || fail "Install Android build-tools $BUILD_TOOLS_VERSION."
 [[ -d "$SDK_ROOT/platforms/android-36" ]] || fail "Install Android SDK platform android-36."
 [[ -d "$SDK_ROOT/cmake/3.22.1" ]] || fail "Install Android CMake 3.22.1."
+python -c 'import sys; assert sys.version_info[:2] == (3, 11), sys.version' || fail "Use Python 3.11."
 java -version 2>&1 | grep -q '17\.' || fail "Use JDK 17."
 gradle --version | grep -q 'Gradle 8.13' || fail "Use Gradle 8.13."
 

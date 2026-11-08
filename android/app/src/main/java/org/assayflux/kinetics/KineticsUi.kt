@@ -223,7 +223,7 @@ private fun HeroCard(onImport: () -> Unit, themeFamily: String) {
                 Spacer(Modifier.width(10.dp))
                 Text("KINETICS  /  RESEARCH OS", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
                 Spacer(Modifier.weight(1f))
-                AssistChip(onClick = {}, label = { Text("LOCAL FIRST") })
+                InfoPill("LOCAL FIRST")
             }
             Text("Your data. Your science. Your device.", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             Text("Bring in research data and prepare a reproducible analysis workspace. Files are encrypted locally during import.",
@@ -341,7 +341,15 @@ private fun StatePill(state: String) {
         "cancel_requested" -> "STOPPING"; "failed" -> "FAILED"; "cancelled" -> "CANCELLED"
         "recovery_required" -> "RECOVERY"; else -> state.uppercase()
     }
-    AssistChip(onClick = {}, label = { Text(text, style = MaterialTheme.typography.labelSmall) })
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        shape = RoundedCornerShape(50),
+        modifier = Modifier.semantics { contentDescription = "Job status: $text" },
+    ) {
+        Text(text, Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
 }
 
 @Composable
@@ -373,7 +381,7 @@ private fun ExploreScreen(modifier: Modifier) {
                         Text(description, style = MaterialTheme.typography.bodyMedium)
                         HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = .5f))
                         Text(maturity, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        AssistChip(onClick = {}, label = { Text("Research foundations") })
+                        InfoPill("Research foundations")
                     }
                 }
             }
@@ -417,6 +425,16 @@ private fun SettingGroup(title: String, description: String, content: @Composabl
             Text(description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             content()
         }
+    }
+}
+
+
+@Composable
+private fun InfoPill(label: String) {
+    Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(50)) {
+        Text(label, Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 

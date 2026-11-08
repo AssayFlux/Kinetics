@@ -38,7 +38,7 @@ Effective 2026-11-08:
 - CI run 1471 built an arm64 debug APK/AAB, cross-compiled Rust, linked the C++17 JNI bridge, and passed static ELF 16 KB alignment and APK ZIP alignment checks. Its artifact hashes and measurements are retained in `docs/android-feasibility.md`.
 - CI run 1481 repeated the arm64 APK/AAB build and static alignment checks.
 - These records establish historical cross-build, packaging and static alignment only. They do not establish a fresh local build, Android runtime execution, physical-device compatibility, scientific-engine feasibility, cold-start or peak memory.
-- Biopython 1.88 custom arm64 wheel was built in the historical CI experiment. SciPy was not installed and remains unresolved.
+- Biopython 1.88 custom arm64 wheel was built in the historical CI experiment. Gradle now pins NDK 28.2.13676358 to match the local build script. SciPy was not installed and remains unresolved.
 - Rust/C++ JNI symbols were present in the historical APK; successful invocation on an Android device is not established.
 - Parasail, RDKit and Mol* remain evaluation candidates, not approved production dependencies.
 
@@ -53,7 +53,7 @@ D-006 sets the target at Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low-
 ## Deliverables
 
 - `docs/android-feasibility.md`: experiment matrix, historical evidence, current blockers, local build procedure and eventual owner-device runbook.
-- Minimal isolated prototypes for each R1 feasibility question; no prototype is silently promoted to production.
+- Minimal isolated prototypes for each R1 feasibility question; the app shell now exposes a manual embedded-Python and Rust/C++ JNI smoke-probe action. No prototype is silently promoted to production.
 - `docs/third-party.md`: exact dependency versions, source/license review and approval status.
 - A consolidated go/no-go matrix with feasible, infeasible, conditional or untested outcomes.
 

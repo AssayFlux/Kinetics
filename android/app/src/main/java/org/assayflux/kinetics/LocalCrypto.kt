@@ -51,10 +51,13 @@ object LocalCrypto {
         return "$context:$chunkIndex".toByteArray(Charsets.UTF_8)
     }
 
-    fun encrypt(plainText: ByteArray, associatedData: ByteArray = byteArrayOf()): ByteArray {
+    fun encrypt(
+        plainText: ByteArray, associatedData: ByteArray = byteArrayOf(),
+        createKeyIfMissing: Boolean = true,
+    ): ByteArray {
         require(plainText.size <= CHUNK_BYTES) { "AES-GCM chunk exceeds the 4 MiB limit" }
         val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.ENCRYPT_MODE, key(createIfMissing = true))
+        cipher.init(Cipher.ENCRYPT_MODE, key(createIfMissing = createKeyIfMissing))
         if (associatedData.isNotEmpty()) cipher.updateAAD(associatedData)
         return cipher.iv + cipher.doFinal(plainText)
     }
@@ -101,7 +104,10 @@ object LocalCrypto {
 
     fun appendEncryptedChunk(file: File, plainText: ByteArray, associatedData: ByteArray) {
         require(plainText.isNotEmpty()) { "Encrypted chunks cannot be empty" }
-        val payload = encrypt(plainText, associatedData)
+        val firstChunk = file.length() <= HEADER_BYTES
+        val payload = encrypt(
+            plainText, associatedData, createKeyIfMissing = firstChunk,
+        )
         RandomAccessFile(file, "rw").use { output ->
             output.seek(output.length())
             output.writeInt(payload.size)

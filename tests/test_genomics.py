@@ -56,3 +56,32 @@ def test_fastq_quality_summary_requires_explicit_supported_offset() -> None:
     assert fastq_quality_summary(["IIII"], offset=33)["mean_phred"] == 40
     with pytest.raises(ValueError):
         fastq_quality_summary(["IIII"], offset=0)
+
+
+
+def test_vcf_small_variant_normalization_checks_reference_and_left_aligns() -> None:
+    from kinetics.genomics import normalize_small_variant
+
+    # An A insertion in an A repeat is represented at the left-most valid anchor.
+    result = normalize_small_variant("chr1", 4, "A", "AA", "CAAAA")
+    assert (result["pos"], result["ref"], result["alt"]) == (1, "C", "CA")
+    assert result["reference_checked"] is True
+
+
+def test_variant_normalization_minimizes_substitution_and_rejects_bad_reference() -> None:
+    from kinetics.genomics import normalize_small_variant
+
+    result = normalize_small_variant("chr2", 10, "AC", "AT", "N" * 9 + "AC")
+    assert (result["pos"], result["ref"], result["alt"]) == (11, "C", "T")
+    with pytest.raises(ValueError, match="does not match"):
+        normalize_small_variant("chr2", 10, "AG", "AT", "N" * 9 + "AC")
+
+
+@pytest.mark.parametrize("ref,alt", [("A", "<DEL>"), ("A", "G,T"), ("N", "A")])
+def test_variant_normalization_rejects_non_literal_or_ambiguous_alleles(
+    ref: str, alt: str,
+) -> None:
+    from kinetics.genomics import normalize_small_variant
+
+    with pytest.raises(ValueError):
+        normalize_small_variant("chr1", 1, ref, alt, "ACGT")

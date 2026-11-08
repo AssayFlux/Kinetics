@@ -6,7 +6,7 @@
 - FASTA/FASTQ parsing, including wrapped FASTQ sequence and quality lines.
 - Sequence statistics, reverse complement, transcription, k-mer counting and global pairwise alignment.
 - FASTQ quality summaries and explicit-offset terminal quality trimming.
-- SAM and VCF text parsing with mandatory-field and scalar validation.
+- SAM and VCF text parsing with mandatory-field and scalar validation.\n- Reference-checked minimal/left normalization for literal biallelic A/C/G/T small variants.
 - Future: BAM/CRAM, robust VCF normalization/decomposition, adapter trimming, paired-read handling, indexed access and Rust acceleration.
 
 ## Current source
@@ -15,7 +15,7 @@ Implemented in `python/kinetics/sequence.py` and `python/kinetics/genomics.py`. 
 ## Limitations
 - No BAM/CRAM binary decoder.
 - Terminal trimming is not adapter trimming or sliding-window quality trimming.
-- VCF parsing is not left-normalization, reference validation, phasing or variant interpretation.
+- VCF parsing does not yet normalize/decompose records automatically. The separate normalizer handles only reference-checked biallelic literal A/C/G/T small variants; symbolic alleles, breakends, multi-allelic decomposition, phasing and variant interpretation remain unsupported.
 - Global alignment is not a high-throughput mapper.
 - No clinical variant interpretation.
 

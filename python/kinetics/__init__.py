@@ -11,7 +11,7 @@ from .catalog import (
 from .chemistry import (
     graph_descriptors, iter_sdf_records, parse_sdf_record, path_fingerprint, substructure_match, tanimoto,
 )
-from .genomics import SamRecord, fastq_quality_summary, parse_sam, parse_vcf
+from .genomics import (\n    SamRecord, fastq_quality_summary, normalize_small_variant, parse_sam, parse_vcf,\n)
 from .kinetics import (
     eadie_hofstee, fit_michaelis_menten, hanes_woolf, inhibition_rate,
     lineweaver_burk, michaelis_menten,
@@ -36,7 +36,7 @@ __all__ = [
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate",
     "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk",
-    "log2_fold_change", "logistic_growth", "michaelis_menten",
+    "log2_fold_change", "logistic_growth", "michaelis_menten", "normalize_small_variant",
     "needleman_wunsch", "neighbor_joining", "parse_fasta", "parse_fastq", "parse_newick",
     "parse_mmcif", "parse_pdb", "parse_sam", "parse_sdf_record", "parse_vcf",
     "patristic_distance", "path_fingerprint", "pearson", "primer_properties",

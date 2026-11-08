@@ -95,3 +95,8 @@ claims: []
 clinical_gate:
   enabled: false
   part12_evidence: []
+  - id: genomics.variant_normalization
+    name: Reference-checked left normalization for biallelic small variants
+    status: implemented
+    implementation: python/kinetics/genomics.py
+    evidence_level: none

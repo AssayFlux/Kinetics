@@ -159,3 +159,86 @@ def hanes_woolf(substrates: list[float], rates: list[float]) -> dict[str, object
         "axes": ["[S]", "[S]/v"],
         "warning": "Exploratory transform; transformed errors are not generally constant variance",
     }
+
+def bootstrap_michaelis_menten(
+    substrates: list[float], rates: list[float], *,
+    replicates: int = 200, confidence_level: float = 0.95,
+    seed: int = 0, grid_size: int = 40,
+) -> dict[str, object]:
+    """Paired nonparametric bootstrap percentile intervals for the exploratory grid fit.
+
+    Resampling assumes independent, identically distributed paired observations.
+    The same parameter search bounds are held fixed across replicates. This does not
+    address model misspecification, identifiability, measurement error or study design.
+    """
+    import random
+
+    if replicates < 100 or replicates > 10_000:
+        raise ValueError("replicates must be between 100 and 10000")
+    if not isfinite(confidence_level) or not 0.5 <= confidence_level < 1.0:
+        raise ValueError("confidence_level must be finite and in [0.5, 1)")
+    if not isinstance(seed, int):
+        raise ValueError("seed must be an integer")
+
+    point = fit_michaelis_menten(substrates, rates, grid_size=grid_size)
+    smax, rmax = max(substrates), max(rates)
+    vmax_bounds = (rmax * 0.5, rmax * 5.0)
+    km_bounds = (max(smax / 1000.0, 1e-12), smax * 100.0)
+    generator = random.Random(seed)
+    vmax_samples: list[float] = []
+    km_samples: list[float] = []
+    sample_count = len(substrates)
+
+    for _ in range(replicates):
+        indices = [generator.randrange(sample_count) for _ in range(sample_count)]
+        sampled_s = [substrates[index] for index in indices]
+        sampled_r = [rates[index] for index in indices]
+        if max(sampled_s) <= 0 or max(sampled_r) <= 0:
+            continue
+        try:
+            fitted = fit_michaelis_menten(
+                sampled_s, sampled_r, vmax_bounds=vmax_bounds,
+                km_bounds=km_bounds, grid_size=grid_size,
+            )
+        except ValueError:
+            continue
+        vmax_samples.append(float(fitted["vmax"]))
+        km_samples.append(float(fitted["km"]))
+
+    minimum_successes = max(50, int(replicates * 0.8))
+    if len(vmax_samples) < minimum_successes:
+        raise ValueError(
+            f"Only {len(vmax_samples)} of {replicates} bootstrap fits succeeded; "
+            "data may be non-informative for the selected model"
+        )
+
+    def percentile(values: list[float], probability: float) -> float:
+        ordered = sorted(values)
+        location = (len(ordered) - 1) * probability
+        lower = int(location)
+        upper = min(lower + 1, len(ordered) - 1)
+        fraction = location - lower
+        return ordered[lower] * (1.0 - fraction) + ordered[upper] * fraction
+
+    tail = (1.0 - confidence_level) / 2.0
+    return {
+        "point_estimate": {"vmax": point["vmax"], "km": point["km"]},
+        "confidence_level": confidence_level,
+        "interval_method": "paired nonparametric percentile bootstrap",
+        "confidence_intervals": {
+            "vmax": [percentile(vmax_samples, tail), percentile(vmax_samples, 1.0 - tail)],
+            "km": [percentile(km_samples, tail), percentile(km_samples, 1.0 - tail)],
+        },
+        "successful_replicates": len(vmax_samples),
+        "requested_replicates": replicates,
+        "seed": seed,
+        "search_grid_size": grid_size,
+        "warnings": [
+            "Exploratory percentile intervals; independent reference validation is required",
+            "Assumes independent, identically distributed paired observations",
+            "Fixed search bounds and finite grid resolution affect interval estimates",
+            "Intervals do not resolve model misspecification or parameter non-identifiability",
+            "No concentration or rate units are inferred",
+        ],
+    }
+

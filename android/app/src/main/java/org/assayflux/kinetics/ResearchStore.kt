@@ -9,6 +9,11 @@ data class ResearchJob(val id: String, val inputName: String, val state: String,
                        val sha256: String?, val message: String?)
 
 class ResearchStore(context: Context) : SQLiteOpenHelper(context, "kinetics-research.db", null, 1) {
+    override fun onConfigure(db: SQLiteDatabase) {
+        super.onConfigure(db)
+        db.setForeignKeyConstraintsEnabled(true)
+    }
+
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("""CREATE TABLE jobs (
             id TEXT PRIMARY KEY NOT NULL, input_name TEXT NOT NULL, input_uri TEXT NOT NULL,

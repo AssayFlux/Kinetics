@@ -179,11 +179,14 @@ def normalize_small_variant(
     # matching preceding reference bases. Re-check the reference at every step.
     if len(ref_allele) != len(alt_allele):
         while start > 0 and ref_allele[-1] == alt_allele[-1]:
+            # Remove the shared right anchor, then prepend the preceding
+            # reference base. This permits shifting out of a repeat tract
+            # to its left-most valid VCF representation.
+            ref_allele = ref_allele[:-1]
+            alt_allele = alt_allele[:-1]
             previous = reference[start - 1]
-            if previous != ref_allele[-1]:
-                break
-            ref_allele = previous + ref_allele[:-1]
-            alt_allele = previous + alt_allele[:-1]
+            ref_allele = previous + ref_allele
+            alt_allele = previous + alt_allele
             start -= 1
 
     return {

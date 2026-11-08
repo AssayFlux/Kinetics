@@ -1,9 +1,9 @@
 # R3 — v0.1 research alpha
 
 **Roadmap item:** Track R / R3  
-**Status:** NOT STARTED — plan prepared; implementation is gated  
+**Status:** IMPLEMENTATION IN PROGRESS — initial research-core primitives committed; independent validation and alpha exit remain gated  
 **Owner:** Engineering + Validation  
-**Depends on:** R2 exit evidence and explicit owner approval  
+**Depends on:** R2 infrastructure integration; R2 exit evidence and explicit approval remain required before v0.1 release  
 **Exit gate:** Reproducible offline alpha with independent-reference validation and owner approval
 
 ## Objective
@@ -58,4 +58,4 @@ Deliver a narrow but real v0.1 research alpha that demonstrates end-to-end scien
 
 R3 is complete only when the three workflow families are implemented and registered at the correct status; reference-based validation records and reproducible tests exist; offline workflows operate end-to-end through R2 infrastructure; provenance and export are inspectable; performance and device limitations are documented; all third-party licenses are reviewed; the alpha is installable on an owner-tested target device; and the owner explicitly approves the v0.1 gate.
 
-**Do not start R3 implementation until R2 exit evidence and approval are complete.**
+**Owner instruction (2026-11-08):** implement R1–R10 as one integrated delivery; do not stop implementation at R2. Preserve the R2 evidence/approval gate before v0.1 release.

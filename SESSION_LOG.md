@@ -1419,3 +1419,9 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Added a global input atom cap (default 2,000,000), in addition to the query residue cap (1,000,000) and structure-chain residue cap (100,000). Exceeding any configured limit fails explicitly.
 - Added regression coverage for streaming atom limits and invalid limit values. The current mapping remains exact-only and intentionally abstains on numbering gaps, non-standard residues, repeated matches and no-hit cases.
 - CI run #1949 was queued for these changes at the time of this log update; no pass is claimed until it completes.
+
+
+## 2026-11-08 — Owner UI reference assets recorded
+- Confirmed repository assets `Assets/App UI - Dashboard Design.jpg` and `Assets/App UI - Login Page Design.jpg` are the owner's visual references for the preferred Kinetics UI design language.
+- Recorded D-013: preserve both source images and align dashboard/authentication plus shared UI patterns to their visual language without compromising accessibility, responsive layouts, scientific clarity or brand constraints.
+- Detailed visual extraction and screenshot comparison remain pending; no claim of having visually inspected or matched the images is made in this checkpoint.

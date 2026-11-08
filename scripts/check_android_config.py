@@ -92,6 +92,19 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
     if not cargo_lock.is_file():
         errors.append("Native Rust Cargo.lock is required for --locked builds")
 
+    manifest_path = root / "android/app/src/main/AndroidManifest.xml"
+    try:
+        manifest = manifest_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        errors.append(f"Android manifest could not be read: {exc}")
+        manifest = ""
+    if 'android:allowBackup="false"' not in manifest:
+        errors.append("Android backup must remain disabled for local research data")
+    if 'android:usesCleartextTraffic="false"' not in manifest:
+        errors.append("Android cleartext traffic must remain disabled")
+    if "android.permission.INTERNET" in manifest:
+        errors.append("Android application must not request INTERNET permission")
+
     package_init = root / "python/kinetics/__init__.py"
     runtime_probe = root / "android/app/src/main/python/kinetics_probe.py"
     if not package_init.is_file():

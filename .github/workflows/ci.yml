@@ -83,6 +83,7 @@ jobs:
           "$ANDROID_HOME/ndk/28.2.13676358/toolchains/llvm/prebuilt/linux-x86_64/bin/clang" --version
       - name: Build arm64 APK/AAB and verify package alignment
         run: |
+          set -o pipefail
           chmod +x scripts/build_android_local.sh
           scripts/build_android_local.sh 2>&1 | tee android-build.log
       - name: Run Android JVM unit-test task

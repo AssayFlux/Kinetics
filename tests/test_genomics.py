@@ -231,3 +231,27 @@ def test_bam_parser_rejects_invalid_resource_limits(kwargs: dict[str, object]) -
 
     with pytest.raises(ValueError, match="positive integer"):
         list(iter_bam_records(io.BytesIO(gzip.compress(b"NOPE")), **kwargs))
+
+
+def test_bam_parser_bounds_aggregate_header_and_reference_dictionary() -> None:
+    import gzip
+    import io
+
+    from kinetics.genomics import iter_bam_records
+
+    payload = (
+        b"BAM\\x01" + struct.pack("<i", 0) + struct.pack("<i", 1)
+        + struct.pack("<i", 5) + b"chr1\\x00" + struct.pack("<i", 1000)
+    )
+    with pytest.raises(ValueError, match="reference dictionary"):
+        list(iter_bam_records(io.BytesIO(gzip.compress(payload)), max_header_bytes=12))
+
+
+def test_bam_parser_rejects_invalid_header_budget() -> None:
+    import gzip
+    import io
+
+    from kinetics.genomics import iter_bam_records
+
+    with pytest.raises(ValueError, match="max_header_bytes"):
+        list(iter_bam_records(io.BytesIO(gzip.compress(b"NOPE")), max_header_bytes=0))

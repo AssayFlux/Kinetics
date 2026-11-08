@@ -340,6 +340,17 @@ def negative_binomial_differential_expression(
 
     for feature, row in zip(feature_ids, counts):
         y = [float(x) for x in row]
+        if not any(y):
+            # An all-zero feature has no estimable abundance or condition effect.
+            # Keep it in the tested family with p=1 so BH adjustment remains explicit.
+            results.append({
+                "feature_id": feature, "log2_fold_change": 0.0,
+                "condition_coefficient": 0.0, "standard_error": float("inf"),
+                "wald_z": 0.0, "p_value": 1.0, "dispersion": 1e-8,
+                "converged": True, "iterations": 0,
+                "warning": "All-zero feature; condition effect is not estimable",
+            })
+            continue
         norm = [y[j] / factors[j] for j in range(n)]
         mean = sum(norm) / n
         variance = sum((x - mean) ** 2 for x in norm) / (n - 1)

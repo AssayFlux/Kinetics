@@ -125,3 +125,9 @@ At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase
 | U6 | Settings, themes, localisation/RTL, motion/haptics, usability and quality report | U1–U5 | All quality bars measured and recorded | not-started |
 
 U0 visual direction: owner authorized best-judgement completion; Obsidian Cyan is selected as the dark-first default, with Light and Neon alternatives. Thirteen palette combinations and 26 font candidates are catalogued. Owner-supplied astronaut background is integrated in the Home hero and organization SVG master copied unchanged. Token generation, font licence review, gallery screenshots across compact/medium/expanded and light/dark, and full matrix validation remain open. App-logo placeholders still block release.
+
+
+### U1 responsive shell progress (2026-11-08)
+- Implemented live Compose window-based bottom navigation, rail and permanent drawer, including compact-height landscape rail and 840dp content width cap.
+- Added pure JVM boundary tests for navigation classification. Check CI against latest main SHA.
+- U1 remains open: NavigationSuiteScaffold/WindowManager posture support, universal search, Research Mode/connectivity chips, onboarding, full screen map and device matrix are not complete.

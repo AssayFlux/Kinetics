@@ -23,7 +23,7 @@ def test_viewer_payload_is_deterministic_and_explicit_about_limits() -> None:
     assert payload["coordinate_unit"] == "angstrom"
     assert payload["atom_count"] == 1
     assert payload["atoms"][0]["xyz"] == [1.0, 2.0, 3.0]
-    assert "No inferred bonds" in payload["limitations"][0]
+    assert "no inferred bonds" in payload["limitations"][0]
     encoded = serialize_viewer_payload(payload)
     assert encoded == serialize_viewer_payload(payload)
     assert json.loads(encoded) == payload

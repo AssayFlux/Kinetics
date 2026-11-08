@@ -21,6 +21,11 @@ tools:
     status: implemented
     implementation: python/kinetics/sequence_pack.py
     evidence_level: none
+  - id: sequence.explicit_genetic_code_translation
+    name: Explicit NCBI genetic-code translation for selected DNA/RNA coding sequences
+    status: implemented
+    implementation: python/kinetics/genetic_code.py
+    evidence_level: none
   - id: sequence.fastq
     name: FASTQ parsing
     status: implemented

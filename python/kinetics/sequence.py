@@ -18,17 +18,19 @@ class SequenceRecord:
 def _normalise(sequence: str) -> str:
     return "".join(sequence.split()).upper()
 
-def parse_fasta(text: str) -> list[SequenceRecord]:
-    records: list[SequenceRecord] = []
+def iter_fasta_records(lines: Iterable[str]):
+    """Yield FASTA records incrementally from an iterable of text lines."""
     header: str | None = None
     chunks: list[str] = []
-    for line_no, raw in enumerate(text.splitlines(), 1):
+    found = False
+    for line_no, raw in enumerate(lines, 1):
         line = raw.strip()
         if not line or line.startswith(";"):
             continue
         if line.startswith(">"):
             if header is not None:
-                records.append(_fasta_record(header, chunks))
+                found = True
+                yield _fasta_record(header, chunks)
             header, chunks = line[1:].strip(), []
             if not header:
                 raise ValueError(f"FASTA line {line_no}: empty identifier")
@@ -37,10 +39,15 @@ def parse_fasta(text: str) -> list[SequenceRecord]:
         else:
             chunks.append(line)
     if header is not None:
-        records.append(_fasta_record(header, chunks))
-    if not records:
+        found = True
+        yield _fasta_record(header, chunks)
+    if not found:
         raise ValueError("FASTA contains no records")
-    return records
+
+
+def parse_fasta(text: str) -> list[SequenceRecord]:
+    """Parse FASTA text; use iter_fasta_records for large streaming inputs."""
+    return list(iter_fasta_records(text.splitlines()))
 
 def _fasta_record(header: str, chunks: list[str]) -> SequenceRecord:
     fields = header.split(maxsplit=1)

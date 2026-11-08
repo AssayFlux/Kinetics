@@ -89,7 +89,7 @@ fun KineticsComponentGallery() {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Button(onClick = {}) { Text("Primary action") }
                             val (selected, setSelected) = remember(name) { mutableStateOf(false) }
-                            FilterChip(selected, { setSelected(it) }, label = { Text("Filter chip") })
+                            FilterChip(selected, { setSelected(!selected) }, label = { Text("Filter chip") })
                         }
                         Text("Research Mode · Implemented · On-device", color = palette.muted)
                     }

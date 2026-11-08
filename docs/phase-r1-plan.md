@@ -38,7 +38,7 @@ Effective 2026-11-08:
 - CI run 1471 built an arm64 debug APK/AAB, cross-compiled Rust, linked the C++17 JNI bridge, and passed static ELF 16 KB alignment and APK ZIP alignment checks. Its artifact hashes and measurements are retained in `docs/android-feasibility.md`.
 - CI run 1481 repeated the arm64 APK/AAB build and static alignment checks.
 - These records establish historical cross-build, packaging and static alignment only. They do not establish a fresh local build, Android runtime execution, physical-device compatibility, scientific-engine feasibility, cold-start or peak memory.
-- Biopython 1.88 custom arm64 wheel was built in the historical CI experiment. Gradle now pins NDK 28.2.13676358 to match the local build script. SciPy was not installed and remains unresolved.
+- Biopython 1.88 custom arm64 wheel was built in the historical CI experiment. Gradle now pins NDK 28.2.13676358 to match the local build script. The local build script verifies the official Gradle 8.13 binary SHA-256 and pins Chaquopy 17.2.0 to immutable commit 1f63c93d8beaf7062fbe51888ab9235475df3bb8. SciPy was not installed and remains unresolved.
 - Rust/C++ JNI symbols were present in the historical APK; successful invocation on an Android device is not established.
 - Parasail, RDKit and Mol* remain evaluation candidates, not approved production dependencies.
 

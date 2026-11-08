@@ -1,12 +1,12 @@
 schema_version: 1
-status: proposed catalogue; audit exact upstream font files and licence texts before bundling
+status: D-015 role selections recorded; exact upstream font files and licence texts must be audited before bundling
 selection_policy:
   distinct_families_only: true
-  default_ui: Inter
-  brand_script: Allura (candidate; restricted to wordmark/brand accent)
+  default_ui: IBM Plex Sans (candidate; D-015)
+  brand_script: Great Vibes (candidate; restricted to wordmark/brand accent, only if logo has no wordmark)
   display_serif: Cormorant Garamond (candidate; selected display headings only)
-  default_scientific_monospace: JetBrains Mono
-  system_fallback: sans-serif
+  default_scientific_monospace: IBM Plex Mono (candidate; D-015)
+  display_serif: Cormorant Garamond (candidate; selected display headings only)\n  system_fallback: sans-serif\n  indic_fallback: verified Devanagari-capable fallback required
   bundle_only_after_licence_audit: true
 families:
   - {id: allura, family: Allura, category: calligraphic_display, style: elegant_script_wordmark_only, licence: OFL-1.1-candidate; verify exact upstream release}

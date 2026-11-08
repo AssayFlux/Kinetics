@@ -1,0 +1,4 @@
+schema_version: 1
+purpose: "Metadata-only inventory of candidate public datasets; no dataset payloads or patient records."
+data_classification: public_non_patient_only
+entries: []

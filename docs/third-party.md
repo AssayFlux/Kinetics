@@ -158,3 +158,14 @@ then the official services URL, then an Aliyun mirror for the same version.
 Every downloaded archive must match the pre-recorded Gradle 8.13 SHA-256 before
 extraction. The mirror is a transport fallback only; it cannot change the
 accepted archive bytes.
+
+
+## First successful arm64 debug package build — 2026-11-08
+
+GitHub Actions run [#1904](https://github.com/AssayFlux/Kinetics/actions/runs/42465569625), commit `30d19ea2bec8a7ad0039eb48fa13ac6bfb6175ed`, produced both debug packages after checksum-verified Gradle 8.13 fallback retrieval:
+
+- APK: 67,678,526 bytes; SHA-256 `0877bfe3331fc596dcaf440f8a659ddf5396c75484e172d2697bf2a7245269f6`.
+- AAB: 38,860,218 bytes; SHA-256 `8ec29ece71ffbe3cef13ca3c25c759d4da958898cbdcde1e8ebad0c75b4db7cd`.
+- Android JVM unit-test task, APK ZIP alignment, native ELF alignment and package size/integrity checks passed in CI. The APK contains arm64-v8a native libraries, including the embedded CPython 3.11 runtime and Kinetics native library.
+
+This is debug build/package evidence only. No emulator or physical-device installation, offline-runtime, cold-start, memory, thermal or user-flow verification was performed. The build does not close the transitive/file-level license audit or approve Chaquopy, Biopython, SciPy, RDKit or any other engine for production distribution.

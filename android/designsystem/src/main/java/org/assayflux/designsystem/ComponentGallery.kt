@@ -28,14 +28,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun KineticsComponentGallery() {
     val palettes = listOf(
-        "Obsidian Cyan" to KineticsTokens.ObsidianCyan,
-        "Midnight Violet" to KineticsTokens.MidnightViolet,
-        "Porcelain Blue" to KineticsTokens.PorcelainBlue,
-        "Ivory Sage" to KineticsTokens.IvorySage,
-        "Cyberpunk" to KineticsTokens.Cyberpunk,
-        "Toxic Lime" to KineticsTokens.ToxicLime,
-        "Ultraviolet" to KineticsTokens.Ultraviolet,
-        "Plasma" to KineticsTokens.Plasma,
+        "Kinetics Light Classic" to (KineticsTokens.KineticsLightClassic to false),
+        "Kinetics Dark Classic" to (KineticsTokens.KineticsDarkClassic to true),
     )
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
@@ -48,8 +42,9 @@ fun KineticsComponentGallery() {
                 style = MaterialTheme.typography.headlineMedium,
             )
         }
-        items(palettes, key = { it.first }) { (name, palette) ->
-            val scheme = if (name == "Porcelain Blue" || name == "Ivory Sage") {
+        items(palettes, key = { it.first }) { (name, entry) ->
+            val (palette, isDark) = entry
+            val scheme = if (!isDark) {
                 lightColorScheme(
                     primary = palette.primary, secondary = palette.secondary,
                     background = palette.background, surface = palette.surface,

@@ -1153,3 +1153,29 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Continue R1/R2 runtime-critical and licensing/security evidence while improving R3–R9 reference validation.
 - Start S6 schema/reference-pack foundations and S1 viewer licensing/bridge only within approved dependencies.
 - Keep S10 model selection and generation blocked until its explicit gates are met.
+
+
+## 2026-11-08 — Session: Parallel R/S/I/P execution and publication-readiness foundation
+**Phase:** R1–R10 + S1/S6–S10 + I1–I5 preparation + P0-gated public-data preparation + G5 paper evidence  
+**Objective:** Follow the owner instruction to progress all four tracks concurrently without bypassing dependencies; establish a reproducible publication evidence process before making scientific claims.
+
+### Committed
+- `docs/parallel-track-execution.md`: explicit parallel lanes, dependencies, evidence vocabulary, P0 restriction and publication gates.
+- `paper/manuscript-skeleton.md`: software-methods manuscript structure with results reserved for measured evidence.
+- `paper/claim-evidence-ledger.csv`: claim-to-evidence tracking template.
+- `validation/RESULT-MANIFEST.md`: required metadata for immutable benchmark results, including dataset/license/version, method, uncertainty, outcomes, resources, provenance and independent review.
+- Updated `ROADMAP.md` to link the parallel execution and paper-readiness documents.
+
+### Track boundaries
+- R1–R10 continue; no phase exit criteria are marked complete by this documentation increment.
+- S work proceeds only where R4/R5, reference-data, renderer and model/license dependencies permit. S10 remains feasibility-only behind model/data, compute and biosafety gates.
+- I1 begins with R6 descriptor correctness and public reference fixtures; I2/I3 engine execution remains gated on secure node and license review; I4/I5 remain research-only design and data/license review until independently validated.
+- P0 remains blocked. Only public-data, non-patient schema/source inventory and test preparation are allowed; no patient interpretation, clinical output or Clinical Mode.
+- Paper 1 is a candidate after R1–R3 exit evidence and independent reference validation. CI green or unit tests alone are not scientific evidence.
+
+### Open evidence
+- Android physical-device runtime, SAF/encryption lifecycle and accessibility/performance matrix.
+- Independent reference suites and held-out benchmarks for R3–R9 and any I/S capability.
+- Complete transitive SBOM/license inventory, model/database/asset licenses, security and node threat-model review.
+- Qualified adviser/legal/ethics gate packet for P0; no patient data.
+- Manuscript results, figures and claims remain empty until generated from reproducible validation records.

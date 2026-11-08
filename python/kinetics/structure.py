@@ -329,8 +329,8 @@ def interaction_candidates(
 ) -> dict[str, object]:
     """Report heavy-atom interaction candidates; geometric screening, not energetics."""
     points = list(atoms)
-    if not points or len(points) > 100_000:
-        raise ValueError("Interaction analysis requires 1..100000 atoms")
+    if not points or len(points) > 5_000:
+        raise ValueError("Interaction analysis requires 1..5000 atoms to bound pairwise screening")
     for name, bounds in (("hydrogen_bond_range", hydrogen_bond_range), ("disulfide_range", disulfide_range)):
         if len(bounds) != 2 or not all(isfinite(x) for x in bounds) or not 0 < bounds[0] < bounds[1]:
             raise ValueError(f"{name} must be finite, positive and increasing")

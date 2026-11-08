@@ -21,7 +21,7 @@ class VariantKey:
     alternate: str
 
     def __post_init__(self) -> None:
-        if not self.genome_build.strip() or not self.chromosome.strip():
+        if not isinstance(self.genome_build, str) or not isinstance(self.chromosome, str) or not self.genome_build.strip() or not self.chromosome.strip():
             raise ValueError("Variant requires genome build and chromosome")
         if not isinstance(self.position, int) or isinstance(self.position, bool) or self.position < 1:
             raise ValueError("Variant position must be a positive 1-based integer")

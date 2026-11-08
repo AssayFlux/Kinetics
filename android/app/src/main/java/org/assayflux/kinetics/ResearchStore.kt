@@ -101,8 +101,22 @@ class ResearchStore(context: Context) :
         writableDatabase.update("jobs", values, "id=?", arrayOf(id))
     }
 
+    /** Resolve only canonical finalized KDAT files inside the dedicated no-backup directory. */
+    private fun resolveEncryptedInput(path: String): File {
+        val root = File(appContext.noBackupFilesDir, "research-inputs").canonicalFile
+        val candidate = File(path).canonicalFile
+        require(candidate.parentFile == root && candidate.extension == "kdat") {
+            "Encrypted input path is outside the dedicated app-private storage directory"
+        }
+        return candidate
+    }
+
     /** Atomically records encrypted storage location, successful state and provenance. */
     fun completeImport(id: String, hash: String, bytes: Long, encryptedPath: String) {
+        val verifiedPath = resolveEncryptedInput(encryptedPath)
+        require(verifiedPath.isFile && verifiedPath.length() > LocalCrypto.HEADER_BYTES) {
+            "Final encrypted input file is missing or empty"
+        }
         val db = writableDatabase
         db.beginTransaction()
         try {
@@ -156,7 +170,7 @@ class ResearchStore(context: Context) :
             else Pair(cursor.getString(0), cursor.getString(1))
         } ?: return false
         LocalCrypto.decryptChunkedFile(
-            File(stored.first), destination, "kinetics-import:$id", stored.second,
+            resolveEncryptedInput(stored.first), destination, "kinetics-import:$id", stored.second,
         )
         return true
     }
@@ -171,7 +185,7 @@ class ResearchStore(context: Context) :
             else Pair(cursor.getString(0), cursor.getString(1))
         } ?: return false
         LocalCrypto.decryptChunkedFileToStream(
-            File(stored.first), destination, "kinetics-import:$id", stored.second,
+            resolveEncryptedInput(stored.first), destination, "kinetics-import:$id", stored.second,
         )
         return true
     }

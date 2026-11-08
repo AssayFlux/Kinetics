@@ -1,3 +1,19 @@
 # Validation evidence
 
 No scientific validation records exist yet. Add versioned, reproducible records only after a capability has an implementation, pinned reference materials, test vectors, tolerances and review. Never mark a registry item validated without committed evidence and a reproducible command.
+
+
+## Pinned host-side kinetic numerical comparison
+
+The CI workflow runs `validation/kinetics_scipy_reference.py` in a separate,
+host-only environment pinned by `validation/requirements-scipy.txt`. The job
+uploads its JSON output as a workflow artifact. It compares the exploratory
+Kinetics grid estimator against `scipy.optimize.curve_fit` on deterministic
+synthetic noise-free and Gaussian-noise cases.
+
+This is a numerical implementation cross-check, not experimental truth,
+biological validation, a calibrated uncertainty study, or Android runtime
+evidence. NumPy and SciPy are validation-host dependencies only and are not
+added to the Android application. The registry evidence level remains
+`none` until independent experimental reference datasets and a reviewed
+validation protocol are completed.

@@ -79,3 +79,34 @@ def serialize_viewer_payload(payload: dict[str, Any]) -> str:
     if payload.get("schema") != PAYLOAD_SCHEMA:
         raise ValueError("Unsupported structure viewer payload schema")
     return json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False)
+
+
+def build_preparation_record(
+    source_bytes: bytes,
+    payload: dict[str, Any],
+    *,
+    parser_version: str,
+    dropped_record_count: int = 0,
+) -> dict[str, Any]:
+    """Create a deterministic provenance record without retaining source content."""
+    if not isinstance(source_bytes, bytes) or not source_bytes:
+        raise ValueError("source_bytes must be non-empty bytes")
+    if not isinstance(parser_version, str) or not parser_version.strip():
+        raise ValueError("parser_version must be non-empty text")
+    if (isinstance(dropped_record_count, bool)
+            or not isinstance(dropped_record_count, int) or dropped_record_count < 0):
+        raise ValueError("dropped_record_count must be a non-negative integer")
+    payload_json = serialize_viewer_payload(payload)
+    return {
+        "record_schema": "kinetics.structure-preparation.v1",
+        "source_sha256": hashlib.sha256(source_bytes).hexdigest(),
+        "source_bytes": len(source_bytes),
+        "source_format": payload["source_format"],
+        "parser_version": parser_version.strip(),
+        "payload_sha256": hashlib.sha256(payload_json.encode("utf-8")).hexdigest(),
+        "payload_schema": payload["schema"],
+        "atom_count": payload["atom_count"],
+        "dropped_record_count": dropped_record_count,
+        "coordinate_unit": payload["coordinate_unit"],
+        "limitations": list(payload["limitations"]),
+    }

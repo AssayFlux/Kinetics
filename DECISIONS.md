@@ -158,3 +158,14 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 
 ## UI decision supersession register
 The following historical decisions are retained for auditability but are no longer active design instructions: D-009 (three-proposal visual gate), D-010 (dark-first preference), D-011 (Obsidian Cyan default), and D-014 (previous Light Classic palette/type proposal). D-015 is the current visual authority. D-012 adaptive navigation and D-013 owner layout-reference decisions remain active unless specifically contradicted by D-015.
+
+## D-016 — Integrated build/test cycle and active UI direction reaffirmed
+- Date: 2026-11-08.
+- Context: Owner found that successful APK compilation had been mistaken for a working application: D-015 was not fully implemented, authentication/biometrics were absent, and several options were inert or informational.
+- Choice: Approved. Implement substantial vertical slices, build arm64 APK/AAB, test affected systems and regression suite, inspect/install the exact artifact where hardware permits, fix failures, and repeat. Testing is part of every cycle, not deferred to the end. Record source commit and artifact SHA-256.
+- Active design: D-015 Light Classic is the sole current UI authority, with Dark Classic and System. Earlier neon/Obsidian Cyan and pre-D-015 palette proposals are discontinued for active implementation and retained only as historical audit records.
+- Authentication boundary: No fictitious cloud/account authentication. Local app-lock must be distinguished from account identity and have secure key lifecycle/recovery. Biometric unlock uses AndroidX BiometricPrompt, runtime capability/enrollment checks, explicit opt-in, credential fallback, lockout/error handling and Keystore-backed cryptographic operations where appropriate. Kinetics never stores biometric templates or passwords.
+- Functionality: Every visible control executes a real action, navigates to an implemented screen, or is visibly disabled with an explanation. Research tools are launchable only with registry capability, input contract, dispatcher, result model/viewer and tests. No fake metrics, authentication success or scientific output.
+- Evidence: Distinguish source implementation, automated tests, reference validation, CI build, emulator verification and physical-device verification. Build success alone is not a tested app. Missing hardware tests remain blockers.
+- Consequences: ROADMAP contains the mandatory cycle. UI screen map, quality report, registry and session log must be updated with each cycle.
+- Approver: Project owner, explicit instruction in chat on 2026-11-08.

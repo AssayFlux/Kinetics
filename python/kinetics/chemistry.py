@@ -405,7 +405,7 @@ def iter_sdf_stream(
 
     def parse_buffer() -> dict[str, object]:
         nonlocal record_count, record_chars, record_lines
-        block = "".join(record_lines).strip()
+        block = "".join(record_lines).rstrip("\r\n")
         record_lines = []
         record_chars = 0
         if not block:

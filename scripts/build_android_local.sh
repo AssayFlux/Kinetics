@@ -5,6 +5,10 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ANDROID_DIR="$ROOT_DIR/android"
 CHAQUOPY_VERSION="17.2.0"
+CHAQUOPY_COMMIT="1f63c93d8beaf7062fbe51888ab9235475df3bb8"
+GRADLE_VERSION="8.13"
+GRADLE_SHA256="20f1b1176237254a6fc204d8434196fa11a4cfb387567519c61556e8710aed78"
+GRADLE_CACHE_DIR="${GRADLE_CACHE_DIR:-$HOME/.cache/kinetics/gradle-$GRADLE_VERSION}"
 PYTHON_TARGET="3.11.17-0"
 NUMPY_WHEEL="numpy-1.26.2-0-cp311-cp311-android_21_arm64_v8a.whl"
 NDK_VERSION="28.2.13676358"
@@ -20,9 +24,9 @@ need git
 need curl
 need cargo
 need rustup
-need gradle
 need patchelf
 need patch
+need sha256sum
 
 [[ -n "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}" ]] || fail "Set ANDROID_HOME or ANDROID_SDK_ROOT."
 SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
@@ -32,7 +36,24 @@ SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 [[ -d "$SDK_ROOT/cmake/3.22.1" ]] || fail "Install Android CMake 3.22.1."
 python -c 'import sys; assert sys.version_info[:2] == (3, 11), sys.version' || fail "Use Python 3.11."
 java -version 2>&1 | grep -q '17\.' || fail "Use JDK 17."
-gradle --version | grep -q 'Gradle 8.13' || fail "Use Gradle 8.13."
+
+# Fetch a checksum-pinned Gradle distribution rather than trusting a host-installed gradle.
+GRADLE_BIN="$GRADLE_CACHE_DIR/gradle-$GRADLE_VERSION/bin/gradle"
+if [[ ! -x "$GRADLE_BIN" ]]; then
+  mkdir -p "$GRADLE_CACHE_DIR"
+  archive="$GRADLE_CACHE_DIR/gradle-$GRADLE_VERSION-bin.zip"
+  curl --fail --location --retry 3 \
+    "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
+    --output "$archive"
+  actual="$(sha256sum "$archive" | awk '{print $1}')"
+  [[ "$actual" == "$GRADLE_SHA256" ]] || fail "Gradle distribution checksum mismatch: $actual"
+  python - "$archive" "$GRADLE_CACHE_DIR" <<'PY'
+import sys, zipfile
+with zipfile.ZipFile(sys.argv[1]) as archive:
+    archive.extractall(sys.argv[2])
+PY
+fi
+"$GRADLE_BIN" --version | grep -q "Gradle $GRADLE_VERSION" || fail "Pinned Gradle $GRADLE_VERSION unavailable."
 
 NDK_BIN="$SDK_ROOT/ndk/$NDK_VERSION/toolchains/llvm/prebuilt/linux-x86_64/bin"
 [[ -d "$NDK_BIN" ]] || fail "This script currently supports Linux/WSL2 x86_64 hosts only."
@@ -47,6 +68,7 @@ if [[ ! -d "$CHAQUOPY_DIR/.git" ]]; then
   mkdir -p "$(dirname "$CHAQUOPY_DIR")"
   git clone --depth 1 --branch "$CHAQUOPY_VERSION" https://github.com/chaquo/chaquopy.git "$CHAQUOPY_DIR"
 fi
+[[ "$(git -C "$CHAQUOPY_DIR" rev-parse HEAD)" == "$CHAQUOPY_COMMIT" ]] || fail "Chaquopy source revision differs from the pinned commit."
 python - "$CHAQUOPY_DIR" <<'PY'
 import sys
 from pathlib import Path
@@ -85,7 +107,7 @@ cp dist/biopython/*.whl "$ANDROID_DIR/app/libs/python-wheels/"
 
 echo "[4/6] Build local debug APK and AAB"
 cd "$ANDROID_DIR"
-gradle --no-daemon :app:assembleDebug :app:bundleDebug
+"$GRADLE_BIN" --no-daemon --stacktrace :app:assembleDebug :app:bundleDebug
 
 echo "[5/6] Check APK ZIP alignment and native ELF alignment"
 APK="$ANDROID_DIR/app/build/outputs/apk/debug/app-debug.apk"

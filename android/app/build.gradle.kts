@@ -94,7 +94,7 @@ val verifyOwnerBrandAssets by tasks.registering {
     group = "verification"
     description = "Fail release builds while owner-approved Kinetics brand assets are placeholders."
     doLast {
-        val brandDir = rootProject.file("../../assets/brand")
+        val brandDir = rootProject.file("../assets/brand")
         val required = listOf(
             "app-logo.svg",
             "app-logo-foreground.svg",

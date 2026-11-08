@@ -241,3 +241,37 @@ def neighbor_joining(distance_matrix: list[list[float]], labels: list[str]) -> N
         Node(length=final_distance / 2.0, children=[clusters[second]]),
     ])
     return root
+
+def to_newick(root: Node) -> str:
+    """Serialize a tree to deterministic Newick with safe quoting and branch lengths."""
+    active: set[int] = set()
+
+    def label_text(label: str) -> str:
+        if not label:
+            return ""
+        if any(character.isspace() or character in "(),:;[]'" for character in label):
+            return "'" + label.replace("'", "''") + "'"
+        return label
+
+    def render(node: Node) -> str:
+        identity = id(node)
+        if identity in active:
+            raise ValueError("Tree contains a cycle")
+        if not isfinite(node.length) or node.length < 0:
+            raise ValueError("Branch lengths must be finite and non-negative")
+        active.add(identity)
+        try:
+            children = ""
+            if node.children:
+                children = "(" + ",".join(render(child) for child in node.children) + ")"
+            result = children + label_text(node.name)
+            if node.length != 0:
+                result += ":" + format(node.length, ".17g")
+            elif node is not root:
+                result += ":0"
+            return result
+        finally:
+            active.remove(identity)
+
+    return render(root) + ";"
+

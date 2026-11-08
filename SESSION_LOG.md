@@ -1425,3 +1425,11 @@ Owner has specified dark-first/futuristic as the intended direction. Exact defau
 - Confirmed repository assets `Assets/App UI - Dashboard Design.jpg` and `Assets/App UI - Login Page Design.jpg` are the owner's visual references for the preferred Kinetics UI design language.
 - Recorded D-013: preserve both source images and align dashboard/authentication plus shared UI patterns to their visual language without compromising accessibility, responsive layouts, scientific clarity or brand constraints.
 - Detailed visual extraction and screenshot comparison remain pending; no claim of having visually inspected or matched the images is made in this checkpoint.
+
+
+## 2026-11-08 — Owner UI master prompt captured additively
+- Audited the current README, root UI-spec index, living UI specification, verified Android UI constraints, decision log, roadmap, token source and brand-asset contract before reconciling the new prompt.
+- Confirmed the app stack is native Android/Jetpack Compose; no framework change is appropriate. Existing repository masters, decisions, capability boundaries, Android accessibility baselines and release gates remain authoritative where they overlap.
+- Added `docs/ui/owner-master-prompt-addendum.md` to capture only additive requirements: delicate visual treatment, motif manifest/pool and deterministic daily picker proposal, theme contrast automation, reduced-motion behavior, cultural respect, expanded screen-state requirements and corresponding test/README expectations.
+- Linked the addendum from README. No screens, tokens, fonts, logos or existing UI were replaced. Motif system and detailed visual implementation remain subject to reconciliation with the full master and Track U gates.
+- Owner's prompt proposes alternate font families; no typography change was made because existing approved repository decisions/catalogue take precedence. No font binaries were bundled.

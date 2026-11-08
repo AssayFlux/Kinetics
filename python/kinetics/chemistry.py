@@ -1,7 +1,6 @@
 """SDF V2000 atom/bond parsing and transparent 2D graph descriptors."""
 from __future__ import annotations
 from collections import Counter
-from math import sqrt
 
 ATOMIC_MASS={"H":1.008,"C":12.011,"N":14.007,"O":15.999,"F":18.998,"P":30.974,
 "S":32.06,"CL":35.45,"BR":79.904,"I":126.90,"B":10.81,"SI":28.085}

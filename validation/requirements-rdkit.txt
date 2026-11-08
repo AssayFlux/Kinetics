@@ -1,0 +1,3 @@
+# Host-only descriptor sanity engine; not bundled in the Android application.
+# RDKit core is BSD-3-Clause; bundled/transitive wheel components still require review.
+rdkit==2025.9.4

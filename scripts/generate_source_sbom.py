@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import re
+import tomllib
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -54,8 +55,15 @@ def generate(root: Path = ROOT) -> dict[str, object]:
 
     bom = re.search(r'compose-bom:([0-9.]+)', gradle_app)
     bom_version = bom.group(1) if bom else "NOASSERTION"
+    for configuration, group, artifact in re.findall(
+        r'(?:implementation|debugImplementation|testImplementation|androidTestImplementation)\("([A-Za-z0-9_.-]+):([A-Za-z0-9_.-]+)"\)',
+        gradle_app,
+    ) if False else []:
+        pass
+
     for group, artifact in re.findall(
-        r'implementation\("([A-Za-z0-9_.-]+):([A-Za-z0-9_.-]+)"\)', gradle_app,
+        r'(?:implementation|debugImplementation|testImplementation|androidTestImplementation)\("([A-Za-z0-9_.-]+):([A-Za-z0-9_.-]+)"\)',
+        gradle_app,
     ):
         add(f"{group}:{artifact}", f"managed-by-compose-bom-{bom_version}", "maven",
             f"pkg:maven/{group}/{artifact}")
@@ -65,6 +73,13 @@ def generate(root: Path = ROOT) -> dict[str, object]:
         if match:
             name, version = match.groups()
             add(name, version, "pypi", f"pkg:pypi/{name}@{version}")
+
+    pyproject = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    for requirement in pyproject.get("build-system", {}).get("requires", []):
+        match = re.match(r"([A-Za-z0-9_.-]+)\s*(.*)", requirement)
+        if match:
+            name, constraint = match.groups()
+            add(name, constraint.strip() or "UNPINNED", "pypi", f"pkg:pypi/{name}")
 
     for line in (root / "requirements-dev.txt").read_text(encoding="utf-8").splitlines():
         line = line.strip()

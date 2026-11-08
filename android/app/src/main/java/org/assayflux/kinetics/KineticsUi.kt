@@ -726,7 +726,7 @@ private fun FastaQcCard() {
 private fun FastqQcCard() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var input by rememberSaveable { mutableStateOf("@read_1\\nACGTACGT\\n+\\nIIII!!!!\\n") }
+    var input by rememberSaveable { mutableStateOf("@read_1\nACGTACGT\n+\nIIII!!!!\n") }
     var offset by rememberSaveable { mutableIntStateOf(33) }
     var running by remember { mutableStateOf(false) }
     var result by remember { mutableStateOf<FastqQcResult?>(null) }

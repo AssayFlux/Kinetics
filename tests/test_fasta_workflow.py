@@ -57,7 +57,7 @@ def test_fasta_workflow_rejects_non_text_input() -> None:
 
 def test_fastq_workflow_reports_quality_with_explicit_phred_offset() -> None:
     from kinetics.workflows import analyze_fastq_text
-    text = "@r1 sample\\nACGT\\n+\\nIIII\\n@r2\\nGG\\n+\\n!!\\n"
+    text = "@r1 sample\nACGT\n+\nIIII\n@r2\nGG\n+\n!!\n"
     result = analyze_fastq_text(text, phred_offset=33)
     assert result["record_count"] == 2
     assert result["total_bases"] == 6
@@ -72,15 +72,15 @@ def test_fastq_workflow_reports_quality_with_explicit_phred_offset() -> None:
 def test_fastq_workflow_requires_explicit_phred_offset() -> None:
     from kinetics.workflows import analyze_fastq_text
     with pytest.raises(ValueError, match="explicit Phred offset"):
-        analyze_fastq_text("@r\\nA\\n+\\n!\\n", phred_offset=0)
+        analyze_fastq_text("@r\nA\n+\n!\n", phred_offset=0)
 
 
 def test_fastq_workflow_rejects_invalid_quality_length_and_limits() -> None:
     from kinetics.workflows import analyze_fastq_text
     with pytest.raises(ValueError, match="length mismatch"):
-        analyze_fastq_text("@r\\nAC\\n+\\n!\\n", phred_offset=33)
+        analyze_fastq_text("@r\nAC\n+\n!\n", phred_offset=33)
     with pytest.raises(ValueError, match="record limit"):
-        analyze_fastq_text("@r1\\nA\\n+\\n!\\n@r2\\nC\\n+\\n!\\n",
+        analyze_fastq_text("@r1\nA\n+\n!\n@r2\nC\n+\n!\n",
                            phred_offset=33, max_records=1)
     with pytest.raises(ValueError, match="total-base limit"):
-        analyze_fastq_text("@r\\nAC\\n+\\n!!\\n", phred_offset=33, max_bases=1)
+        analyze_fastq_text("@r\nAC\n+\n!!\n", phred_offset=33, max_bases=1)

@@ -70,3 +70,31 @@ def test_protein_exact_match_uses_protein_alphabet() -> None:
     )
     assert result["hits"][0]["evidence_type"] == "exact_sequence"
     assert result["query"]["alphabet"] == "protein"
+
+
+
+def test_exact_reference_search_bounds_query_and_validates_integer_limits() -> None:
+    from kinetics.sequence_reference import ReferencePack, exact_reference_search
+    from kinetics.sequence import SequenceRecord
+
+    pack = ReferencePack(
+        name="fixture", version="1", license="CC0-1.0",
+        source="https://example.org/reference",
+        content_sha256="a" * 64,
+    )
+    refs = [SequenceRecord(identifier="r1", sequence="ATG")]
+    with pytest.raises(ValueError, match="max_query_residues"):
+        exact_reference_search(
+            "ATGATG", refs, sequence_type="DNA", reference_pack=pack,
+            max_query_residues=5,
+        )
+    with pytest.raises(ValueError, match="positive integer"):
+        exact_reference_search(
+            "ATG", refs, sequence_type="DNA", reference_pack=pack,
+            max_records=True,
+        )
+    with pytest.raises(ValueError, match="positive integer"):
+        exact_reference_search(
+            "ATG", refs, sequence_type="DNA", reference_pack=pack,
+            max_total_residues=1.5,
+        )

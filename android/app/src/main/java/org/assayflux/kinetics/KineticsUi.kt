@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -26,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.assayflux.designsystem.KineticsTokens
 
-private val Teal = KineticsTokens.ObsidianCyan.primary
+private val Teal = KineticsTokens.KineticsDarkClassic.secondary
 private val Ink = Color(0xFF071018)
-private val LightTeal = KineticsTokens.PorcelainBlue.primary
+private val LightTeal = KineticsTokens.KineticsLightClassic.primary
 
 internal enum class KineticsTab(val label: String, val glyph: String) {
     Home("Home", "⌂"), Work("Work", "▤"), Explore("Explore", "⌕"), Settings("Settings", "⚙")
@@ -42,13 +43,13 @@ internal fun KineticsAppShell(
     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
 ) {
     var tab by rememberSaveable { mutableStateOf(KineticsTab.Home) }
-    var themeFamily by rememberSaveable { mutableStateOf("dark") }
-    val palette = when (themeFamily) {
-        "light" -> KineticsTokens.PorcelainBlue
-        "neon" -> KineticsTokens.Cyberpunk
-        else -> KineticsTokens.ObsidianCyan
+    var themeFamily by rememberSaveable { mutableStateOf("light") }
+    val resolvedTheme = when (themeFamily) {
+        "system" -> if (isSystemInDarkTheme()) "dark" else "light"
+        else -> themeFamily
     }
-    val scheme = if (themeFamily == "light") {
+    val palette = if (resolvedTheme == "dark") KineticsTokens.KineticsDarkClassic else KineticsTokens.KineticsLightClassic
+    val scheme = if (resolvedTheme == "light") {
         lightColorScheme(
             primary = palette.primary, secondary = palette.secondary, tertiary = palette.tertiary,
             background = palette.background, surface = palette.surface, onSurface = palette.text,
@@ -75,7 +76,7 @@ internal fun KineticsAppShell(
             @Composable
             fun Screen(modifier: Modifier) {
                 when (tab) {
-                    KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, themeFamily, onImport, onRefresh,
+                    KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport, onRefresh,
                         onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, modifier)
                     KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, modifier)
                     KineticsTab.Explore -> ExploreScreen(modifier)
@@ -409,13 +410,13 @@ private fun ExploreScreen(modifier: Modifier) {
 private fun SettingsScreen(runtime: String?, onRuntime: () -> Unit, onRefresh: () -> Unit, themeFamily: String, onThemeFamilyChange: (String) -> Unit, modifier: Modifier) {
     Frame("Workspace controls", "Settings & diagnostics.", "Understand the device, local data and privacy boundary.", modifier) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
-            item { SettingGroup("APPEARANCE · THEME FAMILY", "Choose a visual family. Dark is the default; selection survives activity recreation.") {
+            item { SettingGroup("APPEARANCE · THEME", "Choose Light Classic, Dark Classic or follow your Android system appearance. Selection currently lasts for the activity session.") {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf("light" to "Light", "dark" to "Dark", "neon" to "Neon").forEach { (key, label) ->
+                    listOf("light" to "Light", "dark" to "Dark", "system" to "System").forEach { (key, label) ->
                         FilterChip(selected = themeFamily == key, onClick = { onThemeFamilyChange(key) }, label = { Text(label) }, modifier = Modifier.weight(1f))
                     }
                 }
-                Text("26 distinct font families are catalogued; font files remain gated on licence and accessibility review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Calligraphic brand accent, editorial display, clear sans-serif UI and monospaced scientific data. Font files remain gated on licence and glyph review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             } }
             item { SettingGroup("DEVICE RUNTIME", "Python 3.11 and native runtime probes execute locally.") {
                 Button(onRuntime, Modifier.fillMaxWidth()) { Text("Run runtime diagnostics") }

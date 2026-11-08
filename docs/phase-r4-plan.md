@@ -10,7 +10,7 @@
 - Future: BAM/CRAM, robust VCF normalization/decomposition, adapter trimming, paired-read handling, indexed access and Rust acceleration.
 
 ## Current source
-Implemented in `python/kinetics/sequence.py` and `python/kinetics/genomics.py`. Regression-test source is in `tests/test_research_primitives.py` and `tests/test_genomics.py`.
+Implemented in `python/kinetics/sequence.py` and `python/kinetics/genomics.py`. Regression-test source is in `tests/test_research_primitives.py` and `tests/test_genomics.py`. The streaming iterator is exported as `kinetics.iter_fasta_records`; the reference normalizer is exported as `kinetics.normalize_small_variant`.
 
 ## Limitations
 - The FASTA text convenience function materializes its returned records; use the iterator API for large inputs.\n- No BAM/CRAM binary decoder.

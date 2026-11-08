@@ -810,3 +810,18 @@ R1 remains IN PROGRESS. Host-side source CI success does not close Android build
 ### R1/R2 versioned-container runtime probe
 - Extended the manual Android runtime probe to create a KDAT v2 encrypted file, append an authenticated chunk, decrypt it through the production reader, verify SHA-256 and byte-for-byte output, and remove the temporary probe files.
 - This is a future on-device check only; the probe has not been built or executed.
+
+
+## Session 20 — integrated R2/R4 source hardening (2026-11-08)
+
+### R2
+- Added startup cleanup for stale plaintext analysis-cache files: only the app's uniquely-prefixed files older than 24 hours are eligible. Normal callback cleanup remains in place.
+- Empty imported files are rejected rather than recorded as successful research inputs.
+- Hardened data-pack installation against direct-constructor manifest bypass and dot-segment path values. The installer hashes the exact bytes copied to its temporary file, verifies the declared size and SHA-256 before finalization, uses a unique temporary file and refuses to replace an installed version.
+- These are source changes only. Filesystem atomicity, cross-instance concurrency, process-death recovery, Android compilation and device execution remain unverified.
+
+### R4
+- Added `iter_fasta_records`, a lazy iterator over FASTA line iterables, while retaining `parse_fasta` as a convenience materializer.
+- Added `normalize_small_variant` for reference-checked minimal/left normalization of biallelic literal A/C/G/T small variants. Symbolic alleles, breakends, multiallelic decomposition and interpretation remain explicitly unsupported.
+- Exported both APIs, added regression-test source, updated the capability registry and phase documentation.
+- No tests or Android build were run. R4 remains in progress pending tests, reference concordance, BAM/CRAM and large-file/device evidence.

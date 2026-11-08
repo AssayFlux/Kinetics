@@ -58,15 +58,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11.17"
-      - name: Configure preinstalled Android SDK
-        run: |
-          SDK_ROOT="/usr/local/lib/android/sdk"
-          test -x "$SDK_ROOT/cmdline-tools/16.0/bin/sdkmanager"
-          echo "ANDROID_HOME=$SDK_ROOT" >> "$GITHUB_ENV"
-          echo "ANDROID_SDK_ROOT=$SDK_ROOT" >> "$GITHUB_ENV"
-          echo "$SDK_ROOT/cmdline-tools/16.0/bin" >> "$GITHUB_PATH"
-          echo "$SDK_ROOT/platform-tools" >> "$GITHUB_PATH"
-          "$SDK_ROOT/cmdline-tools/16.0/bin/sdkmanager" --version
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
       - name: Install pinned Android SDK components
         run: |
           sdkmanager --install "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358" "cmake;3.22.1"

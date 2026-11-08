@@ -26,10 +26,13 @@ object LocalCrypto {
     const val HEADER_BYTES = 5L
     private const val FILE_FORMAT_VERSION = 2
 
-    private fun key(): SecretKey {
+    private fun key(createIfMissing: Boolean): SecretKey {
         val store = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
         val existing = store.getKey(ALIAS, null) as? SecretKey
         if (existing != null) return existing
+        check(createIfMissing) {
+            "Android Keystore key is missing; refusing to generate a replacement for existing ciphertext"
+        }
         val generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
         generator.init(
             KeyGenParameterSpec.Builder(
@@ -51,7 +54,7 @@ object LocalCrypto {
     fun encrypt(plainText: ByteArray, associatedData: ByteArray = byteArrayOf()): ByteArray {
         require(plainText.size <= CHUNK_BYTES) { "AES-GCM chunk exceeds the 4 MiB limit" }
         val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.ENCRYPT_MODE, key())
+        cipher.init(Cipher.ENCRYPT_MODE, key(createIfMissing = true))
         if (associatedData.isNotEmpty()) cipher.updateAAD(associatedData)
         return cipher.iv + cipher.doFinal(plainText)
     }
@@ -63,7 +66,7 @@ object LocalCrypto {
         val iv = payload.copyOfRange(0, IV_BYTES)
         val encrypted = payload.copyOfRange(IV_BYTES, payload.size)
         val cipher = Cipher.getInstance(TRANSFORMATION)
-        cipher.init(Cipher.DECRYPT_MODE, key(), GCMParameterSpec(TAG_BITS, iv))
+        cipher.init(Cipher.DECRYPT_MODE, key(createIfMissing = false), GCMParameterSpec(TAG_BITS, iv))
         if (associatedData.isNotEmpty()) cipher.updateAAD(associatedData)
         return cipher.doFinal(encrypted)
     }

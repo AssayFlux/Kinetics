@@ -389,8 +389,8 @@ def chain_interface_contacts(
                             or not isinstance(minimum_distance_value, (int, float))
                         ):
                             raise RuntimeError("Internal interface-contact accumulator is malformed")
-                        contact_count = cast(int, contact_count_value)
-                        current_minimum = cast(float, minimum_distance_value)
+                        contact_count = contact_count_value
+                        current_minimum = float(minimum_distance_value)
                         entry["atom_contact_count"] = contact_count + 1
                         entry["minimum_distance_angstrom"] = min(current_minimum, distance)
 

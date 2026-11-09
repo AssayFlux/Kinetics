@@ -608,6 +608,7 @@ fun ExploreScreen(modifier: Modifier) {
                     }
                 }
             }
+            item { StructureViewerPreview() }
             if (entries.any { it.id == "sequence.fasta" && it.status == "implemented" }) {
                 item { FastaQcCard() }
             }

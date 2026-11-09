@@ -2221,3 +2221,10 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Validated modification dates as real YYYYMMDD calendar dates.
 - Added regression tests for appended columns and impossible dates.
 - Exact-source CI required before counting the tests as passed. No comprehensive NCBI release import or PGx clinical validation is implied.
+
+
+## 2026-11-09 — Session 53: Close encrypted import worker resources reliably
+
+- Moved import staging-directory creation, legacy plaintext cleanup and initial state update into the worker's guarded execution block.
+- Added a finally block that closes the SQLite helper after success, cancellation and all failure returns, including failed legacy plaintext cleanup.
+- Exact-source Android CI is required; no process-death or physical-device lifecycle claim is made.

@@ -148,3 +148,8 @@ The imported FASTA WorkManager worker now closes its SQLiteOpenHelper in a `fina
 ### Worker preflight test correction — 2026-11-09
 
 The first exact-source run containing the new worker tests exposed that the test setup used updateJob without populating storage_path; the production worker correctly treats such a row as an uncommitted import. The tests now seed only the committed-row metadata needed to reach the intended preflight guards, without invoking Keystore/decryption. This isolates byte-limit and FASTQ-extension checks and explicitly does not simulate a real encrypted import. A subsequent Python run also caught an assertion-message mismatch in the duplicate-header test; the assertion now checks the actual duplicate-header failure. Corrected exact-source CI is pending.
+
+
+### Import worker resource-lifecycle hardening — 2026-11-09
+
+The encrypted SAF import worker now closes its SQLite helper in a finally block across success, cancellation, and failure paths. Directory creation, legacy plaintext-staging cleanup and the initial running-state update are inside the guarded execution scope, so exceptions in preflight also close the helper. The legacy plaintext cleanup failure returns through the same finally path. Exact-source Android CI is required to verify this change. This is connection/resource lifecycle hardening; it does not prove WorkManager process-death recovery or SAF provider behavior.

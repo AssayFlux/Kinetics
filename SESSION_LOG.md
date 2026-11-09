@@ -2192,3 +2192,15 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Verification boundary
 - Documentation consistency correction only; no phase completion or exit approval is implied.
+
+
+## 2026-11-09 — Session 51: Diagnose and repair first worker/PharmVar test failures
+
+### Exact-source findings
+- CI #2114 failed two new Android worker tests because their fixtures updated state/hash/byte count but omitted storage_path; the production query correctly classifies those rows as not fully committed. Fixed the fixtures to seed the metadata required to reach the byte-limit and FASTQ preflight checks without attempting decryption.
+- CI #2117's Python job reported 235 passed, 4 skipped and one failed. The implementation correctly raised the duplicate-normalized-header error; the test expected the later nine-column error. Corrected the assertion to expect the actual duplicate-header rejection.
+
+### Verification boundary
+- These are test-fixture/assertion corrections, not production behavior changes.
+- Corrected exact-source CI #2121 and later are required before counting these tests as passed.
+- No device runtime, Keystore or encrypted-import end-to-end result is claimed.

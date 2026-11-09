@@ -1,7 +1,7 @@
 # R1 — Android and scientific-stack feasibility
 
 **Roadmap item:** Track R / R1  
-**Status:** IN PROGRESS — latest exact-source CI run #2033 built arm64 APK/AAB and passed static alignment plus Android JVM task; runtime/scientific feasibility remains open  
+**Status:** IN PROGRESS — exact-source CI #2111 passed on the pre-lifecycle-test baseline; CI #2114 exposed two new WorkManager worker test-fixture failures (not a production APK compile failure), which are corrected in subsequent commits and await rerun. Android runtime/scientific feasibility remains open  
 **Owner:** Engineering + Project owner  
 **Started:** 2026-11-07  
 **Depends on:** R0 foundation and approved direction baseline  

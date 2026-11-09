@@ -143,3 +143,8 @@ Added Robolectric/WorkManager test coverage for missing and malformed worker inp
 ### Worker database resource lifecycle — 2026-11-09
 
 The imported FASTA WorkManager worker now closes its SQLiteOpenHelper in a `finally` block for both successful and failed analysis execution. This prevents the worker from retaining a database helper/connection beyond its execution scope. Exact-source Android CI is required to verify compilation and regression tests.
+
+
+### Worker preflight test correction — 2026-11-09
+
+The first exact-source run containing the new worker tests exposed that the test setup used updateJob without populating storage_path; the production worker correctly treats such a row as an uncommitted import. The tests now seed only the committed-row metadata needed to reach the intended preflight guards, without invoking Keystore/decryption. This isolates byte-limit and FASTQ-extension checks and explicitly does not simulate a real encrypted import. A subsequent Python run also caught an assertion-message mismatch in the duplicate-header test; the assertion now checks the actual duplicate-header failure. Corrected exact-source CI is pending.

@@ -156,3 +156,116 @@ def structure_geometry_metrics(
             "Experimental resolution/R-free and predicted pLDDT/PAE are not available in the Atom model.",
         ],
     }
+
+
+def backbone_torsion_angles(
+    atoms: Iterable[Atom],
+    *,
+    chain_id: str | None = None,
+    max_atoms: int = 200_000,
+    max_residues: int = 50_000,
+) -> dict[str, object]:
+    """Calculate observed backbone phi/psi dihedrals without assigning outlier grades.
+
+    Only N, CA and C atoms are used. Residue-number gaps, missing backbone atoms,
+    and duplicate atom names are reported as unavailable rather than reconstructed.
+    Alternate locations and insertion codes are not represented by the Atom model.
+    """
+    for name, limit in (("max_atoms", max_atoms), ("max_residues", max_residues)):
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:
+            raise ValueError(f"{name} must be a positive integer")
+    grouped: dict[tuple[str, int, str], dict[str, tuple[float, float, float]]] = {}
+    atom_count = 0
+    for atom in atoms:
+        atom_count += 1
+        if atom_count > max_atoms:
+            raise ValueError("Structure exceeds max_atoms")
+        if chain_id is not None and atom.chain != chain_id:
+            continue
+        name = atom.name.strip().upper()
+        if name not in {"N", "CA", "C"}:
+            continue
+        coordinate = (atom.x, atom.y, atom.z)
+        if not all(isfinite(value) for value in coordinate):
+            raise ValueError("Backbone coordinates must be finite")
+        key = (atom.chain, atom.residue_number, atom.residue.upper())
+        residue_atoms = grouped.setdefault(key, {})
+        if name in residue_atoms:
+            raise ValueError(f"Duplicate backbone atom {name} at {key}")
+        residue_atoms[name] = coordinate
+        if len(grouped) > max_residues:
+            raise ValueError("Structure exceeds max_residues")
+
+    if not grouped:
+        raise ValueError("No backbone N/CA/C atoms found for the selected chain")
+    by_chain: dict[str, list[tuple[tuple[str, int, str], dict[str, tuple[float, float, float]]]]] = defaultdict(list)
+    for key, residue_atoms in grouped.items():
+        by_chain[key[0]].append((key, residue_atoms))
+
+    def subtract(a: tuple[float, float, float], b: tuple[float, float, float]) -> tuple[float, float, float]:
+        return (a[0] - b[0], a[1] - b[1], a[2] - b[2])
+
+    def dot(a: tuple[float, float, float], b: tuple[float, float, float]) -> float:
+        return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+    def cross(a: tuple[float, float, float], b: tuple[float, float, float]) -> tuple[float, float, float]:
+        return (a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0])
+
+    def dihedral(
+        p0: tuple[float, float, float], p1: tuple[float, float, float],
+        p2: tuple[float, float, float], p3: tuple[float, float, float],
+    ) -> float | None:
+        b0 = subtract(p0, p1)
+        axis = subtract(p2, p1)
+        b2 = subtract(p3, p2)
+        axis_norm = sqrt(dot(axis, axis))
+        if axis_norm <= 1e-12:
+            return None
+        unit = (axis[0] / axis_norm, axis[1] / axis_norm, axis[2] / axis_norm)
+        projection0 = dot(b0, unit)
+        projection2 = dot(b2, unit)
+        v = (b0[0] - projection0 * unit[0], b0[1] - projection0 * unit[1], b0[2] - projection0 * unit[2])
+        w = (b2[0] - projection2 * unit[0], b2[1] - projection2 * unit[1], b2[2] - projection2 * unit[2])
+        if dot(v, v) <= 1e-24 or dot(w, w) <= 1e-24:
+            return None
+        angle = __import__("math").atan2(dot(cross(unit, v), w), dot(v, w))
+        from math import degrees
+        return degrees(angle)
+
+    records: list[dict[str, object]] = []
+    for chain, chain_residues in sorted(by_chain.items()):
+        chain_residues.sort(key=lambda item: item[0][1])
+        for index, (key, current) in enumerate(chain_residues):
+            previous = chain_residues[index - 1] if index > 0 else None
+            following = chain_residues[index + 1] if index + 1 < len(chain_residues) else None
+            contiguous_previous = previous is not None and previous[0][1] + 1 == key[1]
+            contiguous_next = following is not None and key[1] + 1 == following[0][1]
+            phi = None
+            psi = None
+            if contiguous_previous and {"C"} <= previous[1].keys() and {"N", "CA", "C"} <= current.keys():
+                phi = dihedral(previous[1]["C"], current["N"], current["CA"], current["C"])
+            if contiguous_next and {"N", "CA", "C"} <= current.keys() and {"N"} <= following[1].keys():
+                psi = dihedral(current["N"], current["CA"], current["C"], following[1]["N"])
+            records.append({
+                "chain_id": chain,
+                "residue_number": key[1],
+                "residue_name": key[2],
+                "phi_degrees": phi,
+                "psi_degrees": psi,
+                "phi_status": "available" if phi is not None else "unavailable",
+                "psi_status": "available" if psi is not None else "unavailable",
+            })
+
+    return {
+        "schema": "kinetics.backbone-torsion-screen.v1",
+        "residue_count": len(records),
+        "records": records,
+        "assessment_status": "torsion_angles_only",
+        "quality_badge": "not_assessed",
+        "limitations": [
+            "No Ramachandran outlier classification or residue-specific probability model is applied.",
+            "Missing backbone atoms and residue-number gaps are not reconstructed.",
+            "Alternate locations, insertion codes, chain breaks and peptide-bond validation need richer parser metadata.",
+            "Angles are geometric observations, not a calibrated structure-quality score.",
+        ],
+    }

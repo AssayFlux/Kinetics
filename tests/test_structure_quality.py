@@ -59,3 +59,41 @@ def test_geometry_metrics_keep_only_configured_top_clash_records() -> None:
     )
     assert result["clash_count"] == 3
     assert len(result["top_clashes"]) == 1
+
+
+def test_backbone_torsions_report_angles_without_quality_grade() -> None:
+    from kinetics.structure_quality import backbone_torsion_angles
+
+    residues = [
+        ("N", "ALA", 1, 0.0, 0.0, 0.0),
+        ("CA", "ALA", 1, 1.0, 0.0, 0.0),
+        ("C", "ALA", 1, 1.0, 1.0, 0.0),
+        ("N", "GLY", 2, 2.0, 1.0, 1.0),
+        ("CA", "GLY", 2, 3.0, 1.0, 1.0),
+        ("C", "GLY", 2, 3.0, 2.0, 1.0),
+        ("N", "SER", 3, 4.0, 2.0, 2.0),
+        ("CA", "SER", 3, 5.0, 2.0, 2.0),
+        ("C", "SER", 3, 5.0, 3.0, 2.0),
+    ]
+    atoms = [
+        Atom(i + 1, name, residue, "A", number, x, y, z, "N" if name == "N" else "C")
+        for i, (name, residue, number, x, y, z) in enumerate(residues)
+    ]
+    result = backbone_torsion_angles(atoms, chain_id="A")
+    assert result["residue_count"] == 3
+    records = result["records"]
+    assert records[0]["phi_degrees"] is None
+    assert records[-1]["psi_degrees"] is None
+    assert records[1]["phi_status"] == "available"
+    assert records[1]["psi_status"] == "available"
+    assert result["quality_badge"] == "not_assessed"
+
+
+def test_backbone_torsions_abstain_on_missing_atoms_and_bound_input() -> None:
+    from kinetics.structure_quality import backbone_torsion_angles
+
+    atoms = [Atom(1, "CA", "ALA", "A", 1, 0.0, 0.0, 0.0, "C")]
+    result = backbone_torsion_angles(atoms)
+    assert result["records"][0]["phi_degrees"] is None
+    with pytest.raises(ValueError, match="max_atoms"):
+        backbone_torsion_angles(atoms, max_atoms=0)

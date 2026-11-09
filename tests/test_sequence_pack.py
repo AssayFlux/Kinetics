@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 
 import pytest
@@ -8,6 +9,7 @@ import pytest
 from kinetics.sequence_pack import (
     load_local_fasta_reference_pack,
     search_local_fasta_reference,
+    _sha256_stream,
 )
 
 
@@ -126,7 +128,7 @@ def test_local_pack_rejects_boolean_and_non_integer_resource_limits(
 
 
 def test_local_pack_rejects_manifest_symlink_and_oversized_manifest(tmp_path) -> None:
-    fasta_path, manifest_path = write_pack(tmp_path, b">gene\\nACGT\\n")
+    fasta_path, manifest_path = write_pack(tmp_path, b">gene\nACGT\n")
     link_path = tmp_path / "linked-manifest.json"
     link_path.symlink_to(manifest_path)
     with pytest.raises(ValueError, match="symbolic link"):
@@ -138,9 +140,6 @@ def test_local_pack_rejects_manifest_symlink_and_oversized_manifest(tmp_path) ->
         )
 
 
-def test_local_pack_hashing_is_bounded_by_max_pack_bytes(tmp_path) -> None:
-    fasta_path, manifest_path = write_pack(tmp_path, b">gene\\nACGT\\n")
+def test_local_pack_hashing_is_bounded_by_max_pack_bytes() -> None:
     with pytest.raises(ValueError, match="max_pack_bytes"):
-        load_local_fasta_reference_pack(
-            fasta_path, manifest_path, max_pack_bytes=4,
-        )
+        _sha256_stream(io.BytesIO(b"more than three bytes"), max_bytes=3)

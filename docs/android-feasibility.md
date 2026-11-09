@@ -1,19 +1,15 @@
 # Android feasibility — R1 in progress
 
-**Current status (2026-11-08):** R1 remains IN PROGRESS. CI run #1770 (commit `3aa25710c6b4fcb566e67662ea0a5c9163093701`) completed the arm64 APK/AAB build, Android JVM unit-test task and artifact verification successfully. Its Python foundation job failed on a Ruff line-length error in the registry checker, which has since been fixed. The run's artifact upload was still running at the last check; its hashes and download URL must be read from the completed run before distributing it. The integrated design-system module is newer than this build and must pass its own build before its APK is treated as current. Android runtime/device tests, SciPy, a separately evaluated scientific engine, RDKit/alternative, offline viewer and performance measurements remain unresolved.
+**Current status (2026-11-09):** The current application has a reproducible GitHub Actions arm64 debug APK/AAB build lane, Android JVM tests, static APK/ELF alignment checks, and host-side scientific reference jobs. The latest exact-source workflow is [CI #2111](https://github.com/AssayFlux/Kinetics/actions/runs/42557865157) on commit `deaf452415aaa77ea1d2821ad27b0cd090e4ad6b`; at the time of this update, its four non-Android jobs have passed and its Android arm64 build/package/JVM job is still running. Do not count #2111 as complete until that job finishes successfully.
 
-**Owner build/test instruction (2026-11-08):** The owner explicitly authorized GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated checks including Android JVM unit tests. The build host is pinned Linux x86_64; this is not a Termux build. No emulator or physical-device test is run. Physical-device testing remains deferred until the owner is ready.
+**What this evidence means:** Android packaging and host/JVM tests are reproducible. They do not prove installation or execution on an Android device. The current app still lacks accepted emulator/physical-device evidence for Chaquopy, JNI/Rust runtime, SAF, WorkManager process-death recovery, 16 KB page-size runtime, cold-start, memory, battery or thermal behavior. The owner-selected first handset is the Motorola Moto G54 5G, but it has not been connected or tested in this environment.
 
-**Phase plan:** docs/phase-r1-plan.md  
-**Owner gate:** R1 go/no-go review required before R2
+**Architecture feasibility remains conditional:** SciPy is now used in the pinned host-only validation environment for synthetic numerical comparisons; this does not establish SciPy availability in the embedded Android runtime. Parasail, RDKit and Mol* remain candidates rather than approved production dependencies. The complete transitive/file-level license audit and production engine decisions remain open.
 
-## Current evidence boundary
+**Owner build/test instruction:** GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts and run automated checks/JVM tests. The build host is pinned Linux x86_64, not Termux. Emulator and physical-device tests are separate acceptance evidence.
 
-An isolated Android arm64 feasibility app and Chaquopy probe now exist under `android/`. The Gradle configuration targets arm64-v8a and includes Python 3.11, Biopython and NumPy for the isolated R1 APK probe. SciPy is tracked separately as a required but currently unavailable R1 candidate. These are prototype dependencies only, not a production architecture or dependency approval.
-
-Historical runs 1381 and 1384 exposed host-Python provisioning and then Biopython package-resolution blockers; both have been addressed. Historical CI runs 1471 and 1481 subsequently built the arm64 debug APK/AAB after the JVM target mismatch was resolved. Their recorded hashes and static alignment checks are historical evidence only. The current owner instruction explicitly authorizes GitHub Actions to build unsigned arm64 debug APK/AAB artifacts and run automated checks. The Actions host is pinned Linux x86_64; this is not a Termux build. Physical-device testing remains deferred until the owner begins that campaign. SciPy remains unresolved.
-
-No Android app runtime, emulator or physical-device result is yet accepted as validated. No successful on-device Python import, Rust app call, C++ JNI, scientific engine, RDKit, offline viewer, 16 KB runtime, startup, memory or device result is claimed.
+**Phase plan:** docs/phase-r1-plan.md
+**Owner gate:** R1 feasibility matrix and explicit owner go/no-go remain required.
 
 ## Initial research findings
 

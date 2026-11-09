@@ -2117,3 +2117,23 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Still open
 - Independent experimental/reference datasets, unit validation, predeclared identifiability thresholds, uncertainty coverage simulations, broader model comparisons and Android device/runtime evidence.
+
+
+## 2026-11-09 — Session 46: Correct R1 feasibility and privacy status
+
+### Reviewed
+- Re-read the R1 exit criteria, Android feasibility record, current CI workflow and privacy statement against the current repository source and CI history.
+- Found stale text that described the application as a minimal feasibility shell and stated SciPy was absent without distinguishing host validation from Android runtime availability.
+
+### Corrected
+- Updated `docs/android-feasibility.md` to identify the current Android app/build lane, latest exact-source CI #2111 state, and explicit device/runtime boundaries.
+- Clarified that host-only SciPy comparisons do not prove Android SciPy packaging.
+- Updated `PRIVACY.md` to describe the current Research Mode prototype while retaining the explicit absence of an independent privacy assessment, patient workflow, account service, telemetry and remote compute.
+- Updated the roadmap's R4 evidence wording to include the migration and imported-FASTA regression baseline without claiming on-device completion.
+
+### Verification boundary
+- CI #2111 was still running its Android arm64 build/package/JVM job when this record was prepared. Its other four jobs had passed. No final pass is recorded here.
+- No emulator/physical-device test, Moto G54 5G execution, independent privacy review or release approval is claimed.
+
+### Next
+- Confirm CI #2111's Android job outcome; continue R-track gaps only. R1–R10 remain open until their individual exit evidence and owner gates are satisfied.

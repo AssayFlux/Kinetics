@@ -1,7 +1,7 @@
 # Privacy principles and current status
 
 ## Current status
-This repository contains no functioning app, account service, telemetry pipeline, patient-data workflow or remote compute service. This document states design requirements; it is not a claim that an implemented product has passed a privacy assessment.
+The repository now contains an Android Research Mode application prototype with local import, encrypted app-private storage, SQLite job/provenance records, WorkManager orchestration and user-initiated SAF export. It has no account service, telemetry pipeline, patient-data workflow or remote compute service. CI verifies source/build checks, but no independent privacy assessment or real-device privacy audit has passed. This document states design requirements and is not a compliance claim.
 
 ## Intended principles
 - Offline-first operation; no telemetry by default.

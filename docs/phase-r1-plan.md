@@ -38,7 +38,7 @@ Updated 2026-11-08 with explicit owner authorization:
 - CI run 1471 built an arm64 debug APK/AAB, cross-compiled Rust, linked the C++17 JNI bridge, and passed static ELF 16 KB alignment and APK ZIP alignment checks. Its artifact hashes and measurements are retained in `docs/android-feasibility.md`.
 - CI run 1481 repeated the arm64 APK/AAB build and static alignment checks.
 - These records establish historical cross-build, packaging and static alignment only. They do not establish a fresh local build, Android runtime execution, physical-device compatibility, scientific-engine feasibility, cold-start or peak memory.
-- Biopython 1.88 custom arm64 wheel was built in the historical CI experiment. Gradle now pins NDK 28.2.13676358 to match the local build script. The local build script verifies the official Gradle 8.13 binary SHA-256 and pins Chaquopy 17.2.0 to immutable commit 1f63c93d8beaf7062fbe51888ab9235475df3bb8. SciPy was not installed and remains unresolved.
+- Biopython 1.88 custom arm64 wheel was built in the historical CI experiment. Gradle now pins NDK 28.2.13676358 to match the local build script. The local build script verifies the official Gradle 8.13 binary SHA-256 and pins Chaquopy 17.2.0 to immutable commit 1f63c93d8beaf7062fbe51888ab9235475df3bb8. SciPy is used by the pinned host-only numerical reference workflow; availability/packaging in the embedded Android runtime remains unresolved.
 - Rust/C++ JNI symbols were present in the historical APK; successful invocation on an Android device is not established.
 - Parasail, RDKit and Mol* remain evaluation candidates, not approved production dependencies.
 
@@ -61,7 +61,7 @@ D-006 sets the target at Android 10+ (API 29), 64-bit ARM (arm64-v8a), with low-
 
 R1 is complete only when:
 1. Android arm64 local build is reproduced and its APK/AAB contents, size and hashes are recorded.
-2. Embedded Python/Biopython/NumPy and the SciPy decision are evidenced.
+2. Embedded Python/Biopython/NumPy runtime behavior and the Android SciPy availability/packaging decision are evidenced on a target device; host-only SciPy validation is not a substitute.
 3. Rust FFI and C++ JNI calls are executed and verified on Android.
 4. A real scientific sequence engine is built and tested against reference vectors.
 5. RDKit or an alternative and the offline viewer have measured outcomes.

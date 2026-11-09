@@ -62,13 +62,13 @@ def map_chain_sequence_by_alignment(
             raise ValueError(f"{name} must be a positive integer")
     if match_score <= 0 or mismatch_score >= match_score or gap_score >= 0:
         raise ValueError("Alignment scores must satisfy match > 0, mismatch < match and gap < 0")
-    for name, value in (
+    for name, threshold in (
         ("minimum_identity", minimum_identity),
         ("minimum_structure_coverage", minimum_structure_coverage),
     ):
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not isfinite(value):
+        if isinstance(threshold, bool) or not isinstance(threshold, (int, float)) or not isfinite(threshold):
             raise ValueError(f"{name} must be a finite number between 0 and 1")
-        if not 0.0 <= value <= 1.0:
+        if not 0.0 <= threshold <= 1.0:
             raise ValueError(f"{name} must be a finite number between 0 and 1")
     if len(query) > max_query_residues:
         raise ValueError("Query sequence exceeds max_query_residues")

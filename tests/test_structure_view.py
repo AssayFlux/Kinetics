@@ -172,3 +172,43 @@ def test_structure_session_export_enforces_byte_limit() -> None:
         build_structure_session_export(
             b"source", payload, parser_version="1", max_export_bytes=64,
         )
+
+
+def test_structure_source_parser_builds_payload_and_provenance() -> None:
+    from kinetics.structure_view import prepare_structure_viewer_source
+
+    pdb = (
+        "ATOM      1  CA  ALA A   1      1.000   2.000   3.000  1.00 20.00           C  \\n"
+        "END\\n"
+    )
+    result = prepare_structure_viewer_source(pdb, source_format="pdb")
+    assert result["payload"]["atom_count"] == 1
+    assert result["payload"]["atoms"][0]["xyz"] == [1.0, 2.0, 3.0]
+    assert result["preparation"]["source_bytes"] == len(pdb.encode("utf-8"))
+    assert len(result["preparation"]["source_sha256"]) == 64
+
+
+def test_structure_source_parser_supports_mmcif_and_rejects_bounds() -> None:
+    from kinetics.structure_view import prepare_structure_viewer_source
+
+    cif = """data_demo
+loop_
+_atom_site.group_PDB
+_atom_site.id
+_atom_site.type_symbol
+_atom_site.label_atom_id
+_atom_site.label_comp_id
+_atom_site.label_asym_id
+_atom_site.label_seq_id
+_atom_site.Cartn_x
+_atom_site.Cartn_y
+_atom_site.Cartn_z
+ATOM 1 C CA ALA A 1 1.0 2.0 3.0
+"""
+    result = prepare_structure_viewer_source(cif, source_format="mmcif")
+    assert result["payload"]["source_format"] == "mmcif"
+    assert result["payload"]["atoms"][0]["name"] == "CA"
+    with pytest.raises(ValueError, match="max_source_bytes"):
+        prepare_structure_viewer_source(cif, source_format="mmcif", max_source_bytes=4)
+    with pytest.raises(ValueError, match="source_format"):
+        prepare_structure_viewer_source(cif, source_format="pdb")

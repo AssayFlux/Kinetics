@@ -92,3 +92,12 @@ def analyze_fastq(text: str, phred_offset: int) -> str:
     from kinetics.workflows import analyze_fastq_text
     return json.dumps(analyze_fastq_text(text, phred_offset=phred_offset),
                       ensure_ascii=False, sort_keys=True)
+
+def prepare_structure_viewer_source(source_text: str, source_format: str) -> str:
+    """Chaquopy adapter for bounded local PDB/mmCIF parsing and viewer preparation."""
+    import json
+
+    from kinetics.structure_view import prepare_structure_viewer_source as prepare
+
+    result = prepare(source_text, source_format=source_format)
+    return json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":"))

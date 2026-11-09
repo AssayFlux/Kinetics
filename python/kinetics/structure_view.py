@@ -249,3 +249,39 @@ def build_structure_session_export(
     if len(encoded.encode("utf-8")) > max_export_bytes:
         raise ValueError("Structure session export exceeds max_export_bytes")
     return encoded
+
+def prepare_structure_viewer_source(
+    source_text: str,
+    *,
+    source_format: str,
+    max_source_bytes: int = 16 * 1024 * 1024,
+    max_atoms: int = 100_000,
+) -> dict[str, Any]:
+    """Parse bounded caller-supplied PDB/mmCIF text and return payload plus provenance."""
+    from .structure import parse_mmcif, parse_pdb
+
+    if not isinstance(source_text, str) or not source_text:
+        raise ValueError("Structure source must be non-empty text")
+    if (
+        isinstance(max_source_bytes, bool)
+        or not isinstance(max_source_bytes, int)
+        or max_source_bytes < 1
+    ):
+        raise ValueError("max_source_bytes must be a positive integer")
+    source_bytes = source_text.encode("utf-8")
+    if len(source_bytes) > max_source_bytes:
+        raise ValueError("Structure source exceeds max_source_bytes")
+    normalized_format = source_format.lower().strip() if isinstance(source_format, str) else ""
+    if normalized_format == "pdb":
+        atoms = parse_pdb(source_text)
+    elif normalized_format == "mmcif":
+        atoms = parse_mmcif(source_text)
+    else:
+        raise ValueError("source_format must be 'pdb' or 'mmcif'")
+    payload = prepare_viewer_payload(
+        atoms, source_format=normalized_format, max_atoms=max_atoms,
+    )
+    preparation = build_preparation_record(
+        source_bytes, payload, parser_version="kinetics-structure-parser-v1",
+    )
+    return {"payload": payload, "preparation": preparation}

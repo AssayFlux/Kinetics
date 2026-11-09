@@ -185,7 +185,7 @@ def compare_predicted_to_experimental_ca(
     if predicted.keys() != experimental.keys():
         raise ValueError("Predicted and experimental CA residue keys do not match exactly")
     keys = sorted(predicted)
-    value = rmsd(
+    rmsd_value = rmsd(
         [experimental[key] for key in keys],
         [predicted[key] for key in keys],
         superpose=True,
@@ -196,7 +196,7 @@ def compare_predicted_to_experimental_ca(
         "predicted_source_sha256": predicted_source_sha256,
         "experimental_source_sha256": experimental_source_sha256,
         "matched_ca_residues": len(keys),
-        "superposed_ca_rmsd_angstrom": value,
+        "superposed_ca_rmsd_angstrom": rmsd_value,
         "tm_score": None,
         "limitations": [
             "Exact chain/residue/residue-name keys are required; no alignment is performed.",

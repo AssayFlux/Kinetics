@@ -128,3 +128,11 @@ Every S increment must be tested against the exact commit. Host tests are regres
 #### S8 explicit genetic-code table identifier hardening
 - Translation and ORF scanning now reject boolean, floating-point and string table identifiers instead of allowing Python's bool/int equality to select a table implicitly.
 - The supported NCBI tables remain explicitly caller-selected; no genetic-code inference is introduced.
+
+
+#### S6/S9 — Bounded caller-supplied protein motif evidence
+- Added `python/kinetics/protein_motifs.py` for deterministic fixed-width motif matching against a caller-supplied, SHA-256-pinned JSON motif pack.
+- Motifs support canonical amino-acid literals and a single-residue `.` wildcard; arbitrary regular expressions are intentionally unsupported.
+- Enforces pack-byte, motif-count, query-residue, comparison and hit budgets; rejects duplicate JSON keys, duplicate motif IDs and invalid alphabets.
+- Reports exact 1-based match coordinates and motif-pack provenance. A match does not infer family/function; a no-match does not establish novelty.
+- This is a reusable motif-evidence primitive, not a curated motif database, motif-discovery engine, profile-HMM, homology search or calibrated classifier.

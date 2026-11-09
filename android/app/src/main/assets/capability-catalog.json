@@ -366,5 +366,13 @@
     "implementation": "python/kinetics/genome_qc.py",
     "evidence_level": "none",
     "domain": "Genome analysis"
+  },
+  {
+    "id": "protein.fixed_width_motif_scan",
+    "name": "Bounded provenance-aware caller-supplied protein motif scanning with abstention",
+    "status": "implemented",
+    "implementation": "python/kinetics/protein_motifs.py",
+    "evidence_level": "none",
+    "domain": "Protein analysis"
   }
 ]

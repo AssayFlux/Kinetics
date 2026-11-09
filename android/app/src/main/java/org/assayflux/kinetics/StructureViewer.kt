@@ -140,16 +140,15 @@ internal fun StructureViewerPreview() {
                         if (!Python.isStarted()) {
                             Python.start(AndroidPlatform(context.applicationContext))
                         }
-                        val json = Python.getInstance().getModule("kinetics_probe")
-                            .callAttr("prepare_structure_viewer_source", sourceText, format)
-                            .toString()
-                        val envelope = JSONObject(json)
+                        val envelope = JSONObject(
+                            Python.getInstance().getModule("kinetics_probe")
+                                .callAttr("prepare_structure_viewer_import", sourceText, format)
+                                .toString(),
+                        )
                         val payload = envelope.getJSONObject("payload")
                         val sourceHash = envelope.getJSONObject("preparation")
                             .getString("source_sha256")
-                        val sessionJson = Python.getInstance().getModule("kinetics_probe")
-                            .callAttr("export_structure_viewer_session", sourceText, format)
-                            .toString()
+                        val sessionJson = envelope.getString("session_export_json")
                         ImportedStructure(payload.toString(), name, sourceHash, sessionJson)
                     }
                 }

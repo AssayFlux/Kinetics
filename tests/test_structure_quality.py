@@ -97,3 +97,24 @@ def test_backbone_torsions_abstain_on_missing_atoms_and_bound_input() -> None:
     assert result["records"][0]["phi_degrees"] is None
     with pytest.raises(ValueError, match="max_atoms"):
         backbone_torsion_angles(atoms, max_atoms=0)
+
+
+
+def test_geometry_metrics_reject_conflicting_residue_names_at_one_position() -> None:
+    atoms = [
+        Atom(1, "CA", "ALA", "A", 7, 0.0, 0.0, 0.0, "C"),
+        Atom(2, "CA", "GLY", "A", 7, 1.0, 0.0, 0.0, "C"),
+    ]
+    with pytest.raises(ValueError, match="Conflicting residue identities"):
+        structure_geometry_metrics(atoms)
+
+
+def test_backbone_torsions_reject_ambiguous_residue_numbering() -> None:
+    from kinetics.structure_quality import backbone_torsion_angles
+
+    atoms = [
+        Atom(1, "N", "ALA", "A", 7, 0.0, 0.0, 0.0, "N"),
+        Atom(2, "CA", "GLY", "A", 7, 1.0, 0.0, 0.0, "C"),
+    ]
+    with pytest.raises(ValueError, match="Conflicting residue identities"):
+        backbone_torsion_angles(atoms)

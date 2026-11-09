@@ -61,7 +61,7 @@ def run() -> dict[str, object]:
         "overall_pass": all(item["pass"] for item in comparisons),
         "limitations": [
             "Checks table transcription against Biopython, not biological correctness of an organism assignment",
-            "Only NCBI tables 1, 2, 4, 5 and 11 are implemented",
+            "NCBI tables with context-dependent dual-stop semantics are intentionally not implemented",
             "Does not infer genetic codes, find genes, identify organisms or predict function",
         ],
     }

@@ -64,6 +64,16 @@ def structure_geometry_metrics(
     if not points:
         raise ValueError("Structure must contain at least one atom")
 
+    residue_names_by_position: dict[tuple[str, int], str] = {}
+    for atom in points:
+        position = (atom.chain, atom.residue_number)
+        residue_name = atom.residue.strip().upper()
+        previous_name = residue_names_by_position.setdefault(position, residue_name)
+        if previous_name != residue_name:
+            raise ValueError(
+                "Conflicting residue identities at one chain position; "
+                "insertion codes are not represented by this atom model"
+            )
     residues = {(atom.chain, atom.residue_number, atom.residue) for atom in points}
     supported: list[tuple[int, Atom, float]] = []
     unknown_elements: dict[str, int] = defaultdict(int)
@@ -175,6 +185,7 @@ def backbone_torsion_angles(
         if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:
             raise ValueError(f"{name} must be a positive integer")
     grouped: dict[tuple[str, int, str], dict[str, tuple[float, float, float]]] = {}
+    residue_names_by_position: dict[tuple[str, int], str] = {}
     atom_count = 0
     for atom in atoms:
         atom_count += 1
@@ -188,7 +199,15 @@ def backbone_torsion_angles(
         coordinate = (atom.x, atom.y, atom.z)
         if not all(isfinite(value) for value in coordinate):
             raise ValueError("Backbone coordinates must be finite")
-        key = (atom.chain, atom.residue_number, atom.residue.upper())
+        position = (atom.chain, atom.residue_number)
+        residue_name = atom.residue.upper()
+        previous_name = residue_names_by_position.setdefault(position, residue_name)
+        if previous_name != residue_name:
+            raise ValueError(
+                "Conflicting residue identities at one chain position; "
+                "insertion codes are not represented by this atom model"
+            )
+        key = (atom.chain, atom.residue_number, residue_name)
         residue_atoms = grouped.setdefault(key, {})
         if name in residue_atoms:
             raise ValueError(f"Duplicate backbone atom {name} at {key}")

@@ -68,6 +68,63 @@ GENETIC_CODES: Mapping[int, GeneticCode] = MappingProxyType({
     11: _code(
         11, "Bacterial, Archaeal and Plant Plastid", "TTG CTG ATT ATC ATA ATG GTG",
     ),
+    3: _code(
+        3, "Yeast Mitochondrial", "ATA ATG GTG",
+        {"ATA": "M", "TGA": "W", "CTT": "T", "CTC": "T", "CTA": "T", "CTG": "T"},
+    ),
+    6: _code(6, "Ciliate Nuclear", "ATG", {"TAA": "Q", "TAG": "Q"}),
+    9: _code(
+        9, "Echinoderm Mitochondrial", "ATG GTG",
+        {"TGA": "W", "AAA": "N", "AGA": "S", "AGG": "S"},
+    ),
+    10: _code(10, "Euplotid Nuclear", "ATG", {"TGA": "C"}),
+    12: _code(12, "Alternative Yeast Nuclear", "ATG CTG", {"CTG": "S"}),
+    13: _code(
+        13, "Ascidian Mitochondrial", "ATA ATG GTG TTG",
+        {"ATA": "M", "TGA": "W", "AGA": "G", "AGG": "G"},
+    ),
+    14: _code(
+        14, "Alternative Flatworm Mitochondrial", "ATG",
+        {"TAA": "Y", "TGA": "W", "AAA": "N", "AGA": "S", "AGG": "S"},
+    ),
+    15: _code(15, "Blepharisma Macronuclear", "ATG", {"TAG": "Q"}),
+    16: _code(16, "Chlorophycean Mitochondrial", "ATG", {"TAG": "L"}),
+    21: _code(
+        21, "Trematode Mitochondrial", "ATG GTG",
+        {"ATA": "M", "TGA": "W", "AAA": "N", "AGA": "S", "AGG": "S"},
+    ),
+    22: _code(
+        22, "Scenedesmus obliquus Mitochondrial", "ATG",
+        {"TAG": "L", "TCA": "*"},
+    ),
+    23: _code(
+        23, "Thraustochytrium Mitochondrial", "ATT ATG GTG",
+        {"TTA": "*"},
+    ),
+    24: _code(
+        24, "Pterobranchia Mitochondrial", "ATG CTG GTG TTG",
+        {"TGA": "W", "AGA": "S", "AGG": "K"},
+    ),
+    25: _code(
+        25, "Candidate Division SR1", "ATG GTG TTG", {"TGA": "G"},
+    ),
+    26: _code(
+        26, "Pachysolen tannophilus Nuclear", "ATG CTG", {"CTG": "A"},
+    ),
+    29: _code(29, "Mesodinium Nuclear", "ATG", {"TAA": "Y", "TAG": "Y"}),
+    30: _code(30, "Peritrich Nuclear", "ATG", {"TAA": "E", "TAG": "E"}),
+    31: _code(
+        31, "Blastocrithidia Nuclear", "ATG",
+        {"TAA": "E", "TAG": "E", "TGA": "W"},
+    ),
+    32: _code(
+        32, "Balanophoraceae Plastid", "ATA ATC ATG ATT CTG GTG TTG",
+        {"TAG": "W"},
+    ),
+    33: _code(
+        33, "Cephalodiscidae Mitochondrial", "ATG CTG GTG TTG",
+        {"TAA": "Y", "TGA": "W", "AGA": "S", "AGG": "K"},
+    ),
 })
 
 

@@ -34,3 +34,33 @@ def test_viewer_uses_bounded_accessible_selection_list() -> None:
     assert 'aria-label="Structure atoms"' in html
     assert 'aria-live="polite"' in html
     assert 'atoms.slice(0, 500)' in script
+
+
+
+def test_android_viewer_assets_are_byte_identical_to_reviewed_web_assets() -> None:
+    android = ROOT / 'android' / 'app' / 'src' / 'main' / 'assets' / 'structure-viewer'
+    for name in (
+        'structure-viewer.html',
+        'structure-viewer.js',
+        'structure-viewer.css',
+    ):
+        assert (android / name).read_bytes() == (VIEWER / name).read_bytes()
+
+
+def test_android_webview_and_document_io_keep_offline_security_boundary() -> None:
+    source = (
+        ROOT / 'android' / 'app' / 'src' / 'main' / 'java'
+        / 'org' / 'assayflux' / 'kinetics' / 'StructureViewer.kt'
+    ).read_text(encoding='utf-8')
+    assert 'WebViewAssetLoader' in source
+    assert 'settings.allowFileAccess = false' in source
+    assert 'settings.allowContentAccess = false' in source
+    assert 'settings.blockNetworkLoads = true' in source
+    assert 'MIXED_CONTENT_NEVER_ALLOW' in source
+    assert 'shouldOverrideUrlLoading' in source
+    assert 'addJavascriptInterface' not in source
+    assert 'ActivityResultContracts.OpenDocument()' in source
+    assert 'ActivityResultContracts.CreateDocument("application/json")' in source
+    assert 'MAX_STRUCTURE_SOURCE_BYTES = 16 * 1024 * 1024' in source
+    assert 'CodingErrorAction.REPORT' in source
+    assert 'prepare_structure_viewer_import' in source

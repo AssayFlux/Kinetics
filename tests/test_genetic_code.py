@@ -65,10 +65,47 @@ def test_cds_rejects_invalid_start_stop_and_internal_stop() -> None:
 
 
 def test_genetic_code_table_ids_are_explicit_and_limited() -> None:
-    assert set(GENETIC_CODES) == {1, 2, 4, 5, 11}
+    assert set(GENETIC_CODES) == {
+        1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16,
+        21, 22, 23, 24, 25, 26, 29, 30, 31, 32, 33,
+    }
 
 
 @pytest.mark.parametrize("table_id", [True, 1.0, "1"])
 def test_translation_rejects_non_integer_or_boolean_table_ids(table_id: object) -> None:
     with pytest.raises(ValueError, match="Unsupported NCBI"):
         translate_coding_sequence("ATG", table_id=table_id)
+
+
+
+@pytest.mark.parametrize(
+    "table_id, sequence, expected",
+    [
+        (3, "ATA TGA CTT", "MWT"),
+        (6, "TAA TAG TGA", "QQ*"),
+        (9, "AAA AGA AGG", "NSS"),
+        (10, "TGA TAA", "C*"),
+        (12, "CTG TAA", "S*"),
+        (13, "AGA AGG TGA", "GGW"),
+        (14, "TAA AAA TGA", "YNW"),
+        (15, "TAG TAA", "Q*"),
+        (16, "TAG TAA", "L*"),
+        (21, "ATA AAA AGA", "MNS"),
+        (22, "TAG TCA TAA", "L**"),
+        (23, "TTA TAA", "**"),
+        (24, "AGA AGG TGA", "SKW"),
+        (25, "TGA TAA", "G*"),
+        (26, "CTG TAA", "A*"),
+        (29, "TAA TAG TGA", "YY*"),
+        (30, "TAA TAG TGA", "EE*"),
+        (31, "TAA TAG TGA", "EEW"),
+        (32, "TAG TAA TGA", "W**"),
+        (33, "TAA TGA TAG", "YW*"),
+    ],
+)
+def test_extended_explicit_ncbi_tables(
+    table_id: int, sequence: str, expected: str,
+) -> None:
+    result = translate_coding_sequence(sequence, table_id=table_id)
+    assert result["protein"] == expected
+    assert result["table_id"] == table_id

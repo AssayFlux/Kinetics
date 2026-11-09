@@ -21,7 +21,7 @@
     for (const a of payload.atoms) {
       if (!a || !Number.isSafeInteger(a.serial) || a.serial < 0 || serials.has(a.serial) || !Number.isSafeInteger(a.residue_number) || a.residue_number < 0) throw new Error("Invalid or duplicate atom identifier");
       serials.add(a.serial);
-      if (![a.name,a.residue,a.chain,a.element].every(x => typeof x === "string" && x.length <= 8)) throw new Error("Invalid atom annotation");
+      if (![a.name,a.residue,a.chain].every(x => typeof x === "string" && x.length <= 8) || typeof a.element !== "string" || !a.element.trim() || a.element !== a.element.trim().toUpperCase() || a.element.length > 3) throw new Error("Invalid atom annotation");
       if (!Array.isArray(a.xyz) || a.xyz.length !== 3 || !a.xyz.every(validNumber)) throw new Error("Invalid atom coordinates");
     }
   }
@@ -54,8 +54,9 @@
     if (!w || !h) return;
     ctx.fillStyle = "#0e1821"; ctx.fillRect(0,0,w,h); projected = [];
     if (!atoms.length) return;
-    const xs=atoms.map(a=>a.xyz[0]), ys=atoms.map(a=>a.xyz[1]), zs=atoms.map(a=>a.xyz[2]);
-    const center=[(Math.min(...xs)+Math.max(...xs))/2,(Math.min(...ys)+Math.max(...ys))/2,(Math.min(...zs)+Math.max(...zs))/2];
+    const bounds={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};
+    for(const a of atoms)for(let axis=0;axis<3;axis++){bounds.min[axis]=Math.min(bounds.min[axis],a.xyz[axis]);bounds.max[axis]=Math.max(bounds.max[axis],a.xyz[axis]);}
+    const center=bounds.min.map((value,axis)=>(value+bounds.max[axis])/2);
     const cy=Math.cos(yaw), sy=Math.sin(yaw), cp=Math.cos(pitch), sp=Math.sin(pitch);
     const rotated=atoms.map((a,i)=>{const x=a.xyz[0]-center[0],y=a.xyz[1]-center[1],z=a.xyz[2]-center[2];const x1=x*cy-z*sy,z1=x*sy+z*cy;return {i,x:x1,y:y*cp-z1*sp,z:y*sp+z1*cp};});
     const extent=Math.max(1,...rotated.map(p=>Math.max(Math.abs(p.x),Math.abs(p.y))))*2;

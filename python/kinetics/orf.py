@@ -5,6 +5,9 @@ from hashlib import sha256
 
 from kinetics.genetic_code import GENETIC_CODES, translate_coding_sequence
 
+# Hard ceiling on start-to-stop combinations examined across all six frames.
+MAX_CANDIDATE_ORF_PAIRS = 1_000_000
+
 
 def find_orf_candidates(
     sequence: str,
@@ -50,6 +53,7 @@ def find_orf_candidates(
     reverse = dna.translate(str.maketrans("ACGT", "TGCA"))[::-1]
     code = GENETIC_CODES[table_id]
     orfs: list[dict[str, object]] = []
+    candidate_pairs_examined = 0
 
     for strand, oriented in (("+", dna), ("-", reverse)):
         for frame in range(3):
@@ -62,6 +66,12 @@ def find_orf_candidates(
                     open_starts.append(position)
                 if codon in code.stops:
                     for start in open_starts:
+                        candidate_pairs_examined += 1
+                        if candidate_pairs_examined > MAX_CANDIDATE_ORF_PAIRS:
+                            raise ValueError(
+                                "ORF start-to-stop candidate work exceeds "
+                                "MAX_CANDIDATE_ORF_PAIRS"
+                            )
                         coding_sequence = oriented[start:position + 3]
                         translated = translate_coding_sequence(
                             coding_sequence, table_id=table_id, cds=True,
@@ -104,6 +114,8 @@ def find_orf_candidates(
             "max_orfs": max_orfs,
             "max_sequence_bases": max_sequence_bases,
             "max_open_starts_per_frame": max_open_starts,
+            "max_candidate_orf_pairs_total": MAX_CANDIDATE_ORF_PAIRS,
+            "candidate_orf_pairs_examined": candidate_pairs_examined,
         },
         "orf_count": len(orfs),
         "orfs": orfs,

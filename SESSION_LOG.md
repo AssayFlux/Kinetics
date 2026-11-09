@@ -1941,3 +1941,8 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Added a Python contract test for `api/engine-envelope-v1.schema.json`: Draft 2020-12 schema self-check, valid request/result/error examples, and rejection of invalid version, digest, kind/payload combinations and malformed timestamp.
 - Added `jsonschema[format]` as a development/test-only dependency in both project development dependency declarations. It is not an Android/iOS runtime dependency.
 - Cross-language runtime validation remains to be implemented in each adapter as its corresponding operation is migrated; the Python test does not claim Kotlin/Rust/C++/Swift validation is already wired.
+
+
+### D-019 execution-order correction — 2026-11-09
+- Recorded the owner's current strict R → S → I → P → G sequence and two-step-per-track gate.
+- Explicitly superseded D-009's earlier parallel S-track permission for current execution; no S/I/P/G work is to be started while R remains open.

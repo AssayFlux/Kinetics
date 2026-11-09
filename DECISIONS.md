@@ -14,6 +14,8 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-007 | 2026-11-07 | Source-master archival | Resolved operationally — reconstructed from owner's complete chat-supplied master at docs/origin/KINETICS_MASTER.md; not represented as a Git move | Owner instruction |
 | D-008 | 2026-11-07 | Authorization to execute R1–R3 | Approved — proceed sequentially, subject to each phase's evidence, safety and exit gates; not a waiver or completion sign-off | Project owner |
 | D-009 | 2026-11-08 | Parallel Track S implementation sequencing | Approved — begin independently implementable S1 preparation while R1–R10 continue; dependent rendering and S2–S5 gates remain | Project owner |
+| D-018 | 2026-11-09 | Engineering language ownership and integration standard | Approved — owner-directed target stack and shared JSON Schema contract standard | Project owner |
+| D-019 | 2026-11-09 | Sequential track execution order | Approved — R → S → I → P → G, two steps per track; supersedes D-009 parallel sequencing | Project owner |
 
 ## D-000 — Direction baseline (approved)
 - Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.
@@ -184,4 +186,12 @@ The following historical decisions are retained for auditability but are no long
 - Context: The owner supplied an explicit engineering role, target stack ownership, integration-first workflow, interface-contract requirements, security rules and response/checklist requirements, and asked that they be documented and followed.
 - Choice: Adopt `docs/ENGINEERING_INTEGRATION_STANDARD.md` as the mandatory engineering workflow and target ownership model: Python scientific analysis; C++ performance-critical core; Rust security; Kotlin Android; Swift iPhone; HTML/CSS/TypeScript with Three.js for offline 3D visualisation; Bash build/test/deploy automation only. Adopt JSON Schema as the semantic source of truth for cross-component engine messages, initially `api/engine-envelope-v1.schema.json`.
 - Consequences: The standard is normative for new work. Existing code is not represented as conforming merely because it exists. Current Rust/C++ code is a smoke-test probe, Swift and TypeScript/Three.js sources are absent, and current Chaquopy/JNI edges must be migrated or explicitly mapped through reviewed, tested vertical slices. iOS minimum version/team experience remain TBD. No new clinical scope is authorized. No interface is silently changed by this documentation decision.
+- Approver: Project owner, explicit instruction in chat on 2026-11-09.
+
+
+## D-019 — Sequential track order and two-step gates (supersedes D-009)
+- Date: 2026-11-09.
+- Context: The owner explicitly reset execution order after earlier parallel-track instructions and requires a controlled base-first workflow.
+- Choice: Work tracks strictly in this order: **R → S → I → P → G**. For each track, Step 1 builds the documented base; Step 2 audits, tests and completes/fixes remaining base work. Do not begin the next track until the current track's two-step gate has been honestly assessed and reported.
+- Consequences: D-009's permission to develop S in parallel with R is superseded for current execution. Dependencies and safety gates remain. Report completion percentage only after the two-step gate and define the denominator; never claim full track completion if documented exit criteria remain unmet.
 - Approver: Project owner, explicit instruction in chat on 2026-11-09.

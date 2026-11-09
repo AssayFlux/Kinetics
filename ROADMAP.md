@@ -185,3 +185,7 @@ A build may be called tested only when its exact artifact has a recorded success
 ### R-track exact-source audit CI update — 2026-11-09
 - Commit `2ea102719fc37354f18def85bb329a60a885ee2a`, CI run #2094: all five jobs passed, including ARM64 APK/AAB, JVM tests, scientific reference fixtures, RDKit sanity fixtures and declared-source SPDX inventory.
 - The imported FASTA integration slice and its Step 2 code audit now have successful exact-source CI evidence. This is not a declaration that all R1–R10 exit criteria are met. Device/runtime, migration/recovery, broader workflow coverage, independent scientific validation and full licence/security gates remain.
+
+
+### Track execution order — D-019 (2026-11-09)
+D-019 supersedes D-009's parallel-track sequencing. Current execution is strictly R → S → I → P → G, with a two-step base-build and audit gate for each track. Do not start S until R's two-step gate is assessed and reported; do not start I until S is assessed, and so on.

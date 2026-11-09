@@ -177,3 +177,11 @@ The following historical decisions are retained for auditability but are no long
 - Choice: Proceed immediately with P1 public-data-only engineering preparation in parallel with R/S/I work: catalogue/schema validation, synthetic fixtures, dataset provenance and reproducibility infrastructure, and non-clinical research tooling. Do not wait for P0 to build these safe foundations.
 - Constraints: This authorization does not approve patient or human-subject data intake, clinical interpretation, genotype-to-phenotype recommendations, diagnosis/treatment/dosing, Clinical Mode, or claims of clinical validity/utility. P0 remains blocked until the existing legal, ethics, privacy, security, qualified-adviser, validation and owner-approval evidence is complete. D-004 adviser timing remains active; review after R3 and before any P0-gated activity.
 - Approver: Project owner, explicit permission reiterated in chat on 2026-11-09.
+
+
+## D-018 — Owner-directed language ownership and integration contract
+- Date: 2026-11-09.
+- Context: The owner supplied an explicit engineering role, target stack ownership, integration-first workflow, interface-contract requirements, security rules and response/checklist requirements, and asked that they be documented and followed.
+- Choice: Adopt `docs/ENGINEERING_INTEGRATION_STANDARD.md` as the mandatory engineering workflow and target ownership model: Python scientific analysis; C++ performance-critical core; Rust security; Kotlin Android; Swift iPhone; HTML/CSS/TypeScript with Three.js for offline 3D visualisation; Bash build/test/deploy automation only. Adopt JSON Schema as the semantic source of truth for cross-component engine messages, initially `api/engine-envelope-v1.schema.json`.
+- Consequences: The standard is normative for new work. Existing code is not represented as conforming merely because it exists. Current Rust/C++ code is a smoke-test probe, Swift and TypeScript/Three.js sources are absent, and current Chaquopy/JNI edges must be migrated or explicitly mapped through reviewed, tested vertical slices. iOS minimum version/team experience remain TBD. No new clinical scope is authorized. No interface is silently changed by this documentation decision.
+- Approver: Project owner, explicit instruction in chat on 2026-11-09.

@@ -1919,3 +1919,12 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Exact-source CI run #2094 is pending. Step 2 cannot be accepted until that run succeeds.
 - Still not tested: SQLite migration/recovery under Android runtime, WorkManager interruption/retry, SAF provider cleanup on actual providers, full instrumentation/UI flow, emulator/physical device launch, Chaquopy execution on device and performance.
 - No R-track completion claim is made from this base vertical slice.
+
+
+## 2026-11-09 — Owner engineering integration standard
+- Inspected NORTH_STAR, ROADMAP, DECISIONS, SESSION_LOG, architecture, contribution rules, language inventory, Gradle/CMake/Cargo/Python build configuration and existing JSON Schemas.
+- Added `docs/ENGINEERING_INTEGRATION_STANDARD.md` with project profile, explicit target language ownership, current implementation gaps, integration-first workflow, boundary ABI rules, security/testing rules, required change record, Check/Next step format and R→S→I→P→G two-step sequencing.
+- Added `api/engine-envelope-v1.schema.json` as the initial shared semantic contract for request/result/error messages. JSON Schema is the chosen contract source; operation-specific payload schemas and cross-language validators must be added with each operation.
+- Linked the standard from architecture and CONTRIBUTING; recorded owner direction as D-018; added it to ROADMAP.
+- Known gaps are stated, not hidden: current Rust/C++ is a probe, Swift/TypeScript/Three.js are absent, and no full cross-language contract validator exists yet. Team size, iOS minimum version and web graphics support remain TBD.
+- No application interface or runtime behavior was changed in this documentation/schema increment.

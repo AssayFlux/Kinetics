@@ -172,3 +172,11 @@ The owner requires substantial implementation and verification as one continuous
 
 ### Tested-build acceptance
 A build may be called tested only when its exact artifact has a recorded successful build, applicable automated regression results and required install/runtime UI evidence. Device checks that cannot be performed remain explicit blockers. A debug APK is not a production release.
+
+
+## Engineering integration standard — owner direction (2026-11-09)
+- Adopted `docs/ENGINEERING_INTEGRATION_STANDARD.md` and `api/engine-envelope-v1.schema.json` under D-018.
+- All future implementation increments must state component ownership, call direction, transport, contract/version, boundary risks and matching caller/callee changes before coding. JSON Schema is the semantic source of truth for cross-component engine envelopes.
+- Target ownership is Python (science), C++ (performance core), Rust (security), Kotlin (Android), Swift (iPhone), TypeScript/Three.js (offline 3D), Bash (build/test/deploy).
+- This is a target standard, not an implementation claim. Current Kotlin/Python/C++/Rust reality and absent Swift/TypeScript sources are explicitly documented. Team size, iOS minimum version and WebView/device matrix remain TBD.
+- Follow the owner's strict R → S → I → P → G, two-step-per-track sequence. No parallel track work until the owner changes that instruction.

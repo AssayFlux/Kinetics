@@ -1887,3 +1887,8 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### R Step 1 audit correction — analysis export callback wiring — 2026-11-09
 - Source review caught the Work-screen job-card call missing the new analysis-export callback. Home already passed it correctly. Fixed the Work-screen call before accepting this increment.
+
+
+### R Step 1 — documentation update for analysis export — 2026-11-09
+- Updated the R2/R4 phase plans and ROADMAP to include the versioned SAF analysis-result export, source digest binding and privacy exclusions.
+- R Step 1 remains unaccepted pending exact-source CI; R Step 2 will audit the complete R base and close migration, persistence, export and UI regressions.

@@ -46,3 +46,12 @@ Kinetics neighbour joining with Biopython's independent NJ implementation on a
 deterministic additive four-taxon matrix. The result is part of the pinned
 host-side reference CI artifact. It is a synthetic software check, not a
 published-tree or biological-evolution validation.
+
+
+## Differential-expression software comparison
+
+`omics_nb2_scipy_reference.py` compares the exploratory NB2 GLM with an
+independent SciPy maximum-likelihood optimizer on fixed synthetic raw counts.
+It uses the same recorded size factors and fixed moment dispersion, then checks
+coefficients, Fisher-information standard errors and Wald p-values. This is a
+software/numerical comparison, not null/power/FDR or biological validation.

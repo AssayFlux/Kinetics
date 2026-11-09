@@ -42,3 +42,10 @@ Features with all-zero raw counts are now retained in the tested family with p=1
 - The pinned host scientific-reference job passed its Michaelis–Menten/SciPy comparison and genetic-code/Biopython comparison steps. These are bounded synthetic/software-reference checks, not independent experimental validation.
 - Android ARM64 debug APK/AAB packaging, static package/ELF alignment checks and `:app:testDebugUnitTest` passed. APK: 69,875,151 bytes, SHA-256 `059abb9e3a299b5295b8f08772b976195d7be1cd7db46dce34faa7bcf486d2d9`; AAB: 39,952,539 bytes, SHA-256 `9c8e2ca3a81c4ef2b1fb041aefee99ace5cbfb3292574b815c6a87549210044e`.
 - Boundaries: no emulator or physical-device installation/runtime evidence; no Android migration/WorkManager/SAF instrumentation; no end-to-end on-device Chaquopy run; no R5 independent structure concordance, R6 approved-engine chemistry concordance, R7 published tree concordance, R8 null/power/FDR calibration, or R9 authoritative licensed PGx content. R10 security/licence/release gates remain open.
+
+
+## Host-side NB2 likelihood reference comparison — 2026-11-09
+
+Added `validation/omics_nb2_scipy_reference.py` to compare the exploratory per-feature NB2 GLM against an independent SciPy maximum-likelihood fit on a deterministic raw-count dataset. Both fits use the same explicitly calculated median-of-ratios size factors and fixed per-feature moment dispersion; the SciPy implementation independently optimizes the NB2 log likelihood and computes Fisher-information standard errors/Wald p-values. Coefficient, standard-error and p-value tolerances are recorded, and CI fails closed.
+
+This is a bounded synthetic numerical comparison, not a full DESeq2/edgeR replacement or statistical calibration study. Dispersion moderation, repeated measures, outlier robustness, null/power/FDR calibration, batch designs, real omics datasets and independent biological validation remain open.

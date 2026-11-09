@@ -2071,3 +2071,23 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Validate the exact-source run, then extend R7 with a frozen licensed reference alignment/tree set and documented topology/branch tolerances.
+
+
+## 2026-11-09 — Session 43: Add independent NB2 likelihood reference harness
+
+### Reviewed
+- Re-read the R8 differential-expression implementation, normalization/dispersion method, current NB2 tests and pinned SciPy validation environment.
+- Confirmed the current regression suite exercised synthetic behavior but did not compare the IRLS estimates and Wald statistics with an independent optimizer.
+
+### Implemented
+- Added a deterministic raw-count comparison fixture with explicit median-of-ratios size factors and per-feature moment dispersions.
+- Added an independent SciPy NB2 log-likelihood optimizer and Fisher-information standard-error/Wald calculation.
+- Compared condition coefficients, standard errors and p-values with explicit tolerances; wired a fail-closed script and JSON artifact into host reference CI.
+- Documented the synthetic-only boundary in the R8 plan and validation README.
+
+### Verification boundary
+- Exact-source CI must pass before this comparison is counted as executed.
+- This does not validate dispersion moderation, repeated-measures models, outlier handling, null calibration, power, FDR control or biological truth.
+
+### Next
+- Validate the exact-source comparison and continue R8 with null simulations, power/FDR calibration and an independently reviewed reference dataset.

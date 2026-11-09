@@ -1,11 +1,11 @@
 # R1 — Android and scientific-stack feasibility
 
 **Roadmap item:** Track R / R1  
-**Status:** IN PROGRESS — exact-source CI #2122 on `cb32bdb` has passed Python, host scientific-reference, RDKit and SPDX jobs; Android ARM64 build/JVM tests are still running. Device runtime and scientific-stack feasibility remain open  
+**Status:** IMPLEMENTATION/HOST AUDIT STEP CLOSED — exact-source CI #2126 on `888e49b` passed all five jobs, including Android arm64 APK/AAB, JVM tests and static alignment. Physical-device runtime and scientific-stack feasibility remain open  
 **Owner:** Engineering + Project owner  
 **Started:** 2026-11-07  
 **Depends on:** R0 foundation and approved direction baseline  
-**Exit gate:** Evidence-backed feasibility matrix and explicit owner go/no-go before declaring R1 validated or opening Track S. Current sequencing is strictly R → S → I → P → G under D-019.
+**Exit gate:** Evidence-backed feasibility matrix and explicit owner go/no-go before declaring R1 validated. Under D-019 and the owner's 2026-11-09 direction, the R engineering/host audit step is closed and S is the next track; R1's device/runtime and feasibility evidence remains a carry-forward blocker, not a passed criterion.
 
 ## Objective
 

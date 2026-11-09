@@ -15,7 +15,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-008 | 2026-11-07 | Authorization to execute R1–R3 | Approved — proceed sequentially, subject to each phase's evidence, safety and exit gates; not a waiver or completion sign-off | Project owner |
 | D-009 | 2026-11-08 | Parallel Track S implementation sequencing | Approved — begin independently implementable S1 preparation while R1–R10 continue; dependent rendering and S2–S5 gates remain | Project owner |
 | D-018 | 2026-11-09 | Engineering language ownership and integration standard | Approved — owner-directed target stack and shared JSON Schema contract standard | Project owner |
-| D-019 | 2026-11-09 | Sequential track execution order | Approved — R → S → I → P → G, two steps per track; supersedes D-009 parallel sequencing | Project owner |
+| D-019 | 2026-11-09 | Sequential track execution order | Approved — R → S → I → P → G, two steps per track; supersedes D-009 parallel sequencing | Project owner |\n| D-020 | 2026-11-09 | Close R host audit and proceed to S | Approved — close the R implementation/host-regression audit on exact-source CI #2126, consolidate documentation, then begin S. Does not waive or relabel open R device, external-science, licensing, security, accessibility or release evidence | Project owner |
 
 ## D-000 — Direction baseline (approved)
 - Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.
@@ -195,3 +195,11 @@ The following historical decisions are retained for auditability but are no long
 - Choice: Work tracks strictly in this order: **R → S → I → P → G**. For each track, Step 1 builds the documented base; Step 2 audits, tests and completes/fixes remaining base work. Do not begin the next track until the current track's two-step gate has been honestly assessed and reported.
 - Consequences: D-009's permission to develop S in parallel with R is superseded for current execution. Dependencies and safety gates remain. Report completion percentage only after the two-step gate and define the denominator; never claim full track completion if documented exit criteria remain unmet.
 - Approver: Project owner, explicit instruction in chat on 2026-11-09.
+
+
+## D-020 — R engineering audit closure and transition to S
+- Context: The owner requested completion of the R-track audit, documentation consolidation, and transition to S.
+- Evidence: Exact-source commit `888e49bc7108a2609db97d76193a60d5eec175e0`; CI #2126 passed all five jobs, including Android arm64 APK/AAB build, JVM tests, Python 238 passed/4 skipped, host scientific-reference comparisons, RDKit sanity and direct SPDX inventory.
+- Choice: Close the R implementation/host-regression audit step, consolidate the repository documentation, and proceed to S as the next engineering track.
+- Boundary: This is not a declaration that R1–R10 are all phase-accepted, scientifically validated, device-verified, fully licensed or release-ready. Open R evidence remains in the R audit and master roadmap as carry-forward obligations; dependent S work must respect those gaps.
+- Approver: Project owner (explicit instruction in chat, 2026-11-09).

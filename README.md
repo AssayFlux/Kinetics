@@ -5,7 +5,7 @@
   <em>Android-native · Reproducible · Provenance-aware · Research-only</em>
 </p>
 
-Kinetics is an ambitious, modular platform for computational biology and in-silico research. Its engineering work is organised into four parallel research tracks—**R, S, I and P**—with a dedicated governance and user-experience layer. The project is under active development; implementation progress is not the same as scientific validation or release readiness.
+Kinetics is an offline-first, modular platform for computational biology and in-silico research. Engineering tracks execute in the owner-approved order **R → S → I → P → G**, with implementation, automated regression, independent scientific validation, device verification and release acceptance recorded separately. The project remains under active development; implementation progress is not scientific validation or release readiness.
 
 > **Current release state:** Pre-release development. Kinetics is not yet a validated scientific application or a production release. Clinical and patient-data workflows are disabled.
 
@@ -18,7 +18,7 @@ Kinetics is an ambitious, modular platform for computational biology and in-sili
 | **Product** | Offline-first Android scientific workbench |
 | **Primary mode** | Research Mode only |
 | **Engineering scope** | R1–R10, developed as one integrated platform |
-| **Parallel research** | S — Structure & discovery · I — In-silico laboratory · P — Precision medicine preparation |
+| **Next track** | S — Structure, sequence & discovery (after R engineering audit closure) |
 | **User experience** | D-015 Light Classic visual direction; supplied dashboard/login references recorded; Compose redesign in progress |
 | **Build channel** | GitHub Actions · unsigned arm64 debug APK/AAB |
 | **Validation state** | Source tests and CI evidence are distinct from device and independent scientific validation |
@@ -26,15 +26,17 @@ Kinetics is an ambitious, modular platform for computational biology and in-sili
 
 ## Development dashboard
 
-<sub>Latest exact-source verification: [CI #2039](https://github.com/AssayFlux/Kinetics/actions/runs/42493028735) on `79a24eb` — Python/registry, pinned scientific-reference, RDKit, SPDX and Android ARM64 APK/AAB/JVM checks passed. Physical-device runtime and independent experimental validation remain open. Device runtime and independent scientific validation remain open.</sub>
+The current documentation index is [`docs/README.md`](docs/README.md). Track order and decision history are controlled by [`ROADMAP.md`](ROADMAP.md) and [`DECISIONS.md`](DECISIONS.md); superseded instructions are retained only as history.
+
+<sub>Latest exact-source verification: [CI #2126](https://github.com/AssayFlux/Kinetics/actions/runs/42560038764) on `888e49b` — all five jobs passed. Python: 238 passed, 4 skipped; Android arm64 APK/AAB, JVM tests, package alignment, scientific reference fixtures, RDKit sanity and direct SPDX inventory passed. Physical-device runtime and independent experimental validation remain open.</sub>
 
 
 The cards below summarise the state recorded in the project roadmap. “In progress” means implementation or preparation exists; it does **not** mean the phase has passed its exit gate.
 
 | Track | Focus | Progress recorded | Overall state |
 |---|---|---|---|
-| **R — Research platform** | Android foundation, secure data, scientific engines, genomics, quality and release hardening | R1–R10 have implementation work recorded; every phase still has outstanding exit evidence | **In progress** |
-| **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1 and S6–S9 have bounded preparation/implementation; S2–S5 are not started; S10 remains gated | **In progress** |
+| **R — Research platform** | Android foundation, secure data, scientific engines, genomics, quality and release hardening | Engineering implementation and host-side audit pass completed; device, external validation, licensing and signed-release gates remain open | **Audit closed; acceptance evidence open** |
+| **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | Next sequential track; prior preparation is not treated as phase acceptance | **Next** |
 | **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1 has host-side descriptor/reference-fixture work; I4 is source-inventory preparation; I2, I3 and I5 are not started | **In progress** |
 | **P — Precision medicine** | PGx-first research pathway and future governance | P1 public-data metadata gate, synthetic reference-build/coordinate/SHA-256 contract and regression tests implemented; no acquired datasets or genotype interpretation | **Preparation in progress; P0 blocked** |
 | **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open | **In progress** |

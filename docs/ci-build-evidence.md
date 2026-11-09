@@ -97,3 +97,16 @@ Commit `c157bb5a09d9dcc17a8bc7a57b60129d58e4866a`, [workflow run #2100 — succe
 - AAB: 39,953,035 bytes; SHA-256 `bc20f28a3fdb2f4630b586ac8b51d5c6aef814b5fc84526c6759d6ad13a1f782`.
 - Android artifact ZIP: 80,047,834 bytes; SHA-256 `41a206d20a983f0823fa79f03d6a5c114c7982bc209144d5de07a80beefd562b`; artifact ID `13648167099`.
 - R5 evidence boundary: this is synthetic software concordance, not experimental reference-structure validation. mmCIF semantics, SASA/interactions, licensed real structures, large-structure benchmarks, viewer and device measurements remain open.
+
+
+## Exact-source R-track audit baseline — 2026-11-09
+
+- Source commit: `888e49bc7108a2609db97d76193a60d5eec175e0`.
+- Workflow: [run #2126 — successful](https://github.com/AssayFlux/Kinetics/actions/runs/42560038764); all five jobs passed.
+- Python: 242 collected; 238 passed; 4 skipped.
+- Host scientific-reference comparisons, pinned RDKit descriptor sanity and declared-source SPDX inventory passed.
+- Android arm64 debug build and package verification passed; `:app:testDebugUnitTest` completed successfully.
+- APK: 69,891,771 bytes; SHA-256 `73e66bacb3d1e45e8928c52c10b3fed14e29aa71c8e09a8df73945ffef24aa06`.
+- AAB: 39,953,771 bytes; SHA-256 `a851cdeaf921e8b8b40dd82184fb2ef8200bc7b660ab32c80da448cd22d5aadf`.
+- Uploaded Android artifact ZIP: [artifact 13649560656](https://github.com/AssayFlux/Kinetics/actions/runs/42560038764/artifacts/13649560656), 80,049,058 bytes; SHA-256 `3c4b135979a4b1920a7afae3fc500c2aa7ebb35a3ef0af357fa867de9be60488`.
+- This exact-source build verifies the import worker resource-lifecycle hardening. It does not establish physical-device runtime, WorkManager process-death recovery, SAF provider behavior, Chaquopy/JNI runtime, scientific validation or release signing.

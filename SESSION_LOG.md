@@ -2170,3 +2170,10 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Confirm CI and continue the R9/R10 validation gates. R remains open.
+
+
+## 2026-11-09 — Session 49: Expand phylogenetic edge-case coverage
+
+- Added two-taxon neighbour-joining distance preservation, asymmetric/non-zero diagonal rejection and deterministic tie-resolution regression tests.
+- Updated the R7 plan/roadmap to distinguish these deterministic software tests from missing published biological tree references and scale benchmarks.
+- Tests await exact-source CI; R7 remains exploratory and R remains open.

@@ -47,3 +47,8 @@ Added deterministic, seeded alignment-column resampling for Jukes-Cantor + neigh
 Added `validation/phylo_biopython_reference.py` to compare the local neighbour-joining implementation against Biopython 1.88's independent `DistanceTreeConstructor.nj` on a deterministic additive four-taxon distance matrix with unequal terminal branches. The harness compares all six patristic pair distances with a 1e-8 tolerance, asserts leaf identity and fails CI if any comparison differs.
 
 This is synthetic algorithm/software concordance, not a published phylogeny or biological evolutionary validation. It does not validate sequence search, maximum-likelihood/Bayesian inference, model selection, rate heterogeneity, real alignment uncertainty, large-tree scaling, viewers or node security.
+
+
+### Neighbour-joining degenerate-input regression increment — 2026-11-09
+
+Added deterministic regression cases for the two-taxon base case, exact pair-distance preservation, asymmetric/non-zero-diagonal rejection and deterministic tie handling on an equidistant four-taxon matrix. These tests harden matrix edge handling but do not replace the outstanding published-tree/topology reference corpus or large-tree performance study.

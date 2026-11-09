@@ -111,3 +111,37 @@ def test_site_bootstrap_rejects_invalid_alignment_and_limits() -> None:
             {"A": "A" * 30, "B": "C" * 30, "C": "G" * 30, "D": "T" * 30},
             replicates=0,
         )
+
+
+
+def test_neighbor_joining_two_taxa_preserves_exact_pair_distance() -> None:
+    from kinetics.phylo import neighbor_joining, patristic_distance
+
+    tree = neighbor_joining([[0.0, 7.25], [7.25, 0.0]], ["left", "right"])
+    assert patristic_distance(tree, "left", "right") == pytest.approx(7.25)
+
+
+def test_neighbor_joining_rejects_asymmetric_and_nonzero_diagonal_matrices() -> None:
+    from kinetics.phylo import neighbor_joining
+
+    with pytest.raises(ValueError, match="symmetric"):
+        neighbor_joining([[0.0, 1.0], [2.0, 0.0]], ["A", "B"])
+    with pytest.raises(ValueError, match="diagonal"):
+        neighbor_joining([[1.0, 1.0], [1.0, 0.0]], ["A", "B"])
+
+
+def test_neighbor_joining_tie_resolution_is_deterministic() -> None:
+    from kinetics.phylo import neighbor_joining, to_newick
+
+    matrix = [
+        [0.0, 2.0, 2.0, 2.0],
+        [2.0, 0.0, 2.0, 2.0],
+        [2.0, 2.0, 0.0, 2.0],
+        [2.0, 2.0, 2.0, 0.0],
+    ]
+    first = to_newick(neighbor_joining(matrix, ["A", "B", "C", "D"]))
+    second = to_newick(neighbor_joining(matrix, ["A", "B", "C", "D"]))
+    assert first == second
+    assert set(leaf_names(neighbor_joining(matrix, ["A", "B", "C", "D"]))) == {
+        "A", "B", "C", "D",
+    }

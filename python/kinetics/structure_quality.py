@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import heapq
 from collections import defaultdict
-from math import floor, isfinite, sqrt
+from math import atan2, degrees, floor, isfinite, sqrt
 from typing import Iterable
 
 from .structure import Atom
@@ -228,8 +228,7 @@ def backbone_torsion_angles(
         w = (b2[0] - projection2 * unit[0], b2[1] - projection2 * unit[1], b2[2] - projection2 * unit[2])
         if dot(v, v) <= 1e-24 or dot(w, w) <= 1e-24:
             return None
-        angle = __import__("math").atan2(dot(cross(unit, v), w), dot(v, w))
-        from math import degrees
+        angle = atan2(dot(cross(unit, v), w), dot(v, w))
         return degrees(angle)
 
     records: list[dict[str, object]] = []
@@ -242,9 +241,15 @@ def backbone_torsion_angles(
             contiguous_next = following is not None and key[1] + 1 == following[0][1]
             phi = None
             psi = None
-            if contiguous_previous and {"C"} <= previous[1].keys() and {"N", "CA", "C"} <= current.keys():
+            if (
+                previous is not None and previous[0][1] + 1 == key[1]
+                and "C" in previous[1] and {"N", "CA", "C"} <= current.keys()
+            ):
                 phi = dihedral(previous[1]["C"], current["N"], current["CA"], current["C"])
-            if contiguous_next and {"N", "CA", "C"} <= current.keys() and {"N"} <= following[1].keys():
+            if (
+                following is not None and key[1] + 1 == following[0][1]
+                and {"N", "CA", "C"} <= current.keys() and "N" in following[1]
+            ):
                 psi = dihedral(current["N"], current["CA"], current["C"], following[1]["N"])
             records.append({
                 "chain_id": chain,

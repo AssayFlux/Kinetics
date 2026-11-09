@@ -107,3 +107,9 @@ This is an initial R2→R4 integration slice, not the full R2 exit: analysis-res
 The integrated import→authenticated local FASTA QC→durable SHA-256-linked analysis result→SAF JSON export path built successfully on ARM64 and passed the Android JVM unit-test task at commit `fc8b667` (CI run #2093). The exact APK/AAB hashes and workflow artifact ZIP digest are recorded in `docs/ci-build-evidence.md`.
 
 A follow-on audit at `2ea1027` adds export-time digest revalidation, a serialized-result cap and a bounded Compose preview. Its exact-source CI run is pending; do not transfer the preceding build result to that newer commit. Migration/recovery/SAF provider/instrumentation/device tests remain open.
+
+
+### Exact-source audit CI — 2026-11-09
+Commit `2ea102719fc37354f18def85bb329a60a885ee2a`, workflow run #2094, passed all five CI jobs. ARM64 APK/AAB packaging, alignment, artifact hashes and Android JVM unit tests passed. The audit-time export digest guard, result-size cap and bounded Compose preview are included in this exact-source build. See `docs/ci-build-evidence.md` for hashes.
+
+This closes the automated CI check for the current imported FASTA vertical slice. It does **not** close full R-track exit: migration/recovery, WorkManager interruption, SAF provider lifecycle, dedicated instrumentation/UI coverage, emulator/physical-device installation and Chaquopy runtime exercise remain open.

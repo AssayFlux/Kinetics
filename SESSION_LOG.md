@@ -1928,3 +1928,10 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Linked the standard from architecture and CONTRIBUTING; recorded owner direction as D-018; added it to ROADMAP.
 - Known gaps are stated, not hidden: current Rust/C++ is a probe, Swift/TypeScript/Three.js are absent, and no full cross-language contract validator exists yet. Team size, iOS minimum version and web graphics support remain TBD.
 - No application interface or runtime behavior was changed in this documentation/schema increment.
+
+
+### R Step 2 exact-source CI completion — 2026-11-09
+- Commit `2ea102719fc37354f18def85bb329a60a885ee2a`, workflow #2094: all five jobs passed.
+- ARM64 APK SHA-256 `d6b7bd05090519761bb1771b82c41f14b3c3ff2d834a1844d2ec0052babbb82b` (69,875,059 bytes); AAB SHA-256 `9c09035e9588e4af42554418c7f02e1efca2d84441f328b237f29c758c6c261f` (39,951,809 bytes).
+- Android Gradle build, APK/native alignment checks, JVM unit tests and artifact verification all passed. Host Python, reference comparisons, RDKit sanity and SPDX jobs passed.
+- This closes exact-source CI for the R2/R4 imported FASTA integration slice, not the entire R track. Device/runtime and dedicated migration/worker/SAF instrumentation checks remain open.

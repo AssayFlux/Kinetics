@@ -40,3 +40,7 @@ The Explore FASTA text-card remains a bounded convenience path. A second path no
 
 ### R Step 2 CI boundary — 2026-11-09
 The imported FASTA analysis worker and result/export UI compiled into the ARM64 APK/AAB and passed Android JVM unit tests at commit `fc8b667` (CI #2093). The follow-on result-integrity/preview patch `2ea1027` is awaiting exact-source CI. The build confirms packaging and compilation, not successful on-device Chaquopy invocation or scientific reference validation of FASTA QC.
+
+
+### Exact-source audit CI — 2026-11-09
+Commit `2ea102719fc37354f18def85bb329a60a885ee2a`, CI run #2094, passed all five jobs. ARM64 APK/AAB, package alignment, artifact hash checks and Android JVM unit tests passed. The digest revalidation and bounded result/preview guards are present in this exact-source build. No emulator/physical-device execution or on-device Chaquopy FASTA workflow is established by this CI result.

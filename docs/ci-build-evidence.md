@@ -40,14 +40,18 @@ D-016 requires every substantial increment to be built, regression-tested and in
 - AAB: 39,951,888 bytes; SHA-256 `24ce93b67a3eeb1946e1e2c51ef181032422a637cd6f595d9716eef737b8c607`.
 - Workflow artifact ZIP: 80,045,596 bytes; SHA-256 `d79ef58563583f5c7f3ce0b45cbefa53f9a91c86b98b1076a8f22531d52b276c`; artifact ID `13645517097`. This digest is for the uploaded ZIP, not the APK/AAB.
 - The successful build contains the imported FASTA WorkManager worker, schema-v4 durable analysis result, SHA-256 provenance, job-card inspection and SAF analysis JSON export.
-- This evidence is for `fc8b667`, not the subsequent audit patch `2ea1027`. The latter has a separate CI run pending at the time of this entry.
+- Follow-on exact-source audit commit: `2ea102719fc37354f18def85bb329a60a885ee2a`; [workflow run #2094 — successful](https://github.com/AssayFlux/Kinetics/actions/runs/42552040285). All five jobs passed, including Python foundation/registry/tests, pinned host scientific references, RDKit descriptor fixtures, SPDX inventory, and Android ARM64 APK/AAB build + JVM tests.
+- Android build log: `BUILD SUCCESSFUL`; `:app:testDebugUnitTest` — `BUILD SUCCESSFUL`; APK ZIP/native ELF alignment and artifact verification passed.
+- APK: 69,875,059 bytes; SHA-256 `d6b7bd05090519761bb1771b82c41f14b3c3ff2d834a1844d2ec0052babbb82b`.
+- AAB: 39,951,809 bytes; SHA-256 `9c09035e9588e4af42554418c7f02e1efca2d84441f328b237f29c758c6c261f`.
+- This confirms the result-digest revalidation, result-size guard and bounded preview on `2ea1027`. A later documentation/schema-only commit is being verified separately.
 
-### Final R Step 2 audit changes awaiting CI
+### Final R Step 2 audit changes (CI passed on `2ea1027`)
 - Analysis export now requires current job state `succeeded` and exact equality between the current job digest and analysis-record digest.
 - Worker checks non-empty record list and caps serialized output at 2,000,000 characters before persistence.
 - Job-card preview is limited to 12,000 characters; full JSON is available via explicit export.
 
 ### Verification boundaries
-- JVM test task is green for `fc8b667`; no dedicated SQLite migration, analysis worker lifecycle, SAF provider failure, process-death or instrumentation test has yet been added for this vertical slice.
+- JVM test task is green for both `fc8b667` and `2ea1027`; no dedicated SQLite migration, analysis worker lifecycle, SAF provider failure, process-death or instrumentation test has yet been added for this vertical slice.
 - No emulator or physical-device installation/runtime test is recorded. CI artifact existence is not device acceptance.
 - No independent experimental validation or clinical suitability is implied.

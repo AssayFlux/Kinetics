@@ -7,7 +7,7 @@ or infer missing/disordered residues.
 from __future__ import annotations
 
 from math import ceil, floor, isfinite, sqrt
-from typing import Iterable
+from typing import Iterable, cast
 
 from .structure import Atom
 
@@ -382,15 +382,21 @@ def chain_interface_contacts(
                             "atom_contact_count": 0,
                             "minimum_distance_angstrom": distance,
                         })
-                        entry["atom_contact_count"] = int(entry["atom_contact_count"]) + 1
-                        entry["minimum_distance_angstrom"] = min(
-                            float(entry["minimum_distance_angstrom"]), distance,
-                        )
-    contacts = sorted(
-        pairs.values(),
-        key=lambda item: (int(item["atom_contact_count"]), -float(item["minimum_distance_angstrom"])),
-        reverse=True,
-    )
+                        contact_count = entry["atom_contact_count"]
+                        current_minimum = entry["minimum_distance_angstrom"]
+                        if not isinstance(contact_count, int) or not isinstance(current_minimum, (int, float)):
+                            raise RuntimeError("Internal interface-contact accumulator is malformed")
+                        entry["atom_contact_count"] = contact_count + 1
+                        entry["minimum_distance_angstrom"] = min(float(current_minimum), distance)
+
+    def contact_sort_key(item: dict[str, object]) -> tuple[int, float]:
+        contact_count = item["atom_contact_count"]
+        minimum_distance = item["minimum_distance_angstrom"]
+        if not isinstance(contact_count, int) or not isinstance(minimum_distance, (int, float)):
+            raise RuntimeError("Internal interface-contact result is malformed")
+        return contact_count, -float(minimum_distance)
+
+    contacts = sorted(pairs.values(), key=contact_sort_key, reverse=True)
     return {
         "schema": "kinetics.chain-interface-contacts.v1",
         "chain_a": chain_a,
@@ -398,7 +404,7 @@ def chain_interface_contacts(
         "cutoff_angstrom": float(cutoff_angstrom),
         "candidate_pair_count": candidate_pairs,
         "residue_pair_count": len(contacts),
-        "atom_contact_count": sum(int(item["atom_contact_count"]) for item in contacts),
+        "atom_contact_count": sum(cast(int, item["atom_contact_count"]) for item in contacts),
         "residue_contacts": contacts,
         "interpretation": "geometric_interface_contacts_only",
         "limitations": [

@@ -125,11 +125,11 @@ def structure_geometry_metrics(
                             "overlap_angstrom": round(overlap, 4),
                             "severity": "severe" if severe else "candidate",
                         }
-                        item = (overlap, candidate_pairs, record)
+                        heap_entry = (overlap, candidate_pairs, record)
                         if len(top_clashes) < max_reported_clashes:
-                            heapq.heappush(top_clashes, item)
+                            heapq.heappush(top_clashes, heap_entry)
                         else:
-                            heapq.heappushpop(top_clashes, item)
+                            heapq.heappushpop(top_clashes, heap_entry)
 
     clashes = [
         item[2] for item in sorted(top_clashes, key=lambda entry: entry[0], reverse=True)

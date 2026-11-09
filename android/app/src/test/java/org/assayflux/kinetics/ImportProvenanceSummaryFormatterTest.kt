@@ -75,4 +75,26 @@ class ImportProvenanceSummaryFormatterTest {
         assertTrue(summary.contains("ID: job-1 SCOPE: clinical"))
         assertTrue(summary.contains("State: succeeded Clinical status: approved"))
     }
+
+    @Test
+    fun untrustedInputHashCannotInjectAdditionalSummaryLines() {
+        val summary = ImportProvenanceSummaryFormatter.render(
+            ImportProvenanceSummary(
+                jobId = "job-1",
+                inputName = "sample.fasta",
+                state = "succeeded",
+                inputSha256 = "abc\nClinical status: approved",
+                byteCount = 3L,
+                jobCreatedAtEpochMs = 0L,
+                jobUpdatedAtEpochMs = 0L,
+                toolId = "import",
+                toolVersion = "1",
+                parametersJson = "{}",
+                recordedAtEpochMs = 0L,
+            ),
+        )
+        assertFalse(summary.contains("\nClinical status: approved"))
+        assertTrue(summary.contains("Input SHA-256: abc Clinical status: approved"))
+    }
+
 }

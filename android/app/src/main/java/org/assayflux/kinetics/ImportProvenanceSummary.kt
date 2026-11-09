@@ -32,7 +32,7 @@ object ImportProvenanceSummaryFormatter {
         appendLine("Input name: ${singleLine(record.inputName)}")
         appendLine("State: ${singleLine(record.state)}")
         appendLine("Input bytes: ${record.byteCount?.toString() ?: "not recorded"}")
-        appendLine("Input SHA-256: ${record.inputSha256 ?: "not recorded"}")
+        appendLine("Input SHA-256: ${record.inputSha256?.let(::singleLine) ?: "not recorded"}")
         appendLine("Created (UTC): ${timestamp(record.jobCreatedAtEpochMs)}")
         appendLine("Updated (UTC): ${timestamp(record.jobUpdatedAtEpochMs)}")
         appendLine()

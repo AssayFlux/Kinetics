@@ -1815,3 +1815,25 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Run the new formatter regression through exact-source CI, then continue closing the R2 import-to-analysis-to-result/export lifecycle.
+
+
+## 2026-11-09 — Session 34: Close remaining provenance hash line-injection path
+
+**Objective:** Complete the single-line trust boundary for every string rendered by the human-readable import provenance summary.
+
+### Reviewed
+- Re-read NORTH_STAR, ROADMAP, DECISIONS, the latest session history, the R2 provenance/export plan, the formatter and its JVM regression suite.
+- Inspected the formatter field by field after Session 33. The persisted input SHA-256 field was still rendered without the single-line sanitizer, unlike the job ID, state, tool metadata and parameter JSON.
+
+### Implemented
+- Apply the same control-character/newline sanitizer to the persisted input hash before rendering.
+- Add a regression test that attempts to inject a forged clinical-status line through the hash field.
+- Keep numeric byte counts and timestamps typed; no user-controlled display strings are introduced from them.
+
+### Verification boundary
+- Exact-source Android JVM and full CI results are pending. This source change is not yet accepted as a verified baseline.
+- This is presentation/provenance integrity hardening only; it does not validate the import bytes, create scientific results or establish clinical evidence.
+- No emulator or physical-device verification is claimed.
+
+### Next
+- Require the exact-source CI run to pass, then resume the R2 import → durable analysis job → result/provenance → SAF export integration.

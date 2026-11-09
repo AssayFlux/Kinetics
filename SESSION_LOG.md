@@ -2091,3 +2091,16 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Validate the exact-source comparison and continue R8 with null simulations, power/FDR calibration and an independently reviewed reference dataset.
+
+
+## 2026-11-09 — Session 44: Verify R5 structural software reference comparison
+
+### Verification
+- Exact-source commit `f1681ea5e2009f8bcbc33468689108affe57e56c`, workflow #2105, passed all five CI jobs.
+- The pinned host scientific-reference job executed the new Biopython/NumPy structural comparison and its fail-closed overall-pass assertion.
+- PDB atom metadata/coordinates, contact-pair distances and superposed RMSD agreed with independent references within recorded tolerances.
+- Android ARM64 build, static alignment and JVM unit tests passed. APK SHA-256: `f3bb4c76f4cd36ab747efd77e0ba63b79feab2f74c521e4fd9959a298463270d`; AAB SHA-256: `bc20f28a3fdb2f4630b586ac8b51d5c6aef814b5fc84526c6759d6ad13a1f782`.
+
+### Evidence boundary
+- This is synthetic software concordance, not experimental structure validation. Real licensed structures, mmCIF semantics, SASA/interaction concordance, viewer and device benchmarks remain open.
+- R5 and the overall R track remain in progress; no S/I/P/G track work is started.

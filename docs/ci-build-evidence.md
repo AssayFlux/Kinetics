@@ -86,3 +86,14 @@ Commit `c157bb5a09d9dcc17a8bc7a57b60129d58e4866a`, [workflow run #2100 — succe
 - AAB: 39,953,087 bytes; SHA-256 `773cc9cf5569d3eabb6c2665de79a4e0d8e0a47fba3f7b3f6c3c272552996e67`.
 - Artifact ZIP: 80,047,943 bytes; SHA-256 `f9a0e18045a8a418691900868f4f78fd595a30798e2c95da29e82a00649ad7fc`; artifact ID `13647404333`; [download artifact](https://github.com/AssayFlux/Kinetics/actions/runs/42556657894/artifacts/13647404333).
 - This closes the automated Robolectric migration checks for documented schema versions only. Device SQLite migration, interrupted transactions, WorkManager lifecycle, SAF providers and physical-device execution remain open.
+
+
+## Exact-source R5 structural software comparison CI — 2026-11-09
+
+- Source commit: `f1681ea5e2009f8bcbc33468689108affe57e56c`; [CI run #2105 — successful](https://github.com/AssayFlux/Kinetics/actions/runs/42557116117). All five jobs passed.
+- Pinned host scientific-reference job executed the new Biopython 1.88 / NumPy comparison. Its fail-closed assertions passed for PDB atom metadata/coordinates, contact pairs and Horn-versus-Kabsch superposed RMSD. The result is in artifact `kinetics-host-reference-results-f1681ea5e2009f8bcbc33468689108affe57e56c`, artifact ID `13647457755`, ZIP SHA-256 `32c6f5de79373219c7409847679cc0c8359be722aa2d5d98fd6e9b505b9addaf`.
+- Android ARM64 APK/AAB build, static alignment, artifact verification and JVM unit tests passed.
+- APK: 69,875,851 bytes; SHA-256 `f3bb4c76f4cd36ab747efd77e0ba63b79feab2f74c521e4fd9959a298463270d`.
+- AAB: 39,953,035 bytes; SHA-256 `bc20f28a3fdb2f4630b586ac8b51d5c6aef814b5fc84526c6759d6ad13a1f782`.
+- Android artifact ZIP: 80,047,834 bytes; SHA-256 `41a206d20a983f0823fa79f03d6a5c114c7982bc209144d5de07a80beefd562b`; artifact ID `13648167099`.
+- R5 evidence boundary: this is synthetic software concordance, not experimental reference-structure validation. mmCIF semantics, SASA/interactions, licensed real structures, large-structure benchmarks, viewer and device measurements remain open.

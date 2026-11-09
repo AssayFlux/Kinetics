@@ -25,3 +25,10 @@ Reference structures and independently computed coordinate/contact/RMSD concorda
 Added `validation/structure_biopython_reference.py` to compare the local PDB parser's atom metadata/coordinates with pinned Biopython 1.88, contact-pair distances with an independent NumPy calculation, and Horn-quaternion superposed RMSD with an independent NumPy SVD/Kabsch fit. The scientific-reference CI job now runs this script, asserts every comparison passes and uploads its JSON record.
 
 This is a deterministic synthetic software-concordance check only. It does not close the R5 exit gate: no experimental reference structures, full mmCIF semantics, biological assemblies, SASA/interaction chemistry concordance, large-structure benchmark, offline viewer or Android device measurements are claimed.
+
+
+### Exact-source host reference CI — 2026-11-09
+
+The structural parser/geometry comparison passed in the pinned scientific-reference job at commit `f1681ea5e2009f8bcbc33468689108affe57e56c`, CI run #2105. Biopython 1.88 parser metadata/coordinates, NumPy contact distances and independent SVD/Kabsch RMSD all passed their recorded tolerances. The host reference artifact is recorded in `docs/ci-build-evidence.md`.
+
+This closes the new synthetic software-concordance check only. It does not meet R5's experimental structure, mmCIF, SASA/interaction, benchmark, viewer or device exit criteria.

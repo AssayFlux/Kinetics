@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.sequence_structure import (\n    chain_interface_contacts, map_exact_chain_sequence, map_variant_to_structure,\n)
+from kinetics.sequence_structure import (
+    chain_interface_contacts, map_exact_chain_sequence, map_variant_to_structure,
+)
 from kinetics.structure import Atom
 
 

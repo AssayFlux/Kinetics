@@ -229,10 +229,25 @@ def map_variant_to_structure(
             ],
         }
 
+    mapped_residues = mapping.get("mapped_residues")
+    if not isinstance(mapped_residues, list):
+        return {
+            "schema": "kinetics.structure-variant-map.v1",
+            "status": "abstained",
+            "mapping_status": "invalid_mapping_payload",
+            "variant": {
+                "position_1based": variant_position_1based,
+                "reference": reference_amino_acid,
+                "alternate": alternate_amino_acid,
+            },
+            "mapped_residue": None,
+            "limitations": ["The sequence-to-structure mapper returned no residue mapping list."],
+        }
     mapped = next(
         (
-            item for item in mapping["mapped_residues"]
-            if item["query_position_1based"] == variant_position_1based
+            item for item in mapped_residues
+            if isinstance(item, dict)
+            and item.get("query_position_1based") == variant_position_1based
         ),
         None,
     )

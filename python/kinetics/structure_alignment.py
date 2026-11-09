@@ -45,20 +45,16 @@ def map_chain_sequence_by_alignment(
         ("match_score", match_score),
         ("mismatch_score", mismatch_score),
         ("gap_score", gap_score),
-        ("max_query_residues", max_query_residues),
-        ("max_structure_residues", max_structure_residues),
-        ("max_atoms", max_atoms),
-        ("max_alignment_cells", max_alignment_cells),
     ):
         if isinstance(value, bool) or not isinstance(value, int):
             raise ValueError(f"{name} must be an integer")
-    for name, value in (
+    for name, limit in (
         ("max_query_residues", max_query_residues),
         ("max_structure_residues", max_structure_residues),
         ("max_atoms", max_atoms),
         ("max_alignment_cells", max_alignment_cells),
     ):
-        if value < 1:
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:
             raise ValueError(f"{name} must be a positive integer")
     if match_score <= 0 or mismatch_score >= match_score or gap_score >= 0:
         raise ValueError("Alignment scores must satisfy match > 0, mismatch < match and gap < 0")

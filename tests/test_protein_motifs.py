@@ -87,7 +87,7 @@ def test_resource_limits_are_strict_and_enforced() -> None:
     with pytest.raises(ValueError, match="max_comparisons"):
         scan_protein_motif_pack("MKW", payload, motif_pack=pack, max_comparisons=1)
     with pytest.raises(ValueError, match="max_hits"):
-        scan_protein_motif_pack("MKW", payload, motif_pack=pack, max_hits=1)
+        scan_protein_motif_pack("MKWPHAD", payload, motif_pack=pack, max_hits=1)
 
 
 def test_limits_reject_booleans_and_non_integers() -> None:

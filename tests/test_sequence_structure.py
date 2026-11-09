@@ -126,7 +126,7 @@ def test_variant_maps_only_through_unique_exact_chain_correspondence() -> None:
     assert result["status"] == "mapped_coordinate_only"
     assert result["mapping_quality"] == "unique_contiguous_exact_sequence"
     assert result["mapped_residue"]["structure_residue_number"] == 12
-    assert "not a mutation model" in result["limitations"][1]
+    assert any("No side-chain rebuilding" in item for item in result["limitations"])
 
 
 def test_variant_mapping_abstains_for_ambiguous_or_uncovered_positions() -> None:

@@ -1997,3 +1997,23 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Run the exact-source CI suite, inspect the Android test result, then continue R Step 2 against WorkManager interruption/retry and SAF provider lifecycle gaps.
+
+
+## 2026-11-09 — Session 39: Add independent structural software reference harness
+
+### Reviewed
+- Re-read the R5 scope, current PDB/mmCIF parser, contact and Horn-quaternion RMSD implementations, pinned host validation dependencies and scientific-reference CI workflow.
+- Confirmed existing R5 tests covered deterministic geometry and parser edge cases but no independent parser/geometry comparison was executed in CI.
+
+### Implemented
+- Added a deterministic synthetic PDB reference harness comparing atom metadata/coordinates with Biopython 1.88.
+- Added independent NumPy contact-distance and SVD/Kabsch RMSD calculations and explicit tolerances.
+- Wired the script into the pinned scientific-reference CI job, added a fail-closed overall-pass assertion and uploaded the JSON evidence artifact.
+- Documented the precise scope and limitations in the R5 plan and validation README.
+
+### Verification boundary
+- Exact-source CI must pass before this comparison is counted as executed.
+- The fixture is synthetic and does not satisfy the R5 experimental reference-structure, mmCIF, SASA, interaction, benchmark or device exit criteria.
+
+### Next
+- Validate the exact-source run and continue R5 with real, licensed reference structures and explicit coordinate/contact tolerances.

@@ -28,3 +28,12 @@ set covers ethanol and benzene identity/formula/basic descriptor expectations.
 It is an engineering sanity check, not an independent curated chemical
 benchmark, ADMET or biological-activity validation, and does not validate
 Android chemistry feasibility. RDKit remains outside the Android app.
+
+
+## Structural biology software comparison
+
+`structure_biopython_reference.py` uses the pinned Biopython parser and NumPy
+geometry routines to compare a deterministic synthetic PDB fixture with the
+Kinetics PDB parser, contact calculation and superposed RMSD implementation.
+The CI job stores the JSON result with the SciPy and genetic-code comparison
+records. This is software concordance, not an experimental structure benchmark.

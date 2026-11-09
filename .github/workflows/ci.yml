@@ -71,6 +71,11 @@ jobs:
         run: PYTHONPATH=python python validation/kinetics_scipy_reference.py > kinetics-scipy-reference-result.json
       - name: Compare explicit genetic-code tables with Biopython
         run: PYTHONPATH=python python validation/genetic_code_biopython_reference.py > genetic-code-reference-result.json
+      - name: Compare PDB parsing, contacts and superposed RMSD with Biopython and NumPy
+        run: PYTHONPATH=python python validation/structure_biopython_reference.py > structure-biopython-reference-result.json
+      - name: Assert scientific reference comparisons passed
+        run: |
+          python -c "import json; paths=['kinetics-scipy-reference-result.json','genetic-code-reference-result.json','structure-biopython-reference-result.json']; results=[json.load(open(p, encoding='utf-8')) for p in paths]; failures=[r.get('validation_id', p) for p,r in zip(paths,results) if not r.get('overall_pass', False)]; assert not failures, f'Reference validation failed: {failures}'"
       - name: Upload synthetic numerical and codon-table comparison records
         uses: actions/upload-artifact@v4
         with:
@@ -78,6 +83,7 @@ jobs:
           path: |
             kinetics-scipy-reference-result.json
             genetic-code-reference-result.json
+            structure-biopython-reference-result.json
           if-no-files-found: error
           retention-days: 90
 

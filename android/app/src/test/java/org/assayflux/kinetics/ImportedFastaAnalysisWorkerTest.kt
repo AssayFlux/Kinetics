@@ -14,6 +14,14 @@ import org.robolectric.annotation.Config
 class ImportedFastaAnalysisWorkerTest {
     private val context = RuntimeEnvironment.getApplication()
 
+    private fun markCommittedForGuardTest(store: ResearchStore, id: String, bytes: Long) {
+        // Exercise worker preflight guards without invoking Android Keystore or decryption.
+        store.writableDatabase.execSQL(
+            "UPDATE jobs SET state='succeeded', sha256=?, byte_count=?, storage_path=? WHERE id=?",
+            arrayOf("a".repeat(64), bytes, "/guard-test/not-materialized.kdat", id),
+        )
+    }
+
     @Test
     fun missingJobIdFailsClosed() {
         val worker = TestListenableWorkerBuilder<ImportedFastaAnalysisWorker>(context).build()
@@ -44,12 +52,7 @@ class ImportedFastaAnalysisWorkerTest {
         val store = ResearchStore(context)
         try {
             store.createJob("oversized-1", "large.fa", "content://large")
-            store.updateJob(
-                "oversized-1",
-                "succeeded",
-                hash = "a".repeat(64),
-                bytes = 1_000_001L,
-            )
+            markCommittedForGuardTest(store, "oversized-1", 1_000_001L)
             val worker = TestListenableWorkerBuilder<ImportedFastaAnalysisWorker>(context)
                 .setInputData(androidx.work.workDataOf(ImportedFastaAnalysisWorker.KEY_JOB_ID to "oversized-1"))
                 .build()
@@ -69,12 +72,7 @@ class ImportedFastaAnalysisWorkerTest {
         val store = ResearchStore(context)
         try {
             store.createJob("fastq-1", "reads.fastq", "content://reads")
-            store.updateJob(
-                "fastq-1",
-                "succeeded",
-                hash = "b".repeat(64),
-                bytes = 128L,
-            )
+            markCommittedForGuardTest(store, "fastq-1", 128L)
             val worker = TestListenableWorkerBuilder<ImportedFastaAnalysisWorker>(context)
                 .setInputData(androidx.work.workDataOf(ImportedFastaAnalysisWorker.KEY_JOB_ID to "fastq-1"))
                 .build()

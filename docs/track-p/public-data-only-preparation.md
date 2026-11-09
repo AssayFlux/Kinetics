@@ -45,3 +45,19 @@ clinical decision-support and patient-stratification intended-use language.
 This advances P-track public-data engineering preparation only. The acquired-entry
 catalogue remains empty; no external dataset payload has been downloaded or accepted.
 P0 and all patient/human-subject/clinical activities remain blocked.
+
+
+## Synthetic reference and coordinate contract (2026-11-09)
+
+`python/kinetics/variant_reference.py` adds an immutable reference-contig contract
+for non-clinical synthetic fixtures. It binds a sequence to an explicit assembly,
+accession, release, contig, 1-based-closed coordinate convention, timezone-aware
+retrieval timestamp and SHA-256 over the exact uppercase ASCII sequence bytes.
+Reference-checked literal biallelic normalization carries those fields into its
+result provenance and explicitly records that interpretation was not performed.
+
+Regression tests cover digest tampering, ambiguous coordinate conventions,
+non-synthetic/patient classification, timezone-free timestamps, contig mismatch
+and REF/reference disagreement. This is a software contract tested on synthetic
+fixtures only; it is not an authoritative genome assembly, validated variant
+normalizer, PGx matcher or clinical interpretation engine.

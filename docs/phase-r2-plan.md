@@ -138,3 +138,8 @@ This closes automated Robolectric migration coverage for schema v1 through v4. I
 ### Imported FASTA worker guard tests — 2026-11-09
 
 Added Robolectric/WorkManager test coverage for missing and malformed worker input IDs, unknown jobs, rejection of committed inputs above the 1 MB analysis bound before plaintext materialization, and explicit FASTQ rejection before Python runtime startup. These tests exercise fail-closed dispatch and guard ordering only; they do not simulate process death, WorkManager retry/backoff, cancellation during Python execution, real Chaquopy execution or SAF provider failures. Exact-source Android CI is required before counting the tests as passed.
+
+
+### Worker database resource lifecycle — 2026-11-09
+
+The imported FASTA WorkManager worker now closes its SQLiteOpenHelper in a `finally` block for both successful and failed analysis execution. This prevents the worker from retaining a database helper/connection beyond its execution scope. Exact-source Android CI is required to verify compilation and regression tests.

@@ -51,6 +51,8 @@ class ImportedFastaAnalysisWorker(context: Context, parameters: WorkerParameters
         } catch (error: Exception) {
             store.updateJob(jobId, "succeeded", message = "Import succeeded; FASTA QC failed: ${error.message ?: error.javaClass.simpleName}")
             Result.failure()
+        } finally {
+            store.close()
         }
     }
 

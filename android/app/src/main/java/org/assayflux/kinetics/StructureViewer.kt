@@ -44,6 +44,13 @@ import java.nio.charset.CodingErrorAction
 private const val VIEWER_URL = "https://appassets.androidplatform.net/assets/structure-viewer/structure-viewer.html"
 private const val MAX_STRUCTURE_SOURCE_BYTES = 16 * 1024 * 1024
 
+private data class ImportedStructure(
+    val payloadJson: String,
+    val name: String,
+    val sourceHash: String,
+    val sessionJson: String,
+)
+
 private fun readDisplayName(context: android.content.Context, uri: Uri): String {
     val cursor: Cursor? = context.contentResolver.query(
         uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null,
@@ -81,9 +88,30 @@ internal fun StructureViewerPreview() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var payloadJson by remember { mutableStateOf<String?>(null) }
+    var sessionExportJson by remember { mutableStateOf<String?>(null) }
     var sourceLabel by remember { mutableStateOf("Synthetic preview fixture") }
     var importMessage by remember {
         mutableStateOf("Choose a local PDB or mmCIF file to inspect it offline.")
+    }
+    val exportPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json"),
+    ) { uri ->
+        val export = sessionExportJson
+        if (uri != null && export != null) {
+            scope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    runCatching {
+                        context.contentResolver.openOutputStream(uri, "w")?.use { output ->
+                            output.write(export.toByteArray(Charsets.UTF_8))
+                        } ?: error("The selected export destination could not be opened")
+                    }
+                }
+                importMessage = result.fold(
+                    { "Session exported successfully." },
+                    { error -> "Export failed: " + (error.message ?: error.javaClass.simpleName) },
+                )
+            }
+        }
     }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
@@ -119,14 +147,18 @@ internal fun StructureViewerPreview() {
                         val payload = envelope.getJSONObject("payload")
                         val sourceHash = envelope.getJSONObject("preparation")
                             .getString("source_sha256")
-                        Triple(payload.toString(), name, sourceHash)
+                        val sessionJson = Python.getInstance().getModule("kinetics_probe")
+                            .callAttr("export_structure_viewer_session", sourceText, format)
+                            .toString()
+                        ImportedStructure(payload.toString(), name, sourceHash, sessionJson)
                     }
                 }
                 result.fold(
-                    { (json, name, hash) ->
-                        payloadJson = json
-                        sourceLabel = name
-                        importMessage = "Imported $name · SHA-256 ${hash.take(16)}…"
+                    { imported ->
+                        payloadJson = imported.payloadJson
+                        sessionExportJson = imported.sessionJson
+                        sourceLabel = imported.name
+                        importMessage = "Imported ${imported.name} · SHA-256 ${imported.sourceHash.take(16)}…"
                     },
                     { error ->
                         importMessage = "Import failed: " +
@@ -198,6 +230,15 @@ internal fun StructureViewerPreview() {
             Text(importMessage, style = MaterialTheme.typography.bodySmall)
             Button(onClick = { picker.launch(arrayOf("*/*")) }) {
                 Text("Import PDB / mmCIF")
+            }
+            Button(
+                onClick = {
+                    val baseName = sourceLabel.substringBeforeLast('.', sourceLabel)
+                    exportPicker.launch("$baseName.kinetics-session.json")
+                },
+                enabled = sessionExportJson != null,
+            ) {
+                Text("Export session JSON")
             }
             AndroidView(
                 factory = { FrameLayout(it).apply { addView(webView) } },

@@ -7,7 +7,7 @@
 - Sequence statistics, reverse complement, transcription, k-mer counting and global pairwise alignment.
 - FASTQ quality summaries and explicit-offset terminal quality trimming.
 - SAM and VCF text parsing with mandatory-field and scalar validation; SAM validation also checks CIGAR query consumption and permits missing QUAL when SEQ is present.
-- Reference-checked minimal/left normalization for literal biallelic A/C/G/T small variants.
+- Reference-checked minimal/left normalization for literal biallelic A/C/G/T small variants. A separate `ReferenceSequence` contract binds synthetic reference sequence bytes to assembly/accession/release/contig, 1-based-closed coordinates, retrieval timestamp and SHA-256; normalized output retains that provenance.
 - Bounded lazy BAM core-field decoder for gzip/BGZF-compatible BAM streams; optional host-side pysam/HTSlib adapter for BAM/CRAM with explicit local reference for CRAM.
 - Android Explore integration: bounded FASTA QC (record length, GC fraction and ambiguous-symbol count) and bounded FASTQ read-quality summary (explicit Phred+33/Phred+64, read/base counts, mean Phred and Q20/Q30 fractions) through the embedded Python adapter. These are local analysis cards, not yet the full SAF-import → durable job → result/provenance/export workflow.
 
@@ -25,7 +25,7 @@
 - FASTA text convenience function materializes its returned records; use the iterator API for large inputs.
 - BAM decoder exposes core SAM-like fields only and currently materializes each compressed BAM record block (bounded to 64 MiB); auxiliary tags are skipped. CRAM remains unsupported in Android and requires a reviewed htslib/CRAM engine.
 - Terminal trimming is not adapter trimming or sliding-window quality trimming.
-- VCF parsing does not yet normalize/decompose records automatically. The separate normalizer handles only reference-checked biallelic literal A/C/G/T small variants; symbolic alleles, breakends, multi-allelic decomposition, phasing and variant interpretation remain unsupported.
+- VCF parsing does not yet normalize/decompose records automatically. The separate normalizer handles only reference-checked biallelic literal A/C/G/T small variants; symbolic alleles, breakends, multi-allelic decomposition, phasing and variant interpretation remain unsupported. The build-pinned wrapper currently accepts only explicitly classified synthetic non-patient fixtures; authoritative reference-pack intake, full assembly validation and scientific concordance remain open.
 - Global alignment is not a high-throughput mapper.
 - No clinical variant interpretation.
 

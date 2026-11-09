@@ -2284,3 +2284,9 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Reports residue-pair contact counts and minimum distances; hydrogen atoms are excluded.
 - Explicitly avoids affinity, energy, pocket or functional-effect claims.
 - Added synthetic contact and resource-limit regression fixtures; exact-source CI required.
+
+
+## 2026-11-09 — Session 60: S5 deterministic session export foundation
+- Added a byte-bounded, deterministic JSON structure-session export containing the validated coordinate payload and preparation provenance.
+- Export explicitly records `render_state=not_rendered` and discloses the absence of PNG/SVG/interactive viewer state.
+- Added determinism, provenance and export-size regression tests; exact-source CI required.

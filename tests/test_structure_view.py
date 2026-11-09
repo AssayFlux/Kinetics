@@ -9,6 +9,7 @@ from kinetics.structure import Atom
 from kinetics.structure_view import (
     PAYLOAD_SCHEMA,
     build_preparation_record,
+    build_structure_session_export,
     prepare_viewer_payload,
     serialize_viewer_payload,
 )
@@ -144,4 +145,30 @@ def test_viewer_payload_rejects_invalid_byte_limits(invalid_limit: object) -> No
     with pytest.raises(ValueError, match="max_payload_bytes"):
         prepare_viewer_payload(
             [atom()], source_format="pdb", max_payload_bytes=invalid_limit,  # type: ignore[arg-type]
+        )
+
+
+
+def test_structure_session_export_is_deterministic_and_explicitly_unrendered() -> None:
+    source = b"PDB fixture bytes"
+    payload = prepare_viewer_payload([atom()], source_format="pdb")
+    exported = build_structure_session_export(
+        source, payload, parser_version="kinetics-pdb-1",
+    )
+    bundle = json.loads(exported)
+    assert bundle["schema"] == "kinetics.structure-session.v1"
+    assert bundle["render_state"] == "not_rendered"
+    assert bundle["preparation"]["source_sha256"]
+    assert bundle["preparation"]["payload_sha256"]
+    assert "No PNG/SVG image" in bundle["export_limitations"][1]
+    assert exported == build_structure_session_export(
+        source, payload, parser_version="kinetics-pdb-1",
+    )
+
+
+def test_structure_session_export_enforces_byte_limit() -> None:
+    payload = prepare_viewer_payload([atom()], source_format="pdb")
+    with pytest.raises(ValueError, match="max_export_bytes"):
+        build_structure_session_export(
+            b"source", payload, parser_version="1", max_export_bytes=64,
         )

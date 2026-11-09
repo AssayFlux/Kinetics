@@ -105,3 +105,9 @@ Every S increment must be tested against the exact commit. Host tests are regres
 - Added bounded heavy-atom inter-chain contact counting with a spatial-neighbour index.
 - Reports per-residue-pair atom-contact counts and minimum distances under a caller-selected cutoff.
 - This is geometric contact evidence only; no interface energy, affinity, pocket, stability or functional effect is predicted. Pocket detection remains gated on ligand/solvent/chemical-component completeness and independent reference validation.
+
+
+#### S5 deterministic offline session export foundation
+- Added deterministic JSON export containing the validated structure-view payload and content-addressed preparation record.
+- The export is byte-bounded and explicitly marks `render_state=not_rendered`; it does not pretend to contain PNG/SVG or viewer state.
+- Image/session rendering and the structure benchmark matrix remain gated on a selected licensed renderer, fixed experimental reference structures, and device performance evidence.

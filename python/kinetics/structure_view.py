@@ -208,3 +208,44 @@ def build_preparation_record(
         "coordinate_unit": payload["coordinate_unit"],
         "limitations": list(payload["limitations"]),
     }
+
+
+
+def build_structure_session_export(
+    source_bytes: bytes,
+    payload: dict[str, Any],
+    *,
+    parser_version: str,
+    max_export_bytes: int = 64 * 1024 * 1024,
+) -> str:
+    """Build a deterministic offline JSON session export with provenance.
+
+    This exports prepared coordinate data and its content-addressed preparation
+    record. It does not render PNG/SVG or imply a viewer is installed.
+    """
+    if (
+        isinstance(max_export_bytes, bool)
+        or not isinstance(max_export_bytes, int)
+        or max_export_bytes < 1
+    ):
+        raise ValueError("max_export_bytes must be a positive integer")
+    payload_json = serialize_viewer_payload(payload)
+    preparation = build_preparation_record(
+        source_bytes, payload, parser_version=parser_version,
+    )
+    bundle = {
+        "schema": "kinetics.structure-session.v1",
+        "render_state": "not_rendered",
+        "preparation": preparation,
+        "payload": json.loads(payload_json),
+        "export_limitations": [
+            "This session contains prepared coordinates and annotations only.",
+            "No PNG/SVG image or interactive viewer state is included.",
+            "No bonds, protonation, secondary structure, quality grade or biological interpretation is inferred.",
+            "Viewer version is absent because no renderer has been approved and integrated.",
+        ],
+    }
+    encoded = json.dumps(bundle, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    if len(encoded.encode("utf-8")) > max_export_bytes:
+        raise ValueError("Structure session export exceeds max_export_bytes")
+    return encoded

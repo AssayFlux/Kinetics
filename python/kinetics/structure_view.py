@@ -81,13 +81,13 @@ def validate_viewer_payload(payload: dict[str, Any]) -> None:
     """Validate the complete viewer boundary, including internally consistent counts."""
     if not isinstance(payload, dict):
         raise ValueError("Structure viewer payload must be a mapping")
+    if payload.get("schema") != PAYLOAD_SCHEMA:
+        raise ValueError("Unsupported structure viewer payload schema")
     required = {
         "schema", "source_format", "coordinate_unit", "atom_count", "atoms", "limitations",
     }
     if set(payload) != required:
         raise ValueError("Structure viewer payload has missing or unsupported fields")
-    if payload["schema"] != PAYLOAD_SCHEMA:
-        raise ValueError("Unsupported structure viewer payload schema")
     if (
         not isinstance(payload["source_format"], str)
         or payload["source_format"] not in SUPPORTED_SOURCE_FORMATS

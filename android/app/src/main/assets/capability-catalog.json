@@ -72,6 +72,14 @@
     "domain": "Genomics"
   },
   {
+    "id": "variant.reference_checked_normalization",
+    "name": "Build-pinned reference-checked small-variant normalization",
+    "status": "implemented",
+    "implementation": "python/kinetics/variant_reference.py",
+    "evidence_level": "none",
+    "domain": "Variant"
+  },
+  {
     "id": "protein.descriptors",
     "name": "Protein composition, mass, hydropathy and estimated pI",
     "status": "implemented",

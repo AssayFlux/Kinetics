@@ -1785,3 +1785,12 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Fixes are committed for exact-source CI rerun. Do not mark the run green until the new workflow completes.
 - Android build output from #2079 is not a verified APK because the same run's required JVM test failed.
 - No emulator or physical-device installation/runtime verification is claimed.
+
+
+## 2026-11-09 — Session 32: Regenerate the Android capability catalogue
+
+- Exact-source CI #2080 passed Ruff, mypy and registry validation, then failed the generated Android capability catalogue reproducibility check.
+- Root cause: the R4 reference-bound normalization capability was added to the canonical registry, but its generated Android asset was not regenerated.
+- Updated `android/app/src/main/assets/capability-catalog.json` with the missing registry entry. The entry remains `implemented` with `evidence_level: none`; no validation claim was added.
+- CI #2080 Android arm64 build and host-side scientific/chemistry comparison jobs were still running/successful at inspection time; final workflow status must be rechecked.
+- Exact-source CI rerun required to accept this asset fix. No device verification is claimed.

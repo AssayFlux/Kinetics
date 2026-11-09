@@ -193,6 +193,21 @@ tools:
     status: implemented
     implementation: python/kinetics/sequence_structure.py
     evidence_level: none
+  - id: structure.geometry_screen_metrics
+    name: Bounded steric-overlap and coordinate geometry screening without a calibrated quality grade
+    status: implemented
+    implementation: python/kinetics/structure_quality.py
+    evidence_level: none
+  - id: structure.variant_coordinate_mapping
+    name: Exact-match protein variant-to-structure coordinate mapping with abstention
+    status: implemented
+    implementation: python/kinetics/sequence_structure.py
+    evidence_level: none
+  - id: structure.chain_interface_contacts
+    name: Bounded heavy-atom inter-chain geometric contact report
+    status: implemented
+    implementation: python/kinetics/sequence_structure.py
+    evidence_level: none
   - id: genes.catalogue_coverage_report
     name: Source-snapshot gene catalogue composition and annotation completeness report
     status: implemented

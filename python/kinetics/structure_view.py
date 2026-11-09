@@ -14,6 +14,16 @@ from .structure import Atom
 
 PAYLOAD_SCHEMA = "kinetics.structure-view.v1"
 SUPPORTED_SOURCE_FORMATS = frozenset({"pdb", "mmcif"})
+DEFAULT_MAX_PAYLOAD_BYTES = 32 * 1024 * 1024
+
+
+def _validate_payload_byte_limit(max_payload_bytes: int) -> None:
+    if (
+        isinstance(max_payload_bytes, bool)
+        or not isinstance(max_payload_bytes, int)
+        or max_payload_bytes < 1
+    ):
+        raise ValueError("max_payload_bytes must be a positive integer")
 
 
 def prepare_viewer_payload(
@@ -21,8 +31,9 @@ def prepare_viewer_payload(
     *,
     source_format: str,
     max_atoms: int = 200_000,
+    max_payload_bytes: int = DEFAULT_MAX_PAYLOAD_BYTES,
 ) -> dict[str, Any]:
-    """Build a deterministic, size-bounded atom payload in Angstrom coordinates."""
+    """Build a deterministic atom payload within atom-count and serialized-byte limits."""
     if not isinstance(source_format, str):
         raise ValueError("source_format must be text")
     normalized_format = source_format.lower().strip()
@@ -30,6 +41,7 @@ def prepare_viewer_payload(
         raise ValueError("source_format must be 'pdb' or 'mmcif'")
     if isinstance(max_atoms, bool) or not isinstance(max_atoms, int) or max_atoms < 1:
         raise ValueError("max_atoms must be a positive integer")
+    _validate_payload_byte_limit(max_payload_bytes)
 
     records: list[dict[str, Any]] = []
     seen_serials: set[int] = set()
@@ -63,7 +75,7 @@ def prepare_viewer_payload(
 
     if not records:
         raise ValueError("Cannot prepare an empty structure")
-    return {
+    payload = {
         "schema": PAYLOAD_SCHEMA,
         "source_format": normalized_format,
         "coordinate_unit": "angstrom",
@@ -75,10 +87,16 @@ def prepare_viewer_payload(
             "Viewer rendering and WebView security are separate validated components.",
         ],
     }
+    validate_viewer_payload(payload, max_payload_bytes=max_payload_bytes)
+    return payload
 
 
-def validate_viewer_payload(payload: dict[str, Any]) -> None:
-    """Validate the complete viewer boundary, including internally consistent counts."""
+def validate_viewer_payload(
+    payload: dict[str, Any], *,
+    max_payload_bytes: int = DEFAULT_MAX_PAYLOAD_BYTES,
+) -> None:
+    """Validate schema, atom invariants and the serialized WebView handoff byte ceiling."""
+    _validate_payload_byte_limit(max_payload_bytes)
     if not isinstance(payload, dict):
         raise ValueError("Structure viewer payload must be a mapping")
     if payload.get("schema") != PAYLOAD_SCHEMA:
@@ -145,10 +163,19 @@ def validate_viewer_payload(payload: dict[str, Any]) -> None:
         ):
             raise ValueError(f"Structure viewer atom {index} has invalid coordinates")
 
+    encoded_size = len(
+        json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    )
+    if encoded_size > max_payload_bytes:
+        raise ValueError("Structure viewer payload exceeds max_payload_bytes")
 
-def serialize_viewer_payload(payload: dict[str, Any]) -> str:
+
+def serialize_viewer_payload(
+    payload: dict[str, Any], *,
+    max_payload_bytes: int = DEFAULT_MAX_PAYLOAD_BYTES,
+) -> str:
     """Serialize a fully validated payload deterministically without NaN/Infinity."""
-    validate_viewer_payload(payload)
+    validate_viewer_payload(payload, max_payload_bytes=max_payload_bytes)
     return json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 

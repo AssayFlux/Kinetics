@@ -126,3 +126,22 @@ def test_viewer_serializer_rejects_invalid_payload_metadata(
     payload[field] = value
     with pytest.raises(ValueError):
         serialize_viewer_payload(payload)
+
+
+
+def test_viewer_payload_enforces_serialized_byte_limit() -> None:
+    with pytest.raises(ValueError, match="max_payload_bytes"):
+        prepare_viewer_payload(
+            [atom()], source_format="pdb", max_payload_bytes=64,
+        )
+    payload = prepare_viewer_payload([atom()], source_format="pdb")
+    with pytest.raises(ValueError, match="max_payload_bytes"):
+        serialize_viewer_payload(payload, max_payload_bytes=64)
+
+
+@pytest.mark.parametrize("invalid_limit", [True, 0, -1, 1.5, "100"])
+def test_viewer_payload_rejects_invalid_byte_limits(invalid_limit: object) -> None:
+    with pytest.raises(ValueError, match="max_payload_bytes"):
+        prepare_viewer_payload(
+            [atom()], source_format="pdb", max_payload_bytes=invalid_limit,  # type: ignore[arg-type]
+        )

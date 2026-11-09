@@ -75,7 +75,7 @@ Turn Kinetics into a research workbench that can investigate unfamiliar DNA/RNA/
 
 The first S increment will harden the existing local evidence foundations before adding new inference claims:
 
-1. **S1:** retain the strict deterministic structure-payload boundary. Renderer selection, vendored viewer assets and WebView bridge remain gated on R1 WebView feasibility, exact-release/transitive license review and device tests. Do not introduce remote/CDN assets.
+1. **S1:** retain the strict deterministic structure-payload boundary, now with serialized UTF-8 byte and atom ceilings. Renderer selection, vendored viewer assets and WebView bridge remain gated on R1 WebView feasibility, exact-release/transitive license review and device tests. Do not introduce remote/CDN assets.
 2. **S6:** harden local FASTA reference-pack manifest and byte verification, resource-limit validation, exact-match evidence and abstention. Similarity/homology search, E-values, domains and novelty inference remain unimplemented until licensed reference packs and independent calibration exist.
 3. **S7:** preserve bounded six-frame ORF enumeration as a candidate generator only. Prokaryotic/eukaryotic gene annotation, transcript/splice models and annotation truth-set validation remain separate future work.
 4. **S8:** explicit NCBI translation-table support remains caller-selected; no organism/genetic-code inference is authorized by these primitives.

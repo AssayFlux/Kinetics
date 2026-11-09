@@ -2255,3 +2255,10 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Enforced FASTA byte ceilings during streaming hash, closing the growth-after-stat resource-boundary gap.
 - Added tests for manifest symlinks, oversized manifests and streaming byte limits.
 - Exact-source CI is required before this increment is considered regression-tested.
+
+
+## 2026-11-09 — Session 56: S1 structure-payload byte ceiling
+- Added a 32 MiB default serialized UTF-8 payload ceiling to the deterministic structure-view preparation/validation/serialization boundary, in addition to the 200,000-atom ceiling.
+- Added regression tests for oversized payloads and invalid byte-limit types/values.
+- Updated the S1 contract and S roadmap. This remains payload preparation only; no renderer or WebView bridge is claimed.
+- Exact-source CI required.

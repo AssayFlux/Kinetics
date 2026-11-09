@@ -124,16 +124,12 @@ def load_local_fasta_reference_pack(
     manifest = _read_manifest(Path(manifest_path), max_bytes=max_manifest_bytes)
     pack, sequence_type = _validate_manifest(manifest)
     fasta = Path(fasta_path)
-    if fasta.is_symlink():
-        raise ValueError("Reference FASTA must not be a symbolic link")
     try:
-        with fasta.open("rb") as handle:
+        with _open_regular_file(fasta, label="Reference FASTA") as handle:
             before = os.fstat(handle.fileno())
-            if not stat.S_ISREG(before.st_mode):
-                raise ValueError("Reference FASTA must be a regular file")
             if before.st_size > max_pack_bytes:
                 raise ValueError("Reference FASTA exceeds max_pack_bytes")
-            actual_hash = _sha256_stream(handle)
+            actual_hash = _sha256_stream(handle, max_bytes=max_pack_bytes)
             if actual_hash != pack.content_sha256:
                 raise ValueError("Reference FASTA SHA-256 does not match its manifest")
             handle.seek(0)
@@ -159,7 +155,7 @@ def load_local_fasta_reference_pack(
                 text_handle.detach()
             after = os.fstat(handle.fileno())
             handle.seek(0)
-            final_hash = _sha256_stream(handle)
+            final_hash = _sha256_stream(handle, max_bytes=max_pack_bytes)
             if final_hash != actual_hash or (
                 before.st_size != after.st_size
                 or before.st_mtime_ns != after.st_mtime_ns

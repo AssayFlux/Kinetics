@@ -122,3 +122,25 @@ def test_local_pack_rejects_boolean_and_non_integer_resource_limits(
         load_local_fasta_reference_pack(
             fasta_path, manifest_path, **{limit_name: value},
         )
+
+
+
+def test_local_pack_rejects_manifest_symlink_and_oversized_manifest(tmp_path) -> None:
+    fasta_path, manifest_path = write_pack(tmp_path, b">gene\\nACGT\\n")
+    link_path = tmp_path / "linked-manifest.json"
+    link_path.symlink_to(manifest_path)
+    with pytest.raises(ValueError, match="symbolic link"):
+        load_local_fasta_reference_pack(fasta_path, link_path)
+
+    with pytest.raises(ValueError, match="max_manifest_bytes"):
+        load_local_fasta_reference_pack(
+            fasta_path, manifest_path, max_manifest_bytes=16,
+        )
+
+
+def test_local_pack_hashing_is_bounded_by_max_pack_bytes(tmp_path) -> None:
+    fasta_path, manifest_path = write_pack(tmp_path, b">gene\\nACGT\\n")
+    with pytest.raises(ValueError, match="max_pack_bytes"):
+        load_local_fasta_reference_pack(
+            fasta_path, manifest_path, max_pack_bytes=4,
+        )

@@ -2248,3 +2248,10 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next step
 Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 documented base work without crossing S2–S5/S10 gates.
+
+
+## 2026-11-09 — Session 55: S6 reference-pack file-boundary hardening
+- Opened FASTA and manifest inputs through regular-file descriptors, using no-follow flags where supported.
+- Enforced FASTA byte ceilings during streaming hash, closing the growth-after-stat resource-boundary gap.
+- Added tests for manifest symlinks, oversized manifests and streaming byte limits.
+- Exact-source CI is required before this increment is considered regression-tested.

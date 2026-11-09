@@ -83,3 +83,11 @@ The first S increment will harden the existing local evidence foundations before
 6. **S2–S5 and S10:** remain gated by their documented fixed-reference, model/license, node-security and biosafety requirements.
 
 Every S increment must be tested against the exact commit. Host tests are regression evidence only; they do not close biological validation or device acceptance.
+
+
+### S6 security hardening increment — bounded descriptor-based file access
+- Reference FASTA and manifest files are opened as regular files through file descriptors; the final path component is opened with no-follow semantics where the host supports `O_NOFOLLOW`.
+- FASTA hashing now enforces the byte ceiling while streaming, not only from the initial stat size. This prevents a file that grows after the preflight size check from causing unbounded hashing.
+- Manifest reads remain capped at `max_manifest_bytes + 1` to detect overflow without loading an unbounded file.
+- Added regression tests for manifest symlinks, oversized manifests and bounded FASTA hashing.
+- Residual boundary: this protects local file ingestion on supported host filesystems; it does not establish a sandbox against privileged concurrent mutation, malicious kernel/filesystem behavior, or Android SAF document-provider semantics.

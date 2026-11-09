@@ -36,17 +36,28 @@ DEFAULT_MAX_RECORDS = 100_000
 DEFAULT_MAX_TOTAL_RESIDUES = 50_000_000
 
 
-def _read_manifest(path: Path, *, max_bytes: int) -> dict[str, Any]:
+def _open_regular_file(path: Path, *, label: str) -> Any:
+    """Open a regular file without following a final-component symlink where supported."""
     if path.is_symlink():
-        raise ValueError("Reference manifest must not be a symbolic link")
+        raise ValueError(f"{label} must not be a symbolic link")
+    flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
     try:
-        metadata = path.stat()
+        descriptor = os.open(path, flags)
     except OSError as exc:
-        raise ValueError(f"Cannot stat reference manifest: {exc}") from exc
-    if not stat.S_ISREG(metadata.st_mode) or metadata.st_size > max_bytes:
-        raise ValueError("Reference manifest must be a regular file within the size limit")
+        raise ValueError(f"Cannot open {label}: {exc}") from exc
     try:
-        with path.open("rb") as handle:
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise ValueError(f"{label} must be a regular file")
+        return os.fdopen(descriptor, "rb")
+    except Exception:
+        os.close(descriptor)
+        raise
+
+
+def _read_manifest(path: Path, *, max_bytes: int) -> dict[str, Any]:
+    try:
+        with _open_regular_file(path, label="Reference manifest") as handle:
             raw = handle.read(max_bytes + 1)
         if len(raw) > max_bytes:
             raise ValueError("Reference manifest exceeds max_manifest_bytes")
@@ -88,12 +99,18 @@ def _validate_manifest(value: dict[str, Any]) -> tuple[ReferencePack, SequenceTy
     return pack, sequence_type
 
 
-def _sha256_stream(handle: Any, *, chunk_bytes: int = 1_048_576) -> str:
+def _sha256_stream(
+    handle: Any, *, max_bytes: int, chunk_bytes: int = 1_048_576,
+) -> str:
     digest = hashlib.sha256()
+    total = 0
     while True:
-        chunk = handle.read(chunk_bytes)
+        chunk = handle.read(min(chunk_bytes, max_bytes - total + 1))
         if not chunk:
             break
+        total += len(chunk)
+        if total > max_bytes:
+            raise ValueError("Reference FASTA exceeds max_pack_bytes")
         digest.update(chunk)
     return digest.hexdigest()
 

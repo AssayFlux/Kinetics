@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from math import floor, isfinite, sqrt
-from typing import Iterable
+from typing import Iterable, cast
 
 from .structure import Atom
 
@@ -39,11 +39,16 @@ def structure_geometry_metrics(
     ):
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError(f"{name} must be a positive integer")
-    for name, value in (
+    for name, threshold in (
         ("clash_overlap_angstrom", clash_overlap_angstrom),
         ("severe_overlap_angstrom", severe_overlap_angstrom),
     ):
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not isfinite(value) or value <= 0:
+        if (
+            isinstance(threshold, bool)
+            or not isinstance(threshold, (int, float))
+            or not isfinite(threshold)
+            or threshold <= 0
+        ):
             raise ValueError(f"{name} must be finite and positive")
     if severe_overlap_angstrom < clash_overlap_angstrom:
         raise ValueError("severe overlap threshold must be >= clash threshold")
@@ -120,7 +125,7 @@ def structure_geometry_metrics(
                             "severity": "severe" if severe else "candidate",
                         })
 
-    clashes.sort(key=lambda item: float(item["overlap_angstrom"]), reverse=True)
+    clashes.sort(key=lambda item: cast(float, item["overlap_angstrom"]), reverse=True)
     return {
         "schema": "kinetics.structure-geometry-metrics.v1",
         "atom_count": len(points),

@@ -113,3 +113,7 @@ A follow-on audit at `2ea1027` adds export-time digest revalidation, a serialize
 Commit `2ea102719fc37354f18def85bb329a60a885ee2a`, workflow run #2094, passed all five CI jobs. ARM64 APK/AAB packaging, alignment, artifact hashes and Android JVM unit tests passed. The audit-time export digest guard, result-size cap and bounded Compose preview are included in this exact-source build. See `docs/ci-build-evidence.md` for hashes.
 
 This closes the automated CI check for the current imported FASTA vertical slice. It does **not** close full R-track exit: migration/recovery, WorkManager interruption, SAF provider lifecycle, dedicated instrumentation/UI coverage, emulator/physical-device installation and Chaquopy runtime exercise remain open.
+
+
+### R Step 2 temporary plaintext cleanup audit — 2026-11-09
+The short-lived plaintext ownership helper now wraps both authenticated materialization and analysis consumption in one `try/finally`. If decryption fails after creating a partial cache file, the helper attempts to delete it before propagating the failure. JVM regression tests cover failed materialization, consumer exceptions and successful consumption. Deletion remains best-effort filesystem cleanup, not a guarantee of forensic secure erasure; exact-source CI and Android runtime checks remain required.

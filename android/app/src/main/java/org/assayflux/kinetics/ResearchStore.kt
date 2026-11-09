@@ -278,12 +278,11 @@ class ResearchStore(context: Context) :
     /** Run a local analysis callback and always remove its plaintext cache file. */
     fun <T> withStoredInput(id: String, action: (File) -> T): T? {
         val temporary = File(appContext.cacheDir, "kinetics-analysis-" + UUID.randomUUID() + ".tmp")
-        if (!materializeStoredInput(id, temporary)) return null
-        return try {
-            action(temporary)
-        } finally {
-            temporary.delete()
-        }
+        return withPrivateTemporaryFile(
+            file = temporary,
+            materialize = { destination -> materializeStoredInput(id, destination) },
+            action = action,
+        )
     }
 
     fun updateProgress(id: String, bytes: Long) {

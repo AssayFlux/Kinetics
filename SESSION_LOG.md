@@ -1946,3 +1946,9 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### D-019 execution-order correction — 2026-11-09
 - Recorded the owner's current strict R → S → I → P → G sequence and two-step-per-track gate.
 - Explicitly superseded D-009's earlier parallel S-track permission for current execution; no S/I/P/G work is to be started while R remains open.
+
+
+### R Step 2 security cleanup regression — 2026-11-09
+- Audit found that `withStoredInput` entered its cleanup `finally` only after successful decryption/materialization. A failed authenticated decrypt could therefore leave a partially written plaintext cache file.
+- Extracted `withPrivateTemporaryFile` so cleanup encloses materialization as well as consumer execution; added JVM regression tests for partial materialization failure, consumer exception and success.
+- This is a source-level security hardening change. Exact-source Android/JVM CI is required; it does not establish crash-proof secure erasure or device runtime behavior.

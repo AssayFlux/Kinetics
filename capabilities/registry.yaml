@@ -187,6 +187,11 @@ tools:
     status: implemented
     implementation: python/kinetics/structure_view.py
     evidence_level: none
+  - id: structure.session_export
+    name: Byte-bounded deterministic JSON structure session export with provenance (not rendered)
+    status: implemented
+    implementation: python/kinetics/structure_view.py
+    evidence_level: none
 
   - id: structure.exact_sequence_mapping
     name: Conservative exact unique protein sequence-to-structure residue mapping

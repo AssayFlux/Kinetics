@@ -2017,3 +2017,17 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Validate the exact-source run and continue R5 with real, licensed reference structures and explicit coordinate/contact tolerances.
+
+
+## 2026-11-09 — Session 40: Verify legacy SQLite migration coverage
+
+### Verification
+- Exact-source commit `dd3269acfa79546b143e239948df4d95e938abc7`, workflow #2104, completed successfully across all five CI jobs.
+- Android ARM64 debug APK/AAB packaging, static alignment checks, artifact verification and `:app:testDebugUnitTest` passed.
+- The Robolectric suite now includes fresh-install, v1→v4, v2→v4 and v3→v4 migration coverage; v1/v2 fixtures verify retained job data and expected v4 schema.
+- APK SHA-256: `958098b0143b02bd68a6dadbbcd783afbd1fd7c8a5893f553bda5ba365f316e9`; AAB SHA-256: `773cc9cf5569d3eabb6c2665de79a4e0d8e0a47fba3f7b3f6c3c272552996e67`.
+- Artifact ZIP SHA-256: `f9a0e18045a8a418691900868f4f78fd595a30798e2c95da29e82a00649ad7fc`; artifact ID `13647404333`.
+
+### Evidence boundary
+- Automated Robolectric migration tests are now green for the documented schema versions.
+- No device SQLite migration, transaction interruption, process-death, WorkManager retry/resume, SAF provider or on-device Chaquopy execution is claimed. R2 and R remain open.

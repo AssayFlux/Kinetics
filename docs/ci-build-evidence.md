@@ -75,3 +75,14 @@ Commit `c157bb5a09d9dcc17a8bc7a57b60129d58e4866a`, [workflow run #2100 — succe
 - Pinned host scientific-reference job passed the Michaelis–Menten/SciPy and genetic-code/Biopython comparison steps. These are bounded synthetic/software-reference checks, not independent experimental validation.
 - Android ARM64 debug APK/AAB packaging, static package/ELF alignment and `:app:testDebugUnitTest` passed. APK: 69,875,151 bytes; SHA-256 `059abb9e3a299b5295b8f08772b976195d7be1cd7db46dce34faa7bcf486d2d9`. AAB: 39,952,539 bytes; SHA-256 `9c8e2ca3a81c4ef2b1fb041aefee99ace5cbfb3292574b815c6a87549210044e`. Artifact ZIP: 80,046,515 bytes; artifact ID `13646239880`.
 - This evidence does not establish emulator/physical-device runtime, migration/WorkManager/SAF instrumentation, on-device Chaquopy, independent experimental validation, broad domain reference concordance, complete transitive licence/security review or release signing.
+
+
+## Exact-source SQLite migration regression CI — 2026-11-09
+
+- Source commit: `dd3269acfa79546b143e239948df4d95e938abc7`; [CI run #2104 — successful](https://github.com/AssayFlux/Kinetics/actions/runs/42556657894). All five jobs passed.
+- Android arm64 debug APK/AAB build, package and ELF alignment checks, and `:app:testDebugUnitTest` all passed.
+- Robolectric migration coverage now includes fresh schema v4 creation, v1→v4, v2→v4 and v3→v4 upgrades; v1/v2 fixtures assert a pre-existing job row survives and the v4 columns/table exist.
+- APK: 69,875,719 bytes; SHA-256 `958098b0143b02bd68a6dadbbcd783afbd1fd7c8a5893f553bda5ba365f316e9`.
+- AAB: 39,953,087 bytes; SHA-256 `773cc9cf5569d3eabb6c2665de79a4e0d8e0a47fba3f7b3f6c3c272552996e67`.
+- Artifact ZIP: 80,047,943 bytes; SHA-256 `f9a0e18045a8a418691900868f4f78fd595a30798e2c95da29e82a00649ad7fc`; artifact ID `13647404333`; [download artifact](https://github.com/AssayFlux/Kinetics/actions/runs/42556657894/artifacts/13647404333).
+- This closes the automated Robolectric migration checks for documented schema versions only. Device SQLite migration, interrupted transactions, WorkManager lifecycle, SAF providers and physical-device execution remain open.

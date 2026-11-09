@@ -126,3 +126,10 @@ Commit `c157bb5` passed all five CI jobs in workflow run #2100. The JVM suite no
 ### Legacy SQLite migration coverage — 2026-11-09 (R Step 2 audit)
 
 Added Robolectric fixtures for version-one and version-two database upgrades through schema v4, retaining a pre-existing job row and asserting the storage/export columns and analysis-results table are present. The existing v3→v4 and fresh-install/cascade tests remain. This expands automated migration coverage across all supported historical schema versions; the new exact-source CI run is required before calling these added cases passing. It does not exercise device SQLite behavior, interrupted transactions or upgrade from any undocumented schema.
+
+
+### Exact-source legacy migration CI — 2026-11-09
+
+Commit `dd3269acfa79546b143e239948df4d95e938abc7`, CI run #2104, passed all five jobs. The Android arm64 APK/AAB build, package alignment checks and `:app:testDebugUnitTest` passed with the new Robolectric v1→v4 and v2→v4 fixtures, alongside the existing fresh-install and v3→v4 cases. Existing job-row preservation and v4 schema assertions are included. Exact APK/AAB/artifact hashes are recorded in `docs/ci-build-evidence.md`.
+
+This closes automated Robolectric migration coverage for schema v1 through v4. It does not prove migration on Android hardware, interrupted transactions, WorkManager process death/retry, SAF provider behavior or complete R2 integration. R2 remains in progress.

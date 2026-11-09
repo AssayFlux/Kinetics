@@ -296,6 +296,7 @@ def chain_interface_contacts(
     cutoff_angstrom: float = 8.0,
     max_atoms: int = 100_000,
     max_candidate_pairs: int = 2_000_000,
+    max_residue_pairs: int = 100_000,
 ) -> dict[str, object]:
     """Report heavy-atom inter-chain contacts with bounded spatial-neighbour search.
 
@@ -313,7 +314,11 @@ def chain_interface_contacts(
         or cutoff_angstrom <= 0
     ):
         raise ValueError("cutoff_angstrom must be finite and positive")
-    for name, value in (("max_atoms", max_atoms), ("max_candidate_pairs", max_candidate_pairs)):
+    for name, value in (
+        ("max_atoms", max_atoms),
+        ("max_candidate_pairs", max_candidate_pairs),
+        ("max_residue_pairs", max_residue_pairs),
+    ):
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError(f"{name} must be a positive integer")
 
@@ -365,6 +370,8 @@ def chain_interface_contacts(
                             first.residue_number, first.residue,
                             second.residue_number, second.residue,
                         )
+                        if pair_key not in pairs and len(pairs) >= max_residue_pairs:
+                            raise ValueError("Structure exceeds max_residue_pairs")
                         entry = pairs.setdefault(pair_key, {
                             "chain_a": chain_a,
                             "residue_a": first.residue_number,

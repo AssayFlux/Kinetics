@@ -5,9 +5,10 @@ structure-quality grade, validation badge, or experimental/prediction confidence
 """
 from __future__ import annotations
 
+import heapq
 from collections import defaultdict
 from math import floor, isfinite, sqrt
-from typing import Iterable, cast
+from typing import Iterable
 
 from .structure import Atom
 
@@ -81,7 +82,7 @@ def structure_geometry_metrics(
         key = (floor(atom.x / cell_size), floor(atom.y / cell_size), floor(atom.z / cell_size))
         cells[key].append(item)
 
-    clashes: list[dict[str, object]] = []
+    top_clashes: list[tuple[float, int, dict[str, object]]] = []
     candidate_pairs = 0
     severe_count = 0
     clash_count = 0
@@ -111,7 +112,7 @@ def structure_geometry_metrics(
                         clash_count += 1
                         severe = overlap > severe_overlap_angstrom
                         severe_count += int(severe)
-                        clashes.append({
+                        record = {
                             "atom_index_1": index,
                             "atom_index_2": other_index,
                             "chain_1": atom.chain,
@@ -123,9 +124,16 @@ def structure_geometry_metrics(
                             "distance_angstrom": round(distance, 4),
                             "overlap_angstrom": round(overlap, 4),
                             "severity": "severe" if severe else "candidate",
-                        })
+                        }
+                        item = (overlap, candidate_pairs, record)
+                        if len(top_clashes) < max_reported_clashes:
+                            heapq.heappush(top_clashes, item)
+                        else:
+                            heapq.heappushpop(top_clashes, item)
 
-    clashes.sort(key=lambda item: cast(float, item["overlap_angstrom"]), reverse=True)
+    clashes = [
+        item[2] for item in sorted(top_clashes, key=lambda entry: entry[0], reverse=True)
+    ]
     return {
         "schema": "kinetics.structure-geometry-metrics.v1",
         "atom_count": len(points),
@@ -137,7 +145,7 @@ def structure_geometry_metrics(
         "severe_clash_count": severe_count,
         "clash_threshold_angstrom": clash_overlap_angstrom,
         "severe_threshold_angstrom": severe_overlap_angstrom,
-        "top_clashes": clashes[:max_reported_clashes],
+        "top_clashes": clashes,
         "quality_badge": "not_assessed",
         "assessment_status": "geometry_screen_only",
         "limitations": [

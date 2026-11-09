@@ -196,3 +196,15 @@ def test_chain_interface_contacts_validate_chains_and_resource_limits() -> None:
             atoms + [atom(3, "SER", 3, "B")],
             chain_a="A", chain_b="B", max_candidate_pairs=1,
         )
+
+
+def test_chain_interface_contacts_enforces_residue_pair_output_limit() -> None:
+    atoms = [
+        atom(1, "ALA", 1, "A"),
+        atom(2, "GLY", 1, "B"),
+        atom(3, "SER", 2, "B"),
+    ]
+    with pytest.raises(ValueError, match="max_residue_pairs"):
+        chain_interface_contacts(
+            atoms, chain_a="A", chain_b="B", max_residue_pairs=1,
+        )

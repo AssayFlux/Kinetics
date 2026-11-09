@@ -296,8 +296,40 @@
     "domain": "Structural biology"
   },
   {
+    "id": "structure.session_export",
+    "name": "Byte-bounded deterministic JSON structure session export with provenance (not rendered)",
+    "status": "implemented",
+    "implementation": "python/kinetics/structure_view.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
     "id": "structure.exact_sequence_mapping",
     "name": "Conservative exact unique protein sequence-to-structure residue mapping",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence_structure.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "structure.geometry_screen_metrics",
+    "name": "Bounded steric-overlap and coordinate geometry screening without a calibrated quality grade",
+    "status": "implemented",
+    "implementation": "python/kinetics/structure_quality.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "structure.variant_coordinate_mapping",
+    "name": "Exact-match protein variant-to-structure coordinate mapping with abstention",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence_structure.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "structure.chain_interface_contacts",
+    "name": "Bounded heavy-atom inter-chain geometric contact report",
     "status": "implemented",
     "implementation": "python/kinetics/sequence_structure.py",
     "evidence_level": "none",
@@ -310,5 +342,29 @@
     "implementation": "python/kinetics/catalog.py",
     "evidence_level": "none",
     "domain": "Gene reference data"
+  },
+  {
+    "id": "structure.prediction_envelope_validation",
+    "name": "Strict provenance and confidence-envelope validation for external structure predictions",
+    "status": "implemented",
+    "implementation": "python/kinetics/structure_prediction.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "structure.experimental_ca_comparison",
+    "name": "Exact-correspondence superposed CA RMSD comparison with experimental coordinates",
+    "status": "implemented",
+    "implementation": "python/kinetics/structure_prediction.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "genome.contig_assembly_qc",
+    "name": "Bounded contig assembly statistics including N50/L50 and GC/ambiguity summaries",
+    "status": "implemented",
+    "implementation": "python/kinetics/genome_qc.py",
+    "evidence_level": "none",
+    "domain": "Genome analysis"
   }
 ]

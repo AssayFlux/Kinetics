@@ -173,7 +173,9 @@ class ResearchStore(context: Context) :
                 check(cursor.moveToFirst() && cursor.getString(1) == "succeeded" && !cursor.isNull(0)) {
                     "Only a completed, hash-verified import can be analysed"
                 }
-                cursor.getString(0)
+                cursor.getString(0).also { hash ->
+                    require(hash.matches(Regex("[a-f0-9]{64}"))) { "Imported input SHA-256 is invalid" }
+                }
             }
             val values = ContentValues().apply {
                 put("job_id", id); put("tool_id", toolId); put("tool_version", toolVersion)
@@ -215,6 +217,12 @@ class ResearchStore(context: Context) :
     fun storedInputName(id: String): String? = readableDatabase.rawQuery(
         "SELECT input_name FROM jobs WHERE id=?", arrayOf(id),
     ).use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
+
+    /** Read only the committed import size before any analysis plaintext is materialized. */
+    fun storedInputByteCount(id: String): Long? = readableDatabase.rawQuery(
+        "SELECT byte_count FROM jobs WHERE id=? AND state='succeeded' AND storage_path IS NOT NULL",
+        arrayOf(id),
+    ).use { cursor -> if (cursor.moveToFirst() && !cursor.isNull(0)) cursor.getLong(0) else null }
 
     fun storedInputPath(id: String): String? {
         readableDatabase.rawQuery(

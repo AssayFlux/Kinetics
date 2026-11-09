@@ -1892,3 +1892,8 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### R Step 1 — documentation update for analysis export — 2026-11-09
 - Updated the R2/R4 phase plans and ROADMAP to include the versioned SAF analysis-result export, source digest binding and privacy exclusions.
 - R Step 1 remains unaccepted pending exact-source CI; R Step 2 will audit the complete R base and close migration, persistence, export and UI regressions.
+
+
+### R Step 2 audit — reject oversized imports before plaintext materialization — 2026-11-09
+- The first worker version checked the 1 MB cap after authenticated decryption to cache. The audit moved the committed byte-count gate ahead of decryption so a 512 MB stored import is rejected without creating a large plaintext cache file.
+- Analysis persistence now validates the imported digest format before recording a result. Exact-source CI and tests remain pending.

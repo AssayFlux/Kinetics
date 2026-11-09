@@ -15,6 +15,11 @@ class ImportedFastaAnalysisWorker(context: Context, parameters: WorkerParameters
         val store = ResearchStore(applicationContext)
         return try {
             val name = store.storedInputName(jobId) ?: error("Research job does not exist")
+            val committedBytes = store.storedInputByteCount(jobId)
+                ?: error("Only completed, hash-verified imports can be analysed")
+            require(committedBytes in 1..MAX_INPUT_BYTES) {
+                "FASTA import exceeds the 1,000,000-byte analysis limit"
+            }
             require(name.substringAfterLast('.').lowercase() in setOf("fa", "fasta", "fna")) {
                 "This worker accepts FASTA files only; FASTQ requires an explicit Phred offset."
             }

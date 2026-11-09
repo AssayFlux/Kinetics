@@ -28,3 +28,16 @@ reference, validation, security, and owner gates pass.
 ## Schema
 
 The machine-readable contract is `api/public-dataset-catalog.schema.json`.
+
+
+## Automated metadata gate
+
+Run `python scripts/check_public_dataset_catalog.py` before accepting catalogue changes.
+The check rejects patient-data flags, duplicate identifiers, non-HTTPS source/licence
+references, missing content hashes, timestamps without timezone, candidate sources
+promoted without licence review, and research-license approval without a recorded
+reviewer, scope, timestamp and evidence URL. It also rejects clinical-decision-support,
+diagnosis, treatment/dosing recommendation and patient-stratification intended-use language.
+
+The gate is deliberately conservative and is not a substitute for legal review. The
+committed catalogue remains empty of acquired entries. Tests use synthetic metadata only.

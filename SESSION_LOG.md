@@ -2262,3 +2262,11 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Added regression tests for oversized payloads and invalid byte-limit types/values.
 - Updated the S1 contract and S roadmap. This remains payload preparation only; no renderer or WebView bridge is claimed.
 - Exact-source CI required.
+
+
+## 2026-11-09 — Session 57: S2 bounded structure geometry metrics
+- Added a conservative S2 geometry report: atom/residue counts, assessed/unknown element counts, spatially indexed steric-overlap candidates and severe-overlap count.
+- Added explicit atom and candidate-pair ceilings and strict parameter validation.
+- The report always returns `quality_badge=not_assessed`; it does not claim MolProbity, Ramachandran, rotamer, resolution/R-free or pLDDT/PAE quality.
+- Added synthetic regression fixtures and a dedicated S2 contract documenting the evidence still required for a calibrated quality badge.
+- Exact-source CI required.

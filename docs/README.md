@@ -28,7 +28,7 @@ This is the navigation index for the Kinetics repository. Use the living decisio
 | Track | Canonical documents |
 |---|---|
 | R — Research platform | [R0](phase-r0-plan.md), [R1](phase-r1-plan.md), [R2](phase-r2-plan.md), [R3](phase-r3-plan.md), [R4](phase-r4-plan.md), [R5](phase-r5-plan.md), [R6](phase-r6-plan.md), [R7](phase-r7-plan.md), [R8](phase-r8-plan.md), [R9](phase-r9-plan.md), [R10](phase-r10-plan.md), [R-track audit](r-track-audit-2026-11-09.md), [R2 recovery matrix](track-r2/recovery-test-matrix.md) |
-| S — Structure, sequence and discovery | [S roadmap](track-s/discovery-and-design-roadmap.md), [structure viewer contract](track-s/structure-viewer-contract.md), [unknown-sequence evidence contract](track-s/unknown-sequence-evidence-contract.md) |
+| S — Structure, sequence and discovery | [S roadmap](track-s/discovery-and-design-roadmap.md), [S1 viewer](track-s/structure-viewer-contract.md), [S2 quality metrics](track-s/structure-quality-metrics.md), [unknown-sequence evidence contract](track-s/unknown-sequence-evidence-contract.md) |
 | I — In-silico laboratory | [Research boundaries](track-i/research-boundaries.md) |
 | P — Precision medicine preparation | [Public-data-only boundary](track-p/public-data-only-preparation.md), [public dataset catalog](track-p/public-dataset-catalog.md) |
 | UI / design system | [UI/UX specification](android-ui-ux-spec.md), [UI document set](ui/ui-spec.md), [root UI spec](../KINETICS_UI_SPEC.md) |

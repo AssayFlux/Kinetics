@@ -111,3 +111,9 @@ Every S increment must be tested against the exact commit. Host tests are regres
 - Added deterministic JSON export containing the validated structure-view payload and content-addressed preparation record.
 - The export is byte-bounded and explicitly marks `render_state=not_rendered`; it does not pretend to contain PNG/SVG or viewer state.
 - Image/session rendering and the structure benchmark matrix remain gated on a selected licensed renderer, fixed experimental reference structures, and device performance evidence.
+
+
+#### S4 prediction evidence envelope and comparison boundary
+- Added strict validation for externally supplied prediction envelopes, including sequence/model/node provenance, weights hash, license declaration, timezone-aware timestamp, structure payload and per-residue pLDDT consistency.
+- Added exact-correspondence superposed CA RMSD comparison with source hashes.
+- Validated envelopes remain `unverified_prediction`; no model execution, node authentication, confidence calibration, TM-score or predictive accuracy is claimed. Actual node/model execution remains gated.

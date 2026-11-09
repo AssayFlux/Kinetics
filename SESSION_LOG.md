@@ -2290,3 +2290,10 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Added a byte-bounded, deterministic JSON structure-session export containing the validated coordinate payload and preparation provenance.
 - Export explicitly records `render_state=not_rendered` and discloses the absence of PNG/SVG/interactive viewer state.
 - Added determinism, provenance and export-size regression tests; exact-source CI required.
+
+
+## 2026-11-09 — Session 61: S4 prediction evidence and comparison boundary
+- Added strict provenance/confidence envelope validation for externally supplied structure-prediction results.
+- Added exact residue-key superposed CA RMSD comparison for predicted versus experimental coordinates.
+- Outputs remain unverified; no prediction model, node transport/authentication, license approval, confidence calibration or biological accuracy claim is implemented.
+- Added synthetic regression tests and documented S4 external dependencies.

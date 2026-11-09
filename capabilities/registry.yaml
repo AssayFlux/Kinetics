@@ -620,3 +620,14 @@ security_features:
     track: G
     status: planned
     tests: []
+
+  - id: structure.prediction_envelope_validation
+    name: Strict provenance and confidence-envelope validation for external structure predictions
+    status: implemented
+    implementation: python/kinetics/structure_prediction.py
+    evidence_level: none
+  - id: structure.experimental_ca_comparison
+    name: Exact-correspondence superposed CA RMSD comparison with experimental coordinates
+    status: implemented
+    implementation: python/kinetics/structure_prediction.py
+    evidence_level: none

@@ -211,4 +211,4 @@ ATOM 1 C CA ALA A 1 1.0 2.0 3.0
     with pytest.raises(ValueError, match="max_source_bytes"):
         prepare_structure_viewer_source(cif, source_format="mmcif", max_source_bytes=4)
     with pytest.raises(ValueError, match="source_format"):
-        prepare_structure_viewer_source(cif, source_format="pdb")
+        prepare_structure_viewer_source(cif, source_format="xyz")

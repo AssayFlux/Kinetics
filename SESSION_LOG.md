@@ -1725,3 +1725,23 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Resolve any exact-source CI findings.
 - Extend non-clinical synthetic VCF fixtures to validate build/contig/coordinate/allele provenance end to end.
 - Continue R/S/I/P dependency-safe vertical slices; do not claim a track complete until all its exit evidence exists.
+
+
+## 2026-11-09 — Session 29: I1 chemistry representation provenance
+
+**Objective:** Improve the auditability of the existing optional RDKit descriptor adapter without implying Android readiness or biological/ADMET validity.
+
+### Documents and sources reviewed
+- Re-read the North Star, roadmap, decision log, latest session log, I-track research boundaries, R6 plan, RDKit adapter, chemistry tests, pinned RDKit reference fixture/script and CI workflow.
+- Confirmed RDKit is host-only and that existing outputs reported engine/version and canonical isomeric SMILES but did not hash the exact supplied input or fully expose representation assumptions.
+
+### Implemented
+- Added SHA-256 over exact UTF-8 input text and byte count for SMILES and molblock analysis; no pre-parser text normalization is applied.
+- Added explicit representation assumptions for sanitization, canonicalization, protonation, tautomer handling, aromaticity, stereochemistry, hydrogen handling and descriptor units.
+- Added regression assertions for input hash/length and key chemical-state assumptions.
+- Updated I1/R6 documentation and roadmap evidence description.
+
+### Evidence boundary
+- Pinned host RDKit reference fixture remains a basic sanity comparison, not an independent chemistry benchmark.
+- Exact-source CI for the P1/R4 and I1 changes remains pending; no green result is claimed here.
+- RDKit is not packaged in Android; no ADMET, biological activity, docking, PK/PD or clinical claim is made.

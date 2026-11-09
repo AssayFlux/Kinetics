@@ -38,6 +38,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+import java.nio.charset.CodingErrorAction
 
 private const val VIEWER_URL = "https://appassets.androidplatform.net/assets/structure-viewer/structure-viewer.html"
 private const val MAX_STRUCTURE_SOURCE_BYTES = 16 * 1024 * 1024
@@ -100,7 +102,10 @@ internal fun StructureViewerPreview() {
                             )
                         }
                         val bytes = readBounded(context, uri)
-                        val sourceText = bytes.toString(Charsets.UTF_8)
+                        val sourceText = Charsets.UTF_8.newDecoder()
+                            .onMalformedInput(CodingErrorAction.REPORT)
+                            .onUnmappableCharacter(CodingErrorAction.REPORT)
+                            .decode(ByteBuffer.wrap(bytes)).toString()
                         require(!sourceText.contains('\u0000')) {
                             "Structure file is not valid UTF-8 text"
                         }

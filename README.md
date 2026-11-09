@@ -36,7 +36,7 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 | **R — Research platform** | Android foundation, secure data, scientific engines, genomics, quality and release hardening | R1–R10 have implementation work recorded; every phase still has outstanding exit evidence | **In progress** |
 | **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1 and S6–S9 have bounded preparation/implementation; S2–S5 are not started; S10 remains gated | **In progress** |
 | **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1 has host-side descriptor/reference-fixture work; I4 is source-inventory preparation; I2, I3 and I5 are not started | **In progress** |
-| **P — Precision medicine** | PGx-first research pathway and future governance | Public-source metadata preparation only; P0 is blocked and P1–P7 have not started | **Gated / blocked** |
+| **P — Precision medicine** | PGx-first research pathway and future governance | P1 public-data-only metadata gate and synthetic CI tests implemented; no acquired datasets or genotype interpretation | **Preparation in progress; P0 blocked** |
 | **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open | **In progress** |
 | **G — Governance** | Security, licensing, quality system, bias and publication evidence | Requirements and inventories are documented; formal reviews and evidence gates remain open | **In progress** |
 

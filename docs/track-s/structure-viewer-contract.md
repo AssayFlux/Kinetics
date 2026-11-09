@@ -10,7 +10,7 @@ S1 will provide offline loading and rendering of user-selected PDB/mmCIF structu
 
 - `python/kinetics/structure_view.py` builds deterministic `kinetics.structure-view.v1` payloads.
 - Payloads use Angstrom coordinates, stable field names, a configurable atom-count ceiling, finite-coordinate checks, duplicate-serial rejection, bounded annotations, and explicit limitations.
-- `tests/test_structure_view.py` covers serialization determinism, empty/unsupported inputs, atom limits, duplicate serials, non-finite coordinates, and schema rejection.
+- `tests/test_structure_view.py` covers serialization determinism, empty/unsupported inputs, atom limits, duplicate serials, non-finite coordinates, and schema rejection. The serializer now validates exact top-level/atom fields, source format, Angstrom units, atom-count consistency, unique integer serials, residue identifiers, normalized element labels, finite numeric coordinates and non-empty limitations before JSON encoding; malformed payloads are rejected rather than passed to the viewer.
 - Capability `structure.viewer_payload` is registered as implemented source with evidence_level none. This is a preparation utility, not a renderer or validated scientific result.
 
 ## Rendering and security contract

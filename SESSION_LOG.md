@@ -2228,3 +2228,23 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Moved import staging-directory creation, legacy plaintext cleanup and initial state update into the worker's guarded execution block.
 - Added a finally block that closes the SQLite helper after success, cancellation and all failure returns, including failed legacy plaintext cleanup.
 - Exact-source Android CI is required; no process-death or physical-device lifecycle claim is made.
+
+
+## 2026-11-09 — Session 54: Begin sequential Track S implementation step 1
+**Phase:** Track S / Step 1 — documented base implementation  
+**Objective:** Start S after the R host-audit closure and documentation consolidation, following D-019 and owner decision D-020.
+
+### Done
+- Reviewed the S roadmap, offline structure-viewer contract and unknown-sequence evidence contract before changing code.
+- Inspected the existing S1 structure-payload validator, S6 local exact-reference and FASTA pack loader, S7 bounded ORF enumeration, S8 explicit translation tables and S9 conservative sequence-to-structure mapping.
+- Hardened S6 local FASTA pack resource-limit validation: byte, manifest, record and residue limits must be positive integers; booleans and floats are rejected.
+- Added regression coverage for all four resource-limit parameters.
+- Kept S1 rendering gated on R1 WebView feasibility, exact viewer/transitive-license review and device evidence. No unsupported homology, novelty, gene-function or genetic-code inference is introduced.
+
+### Validation boundary
+- Exact-source CI for this increment is required before treating the new tests as passed.
+- Existing S tests and host reference fixtures remain regression/conformance evidence, not independent biological validation.
+- R device, external-science, licensing and release evidence remains carried forward; no R validation claim is implied.
+
+### Next step
+Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 documented base work without crossing S2–S5/S10 gates.

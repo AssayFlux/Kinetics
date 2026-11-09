@@ -112,8 +112,15 @@ def load_local_fasta_reference_pack(
     The same open file descriptor is hashed, parsed, and hashed again to detect
     content changes during ingestion. Limits are enforced before/while parsing.
     """
-    if min(max_pack_bytes, max_manifest_bytes, max_records, max_total_residues) < 1:
-        raise ValueError("All reference-pack resource limits must be positive")
+    limits = {
+        "max_pack_bytes": max_pack_bytes,
+        "max_manifest_bytes": max_manifest_bytes,
+        "max_records": max_records,
+        "max_total_residues": max_total_residues,
+    }
+    for name, value in limits.items():
+        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+            raise ValueError(f"{name} must be a positive integer")
     manifest = _read_manifest(Path(manifest_path), max_bytes=max_manifest_bytes)
     pack, sequence_type = _validate_manifest(manifest)
     fasta = Path(fasta_path)

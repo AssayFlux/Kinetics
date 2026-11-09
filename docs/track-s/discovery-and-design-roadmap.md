@@ -1,6 +1,6 @@
 # Track S — Protein, genome and sequence discovery roadmap
 
-**Status (2026-11-08):** Owner-authorized planning and bounded implementation may proceed in parallel with R1–R10. This document defines the intended S scope; it does not claim the capabilities below are implemented. The existing S1 structure-viewer payload contract remains separate.
+**Status (2026-11-09):** Track S is now the next sequential engineering track under D-019 and owner decision D-020, after the R implementation/host-audit step closed. Step 1 (build the documented base) is underway. Existing S1 and S6–S9 source is bounded foundation work only; no viewer, homology classifier, genome annotator, genetic-code inference or protein-design capability is claimed complete. R dependency gaps remain carry-forward gates.
 
 ## Mission
 
@@ -69,3 +69,17 @@ Turn Kinetics into a research workbench that can investigate unfamiliar DNA/RNA/
 - Existing source foundations include FASTA/FASTQ parsing, basic sequence operations, protein properties, limited PDB/mmCIF atom-site parsing, structure-analysis primitives and a deterministic structure-viewer payload contract.
 - These foundations do **not** constitute production genome annotation, comprehensive unknown-gene discovery, non-standard genetic-code inference, advanced structure prediction or de novo protein design.
 - S6–S8 now have bounded implementations and tests, while S9 has a conservative exact residue-mapping primitive. These remain in-progress research work packages until source, tests, reference evidence and exit gates are recorded individually; S10 remains feasibility-only and generation-gated.
+
+
+## S implementation step 1 — initial execution boundary (2026-11-09)
+
+The first S increment will harden the existing local evidence foundations before adding new inference claims:
+
+1. **S1:** retain the strict deterministic structure-payload boundary. Renderer selection, vendored viewer assets and WebView bridge remain gated on R1 WebView feasibility, exact-release/transitive license review and device tests. Do not introduce remote/CDN assets.
+2. **S6:** harden local FASTA reference-pack manifest and byte verification, resource-limit validation, exact-match evidence and abstention. Similarity/homology search, E-values, domains and novelty inference remain unimplemented until licensed reference packs and independent calibration exist.
+3. **S7:** preserve bounded six-frame ORF enumeration as a candidate generator only. Prokaryotic/eukaryotic gene annotation, transcript/splice models and annotation truth-set validation remain separate future work.
+4. **S8:** explicit NCBI translation-table support remains caller-selected; no organism/genetic-code inference is authorized by these primitives.
+5. **S9:** exact unique sequence-to-structure mapping remains conservative; alignment, insertion-code conversion, family/domain annotation and variant-effect claims remain out of scope until separately validated.
+6. **S2–S5 and S10:** remain gated by their documented fixed-reference, model/license, node-security and biosafety requirements.
+
+Every S increment must be tested against the exact commit. Host tests are regression evidence only; they do not close biological validation or device acceptance.

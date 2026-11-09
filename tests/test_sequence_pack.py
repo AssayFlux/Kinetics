@@ -117,7 +117,7 @@ def test_local_pack_search_verifies_pack_and_returns_exact_evidence(tmp_path) ->
 def test_local_pack_rejects_boolean_and_non_integer_resource_limits(
     tmp_path, limit_name: str, value: object,
 ) -> None:
-    fasta_path, manifest_path = write_pack(tmp_path, b">gene\\nACGT\\n")
+    fasta_path, manifest_path = write_pack(tmp_path, b">gene\nACGT\n")
     with pytest.raises(ValueError, match=f"{limit_name} must be a positive integer"):
         load_local_fasta_reference_pack(
             fasta_path, manifest_path, **{limit_name: value},

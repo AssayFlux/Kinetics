@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Validate public non-patient dataset metadata; never downloads data or lifts P0."""
 from __future__ import annotations
-import argparse, re, sys
+import argparse
+import re
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any

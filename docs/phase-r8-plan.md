@@ -5,14 +5,15 @@
 ## Scope
 - CPM and CLR transformations; Pearson and cross-omics correlation; fold changes; diversity metrics and logistic growth.
 - Exploratory two-group Welch unequal-variance testing with Student-t p-values and Benjamini–Hochberg q-values for pre-normalized/log-scale features.
-- Future: count-aware differential-expression models, covariates, batch effects, paired/repeated-measure designs, robust compositional methods, pathway analysis and multi-omics integration.
+- Added an exploratory NB2 log-link count GLM for raw integer counts, numeric covariates (including caller-encoded batch indicators), size-factor normalization, method-of-moments dispersion, IRLS/Wald tests and BH correction.
+- Paired/repeated-measure designs, dispersion moderation, robust compositional methods, pathway analysis and multi-omics integration remain future work.
 
 ## Current source
 Implemented in `python/kinetics/omics.py`. Inputs are checked for finite values and invalid dimensions.
 
 ## Limitations
 - Welch tests require independent biological samples and pre-normalized/log-scale input.
-- No negative-binomial count model, design matrix, batch correction or repeated-measures inference.
+- NB2 count GLM and numeric design covariates exist, but dispersion is not moderated; batch indicators must be caller-encoded; repeated-measures inference, robust outlier handling and pathway analysis are absent.
 - CPM/CLR alone do not resolve compositional bias or confounding.
 - Multiple-testing correction covers only the feature family supplied to the function.
 

@@ -1,11 +1,11 @@
 # R1 — Android and scientific-stack feasibility
 
 **Roadmap item:** Track R / R1  
-**Status:** IN PROGRESS — exact-source CI #2111 passed on the pre-lifecycle-test baseline; CI #2114 exposed two new WorkManager worker test-fixture failures (not a production APK compile failure), which are corrected in subsequent commits and await rerun. Android runtime/scientific feasibility remains open  
+**Status:** IN PROGRESS — exact-source CI #2122 on `cb32bdb` has passed Python, host scientific-reference, RDKit and SPDX jobs; Android ARM64 build/JVM tests are still running. Device runtime and scientific-stack feasibility remain open  
 **Owner:** Engineering + Project owner  
 **Started:** 2026-11-07  
 **Depends on:** R0 foundation and approved direction baseline  
-**Exit gate:** Evidence-backed feasibility matrix and explicit owner go/no-go before declaring R1 validated or opening Track S. Owner has authorized parallel R1–R10 implementation.
+**Exit gate:** Evidence-backed feasibility matrix and explicit owner go/no-go before declaring R1 validated or opening Track S. Current sequencing is strictly R → S → I → P → G under D-019.
 
 ## Objective
 
@@ -13,8 +13,8 @@ Establish whether the approved Android-native architecture can support the requi
 
 ## Owner instruction — build and test workflow
 
-Updated 2026-11-08 with explicit owner authorization:
-- GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts and run repository automated checks, including Android JVM unit-test tasks and static APK/ELF alignment checks. Latest successful build run #1721 is recorded in docs/ci-build-evidence.md; the JVM test task was NO-SOURCE at that commit. A new responsive navigation unit test is now present and must pass in a subsequent run.
+Updated 2026-11-09:
+- GitHub Actions is authorized to build unsigned arm64 debug APK/AAB artifacts and run repository automated checks, including Android JVM unit-test tasks and static APK/ELF alignment checks. The current exact-source CI #2122 is recorded in GitHub Actions; its Android arm64 build and JVM task are pending at this documentation revision.
 - The Actions Android build runs on a pinned Linux x86_64 host toolchain, not on the owner's ARM64 phone. It is a reproducible build/test lane, not a claim that Termux can host the build.
 - Physical-device testing remains a separate required activity. CI success does not establish app launch, JNI/Python runtime behavior, SAF behavior, background execution or device compatibility on the owner's phone.
 - Keep exact run URLs/IDs, source SHA, toolchain versions, logs, artifact hashes/sizes and test results in the feasibility record.

@@ -2204,3 +2204,12 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - These are test-fixture/assertion corrections, not production behavior changes.
 - Corrected exact-source CI #2121 and later are required before counting these tests as passed.
 - No device runtime, Keystore or encrypted-import end-to-end result is claimed.
+
+
+## 2026-11-09 — Session 51: Reconcile R1/R7/R8 status against current implementation
+
+- Updated R1 feasibility status to the exact current CI #2122 source/run and removed stale parallel-track authorization language; D-019 is the active sequencing decision.
+- Corrected R7 plan scope to include implemented JC69 distance estimation and seeded site-column bootstrap, while retaining the explicit absence of likelihood/Bayesian inference and a viewer.
+- Corrected R8 plan scope to include the exploratory NB2 count GLM and numeric covariates, while documenting missing dispersion moderation, repeated-measures and robust inference.
+- Updated the Android feasibility record to distinguish passed host/Python/RDKit/SPDX jobs from the still-running Android job.
+- No phase exit is declared. R1 device/runtime feasibility and scientific validation remain open.

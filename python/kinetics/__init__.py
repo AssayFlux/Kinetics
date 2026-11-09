@@ -16,6 +16,7 @@ from .genomics_htslib import iter_alignment_records
 from .genomics import (
     SamRecord, fastq_quality_summary, iter_bam_records, normalize_small_variant, parse_sam, parse_vcf,
 )
+from .variant_reference import ReferenceSequence, normalize_against_reference
 from .kinetics import (
     bootstrap_michaelis_menten, eadie_hofstee, fit_michaelis_menten, hanes_woolf, inhibition_rate,
     lineweaver_burk, michaelis_menten,
@@ -53,4 +54,5 @@ __all__ = [
     "sequence_statistics", "solvent_accessible_surface_area", "shannon_diversity", "trim_fastq_ends", "simpson_diversity",
     "substructure_match", "tanimoto", "theoretical_pi", "to_newick", "transcribe", "upgma",
     "search_gene_catalog", "validate_gene_catalog", "welch_differential_expression",
+    "ReferenceSequence", "normalize_against_reference",
 ]

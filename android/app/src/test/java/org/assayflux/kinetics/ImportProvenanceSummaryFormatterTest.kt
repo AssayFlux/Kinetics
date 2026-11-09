@@ -47,7 +47,7 @@ class ImportProvenanceSummaryFormatterTest {
                 recordedAtEpochMs = 0L,
             ),
         )
-        assertFalse(summary.contains("Clinical status: approved"))
+        assertFalse(summary.contains("\nClinical status: approved"))
         assertTrue(summary.contains("Input name: sample.fasta Clinical status: approved"))
     }
 

@@ -1837,3 +1837,20 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Require the exact-source CI run to pass, then resume the R2 import → durable analysis job → result/provenance → SAF export integration.
+
+## 2026-11-09 — Session 35: R-track two-step base cycle — CI regression correction
+
+**Owner-directed sequence:** complete R in two explicit steps before starting S; then S, I, P and G in order.
+
+### Step 1 — Build documented R base
+- Keep R1–R10 as the base scope defined in ROADMAP; integrate rather than presenting isolated modules as a finished workbench.
+- R2 import provenance hardening now sanitizes input name, job metadata, parameter JSON and input SHA-256 in the human-readable summary.
+- CI exposed a contradictory regression assertion: the test both prohibited the sanitized phrase anywhere and expected that same phrase in the sanitized field. Corrected the negative assertion to reject only a newline-prefixed forged section.
+
+### Verification boundary
+- The current exact-source CI run failed at this contradictory JVM assertion; the ARM64 packaging step completed before the JVM test task failed. No successful tested build is claimed.
+- The correction must pass the exact-source Android JVM suite and full CI before R Step 1 is accepted.
+- No emulator or physical-device verification is claimed.
+
+### Next
+- Finish the R Step 1 integration base across import → typed analysis → durable result/provenance → export, then perform R Step 2 full audit and regression closure. Do not start S until R has passed its two-step gate.

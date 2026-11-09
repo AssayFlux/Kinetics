@@ -36,8 +36,8 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 | Track | Focus | Progress recorded | Overall state |
 |---|---|---|---|
 | **R — Research platform** | Android foundation, secure data, scientific engines, genomics, quality and release hardening | Engineering implementation and host-side audit pass completed; device, external validation, licensing and signed-release gates remain open | **Audit closed; acceptance evidence open** |
-| **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | Next sequential track; prior preparation is not treated as phase acceptance | **Next** |
-| **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1 has host-side descriptor/reference-fixture work; I4 is source-inventory preparation; I2, I3 and I5 are not started | **In progress** |
+| **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1 Android viewer import/export, S2 geometry, S3 mapping, S6–S9 bounded foundations and S10 brief validation implemented; model/data, independent validation and device gates remain | **In progress** |
+| **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | Strictly blocked by the owner-approved R → S → I order until S exit criteria are met | **Blocked** |
 | **P — Precision medicine** | PGx-first research pathway and future governance | P1 public-data metadata gate, synthetic reference-build/coordinate/SHA-256 contract and regression tests implemented; no acquired datasets or genotype interpretation | **Preparation in progress; P0 blocked** |
 | **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open | **In progress** |
 | **G — Governance** | Security, licensing, quality system, bias and publication evidence | Requirements and inventories are documented; formal reviews and evidence gates remain open | **In progress** |
@@ -115,7 +115,7 @@ Only source metadata is catalogued at this stage; no public dataset payloads hav
 
 | Evidence item | Latest recorded state |
 |---|---|
-| **Current source revision** | `488632847c015ac44a19026f4af5b2399aea4d7b` |
+| **Current source revision** | `f07b1ba406120109296a381002321fbf767f17a0` |
 | **Latest passing CI** | [#2183 — all five jobs successful on `f704716`](https://github.com/AssayFlux/Kinetics/actions/runs/42572416977); later source CI pending |
 | **Current build result** | Android arm64 APK/AAB/JVM tests passed on `f704716`; session-export and subsequent S8/S10 changes await exact-source verification on `4886328` |
 | **APK / AAB** | APK 69,792,811 bytes · SHA-256 `7029555e9640fd920f22a67890fe921473582affd2538e8aaddd61a261c9e44e`; AAB 39,926,363 bytes · SHA-256 `dd6eb3cc6ddc97c9ed3036b4d6e0747c2e91ef2a6ee57f80eaa4e11e28b8cfa9` |

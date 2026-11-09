@@ -169,3 +169,11 @@ The following historical decisions are retained for auditability but are no long
 - Evidence: Distinguish source implementation, automated tests, reference validation, CI build, emulator verification and physical-device verification. Build success alone is not a tested app. Missing hardware tests remain blockers.
 - Consequences: ROADMAP contains the mandatory cycle. UI screen map, quality report, registry and session log must be updated with each cycle.
 - Approver: Project owner, explicit instruction in chat on 2026-11-08.
+
+
+## D-017 — Owner authorization for safe P-track public-data engineering preparation
+- Date: 2026-11-09.
+- Context: The owner explicitly reiterated permission to proceed with the P track. The existing P0 boundary distinguishes public, non-patient research preparation from patient-data, human-subject and clinical activities.
+- Choice: Proceed immediately with P1 public-data-only engineering preparation in parallel with R/S/I work: catalogue/schema validation, synthetic fixtures, dataset provenance and reproducibility infrastructure, and non-clinical research tooling. Do not wait for P0 to build these safe foundations.
+- Constraints: This authorization does not approve patient or human-subject data intake, clinical interpretation, genotype-to-phenotype recommendations, diagnosis/treatment/dosing, Clinical Mode, or claims of clinical validity/utility. P0 remains blocked until the existing legal, ethics, privacy, security, qualified-adviser, validation and owner-approval evidence is complete. D-004 adviser timing remains active; review after R3 and before any P0-gated activity.
+- Approver: Project owner, explicit permission reiterated in chat on 2026-11-09.

@@ -33,7 +33,7 @@
   },
   {
     "id": "sequence.explicit_genetic_code_translation",
-    "name": "Explicit NCBI genetic-code translation for selected DNA/RNA coding sequences",
+    "name": "Explicit NCBI genetic-code translation for 25 supported DNA/RNA translation tables",
     "status": "implemented",
     "implementation": "python/kinetics/genetic_code.py",
     "evidence_level": "none",
@@ -372,6 +372,14 @@
     "name": "Bounded provenance-aware caller-supplied protein motif scanning with abstention",
     "status": "implemented",
     "implementation": "python/kinetics/protein_motifs.py",
+    "evidence_level": "none",
+    "domain": "Protein analysis"
+  },
+  {
+    "id": "protein.design_brief_validation",
+    "name": "Typed non-generative protein-design brief validation with mandatory release gates",
+    "status": "implemented",
+    "implementation": "python/kinetics/protein_design.py",
     "evidence_level": "none",
     "domain": "Protein analysis"
   },

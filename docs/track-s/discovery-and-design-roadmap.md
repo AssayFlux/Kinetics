@@ -99,3 +99,9 @@ Every S increment must be tested against the exact commit. Host tests are regres
 - The output records the query position, reference/alternate amino acids and corresponding structure residue number. It is coordinate correspondence only.
 - No side-chain mutation modelling, stability/energy scoring, interface-effect prediction, pathogenicity or clinical interpretation is implemented.
 - Interface/pocket analysis remains gated on complete atom chemistry, validated structure inputs and independent reference benchmarks.
+
+
+#### S3 interface-contact baseline
+- Added bounded heavy-atom inter-chain contact counting with a spatial-neighbour index.
+- Reports per-residue-pair atom-contact counts and minimum distances under a caller-selected cutoff.
+- This is geometric contact evidence only; no interface energy, affinity, pocket, stability or functional effect is predicted. Pocket detection remains gated on ligand/solvent/chemical-component completeness and independent reference validation.

@@ -6,6 +6,7 @@ or infer missing/disordered residues.
 """
 from __future__ import annotations
 
+from math import ceil, floor, isfinite, sqrt
 from typing import Iterable
 
 from .structure import Atom
@@ -267,5 +268,120 @@ def map_variant_to_structure(
             "No side-chain rebuilding, energy calculation, stability prediction or interface effect is performed.",
             "No pathogenicity, clinical significance or biological function is inferred.",
             "Insertion codes are not retained by the current atom model.",
+        ],
+    }
+
+
+
+def chain_interface_contacts(
+    atoms: Iterable[Atom],
+    *,
+    chain_a: str,
+    chain_b: str,
+    cutoff_angstrom: float = 8.0,
+    max_atoms: int = 100_000,
+    max_candidate_pairs: int = 2_000_000,
+) -> dict[str, object]:
+    """Report heavy-atom inter-chain contacts with bounded spatial-neighbour search.
+
+    This is a geometric contact count/minimum-distance report, not an interface
+    energy, binding-affinity, pocket, or functional-effect prediction.
+    """
+    if not isinstance(chain_a, str) or not chain_a or not isinstance(chain_b, str) or not chain_b:
+        raise ValueError("chain_a and chain_b must be non-empty text")
+    if chain_a == chain_b:
+        raise ValueError("chain_a and chain_b must be different")
+    if (
+        isinstance(cutoff_angstrom, bool)
+        or not isinstance(cutoff_angstrom, (int, float))
+        or not isfinite(cutoff_angstrom)
+        or cutoff_angstrom <= 0
+    ):
+        raise ValueError("cutoff_angstrom must be finite and positive")
+    for name, value in (("max_atoms", max_atoms), ("max_candidate_pairs", max_candidate_pairs)):
+        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+            raise ValueError(f"{name} must be a positive integer")
+
+    first_chain: list[tuple[int, Atom]] = []
+    second_chain: list[tuple[int, Atom]] = []
+    atom_count = 0
+    for index, atom in enumerate(atoms):
+        atom_count += 1
+        if atom_count > max_atoms:
+            raise ValueError("Structure exceeds max_atoms")
+        if not all(isfinite(value) for value in (atom.x, atom.y, atom.z)):
+            raise ValueError("Structure contains non-finite coordinates")
+        if atom.element.strip().upper() == "H":
+            continue
+        if atom.chain == chain_a:
+            first_chain.append((index, atom))
+        elif atom.chain == chain_b:
+            second_chain.append((index, atom))
+    if not first_chain or not second_chain:
+        raise ValueError("Both requested chains must contain heavy atoms")
+
+    cell_size = float(cutoff_angstrom)
+    cells: dict[tuple[int, int, int], list[tuple[int, Atom]]] = {}
+    for item in second_chain:
+        atom = item[1]
+        key = (floor(atom.x / cell_size), floor(atom.y / cell_size), floor(atom.z / cell_size))
+        cells.setdefault(key, []).append(item)
+
+    radius = ceil(cutoff_angstrom / cell_size)
+    pairs: dict[tuple[int, str, int, str], dict[str, object]] = {}
+    candidate_pairs = 0
+    for _, first in first_chain:
+        key = (floor(first.x / cell_size), floor(first.y / cell_size), floor(first.z / cell_size))
+        for dx in range(-radius, radius + 1):
+            for dy in range(-radius, radius + 1):
+                for dz in range(-radius, radius + 1):
+                    for _, second in cells.get((key[0] + dx, key[1] + dy, key[2] + dz), ()):
+                        candidate_pairs += 1
+                        if candidate_pairs > max_candidate_pairs:
+                            raise ValueError("Structure exceeds max_candidate_pairs")
+                        distance = sqrt(
+                            (first.x - second.x) ** 2
+                            + (first.y - second.y) ** 2
+                            + (first.z - second.z) ** 2
+                        )
+                        if distance > cutoff_angstrom:
+                            continue
+                        pair_key = (
+                            first.residue_number, first.residue,
+                            second.residue_number, second.residue,
+                        )
+                        entry = pairs.setdefault(pair_key, {
+                            "chain_a": chain_a,
+                            "residue_a": first.residue_number,
+                            "residue_name_a": first.residue,
+                            "chain_b": chain_b,
+                            "residue_b": second.residue_number,
+                            "residue_name_b": second.residue,
+                            "atom_contact_count": 0,
+                            "minimum_distance_angstrom": distance,
+                        })
+                        entry["atom_contact_count"] = int(entry["atom_contact_count"]) + 1
+                        entry["minimum_distance_angstrom"] = min(
+                            float(entry["minimum_distance_angstrom"]), distance,
+                        )
+    contacts = sorted(
+        pairs.values(),
+        key=lambda item: (int(item["atom_contact_count"]), -float(item["minimum_distance_angstrom"])),
+        reverse=True,
+    )
+    return {
+        "schema": "kinetics.chain-interface-contacts.v1",
+        "chain_a": chain_a,
+        "chain_b": chain_b,
+        "cutoff_angstrom": float(cutoff_angstrom),
+        "candidate_pair_count": candidate_pairs,
+        "residue_pair_count": len(contacts),
+        "atom_contact_count": sum(int(item["atom_contact_count"]) for item in contacts),
+        "residue_contacts": contacts,
+        "interpretation": "geometric_interface_contacts_only",
+        "limitations": [
+            "Hydrogen atoms are excluded; no protonation or chemical bond model is used.",
+            "No interface energy, binding affinity, pocket, stability or functional effect is predicted.",
+            "Residue insertion codes and alternate conformations are not represented in the Atom model.",
         ],
     }

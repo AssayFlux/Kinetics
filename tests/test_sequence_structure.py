@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.sequence_structure import map_exact_chain_sequence, map_variant_to_structure
+from kinetics.sequence_structure import (\n    chain_interface_contacts, map_exact_chain_sequence, map_variant_to_structure,\n)
 from kinetics.structure import Atom
 
 
@@ -163,4 +163,34 @@ def test_variant_mapping_rejects_invalid_variant_inputs(kwargs, message: str) ->
         map_variant_to_structure(
             "AG", [atom(1, "ALA", 1), atom(2, "GLY", 2)],
             chain_id="A", **parameters,
+        )
+
+
+
+def test_chain_interface_contacts_report_bounded_geometric_residue_pairs() -> None:
+    atoms = [
+        Atom(1, "CA", "ALA", "A", 10, 0.0, 0.0, 0.0, "C"),
+        Atom(2, "CB", "ALA", "A", 10, 0.0, 1.0, 0.0, "C"),
+        Atom(3, "CA", "GLY", "B", 20, 4.0, 0.0, 0.0, "C"),
+        Atom(4, "CA", "SER", "B", 21, 20.0, 0.0, 0.0, "C"),
+        Atom(5, "H", "ALA", "B", 22, 0.5, 0.0, 0.0, "H"),
+    ]
+    result = chain_interface_contacts(atoms, chain_a="A", chain_b="B")
+    assert result["residue_pair_count"] == 1
+    assert result["atom_contact_count"] == 2
+    assert result["residue_contacts"][0]["residue_a"] == 10
+    assert result["residue_contacts"][0]["residue_b"] == 20
+    assert result["interpretation"] == "geometric_interface_contacts_only"
+
+
+def test_chain_interface_contacts_validate_chains_and_resource_limits() -> None:
+    atoms = [atom(1, "ALA", 1), atom(2, "GLY", 2, "B")]
+    with pytest.raises(ValueError, match="different"):
+        chain_interface_contacts(atoms, chain_a="A", chain_b="A")
+    with pytest.raises(ValueError, match="max_atoms"):
+        chain_interface_contacts(atoms, chain_a="A", chain_b="B", max_atoms=1)
+    with pytest.raises(ValueError, match="max_candidate_pairs"):
+        chain_interface_contacts(
+            atoms + [atom(3, "SER", 3, "B")],
+            chain_a="A", chain_b="B", max_candidate_pairs=1,
         )

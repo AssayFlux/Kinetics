@@ -2277,3 +2277,10 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Enforced reference-residue agreement and explicit abstention for ambiguous, noncontiguous, missing or uncovered structure mappings.
 - Output is coordinate correspondence only; no mutation effect, stability, pathogenicity or clinical interpretation is claimed.
 - Added positive, abstention and invalid-input regression tests; exact-source CI required.
+
+
+## 2026-11-09 — Session 59: S3 inter-chain contact evidence
+- Added a bounded spatial-neighbour implementation for heavy-atom contacts between two selected chains.
+- Reports residue-pair contact counts and minimum distances; hydrogen atoms are excluded.
+- Explicitly avoids affinity, energy, pocket or functional-effect claims.
+- Added synthetic contact and resource-limit regression fixtures; exact-source CI required.

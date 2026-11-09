@@ -196,6 +196,12 @@ internal fun StructureViewerPreview() {
             }
             AndroidView(
                 factory = { FrameLayout(it).apply { addView(webView) } },
+                update = { frame ->
+                    if (frame.childCount != 1 || frame.getChildAt(0) !== webView) {
+                        frame.removeAllViews()
+                        frame.addView(webView)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth().height(440.dp),
             )
         }

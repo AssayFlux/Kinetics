@@ -117,3 +117,9 @@ Every S increment must be tested against the exact commit. Host tests are regres
 - Added strict validation for externally supplied prediction envelopes, including sequence/model/node provenance, weights hash, license declaration, timezone-aware timestamp, structure payload and per-residue pLDDT consistency.
 - Added exact-correspondence superposed CA RMSD comparison with source hashes.
 - Validated envelopes remain `unverified_prediction`; no model execution, node authentication, confidence calibration, TM-score or predictive accuracy is claimed. Actual node/model execution remains gated.
+
+
+#### S7 bounded contig QC foundation
+- Added streaming contig summary statistics with N50/L50, total/longest/shortest lengths, canonical-base GC, ambiguous/N-base counts and short-contig counts.
+- Enforced record/base budgets, unique identifiers and DNA IUPAC validation.
+- This is assembly-summary QC only; gene/transcript annotation, contamination/completeness, eukaryotic splice models and functional annotation remain unimplemented pending reference datasets.

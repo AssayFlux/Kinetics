@@ -2297,3 +2297,10 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Added exact residue-key superposed CA RMSD comparison for predicted versus experimental coordinates.
 - Outputs remain unverified; no prediction model, node transport/authentication, license approval, confidence calibration or biological accuracy claim is implemented.
 - Added synthetic regression tests and documented S4 external dependencies.
+
+
+## 2026-11-09 — Session 62: S7 bounded contig assembly QC
+- Added streaming contig-level assembly summary metrics: N50/L50, length distribution endpoints, GC, ambiguity and N counts.
+- Added unique-ID, IUPAC DNA and record/base resource-limit checks.
+- Explicitly does not claim assembly completeness, contamination screening or gene annotation.
+- Added synthetic regression tests; exact-source CI required.

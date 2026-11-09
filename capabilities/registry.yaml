@@ -631,3 +631,9 @@ security_features:
     status: implemented
     implementation: python/kinetics/structure_prediction.py
     evidence_level: none
+
+  - id: genome.contig_assembly_qc
+    name: Bounded contig assembly statistics including N50/L50 and GC/ambiguity summaries
+    status: implemented
+    implementation: python/kinetics/genome_qc.py
+    evidence_level: none

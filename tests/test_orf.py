@@ -59,10 +59,10 @@ def test_orf_scan_rejects_non_integer_or_boolean_table_ids(table_id: object) -> 
 
 
 
-def test_orf_scan_bounds_nested_start_to_stop_candidate_work() -> None:
-    # One stop after many starts creates a quadratic number of nested candidates.
-    sequence = "ATG" * 1415 + "TAA"
+def test_orf_scan_enforces_total_candidate_pair_work_ceiling(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Lower the module ceiling so the boundary is exercised without a million translations.
+    import kinetics.orf as orf_module
+
+    monkeypatch.setattr(orf_module, "MAX_CANDIDATE_ORF_PAIRS", 1)
     with pytest.raises(ValueError, match="candidate work exceeds"):
-        find_orf_candidates(
-            sequence, min_protein_length=1, max_open_starts=2000,
-        )
+        find_orf_candidates("ATGATGTAA", min_protein_length=1)

@@ -50,3 +50,12 @@ def test_geometry_metrics_exclude_unknown_elements_and_bound_candidate_work() ->
 def test_geometry_metrics_reject_invalid_limits(kwargs, message: str) -> None:
     with pytest.raises(ValueError, match=message):
         structure_geometry_metrics([atom(1, "A", 1, 0.0)], **kwargs)
+
+
+def test_geometry_metrics_keep_only_configured_top_clash_records() -> None:
+    result = structure_geometry_metrics(
+        [atom(1, "A", 1, 0.0), atom(2, "B", 2, 1.0), atom(3, "C", 3, 2.0)],
+        max_reported_clashes=1,
+    )
+    assert result["clash_count"] == 3
+    assert len(result["top_clashes"]) == 1

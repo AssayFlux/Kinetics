@@ -77,10 +77,10 @@ def structure_geometry_metrics(
 
     cell_size = 4.0
     cells: dict[tuple[int, int, int], list[tuple[int, Atom, float]]] = defaultdict(list)
-    for item in supported:
-        atom = item[1]
+    for supported_atom in supported:
+        atom = supported_atom[1]
         key = (floor(atom.x / cell_size), floor(atom.y / cell_size), floor(atom.z / cell_size))
-        cells[key].append(item)
+        cells[key].append(supported_atom)
 
     top_clashes: list[tuple[float, int, dict[str, object]]] = []
     candidate_pairs = 0
@@ -125,7 +125,7 @@ def structure_geometry_metrics(
                             "overlap_angstrom": round(overlap, 4),
                             "severity": "severe" if severe else "candidate",
                         }
-                        heap_entry = (overlap, candidate_pairs, record)
+                        heap_entry: tuple[float, int, dict[str, object]] = (overlap, candidate_pairs, record)
                         if len(top_clashes) < max_reported_clashes:
                             heapq.heappush(top_clashes, heap_entry)
                         else:

@@ -382,12 +382,17 @@ def chain_interface_contacts(
                             "atom_contact_count": 0,
                             "minimum_distance_angstrom": distance,
                         })
-                        contact_count = entry["atom_contact_count"]
-                        current_minimum = entry["minimum_distance_angstrom"]
-                        if not isinstance(contact_count, int) or not isinstance(current_minimum, (int, float)):
+                        contact_count_value = entry["atom_contact_count"]
+                        minimum_distance_value = entry["minimum_distance_angstrom"]
+                        if (
+                            not isinstance(contact_count_value, int)
+                            or not isinstance(minimum_distance_value, (int, float))
+                        ):
                             raise RuntimeError("Internal interface-contact accumulator is malformed")
+                        contact_count = cast(int, contact_count_value)
+                        current_minimum = cast(float, minimum_distance_value)
                         entry["atom_contact_count"] = contact_count + 1
-                        entry["minimum_distance_angstrom"] = min(float(current_minimum), distance)
+                        entry["minimum_distance_angstrom"] = min(current_minimum, distance)
 
     def contact_sort_key(item: dict[str, object]) -> tuple[int, float]:
         contact_count = item["atom_contact_count"]

@@ -208,3 +208,33 @@ def test_chain_interface_contacts_enforces_residue_pair_output_limit() -> None:
         chain_interface_contacts(
             atoms, chain_a="A", chain_b="B", max_residue_pairs=1,
         )
+
+
+
+def test_chain_interface_contacts_are_deterministic_under_atom_permutation() -> None:
+    atoms = [
+        Atom(1, "CA", "ALA", "A", 10, 0.0, 0.0, 0.0, "C"),
+        Atom(2, "CA", "GLY", "A", 11, 0.0, 0.0, 0.0, "C"),
+        Atom(3, "CA", "SER", "B", 20, 3.0, 0.0, 0.0, "C"),
+        Atom(4, "CA", "VAL", "B", 21, -3.0, 0.0, 0.0, "C"),
+    ]
+    forward = chain_interface_contacts(atoms, chain_a="A", chain_b="B")
+    reversed_input = chain_interface_contacts(list(reversed(atoms)), chain_a="A", chain_b="B")
+    assert forward["residue_contacts"] == reversed_input["residue_contacts"]
+    assert forward["residue_pair_count"] == 4
+
+
+def test_chain_interface_contacts_include_exact_cutoff_and_reject_nonfinite_coordinates() -> None:
+    boundary = [
+        Atom(1, "CA", "ALA", "A", 1, 0.0, 0.0, 0.0, "C"),
+        Atom(2, "CA", "GLY", "B", 2, 8.0, 0.0, 0.0, "C"),
+    ]
+    result = chain_interface_contacts(
+        boundary, chain_a="A", chain_b="B", cutoff_angstrom=8.0,
+    )
+    assert result["residue_pair_count"] == 1
+    assert result["residue_contacts"][0]["minimum_distance_angstrom"] == 8.0
+
+    invalid = [boundary[0], Atom(3, "CA", "GLY", "B", 2, float("nan"), 0.0, 0.0, "C")]
+    with pytest.raises(ValueError, match="non-finite"):
+        chain_interface_contacts(invalid, chain_a="A", chain_b="B")

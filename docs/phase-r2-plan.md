@@ -117,3 +117,7 @@ This closes the automated CI check for the current imported FASTA vertical slice
 
 ### R Step 2 temporary plaintext cleanup audit — 2026-11-09
 The short-lived plaintext ownership helper now wraps both authenticated materialization and analysis consumption in one `try/finally`. If decryption fails after creating a partial cache file, the helper attempts to delete it before propagating the failure. JVM regression tests cover failed materialization, consumer exceptions and successful consumption. Deletion remains best-effort filesystem cleanup, not a guarantee of forensic secure erasure; exact-source CI and Android runtime checks remain required.
+
+
+### Exact-source security cleanup verification — 2026-11-09
+Commit `c157bb5` passed all five CI jobs in workflow run #2100. The JVM suite now covers private temporary-file cleanup when authenticated materialization fails, when the analysis consumer throws, and after successful use. This closes the automated check for this helper only; SQLite migration, WorkManager process-death/retry, SAF provider failure and device runtime gates remain open. See `docs/ci-build-evidence.md`.

@@ -55,3 +55,13 @@ D-016 requires every substantial increment to be built, regression-tested and in
 - JVM test task is green for both `fc8b667` and `2ea1027`; no dedicated SQLite migration, analysis worker lifecycle, SAF provider failure, process-death or instrumentation test has yet been added for this vertical slice.
 - No emulator or physical-device installation/runtime test is recorded. CI artifact existence is not device acceptance.
 - No independent experimental validation or clinical suitability is implied.
+
+
+### Exact-source private plaintext cleanup regression — 2026-11-09
+Commit `c157bb5a09d9dcc17a8bc7a57b60129d58e4866a`, [workflow run #2100 — successful](https://github.com/AssayFlux/Kinetics/actions/runs/42553589465). All five CI jobs passed, including Android ARM64 debug APK/AAB packaging, APK/native alignment checks, Android JVM tests, Python foundation/registry tests, pinned scientific reference fixtures, RDKit sanity fixtures and SPDX inventory.
+- Android JVM task: `:app:testDebugUnitTest` — BUILD SUCCESSFUL.
+- APK: 69,875,783 bytes; SHA-256 `74275b4552fdab7e009bc067cbb27263e7296f860bb17b52257bbd20cbbd7462`.
+- AAB: 39,953,164 bytes; SHA-256 `c89ad4bb971e9d76410592ba7d76655c7c029b63ce74c5895203edc0a1e7dc7b`.
+- Artifact ZIP: 80,047,831 bytes; SHA-256 `c10568ef4d18f28ea9313b159e7b967103f29728661ce91b448e53c087107e0a`; artifact ID `13646870988`.
+- New JVM regression tests verify temporary plaintext deletion after failed materialization, consumer exceptions and successful analysis.
+- CI validates build/package/JVM and host checks only. It does not prove Android device runtime, secure erasure, database migration or end-to-end WorkManager/SAF lifecycle.

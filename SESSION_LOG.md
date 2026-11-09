@@ -1952,3 +1952,9 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Audit found that `withStoredInput` entered its cleanup `finally` only after successful decryption/materialization. A failed authenticated decrypt could therefore leave a partially written plaintext cache file.
 - Extracted `withPrivateTemporaryFile` so cleanup encloses materialization as well as consumer execution; added JVM regression tests for partial materialization failure, consumer exception and success.
 - This is a source-level security hardening change. Exact-source Android/JVM CI is required; it does not establish crash-proof secure erasure or device runtime behavior.
+
+
+### R2 private plaintext cleanup exact-source CI — 2026-11-09
+- Commit `c157bb5a09d9dcc17a8bc7a57b60129d58e4866a` passed all five jobs in CI run #2100, including Android ARM64 APK/AAB packaging and JVM tests.
+- Regression tests for cleanup after failed materialization, consumer exception and success are included in that exact-source run.
+- Artifact hashes and verification boundaries are recorded in `docs/ci-build-evidence.md`; this does not close device/runtime or migration gates.

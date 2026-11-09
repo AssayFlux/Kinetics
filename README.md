@@ -18,7 +18,7 @@ Kinetics is an offline-first, modular platform for computational biology and in-
 | **Product** | Offline-first Android scientific workbench |
 | **Primary mode** | Research Mode only |
 | **Engineering scope** | R1–R10, developed as one integrated platform |
-| **Next track** | S — Structure, sequence & discovery (after R engineering audit closure) |
+| **Active track** | S — Structure, sequence & discovery; I remains blocked until S exit criteria are evidenced |
 | **User experience** | D-015 Light Classic visual direction; supplied dashboard/login references recorded; Compose redesign in progress |
 | **Build channel** | GitHub Actions · unsigned arm64 debug APK/AAB |
 | **Validation state** | Source tests and CI evidence are distinct from device and independent scientific validation |
@@ -28,7 +28,7 @@ Kinetics is an offline-first, modular platform for computational biology and in-
 
 The current documentation index is [`docs/README.md`](docs/README.md). Track order and decision history are controlled by [`ROADMAP.md`](ROADMAP.md) and [`DECISIONS.md`](DECISIONS.md); superseded instructions are retained only as history.
 
-<sub>Latest exact-source verification: [CI #2126](https://github.com/AssayFlux/Kinetics/actions/runs/42560038764) on `888e49b` — all five jobs passed. Python: 238 passed, 4 skipped; Android arm64 APK/AAB, JVM tests, package alignment, scientific reference fixtures, RDKit sanity and direct SPDX inventory passed. Physical-device runtime and independent experimental validation remain open.</sub>
+<sub>Latest fully passing exact-source CI: [#2183](https://github.com/AssayFlux/Kinetics/actions/runs/42572416977) on `f704716` — all five jobs passed, including Python, Android arm64 APK/AAB/JVM tests, scientific references, RDKit and SPDX. Later S1 export/S2/S8/S10 changes are in subsequent commits and their exact-source CI is pending; physical-device runtime and independent experimental validation remain open.</sub>
 
 
 The cards below summarise the state recorded in the project roadmap. “In progress” means implementation or preparation exists; it does **not** mean the phase has passed its exit gate.
@@ -61,23 +61,23 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 
 | Phase | Workstream | Recorded implementation / preparation | Remaining gate |
 |---|---|---|---|
-| **S1** | Offline structure viewer foundation | Bounded deterministic coordinate payload and schema | Renderer, offline bundle, bridge, R1 feasibility and license review |
-| **S2–S5** | Structure quality, variant/pocket analysis, prediction and export | Not started | Reference structures, approved models, security and independent benchmarks |
-| **S6** | Unknown-sequence triage | Bounded exact full-length local reference matching and evidence contract | Licensed/versioned packs, curated fixtures and calibrated similarity methods |
-| **S7** | Genome annotation | Bounded six-frame complete-ORF candidate enumeration | Organism-specific truth sets, splice-aware models and annotation validation |
-| **S8** | Genetic-code investigation | Explicit translation tables with exhaustive codon transcription comparison | Independent inference validation, abstention and organism-specific truth sets |
-| **S9** | Protein/structure mapping | Conservative exact unique chain mapping with bounded inputs | Alignment, insertion-code handling, domain references and validation |
-| **S10** | De novo protein design | Feasibility planning only | Model/data licensing, secure compute, biosafety, held-out benchmarks and wet-lab validation |
+| **S1** | Offline-first structure viewer | Canvas 2D renderer, bounded PDB/mmCIF SAF import, provenance and Android JSON session export | Device import/export, screenshots, accessibility and performance evidence |
+| **S2–S5** | Geometry/torsion metrics, mapping/interface contacts, prediction evidence and session export | Bounded metrics/mapping, external prediction-envelope validator and Android JSON export are implemented; no prediction engine | Experimental reference concordance, approved models, calibrated thresholds and device evidence |
+| **S6** | Unknown-sequence triage | Streaming FASTA/FASTQ, hash-verified local FASTA packs, exact matching and fixed-width motif scan | Licensed/versioned packs, homology/profile-HMM search and curated/calibrated benchmarks |
+| **S7** | Genome annotation | Bounded contig QC and six-frame ORF candidate enumeration | Prokaryotic/eukaryotic annotation, transcript models and curated genome validation |
+| **S8** | Genetic-code investigation | Explicit translation across 24 supported NCBI tables with exhaustive Biopython codon/start/stop comparison | Organism-specific inference truth sets, calibrated abstention and independent confirmation |
+| **S9** | Protein/structure intelligence | Protein descriptors, motif scan, exact/alignment-aware mapping and interface primitives | Profile-HMM/domain/family references and independent annotation validation |
+| **S10** | Constrained protein design | Typed non-generative brief validator with mandatory human-review and release gates; generation remains blocked | Approved model/data, secure compute, independent benchmarks, biosafety and wet-lab validation |
 
 ## Track I · In-silico laboratory
 
 | Phase | Workstream | Recorded implementation / preparation | Remaining gate |
 |---|---|---|---|
-| **I1** | Ligand preparation & descriptors | Bounded SDF foundation; optional host RDKit adapter and pinned descriptor sanity fixture | Independent chemistry benchmarks, Android integration and applicability-domain validation |
-| **I2** | Docking & virtual screening | Not started | Secure compute node, engine/model licensing, redocking and decoy benchmarks |
-| **I3** | Molecular dynamics | Not started | Approved engine, reproducibility, stability and energy-conservation references |
-| **I4** | ADMET / PK-PD / PBPK | Metadata-only candidate source inventory | Data/model licensing, approved datasets and held-out external validation |
-| **I5** | Variant-effect & virtual-cohort research | Not started | Research-only schemas, bias/ancestry review and benchmark evidence |
+| **I1** | Ligand preparation & descriptors | Prior exploratory source work preserved; I track is blocked by sequencing | Wait until S exits before I implementation |
+| **I2** | Docking & virtual screening | Blocked by S exit gate | Secure compute node, engine/model licensing, redocking and decoy benchmarks |
+| **I3** | Molecular dynamics | Blocked by S exit gate | Approved engine, reproducibility, stability and energy-conservation references |
+| **I4** | ADMET / PK-PD / PBPK | Prior metadata-only inventory preserved; I track is blocked by sequencing | Wait until S exits before I implementation |
+| **I5** | Variant-effect & virtual-cohort research | Blocked by S exit gate | Research-only schemas, bias/ancestry review and benchmark evidence |
 
 ## Track P · Precision medicine (PGx first)
 
@@ -115,9 +115,9 @@ Only source metadata is catalogued at this stage; no public dataset payloads hav
 
 | Evidence item | Latest recorded state |
 |---|---|
-| **Current source revision** | `79a24eb00ec7beea30674a591361c2351beaa13d` |
-| **Latest CI run** | [#2039 — all five jobs successful](https://github.com/AssayFlux/Kinetics/actions/runs/42493028735) |
-| **Current build result** | ARM64 debug APK/AAB, package alignment, artifact hash verification and Android JVM unit-test task passed; Python/registry, pinned host reference, RDKit and SPDX jobs passed |
+| **Current source revision** | `488632847c015ac44a19026f4af5b2399aea4d7b` |
+| **Latest passing CI** | [#2183 — all five jobs successful on `f704716`](https://github.com/AssayFlux/Kinetics/actions/runs/42572416977); later source CI pending |
+| **Current build result** | Android arm64 APK/AAB/JVM tests passed on `f704716`; session-export and subsequent S8/S10 changes await exact-source verification on `4886328` |
 | **APK / AAB** | APK 69,792,811 bytes · SHA-256 `7029555e9640fd920f22a67890fe921473582affd2538e8aaddd61a261c9e44e`; AAB 39,926,363 bytes · SHA-256 `dd6eb3cc6ddc97c9ed3036b4d6e0747c2e91ef2a6ee57f80eaa4e11e28b8cfa9` |
 | **Workflow artifact ZIP** | 79,991,103 bytes · SHA-256 `4b6211b80b9a50a773bdb38c20ee6f7026e327255844f1eeffeb696bc613d8cd` |
 | **Automated checks** | All five CI jobs passed on exact source commit `79a24eb`; Android build log reports `BUILD SUCCESSFUL` |

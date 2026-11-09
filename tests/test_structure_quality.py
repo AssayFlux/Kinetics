@@ -118,3 +118,35 @@ def test_backbone_torsions_reject_ambiguous_residue_numbering() -> None:
     ]
     with pytest.raises(ValueError, match="Conflicting residue identities"):
         backbone_torsion_angles(atoms)
+
+
+def test_backbone_torsion_matches_known_right_handed_quarter_turn() -> None:
+    """A hand-constructed C-N-CA-C plane rotation has a +90 degree phi."""
+    from kinetics.structure_quality import backbone_torsion_angles
+
+    atoms = [
+        Atom(1, "C", "ALA", "A", 1, 0.0, 1.0, 0.0, "C"),
+        Atom(2, "N", "GLY", "A", 2, 0.0, 0.0, 0.0, "N"),
+        Atom(3, "CA", "GLY", "A", 2, 1.0, 0.0, 0.0, "C"),
+        Atom(4, "C", "GLY", "A", 2, 1.0, 0.0, 1.0, "C"),
+        Atom(5, "N", "SER", "A", 3, 1.0, 1.0, 1.0, "N"),
+    ]
+    result = backbone_torsion_angles(atoms, chain_id="A")
+    middle = result["records"][1]
+    assert middle["phi_status"] == "available"
+    assert middle["phi_degrees"] == pytest.approx(90.0, abs=1e-8)
+    assert result["quality_badge"] == "not_assessed"
+
+
+def test_backbone_torsions_report_degenerate_dihedral_as_unavailable() -> None:
+    from kinetics.structure_quality import backbone_torsion_angles
+
+    atoms = [
+        Atom(1, "C", "ALA", "A", 1, -1.0, 0.0, 0.0, "C"),
+        Atom(2, "N", "GLY", "A", 2, 0.0, 0.0, 0.0, "N"),
+        Atom(3, "CA", "GLY", "A", 2, 1.0, 0.0, 0.0, "C"),
+        Atom(4, "C", "GLY", "A", 2, 2.0, 0.0, 0.0, "C"),
+    ]
+    result = backbone_torsion_angles(atoms, chain_id="A")
+    assert result["records"][1]["phi_degrees"] is None
+    assert result["records"][1]["phi_status"] == "unavailable"

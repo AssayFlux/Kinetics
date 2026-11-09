@@ -2177,3 +2177,18 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Added two-taxon neighbour-joining distance preservation, asymmetric/non-zero diagonal rejection and deterministic tie-resolution regression tests.
 - Updated the R7 plan/roadmap to distinguish these deterministic software tests from missing published biological tree references and scale benchmarks.
 - Tests await exact-source CI; R7 remains exploratory and R remains open.
+
+
+## 2026-11-09 — Session 50: Reconcile superseded parallel-track instructions
+
+### Audit finding
+- The current decision log correctly records D-019 as superseding D-009 parallel sequencing, but the top-level ROADMAP sequencing gate and historical parallel execution protocol still instructed parallel S/R/I/P work.
+- Those stale instructions contradicted the owner's latest explicit order and could cause an assistant or contributor to start S before the R gate.
+
+### Corrected
+- Replaced the active ROADMAP sequencing gate with D-019's strict R → S → I → P → G order and two-step-per-track rule.
+- Reworded the former parallel permission as historical/superseded.
+- Marked docs/parallel-track-execution.md as archived historical guidance and explicitly prohibited using its parallel lanes as current instructions.
+
+### Verification boundary
+- Documentation consistency correction only; no phase completion or exit approval is implied.

@@ -1,6 +1,8 @@
-# Parallel execution protocol — R, S, I and P tracks
+# Historical parallel execution protocol — SUPERSEDED
 
-**Owner direction:** 2026-11-08. Execute the four research tracks concurrently where dependencies permit. This protocol does not override the roadmap's sequencing gates, legal/ethics requirements, third-party licenses, scientific validation or owner approvals.
+<badge>ARCHIVED — DO NOT USE FOR CURRENT SEQUENCING</badge>
+
+**Historical owner direction:** 2026-11-08. This document recorded a temporary instruction to execute R/S/I/P concurrently. On 2026-11-09, D-019 explicitly superseded that sequencing permission. The current controlling order is **R → S → I → P → G**, with two steps per track. This file is retained only for decision history; do not use its parallel work lanes or immediate deliverables as current instructions. Refer to `DECISIONS.md` D-019 and the current sequencing gate in `ROADMAP.md`.
 
 ## Operating rules
 
@@ -66,7 +68,7 @@ Required paper package:
 2. **Domain papers:** one at a time after the relevant R/S/I/P phase has independent external validation and reproducible benchmarks. Do not combine unvalidated domains into a broad performance claim.
 3. **No paper submission** based solely on green CI, unit tests, feature checklists or generated screenshots. A passing test proves only the tested software behaviour.
 
-## Immediate next deliverables
+## Historical immediate next deliverables (not current sequencing instructions)
 
 - A claim/evidence ledger and manuscript skeleton under `paper/`.
 - A validation protocol and machine-readable result schema under `validation/`.

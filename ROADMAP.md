@@ -33,7 +33,7 @@ v0.1.0 = R0–R3.
 
 ## Track S — Structure excellence, protein intelligence and discovery
 
-**Sequencing gate (updated by explicit owner instruction, 2026-11-08):** The owner has now explicitly authorized S-track implementation to begin in parallel with completion of R1–R10. This supersedes the earlier sequencing-only prohibition on starting S. Work may proceed only on independently safe S1 preparation that does not assume R1 WebView feasibility or unapproved third-party assets. Full offline rendering remains blocked on R1 WebView/runtime evidence and exact viewer/dependency license approval. S2–S5 retain their scientific, security, model-license and benchmark dependencies. This sequencing change does not mark any R phase complete, waive exit evidence, or authorize patient/clinical use.
+**Sequencing gate — CURRENT (D-019, 2026-11-09):** Execute tracks strictly **R → S → I → P → G**, with exactly two steps per track: (1) build the documented base; (2) audit, test and fix the remaining base gaps. Do not begin S until R's two-step gate has been assessed and reported. The 2026-11-08 parallel S authorization below is historical and superseded by D-019. No phase exit evidence or clinical gate is waived.
 
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |
 |---|---|---|---|---|---|---|
@@ -50,7 +50,7 @@ v0.1.0 = R0–R3.
 
 ## Parallel execution and publication evidence
 
-The owner authorized R, S, I and P work to proceed simultaneously on 2026-11-08, subject to each phase dependency and hard gate. The execution protocol and paper-readiness requirements are recorded in [docs/parallel-track-execution.md](docs/parallel-track-execution.md). Manuscript preparation and claim/evidence ledger are in `paper/`; validation result contract is in `validation/RESULT-MANIFEST.md`. Paper 1 remains a candidate only after R1–R3 exit evidence and independent validation. P0 remains blocked; P-track work is restricted to non-patient public-data preparation until the formal gate passes.
+The owner briefly authorized parallel R/S/I/P work on 2026-11-08; that sequencing permission was explicitly superseded by D-019 on 2026-11-09. The historical protocol is retained at [docs/parallel-track-execution.md](docs/parallel-track-execution.md) for audit only. Current work must follow R → S → I → P → G. Manuscript and claim/evidence records remain subject to their publication gates. P0 remains blocked; only non-patient public-data preparation is permitted before its formal gate.
 
 ## Track I — In-silico lab
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |
@@ -144,14 +144,14 @@ U0 visual direction: D-015 Light Classic is the default and sole active visual a
 - U1 remains open: NavigationSuiteScaffold/WindowManager posture support, universal search, Research Mode/connectivity chips, onboarding, full screen map and device matrix are not complete.
 
 
-### Owner authorization D-009 — begin Track S in parallel (2026-11-08)
+### Historical owner authorization D-009 — begin Track S in parallel (2026-11-08; SUPERSEDED BY D-019)
 - The owner explicitly instructed Engineering to complete R1–R10 and start Track S without waiting for another per-track approval.
 - This supersedes the previous sequencing prohibition only for independently implementable Track S preparation and implementation. S1 preparation has started; full rendering remains gated on R1 WebView/runtime evidence and exact third-party license approval.
 - S2–S5 remain dependent on their scientific reference sets, model/license decisions, node security and benchmark evidence. No scientific, device, production, clinical or release gate is waived.
 
 ## Integrated implementation and verification cycle — owner direction (2026-11-08)
 
-The owner requires substantial implementation and verification as one continuous cycle. This supersedes earlier build-first/test-later interpretations. Build substantial increments, test each increment before accepting it as the next baseline, and continue R/S/I/P in parallel where dependencies permit.
+The owner required substantial implementation and verification as one continuous cycle. Its parallel-track sequencing clause was superseded by D-019 on 2026-11-09. The build/test/fix/evidence cycle remains active, but tracks must now be executed strictly in sequence.
 
 ### Mandatory cycle
 1. Plan and inspect: read NORTH_STAR, ROADMAP, DECISIONS and the latest SESSION_LOG; inspect source, assets, registry, dependencies and tests. Map changes to roadmap items.

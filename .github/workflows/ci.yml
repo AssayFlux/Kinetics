@@ -44,6 +44,8 @@ jobs:
           git diff --exit-code -- docs/ui/component-catalogue.md
       - name: Android offline/build-first configuration guardrails
         run: python scripts/check_android_config.py
+      - name: Validate public non-patient dataset catalogue
+        run: python scripts/check_public_dataset_catalog.py
       - name: Unit tests
         run: pytest
       - name: Reproduction stub

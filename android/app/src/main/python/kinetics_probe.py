@@ -101,3 +101,19 @@ def prepare_structure_viewer_source(source_text: str, source_format: str) -> str
 
     result = prepare(source_text, source_format=source_format)
     return json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def export_structure_viewer_session(source_text: str, source_format: str) -> str:
+    """Create a bounded, provenance-bearing offline JSON session for SAF export."""
+    from kinetics.structure_view import (
+        build_structure_session_export,
+        prepare_structure_viewer_source as prepare,
+    )
+
+    source_bytes = source_text.encode("utf-8")
+    result = prepare(source_text, source_format=source_format)
+    return build_structure_session_export(
+        source_bytes,
+        result["payload"],
+        parser_version="kinetics-structure-parser-v1",
+    )

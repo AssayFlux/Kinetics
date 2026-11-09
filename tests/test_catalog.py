@@ -192,9 +192,9 @@ def test_pharmvar_tsv_rejects_duplicate_normalized_headers() -> None:
     from kinetics.pharmvar import parse_pharmvar_tsv
 
     tsv = (
-        "Haplotype Name\tGene Symbol\tGene-Symbol\tdbSNP rsID\tReference Sequence\t"
-        "Variant Start\tVariant Stop\tReference Allele\tVariant Allele\tVariant Type\n"
-        "GENE*1\tGENE\tGENE\t.\tNG_000001.1\t.\t.\tREFERENCE\t.\treference\n"
+        "Haplotype Name\tGene Symbol\tGene-Symbol\tReference Sequence\tVariant Start\t"
+        "Variant Stop\tReference Allele\tVariant Allele\tVariant Type\n"
+        "GENE*1\tGENE\tGENE\tNG_000001.1\t.\t.\tREFERENCE\t.\treference\n"
     )
     with pytest.raises(ValueError, match="exactly nine"):
         parse_pharmvar_tsv(

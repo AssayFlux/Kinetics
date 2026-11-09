@@ -65,3 +65,13 @@ Commit `c157bb5a09d9dcc17a8bc7a57b60129d58e4866a`, [workflow run #2100 — succe
 - Artifact ZIP: 80,047,831 bytes; SHA-256 `c10568ef4d18f28ea9313b159e7b967103f29728661ce91b448e53c087107e0a`; artifact ID `13646870988`.
 - New JVM regression tests verify temporary plaintext deletion after failed materialization, consumer exceptions and successful analysis.
 - CI validates build/package/JVM and host checks only. It does not prove Android device runtime, secure erasure, database migration or end-to-end WorkManager/SAF lifecycle.
+
+
+## Exact-source R-track audit baseline — 2026-11-09
+
+- Source commit: `8c4128d5e448db51f2b48fec6c38ce6022fdb053`; [CI run #2101 — successful](https://github.com/AssayFlux/Kinetics/actions/runs/42554027490). All five jobs passed.
+- Python CI collected 233 tests: 229 passed, 4 skipped (three optional RDKit adapter tests and one optional pysam test, unavailable in the base environment). The separate pinned RDKit descriptor sanity job passed.
+- The Python suite executed R3/R4 sequence and research primitive tests, R5 structure/view tests, R6 core chemistry, R7 phylogenetics, R8 omics, R9 catalogue/variant reference and R10 registry/SBOM/configuration tests.
+- Pinned host scientific-reference job passed the Michaelis–Menten/SciPy and genetic-code/Biopython comparison steps. These are bounded synthetic/software-reference checks, not independent experimental validation.
+- Android ARM64 debug APK/AAB packaging, static package/ELF alignment and `:app:testDebugUnitTest` passed. APK: 69,875,151 bytes; SHA-256 `059abb9e3a299b5295b8f08772b976195d7be1cd7db46dce34faa7bcf486d2d9`. AAB: 39,952,539 bytes; SHA-256 `9c8e2ca3a81c4ef2b1fb041aefee99ace5cbfb3292574b815c6a87549210044e`. Artifact ZIP: 80,046,515 bytes; artifact ID `13646239880`.
+- This evidence does not establish emulator/physical-device runtime, migration/WorkManager/SAF instrumentation, on-device Chaquopy, independent experimental validation, broad domain reference concordance, complete transitive licence/security review or release signing.

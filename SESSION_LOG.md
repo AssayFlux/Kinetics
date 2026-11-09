@@ -1958,3 +1958,23 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Commit `c157bb5a09d9dcc17a8bc7a57b60129d58e4866a` passed all five jobs in CI run #2100, including Android ARM64 APK/AAB packaging and JVM tests.
 - Regression tests for cleanup after failed materialization, consumer exception and success are included in that exact-source run.
 - Artifact hashes and verification boundaries are recorded in `docs/ci-build-evidence.md`; this does not close device/runtime or migration gates.
+
+
+## 2026-11-09 — Session 37: R-track evidence audit and stale test-status correction
+
+### Reviewed
+- Re-read the R1–R10 phase plans, current roadmap, engineering integration standard, CI evidence and latest exact-source workflow/job logs.
+- Inspected the Python CI log for workflow #2101 at commit `8c4128d5e448db51f2b48fec6c38ce6022fdb053`: pytest collected 233 items and completed with 229 passed / 4 skipped.
+- Confirmed R3/R4 research and sequence tests, R5 structure/view tests, R6 core chemistry tests, R7 phylogenetics tests, R8 omics tests and R9 catalogue/variant tests executed. Optional RDKit adapter tests (3) and pysam test (1) were skipped because those dependencies are not installed in the general test environment. The separate pinned RDKit sanity job passed.
+- Confirmed the pinned host scientific-reference job's SciPy Michaelis–Menten and Biopython genetic-code comparison steps passed.
+- Confirmed all five jobs in CI #2101 passed, including Android ARM64 APK/AAB packaging, static alignment and `:app:testDebugUnitTest`.
+
+### Implemented documentation corrections
+- Removed stale claims in R3/R7/R8 plans that regression tests or the SciPy comparison had not run.
+- Updated R4 exact-source audit notes; recorded the run, test count, artifact hashes and verification boundaries in `docs/ci-build-evidence.md`.
+- Updated ROADMAP with actual test evidence and remaining R-track blockers.
+
+### Verification boundary
+- APK SHA-256: `059abb9e3a299b5295b8f08772b976195d7be1cd7db46dce34faa7bcf486d2d9`; AAB SHA-256: `9c8e2ca3a81c4ef2b1fb041aefee99ace5cbfb3292574b815c6a87549210044e`.
+- No emulator/physical-device install, Android SQLite migration/WorkManager/SAF instrumentation, Chaquopy on-device execution, independent experimental validation, comprehensive domain reference concordance, full transitive licence/security audit or release signing is claimed.
+- R remains open; no S/I/P/G implementation was started. Continue R Step 2 against concrete gaps and do not pass the track gate prematurely.

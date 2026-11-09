@@ -68,9 +68,18 @@ Added host regression coverage for FASTA/FASTQ, IUPAC reverse complement/transcr
 
 ### R3 continued source increment — paired bootstrap intervals
 
-Added a deterministic, seeded paired nonparametric bootstrap percentile-interval helper for the exploratory Michaelis–Menten grid fit. It fixes the parameter search bounds across replicates, reports successful/requested replicate counts, and emits explicit IID, grid-resolution, identifiability and model-misspecification caveats. It is not a replacement for independent reference validation or a validated uncertainty model. Regression-test source was added but not executed under the build-first/test-later instruction.
+Added a deterministic, seeded paired nonparametric bootstrap percentile-interval helper for the exploratory Michaelis–Menten grid fit. It fixes the parameter search bounds across replicates, reports successful/requested replicate counts, and emits explicit IID, grid-resolution, identifiability and model-misspecification caveats. It is not a replacement for independent reference validation or a validated uncertainty model. Regression tests are now included in the exact-source Python CI suite; see the 2026-11-09 CI #2101 audit record below.
 
 
 ### Independent-reference harness
 
-Added a reproducible host-side comparison script using SciPy's bounded trust-region reflective curve_fit as an independent numerical reference for noise-free and seeded Gaussian-noise synthetic Michaelis–Menten datasets. It records versions, parameters, covariance diagonals, tolerances and local residual/identifiability diagnostics. It has not been run; no validation result is claimed, and external experimental reference data remain outstanding.
+Added a reproducible host-side comparison script using SciPy's bounded trust-region reflective curve_fit as an independent numerical reference for noise-free and seeded Gaussian-noise synthetic Michaelis–Menten datasets. It records versions, parameters, covariance diagonals, tolerances and local residual/identifiability diagnostics. The pinned host scientific-reference CI job now executes the Michaelis–Menten/SciPy comparison step successfully (CI #2101). This is a bounded synthetic software-reference comparison; no external experimental dataset or independent wet-lab validation is claimed.
+
+
+### Exact-source automated audit — 2026-11-09 (CI #2101)
+- Source commit: `8c4128d5e448db51f2b48fec6c38ce6022fdb053`; [workflow #2101](https://github.com/AssayFlux/Kinetics/actions/runs/42554027490) completed successfully across all five jobs.
+- Python CI collected 233 tests: 229 passed, 4 skipped (3 optional RDKit adapter tests because RDKit is not installed in the base Python test environment; 1 optional pysam test because pysam is not installed). The separate pinned RDKit descriptor sanity job passed.
+- The suite executed the R3/R4 sequence and research primitive tests, R5 structure/structure-view tests, R6 core chemistry tests, R7 phylogenetics tests, R8 omics tests, R9 catalogue/variant-reference tests and R10 registry/SBOM/configuration checks.
+- The pinned host scientific-reference job passed its Michaelis–Menten/SciPy comparison and genetic-code/Biopython comparison steps. These are bounded synthetic/software-reference checks, not independent experimental validation.
+- Android ARM64 debug APK/AAB packaging, static package/ELF alignment checks and `:app:testDebugUnitTest` passed. APK: 69,875,151 bytes, SHA-256 `059abb9e3a299b5295b8f08772b976195d7be1cd7db46dce34faa7bcf486d2d9`; AAB: 39,952,539 bytes, SHA-256 `9c8e2ca3a81c4ef2b1fb041aefee99ace5cbfb3292574b815c6a87549210044e`.
+- Boundaries: no emulator or physical-device installation/runtime evidence; no Android migration/WorkManager/SAF instrumentation; no end-to-end on-device Chaquopy run; no R5 independent structure concordance, R6 approved-engine chemistry concordance, R7 published tree concordance, R8 null/power/FDR calibration, or R9 authoritative licensed PGx content. R10 security/licence/release gates remain open.

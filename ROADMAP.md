@@ -189,3 +189,10 @@ A build may be called tested only when its exact artifact has a recorded success
 
 ### Track execution order — D-019 (2026-11-09)
 D-019 supersedes D-009's parallel-track sequencing. Current execution is strictly R → S → I → P → G, with a two-step base-build and audit gate for each track. Do not start S until R's two-step gate is assessed and reported; do not start I until S is assessed, and so on.
+
+
+## R-track evidence refresh — 2026-11-09 (CI #2101)
+
+The exact-source revision `8c4128d5e448db51f2b48fec6c38ce6022fdb053` passed all five CI jobs. The Python suite collected 233 tests (229 passed, 4 skipped for optional RDKit/pysam dependencies); the separate pinned RDKit sanity job and pinned SciPy/Biopython reference-comparison job passed. Android ARM64 debug APK/AAB packaging, static alignment checks and JVM unit tests passed. See `docs/ci-build-evidence.md` and the R3/R4/R7/R8 phase plans.
+
+This corrects stale records that the R3 bootstrap, R7 phylogenetics and R8 NB2 regression tests had not run: those modules execute in the passing Python suite. It does **not** close R. R1 device/runtime feasibility; R2 database migration, WorkManager and SAF lifecycle instrumentation; R3 independent experimental/reference uncertainty and residual/model-selection validation; R4 device-scale workflows; R5 independent structure concordance/viewer; R6 approved-engine chemistry concordance; R7 published tree concordance; R8 null/power/FDR calibration; R9 authoritative licensed PGx content and clinical gates; and R10 security, accessibility, transitive licensing, signed release and device benchmarks remain open. Current execution remains D-019 strict R → S → I → P → G; S has not started under this sequence.

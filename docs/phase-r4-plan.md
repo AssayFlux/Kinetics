@@ -44,3 +44,7 @@ The imported FASTA analysis worker and result/export UI compiled into the ARM64 
 
 ### Exact-source audit CI — 2026-11-09
 Commit `2ea102719fc37354f18def85bb329a60a885ee2a`, CI run #2094, passed all five jobs. ARM64 APK/AAB, package alignment, artifact hash checks and Android JVM unit tests passed. The digest revalidation and bounded result/preview guards are present in this exact-source build. No emulator/physical-device execution or on-device Chaquopy FASTA workflow is established by this CI result.
+
+
+### Latest exact-source audit — 2026-11-09
+CI #2101 passed the Python sequence/genomics regression suite and Android ARM64 packaging/JVM tests. This confirms host tests and compilation of the imported FASTA analysis path. It does not prove Android Chaquopy execution, large-file streaming on device, FASTQ durable import-to-export, BAM/CRAM Android support, external aligner/variant concordance or device performance. Those remain open.

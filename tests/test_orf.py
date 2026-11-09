@@ -56,3 +56,13 @@ def test_orf_scan_enforces_limits_and_rejects_ambiguous_sequence() -> None:
 def test_orf_scan_rejects_non_integer_or_boolean_table_ids(table_id: object) -> None:
     with pytest.raises(ValueError, match="Unsupported NCBI"):
         find_orf_candidates("ATGAAATAA", table_id=table_id)
+
+
+
+def test_orf_scan_bounds_nested_start_to_stop_candidate_work() -> None:
+    # One stop after many starts creates a quadratic number of nested candidates.
+    sequence = "ATG" * 1415 + "TAA"
+    with pytest.raises(ValueError, match="candidate work exceeds"):
+        find_orf_candidates(
+            sequence, min_protein_length=1, max_open_starts=2000,
+        )

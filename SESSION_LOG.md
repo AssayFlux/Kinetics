@@ -1668,3 +1668,34 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### Next increment
 - Remove the unreferenced pre-D-015 hero composable and its obsolete image/gradient dependencies only after confirming the dashboard call graph, then refine the live-data D-015 dashboard carousel without inventing jobs, metrics or branding.
 - Rebuild and test the exact next commit before accepting it as a baseline.
+
+
+## 2026-11-09 — Session 27: P-track public-data engineering preparation
+
+**Phase:** Track P / P1 safe public-data-only preparation  
+**Objective:** Act on the owner's explicit P-track permission without misrepresenting it as approval for patient-data or clinical activity.
+
+### Direction and documents reviewed
+- Re-read the current roadmap, decision log, session history, P-track public-data boundary, public dataset catalogue/schema, dataset-intake policy and CI workflow.
+- Reconfirmed D-004: qualified clinical-adviser engagement is revisited after R3 and is required before P0-gated activity.
+- Reconfirmed P0 remains a separate legal, ethics, privacy, security, qualified-adviser and owner-evidence gate.
+
+### Implemented
+- Added `scripts/check_public_dataset_catalog.py` to validate non-patient source metadata, unique identifiers, HTTPS references, content hash shape, timezone-aware retrieval timestamps, and licence-review evidence for research-approved entries.
+- Added conservative intended-use checks to reject clinical decision-support, diagnosis, treatment/dosing recommendation and patient-stratification language.
+- Extended the public dataset JSON Schema so `approved_for_research` entries require reviewer, review timestamp, approved scope and evidence URL.
+- Added synthetic tests for valid catalogue, patient-data rejection, duplicate IDs, missing hash/timezone, missing licence-review evidence and prohibited intended-use language.
+- Wired the catalogue validator into the Python CI job.
+- Updated P1 roadmap status to distinguish safe public-data engineering preparation from P0-gated patient/clinical activity; updated README and decision log with owner authorization D-017.
+
+### Scope and evidence boundary
+- The acquired dataset catalogue remains empty; no external dataset payloads were downloaded.
+- Candidate sources remain `verify_before_intake`; no licence approval is inferred.
+- No patient data, human subjects, genotype-to-phenotype interpretation, clinical recommendations or Clinical Mode are implemented.
+- This increment advances P1 preparation only; it does not pass P0 or P1's scientific validation exit gate.
+- Exact-source CI is pending at commit time; no passing build or test is claimed yet.
+
+### Next increment
+- Obtain green exact-source CI for this metadata gate.
+- Add versioned non-patient synthetic genotype/variant fixtures and build/coordinate/allele-normalization contracts without clinical interpretation.
+- Keep external datasets out of the repository until exact release, licence and intended-use reviews are documented.

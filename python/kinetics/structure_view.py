@@ -88,7 +88,10 @@ def validate_viewer_payload(payload: dict[str, Any]) -> None:
         raise ValueError("Structure viewer payload has missing or unsupported fields")
     if payload["schema"] != PAYLOAD_SCHEMA:
         raise ValueError("Unsupported structure viewer payload schema")
-    if payload["source_format"] not in SUPPORTED_SOURCE_FORMATS:
+    if (
+        not isinstance(payload["source_format"], str)
+        or payload["source_format"] not in SUPPORTED_SOURCE_FORMATS
+    ):
         raise ValueError("Structure viewer payload has unsupported source_format")
     if payload["coordinate_unit"] != "angstrom":
         raise ValueError("Structure viewer payload coordinate_unit must be angstrom")

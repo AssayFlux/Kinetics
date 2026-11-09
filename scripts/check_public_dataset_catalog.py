@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate public non-patient dataset metadata; never downloads data or lifts P0."""
 from __future__ import annotations
+
 import argparse
 import re
 import sys
@@ -8,20 +9,29 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
+
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = ROOT / "data" / "public-dataset-catalog.yaml"
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-FORBIDDEN = ("diagnos", "treatment recommendation", "dosing recommendation",
-             "clinical decision support", "patient stratification", "individual risk score")
+FORBIDDEN = (
+    "diagnos",
+    "treatment recommendation",
+    "dosing recommendation",
+    "clinical decision support",
+    "patient stratification",
+    "individual risk score",
+)
+
 
 def _https(value: Any) -> bool:
     if not isinstance(value, str):
         return False
     parsed = urlparse(value)
     return parsed.scheme == "https" and bool(parsed.netloc)
+
 
 def _aware(value: Any) -> bool:
     if not isinstance(value, str):
@@ -32,10 +42,12 @@ def _aware(value: Any) -> bool:
         return False
     return parsed.tzinfo is not None and parsed.utcoffset() is not None
 
+
 def _safe_use(value: Any) -> bool:
     return isinstance(value, str) and bool(value.strip()) and not any(
         term in value.casefold() for term in FORBIDDEN
     )
+
 
 def validate_catalog(data: Any) -> list[str]:
     errors: list[str] = []
@@ -98,11 +110,17 @@ def validate_catalog(data: Any) -> list[str]:
         for field in ("source_url", "license_url"):
             if not _https(item.get(field)):
                 errors.append(f"{p}.{field} must be HTTPS")
-        if item.get("license_review_status") not in {"not_reviewed", "approved_for_research", "prohibited"}:
+        if item.get("license_review_status") not in {
+            "not_reviewed",
+            "approved_for_research",
+            "prohibited",
+        }:
             errors.append(f"{p}.license_review_status is invalid")
         if item.get("patient_data") is not False:
             errors.append(f"{p}.patient_data must be false")
-        if not isinstance(item.get("content_sha256"), str) or not SHA256.fullmatch(item["content_sha256"]):
+        if not isinstance(item.get("content_sha256"), str) or not SHA256.fullmatch(
+            item["content_sha256"]
+        ):
             errors.append(f"{p}.content_sha256 must be a lowercase SHA-256 digest")
         if not _aware(item.get("retrieved_at")):
             errors.append(f"{p}.retrieved_at must be timezone-aware ISO-8601")
@@ -122,6 +140,7 @@ def validate_catalog(data: Any) -> list[str]:
                     errors.append(f"{p}.license_review.evidence_url must be HTTPS")
     return errors
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG)
@@ -136,9 +155,13 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print(f"Public dataset catalogue valid: {len(data['candidate_sources'])} candidate(s), "
-          f"{len(data['entries'])} acquired metadata entr(y/ies); patient-data intake remains disabled.")
+    print(
+        f"Public dataset catalogue valid: {len(data['candidate_sources'])} candidate(s), "
+        f"{len(data['entries'])} acquired metadata entr(y/ies); "
+        "patient-data intake remains disabled."
+    )
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

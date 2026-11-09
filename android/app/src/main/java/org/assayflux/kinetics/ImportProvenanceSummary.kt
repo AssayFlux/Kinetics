@@ -53,5 +53,5 @@ object ImportProvenanceSummaryFormatter {
         DateTimeFormatter.ISO_INSTANT.format(Instant.ofEpochMilli(epochMillis))
 
     private fun singleLine(value: String): String =
-        value.replace(Regex("[\\r\\n\\t\\u0000-\\u001F\\u007F]"), " ")
+        value.replace(Regex("[\\r\\n\\t\\u0000-\\u001F\\u007F]+"), " ").trim()
 }

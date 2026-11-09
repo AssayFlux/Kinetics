@@ -1763,3 +1763,25 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### Evidence boundary
 - This is a validated serialization boundary in source/tests only; no Mol*/3Dmol.js renderer, offline bundle, WebView bridge, license approval or device rendering is claimed.
 - Exact-source CI remains pending; no green result is claimed.
+
+
+## 2026-11-09 — Session 31: Repair exact-source CI failures
+
+**Objective:** Resolve the two independently observed failures in CI #2079 before continuing feature integration.
+
+### Repository review
+- Re-read NORTH_STAR, ROADMAP, DECISIONS, the latest session log, the parallel-track protocol, integrated R1–R10 inventory, R2 plan, S1 viewer contract, I1 chemistry plan and P1 public-data boundary.
+- Confirmed D-016 requires fixing and rerunning the exact source, and that software tests do not establish scientific validation or device verification.
+
+### Failure evidence
+- CI #2079 Python job failed Ruff E501 at `scripts/check_public_dataset_catalog.py:163`.
+- CI #2079 Android build produced the arm64 debug APK/AAB, but its JVM test task failed: `ImportProvenanceSummaryFormatterTest.untrustedInputNameCannotInjectAdditionalSummaryLines` (15 tests, 1 failure).
+
+### Corrective changes
+- Wrapped the public-catalogue status output to satisfy the configured 100-character Ruff limit without changing validation semantics.
+- Changed provenance input-name sanitization to collapse consecutive control characters into one separator and trim boundary whitespace. This prevents CRLF input from creating doubled spaces while preserving a single-line display value.
+
+### Verification boundary
+- Fixes are committed for exact-source CI rerun. Do not mark the run green until the new workflow completes.
+- Android build output from #2079 is not a verified APK because the same run's required JVM test failed.
+- No emulator or physical-device installation/runtime verification is claimed.

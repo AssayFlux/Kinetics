@@ -56,61 +56,94 @@ def _fasta_record(header: str, chunks: list[str]) -> SequenceRecord:
         raise ValueError(f"FASTA record {fields[0]!r}: empty sequence")
     return SequenceRecord(fields[0], seq, fields[1] if len(fields) > 1 else "")
 
-def parse_fastq(text: str) -> list[tuple[SequenceRecord, str]]:
-    """Parse wrapped FASTQ sequence and quality lines with exact length matching."""
-    lines = text.splitlines()
-    output: list[tuple[SequenceRecord, str]] = []
-    index = 0
-    while index < len(lines):
-        while index < len(lines) and not lines[index].strip():
-            index += 1
-        if index >= len(lines):
+def iter_fastq_records(
+    lines: Iterable[str],
+    *,
+    max_records: int = 10_000_000,
+    max_total_bases: int = 1_000_000_000,
+    max_record_bases: int = 10_000_000,
+) -> Iterator[tuple[SequenceRecord, str]]:
+    """Stream wrapped FASTQ records with explicit record and base ceilings."""
+    for name, limit in (
+        ("max_records", max_records),
+        ("max_total_bases", max_total_bases),
+        ("max_record_bases", max_record_bases),
+    ):
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit < 1:
+            raise ValueError(f"{name} must be a positive integer")
+    iterator = iter(enumerate(lines, 1))
+    record_count = 0
+    total_bases = 0
+    while True:
+        header_line = None
+        for item in iterator:
+            if item[1].strip():
+                header_line = item
+                break
+        if header_line is None:
             break
-        header = lines[index]
+        line_number, header = header_line
         if not header.startswith("@") or not header[1:].strip():
-            raise ValueError(f"FASTQ line {index + 1}: invalid record header")
-        header_fields = header[1:].split(maxsplit=1)
-        identifier = header_fields[0]
-        description = header_fields[1] if len(header_fields) > 1 else ""
-        index += 1
-
+            raise ValueError(f"FASTQ line {line_number}: invalid record header")
+        fields = header[1:].strip().split(maxsplit=1)
+        identifier = fields[0]
+        description = fields[1] if len(fields) > 1 else ""
         sequence_chunks: list[str] = []
-        while index < len(lines) and not lines[index].startswith("+"):
-            if not lines[index].strip():
-                raise ValueError(f"FASTQ line {index + 1}: empty sequence line")
-            sequence_chunks.append(lines[index].strip())
-            index += 1
-        if index >= len(lines):
+        sequence_length = 0
+        plus_line = None
+        for current_line, raw in iterator:
+            line = raw.rstrip("\r\n")
+            if line.startswith("+"):
+                plus_line = (current_line, line)
+                break
+            if not line:
+                raise ValueError(f"FASTQ line {current_line}: empty sequence line")
+            chunk = _normalise(line)
+            sequence_length += len(chunk)
+            if sequence_length > max_record_bases:
+                raise ValueError(f"FASTQ record {identifier!r} exceeds max_record_bases")
+            sequence_chunks.append(chunk)
+        if plus_line is None:
             raise ValueError(f"FASTQ record {identifier!r}: missing '+' separator")
-        plus = lines[index]
-        plus_identifier = plus[1:].strip().split(maxsplit=1)
+        plus_identifier = plus_line[1].strip().split(maxsplit=1)
         if plus_identifier and plus_identifier[0] != identifier:
             raise ValueError(f"FASTQ record {identifier!r}: separator identifier mismatch")
-        index += 1
-
-        sequence = _normalise("".join(sequence_chunks))
+        sequence = "".join(sequence_chunks)
         if not sequence:
             raise ValueError(f"FASTQ record {identifier!r}: empty sequence")
+        validate_sequence(sequence, DNA)
         quality_chunks: list[str] = []
         quality_length = 0
-        while index < len(lines) and quality_length < len(sequence):
-            quality = lines[index]
+        while quality_length < sequence_length:
+            try:
+                quality_line_number, raw_quality = next(iterator)
+            except StopIteration as exc:
+                raise ValueError(
+                    f"FASTQ record {identifier!r}: sequence/quality length mismatch"
+                ) from exc
+            quality = raw_quality.rstrip("\r\n")
             if not quality:
-                raise ValueError(f"FASTQ line {index + 1}: empty quality line")
+                raise ValueError(f"FASTQ line {quality_line_number}: empty quality line")
+            if any(not 33 <= ord(char) <= 126 for char in quality):
+                raise ValueError(f"FASTQ line {quality_line_number}: invalid quality character")
+            if len(quality) > sequence_length - quality_length:
+                raise ValueError(f"FASTQ record {identifier!r}: sequence/quality length mismatch")
             quality_chunks.append(quality)
             quality_length += len(quality)
-            index += 1
-        if quality_length != len(sequence):
-            raise ValueError(
-                f"FASTQ record {identifier!r}: sequence/quality length mismatch"
-            )
-        quality = "".join(quality_chunks)
-        if any(not 33 <= ord(char) <= 126 for char in quality):
-            raise ValueError(f"FASTQ record {identifier!r}: invalid quality character")
-        output.append((SequenceRecord(identifier, sequence, description), quality))
-    if not output:
+        record_count += 1
+        total_bases += sequence_length
+        if record_count > max_records:
+            raise ValueError("FASTQ exceeds max_records")
+        if total_bases > max_total_bases:
+            raise ValueError("FASTQ exceeds max_total_bases")
+        yield SequenceRecord(identifier, sequence, description), "".join(quality_chunks)
+    if record_count == 0:
         raise ValueError("FASTQ contains no records")
-    return output
+
+
+def parse_fastq(text: str) -> list[tuple[SequenceRecord, str]]:
+    """Parse FASTQ text into memory; use iter_fastq_records for bounded streaming."""
+    return list(iter_fastq_records(text.splitlines()))
 
 def validate_sequence(sequence: str, alphabet: Iterable[str] = DNA) -> None:
     invalid = sorted(set(_normalise(sequence)) - set(alphabet))

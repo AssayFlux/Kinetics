@@ -499,8 +499,14 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
                 }
                 if (analysisExpanded) {
                     Text("Analysis method: ${job.analysisToolId ?: "unknown"}", style = MaterialTheme.typography.labelSmall)
-                    Text(job.analysisResultJson, style = MaterialTheme.typography.bodySmall)
-                    TextButton(onClick = { onExportAnalysis(job) }) { Text("Export analysis JSON") }
+                    val previewLimit = 12_000
+                    Text(
+                        if (job.analysisResultJson.length > previewLimit) {
+                            job.analysisResultJson.take(previewLimit) + "\\n… Preview truncated. Export the complete JSON result."
+                        } else job.analysisResultJson,
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                    TextButton(onClick = { onExportAnalysis(job) }) { Text("Export complete analysis JSON") }
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {

@@ -193,7 +193,9 @@ class ResearchStore(context: Context) :
 
     /** Portable analysis record, bound to the exact import digest; excludes source URI and paths. */
     fun analysisExportJson(id: String): String? = readableDatabase.rawQuery(
-        "SELECT tool_id,tool_version,input_sha256,parameters_json,result_json,created_at FROM analysis_results WHERE job_id=?",
+        """SELECT a.tool_id,a.tool_version,a.input_sha256,a.parameters_json,a.result_json,a.created_at
+           FROM analysis_results a JOIN jobs j ON j.id=a.job_id
+           WHERE a.job_id=? AND j.state='succeeded' AND j.sha256=a.input_sha256""".trimIndent(),
         arrayOf(id),
     ).use { cursor ->
         if (!cursor.moveToFirst()) null else {

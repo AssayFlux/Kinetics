@@ -1897,3 +1897,10 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### R Step 2 audit — reject oversized imports before plaintext materialization — 2026-11-09
 - The first worker version checked the 1 MB cap after authenticated decryption to cache. The audit moved the committed byte-count gate ahead of decryption so a 512 MB stored import is rejected without creating a large plaintext cache file.
 - Analysis persistence now validates the imported digest format before recording a result. Exact-source CI and tests remain pending.
+
+
+### R Step 2 audit — result integrity and bounded UI preview — 2026-11-09
+- Analysis JSON export now joins the current job and only emits a result if the job is still succeeded and its current SHA-256 exactly matches the digest bound to that analysis record.
+- Worker validates both record_count and a non-empty records array and rejects results above the 2 MB persistence cap before storage.
+- Job-card result preview is capped at 12,000 characters; the complete version remains available through the explicit SAF JSON export action, avoiding multi-megabyte Compose text rendering.
+- CI for the preceding integration revision passed the arm64 APK/AAB build, Android JVM unit tests and artifact verification; this latest audit patch now requires its own CI run.

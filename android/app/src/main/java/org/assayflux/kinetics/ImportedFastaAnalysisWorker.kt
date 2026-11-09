@@ -32,8 +32,12 @@ class ImportedFastaAnalysisWorker(context: Context, parameters: WorkerParameters
                 if (!Python.isStarted()) Python.start(AndroidPlatform(applicationContext))
                 val json = Python.getInstance().getModule("kinetics_probe")
                     .callAttr("analyze_fasta", text).toString()
+                require(json.length <= MAX_RESULT_CHARS) {
+                    "FASTA QC result exceeds the 2,000,000-character storage limit"
+                }
                 val parsed = JSONObject(json)
                 check(parsed.getInt("record_count") > 0) { "FASTA contains no records" }
+                check(parsed.getJSONArray("records").length() > 0) { "FASTA QC result contains no records" }
                 json
             } ?: error("Imported encrypted input is unavailable")
             store.saveAnalysisResult(
@@ -54,5 +58,6 @@ class ImportedFastaAnalysisWorker(context: Context, parameters: WorkerParameters
         const val KEY_JOB_ID = "job_id"
         private const val MAX_INPUT_BYTES = 1_000_000L
         private const val MAX_INPUT_CHARS = 1_000_000
+        private const val MAX_RESULT_CHARS = 2_000_000
     }
 }

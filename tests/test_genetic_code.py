@@ -67,7 +67,7 @@ def test_cds_rejects_invalid_start_stop_and_internal_stop() -> None:
 def test_genetic_code_table_ids_are_explicit_and_limited() -> None:
     assert set(GENETIC_CODES) == {
         1, 2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16,
-        21, 22, 23, 24, 25, 26, 29, 30, 31, 32, 33,
+        21, 22, 23, 24, 25, 26, 29, 30, 32, 33,
     }
 
 
@@ -98,7 +98,6 @@ def test_translation_rejects_non_integer_or_boolean_table_ids(table_id: object) 
         (26, "CTG TAA", "A*"),
         (29, "TAA TAG TGA", "YY*"),
         (30, "TAA TAG TGA", "EE*"),
-        (31, "TAA TAG TGA", "EEW"),
         (32, "TAG TAA TGA", "W**"),
         (33, "TAA TGA TAG", "YW*"),
     ],

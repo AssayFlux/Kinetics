@@ -33,7 +33,7 @@
   },
   {
     "id": "sequence.explicit_genetic_code_translation",
-    "name": "Explicit NCBI genetic-code translation for 25 supported DNA/RNA translation tables",
+    "name": "Explicit NCBI genetic-code translation for 24 supported DNA/RNA translation tables",
     "status": "implemented",
     "implementation": "python/kinetics/genetic_code.py",
     "evidence_level": "none",

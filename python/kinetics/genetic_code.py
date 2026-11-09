@@ -113,10 +113,6 @@ GENETIC_CODES: Mapping[int, GeneticCode] = MappingProxyType({
     ),
     29: _code(29, "Mesodinium Nuclear", "ATG", {"TAA": "Y", "TAG": "Y"}),
     30: _code(30, "Peritrich Nuclear", "ATG", {"TAA": "E", "TAG": "E"}),
-    31: _code(
-        31, "Blastocrithidia Nuclear", "ATG",
-        {"TAA": "E", "TAG": "E", "TGA": "W"},
-    ),
     32: _code(
         32, "Balanophoraceae Plastid", "ATA ATC ATG ATT CTG GTG TTG",
         {"TAG": "W"},

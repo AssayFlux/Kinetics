@@ -1978,3 +1978,22 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - APK SHA-256: `059abb9e3a299b5295b8f08772b976195d7be1cd7db46dce34faa7bcf486d2d9`; AAB SHA-256: `9c8e2ca3a81c4ef2b1fb041aefee99ace5cbfb3292574b815c6a87549210044e`.
 - No emulator/physical-device install, Android SQLite migration/WorkManager/SAF instrumentation, Chaquopy on-device execution, independent experimental validation, comprehensive domain reference concordance, full transitive licence/security audit or release signing is claimed.
 - R remains open; no S/I/P/G implementation was started. Continue R Step 2 against concrete gaps and do not pass the track gate prematurely.
+
+
+## 2026-11-09 — Session 38: Expand SQLite migration regression coverage
+
+### Reviewed
+- Re-read the current R2 plan, roadmap, ResearchStore schema migration implementation and Robolectric migration test suite.
+- Confirmed the existing suite exercised fresh schema creation and v3→v4 only, while the production upgrade path contains sequential v1→v2, v2→v3 and v3→v4 steps.
+
+### Implemented
+- Added synthetic legacy database fixtures for schema v1 and v2.
+- Asserted both historical schemas upgrade through v4, preserve an existing job row and expose the expected storage_path, exported_at and analysis_results schema.
+- Kept the existing fresh-install, v3→v4, digest-binding and cascade-delete cases.
+
+### Verification boundary
+- The new tests are committed as source only after the exact-source Android/JVM CI run passes.
+- Robolectric migration tests do not replace Android device/runtime migration, interrupted-transaction or process-death verification. No R2/R-track exit is claimed.
+
+### Next
+- Run the exact-source CI suite, inspect the Android test result, then continue R Step 2 against WorkManager interruption/retry and SAF provider lifecycle gaps.

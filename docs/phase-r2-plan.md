@@ -121,3 +121,8 @@ The short-lived plaintext ownership helper now wraps both authenticated material
 
 ### Exact-source security cleanup verification — 2026-11-09
 Commit `c157bb5` passed all five CI jobs in workflow run #2100. The JVM suite now covers private temporary-file cleanup when authenticated materialization fails, when the analysis consumer throws, and after successful use. This closes the automated check for this helper only; SQLite migration, WorkManager process-death/retry, SAF provider failure and device runtime gates remain open. See `docs/ci-build-evidence.md`.
+
+
+### Legacy SQLite migration coverage — 2026-11-09 (R Step 2 audit)
+
+Added Robolectric fixtures for version-one and version-two database upgrades through schema v4, retaining a pre-existing job row and asserting the storage/export columns and analysis-results table are present. The existing v3→v4 and fresh-install/cascade tests remain. This expands automated migration coverage across all supported historical schema versions; the new exact-source CI run is required before calling these added cases passing. It does not exercise device SQLite behavior, interrupted transactions or upgrade from any undocumented schema.

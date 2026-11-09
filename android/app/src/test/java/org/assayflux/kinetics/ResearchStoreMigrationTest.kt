@@ -1,6 +1,5 @@
 package org.assayflux.kinetics
 
-import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -13,7 +12,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
-import java.io.File
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [35])
@@ -70,6 +68,58 @@ class ResearchStoreMigrationTest {
         assertEquals(4, db.version)
         assertTrue(tableExists(db, "analysis_results"))
         db.rawQuery("SELECT input_name FROM jobs WHERE id='legacy-1'", null).use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            assertEquals("x.fa", cursor.getString(0))
+        }
+        store.close()
+    }
+
+    @Test
+    fun versionOneDatabaseMigratesThroughAllVersionsWithoutLosingJobs() {
+        assertLegacyDatabaseMigrates(version = 1)
+    }
+
+    @Test
+    fun versionTwoDatabaseMigratesThroughAllVersionsWithoutLosingJobs() {
+        assertLegacyDatabaseMigrates(version = 2)
+    }
+
+    private fun assertLegacyDatabaseMigrates(version: Int) {
+        val legacy = context.openOrCreateDatabase("kinetics-research.db", 0, null)
+        val storagePathColumn = if (version >= 2) ", storage_path TEXT" else ""
+        val exportedAtColumn = if (version >= 3) ", exported_at INTEGER" else ""
+        legacy.execSQL(
+            """CREATE TABLE jobs (
+                id TEXT PRIMARY KEY NOT NULL, input_name TEXT NOT NULL, input_uri TEXT NOT NULL,
+                state TEXT NOT NULL, sha256 TEXT, byte_count INTEGER, message TEXT
+                $storagePathColumn$exportedAtColumn, created_at INTEGER NOT NULL,
+                updated_at INTEGER NOT NULL
+            )""".trimIndent(),
+        )
+        legacy.execSQL(
+            """CREATE TABLE provenance (
+                job_id TEXT PRIMARY KEY NOT NULL REFERENCES jobs(id), tool_id TEXT NOT NULL,
+                tool_version TEXT NOT NULL, input_sha256 TEXT NOT NULL,
+                parameters_json TEXT NOT NULL, created_at INTEGER NOT NULL
+            )""".trimIndent(),
+        )
+        legacy.execSQL("CREATE INDEX jobs_created_at_idx ON jobs(created_at DESC)")
+        if (version >= 3) {
+            legacy.execSQL("CREATE INDEX provenance_created_at_idx ON provenance(created_at DESC)")
+        }
+        legacy.execSQL(
+            "INSERT INTO jobs(id,input_name,input_uri,state,created_at,updated_at) VALUES('legacy-$version','x.fa','content://legacy','succeeded',1,1)",
+        )
+        legacy.version = version
+        legacy.close()
+
+        val store = ResearchStore(context)
+        val db = store.writableDatabase
+        assertEquals(4, db.version)
+        assertTrue(tableExists(db, "analysis_results"))
+        assertTrue(columnExists(db, "jobs", "storage_path"))
+        assertTrue(columnExists(db, "jobs", "exported_at"))
+        db.rawQuery("SELECT input_name FROM jobs WHERE id='legacy-$version'", null).use { cursor ->
             assertTrue(cursor.moveToFirst())
             assertEquals("x.fa", cursor.getString(0))
         }

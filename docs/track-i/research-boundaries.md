@@ -42,3 +42,14 @@ No source has been downloaded, licensed, curated, or approved by this inventory.
 
 
 Machine-readable I4 preparation: `data/admet-source-catalog.yaml` and `api/admet-source-catalog.schema.json` record PubChem BioAssay, ChEMBL and Tox21 as candidates only. The schema requires `verify_before_intake`, `patient_data: false`, and currently prohibits acquired data entries (`maxItems: 0`). Exact releases, license review and endpoint curation must precede any intake.
+
+
+## I1 — implementation note (2026-11-09)
+
+The optional host RDKit adapter records exact input-text SHA-256/UTF-8 length and
+states its sanitization, canonical isomeric representation, protonation, tautomer,
+aromaticity, stereochemistry, hydrogen and descriptor-unit assumptions. The input
+is passed to the RDKit parser without preprocessing; protonation and tautomer states
+are not corrected or inferred. This is provenance disclosure, not a validated
+chemistry benchmark or evidence of biological activity. RDKit remains unbundled
+from Android pending ABI, license, dependency and size review.

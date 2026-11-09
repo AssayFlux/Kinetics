@@ -134,6 +134,7 @@ def test_rdkit_reference_sanity_fixture_script() -> None:
     assert result["overall_pass"] is True
     assert result["engine"]["engine"] == "RDKit"
     assert all(item["pass"] for item in result["results"])
+    assert result["graph_parser_comparison"]["pass"] is True
 
 
 def test_sdf_stream_parses_incrementally_and_enforces_record_budgets() -> None:

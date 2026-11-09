@@ -30,3 +30,10 @@ handling (unassigned centres are reported, not inferred), hydrogen handling and
 units (Da and Å²). This improves auditability but does not resolve tautomer,
 protonation, stereochemical or conformational ambiguity. The adapter remains
 host-only; Android packaging and independent chemistry validation remain open.
+
+
+## Host-side SDF graph concordance — 2026-11-09
+
+The pinned RDKit sanity harness now also parses an explicit-atom cyclopropane V2000 fixture through both the local SDF parser and RDKit. It compares atom/bond counts, element and bond-order identity, coordinates, and graph cycle rank versus RDKit ring count. The result is fail-closed in CI and covered by the optional RDKit test.
+
+This is a synthetic graph/parser check, not approval of RDKit for Android or proof of chemical validity. The local parser intentionally counts only explicit atoms and does not infer implicit hydrogens; stereochemistry, aromaticity, protonation, tautomerism and production engine/licensing decisions remain open.

@@ -14,7 +14,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "python"))
 
-from kinetics.chemistry_rdkit import analyze_smiles, rdkit_backend_info
+from kinetics.chemistry import graph_descriptors, parse_sdf_record
+from kinetics.chemistry_rdkit import analyze_molblock, analyze_smiles, rdkit_backend_info
 
 FIXTURE = ROOT / "validation" / "chemistry-reference-fixtures.json"
 
@@ -49,16 +50,94 @@ def run() -> dict[str, Any]:
             "pass": all(checks.values()),
             "observed": {key: observed[key] for key in expected},
         })
+    # A small explicit-atom SDF ring compares the conservative graph parser
+    # against RDKit's independently parsed/sanitized molecular graph.
+    counts = f"{3:3d}{3:3d}  0  0  0  0            999 V2000"
+    coordinates = [(0.0, 0.0, 0.0), (1.5, 0.0, 0.0), (0.75, 1.3, 0.0)]
+    atom_lines = [
+        f"{x:10.4f}{y:10.4f}{z:10.4f} {'C':>3s}"
+        for x, y, z in coordinates
+    ]
+    bond_lines = [
+        f"{1:3d}{2:3d}{1:3d}",
+        f"{2:3d}{3:3d}{1:3d}",
+        f"{3:3d}{1:3d}{1:3d}",
+    ]
+    molblock = "\n".join([
+        "cyclopropane", "Kinetics reference", "", counts,
+        *atom_lines, *bond_lines, "M  END",
+    ])
+    local = parse_sdf_record(molblock)
+    local_graph = graph_descriptors(local)
+    adapter = analyze_molblock(molblock)
+    from rdkit import Chem
+    reference_molecule = Chem.MolFromMolBlock(
+        molblock, sanitize=True, removeHs=False, strictParsing=True,
+    )
+    if reference_molecule is None:
+        raise RuntimeError("RDKit could not parse the SDF graph reference fixture")
+    reference_conformer = reference_molecule.GetConformer()
+    max_coordinate_delta = 0.0
+    element_match = local["atom_count"] == reference_molecule.GetNumAtoms()
+    if element_match:
+        for index, atom in enumerate(local["atoms"]):
+            reference_atom = reference_molecule.GetAtomWithIdx(index)
+            element_match = element_match and atom["element"] == reference_atom.GetSymbol()
+            point = reference_conformer.GetAtomPosition(index)
+            max_coordinate_delta = max(
+                max_coordinate_delta,
+                math.sqrt(
+                    (float(atom["x"]) - point.x) ** 2
+                    + (float(atom["y"]) - point.y) ** 2
+                    + (float(atom["z"]) - point.z) ** 2
+                ),
+            )
+    bond_match = local["bond_count"] == reference_molecule.GetNumBonds()
+    if bond_match:
+        for first, second, order in local["bonds"]:
+            reference_bond = reference_molecule.GetBondBetweenAtoms(first, second)
+            bond_match = bond_match and reference_bond is not None
+            if reference_bond is not None:
+                bond_match = bond_match and reference_bond.GetBondTypeAsDouble() == order
+    graph_comparison = {
+        "fixture": "explicit-atom cyclopropane V2000",
+        "pass": (
+            element_match and bond_match
+            and local_graph["cycle_rank"] == reference_molecule.GetRingInfo().NumRings()
+            and max_coordinate_delta <= 1e-4
+            and adapter["atom_count"] == reference_molecule.GetNumAtoms()
+            and adapter["bond_count"] == reference_molecule.GetNumBonds()
+        ),
+        "local_atom_count": local["atom_count"],
+        "rdkit_atom_count": reference_molecule.GetNumAtoms(),
+        "local_bond_count": local["bond_count"],
+        "rdkit_bond_count": reference_molecule.GetNumBonds(),
+        "local_cycle_rank": local_graph["cycle_rank"],
+        "rdkit_ring_count": reference_molecule.GetRingInfo().NumRings(),
+        "element_match": element_match,
+        "bond_order_match": bond_match,
+        "max_coordinate_delta_angstrom": max_coordinate_delta,
+        "coordinate_tolerance_angstrom": 1e-4,
+        "rdkit_formula_including_implicit_hydrogens": adapter["formula"],
+        "note": "The local formula counts explicit SDF atoms only; implicit-hydrogen formula equality is intentionally not asserted.",
+    }
     return {
         "validation_id": fixture["validation_id"],
         "schema_version": fixture["schema_version"],
         "engine": backend,
         "fixture_reference_basis": fixture["reference_basis"],
         "results": results,
-        "overall_pass": all(result["pass"] for result in results),
-        "limitations": fixture["limitations"],
+        "graph_parser_comparison": graph_comparison,
+        "overall_pass": all(result["pass"] for result in results) and graph_comparison["pass"],
+        "limitations": fixture["limitations"] + [
+            "The SDF comparison is a synthetic explicit-atom graph/coordinate concordance check only.",
+            "It does not validate stereochemistry, aromaticity models, implicit-hydrogen inference, tautomer/protonation behavior or Android RDKit feasibility.",
+        ],
     }
 
 
 if __name__ == "__main__":
-    print(json.dumps(run(), indent=2, sort_keys=True))
+    result = run()
+    print(json.dumps(result, indent=2, sort_keys=True))
+    if not result["overall_pass"]:
+        raise SystemExit(1)

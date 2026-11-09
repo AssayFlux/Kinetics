@@ -2031,3 +2031,23 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### Evidence boundary
 - Automated Robolectric migration tests are now green for the documented schema versions.
 - No device SQLite migration, transaction interruption, process-death, WorkManager retry/resume, SAF provider or on-device Chaquopy execution is claimed. R2 and R remain open.
+
+
+## 2026-11-09 — Session 41: Cross-check SDF graph parsing against RDKit
+
+### Reviewed
+- Re-read R6 scope, local V2000/V3000 parser, graph descriptor tests, optional RDKit adapter, pinned RDKit host fixtures and third-party approval boundaries.
+- Confirmed the existing RDKit reference fixture tested adapter descriptor outputs but did not compare the local SDF graph parser with an independent cheminformatics parser.
+
+### Implemented
+- Added a deterministic explicit-atom cyclopropane V2000 fixture.
+- Compared local and RDKit atom/bond counts, element identities, bond orders, coordinates and cycle rank/ring count.
+- Added explicit tolerance and documented why implicit-hydrogen formula equality is not asserted.
+- Made the reference script fail closed and extended the optional RDKit regression test.
+
+### Verification boundary
+- Exact-source CI must pass before this new comparison is counted as executed.
+- Synthetic graph concordance does not establish stereochemical/tautomer/protonation correctness, chemical benchmark performance or Android RDKit feasibility/licensing.
+
+### Next
+- Validate the exact-source RDKit host job and continue R6 against an owner-approved reference corpus and engine/license feasibility decision.

@@ -133,3 +133,8 @@ Added Robolectric fixtures for version-one and version-two database upgrades thr
 Commit `dd3269acfa79546b143e239948df4d95e938abc7`, CI run #2104, passed all five jobs. The Android arm64 APK/AAB build, package alignment checks and `:app:testDebugUnitTest` passed with the new Robolectric v1→v4 and v2→v4 fixtures, alongside the existing fresh-install and v3→v4 cases. Existing job-row preservation and v4 schema assertions are included. Exact APK/AAB/artifact hashes are recorded in `docs/ci-build-evidence.md`.
 
 This closes automated Robolectric migration coverage for schema v1 through v4. It does not prove migration on Android hardware, interrupted transactions, WorkManager process death/retry, SAF provider behavior or complete R2 integration. R2 remains in progress.
+
+
+### Imported FASTA worker guard tests — 2026-11-09
+
+Added Robolectric/WorkManager test coverage for missing and malformed worker input IDs, unknown jobs, rejection of committed inputs above the 1 MB analysis bound before plaintext materialization, and explicit FASTQ rejection before Python runtime startup. These tests exercise fail-closed dispatch and guard ordering only; they do not simulate process death, WorkManager retry/backoff, cancellation during Python execution, real Chaquopy execution or SAF provider failures. Exact-source Android CI is required before counting the tests as passed.

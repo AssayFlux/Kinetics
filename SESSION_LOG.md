@@ -2137,3 +2137,22 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Confirm CI #2111's Android job outcome; continue R-track gaps only. R1–R10 remain open until their individual exit evidence and owner gates are satisfied.
+
+
+## 2026-11-09 — Session 47: Add imported FASTA worker guard tests
+
+### Reviewed
+- Re-read the imported FASTA worker and its dispatch bounds before expanding the Android test surface.
+- Confirmed the worker rejects invalid job identifiers before store access, checks the committed byte count before materializing plaintext, and rejects FASTQ before starting the embedded Python runtime.
+
+### Implemented
+- Added the pinned WorkManager testing dependency for JVM/Robolectric tests.
+- Added tests for missing/malformed IDs, unknown jobs, an oversized committed input rejected before plaintext materialization, and FASTQ rejection pending an explicit Phred offset.
+- Updated the R2 plan and roadmap with the exact coverage and its limitations.
+
+### Verification boundary
+- Tests are newly authored and are not counted as passing until the exact-source Android CI job completes.
+- They do not establish WorkManager process-death/retry/cancellation semantics, on-device Chaquopy execution or SAF provider behavior.
+
+### Next
+- Verify exact-source CI, then extend deterministic lifecycle coverage where it can be meaningfully exercised without pretending a JVM test is a device test.

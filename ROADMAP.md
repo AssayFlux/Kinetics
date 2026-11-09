@@ -37,7 +37,7 @@ v0.1.0 = R0–R3.
 
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |
 |---|---|---|---|---|---|---|
-| S1 | Offline Mol*/3Dmol.js, structure loading/preparation log | R1 WebView, R2, license review | Offline tests and preparation provenance | in-progress — deterministic bounded coordinate payload + schema + tests committed; renderer, offline bundle, bridge and license review open | Engineering | 2026-11-08 |
+| S1 | Offline Mol*/3Dmol.js, structure loading/preparation log | R1 WebView, R2, license review | Offline tests and preparation provenance | in-progress — deterministic bounded coordinate payload now receives strict schema/type/count/finite-coordinate/unique-serial validation before serialization, with malformed-payload regression tests; renderer, offline bundle, bridge and license review open | Engineering | 2026-11-08 |
 | S2 | Quality badges/metrics | S1, fixed PDB set | Benchmark concordance/tolerances | not-started | Engineering + Validation | TBD |
 | S3 | Variant mapping, interface and pocket analysis | S2, variant evidence | Capability validation; evidence not verdict | not-started | Engineering + Validation | TBD |
 | S4 | Node prediction with approved models/confidence and experimental comparison | Node security, code/weights licenses | Reproducible benchmark and limitations | not-started | Engineering + Validation | TBD |

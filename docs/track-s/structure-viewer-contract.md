@@ -1,6 +1,6 @@
 # Track S1 — Offline structure viewer contract
 
-**Status:** S1 preparation started in parallel with R1–R10 on owner instruction (2026-11-08). This is not a completed viewer.
+**Status (2026-11-09):** S1 is a gated preparation contract in the sequential S track, after the R-track implementation/host-audit gate. This is not a completed viewer.
 
 ## Scope and non-goals
 

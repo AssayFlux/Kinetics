@@ -86,7 +86,7 @@ internal fun KineticsAppShell(
                 when (tab) {
                     KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
                         onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, modifier)
-                    KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, modifier)
+                    KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, modifier)
                     KineticsTab.Explore -> ExploreScreen(modifier)
                     KineticsTab.Settings -> SettingsScreen(
                         runtimeReport, onRunRuntime, onRefresh, themeFamily, onThemeFamilyChange,

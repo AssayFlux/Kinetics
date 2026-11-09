@@ -483,7 +483,7 @@ class ResearchStore(context: Context) :
         val result = mutableListOf<ResearchJob>()
         readableDatabase.rawQuery(
             """SELECT j.id,j.input_name,j.state,j.sha256,j.message,
-                      p.tool_id,p.tool_version,p.parameters_json,p.created_at
+                      p.tool_id,p.tool_version,p.parameters_json,p.created_at,
                       a.tool_id,a.result_json
                FROM jobs j
                LEFT JOIN provenance p ON p.job_id=j.id

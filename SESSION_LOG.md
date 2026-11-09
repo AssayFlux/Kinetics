@@ -1867,3 +1867,8 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### Verification boundary
 - CI for commit `45a54b6` is still running at the time of this entry. This new integration slice is not yet compiled or tested.
 - No emulator/physical-device verification is claimed. No analysis export or full R-track exit is claimed yet.
+
+
+### R Step 1 integration correction — 2026-11-09
+- Source review after the first integration commit found two wiring defects before CI: a missing comma in the recent-jobs SQL projection and the Work screen not forwarding the new analysis callback. Both are corrected in the next commit.
+- This is exactly why the two-step plan includes a dedicated audit/repair pass; no acceptance is claimed until exact-source CI passes.

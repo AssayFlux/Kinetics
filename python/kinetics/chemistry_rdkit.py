@@ -5,6 +5,7 @@ real RDKit sanitization/descriptor/fingerprint engine when it is installed on a 
 """
 from __future__ import annotations
 
+from hashlib import sha256
 from typing import Any
 
 
@@ -29,7 +30,9 @@ def rdkit_backend_info() -> dict[str, str]:
     return {"available": "true", "engine": "RDKit", "version": version.rdkitVersion}
 
 
-def _describe(molecule: Any, *, source_format: str) -> dict[str, object]:
+def _describe(
+    molecule: Any, *, source_format: str, raw_input: str, remove_hs: bool | None = None,
+) -> dict[str, object]:
     Chem, _, version, descriptors, modules = _rdkit()
     fingerprint_generator, mol_descriptors = modules
     if molecule is None:
@@ -45,6 +48,26 @@ def _describe(molecule: Any, *, source_format: str) -> dict[str, object]:
         "engine": "RDKit",
         "engine_version": version.rdkitVersion,
         "source_format": source_format,
+        "input_provenance": {
+            "sha256_utf8": sha256(raw_input.encode("utf-8")).hexdigest(),
+            "utf8_bytes": len(raw_input.encode("utf-8")),
+            "preprocessing": "none; exact supplied text passed to RDKit parser",
+        },
+        "representation_assumptions": {
+            "sanitization": "RDKit Chem.SanitizeMol",
+            "canonicalization": "RDKit canonical isomeric SMILES",
+            "protonation": "input state retained; no protonation adjustment",
+            "tautomer": "input tautomer retained; no tautomer canonicalization",
+            "aromaticity": "RDKit sanitization/aromaticity model",
+            "stereochemistry": "isomeric SMILES; unassigned centers are reported, not inferred",
+            "hydrogen_handling": (
+                "RDKit parser defaults" if remove_hs is None
+                else f"MolFromMolBlock removeHs={remove_hs}"
+            ),
+            "molecular_weight_unit": "Da",
+            "exact_molecular_weight_unit": "Da",
+            "tpsa_unit": "angstrom^2",
+        },
         "sanitization": "RDKit Chem.SanitizeMol",
         "canonical_isomeric_smiles": canonical,
         "formula": mol_descriptors.CalcMolFormula(molecule),
@@ -77,7 +100,7 @@ def analyze_smiles(smiles: str) -> dict[str, object]:
         raise ValueError("SMILES must be a non-empty string no longer than 1 MB")
     Chem, _, _, _, _ = _rdkit()
     molecule = Chem.MolFromSmiles(smiles, sanitize=True)
-    return _describe(molecule, source_format="SMILES")
+    return _describe(molecule, source_format="SMILES", raw_input=smiles)
 
 
 def analyze_molblock(molblock: str) -> dict[str, object]:
@@ -88,7 +111,7 @@ def analyze_molblock(molblock: str) -> dict[str, object]:
     molecule = Chem.MolFromMolBlock(
         molblock, sanitize=True, removeHs=False, strictParsing=True,
     )
-    return _describe(molecule, source_format="molblock")
+    return _describe(molecule, source_format="molblock", raw_input=molblock, remove_hs=False)
 
 
 def morgan_tanimoto(first_smiles: str, second_smiles: str, *, radius: int = 2, bits: int = 2048) -> float:

@@ -77,10 +77,75 @@ def prepare_viewer_payload(
     }
 
 
-def serialize_viewer_payload(payload: dict[str, Any]) -> str:
-    """Serialize a prepared payload deterministically without NaN/Infinity extensions."""
-    if payload.get("schema") != PAYLOAD_SCHEMA:
+def validate_viewer_payload(payload: dict[str, Any]) -> None:
+    """Validate the complete viewer boundary, including internally consistent counts."""
+    if not isinstance(payload, dict):
+        raise ValueError("Structure viewer payload must be a mapping")
+    required = {
+        "schema", "source_format", "coordinate_unit", "atom_count", "atoms", "limitations",
+    }
+    if set(payload) != required:
+        raise ValueError("Structure viewer payload has missing or unsupported fields")
+    if payload["schema"] != PAYLOAD_SCHEMA:
         raise ValueError("Unsupported structure viewer payload schema")
+    if payload["source_format"] not in SUPPORTED_SOURCE_FORMATS:
+        raise ValueError("Structure viewer payload has unsupported source_format")
+    if payload["coordinate_unit"] != "angstrom":
+        raise ValueError("Structure viewer payload coordinate_unit must be angstrom")
+    atom_count = payload["atom_count"]
+    atoms = payload["atoms"]
+    if (
+        isinstance(atom_count, bool) or not isinstance(atom_count, int)
+        or atom_count < 1 or atom_count > 200_000
+    ):
+        raise ValueError("Structure viewer payload atom_count is outside the supported range")
+    if not isinstance(atoms, list) or len(atoms) != atom_count:
+        raise ValueError("Structure viewer payload atom_count does not match atoms")
+    if not isinstance(payload["limitations"], list) or not payload["limitations"] or any(
+        not isinstance(item, str) or not item.strip() for item in payload["limitations"]
+    ):
+        raise ValueError("Structure viewer payload limitations must be non-empty text entries")
+
+    seen_serials: set[int] = set()
+    atom_fields = {
+        "serial", "name", "residue", "chain", "residue_number", "element", "xyz",
+    }
+    for index, atom in enumerate(atoms):
+        if not isinstance(atom, dict) or set(atom) != atom_fields:
+            raise ValueError(f"Structure viewer atom {index} has missing or unsupported fields")
+        serial, residue_number = atom["serial"], atom["residue_number"]
+        if (
+            isinstance(serial, bool) or not isinstance(serial, int) or serial < 0
+            or serial in seen_serials
+        ):
+            raise ValueError(f"Structure viewer atom {index} has an invalid or duplicate serial")
+        seen_serials.add(serial)
+        if (
+            isinstance(residue_number, bool) or not isinstance(residue_number, int)
+            or residue_number < 0
+        ):
+            raise ValueError(f"Structure viewer atom {index} has an invalid residue number")
+        for field in ("name", "residue", "chain"):
+            value = atom[field]
+            if not isinstance(value, str) or len(value) > 8:
+                raise ValueError(f"Structure viewer atom {index} has an invalid {field}")
+        element = atom["element"]
+        if (
+            not isinstance(element, str) or not element.strip()
+            or element != element.strip().upper() or len(element) > 3
+        ):
+            raise ValueError(f"Structure viewer atom {index} has an invalid element")
+        xyz = atom["xyz"]
+        if not isinstance(xyz, list) or len(xyz) != 3 or any(
+            isinstance(value, bool) or not isinstance(value, (int, float))
+            or not isfinite(value) for value in xyz
+        ):
+            raise ValueError(f"Structure viewer atom {index} has invalid coordinates")
+
+
+def serialize_viewer_payload(payload: dict[str, Any]) -> str:
+    """Serialize a fully validated payload deterministically without NaN/Infinity."""
+    validate_viewer_payload(payload)
     return json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False)
 
 

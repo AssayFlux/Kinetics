@@ -62,7 +62,7 @@ Turn Kinetics into a research workbench that can investigate unfamiliar DNA/RNA/
 - S8 depends on S6/S7 reference metadata and independently curated organism-specific translation-table truth sets.
 - S9 depends on R5 structure parsing/viewer provenance and validated residue mapping.
 - S10 is planning and model/license feasibility only until compute architecture, model/data licenses, benchmark protocol and biosafety review are approved. Full generation and experimental claims are blocked until those gates pass.
-- Track S work proceeds alongside R1–R10 only where dependencies are satisfied. No R or S exit gate is waived.
+- Track S begins only after the R-track implementation/host-audit gate and proceeds in its documented sequential order. No R or S exit gate is waived.
 
 ## Current honest baseline
 

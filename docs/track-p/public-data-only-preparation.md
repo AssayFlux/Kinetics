@@ -31,3 +31,17 @@ Public-data research still requires dataset licences, citation, provenance, bias
 The metadata-only `data/public-dataset-catalog.yaml` now separates candidate source discovery from acquired dataset records. Candidate sources include NCBI Gene, PharmVar, ClinVar and CPIC. Every candidate is explicitly marked `verify_before_intake` and `patient_data: false`; this is not a license approval, data download, or permission to use patient records.
 
 Before adding an acquired entry, pin its exact release/accession, inspect and record the governing license and attribution requirements, retrieve only permitted non-patient content, compute SHA-256 over the exact bytes, document retrieval time and intended research use, and review known bias/limitations. P0 remains blocked. No genotype-to-phenotype interpretation, individual report, guideline recommendation or clinical workflow is implemented by this inventory.
+
+
+## Engineering progress (2026-11-09)
+
+The public non-patient catalogue now has an automated metadata gate in
+`scripts/check_public_dataset_catalog.py`, wired into the Python CI job and covered
+by synthetic tests. The gate checks source/licence URLs, unique IDs, non-patient
+classification, exact SHA-256 shape, timezone-aware retrieval timestamps, and explicit
+evidence before an entry can be marked approved for non-clinical research. It rejects
+clinical decision-support and patient-stratification intended-use language.
+
+This advances P-track public-data engineering preparation only. The acquired-entry
+catalogue remains empty; no external dataset payload has been downloaded or accepted.
+P0 and all patient/human-subject/clinical activities remain blocked.

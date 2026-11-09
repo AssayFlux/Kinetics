@@ -1877,3 +1877,9 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### R Step 1 documentation sync — 2026-11-09
 - Updated the R2 and R4 phase plans and roadmap to describe the new authenticated imported-FASTA → WorkManager → bounded QC → SHA-256-linked durable result → job-card inspection path.
 - Remaining work is explicitly retained for R Step 2; no R-track completion percentage or acceptance is recorded until the exact-source audit and tests close.
+
+
+### R Step 1 — analysis result export added — 2026-11-09
+- Added a portable versioned analysis-result JSON envelope containing the method/tool identity, parameters, exact imported-input SHA-256, timestamp and result payload; source URI/private paths remain excluded.
+- Added a user-mediated SAF JSON export action on the saved result view, with best-effort partial-document cleanup and explicit warning when the provider cannot delete.
+- Exact-source CI is required for this additional slice; it is not yet verified.

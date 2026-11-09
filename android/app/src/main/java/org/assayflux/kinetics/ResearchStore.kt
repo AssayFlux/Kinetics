@@ -189,6 +189,29 @@ class ResearchStore(context: Context) :
         "SELECT result_json FROM analysis_results WHERE job_id=?", arrayOf(id),
     ).use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
 
+    /** Portable analysis record, bound to the exact import digest; excludes source URI and paths. */
+    fun analysisExportJson(id: String): String? = readableDatabase.rawQuery(
+        "SELECT tool_id,tool_version,input_sha256,parameters_json,result_json,created_at FROM analysis_results WHERE job_id=?",
+        arrayOf(id),
+    ).use { cursor ->
+        if (!cursor.moveToFirst()) null else {
+            val parameters = runCatching { JSONObject(cursor.getString(3)) }
+                .getOrElse { JSONObject().put("raw_parameters", cursor.getString(3)) }
+            JSONObject()
+                .put("schema", "org.assayflux.kinetics.analysis-result")
+                .put("schema_version", 1)
+                .put("record_type", "research_analysis")
+                .put("tool_id", cursor.getString(0))
+                .put("tool_version", cursor.getString(1))
+                .put("input_sha256", cursor.getString(2))
+                .put("parameters", parameters)
+                .put("result", JSONObject(cursor.getString(4)))
+                .put("created_at_epoch_ms", cursor.getLong(5))
+                .put("scope_note", "Research-use QC only. No diagnosis, clinical interpretation or independent biological validation is implied.")
+                .toString(2)
+        }
+    }
+
     fun storedInputName(id: String): String? = readableDatabase.rawQuery(
         "SELECT input_name FROM jobs WHERE id=?", arrayOf(id),
     ).use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }

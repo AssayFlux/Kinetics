@@ -87,6 +87,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
     var pendingExportJob by remember { mutableStateOf<String?>(null) }
     var pendingProvenanceExportJob by remember { mutableStateOf<String?>(null) }
     var pendingProvenanceSummaryJob by remember { mutableStateOf<String?>(null) }
+    var pendingAnalysisExportJob by remember { mutableStateOf<String?>(null) }
     val exportPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/octet-stream"),
     ) { uri ->
@@ -162,6 +163,36 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
                         } else {
                             "Provenance export failed: $detail. The destination may be partial; delete it manually before retrying."
                         }
+                    },
+                )
+            }
+        }
+    }
+
+    val analysisExportPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json"),
+    ) { uri ->
+        val jobId = pendingAnalysisExportJob
+        pendingAnalysisExportJob = null
+        if (uri != null && jobId != null) {
+            scope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    runCatching {
+                        val json = store.analysisExportJson(jobId) ?: error("No saved analysis result exists")
+                        val output = activity.contentResolver.openOutputStream(uri, "wt")
+                            ?: error("Selected analysis destination could not be opened")
+                        output.use { stream -> stream.write(json.toByteArray(Charsets.UTF_8)); stream.flush() }
+                    }
+                }
+                notice = result.fold(
+                    { "Analysis result and source-hash provenance exported." },
+                    { error ->
+                        val removed = runCatching {
+                            android.provider.DocumentsContract.deleteDocument(activity.contentResolver, uri)
+                        }.getOrDefault(false)
+                        val detail = error.message ?: error.javaClass.simpleName
+                        if (removed) "Analysis export failed: $detail. Incomplete destination removed."
+                        else "Analysis export failed: $detail. Destination may be partial; remove it manually."
                     },
                 )
             }
@@ -373,6 +404,10 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
                 "analysis-${job.id}", ExistingWorkPolicy.KEEP, request,
             )
             notice = "Local FASTA QC queued for ${job.inputName}. The saved result will retain the imported SHA-256 provenance."
+        },
+        onExportAnalysis = { job ->
+            pendingAnalysisExportJob = job.id
+            analysisExportPicker.launch("kinetics-analysis-${job.id}.json")
         },
         onExportProvenanceSummary = { job ->
             pendingProvenanceSummaryJob = job.id

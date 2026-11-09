@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import json
 
 import pytest
@@ -82,3 +83,46 @@ def test_viewer_payload_rejects_non_integer_or_boolean_atom_limits() -> None:
     for invalid_limit in (True, 1.5, "10"):
         with pytest.raises(ValueError, match="max_atoms"):
             prepare_viewer_payload([atom()], source_format="pdb", max_atoms=invalid_limit)  # type: ignore[arg-type]
+
+
+def test_viewer_serializer_rejects_inconsistent_or_unsafe_payloads() -> None:
+    payload = prepare_viewer_payload([atom()], source_format="pdb")
+
+    wrong_count = copy.deepcopy(payload)
+    wrong_count["atom_count"] = 2
+    with pytest.raises(ValueError, match="does not match"):
+        serialize_viewer_payload(wrong_count)
+
+    non_finite = copy.deepcopy(payload)
+    non_finite["atoms"][0]["xyz"][0] = float("inf")
+    with pytest.raises(ValueError, match="invalid coordinates"):
+        serialize_viewer_payload(non_finite)
+
+    duplicate = copy.deepcopy(payload)
+    duplicate["atoms"].append(copy.deepcopy(duplicate["atoms"][0]))
+    duplicate["atom_count"] = 2
+    with pytest.raises(ValueError, match="duplicate serial"):
+        serialize_viewer_payload(duplicate)
+
+    extra_field = copy.deepcopy(payload)
+    extra_field["unreviewed_html"] = "<script>"
+    with pytest.raises(ValueError, match="unsupported fields"):
+        serialize_viewer_payload(extra_field)
+
+
+@pytest.mark.parametrize(
+    "field, value",
+    [
+        ("source_format", []),
+        ("coordinate_unit", "nm"),
+        ("atom_count", True),
+        ("limitations", []),
+    ],
+)
+def test_viewer_serializer_rejects_invalid_payload_metadata(
+    field: str, value: object,
+) -> None:
+    payload = prepare_viewer_payload([atom()], source_format="pdb")
+    payload[field] = value
+    with pytest.raises(ValueError):
+        serialize_viewer_payload(payload)

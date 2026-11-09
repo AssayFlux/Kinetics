@@ -34,3 +34,8 @@ Versioned allele-definition JSON ingestion now requires a pinned source release,
 ### PharmVar source adapter
 
 Added a parser for PharmVar's documented nine-column TSV haplotype/variant format. It verifies the original TSV byte-stream SHA-256, requires an exact pinned database release, preserves RefSeqGene/LRG/chromosome reference accessions and 1-based sequence coordinates, handles the explicit REFERENCE/*1 sentinel and matches only exact, complete, already phased variant sets. It does not remap locus coordinates to GRCh37/GRCh38, infer phase/CNV/hybrid alleles or translate diplotypes/phenotypes. No bulk PharmVar dataset has yet been downloaded or bundled.
+
+
+### PharmVar TSV parser hardening — 2026-11-09
+
+The nine-column importer now rejects duplicate/empty normalized header names, non-nine-column headers, and short/extra-width data rows instead of allowing DictReader to silently overwrite or discard fields. Added regression tests for malformed row widths, duplicate headers, ambiguous exact allele matches, phase/completeness abstention and reference-accession mismatch. This is parser integrity coverage only; it does not validate biological allele interpretation or supply authoritative PGx content.

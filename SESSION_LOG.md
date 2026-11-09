@@ -2156,3 +2156,17 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Verify exact-source CI, then extend deterministic lifecycle coverage where it can be meaningfully exercised without pretending a JVM test is a device test.
+
+
+## 2026-11-09 — Session 48: Harden PharmVar TSV ingestion
+
+### Implemented
+- PharmVar TSV header validation now rejects empty or duplicate normalized column names and requires exactly the documented nine columns.
+- Each data row must contain exactly nine fields; short and extra-field rows fail closed.
+- Added tests for ambiguous exact allele matches, phase/completeness abstention and reference-accession mismatch.
+
+### Verification boundary
+- The tests are newly authored; exact-source CI is pending. No biological validation, licensed reference dataset import or clinical PGx capability is claimed.
+
+### Next
+- Confirm CI and continue the R9/R10 validation gates. R remains open.

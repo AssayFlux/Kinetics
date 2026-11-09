@@ -94,6 +94,13 @@ def parse_pharmvar_tsv(
     def normalize(value: str) -> str:
         return "".join(character for character in value.casefold() if character.isalnum())
 
+    normalized_headers = [normalize(name) for name in reader.fieldnames]
+    if any(not name for name in normalized_headers):
+        raise ValueError("PharmVar TSV header contains an empty column name")
+    if len(set(normalized_headers)) != len(normalized_headers):
+        raise ValueError("PharmVar TSV header contains duplicate column names")
+    if len(reader.fieldnames) != 9:
+        raise ValueError("PharmVar TSV must contain exactly nine documented columns")
     columns = {normalize(name): name for name in reader.fieldnames}
     aliases = {
         "haplotype": ("haplotypeidentifier", "haplotype", "haplotypename", "allele", "name"),
@@ -117,6 +124,8 @@ def parse_pharmvar_tsv(
     grouped: dict[tuple[str, str, str], list[PharmVarVariant]] = {}
     reference_groups: set[tuple[str, str, str]] = set()
     for line_number, row in enumerate(reader, 2):
+        if None in row or any(row.get(column) is None for column in reader.fieldnames):
+            raise ValueError(f"PharmVar TSV line {line_number}: row must contain exactly nine fields")
         gene = (row.get(selected["gene"]) or "").strip()
         haplotype = (row.get(selected["haplotype"]) or "").strip()
         reference = (row.get(selected["reference"]) or "").strip()

@@ -184,3 +184,99 @@ def test_gene_catalogue_coverage_report_enforces_bounds() -> None:
     ], source_release="fixture"))
     with pytest.raises(ValueError, match="max_entries"):
         gene_catalogue_coverage_report([entry, entry], max_entries=1)
+
+
+
+def test_pharmvar_tsv_rejects_duplicate_normalized_headers() -> None:
+    import hashlib
+    from kinetics.pharmvar import parse_pharmvar_tsv
+
+    tsv = (
+        "Haplotype Name\tGene Symbol\tGene-Symbol\tdbSNP rsID\tReference Sequence\t"
+        "Variant Start\tVariant Stop\tReference Allele\tVariant Allele\tVariant Type\n"
+        "GENE*1\tGENE\tGENE\t.\tNG_000001.1\t.\t.\tREFERENCE\t.\treference\n"
+    )
+    with pytest.raises(ValueError, match="exactly nine"):
+        parse_pharmvar_tsv(
+            tsv, source_release="fixture-1", expected_release="fixture-1",
+            source_url="https://example.org/download",
+            source_sha256=hashlib.sha256(tsv.encode()).hexdigest(), license_id="CC0-1.0",
+        )
+
+
+def test_pharmvar_tsv_rejects_short_and_extra_field_rows() -> None:
+    import hashlib
+    from kinetics.pharmvar import parse_pharmvar_tsv
+
+    header = (
+        "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"
+        "Variant Stop\tReference Allele\tVariant Allele\tVariant Type\n"
+    )
+    for row in (
+        "GENE*1\tGENE\t.\tNG_000001.1\t.\t.\tREFERENCE\t.\n",
+        "GENE*1\tGENE\t.\tNG_000001.1\t.\t.\tREFERENCE\t.\treference\textra\n",
+    ):
+        tsv = header + row
+        with pytest.raises(ValueError, match="exactly nine fields"):
+            parse_pharmvar_tsv(
+                tsv, source_release="fixture-1", expected_release="fixture-1",
+                source_url="https://example.org/download",
+                source_sha256=hashlib.sha256(tsv.encode()).hexdigest(), license_id="CC0-1.0",
+            )
+
+
+def test_pharmvar_exact_match_reports_ambiguous_definitions_without_order_bias() -> None:
+    import hashlib
+    from kinetics.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
+
+    tsv = (
+        "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"
+        "Variant Stop\tReference Allele\tVariant Allele\tVariant Type\n"
+        "GENE*2\tGENE\trs1\tNG_000001.1\t10\t10\tA\tG\tsubstitution\n"
+        "GENE*3\tGENE\trs1\tNG_000001.1\t10\t10\tA\tG\tsubstitution\n"
+    )
+    definitions = parse_pharmvar_tsv(
+        tsv, source_release="fixture-1", expected_release="fixture-1",
+        source_url="https://example.org/download",
+        source_sha256=hashlib.sha256(tsv.encode()).hexdigest(), license_id="CC0-1.0",
+    )
+    observed = next(iter(definitions[0].variants))
+    result = match_pharmvar_haplotype(
+        "GENE", "NG_000001.1", [observed], definitions,
+        phase_confirmed=True, call_complete=True,
+    )
+    assert result.status == "ambiguous"
+    assert result.haplotype is None
+    assert result.matched_haplotypes == ("GENE*2", "GENE*3")
+
+
+def test_pharmvar_matching_requires_complete_phase_and_matching_accession() -> None:
+    import hashlib
+    from kinetics.pharmvar import match_pharmvar_haplotype, parse_pharmvar_tsv
+
+    tsv = (
+        "Haplotype Name\tGene Symbol\tdbSNP rsID\tReference Sequence\tVariant Start\t"
+        "Variant Stop\tReference Allele\tVariant Allele\tVariant Type\n"
+        "GENE*2\tGENE\trs1\tNG_000001.1\t10\t10\tA\tG\tsubstitution\n"
+    )
+    definitions = parse_pharmvar_tsv(
+        tsv, source_release="fixture-1", expected_release="fixture-1",
+        source_url="https://example.org/download",
+        source_sha256=hashlib.sha256(tsv.encode()).hexdigest(), license_id="CC0-1.0",
+    )
+    observed = next(iter(definitions[0].variants))
+    unphased = match_pharmvar_haplotype(
+        "GENE", "NG_000001.1", [observed], definitions,
+        phase_confirmed=False, call_complete=True,
+    )
+    incomplete = match_pharmvar_haplotype(
+        "GENE", "NG_000001.1", [observed], definitions,
+        phase_confirmed=True, call_complete=False,
+    )
+    assert unphased.status == "no_call_unphased"
+    assert incomplete.status == "no_call_incomplete"
+    with pytest.raises(ValueError, match="different reference accession"):
+        match_pharmvar_haplotype(
+            "GENE", "NG_000002.1", [observed], definitions,
+            phase_confirmed=True, call_complete=True,
+        )

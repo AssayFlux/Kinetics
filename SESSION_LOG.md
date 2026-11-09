@@ -1935,3 +1935,9 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - ARM64 APK SHA-256 `d6b7bd05090519761bb1771b82c41f14b3c3ff2d834a1844d2ec0052babbb82b` (69,875,059 bytes); AAB SHA-256 `9c09035e9588e4af42554418c7f02e1efca2d84441f328b237f29c758c6c261f` (39,951,809 bytes).
 - Android Gradle build, APK/native alignment checks, JVM unit tests and artifact verification all passed. Host Python, reference comparisons, RDKit sanity and SPDX jobs passed.
 - This closes exact-source CI for the R2/R4 imported FASTA integration slice, not the entire R track. Device/runtime and dedicated migration/worker/SAF instrumentation checks remain open.
+
+
+### Shared envelope contract test — 2026-11-09
+- Added a Python contract test for `api/engine-envelope-v1.schema.json`: Draft 2020-12 schema self-check, valid request/result/error examples, and rejection of invalid version, digest, kind/payload combinations and malformed timestamp.
+- Added `jsonschema[format]` as a development/test-only dependency in both project development dependency declarations. It is not an Android/iOS runtime dependency.
+- Cross-language runtime validation remains to be implemented in each adapter as its corresponding operation is migrated; the Python test does not claim Kotlin/Rust/C++/Swift validation is already wired.

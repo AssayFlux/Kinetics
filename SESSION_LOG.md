@@ -1854,3 +1854,16 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Finish the R Step 1 integration base across import → typed analysis → durable result/provenance → export, then perform R Step 2 full audit and regression closure. Do not start S until R has passed its two-step gate.
+
+
+## 2026-11-09 — Session 36: R Step 1 — connect authenticated imported FASTA to durable QC result
+
+### Implemented
+- Added a WorkManager analysis worker for completed FASTA imports only. It decrypts/authenticates the already stored KDAT input into the existing short-lived private cache helper, enforces 1 MB byte and character bounds, runs the registered local FASTA QC adapter, and removes the plaintext cache in the existing `withStoredInput` finally block.
+- Added schema v4 `analysis_results` storage with foreign-key cleanup, exact source SHA-256, tool/version, parameters, result JSON and timestamp. Result persistence is transactional and only accepts succeeded imports with a recorded digest.
+- Added a job-level Run FASTA QC action and saved-result inspection on Home/Work cards. Analysis is unique WorkManager work tagged separately for refresh.
+- FASTQ is intentionally not auto-analysed: the user must explicitly choose Phred+33 or Phred+64; this worker only accepts FASTA extensions.
+
+### Verification boundary
+- CI for commit `45a54b6` is still running at the time of this entry. This new integration slice is not yet compiled or tested.
+- No emulator/physical-device verification is claimed. No analysis export or full R-track exit is claimed yet.

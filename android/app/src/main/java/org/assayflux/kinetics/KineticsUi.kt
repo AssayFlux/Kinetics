@@ -46,6 +46,7 @@ internal fun KineticsAppShell(
     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
     onExportProvenance: (ResearchJob) -> Unit,
     onExportProvenanceSummary: (ResearchJob) -> Unit,
+    onAnalyzeImported: (ResearchJob) -> Unit,
     themeFamily: String, onThemeFamilyChange: (String) -> Unit,
     biometricEnabled: Boolean, biometricAvailable: Boolean,
     onBiometricChange: (Boolean) -> Unit,
@@ -84,7 +85,7 @@ internal fun KineticsAppShell(
             fun Screen(modifier: Modifier) {
                 when (tab) {
                     KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
-                        onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, modifier)
+                        onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, modifier)
                     KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, modifier)
                     KineticsTab.Explore -> ExploreScreen(modifier)
                     KineticsTab.Settings -> SettingsScreen(
@@ -181,7 +182,7 @@ private fun HomeScreen(
     onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
     onExportProvenance: (ResearchJob) -> Unit,
-    onExportProvenanceSummary: (ResearchJob) -> Unit, modifier: Modifier,
+    onExportProvenanceSummary: (ResearchJob) -> Unit, onAnalyzeImported: (ResearchJob) -> Unit, modifier: Modifier,
 ) {
     val active = jobs.count { it.state in listOf("queued", "running", "cancel_requested") }
     val done = jobs.count { it.state == "succeeded" }
@@ -209,7 +210,7 @@ private fun HomeScreen(
             }
             item { Section("Recent activity", "View all", onOpenWork) }
             if (jobs.isEmpty()) item { Empty("Your workspace is clear", "Import a research file to create your first job.") }
-            else items(jobs.take(4), key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary) }
+            else items(jobs.take(4), key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported) }
             item {
                 Section("Device health", "Run checks", onRuntime)
                 OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
@@ -366,7 +367,7 @@ private fun WorkScreen(
     jobs: List<ResearchJob>, onImport: () -> Unit, onCancel: (ResearchJob) -> Unit,
     onResume: (ResearchJob) -> Unit, onDelete: (ResearchJob) -> Unit,
     onExport: (ResearchJob) -> Unit, onExportProvenance: (ResearchJob) -> Unit,
-    onExportProvenanceSummary: (ResearchJob) -> Unit, modifier: Modifier,
+    onExportProvenanceSummary: (ResearchJob) -> Unit, onAnalyzeImported: (ResearchJob) -> Unit, modifier: Modifier,
 ) {
     var query by remember { mutableStateOf("") }
     var filter by remember { mutableStateOf("All") }
@@ -393,7 +394,7 @@ private fun WorkScreen(
             }
             item { Button(onClick = onImport, Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp)) { Text("+  Import new data") } }
             if (filtered.isEmpty()) item { Empty("No matching research jobs", "Try another search or import a dataset to begin.") }
-            else items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary) }
+            else items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported) }
         }
     }
 }
@@ -402,7 +403,8 @@ private fun WorkScreen(
 private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
                     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
                     onExportProvenance: (ResearchJob) -> Unit,
-                    onExportProvenanceSummary: (ResearchJob) -> Unit) {
+                    onExportProvenanceSummary: (ResearchJob) -> Unit,
+                    onAnalyzeImported: (ResearchJob) -> Unit) {
     val active = job.state in listOf("queued", "running", "cancel_requested")
     val success = job.state == "succeeded"
     val issue = job.state in listOf("failed", "recovery_required")
@@ -487,9 +489,17 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
                     }
                 }
             }
+            if (job.analysisResultJson != null) {
+                var analysisExpanded by rememberSaveable(job.id) { mutableStateOf(false) }
+                TextButton(onClick = { analysisExpanded = !analysisExpanded }) {
+                    Text(if (analysisExpanded) "Hide analysis result" else "View saved analysis result")
+                }
+                if (analysisExpanded) Text(job.analysisResultJson, style = MaterialTheme.typography.bodySmall)
+            }
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                 if (active) OutlinedButton(onClick = { onCancel(job) }) { Text("Cancel") }
                 if (job.state == "cancelled" || job.state == "failed") OutlinedButton(onClick = { onResume(job) }) { Text("Resume") }
+                if (success && job.analysisResultJson == null && job.inputName.substringAfterLast('.').lowercase() in setOf("fa", "fasta", "fna")) OutlinedButton(onClick = { onAnalyzeImported(job) }) { Text("Run FASTA QC") }
                 if (success) Button(onClick = { onExport(job) }) { Text("Export") }
                 if (success || issue || job.state == "cancelled") OutlinedButton(onClick = { onDelete(job) }) { Text("Delete") }
             }

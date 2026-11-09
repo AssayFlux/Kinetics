@@ -18,6 +18,8 @@ data class ResearchJob(
     val provenanceToolVersion: String? = null,
     val provenanceParametersJson: String? = null,
     val provenanceCreatedAt: Long? = null,
+    val analysisToolId: String? = null,
+    val analysisResultJson: String? = null,
 )
 
 data class RecoverableImport(val id: String, val uri: String)
@@ -68,6 +70,7 @@ class ResearchStore(context: Context) :
         )
         db.execSQL("CREATE INDEX jobs_created_at_idx ON jobs(created_at DESC)")
         db.execSQL("CREATE INDEX provenance_created_at_idx ON provenance(created_at DESC)")
+        db.execSQL("""CREATE TABLE analysis_results (job_id TEXT PRIMARY KEY NOT NULL REFERENCES jobs(id) ON DELETE CASCADE, tool_id TEXT NOT NULL, tool_version TEXT NOT NULL, input_sha256 TEXT NOT NULL, parameters_json TEXT NOT NULL, result_json TEXT NOT NULL, created_at INTEGER NOT NULL)""")
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -77,6 +80,9 @@ class ResearchStore(context: Context) :
         if (oldVersion < 3) {
             db.execSQL("ALTER TABLE jobs ADD COLUMN exported_at INTEGER")
             db.execSQL("CREATE INDEX IF NOT EXISTS provenance_created_at_idx ON provenance(created_at DESC)")
+        }
+        if (oldVersion < 4) {
+            db.execSQL("""CREATE TABLE analysis_results (job_id TEXT PRIMARY KEY NOT NULL REFERENCES jobs(id) ON DELETE CASCADE, tool_id TEXT NOT NULL, tool_version TEXT NOT NULL, input_sha256 TEXT NOT NULL, parameters_json TEXT NOT NULL, result_json TEXT NOT NULL, created_at INTEGER NOT NULL)""")
         }
     }
 
@@ -153,6 +159,39 @@ class ResearchStore(context: Context) :
             db.endTransaction()
         }
     }
+
+    /** Persist an analysis result with the exact imported-input digest and explicit method parameters. */
+    fun saveAnalysisResult(id: String, toolId: String, toolVersion: String, parametersJson: String, resultJson: String) {
+        require(toolId.isNotBlank() && toolVersion.isNotBlank()) { "Analysis tool identity is required" }
+        require(resultJson.isNotBlank() && resultJson.length <= MAX_ANALYSIS_RESULT_CHARS) {
+            "Analysis result is empty or exceeds the storage limit"
+        }
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            val inputHash = db.rawQuery("SELECT sha256,state FROM jobs WHERE id=?", arrayOf(id)).use { cursor ->
+                check(cursor.moveToFirst() && cursor.getString(1) == "succeeded" && !cursor.isNull(0)) {
+                    "Only a completed, hash-verified import can be analysed"
+                }
+                cursor.getString(0)
+            }
+            val values = ContentValues().apply {
+                put("job_id", id); put("tool_id", toolId); put("tool_version", toolVersion)
+                put("input_sha256", inputHash); put("parameters_json", parametersJson)
+                put("result_json", resultJson); put("created_at", System.currentTimeMillis())
+            }
+            db.insertWithOnConflict("analysis_results", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+            db.setTransactionSuccessful()
+        } finally { db.endTransaction() }
+    }
+
+    fun analysisResultJson(id: String): String? = readableDatabase.rawQuery(
+        "SELECT result_json FROM analysis_results WHERE job_id=?", arrayOf(id),
+    ).use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
+
+    fun storedInputName(id: String): String? = readableDatabase.rawQuery(
+        "SELECT input_name FROM jobs WHERE id=?", arrayOf(id),
+    ).use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
 
     fun storedInputPath(id: String): String? {
         readableDatabase.rawQuery(
@@ -355,6 +394,7 @@ class ResearchStore(context: Context) :
         val db = writableDatabase
         db.beginTransaction()
         try {
+            db.delete("analysis_results", "job_id=?", arrayOf(id))
             db.delete("provenance", "job_id=?", arrayOf(id))
             check(db.delete("jobs", "id=?", arrayOf(id)) == 1) {
                 "Research job metadata disappeared during deletion"
@@ -444,8 +484,10 @@ class ResearchStore(context: Context) :
         readableDatabase.rawQuery(
             """SELECT j.id,j.input_name,j.state,j.sha256,j.message,
                       p.tool_id,p.tool_version,p.parameters_json,p.created_at
+                      a.tool_id,a.result_json
                FROM jobs j
                LEFT JOIN provenance p ON p.job_id=j.id
+               LEFT JOIN analysis_results a ON a.job_id=j.id
                ORDER BY j.created_at DESC LIMIT ?""".trimIndent(),
             arrayOf(limit.coerceIn(1, 100).toString()),
         ).use { cursor ->
@@ -460,6 +502,8 @@ class ResearchStore(context: Context) :
                     provenanceToolVersion = if (cursor.isNull(6)) null else cursor.getString(6),
                     provenanceParametersJson = if (cursor.isNull(7)) null else cursor.getString(7),
                     provenanceCreatedAt = if (cursor.isNull(8)) null else cursor.getLong(8),
+                    analysisToolId = if (cursor.isNull(9)) null else cursor.getString(9),
+                    analysisResultJson = if (cursor.isNull(10)) null else cursor.getString(10),
                 )
             }
         }
@@ -467,7 +511,8 @@ class ResearchStore(context: Context) :
     }
 
     companion object {
-        private const val DATABASE_VERSION = 3
+        private const val DATABASE_VERSION = 4
+        private const val MAX_ANALYSIS_RESULT_CHARS = 2_000_000
         private const val PLAINTEXT_CACHE_PREFIX = "kinetics-analysis-"
         private const val PLAINTEXT_CACHE_MAX_AGE_MS = 24L * 60L * 60L * 1000L
     }

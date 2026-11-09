@@ -263,10 +263,12 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
             }
         }
         val workInfos = manager.getWorkInfosByTagLiveData("kinetics-import")
+        val analysisInfos = manager.getWorkInfosByTagLiveData("kinetics-analysis")
         val observer = Observer<List<WorkInfo>> { jobs = store.recentJobs() }
         workInfos.observe(activity, observer)
+        analysisInfos.observe(activity, observer)
         jobs = store.recentJobs()
-        onDispose { workInfos.removeObserver(observer) }
+        onDispose { workInfos.removeObserver(observer); analysisInfos.removeObserver(observer) }
     }
     if (biometricEnabled && !biometricUnlocked) {
         BiometricLockScreen(
@@ -362,6 +364,15 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
         onExportProvenance = { job ->
             pendingProvenanceExportJob = job.id
             provenanceExportPicker.launch("kinetics-provenance-${job.id}.json")
+        },
+        onAnalyzeImported = { job ->
+            val request = OneTimeWorkRequestBuilder<ImportedFastaAnalysisWorker>()
+                .setInputData(workDataOf(ImportedFastaAnalysisWorker.KEY_JOB_ID to job.id))
+                .addTag("kinetics-analysis").build()
+            WorkManager.getInstance(activity).enqueueUniqueWork(
+                "analysis-${job.id}", ExistingWorkPolicy.KEEP, request,
+            )
+            notice = "Local FASTA QC queued for ${job.inputName}. The saved result will retain the imported SHA-256 provenance."
         },
         onExportProvenanceSummary = { job ->
             pendingProvenanceSummaryJob = job.id

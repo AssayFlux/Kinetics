@@ -1794,3 +1794,24 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Updated `android/app/src/main/assets/capability-catalog.json` with the missing registry entry. The entry remains `implemented` with `evidence_level: none`; no validation claim was added.
 - CI #2080 Android arm64 build and host-side scientific/chemistry comparison jobs were still running/successful at inspection time; final workflow status must be rechecked.
 - Exact-source CI rerun required to accept this asset fix. No device verification is claimed.
+
+
+## 2026-11-09 — Session 33: Harden human-readable provenance against metadata line injection
+
+**Objective:** Ensure imported filenames and persisted metadata cannot forge additional claims or sections in the exported human-readable provenance summary.
+
+### Reviewed
+- Re-read the North Star, roadmap, decisions, latest session log, R2 import/provenance plan, Android formatter and its JVM tests.
+- Confirmed the summary already sanitized input names, but other persisted scalar fields and the parameter text were rendered without the same single-line boundary.
+
+### Implemented
+- Apply the existing control-character and newline sanitizer to the job identifier, state, tool identifier, tool version and parameter JSON before rendering.
+- Added a regression case attempting to inject clinical approval, validation, reviewer and interpretation lines through those fields.
+- Kept the summary explicitly scoped to import/encryption/hash provenance; this does not create scientific or clinical evidence.
+
+### Verification
+- Exact-source Android JVM test and full CI rerun are required; no pass is claimed at commit time.
+- No emulator or physical-device test is claimed.
+
+### Next
+- Run the new formatter regression through exact-source CI, then continue closing the R2 import-to-analysis-to-result/export lifecycle.

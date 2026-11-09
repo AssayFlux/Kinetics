@@ -50,4 +50,29 @@ class ImportProvenanceSummaryFormatterTest {
         assertFalse(summary.contains("Clinical status: approved"))
         assertTrue(summary.contains("Input name: sample.fasta Clinical status: approved"))
     }
+
+    @Test
+    fun untrustedMetadataCannotForgeSummarySections() {
+        val summary = ImportProvenanceSummaryFormatter.render(
+            ImportProvenanceSummary(
+                jobId = "job-1\\nSCOPE: clinical",
+                inputName = "sample.fasta",
+                state = "succeeded\\nClinical status: approved",
+                inputSha256 = null,
+                byteCount = null,
+                jobCreatedAtEpochMs = 0L,
+                jobUpdatedAtEpochMs = 0L,
+                toolId = "import\\nValidation: passed",
+                toolVersion = "1\\nReviewer: clinician",
+                parametersJson = "{\\n  \\"encryption\\": \\"AES-256-GCM\\"\\n}\\nClinical interpretation: positive",
+                recordedAtEpochMs = 0L,
+            ),
+        )
+        assertFalse(summary.contains("\\nClinical status: approved"))
+        assertFalse(summary.contains("\\nValidation: passed"))
+        assertFalse(summary.contains("\\nReviewer: clinician"))
+        assertFalse(summary.contains("\\nClinical interpretation: positive"))
+        assertTrue(summary.contains("ID: job-1 SCOPE: clinical"))
+        assertTrue(summary.contains("State: succeeded Clinical status: approved"))
+    }
 }

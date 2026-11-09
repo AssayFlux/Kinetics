@@ -59,7 +59,8 @@
     const center=bounds.min.map((value,axis)=>(value+bounds.max[axis])/2);
     const cy=Math.cos(yaw), sy=Math.sin(yaw), cp=Math.cos(pitch), sp=Math.sin(pitch);
     const rotated=atoms.map((a,i)=>{const x=a.xyz[0]-center[0],y=a.xyz[1]-center[1],z=a.xyz[2]-center[2];const x1=x*cy-z*sy,z1=x*sy+z*cy;return {i,x:x1,y:y*cp-z1*sp,z:y*sp+z1*cp};});
-    const extent=Math.max(1,...rotated.map(p=>Math.max(Math.abs(p.x),Math.abs(p.y))))*2;
+    let extent=1;for(const p of rotated)extent=Math.max(extent,Math.abs(p.x),Math.abs(p.y));
+    extent*=2;
     const scale=Math.min(w,h)*.76/extent*zoom, ordered=rotated.slice().sort((a,b)=>a.z-b.z);
     for(const p of ordered){const a=atoms[p.i],x=w/2+p.x*scale,y=h/2-p.y*scale,r=p.i===selected?6:Math.max(1.8,Math.min(4,scale*.045));let colour;
       if(colourMode.value==="chain"){let hash=0;for(const c of a.chain)hash=(hash*31+c.charCodeAt(0))|0;colour=chainPalette[Math.abs(hash)%chainPalette.length];}

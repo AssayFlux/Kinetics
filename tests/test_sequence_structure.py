@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.sequence_structure import map_exact_chain_sequence
+from kinetics.sequence_structure import map_exact_chain_sequence, map_variant_to_structure
 from kinetics.structure import Atom
 
 
@@ -109,3 +109,58 @@ def test_mapping_detects_overlapping_exact_occurrences() -> None:
     )
     assert result["status"] == "ambiguous_exact_match"
     assert result["candidate_query_starts_1based"] == [1, 2, 3]
+
+
+
+def test_variant_maps_only_through_unique_exact_chain_correspondence() -> None:
+    atoms = [
+        atom(1, "ALA", 10), atom(2, "GLY", 11),
+        atom(3, "SER", 12), atom(4, "VAL", 13),
+    ]
+    result = map_variant_to_structure(
+        "MAGS VLK".replace(" ", ""), atoms, chain_id="A",
+        variant_position_1based=4, reference_amino_acid="S", alternate_amino_acid="T",
+    )
+    assert result["status"] == "mapped_coordinate_only"
+    assert result["mapping_quality"] == "unique_contiguous_exact_sequence"
+    assert result["mapped_residue"]["structure_residue_number"] == 12
+    assert "not a mutation model" in result["limitations"][1]
+
+
+def test_variant_mapping_abstains_for_ambiguous_or_uncovered_positions() -> None:
+    ambiguous = map_variant_to_structure(
+        "AGSVAGSV", [atom(1, "ALA", 1), atom(2, "GLY", 2), atom(3, "SER", 3), atom(4, "VAL", 4)],
+        chain_id="A", variant_position_1based=1,
+        reference_amino_acid="A", alternate_amino_acid="T",
+    )
+    assert ambiguous["status"] == "abstained"
+    assert ambiguous["mapping_status"] == "ambiguous_exact_match"
+
+    uncovered = map_variant_to_structure(
+        "MAGS", [atom(1, "GLY", 10), atom(2, "SER", 11)],
+        chain_id="A", variant_position_1based=1,
+        reference_amino_acid="M", alternate_amino_acid="L",
+    )
+    assert uncovered["status"] == "not_covered_by_structure"
+
+
+@pytest.mark.parametrize(
+    "kwargs, message",
+    [
+        ({"variant_position_1based": True}, "positive integer"),
+        ({"reference_amino_acid": "Z"}, "canonical"),
+        ({"alternate_amino_acid": "S"}, "must differ"),
+    ],
+)
+def test_variant_mapping_rejects_invalid_variant_inputs(kwargs, message: str) -> None:
+    parameters = {
+        "variant_position_1based": 1,
+        "reference_amino_acid": "A",
+        "alternate_amino_acid": "V",
+    }
+    parameters.update(kwargs)
+    with pytest.raises(ValueError, match=message):
+        map_variant_to_structure(
+            "AG", [atom(1, "ALA", 1), atom(2, "GLY", 2)],
+            chain_id="A", **parameters,
+        )

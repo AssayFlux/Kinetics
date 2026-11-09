@@ -2270,3 +2270,10 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - The report always returns `quality_badge=not_assessed`; it does not claim MolProbity, Ramachandran, rotamer, resolution/R-free or pLDDT/PAE quality.
 - Added synthetic regression fixtures and a dedicated S2 contract documenting the evidence still required for a calibrated quality badge.
 - Exact-source CI required.
+
+
+## 2026-11-09 — Session 58: S3 conservative variant coordinate mapping
+- Added protein substitution-to-structure mapping over the existing exact, unique, contiguous chain correspondence primitive.
+- Enforced reference-residue agreement and explicit abstention for ambiguous, noncontiguous, missing or uncovered structure mappings.
+- Output is coordinate correspondence only; no mutation effect, stability, pathogenicity or clinical interpretation is claimed.
+- Added positive, abstention and invalid-input regression tests; exact-source CI required.

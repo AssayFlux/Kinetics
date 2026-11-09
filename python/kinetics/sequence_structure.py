@@ -153,3 +153,119 @@ def map_exact_chain_sequence(
             "This mapping is not evidence of variant effect or protein function.",
         ],
     }
+
+
+
+def map_variant_to_structure(
+    query_sequence: str,
+    atoms: Iterable[Atom],
+    *,
+    chain_id: str,
+    variant_position_1based: int,
+    reference_amino_acid: str,
+    alternate_amino_acid: str,
+    max_query_residues: int = 1_000_000,
+    max_structure_residues: int = 100_000,
+    max_atoms: int = 2_000_000,
+) -> dict[str, object]:
+    """Map one protein substitution to a structure only through a unique exact chain match.
+
+    This reports coordinate correspondence only. It does not predict structural,
+    functional, pathogenic or clinical effect.
+    """
+    if (
+        isinstance(variant_position_1based, bool)
+        or not isinstance(variant_position_1based, int)
+        or variant_position_1based < 1
+    ):
+        raise ValueError("variant_position_1based must be a positive integer")
+    if (
+        not isinstance(reference_amino_acid, str)
+        or len(reference_amino_acid) != 1
+        or reference_amino_acid not in THREE_TO_ONE.values()
+    ):
+        raise ValueError("reference_amino_acid must be one canonical amino-acid letter")
+    if (
+        not isinstance(alternate_amino_acid, str)
+        or len(alternate_amino_acid) != 1
+        or alternate_amino_acid not in THREE_TO_ONE.values()
+    ):
+        raise ValueError("alternate_amino_acid must be one canonical amino-acid letter")
+    if alternate_amino_acid == reference_amino_acid:
+        raise ValueError("Reference and alternate amino acids must differ")
+    query = "".join(query_sequence.split()).upper() if isinstance(query_sequence, str) else ""
+    if not query or variant_position_1based > len(query):
+        raise ValueError("Variant position is outside the query protein sequence")
+    observed_reference = query[variant_position_1based - 1]
+    if observed_reference != reference_amino_acid:
+        raise ValueError(
+            f"Variant reference amino acid {reference_amino_acid} does not match query "
+            f"residue {observed_reference} at position {variant_position_1based}"
+        )
+
+    mapping = map_exact_chain_sequence(
+        query,
+        atoms,
+        chain_id=chain_id,
+        max_query_residues=max_query_residues,
+        max_structure_residues=max_structure_residues,
+        max_atoms=max_atoms,
+    )
+    if mapping["status"] != "exact_unique_match":
+        return {
+            "schema": "kinetics.structure-variant-map.v1",
+            "status": "abstained",
+            "mapping_status": mapping["status"],
+            "variant": {
+                "position_1based": variant_position_1based,
+                "reference": reference_amino_acid,
+                "alternate": alternate_amino_acid,
+            },
+            "mapped_residue": None,
+            "limitations": [
+                "Variant-to-structure mapping requires a unique contiguous exact chain match.",
+                "No structural, functional, pathogenic or clinical effect is inferred.",
+            ],
+        }
+
+    mapped = next(
+        (
+            item for item in mapping["mapped_residues"]
+            if item["query_position_1based"] == variant_position_1based
+        ),
+        None,
+    )
+    if mapped is None:
+        return {
+            "schema": "kinetics.structure-variant-map.v1",
+            "status": "not_covered_by_structure",
+            "mapping_status": mapping["status"],
+            "variant": {
+                "position_1based": variant_position_1based,
+                "reference": reference_amino_acid,
+                "alternate": alternate_amino_acid,
+            },
+            "mapped_residue": None,
+            "limitations": [
+                "The exact structure chain does not cover the requested query position.",
+                "No structural, functional, pathogenic or clinical effect is inferred.",
+            ],
+        }
+    return {
+        "schema": "kinetics.structure-variant-map.v1",
+        "status": "mapped_coordinate_only",
+        "mapping_status": mapping["status"],
+        "mapping_quality": "unique_contiguous_exact_sequence",
+        "variant": {
+            "position_1based": variant_position_1based,
+            "reference": reference_amino_acid,
+            "alternate": alternate_amino_acid,
+        },
+        "mapped_residue": mapped,
+        "limitations": [
+            "This is coordinate correspondence only, not a mutation model.",
+            "No side-chain rebuilding, energy calculation, stability prediction or interface effect is performed.",
+            "No pathogenicity, clinical significance or biological function is inferred.",
+            "Insertion codes are not retained by the current atom model.",
+        ],
+    }

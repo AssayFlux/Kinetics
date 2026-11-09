@@ -91,3 +91,11 @@ Every S increment must be tested against the exact commit. Host tests are regres
 - Manifest reads remain capped at `max_manifest_bytes + 1` to detect overflow without loading an unbounded file.
 - Added regression tests for manifest symlinks, oversized manifests and bounded FASTA hashing.
 - Residual boundary: this protects local file ingestion on supported host filesystems; it does not establish a sandbox against privileged concurrent mutation, malicious kernel/filesystem behavior, or Android SAF document-provider semantics.
+
+
+### S3 — Variant-to-structure coordinate mapping foundation
+- Added `map_variant_to_structure`, which maps a protein substitution only when the structure chain has a unique, contiguous exact sequence match and the reference residue agrees with the query sequence.
+- Ambiguous, gapped, missing or uncovered mappings abstain explicitly.
+- The output records the query position, reference/alternate amino acids and corresponding structure residue number. It is coordinate correspondence only.
+- No side-chain mutation modelling, stability/energy scoring, interface-effect prediction, pathogenicity or clinical interpretation is implemented.
+- Interface/pocket analysis remains gated on complete atom chemistry, validated structure inputs and independent reference benchmarks.

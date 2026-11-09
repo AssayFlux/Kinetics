@@ -2310,3 +2310,22 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Hardened genetic-code and ORF entry points to accept only integer NCBI table identifiers, explicitly rejecting booleans/floats/strings.
 - Added regression cases for both APIs. No genetic-code inference is implemented.
 - Exact-source CI required.
+
+
+## 2026-11-09 — Session 64: S1 Android viewer handoff, S5 SAF export and S7 bounded candidate work
+
+### Done
+- Integrated Android SAF PDB/ENT/CIF/mmCIF import with bounded 16 MiB reads, strict UTF-8 decoding and the Python structure parser/provenance path.
+- Integrated the dependency-free renderer through a packaged local WebView asset origin with network, file/content access and mixed-content restrictions; navigation is constrained and no generic JavaScript bridge is exposed.
+- Added Android SAF JSON session export through `CreateDocument`; it exports the validated payload and provenance and explicitly remains `not_rendered`.
+- Added the S7 six-frame ORF candidate-evaluation ceiling (1,000,000 total) and a nested-start regression test; documented the 24 explicitly supported S8 translation tables and exclusion of context-dependent table 31.
+- Corrected the S audit matrix to distinguish completed Android integration from still-open physical-device, PNG/SVG and persisted-view-state work.
+
+### Validation and limits
+- CI #2200 and #2201 passed all five jobs on their exact commits.
+- CI #2202 passed Python foundation/registry/tests, scientific-reference, RDKit and SPDX jobs; Android arm64 packaging remained in progress at this log update.
+- CI #2204 on the audit/test commit was pending; the nested-start test is not counted as CI-verified until that exact run passes.
+- No physical Android device, screenshots, accessibility audit, memory/latency benchmark, PNG/SVG renderer, biological annotation truth set, licensed prediction model or wet-lab validation is available here.
+
+### Next step
+- Verify CI #2202 Android packaging and CI #2204 exact-source regression suite; continue closing implementable S1–S10 software gaps while retaining external validation gates.

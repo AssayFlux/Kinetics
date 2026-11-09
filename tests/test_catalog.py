@@ -196,7 +196,7 @@ def test_pharmvar_tsv_rejects_duplicate_normalized_headers() -> None:
         "Variant Stop\tReference Allele\tVariant Allele\tVariant Type\n"
         "GENE*1\tGENE\tGENE\tNG_000001.1\t.\t.\tREFERENCE\t.\treference\n"
     )
-    with pytest.raises(ValueError, match="exactly nine"):
+    with pytest.raises(ValueError, match="duplicate column"):
         parse_pharmvar_tsv(
             tsv, source_release="fixture-1", expected_release="fixture-1",
             source_url="https://example.org/download",

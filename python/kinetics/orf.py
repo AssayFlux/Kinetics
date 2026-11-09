@@ -20,7 +20,11 @@ def find_orf_candidates(
     Coordinates are 0-based, half-open on the normalized input sequence. Nested
     starts are retained. Only canonical DNA/RNA is accepted; no code is inferred.
     """
-    if table_id not in GENETIC_CODES:
+    if (
+        isinstance(table_id, bool)
+        or not isinstance(table_id, int)
+        or table_id not in GENETIC_CODES
+    ):
         raise ValueError(f"Unsupported NCBI genetic code table: {table_id}")
     if (
         not isinstance(min_protein_length, int)

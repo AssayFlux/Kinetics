@@ -85,7 +85,11 @@ def translate_coding_sequence(
     internal stops; the initiator is represented as methionine and terminal stop
     is omitted. This function does not identify genes or infer the organism's code.
     """
-    if table_id not in GENETIC_CODES:
+    if (
+        isinstance(table_id, bool)
+        or not isinstance(table_id, int)
+        or table_id not in GENETIC_CODES
+    ):
         raise ValueError(f"Unsupported NCBI genetic code table: {table_id}")
     if not isinstance(frame, int) or isinstance(frame, bool) or frame not in (0, 1, 2):
         raise ValueError("frame must be the integer 0, 1 or 2")

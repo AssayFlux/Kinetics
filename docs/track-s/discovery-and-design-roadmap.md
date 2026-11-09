@@ -123,3 +123,8 @@ Every S increment must be tested against the exact commit. Host tests are regres
 - Added streaming contig summary statistics with N50/L50, total/longest/shortest lengths, canonical-base GC, ambiguous/N-base counts and short-contig counts.
 - Enforced record/base budgets, unique identifiers and DNA IUPAC validation.
 - This is assembly-summary QC only; gene/transcript annotation, contamination/completeness, eukaryotic splice models and functional annotation remain unimplemented pending reference datasets.
+
+
+#### S8 explicit genetic-code table identifier hardening
+- Translation and ORF scanning now reject boolean, floating-point and string table identifiers instead of allowing Python's bool/int equality to select a table implicitly.
+- The supported NCBI tables remain explicitly caller-selected; no genetic-code inference is introduced.

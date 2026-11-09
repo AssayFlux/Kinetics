@@ -66,3 +66,9 @@ def test_cds_rejects_invalid_start_stop_and_internal_stop() -> None:
 
 def test_genetic_code_table_ids_are_explicit_and_limited() -> None:
     assert set(GENETIC_CODES) == {1, 2, 4, 5, 11}
+
+
+@pytest.mark.parametrize("table_id", [True, 1.0, "1"])
+def test_translation_rejects_non_integer_or_boolean_table_ids(table_id: object) -> None:
+    with pytest.raises(ValueError, match="Unsupported NCBI"):
+        translate_coding_sequence("ATG", table_id=table_id)

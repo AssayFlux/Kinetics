@@ -2304,3 +2304,9 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Added unique-ID, IUPAC DNA and record/base resource-limit checks.
 - Explicitly does not claim assembly completeness, contamination screening or gene annotation.
 - Added synthetic regression tests; exact-source CI required.
+
+
+## 2026-11-09 — Session 63: S8 genetic-code selector validation
+- Hardened genetic-code and ORF entry points to accept only integer NCBI table identifiers, explicitly rejecting booleans/floats/strings.
+- Added regression cases for both APIs. No genetic-code inference is implemented.
+- Exact-source CI required.

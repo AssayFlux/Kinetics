@@ -50,3 +50,9 @@ def test_orf_scan_enforces_limits_and_rejects_ambiguous_sequence() -> None:
         find_orf_candidates("ATGATG", max_open_starts=1)
     with pytest.raises(ValueError, match="positive integer"):
         find_orf_candidates("ATG", max_open_starts=0)
+
+
+@pytest.mark.parametrize("table_id", [True, 11.0, "11"])
+def test_orf_scan_rejects_non_integer_or_boolean_table_ids(table_id: object) -> None:
+    with pytest.raises(ValueError, match="Unsupported NCBI"):
+        find_orf_candidates("ATGAAATAA", table_id=table_id)

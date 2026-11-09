@@ -136,3 +136,11 @@ Every S increment must be tested against the exact commit. Host tests are regres
 - Enforces pack-byte, motif-count, query-residue, comparison and hit budgets; rejects duplicate JSON keys, duplicate motif IDs and invalid alphabets.
 - Reports exact 1-based match coordinates and motif-pack provenance. A match does not infer family/function; a no-match does not establish novelty.
 - This is a reusable motif-evidence primitive, not a curated motif database, motif-discovery engine, profile-HMM, homology search or calibrated classifier.
+
+
+#### S3/S9 — Bounded alignment-aware coordinate mapping
+- Added a semi-global linear-gap alignment mapper for a complete observed structure chain against a query-sequence subsequence.
+- Query terminal overhangs are free; internal gaps are scored. Only identical aligned residue pairs are mapped.
+- Counts optimal traceback paths (capped at two) and abstains on tied placements/tracebacks rather than choosing an arbitrary coordinate mapping.
+- Enforces sequence, atom, residue and dynamic-programming cell budgets, plus caller-selected identity and structure-coverage thresholds.
+- This is coordinate correspondence only, not a calibrated homology/family classifier, mutation model or functional predictor. Insertion codes and alternate locations remain unsupported by the current atom model.

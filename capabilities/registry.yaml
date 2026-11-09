@@ -243,6 +243,12 @@ tools:
     implementation: python/kinetics/protein_motifs.py
     evidence_level: none
 
+  - id: structure.alignment_coordinate_mapping
+    name: Bounded semi-global sequence-to-structure alignment with ambiguity abstention
+    status: implemented
+    implementation: python/kinetics/structure_alignment.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

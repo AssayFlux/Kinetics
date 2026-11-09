@@ -1745,3 +1745,21 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Pinned host RDKit reference fixture remains a basic sanity comparison, not an independent chemistry benchmark.
 - Exact-source CI for the P1/R4 and I1 changes remains pending; no green result is claimed here.
 - RDKit is not packaged in Android; no ADMET, biological activity, docking, PK/PD or clinical claim is made.
+
+
+## 2026-11-09 — Session 30: S1 structure payload boundary hardening
+
+**Objective:** Harden the offline viewer data boundary while renderer and WebView dependencies remain under license/security review.
+
+### Documents and code reviewed
+- Re-read the North Star, roadmap, decision log, latest session log, S1 viewer contract, S-track discovery roadmap, payload JSON Schema, structure payload implementation/tests and Android/CI constraints.
+- Confirmed S1 currently produces a bounded coordinate payload but the serializer only checked the schema version and could serialize internally inconsistent payloads.
+
+### Implemented
+- Added strict payload validation before serialization: exact top-level and atom fields, supported source format, Angstrom units, atom-count consistency and bounds, non-empty limitation text, unique non-negative integer atom serials, non-negative residue numbers, bounded text annotations, normalized element labels and finite numeric XYZ coordinates.
+- Added regression tests for mismatched counts, non-finite coordinates, duplicate serials, unexpected top-level fields and invalid metadata types.
+- Updated S1 roadmap and viewer contract.
+
+### Evidence boundary
+- This is a validated serialization boundary in source/tests only; no Mol*/3Dmol.js renderer, offline bundle, WebView bridge, license approval or device rendering is claimed.
+- Exact-source CI remains pending; no green result is claimed.

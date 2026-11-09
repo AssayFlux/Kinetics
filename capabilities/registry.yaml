@@ -46,6 +46,11 @@ tools:
     status: implemented
     implementation: python/kinetics/genomics.py
     evidence_level: none
+  - id: variant.reference_checked_normalization
+    name: Build-pinned reference-checked small-variant normalization
+    status: implemented
+    implementation: python/kinetics/variant_reference.py
+    evidence_level: none
   - id: protein.descriptors
     name: Protein composition, mass, hydropathy and estimated pI
     status: implemented

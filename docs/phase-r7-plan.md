@@ -40,3 +40,10 @@ Added deterministic, seeded alignment-column resampling for Jukes-Cantor + neigh
 - The pinned host scientific-reference job passed its Michaelis–Menten/SciPy comparison and genetic-code/Biopython comparison steps. These are bounded synthetic/software-reference checks, not independent experimental validation.
 - Android ARM64 debug APK/AAB packaging, static package/ELF alignment checks and `:app:testDebugUnitTest` passed. APK: 69,875,151 bytes, SHA-256 `059abb9e3a299b5295b8f08772b976195d7be1cd7db46dce34faa7bcf486d2d9`; AAB: 39,952,539 bytes, SHA-256 `9c8e2ca3a81c4ef2b1fb041aefee99ace5cbfb3292574b815c6a87549210044e`.
 - Boundaries: no emulator or physical-device installation/runtime evidence; no Android migration/WorkManager/SAF instrumentation; no end-to-end on-device Chaquopy run; no R5 independent structure concordance, R6 approved-engine chemistry concordance, R7 published tree concordance, R8 null/power/FDR calibration, or R9 authoritative licensed PGx content. R10 security/licence/release gates remain open.
+
+
+## Host-side neighbour-joining reference comparison — 2026-11-09
+
+Added `validation/phylo_biopython_reference.py` to compare the local neighbour-joining implementation against Biopython 1.88's independent `DistanceTreeConstructor.nj` on a deterministic additive four-taxon distance matrix with unequal terminal branches. The harness compares all six patristic pair distances with a 1e-8 tolerance, asserts leaf identity and fails CI if any comparison differs.
+
+This is synthetic algorithm/software concordance, not a published phylogeny or biological evolutionary validation. It does not validate sequence search, maximum-likelihood/Bayesian inference, model selection, rate heterogeneity, real alignment uncertainty, large-tree scaling, viewers or node security.

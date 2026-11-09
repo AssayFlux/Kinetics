@@ -73,9 +73,11 @@ jobs:
         run: PYTHONPATH=python python validation/genetic_code_biopython_reference.py > genetic-code-reference-result.json
       - name: Compare PDB parsing, contacts and superposed RMSD with Biopython and NumPy
         run: PYTHONPATH=python python validation/structure_biopython_reference.py > structure-biopython-reference-result.json
+      - name: Compare neighbour-joining tree distances with Biopython
+        run: PYTHONPATH=python python validation/phylo_biopython_reference.py > phylo-biopython-reference-result.json
       - name: Assert scientific reference comparisons passed
         run: |
-          python -c "import json; paths=['kinetics-scipy-reference-result.json','genetic-code-reference-result.json','structure-biopython-reference-result.json']; results=[json.load(open(p, encoding='utf-8')) for p in paths]; failures=[r.get('validation_id', p) for p,r in zip(paths,results) if not r.get('overall_pass', False)]; assert not failures, f'Reference validation failed: {failures}'"
+          python -c "import json; paths=['kinetics-scipy-reference-result.json','genetic-code-reference-result.json','structure-biopython-reference-result.json','phylo-biopython-reference-result.json']; results=[json.load(open(p, encoding='utf-8')) for p in paths]; failures=[r.get('validation_id', p) for p,r in zip(paths,results) if not r.get('overall_pass', False)]; assert not failures, f'Reference validation failed: {failures}'"
       - name: Upload synthetic numerical and codon-table comparison records
         uses: actions/upload-artifact@v4
         with:
@@ -84,6 +86,7 @@ jobs:
             kinetics-scipy-reference-result.json
             genetic-code-reference-result.json
             structure-biopython-reference-result.json
+            phylo-biopython-reference-result.json
           if-no-files-found: error
           retention-days: 90
 

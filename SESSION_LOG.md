@@ -2051,3 +2051,23 @@ Audit current Compose screens, token generator, settings persistence and asset i
 
 ### Next
 - Validate the exact-source RDKit host job and continue R6 against an owner-approved reference corpus and engine/license feasibility decision.
+
+
+## 2026-11-09 — Session 42: Add independent phylogenetic NJ reference harness
+
+### Reviewed
+- Re-read the R7 phylogenetics scope, neighbour-joining implementation, Newick/tree-distance tests and pinned Biopython reference environment.
+- Confirmed existing tests checked selected additive three-taxon distances but did not compare the local NJ implementation with an independent tree-construction package in CI.
+
+### Implemented
+- Added a deterministic four-taxon additive distance matrix with unequal terminal branches.
+- Added a Biopython 1.88 NJ reference tree and compared all six patristic pair distances against Kinetics with a 1e-8 tolerance.
+- Added fail-closed output and CI artifact upload alongside the existing scientific-reference records.
+- Documented the synthetic-only evidence boundary in the R7 plan and validation README.
+
+### Verification boundary
+- Exact-source CI must pass before this check is counted as executed.
+- This does not establish published phylogeny concordance, model-based inference, evolutionary interpretation, search/viewer functionality or device performance.
+
+### Next
+- Validate the exact-source run, then extend R7 with a frozen licensed reference alignment/tree set and documented topology/branch tolerances.

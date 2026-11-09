@@ -94,9 +94,18 @@ def test_rdkit_backend_uses_sanitized_molecules_and_morgan_fingerprints() -> Non
     from kinetics.chemistry_rdkit import analyze_smiles, morgan_tanimoto
 
     ethanol = analyze_smiles("CCO")
+    from hashlib import sha256
+
     assert ethanol["engine"] == "RDKit"
     assert ethanol["formula"] == "C2H6O"
     assert ethanol["morgan_fingerprint"]["algorithm"] == "Morgan"
+    provenance = ethanol["input_provenance"]
+    assert provenance["sha256_utf8"] == sha256(b"CCO").hexdigest()
+    assert provenance["utf8_bytes"] == 3
+    assumptions = ethanol["representation_assumptions"]
+    assert assumptions["protonation"] == "input state retained; no protonation adjustment"
+    assert assumptions["tautomer"] == "input tautomer retained; no tautomer canonicalization"
+    assert assumptions["molecular_weight_unit"] == "Da"
     assert morgan_tanimoto("CCO", "CCO") == pytest.approx(1.0)
     assert morgan_tanimoto("CCO", "CC") < 1.0
 

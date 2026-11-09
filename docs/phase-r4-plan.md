@@ -36,3 +36,7 @@ Independent fixtures and cross-tool concordance; malformed/large-file tests; det
 ### Imported FASTA QC execution path — 2026-11-09 (R Step 1)
 
 The Explore FASTA text-card remains a bounded convenience path. A second path now connects an already imported, authenticated FASTA research job to a WorkManager worker and durable analysis-result record. The worker applies 1 MB input bounds, uses the registered `analyze_fasta` Python adapter, persists result JSON with the exact source import digest and tool parameters, and exposes the saved result on the Home/Work job card. FASTQ is not automatically dispatched: explicit Phred offset selection remains mandatory. An analysis-result JSON export includes the tool identity, parameters, exact source SHA-256, result and scope note, while excluding private URI/path metadata. The latest integration commit still requires exact-source CI and device verification.
+
+
+### R Step 2 CI boundary — 2026-11-09
+The imported FASTA analysis worker and result/export UI compiled into the ARM64 APK/AAB and passed Android JVM unit tests at commit `fc8b667` (CI #2093). The follow-on result-integrity/preview patch `2ea1027` is awaiting exact-source CI. The build confirms packaging and compilation, not successful on-device Chaquopy invocation or scientific reference validation of FASTA QC.

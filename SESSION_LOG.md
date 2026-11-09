@@ -1904,3 +1904,18 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Worker validates both record_count and a non-empty records array and rejects results above the 2 MB persistence cap before storage.
 - Job-card result preview is capped at 12,000 characters; the complete version remains available through the explicit SAF JSON export action, avoiding multi-megabyte Compose text rendering.
 - CI for the preceding integration revision passed the arm64 APK/AAB build, Android JVM unit tests and artifact verification; this latest audit patch now requires its own CI run.
+
+
+## 2026-11-09 — R Step 2: exact-source integration verification and final audit patch
+
+### Verified revision
+- Commit `fc8b667951626447d951931bbfd1f901867405be`, CI run #2093: all five workflow jobs passed.
+- ARM64 debug APK and AAB built; APK ZIP/native ELF alignment checks passed; Android JVM unit tests passed; artifacts and hashes recorded in `docs/ci-build-evidence.md`.
+- APK SHA-256: `29db7d4014eeba7e6ab0ac57465c636f74cddbfe3b673a19c5e355c1b5e9387b`.
+- AAB SHA-256: `24ce93b67a3eeb1946e1e2c51ef181032422a637cd6f595d9716eef737b8c607`.
+
+### Follow-on audit commit
+- Commit `2ea102719fc37354f18def85bb329a60a885ee2a`: require current job SHA-256 equality when exporting analysis, reject malformed/empty/oversized QC results before storage, and cap Compose preview to 12,000 characters.
+- Exact-source CI run #2094 is pending. Step 2 cannot be accepted until that run succeeds.
+- Still not tested: SQLite migration/recovery under Android runtime, WorkManager interruption/retry, SAF provider cleanup on actual providers, full instrumentation/UI flow, emulator/physical device launch, Chaquopy execution on device and performance.
+- No R-track completion claim is made from this base vertical slice.

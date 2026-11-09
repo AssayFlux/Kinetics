@@ -27,3 +27,27 @@
 - Host reference comparisons establish agreement with selected pinned software fixtures only.
 
 D-016 requires every substantial increment to be built, regression-tested and inspected. Record exact source SHA, workflow, toolchain, artifact hashes, test results and device details; unavailable evidence remains NOT RUN or BLOCKED.
+
+
+## R-track imported FASTA analysis integration — 2026-11-09
+
+### Exact-source CI evidence (integration revision before final audit patch)
+- Source commit: `fc8b667951626447d951931bbfd1f901867405be`.
+- Workflow: [run #2093 — successful](https://github.com/AssayFlux/Kinetics/actions/runs/42551582986).
+- All five jobs passed: Python foundation/registry/tests; pinned host scientific-reference comparisons; pinned host RDKit descriptor sanity fixtures; Android ARM64 debug APK/AAB build, package checks and JVM unit tests; declared source dependency SPDX inventory.
+- Android Gradle build: `BUILD SUCCESSFUL`; `:app:testDebugUnitTest` — `BUILD SUCCESSFUL`; APK ZIP alignment and native ELF alignment checks passed.
+- APK: 69,875,191 bytes; SHA-256 `29db7d4014eeba7e6ab0ac57465c636f74cddbfe3b673a19c5e355c1b5e9387b`.
+- AAB: 39,951,888 bytes; SHA-256 `24ce93b67a3eeb1946e1e2c51ef181032422a637cd6f595d9716eef737b8c607`.
+- Workflow artifact ZIP: 80,045,596 bytes; SHA-256 `d79ef58563583f5c7f3ce0b45cbefa53f9a91c86b98b1076a8f22531d52b276c`; artifact ID `13645517097`. This digest is for the uploaded ZIP, not the APK/AAB.
+- The successful build contains the imported FASTA WorkManager worker, schema-v4 durable analysis result, SHA-256 provenance, job-card inspection and SAF analysis JSON export.
+- This evidence is for `fc8b667`, not the subsequent audit patch `2ea1027`. The latter has a separate CI run pending at the time of this entry.
+
+### Final R Step 2 audit changes awaiting CI
+- Analysis export now requires current job state `succeeded` and exact equality between the current job digest and analysis-record digest.
+- Worker checks non-empty record list and caps serialized output at 2,000,000 characters before persistence.
+- Job-card preview is limited to 12,000 characters; full JSON is available via explicit export.
+
+### Verification boundaries
+- JVM test task is green for `fc8b667`; no dedicated SQLite migration, analysis worker lifecycle, SAF provider failure, process-death or instrumentation test has yet been added for this vertical slice.
+- No emulator or physical-device installation/runtime test is recorded. CI artifact existence is not device acceptance.
+- No independent experimental validation or clinical suitability is implied.

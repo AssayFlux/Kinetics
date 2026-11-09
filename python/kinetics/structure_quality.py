@@ -237,8 +237,6 @@ def backbone_torsion_angles(
         for index, (key, current) in enumerate(chain_residues):
             previous = chain_residues[index - 1] if index > 0 else None
             following = chain_residues[index + 1] if index + 1 < len(chain_residues) else None
-            contiguous_previous = previous is not None and previous[0][1] + 1 == key[1]
-            contiguous_next = following is not None and key[1] + 1 == following[0][1]
             phi = None
             psi = None
             if (

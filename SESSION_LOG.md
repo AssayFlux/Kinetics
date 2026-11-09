@@ -1872,3 +1872,8 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### R Step 1 integration correction — 2026-11-09
 - Source review after the first integration commit found two wiring defects before CI: a missing comma in the recent-jobs SQL projection and the Work screen not forwarding the new analysis callback. Both are corrected in the next commit.
 - This is exactly why the two-step plan includes a dedicated audit/repair pass; no acceptance is claimed until exact-source CI passes.
+
+
+### R Step 1 documentation sync — 2026-11-09
+- Updated the R2 and R4 phase plans and roadmap to describe the new authenticated imported-FASTA → WorkManager → bounded QC → SHA-256-linked durable result → job-card inspection path.
+- Remaining work is explicitly retained for R Step 2; no R-track completion percentage or acceptance is recorded until the exact-source audit and tests close.

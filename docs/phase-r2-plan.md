@@ -94,3 +94,10 @@ Added a user-mediated Storage Access Framework CreateDocument export path for co
 ### SAF export failure cleanup — 2026-11-08
 
 The Android export flow now opens newly created SAF destinations in truncate mode and, if authenticated decryption/hash verification or stream writing fails, attempts to delete the incomplete document through `DocumentsContract.deleteDocument`. The UI reports whether the provider confirmed deletion. If the provider does not support deletion, it explicitly warns that a partial destination may remain and must be removed manually before retrying. This is best-effort provider-dependent cleanup, not a guarantee of secure erasure or universal SAF rollback. Device/provider tests remain outstanding.
+
+
+### Imported FASTA QC vertical slice — 2026-11-09 (R Step 1)
+
+A completed, hash-verified FASTA import can now launch a unique WorkManager analysis job from its Home/Work job card. The worker authenticates/decrypts the stored KDAT input through the existing private-cache helper, enforces a 1 MB byte/character bound, runs the local FASTA QC adapter, removes the temporary plaintext in a `finally` path, and transactionally persists the JSON result with tool/version, explicit parameters, source SHA-256 and timestamp in schema v4 `analysis_results`. Saved result JSON is inspectable from the job card. The worker deliberately rejects FASTQ because Phred+33/64 must be selected explicitly by the user.
+
+This is an initial R2→R4 integration slice, not the full R2 exit: analysis-result SAF export, lifecycle/migration/recovery tests, result rendering, larger-file streaming, UI error/retry states, exact-source CI and device/provider tests remain to be completed in R Step 2.

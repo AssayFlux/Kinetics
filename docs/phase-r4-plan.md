@@ -31,3 +31,8 @@
 
 ## Exit evidence
 Independent fixtures and cross-tool concordance; malformed/large-file tests; deterministic provenance; measured runtime/memory; offline Android integration and device evidence; license review. No capability is marked validated until its evidence record is committed.
+
+
+### Imported FASTA QC execution path — 2026-11-09 (R Step 1)
+
+The Explore FASTA text-card remains a bounded convenience path. A second path now connects an already imported, authenticated FASTA research job to a WorkManager worker and durable analysis-result record. The worker applies 1 MB input bounds, uses the registered `analyze_fasta` Python adapter, persists result JSON with the exact source import digest and tool parameters, and exposes the saved result on the Home/Work job card. FASTQ is not automatically dispatched: explicit Phred offset selection remains mandatory. This slice has not yet passed exact-source CI or device verification.

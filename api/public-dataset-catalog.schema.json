@@ -88,8 +88,55 @@
           },
           "notes": {
             "type": "string"
+          },
+          "license_review": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reviewer",
+              "reviewed_at",
+              "approved_scope",
+              "evidence_url"
+            ],
+            "properties": {
+              "reviewer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reviewed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "approved_scope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_url": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "license_review_status": {
+                  "const": "approved_for_research"
+                }
+              },
+              "required": [
+                "license_review_status"
+              ]
+            },
+            "then": {
+              "required": [
+                "license_review"
+              ]
+            }
+          }
+        ]
       }
     },
     "candidate_sources": {

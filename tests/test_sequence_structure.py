@@ -149,7 +149,7 @@ def test_variant_mapping_abstains_for_ambiguous_or_uncovered_positions() -> None
     [
         ({"variant_position_1based": True}, "positive integer"),
         ({"reference_amino_acid": "Z"}, "canonical"),
-        ({"alternate_amino_acid": "S"}, "must differ"),
+        ({"alternate_amino_acid": "A"}, "must differ"),
     ],
 )
 def test_variant_mapping_rejects_invalid_variant_inputs(kwargs, message: str) -> None:

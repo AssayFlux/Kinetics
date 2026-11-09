@@ -117,3 +117,22 @@ def export_structure_viewer_session(source_text: str, source_format: str) -> str
         result["payload"],
         parser_version="kinetics-structure-parser-v1",
     )
+
+
+def prepare_structure_viewer_import(source_text: str, source_format: str) -> str:
+    """Parse once and return viewer payload, provenance and bounded session export."""
+    import json
+
+    from kinetics.structure_view import (
+        build_structure_session_export,
+        prepare_structure_viewer_source as prepare,
+    )
+
+    source_bytes = source_text.encode("utf-8")
+    result = prepare(source_text, source_format=source_format)
+    result["session_export_json"] = build_structure_session_export(
+        source_bytes,
+        result["payload"],
+        parser_version="kinetics-structure-parser-v1",
+    )
+    return json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":"))

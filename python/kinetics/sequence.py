@@ -105,7 +105,7 @@ def iter_fastq_records(
             sequence_chunks.append(chunk)
         if plus_line is None:
             raise ValueError(f"FASTQ record {identifier!r}: missing '+' separator")
-        plus_identifier = plus_line[1].strip().split(maxsplit=1)
+        plus_identifier = plus_line[1][1:].strip().split(maxsplit=1)
         if plus_identifier and plus_identifier[0] != identifier:
             raise ValueError(f"FASTQ record {identifier!r}: separator identifier mismatch")
         sequence = "".join(sequence_chunks)

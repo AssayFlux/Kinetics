@@ -394,14 +394,29 @@ def chain_interface_contacts(
                         entry["atom_contact_count"] = contact_count + 1
                         entry["minimum_distance_angstrom"] = min(current_minimum, distance)
 
-    def contact_sort_key(item: dict[str, object]) -> tuple[int, float]:
+    def contact_sort_key(item: dict[str, object]) -> tuple[int, float, int, str, int, str]:
         contact_count = item["atom_contact_count"]
         minimum_distance = item["minimum_distance_angstrom"]
-        if not isinstance(contact_count, int) or not isinstance(minimum_distance, (int, float)):
+        residue_a = item["residue_a"]
+        residue_name_a = item["residue_name_a"]
+        residue_b = item["residue_b"]
+        residue_name_b = item["residue_name_b"]
+        if (
+            not isinstance(contact_count, int)
+            or not isinstance(minimum_distance, (int, float))
+            or not isinstance(residue_a, int)
+            or not isinstance(residue_name_a, str)
+            or not isinstance(residue_b, int)
+            or not isinstance(residue_name_b, str)
+        ):
             raise RuntimeError("Internal interface-contact result is malformed")
-        return contact_count, -float(minimum_distance)
+        # Explicit residue tie-breakers make output independent of atom input order.
+        return (
+            -contact_count, float(minimum_distance),
+            residue_a, residue_name_a, residue_b, residue_name_b,
+        )
 
-    contacts = sorted(pairs.values(), key=contact_sort_key, reverse=True)
+    contacts = sorted(pairs.values(), key=contact_sort_key)
     return {
         "schema": "kinetics.chain-interface-contacts.v1",
         "chain_a": chain_a,

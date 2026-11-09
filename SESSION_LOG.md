@@ -1699,3 +1699,29 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Obtain green exact-source CI for this metadata gate.
 - Add versioned non-patient synthetic genotype/variant fixtures and build/coordinate/allele-normalization contracts without clinical interpretation.
 - Keep external datasets out of the repository until exact release, licence and intended-use reviews are documented.
+
+
+## 2026-11-09 — Session 28: Build-pinned synthetic reference contract (P1/R4)
+
+**Objective:** Continue P-track public-data preparation and strengthen R4's reference identity/coordinate provenance without admitting external or patient data.
+
+### Documents and code reviewed
+- Re-read the North Star, roadmap, decision log, session history, P-track preparation and catalogue policy, R4 plan, public dataset schema, registry, Python CI workflow and affected genomics parser/tests.
+- Confirmed that the existing R4 small-variant normalizer checks REF against a supplied sequence but did not bind that sequence to a named assembly/release/contig, coordinate convention or digest.
+
+### Implemented
+- Added immutable `ReferenceSequence` metadata with assembly, accession, release, contig, 1-based-closed coordinates, retrieval timestamp, explicit synthetic non-patient classification and SHA-256 verification over uppercase ASCII sequence bytes.
+- Added `normalize_against_reference`, which verifies reference identity and contig before calling the existing literal biallelic normalizer and carries reference metadata into the output.
+- Explicitly records `interpretation_performed: false`; no transcript mapping, phasing, pathogenicity, PGx matching or clinical interpretation is performed.
+- Added synthetic regression tests for successful left normalization/provenance, digest tampering, invalid coordinate conventions, patient classification, malformed sequence/timestamp, contig mismatch and REF mismatch.
+- Registered the capability with evidence level `none`, exported the public API and updated P/R4 documentation.
+
+### Evidence boundary
+- Exact-source CI is pending; no test/build success is claimed in this log.
+- The fixture is synthetic and does not represent GRCh37, GRCh38, T2T or any authoritative assembly.
+- External reference-pack acquisition, licence review, full assembly/contig validation, independent normalizer concordance, Android integration and clinical interpretation remain unimplemented.
+
+### Next
+- Resolve any exact-source CI findings.
+- Extend non-clinical synthetic VCF fixtures to validate build/contig/coordinate/allele provenance end to end.
+- Continue R/S/I/P dependency-safe vertical slices; do not claim a track complete until all its exit evidence exists.

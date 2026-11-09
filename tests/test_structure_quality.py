@@ -14,7 +14,7 @@ def test_geometry_metrics_report_clashes_without_assigning_quality_grade() -> No
     result = structure_geometry_metrics([
         atom(1, "A", 1, 0.0),
         atom(2, "B", 2, 1.0),
-        atom(3, "A", 1, 0.5),
+        atom(3, "A", 1, 20.0),
     ])
     assert result["atom_count"] == 3
     assert result["residue_count"] == 2
@@ -33,7 +33,7 @@ def test_geometry_metrics_exclude_unknown_elements_and_bound_candidate_work() ->
     assert result["unassessed_element_counts"] == {"XX": 1}
     with pytest.raises(ValueError, match="max_candidate_pairs"):
         structure_geometry_metrics(
-            [atom(1, "A", 1, 0.0), atom(2, "B", 2, 1.0)],
+            [atom(1, "A", 1, 0.0), atom(2, "B", 2, 1.0), atom(3, "C", 3, 2.0)],
             max_candidate_pairs=1,
         )
 

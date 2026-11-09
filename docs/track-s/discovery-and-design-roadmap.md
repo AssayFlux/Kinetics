@@ -9,7 +9,7 @@ Turn Kinetics into a research workbench that can investigate unfamiliar DNA/RNA/
 ## Work packages
 
 ### S6 — Sequence intelligence and unknown-sequence triage
-- Accept large FASTA/FASTQ and annotated genome/contig inputs with streaming, bounded-memory parsing, provenance and format validation.
+- Accept large FASTA/FASTQ and annotated genome/contig inputs with streaming, bounded-memory parsing, provenance and format validation. A bounded streaming wrapped-FASTQ iterator is now implemented; full end-to-end workflow integration remains.
 - Detect likely coding regions, ORFs, splice-aware candidates where evidence permits, and report alternative hypotheses rather than one forced answer.
 - Search local, version-pinned gene/protein reference packs; support remote search only through an explicitly configured, consented node/service.
 - Provide similarity, domain, motif, conserved-region and family evidence with database/version, alignment coverage, identity, E-values or calibrated scores where applicable.

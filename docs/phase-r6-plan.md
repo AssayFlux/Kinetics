@@ -18,3 +18,15 @@ Implemented in `python/kinetics/chemistry.py`. Resource caps apply to substructu
 
 ## Exit evidence
 Reference SDF/SMILES corpus; concordance against an owner-approved engine; stereochemical and valence edge cases; deterministic descriptor/fingerprint definitions; adversarial resource-limit tests; license and Android ABI review.
+
+
+## Representation and provenance contract (2026-11-09)
+
+The optional RDKit adapter now returns a SHA-256 and UTF-8 byte count for the
+exact supplied SMILES/molblock text, with no pre-parser text normalization. Results
+also disclose canonical isomeric SMILES, RDKit sanitization/aromaticity, input
+protonation and tautomer retention (no adjustment/canonicalization), stereochemistry
+handling (unassigned centres are reported, not inferred), hydrogen handling and
+units (Da and Å²). This improves auditability but does not resolve tautomer,
+protonation, stereochemical or conformational ambiguity. The adapter remains
+host-only; Android packaging and independent chemistry validation remain open.

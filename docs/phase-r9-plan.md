@@ -39,3 +39,8 @@ Added a parser for PharmVar's documented nine-column TSV haplotype/variant forma
 ### PharmVar TSV parser hardening — 2026-11-09
 
 The nine-column importer now rejects duplicate/empty normalized header names, non-nine-column headers, and short/extra-width data rows instead of allowing DictReader to silently overwrite or discard fields. Added regression tests for malformed row widths, duplicate headers, ambiguous exact allele matches, phase/completeness abstention and reference-accession mismatch. This is parser integrity coverage only; it does not validate biological allele interpretation or supply authoritative PGx content.
+
+
+### NCBI gene_info strict row/date validation — 2026-11-09
+
+The streaming 16-column parser now requires exactly 16 tab-separated fields (not merely at least 16), preventing silent acceptance of schema drift or appended fields. Modification dates are parsed as real calendar dates rather than checked only for eight digits. Added regressions for extra columns and impossible dates. This remains source-file parser validation, not a complete NCBI release import or comprehensive catalogue coverage claim.

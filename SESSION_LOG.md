@@ -2213,3 +2213,11 @@ Audit current Compose screens, token generator, settings persistence and asset i
 - Corrected R8 plan scope to include the exploratory NB2 count GLM and numeric covariates, while documenting missing dispersion moderation, repeated-measures and robust inference.
 - Updated the Android feasibility record to distinguish passed host/Python/RDKit/SPDX jobs from the still-running Android job.
 - No phase exit is declared. R1 device/runtime feasibility and scientific validation remain open.
+
+
+## 2026-11-09 — Session 52: Harden NCBI Gene catalogue parsing
+
+- Changed gene_info row-width validation to require exactly 16 fields; extra fields are no longer silently discarded.
+- Validated modification dates as real YYYYMMDD calendar dates.
+- Added regression tests for appended columns and impossible dates.
+- Exact-source CI required before counting the tests as passed. No comprehensive NCBI release import or PGx clinical validation is implied.

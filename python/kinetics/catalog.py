@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import gzip
+from datetime import datetime
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Iterator
@@ -43,8 +44,8 @@ def iter_ncbi_gene_info(lines: Iterable[str], *, source_release: str) -> Iterato
         if not line or line.startswith("#"):
             continue
         fields = line.split("\t")
-        if len(fields) < 16:
-            raise ValueError(f"gene_info line {line_number}: expected all 16 NCBI columns")
+        if len(fields) != 16:
+            raise ValueError(f"gene_info line {line_number}: expected exactly 16 NCBI columns")
         (
             tax_id, gene_id, symbol, locus_tag, synonyms, dbxrefs, chromosome,
             map_location, description, gene_type, nomenclature_symbol,
@@ -53,8 +54,13 @@ def iter_ncbi_gene_info(lines: Iterable[str], *, source_release: str) -> Iterato
         ) = fields[:16]
         if not tax_id.isdigit() or not gene_id.isdigit() or not symbol or symbol == "-":
             raise ValueError(f"gene_info line {line_number}: invalid tax_id, GeneID or symbol")
-        if modification_date and (len(modification_date) != 8 or not modification_date.isdigit()):
-            raise ValueError(f"gene_info line {line_number}: invalid modification date")
+        if modification_date:
+            try:
+                datetime.strptime(modification_date, "%Y%m%d")
+            except ValueError as exc:
+                raise ValueError(
+                    f"gene_info line {line_number}: invalid modification date"
+                ) from exc
         yield GeneEntry(
             tax_id=tax_id,
             gene_id=gene_id,

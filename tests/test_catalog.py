@@ -280,3 +280,23 @@ def test_pharmvar_matching_requires_complete_phase_and_matching_accession() -> N
             "GENE", "NG_000002.1", [observed], definitions,
             phase_confirmed=True, call_complete=True,
         )
+
+
+
+def test_gene_info_rejects_extra_columns_instead_of_silently_ignoring_them() -> None:
+    row = "\t".join([
+        "9606", "1", "GENE1", "-", "-", "-", "-", "-", "description",
+        "protein-coding", "GENE1", "Gene one", "Official", "-", "20250101", "gene",
+        "unexpected-extra",
+    ])
+    with pytest.raises(ValueError, match="exactly 16"):
+        list(iter_ncbi_gene_info([row], source_release="fixture-1"))
+
+
+def test_gene_info_rejects_impossible_calendar_modification_date() -> None:
+    row = "\t".join([
+        "9606", "1", "GENE1", "-", "-", "-", "-", "-", "description",
+        "protein-coding", "GENE1", "Gene one", "Official", "-", "20250230", "gene",
+    ])
+    with pytest.raises(ValueError, match="invalid modification date"):
+        list(iter_ncbi_gene_info([row], source_release="fixture-1"))

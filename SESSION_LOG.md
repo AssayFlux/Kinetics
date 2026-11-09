@@ -2104,3 +2104,16 @@ Audit current Compose screens, token generator, settings persistence and asset i
 ### Evidence boundary
 - This is synthetic software concordance, not experimental structure validation. Real licensed structures, mmCIF semantics, SASA/interaction concordance, viewer and device benchmarks remain open.
 - R5 and the overall R track remain in progress; no S/I/P/G track work is started.
+
+
+## 2026-11-09 — Session 45: Correct R3 diagnostics inventory
+
+### Reviewed
+- Audited `fit_michaelis_menten`, `bootstrap_michaelis_menten` and their regression tests against the R3 exit criteria and roadmap statements.
+
+### Corrected
+- Updated the R3 plan to accurately record existing Gaussian-iid AIC/BIC, standardized residuals, leverage, Cook's distance, Durbin–Watson, residual sign runs, local Jacobian covariance/standard errors and identifiability condition-number output.
+- Kept the critical distinction: these are implemented, regression-tested descriptive diagnostics, not independently validated model-selection or uncertainty methods.
+
+### Still open
+- Independent experimental/reference datasets, unit validation, predeclared identifiability thresholds, uncertainty coverage simulations, broader model comparisons and Android device/runtime evidence.

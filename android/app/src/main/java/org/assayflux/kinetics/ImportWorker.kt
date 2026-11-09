@@ -20,18 +20,22 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
         val uri = Uri.parse(inputData.getString(KEY_URI) ?: return Result.failure())
         val store = ResearchStore(applicationContext)
         val stagingDirectory = File(applicationContext.noBackupFilesDir, "research-imports")
-            .apply { mkdirs() }
         val legacyPlaintextPartial = File(stagingDirectory, "$jobId.part")
-        if (legacyPlaintextPartial.exists() && !legacyPlaintextPartial.delete()) {
-            store.updateJob(jobId, "failed", message = "Legacy plaintext staging file could not be removed")
-            return Result.failure()
-        }
         val partial = File(stagingDirectory, "$jobId.encpart")
-        store.updateJob(jobId, "running")
-
         var byteCount = 0L
         var finalizedFile: File? = null
         return try {
+            check(stagingDirectory.isDirectory || stagingDirectory.mkdirs()) {
+                "Private import staging directory could not be created"
+            }
+            if (legacyPlaintextPartial.exists() && !legacyPlaintextPartial.delete()) {
+                store.updateJob(
+                    jobId, "failed",
+                    message = "Legacy plaintext staging file could not be removed",
+                )
+                return Result.failure()
+            }
+            store.updateJob(jobId, "running")
             val digest = MessageDigest.getInstance("SHA-256")
             val partialPrefixDigest = MessageDigest.getInstance("SHA-256")
             val chunkContext = "kinetics-import:$jobId"
@@ -160,6 +164,8 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
             }
             store.updateJob(jobId, state, bytes = byteCount, message = detail)
             Result.failure()
+        } finally {
+            store.close()
         }
     }
 

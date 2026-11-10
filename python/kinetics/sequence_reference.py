@@ -249,9 +249,12 @@ def local_alignment_reference_search(
     for name, value in integer_limits.items():
         if isinstance(value, bool) or not isinstance(value, int):
             raise ValueError(f"{name} must be an integer")
-        if name in {"match_score"}:
+        if name == "match_score":
             if value < 1:
                 raise ValueError(f"{name} must be positive")
+        elif name in {"mismatch_score", "gap_score"}:
+            if value >= 0:
+                raise ValueError(f"{name} must be negative")
         elif value < 1:
             raise ValueError(f"{name} must be a positive integer")
     if mismatch_score >= 0 or gap_score >= 0:

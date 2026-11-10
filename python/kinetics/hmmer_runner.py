@@ -7,13 +7,26 @@ from __future__ import annotations
 
 import hashlib
 import os
-import shutil
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
-from typing import Mapping
+from typing import Callable, Mapping
 
 from .hmmer import parse_hmmscan_domtblout
+
+
+def _child_file_limit(max_bytes: int) -> Callable[[], None] | None:
+    """Apply a kernel-enforced output-file ceiling on POSIX child processes."""
+    if sys.platform == "win32":
+        return None
+
+    def apply_limit() -> None:
+        import resource
+
+        resource.setrlimit(resource.RLIMIT_FSIZE, (max_bytes, max_bytes))
+
+    return apply_limit
 
 
 def _sha256_file(path: Path, *, max_bytes: int) -> tuple[str, int]:
@@ -99,7 +112,7 @@ def run_local_hmmscan(
         }
         try:
             with stderr_path.open("wb") as stderr_handle:
-                subprocess.run(
+                run_result = subprocess.run(
                     [
                         str(executable),
                         "--noali",
@@ -116,10 +129,13 @@ def run_local_hmmscan(
                     check=False,
                     timeout=timeout_seconds,
                     shell=False,
+                    preexec_fn=_child_file_limit(max_output_bytes),
                 )
         except subprocess.TimeoutExpired as exc:
             raise TimeoutError("Local hmmscan exceeded timeout_seconds") from exc
 
+        if run_result.returncode != 0:
+            raise RuntimeError(f"hmmscan exited with status {run_result.returncode}")
         if stderr_path.stat().st_size > max_output_bytes:
             raise ValueError("HMMER diagnostic output exceeds max_output_bytes")
         stderr_text = stderr_path.read_text(encoding="utf-8", errors="replace")
@@ -143,6 +159,8 @@ def run_local_hmmscan(
             timeout=min(timeout_seconds, 30),
             shell=False,
         )
+        if version_result.returncode != 0:
+            raise RuntimeError("Pinned executable failed the HMMER version check")
         version_text = version_result.stdout[:65536].decode("utf-8", errors="replace")
         version_line = next(
             (line.strip() for line in version_text.splitlines()

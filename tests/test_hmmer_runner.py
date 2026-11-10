@@ -22,7 +22,7 @@ def _artifacts(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     executable.write_bytes(b"synthetic hmmscan executable")
     executable.chmod(0o755)
     profile = tmp_path / "profiles.hmm"
-    profile.write_text("HMMER3/f\\nsynthetic profile\\n", encoding="ascii")
+    profile.write_text("HMMER3/f\nsynthetic profile\n", encoding="ascii")
     pack = {
         **PACK_BASE,
         "content_sha256": hashlib.sha256(profile.read_bytes()).hexdigest(),
@@ -36,19 +36,19 @@ def test_local_hmmscan_pins_binary_and_profile_and_parses_output(
     executable, profile, pack = _artifacts(tmp_path)
     row = (
         "PF00001 PF00001.1 100 query-1 - 80 1e-20 72.5 0.1 1 1 "
-        "1e-18 1e-18 70.0 0.0 5 75 3 73 2 75 0.98 kinase-like domain\\n"
+        "1e-18 1e-18 70.0 0.0 5 75 3 73 2 75 0.98 kinase-like domain\n"
     )
 
     def fake_run(args: list[str], **kwargs: object) -> subprocess.CompletedProcess[bytes]:
         if "-h" in args:
-            return subprocess.CompletedProcess(args, 0, b"# HMMER 3.4 (fixture)\\n", b"")
+            return subprocess.CompletedProcess(args, 0, b"# HMMER 3.4 (fixture)\n", b"")
         output_index = args.index("--domtblout") + 1
         Path(args[output_index]).write_text(row, encoding="utf-8")
         return subprocess.CompletedProcess(args, 0, b"", b"")
 
     monkeypatch.setattr(subprocess, "run", fake_run)
     result = run_local_hmmscan(
-        ">query-1\\n" + "A" * 80 + "\\n",
+        ">query-1\n" + "A" * 80 + "\n",
         executable_path=str(executable),
         executable_sha256=hashlib.sha256(executable.read_bytes()).hexdigest(),
         profile_path=str(profile),
@@ -64,7 +64,7 @@ def test_local_hmmscan_rejects_unpinned_executable_and_profile(
     executable, profile, pack = _artifacts(tmp_path)
     with pytest.raises(ValueError, match="executable SHA-256"):
         run_local_hmmscan(
-            ">q\\nAAAA\\n",
+            ">q\nAAAA\n",
             executable_path=str(executable),
             executable_sha256="0" * 64,
             profile_path=str(profile),
@@ -72,7 +72,7 @@ def test_local_hmmscan_rejects_unpinned_executable_and_profile(
         )
     with pytest.raises(ValueError, match="profile-pack metadata"):
         run_local_hmmscan(
-            ">q\\nAAAA\\n",
+            ">q\nAAAA\n",
             executable_path=str(executable),
             executable_sha256=hashlib.sha256(executable.read_bytes()).hexdigest(),
             profile_path=str(profile),
@@ -93,7 +93,7 @@ def test_local_hmmscan_rejects_input_and_limit_errors(tmp_path: Path) -> None:
         )
     with pytest.raises(ValueError, match="timeout_seconds"):
         run_local_hmmscan(
-            ">q\\nAAAA",
+            ">q\nAAAA",
             executable_path=str(executable),
             executable_sha256=digest,
             profile_path=str(profile),

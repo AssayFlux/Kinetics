@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import sys
 from pathlib import Path
 
@@ -17,26 +16,42 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path, str, str]:
     weights = tmp_path / "weights.bin"
     weights.write_bytes(b"synthetic weights")
     executable = tmp_path / "engine.py"
-    executable.write_text(
-        "#!" + sys.executable + "\n"
-        "import json, pathlib, sys\n"
-        "args = sys.argv[1:]\n"
-        "request = pathlib.Path(args[args.index('--kinetics-request') + 1])\n"
-        "response = pathlib.Path(args[args.index('--kinetics-response') + 1])\n"
-        "data = json.loads(request.read_text())\n"
-        "seq = data['sequence']\n"
-        "response.write_text(json.dumps({\n"
-        " 'schema': 'kinetics.structure-prediction.v1',\n"
-        " 'input_sequence_sha256': __import__('hashlib').sha256(seq.encode()).hexdigest(),\n"
-        " 'sequence_length': len(seq), 'model': data['model'], 'node': data['node'],\n"
-        " 'created_at': '2026-11-10T00:00:00Z',\n"
-        " 'predicted_structure': {'schema':'kinetics.structure-view.v1', 'source_format':'pdb', 'coordinate_unit':'angstrom', 'atom_count':1, 'atoms':[{'serial':1,'name':'CA','residue':'ALA','chain':'A','residue_number':1,'element':'C','xyz':[0.0,0.0,0.0]}], 'limitations':['synthetic fixture']},\n"
-        " 'confidence': {'plddt_per_residue':[50.0]*len(seq), 'mean_plddt':50.0,\n"
-        "  'pae_mean_angstrom':None, 'pae_max_angstrom':None},\n"
-        " 'limitations':['synthetic fixture only']\n"
-        "}))\n",
-        encoding="utf-8",
-    )
+    script = [
+        "#!" + sys.executable,
+        "import hashlib, json, pathlib, sys",
+        "args = sys.argv[1:]",
+        "request = pathlib.Path(args[args.index('--kinetics-request') + 1])",
+        "response = pathlib.Path(args[args.index('--kinetics-response') + 1])",
+        "data = json.loads(request.read_text())",
+        "seq = data['sequence']",
+        "result = {",
+        " 'schema': 'kinetics.structure-prediction.v1',",
+        " 'input_sequence_sha256': hashlib.sha256(seq.encode()).hexdigest(),",
+        " 'sequence_length': len(seq),",
+        " 'model': data['model'],",
+        " 'node': data['node'],",
+        " 'created_at': '2026-11-10T00:00:00Z',",
+        " 'predicted_structure': {",
+        "  'schema': 'kinetics.structure-view.v1',",
+        "  'source_format': 'pdb',",
+        "  'coordinate_unit': 'angstrom',",
+        "  'atom_count': 1,",
+        "  'atoms': [{'serial': 1, 'name': 'CA', 'residue': 'ALA',",
+        "            'chain': 'A', 'residue_number': 1, 'element': 'C',",
+        "            'xyz': [0.0, 0.0, 0.0]}],",
+        "  'limitations': ['synthetic fixture'],",
+        " },",
+        " 'confidence': {",
+        "  'plddt_per_residue': [50.0] * len(seq),",
+        "  'mean_plddt': 50.0,",
+        "  'pae_mean_angstrom': None,",
+        "  'pae_max_angstrom': None,",
+        " },",
+        " 'limitations': ['synthetic fixture only'],",
+        "}",
+        "response.write_text(json.dumps(result))",
+    ]
+    executable.write_text("\n".join(script) + "\n", encoding="utf-8")
     executable.chmod(0o755)
     return (
         executable,
@@ -91,7 +106,7 @@ def test_pinned_local_prediction_rejects_artifact_hash_mismatch(
         )
 
 
-def test_pinned_local_prediction_rejects_nonzero_exit_and_timeout(
+def test_pinned_local_prediction_rejects_nonzero_exit(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     engine = _engine(tmp_path)

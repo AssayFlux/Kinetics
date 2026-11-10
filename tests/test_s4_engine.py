@@ -60,7 +60,11 @@ def test_s4_adapter_rejects_remote_or_mismatched_engine_provenance() -> None:
     engine.execution_mode = "remote"
     with pytest.raises(ValueError, match="local"):
         run_local_structure_prediction("AG", engine)
-    engine = _FakeEngine()
-    engine.node_provenance = {**engine.node_provenance, "node_id": "other"}
+    class _MismatchedEnvelopeEngine(_FakeEngine):
+        def predict(self, sequence: str) -> dict[str, object]:
+            envelope = super().predict(sequence)
+            envelope["node"] = {**self.node_provenance, "node_id": "other"}
+            return envelope
+
     with pytest.raises(ValueError, match="node provenance"):
-        run_local_structure_prediction("AG", engine)
+        run_local_structure_prediction("AG", _MismatchedEnvelopeEngine())

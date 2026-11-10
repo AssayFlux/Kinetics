@@ -1,6 +1,8 @@
 package org.assayflux.kinetics
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -89,6 +91,8 @@ internal fun StructureViewerPreview() {
     val scope = rememberCoroutineScope()
     var payloadJson by remember { mutableStateOf<String?>(null) }
     var sessionExportJson by remember { mutableStateOf<String?>(null) }
+    var viewerWebView by remember { mutableStateOf<WebView?>(null) }
+    var pendingPngBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var sourceLabel by remember { mutableStateOf("Synthetic preview fixture") }
     var importMessage by remember {
         mutableStateOf("Choose a local PDB or mmCIF file to inspect it offline.")
@@ -111,6 +115,32 @@ internal fun StructureViewerPreview() {
                     { error -> "Export failed: " + (error.message ?: error.javaClass.simpleName) },
                 )
             }
+        }
+    }
+    val pngExportPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("image/png"),
+    ) { uri ->
+        val bitmap = pendingPngBitmap
+        pendingPngBitmap = null
+        if (uri != null && bitmap != null) {
+            scope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    runCatching {
+                        context.contentResolver.openOutputStream(uri, "w")?.use { output ->
+                            check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)) {
+                                "PNG encoding failed"
+                            }
+                        } ?: error("The selected PNG destination could not be opened")
+                    }
+                }
+                bitmap.recycle()
+                importMessage = result.fold(
+                    { "PNG snapshot exported successfully." },
+                    { error -> "PNG export failed: " + (error.message ?: error.javaClass.simpleName) },
+                )
+            }
+        } else {
+            bitmap?.recycle()
         }
     }
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -239,8 +269,33 @@ internal fun StructureViewerPreview() {
             ) {
                 Text("Export session JSON")
             }
+            Button(
+                onClick = {
+                    val view = viewerWebView
+                    if (view == null || view.width < 1 || view.height < 1) {
+                        importMessage = "PNG export unavailable until the viewer is laid out."
+                    } else if (view.width.toLong() * view.height.toLong() > 16_777_216L) {
+                        importMessage = "PNG snapshot exceeds the 16-megapixel safety limit."
+                    } else {
+                        runCatching {
+                            Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+                                .also { bitmap -> view.draw(Canvas(bitmap)) }
+                        }.onSuccess { bitmap ->
+                            pendingPngBitmap = bitmap
+                            val baseName = sourceLabel.substringBeforeLast('.', sourceLabel)
+                            pngExportPicker.launch("$baseName.png")
+                        }.onFailure { error ->
+                            importMessage = "PNG capture failed: " +
+                                (error.message ?: error.javaClass.simpleName)
+                        }
+                    }
+                },
+                enabled = payloadJson != null,
+            ) {
+                Text("Export viewer PNG")
+            }
             AndroidView(
-                factory = { FrameLayout(it).apply { addView(webView) } },
+                factory = { FrameLayout(it).apply { viewerWebView = webView; addView(webView) } },
                 update = { frame ->
                     if (frame.childCount != 1 || frame.getChildAt(0) !== webView) {
                         frame.removeAllViews()

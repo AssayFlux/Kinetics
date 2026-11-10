@@ -240,6 +240,9 @@ internal fun StructureViewerPreview() {
     }
     DisposableEffect(webView) {
         onDispose {
+            if (viewerWebView === webView) viewerWebView = null
+            pendingPngBitmap?.recycle()
+            pendingPngBitmap = null
             webView.stopLoading()
             webView.loadUrl("about:blank")
             webView.destroy()
@@ -297,6 +300,7 @@ internal fun StructureViewerPreview() {
             AndroidView(
                 factory = { FrameLayout(it).apply { viewerWebView = webView; addView(webView) } },
                 update = { frame ->
+                    viewerWebView = webView
                     if (frame.childCount != 1 || frame.getChildAt(0) !== webView) {
                         frame.removeAllViews()
                         frame.addView(webView)

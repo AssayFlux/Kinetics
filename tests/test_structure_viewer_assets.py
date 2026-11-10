@@ -64,3 +64,15 @@ def test_android_webview_and_document_io_keep_offline_security_boundary() -> Non
     assert 'MAX_STRUCTURE_SOURCE_BYTES = 16 * 1024 * 1024' in source
     assert 'CodingErrorAction.REPORT' in source
     assert 'prepare_structure_viewer_import' in source
+
+
+def test_android_viewer_supports_bounded_png_snapshot_export() -> None:
+    source = (
+        ROOT / 'android' / 'app' / 'src' / 'main' / 'java'
+        / 'org' / 'assayflux' / 'kinetics' / 'StructureViewer.kt'
+    ).read_text(encoding='utf-8')
+    assert 'CreateDocument("image/png")' in source
+    assert 'Bitmap.CompressFormat.PNG' in source
+    assert '16_777_216L' in source
+    assert 'viewerWebView = webView' in source
+    assert 'pendingPngBitmap?.recycle()' in source

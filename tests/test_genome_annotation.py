@@ -17,7 +17,7 @@ def _annotator(tmp_path: Path) -> tuple[Path, str]:
         "import pathlib, sys\n"
         "args=sys.argv[1:]\n"
         "out=pathlib.Path(args[args.index('--kinetics-output-gff3')+1])\n"
-        "out.write_text('##gff-version 3\\\\nctg1\\\\ttest\\\\tgene\\\\t1\\\\t9\\\\t.\\\\t+\\\\t.\\\\tID=g1\\\\n')\n",
+        "out.write_text('##gff-version 3\\\nctg1\\\ttest\\\tgene\\\t1\\\t9\\\t.\\\t+\\\t.\\\tID=g1\\\n')\n",
         encoding="utf-8",
     )
     executable.chmod(0o755)
@@ -56,7 +56,7 @@ def test_local_annotator_rejects_hash_mismatch_and_out_of_bounds_feature(
         "import pathlib, sys\n"
         "args=sys.argv[1:]\n"
         "out=pathlib.Path(args[args.index('--kinetics-output-gff3')+1])\n"
-        "out.write_text('##gff-version 3\\\\nctg1\\\\ttest\\\\tgene\\\\t1\\\\t99\\\\t.\\\\t+\\\\t.\\\\tID=g1\\\\n')\n",
+        "out.write_text('##gff-version 3\\\nctg1\\\ttest\\\tgene\\\t1\\\t99\\\t.\\\t+\\\t.\\\tID=g1\\\n')\n",
         encoding="utf-8",
     )
     executable.chmod(0o755)

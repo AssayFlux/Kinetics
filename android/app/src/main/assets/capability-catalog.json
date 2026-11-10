@@ -462,5 +462,21 @@
     "implementation": "python/kinetics/hmmer.py",
     "evidence_level": "none",
     "domain": "Protein analysis"
+  },
+  {
+    "id": "structure.pinned_local_prediction_process",
+    "name": "Hash-pinned local S4 prediction process protocol with output validation",
+    "status": "implemented",
+    "implementation": "python/kinetics/s4_process.py",
+    "evidence_level": "none",
+    "domain": "Structure prediction"
+  },
+  {
+    "id": "genome.pinned_local_gff3_annotator",
+    "name": "Hash-pinned local genome annotator process with bounded GFF3 validation",
+    "status": "implemented",
+    "implementation": "python/kinetics/genome_annotation.py",
+    "evidence_level": "none",
+    "domain": "Genome analysis"
   }
 ]

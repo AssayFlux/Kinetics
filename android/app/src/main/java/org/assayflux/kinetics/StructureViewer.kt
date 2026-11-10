@@ -38,6 +38,7 @@ import com.chaquo.python.android.AndroidPlatform
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
@@ -91,6 +92,9 @@ internal fun StructureViewerPreview() {
     val scope = rememberCoroutineScope()
     var payloadJson by remember { mutableStateOf<String?>(null) }
     var sessionExportJson by remember { mutableStateOf<String?>(null) }
+    var pendingSessionJson by remember { mutableStateOf<String?>(null) }
+    var pendingSvg by remember { mutableStateOf<String?>(null) }
+    var viewerStateJson by remember { mutableStateOf<String?>(null) }
     var viewerWebView by remember { mutableStateOf<WebView?>(null) }
     var pendingPngBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var sourceLabel by remember { mutableStateOf("Synthetic preview fixture") }
@@ -100,7 +104,8 @@ internal fun StructureViewerPreview() {
     val exportPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/json"),
     ) { uri ->
-        val export = sessionExportJson
+        val export = pendingSessionJson
+        pendingSessionJson = null
         if (uri != null && export != null) {
             scope.launch {
                 val result = withContext(Dispatchers.IO) {
@@ -113,6 +118,27 @@ internal fun StructureViewerPreview() {
                 importMessage = result.fold(
                     { "Session exported successfully." },
                     { error -> "Export failed: " + (error.message ?: error.javaClass.simpleName) },
+                )
+            }
+        }
+    }
+    val svgExportPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("image/svg+xml"),
+    ) { uri ->
+        val svg = pendingSvg
+        pendingSvg = null
+        if (uri != null && svg != null) {
+            scope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    runCatching {
+                        context.contentResolver.openOutputStream(uri, "w")?.use { output ->
+                            output.write(svg.toByteArray(Charsets.UTF_8))
+                        } ?: error("The selected SVG destination could not be opened")
+                    }
+                }
+                importMessage = result.fold(
+                    { "SVG snapshot exported successfully." },
+                    { error -> "SVG export failed: " + (error.message ?: error.javaClass.simpleName) },
                 )
             }
         }
@@ -186,6 +212,7 @@ internal fun StructureViewerPreview() {
                     { imported ->
                         payloadJson = imported.payloadJson
                         sessionExportJson = imported.sessionJson
+                        viewerStateJson = null
                         sourceLabel = imported.name
                         importMessage = "Imported ${imported.name} · SHA-256 ${imported.sourceHash.take(16)}…"
                     },
@@ -230,8 +257,16 @@ internal fun StructureViewerPreview() {
                         val encoded = JSONObject.quote(activePayload)
                         view.evaluateJavascript(
                             "window.KineticsStructureViewer.load(JSON.parse($encoded));",
-                            null,
-                        )
+                        ) {
+                            val savedState = viewerStateJson
+                            if (savedState != null) {
+                                val stateLiteral = JSONObject.quote(savedState)
+                                view.evaluateJavascript(
+                                    "window.KineticsStructureViewer.setState(JSON.parse($stateLiteral));",
+                                    null,
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -243,6 +278,8 @@ internal fun StructureViewerPreview() {
             if (viewerWebView === webView) viewerWebView = null
             pendingPngBitmap?.recycle()
             pendingPngBitmap = null
+            pendingSvg = null
+            pendingSessionJson = null
             webView.stopLoading()
             webView.loadUrl("about:blank")
             webView.destroy()
@@ -265,12 +302,89 @@ internal fun StructureViewerPreview() {
             }
             Button(
                 onClick = {
-                    val baseName = sourceLabel.substringBeforeLast('.', sourceLabel)
-                    exportPicker.launch("$baseName.kinetics-session.json")
+                    val view = viewerWebView
+                    val base = sessionExportJson
+                    if (view == null || base == null) {
+                        importMessage = "Session export is unavailable until a structure is loaded."
+                    } else {
+                        view.evaluateJavascript("window.KineticsStructureViewer.getState()") { rawState ->
+                            runCatching {
+                                val state = JSONObject(rawState ?: error("Viewer state is unavailable"))
+                                viewerStateJson = state.toString()
+                                val session = JSONObject(base)
+                                session.put("viewer_state", state)
+                                session.put("render_state", "viewer_state_saved")
+                                val limitations = JSONArray()
+                                val previous = session.optJSONArray("export_limitations")
+                                if (previous != null) {
+                                    for (index in 0 until previous.length()) {
+                                        val item = previous.optString(index)
+                                        if (!item.contains("interactive viewer state")) {
+                                            limitations.put(item)
+                                        }
+                                    }
+                                }
+                                limitations.put("PNG and SVG snapshots are separate files, not embedded images.")
+                                session.put("export_limitations", limitations)
+                                val encoded = session.toString()
+                                require(encoded.toByteArray(Charsets.UTF_8).size <= 64 * 1024 * 1024) {
+                                    "Session export exceeds the 64 MiB limit."
+                                }
+                                pendingSessionJson = encoded
+                                val baseName = sourceLabel.substringBeforeLast('.', sourceLabel)
+                                exportPicker.launch("$baseName.kinetics-session.json")
+                            }.onFailure { error ->
+                                importMessage = "Session state capture failed: " +
+                                    (error.message ?: error.javaClass.simpleName)
+                            }
+                        }
+                    }
                 },
                 enabled = sessionExportJson != null,
             ) {
-                Text("Export session JSON")
+                Text("Export session JSON + view state")
+            }
+            Button(
+                onClick = {
+                    val view = viewerWebView
+                    if (view == null) {
+                        importMessage = "SVG export is unavailable until the viewer is ready."
+                    } else {
+                        view.evaluateJavascript("window.KineticsStructureViewer.exportSvg()") { rawSvg ->
+                            runCatching {
+                                val svg = JSONArray("[$rawSvg]").getString(0)
+                                require(svg.toByteArray(Charsets.UTF_8).size <= 32 * 1024 * 1024) {
+                                    "SVG export exceeds the 32 MiB limit."
+                                }
+                                pendingSvg = svg
+                                val baseName = sourceLabel.substringBeforeLast('.', sourceLabel)
+                                svgExportPicker.launch("$baseName.svg")
+                            }.onFailure { error ->
+                                importMessage = "SVG capture failed: " +
+                                    (error.message ?: error.javaClass.simpleName)
+                            }
+                        }
+                    }
+                },
+                enabled = payloadJson != null,
+            ) {
+                Text("Export viewer SVG")
+            }
+            Button(
+                onClick = {
+                    val view = viewerWebView
+                    val state = viewerStateJson
+                    if (view != null && state != null) {
+                        val literal = JSONObject.quote(state)
+                        view.evaluateJavascript(
+                            "window.KineticsStructureViewer.setState(JSON.parse($literal));",
+                            null,
+                        )
+                    }
+                },
+                enabled = payloadJson != null && viewerStateJson != null,
+            ) {
+                Text("Restore saved view state")
             }
             Button(
                 onClick = {

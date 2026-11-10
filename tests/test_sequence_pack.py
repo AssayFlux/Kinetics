@@ -143,3 +143,15 @@ def test_local_pack_rejects_manifest_symlink_and_oversized_manifest(tmp_path) ->
 def test_local_pack_hashing_is_bounded_by_max_pack_bytes() -> None:
     with pytest.raises(ValueError, match="max_pack_bytes"):
         _sha256_stream(io.BytesIO(b"more than three bytes"), max_bytes=3)
+
+
+def test_verified_local_pack_supports_bounded_similarity_alignment(tmp_path) -> None:
+    from kinetics.sequence_pack import search_local_fasta_alignment
+
+    fasta = b">reference-fragment\nTTACGTAA\n"
+    fasta_path, manifest_path = write_pack(tmp_path, fasta)
+    result = search_local_fasta_alignment("ACGT", fasta_path, manifest_path)
+    assert result["hits"][0]["reference_id"] == "reference-fragment"
+    assert result["hits"][0]["query_coverage"] == 1.0
+    assert result["hits"][0]["reference_start_1based"] == 3
+    assert result["conclusion"]["homology"] == "not_established"

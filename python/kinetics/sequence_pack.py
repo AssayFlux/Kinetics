@@ -20,6 +20,7 @@ from kinetics.sequence_reference import (
     SequenceType,
     _alphabet,
     exact_reference_search,
+    local_alignment_reference_search,
 )
 
 
@@ -211,4 +212,41 @@ def search_local_fasta_reference(
         reference_pack=loaded.metadata,
         max_records=max_records,
         max_total_residues=max_total_residues,
+    )
+
+
+def search_local_fasta_alignment(
+    query: str,
+    fasta_path: str | Path,
+    manifest_path: str | Path,
+    *,
+    max_pack_bytes: int = DEFAULT_MAX_PACK_BYTES,
+    max_manifest_bytes: int = DEFAULT_MAX_MANIFEST_BYTES,
+    max_records: int = 10_000,
+    max_total_residues: int = 5_000_000,
+    max_query_residues: int = 20_000,
+    max_alignment_cells: int = 2_000_000,
+    max_total_alignment_cells: int = 20_000_000,
+    max_hits: int = 100,
+) -> dict[str, object]:
+    """Verify a local FASTA pack before bounded Smith–Waterman similarity triage."""
+    loaded = load_local_fasta_reference_pack(
+        fasta_path,
+        manifest_path,
+        max_pack_bytes=max_pack_bytes,
+        max_manifest_bytes=max_manifest_bytes,
+        max_records=max_records,
+        max_total_residues=max_total_residues,
+    )
+    return local_alignment_reference_search(
+        query,
+        loaded.records,
+        sequence_type=loaded.sequence_type,
+        reference_pack=loaded.metadata,
+        max_records=max_records,
+        max_total_residues=max_total_residues,
+        max_query_residues=max_query_residues,
+        max_alignment_cells=max_alignment_cells,
+        max_total_alignment_cells=max_total_alignment_cells,
+        max_hits=max_hits,
     )

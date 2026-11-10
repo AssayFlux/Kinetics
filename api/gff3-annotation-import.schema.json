@@ -16,7 +16,8 @@
     "sequence_regions",
     "coordinate_system",
     "resource_limits",
-    "limitations"
+    "limitations",
+    "features"
   ],
   "properties": {
     "schema": {
@@ -68,6 +69,73 @@
       "minItems": 1,
       "items": {
         "type": "string"
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "seqid",
+          "source",
+          "type",
+          "start",
+          "end",
+          "score",
+          "strand",
+          "phase",
+          "attributes"
+        ],
+        "properties": {
+          "seqid": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "end": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "strand": {
+            "enum": [
+              "+",
+              "-",
+              ".",
+              "?"
+            ]
+          },
+          "phase": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 2
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
       }
     }
   }

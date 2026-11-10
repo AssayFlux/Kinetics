@@ -15,6 +15,7 @@ def test_gff3_import_checks_hierarchy_and_coordinate_system() -> None:
         "chr1\tRefSeq\tCDS\t20\t100\t42.5\t+\t0\tID=c1;Parent=t1\n",
     ])
     assert result["feature_count"] == 4
+    assert result["features"][0]["attributes"]["Name"] == "gene one"
     assert result["parent_edge_count"] == 3
     assert result["coordinate_system"] == "1-based inclusive (GFF3)"
     assert result["feature_type_counts"] == {"CDS": 1, "exon": 1, "gene": 1, "mRNA": 1}

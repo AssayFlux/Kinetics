@@ -191,6 +191,7 @@ def parse_gff3(
         "schema": "kinetics.gff3-annotation-import.v1",
         "format": "GFF3",
         "feature_count": len(features),
+        "features": features,
         "sequence_count": len(seqids),
         "sequence_ids": seqids,
         "feature_type_counts": dict(sorted(counts.items())),

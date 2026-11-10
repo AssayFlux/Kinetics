@@ -2356,3 +2356,26 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - D-022 does not waive D-021's external gates: licensed model/data acquisition, independent biological/experimental validation, physical-device verification and any required secure inference infrastructure must remain honestly tracked until actually available and verified.
 - Unvalidated capabilities stay disabled or clearly marked unverified. Do not fabricate model weights, reference packs, test results, external credentials or device evidence.
 - Track I remains blocked until the implementable S software scope is complete and the exact-source audit passes.
+
+
+## 2026-11-10 — Session 65: S4/S6/S7/S9 local execution and evidence pipelines
+
+### Implemented
+- S4: hash-pinned local prediction-process protocol with bounded JSON I/O, executable and weights SHA-256 verification, provenance matching and strict prediction-envelope validation.
+- S6: local HMMER profile pressing/search against a complete source-plus-four-index pressed pack; bounded local BLASTP against hash-manifested protein databases; existing FASTA packs, exact search, Smith–Waterman and motif scanning remain integrated.
+- S7: genome-wide aggregate-budget ORF candidate scanning; pinned Prodigal prokaryotic and AUGUSTUS eukaryotic runners; generic local GFF3 annotator protocol; supplied GFF3 transcript/CDS reconstruction and coordinate validation.
+- S9: bounded HMMER domain-evidence parsing and caller-thresholded candidate ranking/abstention. No functional assignment is made.
+- Regenerated the Android capability catalogue from the canonical registry and updated the S-track audit/roadmap.
+
+### Exact-source verification
+- CI #2275, run `42738823000`, exact commit `a05339e8fb2afbd0d12093972dcff81c68399b9b`: **5/5 jobs passed**.
+- Python strict typing, Ruff, registry/catalogue reproducibility and the full unit-test suite passed.
+- Android arm64 APK/AAB packaging, alignment, JVM tests and artifact/hash checks passed.
+- Scientific reference fixtures, RDKit sanity fixtures and SPDX inventory passed.
+
+### Boundaries and remaining work
+- S4 model/runtime/weights and secure inference infrastructure remain external D-021 gates.
+- S6 BLAST+/HMMER binaries and curated/licensed local reference databases are caller-supplied; homology evidence is not calibrated or a functional verdict.
+- S7 Prodigal/AUGUSTUS binaries and species models are caller-supplied; syntax/coordinate checks do not establish biological accuracy.
+- S9 profile databases and independent family/domain concordance remain external gates.
+- S1/S5 SVG export and persisted interactive view state, S3 pocket candidates and S8 translation-table inference remain software gaps; S2 calibration and physical-device evidence also remain open. Track S is **not closed** and Track I remains blocked.

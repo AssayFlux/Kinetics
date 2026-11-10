@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from kinetics.hmmer_runner import run_local_hmmscan
+from kinetics.hmmer_runner import hash_pressed_profile_pack, run_local_hmmscan
 
 
 PACK_BASE = {
@@ -56,6 +56,7 @@ def test_local_hmmscan_pins_binary_and_profile_and_parses_output(
     )
     assert result["execution_mode"] == "local"
     assert result["evidence"]["domain_hit_count"] == 1
+    assert result["profile_pack_sha256"] == pack["content_sha256"]
 
 
 def test_local_hmmscan_rejects_unpinned_executable_and_profile(
@@ -70,7 +71,7 @@ def test_local_hmmscan_rejects_unpinned_executable_and_profile(
             profile_path=str(profile),
             profile_pack=pack,
         )
-    with pytest.raises(ValueError, match="profile-pack metadata"):
+    with pytest.raises(ValueError, match="profile-pack SHA-256"):
         run_local_hmmscan(
             ">q\nAAAA\n",
             executable_path=str(executable),
@@ -100,3 +101,11 @@ def test_local_hmmscan_rejects_input_and_limit_errors(tmp_path: Path) -> None:
             profile_pack=pack,
             timeout_seconds=0,
         )
+
+
+
+def test_pressed_profile_pack_requires_all_index_files(tmp_path: Path) -> None:
+    profile = tmp_path / "profiles.hmm"
+    profile.write_text("HMMER3/f\\n", encoding="ascii")
+    with pytest.raises(ValueError, match="missing"):
+        hash_pressed_profile_pack(str(profile))

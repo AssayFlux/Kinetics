@@ -41,6 +41,28 @@ def _sha256_file(path: Path, *, max_bytes: int) -> tuple[str, int]:
     return digest.hexdigest(), total
 
 
+def hash_pressed_profile_pack(
+    profile_path: str, *, max_bytes: int = 512 * 1024 * 1024,
+) -> str:
+    """Hash an HMM source file and all four HMMER pressed-index siblings."""
+    source = Path(profile_path).expanduser().resolve(strict=True)
+    if not source.is_file():
+        raise ValueError("profile_path must be an HMM source file")
+    digest = hashlib.sha256()
+    total = 0
+    for suffix in ("", ".h3m", ".h3i", ".h3f", ".h3p"):
+        artifact = source if not suffix else Path(str(source) + suffix)
+        if not artifact.is_file():
+            raise ValueError(f"Pressed HMM profile pack is missing {artifact.name}")
+        artifact_hash, size = _sha256_file(
+            artifact, max_bytes=max_bytes - total,
+        )
+        total += size
+        digest.update(suffix.encode("ascii") + b"\\0")
+        digest.update(bytes.fromhex(artifact_hash))
+    return digest.hexdigest()
+
+
 def run_local_hmmscan(
     sequences_fasta: str,
     *,
@@ -92,9 +114,13 @@ def run_local_hmmscan(
     )
     if executable_hash != expected_executable_hash:
         raise ValueError("HMMER executable SHA-256 does not match approved digest")
-    profile_hash, _ = _sha256_file(profile, max_bytes=max_profile_bytes)
+    profile_hash = hash_pressed_profile_pack(
+        str(profile), max_bytes=max_profile_bytes,
+    )
     if dict(profile_pack).get("content_sha256") != profile_hash:
-        raise ValueError("HMM profile SHA-256 does not match profile-pack metadata")
+        raise ValueError(
+            "Pressed HMM profile-pack SHA-256 does not match profile-pack metadata"
+        )
 
     with tempfile.TemporaryDirectory(prefix="kinetics-hmmscan-") as work_dir:
         work = Path(work_dir)

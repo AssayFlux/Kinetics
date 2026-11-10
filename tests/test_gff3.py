@@ -76,3 +76,18 @@ def test_gff3_enforces_feature_and_attribute_budgets() -> None:
         parse_gff3(records, max_features=1)
     with pytest.raises(ValueError, match="max_attribute_bytes"):
         parse_gff3(records[:2], max_attribute_bytes=2)
+
+
+def test_gff3_enforces_total_attribute_and_line_budgets_and_sequence_regions() -> None:
+    valid = [
+        "##gff-version 3\n",
+        "##sequence-region chr1 1 10\n",
+        "chr1\ts\tgene\t1\t4\t.\t+\t.\tID=g1\n",
+    ]
+    with pytest.raises(ValueError, match="max_total_attribute_bytes"):
+        parse_gff3(valid, max_total_attribute_bytes=2)
+    with pytest.raises(ValueError, match="max_lines"):
+        parse_gff3(valid, max_lines=2)
+    outside = valid[:2] + ["chr1\ts\tgene\t1\t11\t.\t+\t.\tID=g1\n"]
+    with pytest.raises(ValueError, match="sequence-region"):
+        parse_gff3(outside)

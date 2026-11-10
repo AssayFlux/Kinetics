@@ -243,6 +243,8 @@ def local_alignment_reference_search(
         "max_total_alignment_cells": max_total_alignment_cells,
         "max_hits": max_hits,
         "match_score": match_score,
+        "mismatch_score": mismatch_score,
+        "gap_score": gap_score,
     }
     for name, value in integer_limits.items():
         if isinstance(value, bool) or not isinstance(value, int):

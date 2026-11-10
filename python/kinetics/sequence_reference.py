@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from io import BytesIO, TextIOWrapper
 from hashlib import sha256
-from typing import Iterable, Literal
+from typing import Iterable, Literal, cast
 from urllib.parse import urlparse
 
 from kinetics.sequence import DNA, PROTEIN, RNA, SequenceRecord, iter_fasta_records, validate_sequence
@@ -355,7 +355,7 @@ def local_alignment_reference_search(
                 "evidence_type": "bounded_smith_waterman_identity_scored_local_alignment",
             })
 
-    hits.sort(key=lambda hit: (-int(hit["score"]), str(hit["reference_id"])))
+    hits.sort(key=lambda hit: (-cast(int, hit["score"]), str(hit["reference_id"])))
     return {
         "schema_version": 1,
         "query": {

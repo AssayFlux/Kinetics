@@ -3,7 +3,20 @@ from __future__ import annotations
 
 from collections import Counter
 import math
+from typing import TypedDict
 from urllib.parse import unquote
+
+
+class _Feature(TypedDict):
+    seqid: str
+    source: str
+    type: str
+    start: int
+    end: int
+    score: float | None
+    strand: str
+    phase: int | None
+    attributes: dict[str, str]
 
 
 def parse_gff3(
@@ -27,8 +40,8 @@ def parse_gff3(
     if not hasattr(lines, "__iter__"):
         raise TypeError("lines must be an iterable of text lines")
 
-    features: list[dict[str, object]] = []
-    ids: dict[str, dict[str, object]] = {}
+    features: list[_Feature] = []
+    ids: dict[str, _Feature] = {}
     parent_graph: dict[str, tuple[str, ...]] = {}
     regions: dict[str, tuple[int, int]] = {}
     counts: Counter[str] = Counter()
@@ -115,12 +128,13 @@ def parse_gff3(
                     raise ValueError("GFF3 attributes must be key=value pairs")
                 key_raw, value_raw = item.split("=", 1)
                 try:
-                    key, value = unquote(key_raw, errors="strict"), unquote(value_raw, errors="strict")
+                    attribute_key = unquote(key_raw, errors="strict")
+                    attribute_value = unquote(value_raw, errors="strict")
                 except UnicodeDecodeError as exc:
                     raise ValueError("GFF3 attributes contain invalid UTF-8 escapes") from exc
-                if not key or key in attrs:
+                if not attribute_key or attribute_key in attrs:
                     raise ValueError("GFF3 attribute keys must be non-empty and unique")
-                attrs[key] = value
+                attrs[attribute_key] = attribute_value
 
         identifier = attrs.get("ID")
         if identifier is not None:
@@ -129,7 +143,7 @@ def parse_gff3(
         parents = tuple(attrs.get("Parent", "").split(",")) if attrs.get("Parent") else ()
         if any(not parent for parent in parents) or len(set(parents)) != len(parents):
             raise ValueError("GFF3 Parent references must be non-empty and unique")
-        feature: dict[str, object] = {
+        feature: _Feature = {
             "seqid": seqid, "source": source, "type": kind, "start": start, "end": end,
             "score": score, "strand": strand, "phase": phase, "attributes": attrs,
         }
@@ -146,18 +160,18 @@ def parse_gff3(
     if not saw_version:
         raise ValueError("GFF3 version 3 directive is required")
     for feature in features:
-        seqid = str(feature["seqid"])
-        region = regions.get(seqid)
-        if region and (int(feature["start"]) < region[0] or int(feature["end"]) > region[1]):
+        region = regions.get(feature["seqid"])
+        if region and (feature["start"] < region[0] or feature["end"] > region[1]):
             raise ValueError("GFF3 feature lies outside its sequence-region")
-        for parent_id in feature["attributes"].get("Parent", "").split(",") if feature["attributes"].get("Parent") else ():
-            parent = ids.get(parent_id)
-            if parent is None:
-                raise ValueError(f"GFF3 Parent {parent_id!r} does not resolve to an ID")
+        raw_parents = feature["attributes"].get("Parent", "")
+        for parent_identifier in raw_parents.split(",") if raw_parents else ():
+            parent_feature = ids.get(parent_identifier)
+            if parent_feature is None:
+                raise ValueError(f"GFF3 Parent {parent_identifier!r} does not resolve to an ID")
             if (
-                parent["seqid"] != feature["seqid"]
-                or int(parent["start"]) > int(feature["start"])
-                or int(parent["end"]) < int(feature["end"])
+                parent_feature["seqid"] != feature["seqid"]
+                or parent_feature["start"] > feature["start"]
+                or parent_feature["end"] < feature["end"]
             ):
                 raise ValueError("GFF3 child feature must lie within its parent on the same sequence")
 
@@ -180,11 +194,11 @@ def parse_gff3(
                 continue
             active.add(identifier)
             stack.append((identifier, True))
-            for parent in reversed(parent_graph.get(identifier, ())):
-                if parent in active:
+            for parent_identifier in reversed(parent_graph.get(identifier, ())):
+                if parent_identifier in active:
                     raise ValueError("GFF3 Parent graph contains a cycle")
-                if parent in ids and parent not in visited:
-                    stack.append((parent, False))
+                if parent_identifier in ids and parent_identifier not in visited:
+                    stack.append((parent_identifier, False))
 
     seqids = sorted({str(feature["seqid"]) for feature in features})
     return {

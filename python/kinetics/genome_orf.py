@@ -65,18 +65,28 @@ def scan_contig_orf_candidates(
             max_sequence_bases=max_total_bases,
             max_candidate_orf_pairs_total=remaining_pairs,
         )
+        resource_limits = result.get("resource_limits")
+        if not isinstance(resource_limits, dict):
+            raise RuntimeError("ORF scanner omitted resource-limit evidence")
+        examined = resource_limits.get("candidate_orf_pairs_examined")
+        orf_count = result.get("orf_count")
+        orfs = result.get("orfs")
+        if (
+            isinstance(examined, bool) or not isinstance(examined, int)
+            or isinstance(orf_count, bool) or not isinstance(orf_count, int)
+            or not isinstance(orfs, list)
+        ):
+            raise RuntimeError("ORF scanner returned an invalid candidate result")
         total_bases += len(sequence)
-        total_orfs += int(result["orf_count"])
-        total_pairs += int(result["resource_limits"]["candidate_orf_pairs_examined"])
+        total_orfs += orf_count
+        total_pairs += examined
         contig_results.append({
             "contig_id": record.identifier,
             "sequence_sha256": sha256(sequence.encode("ascii")).hexdigest(),
             "sequence_length": len(sequence),
-            "orf_count": result["orf_count"],
-            "candidate_orf_pairs_examined": result["resource_limits"][
-                "candidate_orf_pairs_examined"
-            ],
-            "orfs": result["orfs"],
+            "orf_count": orf_count,
+            "candidate_orf_pairs_examined": examined,
+            "orfs": orfs,
         })
     if not contig_results:
         raise ValueError("Genome contains no contigs")

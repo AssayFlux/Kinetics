@@ -438,5 +438,13 @@
     "implementation": "python/kinetics/s4_engine.py",
     "evidence_level": "none",
     "domain": "Structural biology"
+  },
+  {
+    "id": "genome.prokaryotic_orf_candidate_scan",
+    "name": "Genome-wide bounded six-frame ORF candidate triage across contigs",
+    "status": "implemented",
+    "implementation": "python/kinetics/genome_orf.py",
+    "evidence_level": "none",
+    "domain": "Genome analysis"
   }
 ]

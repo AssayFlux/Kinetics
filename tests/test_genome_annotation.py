@@ -10,16 +10,20 @@ from kinetics.genome_annotation import run_pinned_local_gff3_annotator
 from kinetics.sequence import SequenceRecord
 
 
-def _annotator(tmp_path: Path) -> tuple[Path, str]:
+def _annotator(tmp_path: Path, *, end: int = 9) -> tuple[Path, str]:
     executable = tmp_path / "annotator.py"
-    executable.write_text(
-        "#!" + sys.executable + "\n"
-        "import pathlib, sys\n"
-        "args=sys.argv[1:]\n"
-        "out=pathlib.Path(args[args.index('--kinetics-output-gff3')+1])\n"
-        "out.write_text('##gff-version 3\\\nctg1\\\ttest\\\tgene\\\t1\\\t9\\\t.\\\t+\\\t.\\\tID=g1\\\n')\n",
-        encoding="utf-8",
+    gff3 = (
+        "##gff-version 3\n"
+        f"ctg1\ttest\tgene\t1\t{end}\t.\t+\t.\tID=g1\n"
     )
+    script = "\n".join([
+        "#!" + sys.executable,
+        "import pathlib, sys",
+        "args=sys.argv[1:]",
+        "out=pathlib.Path(args[args.index('--kinetics-output-gff3')+1])",
+        f"out.write_text({gff3!r})",
+    ])
+    executable.write_text(script + "\n", encoding="utf-8")
     executable.chmod(0o755)
     return executable, hashlib.sha256(executable.read_bytes()).hexdigest()
 
@@ -42,7 +46,7 @@ def test_local_annotator_runs_and_validates_gff3_against_input_contig(
 def test_local_annotator_rejects_hash_mismatch_and_out_of_bounds_feature(
     tmp_path: Path,
 ) -> None:
-    executable, digest = _annotator(tmp_path)
+    executable, _ = _annotator(tmp_path)
     with pytest.raises(ValueError, match="SHA-256"):
         run_pinned_local_gff3_annotator(
             [SequenceRecord("ctg1", "ATGAAATAA")],
@@ -51,16 +55,7 @@ def test_local_annotator_rejects_hash_mismatch_and_out_of_bounds_feature(
             annotator_id="synthetic",
             annotator_version="1",
         )
-    executable.write_text(
-        "#!" + sys.executable + "\n"
-        "import pathlib, sys\n"
-        "args=sys.argv[1:]\n"
-        "out=pathlib.Path(args[args.index('--kinetics-output-gff3')+1])\n"
-        "out.write_text('##gff-version 3\\\nctg1\\\ttest\\\tgene\\\t1\\\t99\\\t.\\\t+\\\t.\\\tID=g1\\\n')\n",
-        encoding="utf-8",
-    )
-    executable.chmod(0o755)
-    digest = hashlib.sha256(executable.read_bytes()).hexdigest()
+    executable, digest = _annotator(tmp_path, end=99)
     with pytest.raises(ValueError, match="beyond supplied contig"):
         run_pinned_local_gff3_annotator(
             [SequenceRecord("ctg1", "ATGAAATAA")],

@@ -38,8 +38,8 @@ def test_minus_strand_segments_are_joined_in_transcriptional_order() -> None:
 def test_reconstruction_rejects_missing_transcript_and_bounds() -> None:
     with pytest.raises(ValueError, match="does not resolve"):
         parse_gff3([
-            "##gff-version 3\\n",
-            "chr1\\ts\\tCDS\\t1\\t3\\t.\\t+\\t0\\tParent=missing\\n",
+            "##gff-version 3\n",
+            "chr1\ts\tCDS\t1\t3\t.\t+\t0\tParent=missing\n",
         ])
 
 

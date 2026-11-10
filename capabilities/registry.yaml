@@ -36,6 +36,11 @@ tools:
     status: implemented
     implementation: python/kinetics/genome_orf.py
     evidence_level: none
+  - id: sequence.local_blastp
+    name: Hash-pinned bounded local BLASTP protein homology search
+    status: implemented
+    implementation: python/kinetics/blastp.py
+    evidence_level: none
   - id: sequence.local_hmmpress
     name: Hash-pinned local hmmpress profile-pack preparation
     status: implemented

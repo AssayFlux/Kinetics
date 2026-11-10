@@ -486,5 +486,13 @@
     "implementation": "python/kinetics/hmmer_runner.py",
     "evidence_level": "none",
     "domain": "Protein intelligence"
+  },
+  {
+    "id": "sequence.local_blastp",
+    "name": "Hash-pinned bounded local BLASTP protein homology search",
+    "status": "implemented",
+    "implementation": "python/kinetics/blastp.py",
+    "evidence_level": "none",
+    "domain": "Protein intelligence"
   }
 ]

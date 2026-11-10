@@ -1,5 +1,11 @@
-# S7 — Contig assembly QC boundary
+# S7 — Genome annotation foundations
 
-`python/kinetics/genome_qc.py` consumes sequence records incrementally and reports contig count, total/longest/shortest lengths, N50/L50, canonical-base GC fraction, ambiguous/N-base counts and short-contig count. It enforces record and total-base budgets and rejects duplicate IDs or invalid IUPAC DNA symbols.
+## Bounded six-frame ORF candidate scan
 
-This is assembly-summary QC only. It does not establish completeness, contamination, assembly correctness, gene boundaries, eukaryotic splice models, transcript isoforms, function or pathway annotation. Six-frame ORF candidates remain a separate explicitly selected-code heuristic. Prokaryotic and eukaryotic annotation pipelines require independently curated organism-class datasets and separate validation.
+The ORF scanner enumerates complete start-to-stop candidates on both strands under an explicitly selected NCBI translation table. It enforces sequence, open-start, output and total candidate-pair ceilings. It remains a heuristic candidate generator, not a gene caller.
+
+## GFF3 annotation import
+
+The GFF3 v3 reader validates nine-column structure, 1-based inclusive coordinates, finite scores, strand/phase syntax, unique IDs, resolvable parent edges, parent containment, acyclic hierarchy, sequence-region bounds and explicit resource budgets. It reports feature-type counts without claiming annotation correctness.
+
+It does not infer organism class, predict genes, interpret embedded FASTA, translate CDS, validate splice biology or assign function. GFF3 import is not a substitute for separate prokaryotic and eukaryotic annotation pipelines. Those predictors and independent organism-diverse benchmarks remain open.

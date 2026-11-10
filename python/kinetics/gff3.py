@@ -1,0 +1,204 @@
+"""Bounded GFF3 v3 annotation import; does not predict or validate biology."""
+from __future__ import annotations
+
+from collections import Counter
+import math
+from urllib.parse import unquote
+
+
+def parse_gff3(
+    lines: object,
+    *,
+    max_lines: int = 2_000_000,
+    max_features: int = 1_000_000,
+    max_attribute_bytes: int = 16_384,
+    max_total_attribute_bytes: int = 64 * 1024 * 1024,
+) -> dict[str, object]:
+    """Validate GFF3 structure, feature IDs, parent graph and coordinate bounds."""
+    limits = {
+        "max_lines": max_lines,
+        "max_features": max_features,
+        "max_attribute_bytes": max_attribute_bytes,
+        "max_total_attribute_bytes": max_total_attribute_bytes,
+    }
+    for name, value in limits.items():
+        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+            raise ValueError(f"{name} must be a positive integer")
+    if not hasattr(lines, "__iter__"):
+        raise TypeError("lines must be an iterable of text lines")
+
+    features: list[dict[str, object]] = []
+    ids: dict[str, dict[str, object]] = {}
+    parent_graph: dict[str, tuple[str, ...]] = {}
+    regions: dict[str, tuple[int, int]] = {}
+    counts: Counter[str] = Counter()
+    attribute_bytes = 0
+    saw_version = False
+    saw_fasta = False
+    line_count = 0
+
+    for line_count, raw in enumerate(lines, 1):
+        if line_count > max_lines:
+            raise ValueError("GFF3 input exceeds max_lines")
+        if not isinstance(raw, str):
+            raise TypeError("GFF3 lines must be text")
+        line = raw.rstrip("\\r\\n")
+        if not line:
+            continue
+        if saw_fasta:
+            continue
+        if line == "##FASTA":
+            saw_fasta = True
+            continue
+        if line.startswith("##"):
+            if line == "##gff-version 3":
+                if saw_version:
+                    raise ValueError("GFF3 version directive must occur once")
+                saw_version = True
+            elif line.startswith("##sequence-region "):
+                fields = line.split()
+                if len(fields) != 4:
+                    raise ValueError("Malformed GFF3 sequence-region directive")
+                try:
+                    start, end = int(fields[2]), int(fields[3])
+                except ValueError as exc:
+                    raise ValueError("Invalid GFF3 sequence-region coordinates") from exc
+                if not fields[1] or start < 1 or end < start or fields[1] in regions:
+                    raise ValueError("Invalid or duplicate GFF3 sequence-region")
+                regions[fields[1]] = (start, end)
+            continue
+        if line.startswith("#"):
+            continue
+
+        cols = line.split("\\t")
+        if len(cols) != 9:
+            raise ValueError(f"GFF3 line {line_count} must contain nine columns")
+        seqid, source, kind, start_s, end_s, score_s, strand, phase_s, attr_s = cols
+        if not seqid or not source or not kind:
+            raise ValueError("GFF3 seqid, source and type must be non-empty")
+        try:
+            start, end = int(start_s), int(end_s)
+        except ValueError as exc:
+            raise ValueError("GFF3 coordinates must be integers") from exc
+        if start < 1 or end < start:
+            raise ValueError("GFF3 coordinates must be positive, ordered and 1-based")
+        if score_s == ".":
+            score = None
+        else:
+            try:
+                score = float(score_s)
+            except ValueError as exc:
+                raise ValueError("GFF3 score must be numeric or '.'") from exc
+            if not math.isfinite(score):
+                raise ValueError("GFF3 score must be finite")
+        if strand not in {"+", "-", ".", "?"}:
+            raise ValueError("Invalid GFF3 strand")
+        if kind == "CDS":
+            if phase_s not in {"0", "1", "2"}:
+                raise ValueError("CDS phase must be 0, 1 or 2")
+            phase: int | None = int(phase_s)
+        else:
+            if phase_s != ".":
+                raise ValueError("Non-CDS feature phase must be '.'")
+            phase = None
+
+        encoded_size = len(attr_s.encode("utf-8"))
+        attribute_bytes += encoded_size
+        if encoded_size > max_attribute_bytes:
+            raise ValueError("GFF3 feature exceeds max_attribute_bytes")
+        if attribute_bytes > max_total_attribute_bytes:
+            raise ValueError("GFF3 input exceeds max_total_attribute_bytes")
+        attrs: dict[str, str] = {}
+        if attr_s != ".":
+            for item in attr_s.split(";"):
+                if not item or "=" not in item:
+                    raise ValueError("GFF3 attributes must be key=value pairs")
+                key_raw, value_raw = item.split("=", 1)
+                try:
+                    key, value = unquote(key_raw, errors="strict"), unquote(value_raw, errors="strict")
+                except UnicodeDecodeError as exc:
+                    raise ValueError("GFF3 attributes contain invalid UTF-8 escapes") from exc
+                if not key or key in attrs:
+                    raise ValueError("GFF3 attribute keys must be non-empty and unique")
+                attrs[key] = value
+
+        identifier = attrs.get("ID")
+        if identifier is not None:
+            if not identifier or identifier in ids:
+                raise ValueError("GFF3 feature IDs must be non-empty and globally unique")
+        parents = tuple(attrs.get("Parent", "").split(",")) if attrs.get("Parent") else ()
+        if any(not parent for parent in parents) or len(set(parents)) != len(parents):
+            raise ValueError("GFF3 Parent references must be non-empty and unique")
+        feature: dict[str, object] = {
+            "seqid": seqid, "source": source, "type": kind, "start": start, "end": end,
+            "score": score, "strand": strand, "phase": phase, "attributes": attrs,
+        }
+        features.append(feature)
+        counts[kind] += 1
+        if identifier is not None:
+            ids[identifier] = feature
+            parent_graph[identifier] = parents
+        elif parents:
+            parent_graph[f"@anonymous-{len(features)}"] = parents
+        if len(features) > max_features:
+            raise ValueError("GFF3 input exceeds max_features")
+
+    if not saw_version:
+        raise ValueError("GFF3 version 3 directive is required")
+    for feature in features:
+        seqid = str(feature["seqid"])
+        region = regions.get(seqid)
+        if region and (int(feature["start"]) < region[0] or int(feature["end"]) > region[1]):
+            raise ValueError("GFF3 feature lies outside its sequence-region")
+        for parent_id in feature["attributes"].get("Parent", "").split(",") if feature["attributes"].get("Parent") else ():
+            parent = ids.get(parent_id)
+            if parent is None:
+                raise ValueError(f"GFF3 Parent {parent_id!r} does not resolve to an ID")
+            if (
+                parent["seqid"] != feature["seqid"]
+                or int(parent["start"]) > int(feature["start"])
+                or int(parent["end"]) < int(feature["end"])
+            ):
+                raise ValueError("GFF3 child feature must lie within its parent on the same sequence")
+
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(identifier: str) -> None:
+        if identifier in visiting:
+            raise ValueError("GFF3 Parent graph contains a cycle")
+        if identifier in visited:
+            return
+        visiting.add(identifier)
+        for parent in parent_graph.get(identifier, ()):
+            if parent in ids:
+                visit(parent)
+        visiting.remove(identifier)
+        visited.add(identifier)
+
+    for identifier in ids:
+        visit(identifier)
+
+    seqids = sorted({str(feature["seqid"]) for feature in features})
+    return {
+        "schema": "kinetics.gff3-annotation-import.v1",
+        "format": "GFF3",
+        "feature_count": len(features),
+        "sequence_count": len(seqids),
+        "sequence_ids": seqids,
+        "feature_type_counts": dict(sorted(counts.items())),
+        "identified_feature_count": len(ids),
+        "parent_edge_count": sum(len(value) for value in parent_graph.values()),
+        "sequence_regions": {
+            key: {"start": value[0], "end": value[1]} for key, value in sorted(regions.items())
+        },
+        "coordinate_system": "1-based inclusive (GFF3)",
+        "resource_limits": {**limits, "lines_read": line_count, "attribute_bytes_read": attribute_bytes},
+        "limitations": [
+            "Imports supplied annotations; does not predict genes, transcripts or splice sites.",
+            "No taxonomy, organism class, function, pathway or biological correctness is inferred.",
+            "Embedded FASTA is ignored; sequence/annotation concordance is not checked.",
+            "CDS phases are range-checked only; translation and splice consistency are not validated.",
+            "Structural validity does not establish annotation quality or experimental support.",
+        ],
+    }

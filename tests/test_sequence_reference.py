@@ -139,3 +139,41 @@ def test_fasta_reference_search_rejects_hash_mismatch_and_byte_budget() -> None:
             ),
             max_fasta_bytes=4,
         )
+
+
+def test_bounded_local_alignment_reports_partial_match_coordinates_and_provenance() -> None:
+    from kinetics.sequence_reference import local_alignment_reference_search
+
+    result = local_alignment_reference_search(
+        "ACGT", [SequenceRecord("ref", "TTACGTAA")],
+        sequence_type="DNA", reference_pack=pack(),
+    )
+    hit = result["hits"][0]
+    assert hit["reference_id"] == "ref"
+    assert hit["score"] == 8
+    assert hit["identity"] == 1.0
+    assert hit["query_coverage"] == 1.0
+    assert (hit["reference_start_1based"], hit["reference_end_1based"]) == (3, 6)
+    assert hit["evalue"] is None
+    assert result["conclusion"]["homology"] == "not_established"
+
+
+def test_bounded_local_alignment_abstains_and_enforces_cell_budgets() -> None:
+    from kinetics.sequence_reference import local_alignment_reference_search
+
+    no_hit = local_alignment_reference_search(
+        "AAAA", [SequenceRecord("ref", "TTTT")],
+        sequence_type="DNA", reference_pack=pack(),
+    )
+    assert no_hit["hits"] == []
+    assert no_hit["conclusion"]["novelty"] == "not_established"
+    with pytest.raises(ValueError, match="max_alignment_cells"):
+        local_alignment_reference_search(
+            "ACGT", [SequenceRecord("ref", "ACGT")],
+            sequence_type="DNA", reference_pack=pack(), max_alignment_cells=4,
+        )
+    with pytest.raises(ValueError, match="max_total_alignment_cells"):
+        local_alignment_reference_search(
+            "ACGT", [SequenceRecord("r1", "ACGT"), SequenceRecord("r2", "ACGT")],
+            sequence_type="DNA", reference_pack=pack(), max_total_alignment_cells=40,
+        )

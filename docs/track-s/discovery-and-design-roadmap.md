@@ -151,3 +151,8 @@ Every S increment must be tested against the exact commit. Host tests are regres
 The owner approved deferring external biological/experimental validation, licensed reference/model resources and secure inference infrastructure, and physical-device verification as explicit carry-forward deliverables. Capabilities without implementation, license or validation remain disabled and must not be presented as scientifically established.
 
 This decision does **not** waive missing software implementation. Full prokaryotic/eukaryotic annotation, homology/profile-HMM and family/domain workflows, and prediction-engine integration remain open engineering work. S10 generation remains disabled. Continue S; I remains blocked until the implementable S scope is completed and audited. See [the S-track evidence audit](audit-2026-11-09.md).
+
+
+## S6 software increment — local alignment primitive (2026-11-10)
+
+A bounded Smith–Waterman local aligner is now available for caller-supplied reference records. It reports descriptive score, identity, query/reference coverage and 1-based local coordinates under explicit dynamic-programming cell ceilings. It does not compute E-values or statistical significance and must not be presented as a calibrated homology/family classifier. Curated licensed reference packs and independent validation remain required.

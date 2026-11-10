@@ -16,8 +16,8 @@ def test_plus_strand_multiexon_cds_reconstruction_and_translation() -> None:
     ])
     result = reconstruct_gff3_cds(annotation, {"chr1": "ATGAAAAAATAA"}, table_id=1)
     transcript = result["transcripts"][0]
-    assert transcript["cds_sequence"] == "ATGATAA"
-    assert transcript["phase_consistent"] is False
+    assert transcript["cds_sequence"] == "ATGAATAA"
+    assert transcript["phase_consistent"] is True
     assert transcript["translation_status"] == "abstained"
 
 
@@ -31,7 +31,7 @@ def test_minus_strand_segments_are_joined_in_transcriptional_order() -> None:
     ])
     result = reconstruct_gff3_cds(annotation, {"chr1": "TTACAAAAATCA"}, table_id=1)
     transcript = result["transcripts"][0]
-    assert transcript["cds_sequence"] == "TGATG"
+    assert transcript["cds_sequence"] == "TGATGTAA"
     assert transcript["segment_phases"][1]["expected_phase"] == 2
 
 

@@ -113,7 +113,12 @@ def reconstruct_gff3_cds(
             phase = segment["phase"]
             if phase is None:
                 raise ValueError("CDS phase is required for every CDS segment")
-            expected_phase = 0 if index == 0 else (3 - coding_length % 3) % 3
+            expected_phase = (
+                phase if index == 0
+                else (3 - (coding_length - first_phase) % 3) % 3
+            )
+            if index == 0:
+                first_phase = phase
             if phase != expected_phase:
                 phase_consistent = False
             left, right = segment["start"] - 1, segment["end"]

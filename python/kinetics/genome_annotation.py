@@ -156,13 +156,13 @@ def run_pinned_local_gff3_annotator(
             raise ValueError("Gene annotation exceeds max_gff3_bytes")
         with output_path.open("r", encoding="utf-8", errors="strict") as stream:
             annotation = parse_gff3(stream)
+        annotation_bytes = output_path.read_bytes()
     unknown = set(annotation["sequence_ids"]) - set(contigs)
     if unknown:
         raise ValueError(f"Annotation refers to unknown contigs: {sorted(unknown)[:5]}")
     for feature in annotation["features"]:
         if feature["end"] > len(contigs[feature["seqid"]]):
             raise ValueError("GFF3 feature extends beyond supplied contig length")
-    annotation_bytes = output_path.read_bytes()
     return {
         "schema": "kinetics.local-genome-annotation.v1",
         "execution_mode": "local",

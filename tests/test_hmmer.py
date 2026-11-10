@@ -15,7 +15,10 @@ PACK = {
 
 # target name/accession/tlen, query name/accession/qlen, full E/score/bias,
 # domain #/of, c-E/i-E, domain score/bias, HMM, alignment, envelope coords, acc.
-ROW = "PF00001 PF00001.1 100 query-1 - 80 1e-20 72.5 0.1 1 1 1e-18 1e-18 70.0 0.0 5 75 3 73 2 75 0.98 kinase-like domain"
+ROW = (
+    "PF00001 PF00001.1 100 query-1 - 80 1e-20 72.5 0.1 1 1 "
+    "1e-18 1e-18 70.0 0.0 5 75 3 73 2 75 0.98 kinase-like domain"
+)
 
 
 def test_domtblout_parser_preserves_profile_statistics_and_coordinates() -> None:

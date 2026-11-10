@@ -42,7 +42,7 @@ def parse_gff3(
             raise ValueError("GFF3 input exceeds max_lines")
         if not isinstance(raw, str):
             raise TypeError("GFF3 lines must be text")
-        line = raw.rstrip("\\r\\n")
+        line = raw.rstrip("\r\n")
         if not line:
             continue
         if saw_fasta:
@@ -70,7 +70,7 @@ def parse_gff3(
         if line.startswith("#"):
             continue
 
-        cols = line.split("\\t")
+        cols = line.split("\t")
         if len(cols) != 9:
             raise ValueError(f"GFF3 line {line_count} must contain nine columns")
         seqid, source, kind, start_s, end_s, score_s, strand, phase_s, attr_s = cols

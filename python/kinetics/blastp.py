@@ -16,6 +16,25 @@ from .sequence import parse_fasta
 _AMINO_ACIDS = frozenset("ACDEFGHIKLMNPQRSTVWYBXZJ")
 
 
+def _resolve_database_prefix(database_prefix: str) -> Path:
+    raw = Path(database_prefix).expanduser()
+    if not raw.name:
+        raise ValueError("database_prefix must name a BLAST database")
+    return raw.parent.resolve(strict=True) / raw.name
+
+
+def _file_limit(max_bytes: int):
+    if sys.platform == "win32":
+        return None
+
+    def apply() -> None:
+        import resource
+
+        resource.setrlimit(resource.RLIMIT_FSIZE, (max_bytes, max_bytes))
+
+    return apply
+
+
 def _hash_file(path: Path, *, max_bytes: int) -> tuple[str, int]:
     digest = hashlib.sha256()
     total = 0
@@ -37,9 +56,7 @@ def hash_blast_protein_database(
     """Verify and hash the required BLAST protein database core files."""
     if isinstance(max_bytes, bool) or not isinstance(max_bytes, int) or max_bytes < 1:
         raise ValueError("max_bytes must be a positive integer")
-    prefix = Path(database_prefix).expanduser().resolve(strict=True)
-    if not prefix.is_file():
-        raise ValueError("database_prefix must identify an existing database file")
+    prefix = _resolve_database_prefix(database_prefix)
     required = {".pin", ".phr", ".psq"}
     if not required.issubset(file_sha256):
         raise ValueError("BLAST protein database manifest requires .pin, .phr and .psq")
@@ -163,7 +180,7 @@ def run_local_blastp(
     database_hash = hash_blast_protein_database(
         database_prefix, database_file_sha256, max_bytes=max_database_bytes,
     )
-    database = Path(database_prefix).expanduser().resolve(strict=True)
+    database = _resolve_database_prefix(database_prefix)
     if _hash_file(executable, max_bytes=max_executable_bytes)[0] != executable_hash:
         raise ValueError("BLAST executable changed after approval")
     if hash_blast_protein_database(
@@ -208,6 +225,7 @@ def run_local_blastp(
                     timeout=timeout_seconds,
                     check=False,
                     shell=False,
+                    preexec_fn=_file_limit(max_output_bytes),
                 )
         except subprocess.TimeoutExpired as exc:
             raise TimeoutError("Local BLASTP exceeded timeout_seconds") from exc
@@ -218,6 +236,7 @@ def run_local_blastp(
         if output_path.stat().st_size > max_output_bytes:
             raise ValueError("BLASTP output exceeds max_output_bytes")
         hits: list[dict[str, object]] = []
+        hits_per_query: dict[str, int] = {}
         with output_path.open("r", encoding="utf-8", errors="strict") as stream:
             for line_number, raw in enumerate(stream, 1):
                 if len(raw.encode("utf-8")) > 16_384:
@@ -255,10 +274,15 @@ def run_local_blastp(
                     or not (1 <= qstart <= qend <= query_length)
                     or not (1 <= sstart <= send <= subject_length)
                     or evalue < 0
+                    or evalue > evalue_threshold
+                    or bitscore < 0
                 ):
                     raise ValueError(f"BLASTP output line {line_number} has invalid coordinates")
                 if len(hits) >= max_hits:
                     raise ValueError("BLASTP output exceeds max_hits")
+                hits_per_query[query_id] = hits_per_query.get(query_id, 0) + 1
+                if hits_per_query[query_id] > max_target_seqs:
+                    raise ValueError("BLASTP output exceeds max_target_seqs for a query")
                 hits.append({
                     "query_id": query_id,
                     "subject_id": subject_id,

@@ -19,7 +19,8 @@ def _artifacts(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
         " raise SystemExit(0)",
         "args=sys.argv[1:]",
         "out=pathlib.Path(args[args.index('-out')+1])",
-        "out.write_text('q1\\\\ts1\\\\t98.0\\\\t10\\\\t0\\\\t0\\\\t1\\\\t10\\\\t5\\\\t14\\\\t1e-20\\\\t42.0\\\\t10\\\\t100\\\\n')",
+        "row = " + repr("\t".join(["q1", "s1", "98.0", "10", "0", "0", "1", "10", "5", "14", "1e-20", "42.0", "10", "100"]) + "\n"),
+        "out.write_text(row)",
     ]
     executable.write_text("\n".join(script) + "\n", encoding="utf-8")
     executable.chmod(0o755)

@@ -73,7 +73,7 @@ def run_local_structure_prediction(
     if envelope.get("node") != engine.node_provenance:
         raise ValueError("Prediction envelope node provenance differs from installed engine")
     validation = validate_prediction_envelope(
-        sequence,
+        normalized_sequence,
         envelope,
         max_residues=max_residues,
         max_payload_bytes=max_payload_bytes,

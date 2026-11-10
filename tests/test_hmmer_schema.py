@@ -6,7 +6,17 @@ from pathlib import Path
 from jsonschema import Draft202012Validator
 
 from kinetics.hmmer import parse_hmmscan_domtblout
-from test_hmmer import PACK, ROW
+PACK = {
+    "name": "synthetic-profile-pack",
+    "version": "1",
+    "license": "CC0-1.0",
+    "source": "https://example.org/profiles",
+    "content_sha256": "a" * 64,
+}
+ROW = (
+    "PF00001 PF00001.1 100 query-1 - 80 1e-20 72.5 0.1 1 1 "
+    "1e-18 1e-18 70.0 0.0 5 75 3 73 2 75 0.98 kinase-like domain"
+)
 
 
 def test_hmmscan_evidence_matches_versioned_schema() -> None:

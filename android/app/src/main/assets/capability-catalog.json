@@ -464,6 +464,14 @@
     "domain": "Genome analysis"
   },
   {
+    "id": "protein.hmmer_domain_candidate_ranking",
+    "name": "Caller-thresholded ranking and abstention for HMMER domain candidates",
+    "status": "implemented",
+    "implementation": "python/kinetics/hmmer_rank.py",
+    "evidence_level": "none",
+    "domain": "Protein analysis"
+  },
+  {
     "id": "protein.hmmscan_domtblout_evidence",
     "name": "Bounded HMMER hmmscan domain-hit evidence parsing with profile provenance",
     "status": "implemented",

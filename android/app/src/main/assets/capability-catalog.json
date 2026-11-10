@@ -422,5 +422,13 @@
     "implementation": "python/kinetics/gff3_transcripts.py",
     "evidence_level": "none",
     "domain": "Genome analysis"
+  },
+  {
+    "id": "protein.hmmscan_domtblout_evidence",
+    "name": "Bounded HMMER hmmscan domain-hit evidence parsing with profile provenance",
+    "status": "implemented",
+    "implementation": "python/kinetics/hmmer.py",
+    "evidence_level": "none",
+    "domain": "Protein analysis"
   }
 ]

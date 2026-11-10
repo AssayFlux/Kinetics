@@ -159,3 +159,10 @@ A bounded Smith–Waterman local aligner is now available for caller-supplied re
 
 
 The verified local FASTA-pack workflow now exposes the bounded local aligner directly after hash-pinned pack ingestion. GFF3 import returns its validated feature records as well as summary counts, enabling downstream processing while preserving the annotation-import-versus-prediction distinction.
+
+
+## S4/S7/S9 software increments (2026-11-10)
+
+- **S4:** a dependency-injected local prediction-engine protocol now connects an approved local worker to the existing strict envelope validator. No engine or weights are bundled; model/license, runtime and calibration gates remain open.
+- **S7:** supplied GFF3 annotations can now be reconstructed into strand-aware spliced CDS sequences and translated with an explicit genetic code. This is not de novo eukaryotic gene prediction.
+- **S9:** HMMER hmmscan domain-table output can be parsed into bounded provenance-bearing candidate profile-match evidence. A local HMMER binary and approved profile packs are still needed for live searches.

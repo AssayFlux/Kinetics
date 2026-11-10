@@ -206,3 +206,7 @@ This corrects stale records that the R3 bootstrap, R7 phylogenetics and R8 NB2 r
 
 ### Owner decision D-021 — Track S external gates (2026-11-10)
 The owner approved deferring independent biological validation, licensed reference/model acquisition and secure inference infrastructure, and physical-device verification as explicit carry-forward obligations. Unvalidated capabilities remain disabled. This does not close missing software: S4 prediction-engine integration, S6 homology/profile-HMM, S7 full prokaryotic/eukaryotic annotation, and S9 family/domain workflows remain open. S10 generation remains disabled. Track I stays blocked until the remaining implementable S software scope is delivered and audited. See `docs/track-s/audit-2026-11-09.md`.
+
+
+### Owner decision D-022 — full S software implementation authorization (2026-11-10)
+The owner authorized full implementation of all remaining S-track software and its integration/audit, including S4, S6, S7 and S9. Continue repository code, tests, documentation and capability integration without repeated permission requests. D-021's explicit external validation, licensed data/model and physical-device deferrals remain in force; no evidence may be fabricated and unvalidated capabilities remain disabled. Track I remains blocked pending S exit audit.

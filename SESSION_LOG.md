@@ -2347,3 +2347,12 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 
 ### Deferred validation
 - Device screenshots, import/export on physical hardware, accessibility, memory/latency benchmarks, experimental structure concordance, licensed biological reference packs, model licensing and wet-lab evidence remain explicitly deferred.
+
+
+## 2026-11-10 — Owner decision D-022: full S software implementation authorization
+
+- Owner explicitly authorized full implementation of the remaining S-track software scope, including S4, S6, S7 and S9, and completion of the S1–S10 software audit.
+- Continue implementing without asking for repeated permission for ordinary repository code, tests, documentation, capability registration and integration work.
+- D-022 does not waive D-021's external gates: licensed model/data acquisition, independent biological/experimental validation, physical-device verification and any required secure inference infrastructure must remain honestly tracked until actually available and verified.
+- Unvalidated capabilities stay disabled or clearly marked unverified. Do not fabricate model weights, reference packs, test results, external credentials or device evidence.
+- Track I remains blocked until the implementable S software scope is complete and the exact-source audit passes.

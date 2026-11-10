@@ -8,7 +8,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from typing import Mapping
+from typing import Callable, Mapping
 from urllib.parse import urlparse
 
 from .sequence import parse_fasta
@@ -23,7 +23,7 @@ def _resolve_database_prefix(database_prefix: str) -> Path:
     return raw.parent.resolve(strict=True) / raw.name
 
 
-def _file_limit(max_bytes: int):
+def _file_limit(max_bytes: int) -> Callable[[], None] | None:
     if sys.platform == "win32":
         return None
 

@@ -11,6 +11,11 @@ from kinetics.blastp import hash_blast_protein_database, run_local_blastp
 
 def _artifacts(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     executable = tmp_path / "blastp.py"
+    row_fields = [
+        "q1", "s1", "98.0", "10", "0", "0", "1", "10",
+        "5", "14", "1e-20", "42.0", "10", "100",
+    ]
+    row_literal = repr("\t".join(row_fields) + "\n")
     script = [
         "#!" + sys.executable,
         "import pathlib, sys",
@@ -19,7 +24,7 @@ def _artifacts(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
         " raise SystemExit(0)",
         "args=sys.argv[1:]",
         "out=pathlib.Path(args[args.index('-out')+1])",
-        "row = " + repr("\t".join(["q1", "s1", "98.0", "10", "0", "0", "1", "10", "5", "14", "1e-20", "42.0", "10", "100"]) + "\n"),
+        "row = " + row_literal,
         "out.write_text(row)",
     ]
     executable.write_text("\n".join(script) + "\n", encoding="utf-8")

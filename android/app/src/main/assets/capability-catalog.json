@@ -478,5 +478,13 @@
     "implementation": "python/kinetics/genome_annotation.py",
     "evidence_level": "none",
     "domain": "Genome analysis"
+  },
+  {
+    "id": "sequence.local_hmmpress",
+    "name": "Hash-pinned local hmmpress profile-pack preparation",
+    "status": "implemented",
+    "implementation": "python/kinetics/hmmer_runner.py",
+    "evidence_level": "none",
+    "domain": "Protein intelligence"
   }
 ]

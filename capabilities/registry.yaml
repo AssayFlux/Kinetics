@@ -36,6 +36,11 @@ tools:
     status: implemented
     implementation: python/kinetics/genome_orf.py
     evidence_level: none
+  - id: sequence.local_hmmpress
+    name: Hash-pinned local hmmpress profile-pack preparation
+    status: implemented
+    implementation: python/kinetics/hmmer_runner.py
+    evidence_level: none
   - id: sequence.local_hmmscan
     name: Pinned local HMMER profile search with bounded execution and evidence parsing
     status: implemented

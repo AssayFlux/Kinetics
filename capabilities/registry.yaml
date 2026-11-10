@@ -305,12 +305,6 @@ tools:
     implementation: python/kinetics/s4_engine.py
     evidence_level: none
 
-  - id: genome.prokaryotic_orf_candidate_scan
-    name: Genome-wide bounded six-frame ORF candidate triage across contigs
-    status: implemented
-    implementation: python/kinetics/genome_orf.py
-    evidence_level: none
-
 engines: []
 data_packs: []
 domains: []

@@ -110,16 +110,16 @@ def run_local_augustus(
     ):
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError(f"{name} must be a positive integer")
-    for name, value in (
+    for digest_name, digest_value in (
         ("executable_sha256", executable_sha256),
         ("species_model_sha256", species_model_sha256),
     ):
         if (
-            not isinstance(value, str)
-            or len(value) != 64
-            or any(char not in "0123456789abcdef" for char in value)
+            not isinstance(digest_value, str)
+            or len(digest_value) != 64
+            or any(char not in "0123456789abcdef" for char in digest_value)
         ):
-            raise ValueError(f"{name} must be lowercase SHA-256 hex")
+            raise ValueError(f"{digest_name} must be lowercase SHA-256 hex")
     if not isinstance(tool_version, str) or not tool_version.strip():
         raise ValueError("tool_version must be non-empty caller-supplied text")
 

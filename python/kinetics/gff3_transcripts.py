@@ -108,6 +108,7 @@ def reconstruct_gff3_cds(
         pieces: list[str] = []
         phase_rows: list[dict[str, int]] = []
         coding_length = 0
+        first_phase = 0
         phase_consistent = True
         for index, segment in enumerate(ordered):
             phase = segment["phase"]

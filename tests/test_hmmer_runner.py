@@ -23,9 +23,11 @@ def _artifacts(tmp_path: Path) -> tuple[Path, Path, dict[str, str]]:
     executable.chmod(0o755)
     profile = tmp_path / "profiles.hmm"
     profile.write_text("HMMER3/f\nsynthetic profile\n", encoding="ascii")
+    for suffix in (".h3m", ".h3i", ".h3f", ".h3p"):
+        Path(str(profile) + suffix).write_bytes(("pressed" + suffix).encode("ascii"))
     pack = {
         **PACK_BASE,
-        "content_sha256": hashlib.sha256(profile.read_bytes()).hexdigest(),
+        "content_sha256": hash_pressed_profile_pack(str(profile)),
     }
     return executable, profile, pack
 

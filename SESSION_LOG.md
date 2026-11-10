@@ -2329,3 +2329,21 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 
 ### Next step
 - Verify CI #2202 Android packaging and CI #2204 exact-source regression suite; continue closing implementable S1–S10 software gaps while retaining external validation gates.
+
+
+## 2026-11-10 — Owner decision D-021 and S5 PNG increment
+
+### Owner-approved scope
+- Owner approved deferring independent biological/experimental validation, curated truth sets/calibration, licensed reference datasets and prediction models/weights/secure inference infrastructure, and physical-device verification as explicit carry-forward deliverables.
+- All unvalidated capabilities remain disabled and labelled unverified.
+- This approval does not waive missing software implementation. S4 prediction-engine integration, S6 homology/profile-HMM workflows, S7 prokaryotic/eukaryotic genome annotation, and S9 family/domain workflows remain open. S10 candidate generation remains disabled.
+- Track I remains blocked until the implementable S software scope is completed and audited.
+
+### S5 implementation
+- Added Android SAF PNG snapshot export with a 16-megapixel pixel-count bound.
+- Added active WebView reference refresh and cleanup for viewer replacement/disposal, plus a source-contract regression test.
+- Commit `e1afc18` added the export; `39e6eaf` tightened lifecycle handling and test coverage.
+- CI for `39e6eaf` was queued at this log update; no pass is claimed until exact-source CI completes.
+
+### Deferred validation
+- Device screenshots, import/export on physical hardware, accessibility, memory/latency benchmarks, experimental structure concordance, licensed biological reference packs, model licensing and wet-lab evidence remain explicitly deferred.

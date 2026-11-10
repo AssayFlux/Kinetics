@@ -144,3 +144,10 @@ Every S increment must be tested against the exact commit. Host tests are regres
 - Counts optimal traceback paths (capped at two) and abstains on tied placements/tracebacks rather than choosing an arbitrary coordinate mapping.
 - Enforces sequence, atom, residue and dynamic-programming cell budgets, plus caller-selected identity and structure-coverage thresholds.
 - This is coordinate correspondence only, not a calibrated homology/family classifier, mutation model or functional predictor. Insertion codes and alternate locations remain unsupported by the current atom model.
+
+
+## Owner scope decision D-021 — 2026-11-10
+
+The owner approved deferring external biological/experimental validation, licensed reference/model resources and secure inference infrastructure, and physical-device verification as explicit carry-forward deliverables. Capabilities without implementation, license or validation remain disabled and must not be presented as scientifically established.
+
+This decision does **not** waive missing software implementation. Full prokaryotic/eukaryotic annotation, homology/profile-HMM and family/domain workflows, and prediction-engine integration remain open engineering work. S10 generation remains disabled. Continue S; I remains blocked until the implementable S scope is completed and audited. See [the S-track evidence audit](audit-2026-11-09.md).

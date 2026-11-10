@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/local-alignment-evidence.schema.json",
+  "title": "Kinetics bounded local sequence alignment evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "query",
+    "search",
+    "hits",
+    "conclusion",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "query": {
+      "type": "object",
+      "required": [
+        "sequence_sha256",
+        "length",
+        "alphabet"
+      ],
+      "properties": {
+        "sequence_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "alphabet": {
+          "enum": [
+            "DNA",
+            "RNA",
+            "protein"
+          ]
+        }
+      }
+    },
+    "search": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "scoring",
+        "reference_pack",
+        "records_examined",
+        "alignment_cells_examined"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "bounded-smith-waterman-linear-gap-v1"
+        },
+        "scoring": {
+          "type": "object"
+        },
+        "reference_pack": {
+          "type": "object",
+          "required": [
+            "name",
+            "version",
+            "license",
+            "source",
+            "content_sha256"
+          ]
+        },
+        "records_examined": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "alignment_cells_examined": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "hits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "reference_id",
+          "score",
+          "identity",
+          "query_coverage",
+          "reference_coverage",
+          "evalue",
+          "evidence_type"
+        ],
+        "properties": {
+          "reference_id": {
+            "type": "string"
+          },
+          "score": {
+            "type": "integer"
+          },
+          "identity": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "query_coverage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "reference_coverage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evalue": {
+            "type": "null"
+          },
+          "evidence_type": {
+            "const": "bounded_smith_waterman_identity_scored_local_alignment"
+          }
+        }
+      }
+    },
+    "conclusion": {
+      "type": "object",
+      "required": [
+        "status",
+        "homology",
+        "family_or_function",
+        "novelty",
+        "statistical_significance"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "local_alignment_hits",
+            "no_local_alignment"
+          ]
+        },
+        "homology": {
+          "const": "not_established"
+        },
+        "family_or_function": {
+          "const": "not_inferred"
+        },
+        "novelty": {
+          "const": "not_established"
+        },
+        "statistical_significance": {
+          "const": "not_computed"
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

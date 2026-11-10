@@ -291,7 +291,6 @@ def local_alignment_reference_search(
         for i, query_residue in enumerate(query_sequence, 1):
             current = [0] * width
             row_offset = i * width
-            previous_offset = (i - 1) * width
             for j, target_residue in enumerate(target, 1):
                 diagonal = previous[j - 1] + (
                     match_score if query_residue == target_residue else mismatch_score

@@ -390,5 +390,21 @@
     "implementation": "python/kinetics/structure_alignment.py",
     "evidence_level": "none",
     "domain": "Structural biology"
+  },
+  {
+    "id": "sequence.local_alignment_reference_search",
+    "name": "Bounded Smith-Waterman local sequence alignment against caller-supplied reference records",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence_reference.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
+    "id": "genome.gff3_annotation_import",
+    "name": "Bounded GFF3 v3 feature annotation import and hierarchy validation",
+    "status": "implemented",
+    "implementation": "python/kinetics/gff3.py",
+    "evidence_level": "none",
+    "domain": "Genome analysis"
   }
 ]

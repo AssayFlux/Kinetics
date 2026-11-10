@@ -89,8 +89,13 @@ def run_pinned_local_gff3_annotator(
     for record in records:
         if len(contigs) >= max_contigs:
             raise ValueError("Genome exceeds max_contigs")
-        if not isinstance(record.identifier, str) or not record.identifier.strip():
-            raise ValueError("Contig identifiers must be non-empty text")
+        if (
+            not isinstance(record.identifier, str)
+            or not record.identifier
+            or not record.identifier.isascii()
+            or any(char.isspace() or ord(char) < 33 or char == ">" for char in record.identifier)
+        ):
+            raise ValueError("Contig identifiers must be safe non-empty ASCII tokens")
         if record.identifier in contigs:
             raise ValueError("Contig identifiers must be unique")
         sequence = "".join(record.sequence.split()).upper().replace("U", "T")

@@ -406,5 +406,13 @@
     "implementation": "python/kinetics/gff3.py",
     "evidence_level": "none",
     "domain": "Genome analysis"
+  },
+  {
+    "id": "sequence.local_fasta_alignment_search",
+    "name": "Verified local FASTA pack ingestion followed by bounded Smith-Waterman alignment",
+    "status": "implemented",
+    "implementation": "python/kinetics/sequence_pack.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
   }
 ]

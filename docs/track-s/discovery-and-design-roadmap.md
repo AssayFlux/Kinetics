@@ -156,3 +156,6 @@ This decision does **not** waive missing software implementation. Full prokaryot
 ## S6 software increment — local alignment primitive (2026-11-10)
 
 A bounded Smith–Waterman local aligner is now available for caller-supplied reference records. It reports descriptive score, identity, query/reference coverage and 1-based local coordinates under explicit dynamic-programming cell ceilings. It does not compute E-values or statistical significance and must not be presented as a calibrated homology/family classifier. Curated licensed reference packs and independent validation remain required.
+
+
+The verified local FASTA-pack workflow now exposes the bounded local aligner directly after hash-pinned pack ingestion. GFF3 import returns its validated feature records as well as summary counts, enabling downstream processing while preserving the annotation-import-versus-prediction distinction.

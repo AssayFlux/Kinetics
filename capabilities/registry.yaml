@@ -272,6 +272,12 @@ tools:
     implementation: python/kinetics/sequence_pack.py
     evidence_level: none
 
+  - id: genome.gff3_transcript_cds_reconstruction
+    name: Bounded strand-aware GFF3 CDS reconstruction and explicit-table translation
+    status: implemented
+    implementation: python/kinetics/gff3_transcripts.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

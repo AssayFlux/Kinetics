@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 from .gff3 import parse_gff3
+from .genetic_code import GENETIC_CODES
 from .sequence import SequenceRecord
 
 
@@ -69,6 +70,8 @@ def run_pinned_local_gff3_annotator(
     ):
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError(f"{name} must be a positive integer")
+    if translation_table not in GENETIC_CODES:
+        raise ValueError("translation_table is not a supported NCBI genetic code")
     for name, value in (("annotator_id", annotator_id), ("annotator_version", annotator_version)):
         if not isinstance(value, str) or not value.strip():
             raise ValueError(f"{name} must be non-empty text")
@@ -103,6 +106,13 @@ def run_pinned_local_gff3_annotator(
     if _hash_file(executable, max_executable_bytes) != executable_sha256:
         raise ValueError("Annotator executable SHA-256 does not match approved digest")
 
+    executable_hash = _hash_file(executable, max_executable_bytes)
+    if executable_hash != executable_sha256:
+        raise ValueError("Annotator executable changed after approval")
+    contig_hashes = {
+        name: hashlib.sha256(sequence.encode("ascii")).hexdigest()
+        for name, sequence in contigs.items()
+    }
     fasta = "".join(f">{name}\n{sequence}\n" for name, sequence in contigs.items())
     with tempfile.TemporaryDirectory(prefix="kinetics-s7-") as directory:
         work = Path(directory)
@@ -152,15 +162,19 @@ def run_pinned_local_gff3_annotator(
     for feature in annotation["features"]:
         if feature["end"] > len(contigs[feature["seqid"]]):
             raise ValueError("GFF3 feature extends beyond supplied contig length")
+    annotation_bytes = output_path.read_bytes()
     return {
         "schema": "kinetics.local-genome-annotation.v1",
         "execution_mode": "local",
         "annotator": {"id": annotator_id, "version": annotator_version,
-                      "executable_sha256": executable_sha256},
+                      "executable_sha256": executable_hash},
         "mode": mode,
         "translation_table": translation_table,
         "input_contigs": len(contigs),
         "input_bases": total_bases,
+        "input_contig_sha256": contig_hashes,
+        "annotation_sha256": hashlib.sha256(annotation_bytes).hexdigest(),
+        "annotation_bytes": len(annotation_bytes),
         "annotation": annotation,
         "conclusion": "syntax_and_coordinate_validated_gene_caller_output",
         "limitations": [

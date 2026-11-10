@@ -122,6 +122,13 @@ def run_local_hmmscan(
             "Pressed HMM profile-pack SHA-256 does not match profile-pack metadata"
         )
 
+    if _sha256_file(executable, max_bytes=max_executable_bytes)[0] != executable_hash:
+        raise ValueError("HMMER executable changed after approval")
+    if hash_pressed_profile_pack(
+        str(profile), max_bytes=max_profile_bytes,
+    ) != profile_hash:
+        raise ValueError("Pressed HMM profile pack changed after approval")
+
     with tempfile.TemporaryDirectory(prefix="kinetics-hmmscan-") as work_dir:
         work = Path(work_dir)
         fasta_path = work / "queries.fasta"

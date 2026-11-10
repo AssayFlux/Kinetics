@@ -49,6 +49,10 @@
     canvas.width = Math.max(1, Math.floor(rect.width*dpr)); canvas.height = Math.max(1, Math.floor(rect.height*dpr));
     ctx.setTransform(dpr,0,0,dpr,0,0); draw();
   }
+  function atomColour(a) {
+    if(colourMode.value==="chain"){let hash=0;for(const c of a.chain)hash=(hash*31+c.charCodeAt(0))|0;return chainPalette[Math.abs(hash)%chainPalette.length];}
+    return elementColours[a.element]||"#9aa9b5";
+  }
   function draw() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     if (!w || !h) return;
@@ -62,13 +66,60 @@
     let extent=1;for(const p of rotated)extent=Math.max(extent,Math.abs(p.x),Math.abs(p.y));
     extent*=2;
     const scale=Math.min(w,h)*.76/extent*zoom, ordered=rotated.slice().sort((a,b)=>a.z-b.z);
-    for(const p of ordered){const a=atoms[p.i],x=w/2+p.x*scale,y=h/2-p.y*scale,r=p.i===selected?6:Math.max(1.8,Math.min(4,scale*.045));let colour;
-      if(colourMode.value==="chain"){let hash=0;for(const c of a.chain)hash=(hash*31+c.charCodeAt(0))|0;colour=chainPalette[Math.abs(hash)%chainPalette.length];}
-      else colour=elementColours[a.element]||"#9aa9b5";
-      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=colour;ctx.globalAlpha=.55+(.45*(p.z/extent+0.5));ctx.fill();ctx.globalAlpha=1;
+    for(const p of ordered){const a=atoms[p.i],x=w/2+p.x*scale,y=h/2-p.y*scale,r=p.i===selected?6:Math.max(1.8,Math.min(4,scale*.045));const colour=atomColour(a);
+      const opacity=.55+(.45*(p.z/extent+0.5));
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=colour;ctx.globalAlpha=opacity;ctx.fill();ctx.globalAlpha=1;
       if(p.i===selected){ctx.beginPath();ctx.arc(x,y,r+4,0,Math.PI*2);ctx.strokeStyle="#ffffff";ctx.lineWidth=1.5;ctx.stroke();}
-      projected[p.i]={x,y,z:p.z};
+      projected[p.i]={x,y,z:p.z,r,opacity};
     }
+  }
+  function getState() {
+    return {
+      schema:"kinetics.structure-view-state.v1",
+      yaw,
+      pitch,
+      zoom,
+      colour_mode:colourMode.value,
+      selected_atom_serial:selected>=0?atoms[selected].serial:null
+    };
+  }
+  function setState(state) {
+    if(!state||state.schema!=="kinetics.structure-view-state.v1"||
+       !validNumber(state.yaw)||!validNumber(state.pitch)||!validNumber(state.zoom)||
+       state.pitch < -1.5||state.pitch > 1.5||state.zoom < .2||state.zoom > 8||
+       !["element","chain"].includes(state.colour_mode)) throw new Error("Invalid viewer state");
+    if(state.selected_atom_serial!==null&&
+       (!Number.isSafeInteger(state.selected_atom_serial)||state.selected_atom_serial<0)) {
+      throw new Error("Invalid selected atom serial");
+    }
+    yaw=state.yaw;pitch=state.pitch;zoom=state.zoom;colourMode.value=state.colour_mode;
+    selected=state.selected_atom_serial===null?-1:
+      atoms.findIndex(atom=>atom.serial===state.selected_atom_serial);
+    updateSelection();draw();return getState();
+  }
+  function exportSvg() {
+    if(!atoms.length) throw new Error("No structure is loaded");
+    if(projected.length!==atoms.length||projected.some(point=>!point)) draw();
+    const width=Math.max(1,canvas.clientWidth),height=Math.max(1,canvas.clientHeight);
+    const parts=[
+      '<svg xmlns="http://www.w3.org/2000/svg" width="'+width+'" height="'+height+
+      '" viewBox="0 0 '+width+' '+height+'">',
+      '<rect width="100%" height="100%" fill="#0e1821"/>'
+    ];
+    for(let i=0;i<atoms.length;i++){
+      const point=projected[i];if(!point)continue;
+      const colour=atomColour(atoms[i]);
+      parts.push('<circle cx="'+point.x.toFixed(3)+'" cy="'+point.y.toFixed(3)+
+        '" r="'+point.r.toFixed(3)+'" fill="'+colour+'" fill-opacity="'+
+        point.opacity.toFixed(4)+'"/>');
+      if(i===selected)parts.push('<circle cx="'+point.x.toFixed(3)+'" cy="'+
+        point.y.toFixed(3)+'" r="'+(point.r+4).toFixed(3)+
+        '" fill="none" stroke="#ffffff" stroke-width="1.5"/>');
+    }
+    parts.push("</svg>");
+    const svg=parts.join("");
+    if(new TextEncoder().encode(svg).length>MAX_BYTES) throw new Error("SVG exceeds 32 MiB");
+    return svg;
   }
   function updateSelection(){const a=atoms[selected];selection.textContent=a?"Chain "+(a.chain||"—")+" · "+a.residue+a.residue_number+" · "+a.name+" · atom #"+a.serial:"No atom selected";Array.from(atomList.children).forEach((li,i)=>li.setAttribute("aria-current",String(i===selected)));}
   canvas.addEventListener("pointerdown",e=>{dragging=true;last={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);});
@@ -79,6 +130,9 @@
   document.getElementById("reset-view").addEventListener("click",()=>{yaw=.55;pitch=-.35;zoom=1;draw();});
   window.addEventListener("resize",resize);
   // Deliberately no generic native bridge, eval hook, network loader or file access.
-  window.KineticsStructureViewer = Object.freeze({load,clear(){atoms=[];selected=-1;atomList.replaceChildren();empty.hidden=false;status.textContent="Waiting for structure payload";updateSelection();draw();}});
+  window.KineticsStructureViewer = Object.freeze({
+    load,exportSvg,getState,setState,
+    clear(){atoms=[];selected=-1;projected=[];atomList.replaceChildren();empty.hidden=false;status.textContent="Waiting for structure payload";updateSelection();draw();}
+  });
   resize();
 })();

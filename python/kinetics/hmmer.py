@@ -100,6 +100,8 @@ def parse_hmmscan_domtblout(
             raise ValueError(
                 f"HMMER domtblout line {line_count} has invalid coordinates or accuracy"
             )
+        if len(hits) >= max_domains:
+            raise ValueError("HMMER domtblout exceeds max_domains")
         profile_id, query_id = fields[0], fields[3]
         if not profile_id or not query_id:
             raise ValueError(f"HMMER domtblout line {line_count} has an empty profile or query ID")
@@ -137,8 +139,6 @@ def parse_hmmscan_domtblout(
             "accuracy": accuracy,
             "description": fields[22] if len(fields) > 22 else "",
         })
-        if len(hits) > max_domains:
-            raise ValueError("HMMER domtblout exceeds max_domains")
 
     return {
         "schema": "kinetics.hmmscan-domain-evidence.v1",

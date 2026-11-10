@@ -257,24 +257,24 @@ def press_local_hmm_profile(
     ):
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError(f"{name} must be a positive integer")
-    for name, value in (
+    for digest_name, digest_value in (
         ("hmmpress_sha256", hmmpress_sha256),
         ("source_hmm_sha256", source_hmm_sha256),
     ):
         if (
-            not isinstance(value, str)
-            or len(value) != 64
-            or any(char not in "0123456789abcdef" for char in value)
+            not isinstance(digest_value, str)
+            or len(digest_value) != 64
+            or any(char not in "0123456789abcdef" for char in digest_value)
         ):
-            raise ValueError(f"{name} must be lowercase SHA-256 hex")
-    for name, value in (
+            raise ValueError(f"{digest_name} must be lowercase SHA-256 hex")
+    for text_name, text_value in (
         ("profile_name", profile_name),
         ("profile_version", profile_version),
         ("profile_license", profile_license),
         ("profile_source", profile_source),
     ):
-        if not isinstance(value, str) or not value.strip():
-            raise ValueError(f"{name} must be non-empty text")
+        if not isinstance(text_value, str) or not text_value.strip():
+            raise ValueError(f"{text_name} must be non-empty text")
 
     executable = Path(hmmpress_executable_path).expanduser().resolve(strict=True)
     profile = Path(profile_path).expanduser().resolve(strict=True)

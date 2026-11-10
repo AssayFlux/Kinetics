@@ -75,7 +75,7 @@ class PinnedSubprocessPredictionEngine:
         ):
             if isinstance(value, bool) or not isinstance(value, int) or value < 1:
                 raise ValueError(f"{name} must be a positive integer")
-        for name, value in (
+        for text_name, text_value in (
             ("model_name", model_name),
             ("model_version", model_version),
             ("model_license", model_license),
@@ -84,18 +84,18 @@ class PinnedSubprocessPredictionEngine:
             ("node_id", node_id),
             ("run_id", run_id),
         ):
-            if not isinstance(value, str) or not value.strip():
-                raise ValueError(f"{name} must be non-empty text")
-        for name, value in (
+            if not isinstance(text_value, str) or not text_value.strip():
+                raise ValueError(f"{text_name} must be non-empty text")
+        for digest_name, digest_value in (
             ("executable_sha256", executable_sha256),
             ("weights_sha256", weights_sha256),
         ):
             if (
-                not isinstance(value, str)
-                or len(value) != 64
-                or any(char not in "0123456789abcdef" for char in value)
+                not isinstance(digest_value, str)
+                or len(digest_value) != 64
+                or any(char not in "0123456789abcdef" for char in digest_value)
             ):
-                raise ValueError(f"{name} must be lowercase SHA-256 hex")
+                raise ValueError(f"{digest_name} must be lowercase SHA-256 hex")
         self.executable_path = str(Path(executable_path).expanduser().resolve(strict=True))
         self.weights_path = str(Path(weights_path).expanduser().resolve(strict=True))
         executable = Path(self.executable_path)

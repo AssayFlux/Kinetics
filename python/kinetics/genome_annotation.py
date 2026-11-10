@@ -72,9 +72,12 @@ def run_pinned_local_gff3_annotator(
             raise ValueError(f"{name} must be a positive integer")
     if translation_table not in GENETIC_CODES:
         raise ValueError("translation_table is not a supported NCBI genetic code")
-    for name, value in (("annotator_id", annotator_id), ("annotator_version", annotator_version)):
-        if not isinstance(value, str) or not value.strip():
-            raise ValueError(f"{name} must be non-empty text")
+    for text_name, text_value in (
+        ("annotator_id", annotator_id),
+        ("annotator_version", annotator_version),
+    ):
+        if not isinstance(text_value, str) or not text_value.strip():
+            raise ValueError(f"{text_name} must be non-empty text")
     if (
         not isinstance(executable_sha256, str)
         or len(executable_sha256) != 64

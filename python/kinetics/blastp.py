@@ -138,14 +138,14 @@ def run_local_blastp(
         or evalue_threshold <= 0
     ):
         raise ValueError("evalue_threshold must be finite and positive")
-    for name, value in (
+    for text_name, text_value in (
         ("database_id", database_id),
         ("database_version", database_version),
         ("database_license", database_license),
         ("database_source", database_source),
     ):
-        if not isinstance(value, str) or not value.strip():
-            raise ValueError(f"{name} must be non-empty text")
+        if not isinstance(text_value, str) or not text_value.strip():
+            raise ValueError(f"{text_name} must be non-empty text")
     if urlparse(database_source).scheme not in {"https", "http", "doi"}:
         raise ValueError("database_source must be an http(s) or doi URI")
     if (

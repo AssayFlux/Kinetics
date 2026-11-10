@@ -182,10 +182,12 @@ class PinnedSubprocessPredictionEngine:
                 )
             if not response_path.is_file():
                 raise RuntimeError("Local prediction engine did not write response.json")
-            if response_path.stat().st_size > self.max_response_bytes:
-                raise ValueError("Prediction response exceeds max_response_bytes")
             try:
-                envelope = json.loads(response_path.read_text(encoding="utf-8"))
+                with response_path.open("rb") as response_handle:
+                    response_bytes = response_handle.read(self.max_response_bytes + 1)
+                if len(response_bytes) > self.max_response_bytes:
+                    raise ValueError("Prediction response exceeds max_response_bytes")
+                envelope = json.loads(response_bytes.decode("utf-8"))
             except (UnicodeDecodeError, json.JSONDecodeError) as exc:
                 raise ValueError("Prediction engine returned invalid UTF-8 JSON") from exc
             if not isinstance(envelope, dict):

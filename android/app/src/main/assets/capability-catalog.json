@@ -446,5 +446,21 @@
     "implementation": "python/kinetics/genome_orf.py",
     "evidence_level": "none",
     "domain": "Genome analysis"
+  },
+  {
+    "id": "sequence.local_hmmscan",
+    "name": "Pinned local HMMER profile search with bounded execution and evidence parsing",
+    "status": "implemented",
+    "implementation": "python/kinetics/hmmer_runner.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
+    "id": "protein.hmmscan_domain_evidence",
+    "name": "Bounded HMMER profile-domain evidence parsing",
+    "status": "implemented",
+    "implementation": "python/kinetics/hmmer.py",
+    "evidence_level": "none",
+    "domain": "Protein analysis"
   }
 ]

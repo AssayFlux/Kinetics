@@ -31,6 +31,21 @@ tools:
     status: implemented
     implementation: python/kinetics/orf.py
     evidence_level: none
+  - id: genome.prokaryotic_orf_candidate_scan
+    name: Genome-wide bounded six-frame ORF candidate triage across contigs
+    status: implemented
+    implementation: python/kinetics/genome_orf.py
+    evidence_level: none
+  - id: sequence.local_hmmscan
+    name: Pinned local HMMER profile search with bounded execution and evidence parsing
+    status: implemented
+    implementation: python/kinetics/hmmer_runner.py
+    evidence_level: none
+  - id: protein.hmmscan_domain_evidence
+    name: Bounded HMMER profile-domain evidence parsing
+    status: implemented
+    implementation: python/kinetics/hmmer.py
+    evidence_level: none
   - id: sequence.fastq
     name: FASTQ parsing
     status: implemented

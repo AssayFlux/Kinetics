@@ -71,8 +71,10 @@ def run_local_structure_prediction(
         "prediction_envelope": envelope,
         "limitations": [
             "The adapter validates output structure and provenance, not model accuracy.",
-            "The host must independently approve engine code, model weights, dataset licenses and runtime dependencies.",
-            "Local execution is declared by the adapter; the host must enforce its own network isolation policy.",
+            ("The host must independently approve engine code, model weights, dataset "
+             "licenses and runtime dependencies."),
+            ("Local execution is declared by the adapter; the host must enforce its own "
+             "network isolation policy."),
             "Confidence calibration and experimental concordance remain separate release gates.",
         ],
     }

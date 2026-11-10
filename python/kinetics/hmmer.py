@@ -71,7 +71,9 @@ def parse_hmmscan_domtblout(
             env_start, env_end = int(fields[19]), int(fields[20])
             accuracy = float(fields[21])
         except ValueError as exc:
-            raise ValueError(f"HMMER domtblout line {line_count} contains invalid numeric fields") from exc
+            raise ValueError(
+                f"HMMER domtblout line {line_count} contains invalid numeric fields"
+            ) from exc
         numeric = (
             full_evalue, full_score, conditional_evalue, independent_evalue,
             domain_score, accuracy,
@@ -81,7 +83,9 @@ def parse_hmmscan_domtblout(
         if any(value < 0 for value in (full_evalue, conditional_evalue, independent_evalue)):
             raise ValueError(f"HMMER domtblout line {line_count} contains a negative E-value")
         if profile_length < 1 or query_length < 1 or domain_number < 1 or domain_count < 1:
-            raise ValueError(f"HMMER domtblout line {line_count} contains invalid lengths or domain indices")
+            raise ValueError(
+                f"HMMER domtblout line {line_count} contains invalid lengths or domain indices"
+            )
         if domain_number > domain_count:
             raise ValueError(f"HMMER domtblout line {line_count} has an invalid domain index")
         if not (
@@ -91,7 +95,9 @@ def parse_hmmscan_domtblout(
             and env_start <= ali_start <= ali_end <= env_end
             and 0.0 <= accuracy <= 1.0
         ):
-            raise ValueError(f"HMMER domtblout line {line_count} has invalid coordinates or accuracy")
+            raise ValueError(
+                f"HMMER domtblout line {line_count} has invalid coordinates or accuracy"
+            )
         profile_id, query_id = fields[0], fields[3]
         if not profile_id or not query_id:
             raise ValueError(f"HMMER domtblout line {line_count} has an empty profile or query ID")
@@ -134,14 +140,19 @@ def parse_hmmscan_domtblout(
         "hits": hits,
         "conclusion": {
             "status": "profile_matches_reported" if hits else "no_profile_matches_reported",
-            "family_or_domain_assignment": "candidate_profile_matches_require_review" if hits else "not_established",
+            "family_or_domain_assignment": (
+                "candidate_profile_matches_require_review" if hits else "not_established"
+            ),
             "function": "not_inferred",
             "novelty": "not_established",
         },
         "limitations": [
             "Parses caller-supplied HMMER hmmscan domtblout; does not execute HMMER",
-            "Profile identity and licensing metadata are caller-supplied and not independently authenticated",
-            "Profile matches are candidates and require threshold, coverage, provenance and expert review",
-            "No protein function, pathogenicity, organism identity or biological validity is inferred",
+            ("Profile identity and licensing metadata are caller-supplied and not "
+             "independently authenticated"),
+            ("Profile matches are candidates and require threshold, coverage, provenance "
+             "and expert review"),
+            ("No protein function, pathogenicity, organism identity or biological validity "
+             "is inferred"),
         ],
     }

@@ -87,7 +87,9 @@ def reconstruct_gff3_cds(
             segment["seqid"] != seqid or segment["strand"] != strand
             for segment in segments
         ):
-            raise ValueError(f"Transcript {transcript_id!r} has inconsistent CDS sequence or strand")
+            raise ValueError(
+                f"Transcript {transcript_id!r} has inconsistent CDS sequence or strand"
+            )
         if any(
             segment["start"] < transcript["start"] or segment["end"] > transcript["end"]
             for segment in segments
@@ -147,7 +149,9 @@ def reconstruct_gff3_cds(
             translation_reason = "CDS phase continuity is inconsistent"
         elif ordered[0]["phase"] != 0:
             translation_status = "partial_cds"
-            translation_reason = "First CDS phase is non-zero; complete 5-prime CDS is not established"
+            translation_reason = (
+                "First CDS phase is non-zero; complete 5-prime CDS is not established"
+            )
         else:
             try:
                 translated = translate_coding_sequence(
@@ -168,7 +172,9 @@ def reconstruct_gff3_cds(
             "strand": strand,
             "cds_segment_count": len(ordered),
             "cds_length": len(coding_sequence),
-            "coordinate_system": "1-based inclusive GFF3 input; spliced sequence in transcriptional orientation",
+            "coordinate_system": (
+                "1-based inclusive GFF3 input; spliced sequence in transcriptional orientation"
+            ),
             "phase_consistent": phase_consistent,
             "segment_phases": phase_rows,
             "cds_sequence": coding_sequence,
@@ -184,9 +190,12 @@ def reconstruct_gff3_cds(
         "total_cds_bases": total_bases,
         "transcripts": results,
         "limitations": [
-            "Reconstructs caller-supplied GFF3 CDS annotations; does not predict genes or transcripts",
-            "No splice-site, promoter, transcript completeness or alternative-splicing inference is performed",
-            "Translation is emitted only when supplied phases and explicit translation table permit complete-CDS validation",
+            ("Reconstructs caller-supplied GFF3 CDS annotations; does not predict "
+             "genes or transcripts"),
+            ("No splice-site, promoter, transcript completeness or alternative-splicing "
+             "inference is performed"),
+            ("Translation is emitted only when supplied phases and explicit translation "
+             "table permit complete-CDS validation"),
             "No organism or genetic code is inferred; table_id is caller-selected",
             "Protein family, domain, function and biological validity are not established",
         ],

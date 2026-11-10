@@ -228,3 +228,116 @@ def run_local_hmmscan(
                 "No network access is requested; the host must enforce OS-level network isolation.",
             ],
         }
+
+
+
+def press_local_hmm_profile(
+    *,
+    hmmpress_executable_path: str,
+    hmmpress_sha256: str,
+    profile_path: str,
+    source_hmm_sha256: str,
+    profile_name: str,
+    profile_version: str,
+    profile_license: str,
+    profile_source: str,
+    timeout_seconds: int = 300,
+    max_executable_bytes: int = 512 * 1024 * 1024,
+    max_profile_bytes: int = 512 * 1024 * 1024,
+) -> dict[str, object]:
+    """Run a hash-pinned local hmmpress and produce metadata for a pressed pack."""
+    for name, value in (
+        ("timeout_seconds", timeout_seconds),
+        ("max_executable_bytes", max_executable_bytes),
+        ("max_profile_bytes", max_profile_bytes),
+    ):
+        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+            raise ValueError(f"{name} must be a positive integer")
+    for name, value in (
+        ("hmmpress_sha256", hmmpress_sha256),
+        ("source_hmm_sha256", source_hmm_sha256),
+    ):
+        if (
+            not isinstance(value, str)
+            or len(value) != 64
+            or any(char not in "0123456789abcdef" for char in value)
+        ):
+            raise ValueError(f"{name} must be lowercase SHA-256 hex")
+    for name, value in (
+        ("profile_name", profile_name),
+        ("profile_version", profile_version),
+        ("profile_license", profile_license),
+        ("profile_source", profile_source),
+    ):
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"{name} must be non-empty text")
+
+    executable = Path(hmmpress_executable_path).expanduser().resolve(strict=True)
+    profile = Path(profile_path).expanduser().resolve(strict=True)
+    if not executable.is_file() or not os.access(executable, os.X_OK):
+        raise ValueError("hmmpress executable must be an executable regular file")
+    if not profile.is_file():
+        raise ValueError("profile_path must be a regular HMM source file")
+    executable_hash, _ = _sha256_file(
+        executable, max_bytes=max_executable_bytes,
+    )
+    if executable_hash != hmmpress_sha256:
+        raise ValueError("hmmpress executable SHA-256 does not match approved digest")
+    source_hash, _ = _sha256_file(profile, max_bytes=max_profile_bytes)
+    if source_hash != source_hmm_sha256:
+        raise ValueError("Source HMM SHA-256 does not match approved digest")
+
+    with tempfile.TemporaryDirectory(prefix="kinetics-hmmpress-") as directory:
+        work = Path(directory)
+        stderr_path = work / "hmmpress.stderr"
+        try:
+            with stderr_path.open("wb") as stderr_handle:
+                result = subprocess.run(
+                    [str(executable), "-f", str(profile)],
+                    stdin=subprocess.DEVNULL,
+                    stdout=subprocess.DEVNULL,
+                    stderr=stderr_handle,
+                    cwd=work,
+                    env={
+                        "HOME": str(work),
+                        "TMPDIR": str(work),
+                        "TEMP": str(work),
+                        "TMP": str(work),
+                        "PATH": os.defpath,
+                        "LANG": "C",
+                        "LC_ALL": "C",
+                    },
+                    timeout=timeout_seconds,
+                    check=False,
+                    shell=False,
+                    preexec_fn=_child_file_limit(max_profile_bytes),
+                )
+        except subprocess.TimeoutExpired as exc:
+            raise TimeoutError("Local hmmpress exceeded timeout_seconds") from exc
+        if result.returncode != 0:
+            diagnostics = stderr_path.read_text(encoding="utf-8", errors="replace")
+            raise RuntimeError(
+                f"hmmpress exited with status {result.returncode}: {diagnostics[-2000:]}"
+            )
+
+    pack_hash = hash_pressed_profile_pack(
+        str(profile), max_bytes=max_profile_bytes,
+    )
+    return {
+        "schema": "kinetics.pressed-hmm-profile-pack.v1",
+        "hmmpress_sha256": executable_hash,
+        "source_hmm_sha256": source_hash,
+        "profile_pack": {
+            "name": profile_name,
+            "version": profile_version,
+            "license": profile_license,
+            "source": profile_source,
+            "content_sha256": pack_hash,
+        },
+        "pressed_profile_prefix": str(profile),
+        "limitations": [
+            "The caller must independently approve profile source and license terms.",
+            "The pack hash identifies source HMM and generated pressed index files.",
+            "Pressing validates file production, not biological profile quality or thresholds.",
+        ],
+    }

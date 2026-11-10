@@ -6,7 +6,11 @@ from pathlib import Path
 
 import pytest
 
-from kinetics.hmmer_runner import hash_pressed_profile_pack, run_local_hmmscan
+from kinetics.hmmer_runner import (
+    hash_pressed_profile_pack,
+    press_local_hmm_profile,
+    run_local_hmmscan,
+)
 
 
 PACK_BASE = {
@@ -111,3 +115,34 @@ def test_pressed_profile_pack_requires_all_index_files(tmp_path: Path) -> None:
     profile.write_text("HMMER3/f\\n", encoding="ascii")
     with pytest.raises(ValueError, match="missing"):
         hash_pressed_profile_pack(str(profile))
+
+
+
+def test_pinned_hmmpress_builds_complete_profile_pack(tmp_path: Path) -> None:
+    import sys
+
+    profile = tmp_path / "profiles.hmm"
+    profile.write_text("HMMER3/f\nsynthetic profile\n", encoding="ascii")
+    executable = tmp_path / "hmmpress.py"
+    executable.write_text(
+        "#!" + sys.executable + "\n"
+        "import pathlib, sys\n"
+        "profile=pathlib.Path(sys.argv[-1])\n"
+        "for suffix in ('.h3m','.h3i','.h3f','.h3p'):\n"
+        " pathlib.Path(str(profile)+suffix).write_bytes(('index'+suffix).encode())\n",
+        encoding="utf-8",
+    )
+    executable.chmod(0o755)
+    result = press_local_hmm_profile(
+        hmmpress_executable_path=str(executable),
+        hmmpress_sha256=hashlib.sha256(executable.read_bytes()).hexdigest(),
+        profile_path=str(profile),
+        source_hmm_sha256=hashlib.sha256(profile.read_bytes()).hexdigest(),
+        profile_name="fixture",
+        profile_version="1",
+        profile_license="CC0-1.0",
+        profile_source="https://example.org/fixture",
+    )
+    assert result["profile_pack"]["content_sha256"] == hash_pressed_profile_pack(
+        str(profile)
+    )

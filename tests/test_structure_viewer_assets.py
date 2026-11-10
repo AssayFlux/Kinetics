@@ -76,3 +76,26 @@ def test_android_viewer_supports_bounded_png_snapshot_export() -> None:
     assert '16_777_216L' in source
     assert 'viewerWebView = webView' in source
     assert 'pendingPngBitmap?.recycle()' in source
+
+
+
+def test_viewer_exports_bounded_svg_and_serializable_interactive_state() -> None:
+    script = (VIEWER / "structure-viewer.js").read_text(encoding="utf-8")
+    assert "function exportSvg()" in script
+    assert "function getState()" in script
+    assert "function setState(state)" in script
+    assert "kinetics.structure-view-state.v1" in script
+    assert "SVG exceeds 32 MiB" in script
+
+
+def test_android_saf_exports_svg_and_session_view_state() -> None:
+    source = (
+        ROOT / "android" / "app" / "src" / "main" / "java"
+        / "org" / "assayflux" / "kinetics" / "StructureViewer.kt"
+    ).read_text(encoding="utf-8")
+    assert 'CreateDocument("image/svg+xml")' in source
+    assert "Export viewer SVG" in source
+    assert 'getState()' in source
+    assert 'put("viewer_state", state)' in source
+    assert "Restore saved view state" in source
+    assert "32 * 1024 * 1024" in source

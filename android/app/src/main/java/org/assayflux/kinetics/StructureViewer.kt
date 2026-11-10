@@ -352,7 +352,11 @@ internal fun StructureViewerPreview() {
                     } else {
                         view.evaluateJavascript("window.KineticsStructureViewer.exportSvg()") { rawSvg ->
                             runCatching {
-                                val svg = JSONArray("[$rawSvg]").getString(0)
+                                val raw = rawSvg ?: error("Viewer did not return an SVG snapshot")
+                                val svg = JSONArray("[$raw]").getString(0)
+                                require(svg.startsWith("<svg") && svg.endsWith("</svg>")) {
+                                    "Viewer returned an invalid SVG snapshot."
+                                }
                                 require(svg.toByteArray(Charsets.UTF_8).size <= 32 * 1024 * 1024) {
                                     "SVG export exceeds the 32 MiB limit."
                                 }

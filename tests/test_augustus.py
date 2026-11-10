@@ -13,7 +13,7 @@ from kinetics.sequence import SequenceRecord
 def _fixtures(tmp_path: Path, *, end: int = 9) -> tuple[Path, Path, str, str]:
     config = tmp_path / "augustus-config"
     species_dir = config / "species" / "fixture_species"
-    species_dir.mkdir(parents=True)
+    species_dir.mkdir(parents=True, exist_ok=True)
     (species_dir / "parameters.cfg").write_text("synthetic model", encoding="utf-8")
     executable = tmp_path / "augustus.py"
     gff = (

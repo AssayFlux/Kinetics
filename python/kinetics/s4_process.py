@@ -131,6 +131,10 @@ class PinnedSubprocessPredictionEngine:
     def predict(self, sequence: str) -> dict[str, object]:
         executable = Path(self.executable_path)
         weights = Path(self.weights_path)
+        if _file_sha256(executable, max_bytes=self.max_executable_bytes) != self.executable_sha256:
+            raise ValueError("Prediction executable changed after approval")
+        if _file_sha256(weights, max_bytes=self.max_weights_bytes) != self.weights_sha256:
+            raise ValueError("Prediction weights changed after approval")
         with tempfile.TemporaryDirectory(prefix="kinetics-s4-") as directory:
             work = Path(directory)
             request_path = work / "request.json"

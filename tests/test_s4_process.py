@@ -30,7 +30,7 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path, str, str]:
         " 'input_sequence_sha256': __import__('hashlib').sha256(seq.encode()).hexdigest(),\n"
         " 'sequence_length': len(seq), 'model': data['model'], 'node': data['node'],\n"
         " 'created_at': '2026-11-10T00:00:00Z',\n"
-        " 'predicted_structure': {'schema':'kinetics.structure-view.v1', 'atoms':[], 'bonds':[]},\n"
+        " 'predicted_structure': {'schema':'kinetics.structure-view.v1', 'source_format':'pdb', 'coordinate_unit':'angstrom', 'atom_count':1, 'atoms':[{'serial':1,'name':'CA','residue':'ALA','chain':'A','residue_number':1,'element':'C','xyz':[0.0,0.0,0.0]}], 'limitations':['synthetic fixture']},\n"
         " 'confidence': {'plddt_per_residue':[50.0]*len(seq), 'mean_plddt':50.0,\n"
         "  'pae_mean_angstrom':None, 'pae_max_angstrom':None},\n"
         " 'limitations':['synthetic fixture only']\n"

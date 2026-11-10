@@ -22,7 +22,8 @@ def test_viewer_uses_typed_payload_surface_without_generic_bridge_or_eval() -> N
     script = (VIEWER / 'structure-viewer.js').read_text(encoding='utf-8')
     assert 'function validate(payload)' in script
     assert 'function load(payload)' in script
-    assert 'window.KineticsStructureViewer = Object.freeze({load,clear()' in script
+    assert 'window.KineticsStructureViewer = Object.freeze({' in script
+    assert 'load,exportSvg,getState,setState' in script
     assert 'addJavascriptInterface' not in script
     assert 'eval(' not in script
     assert 'fetch(' not in script

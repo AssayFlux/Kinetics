@@ -79,11 +79,16 @@ def rank_hmmer_domain_candidates(
         evalue = raw.get("independent_evalue")
         accuracy = raw.get("accuracy")
         domain_score = raw.get("domain_score")
-        if any(
-            isinstance(value, bool)
-            or not isinstance(value, (int, float))
-            or not math.isfinite(value)
-            for value in (evalue, accuracy, domain_score)
+        if (
+            isinstance(evalue, bool)
+            or not isinstance(evalue, (int, float))
+            or not math.isfinite(evalue)
+            or isinstance(accuracy, bool)
+            or not isinstance(accuracy, (int, float))
+            or not math.isfinite(accuracy)
+            or isinstance(domain_score, bool)
+            or not isinstance(domain_score, (int, float))
+            or not math.isfinite(domain_score)
         ):
             raise ValueError(f"HMMER evidence hit {index} has invalid statistics")
         if evalue < 0 or not 0 <= accuracy <= 1:

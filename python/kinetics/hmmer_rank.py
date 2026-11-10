@@ -50,7 +50,7 @@ def rank_hmmer_domain_candidates(
     if len(raw_hits) > max_candidates:
         raise ValueError("HMMER evidence exceeds max_candidates")
 
-    candidates: list[dict[str, object]] = []
+    candidates: list[dict[str, Any]] = []
     for index, raw in enumerate(raw_hits):
         if not isinstance(raw, dict):
             raise ValueError(f"HMMER evidence hit {index} must be an object")

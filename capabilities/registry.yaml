@@ -284,6 +284,12 @@ tools:
     implementation: python/kinetics/hmmer.py
     evidence_level: none
 
+  - id: structure.local_prediction_engine_adapter
+    name: Dependency-injected local structure-prediction engine adapter with strict output validation
+    status: implemented
+    implementation: python/kinetics/s4_engine.py
+    evidence_level: none
+
 engines: []
 data_packs: []
 domains: []

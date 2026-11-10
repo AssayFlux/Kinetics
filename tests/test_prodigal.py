@@ -34,6 +34,7 @@ def test_pinned_prodigal_emits_coordinate_checked_candidates(tmp_path: Path) -> 
         [SequenceRecord("ctg1", "ATGAAATAA")],
         executable_path=str(executable),
         executable_sha256=digest,
+        tool_version="fixture-1",
     )
     assert result["conclusion"] == "prokaryotic_gene_candidates_require_review"
     assert result["annotation"]["feature_count"] == 1
@@ -48,6 +49,7 @@ def test_prodigal_rejects_tampering_and_out_of_bounds_coordinates(
             [SequenceRecord("ctg1", "ATGAAATAA")],
             executable_path=str(executable),
             executable_sha256="0" * 64,
+            tool_version="fixture-1",
         )
     executable, digest = _prodigal(tmp_path, end=99)
     with pytest.raises(ValueError, match="beyond supplied contig"):
@@ -55,4 +57,5 @@ def test_prodigal_rejects_tampering_and_out_of_bounds_coordinates(
             [SequenceRecord("ctg1", "ATGAAATAA")],
             executable_path=str(executable),
             executable_sha256=digest,
+            tool_version="fixture-1",
         )

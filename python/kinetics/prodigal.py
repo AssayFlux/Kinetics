@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 from .gff3 import parse_gff3
-from .genetic_code import GENETIC_CODES
 from .sequence import SequenceRecord
 
 
@@ -44,6 +43,7 @@ def run_local_prodigal(
     executable_path: str,
     executable_sha256: str,
     translation_table: int = 11,
+    tool_version: str,
     mode: str = "single",
     timeout_seconds: int = 1800,
     max_contigs: int = 100_000,
@@ -54,8 +54,14 @@ def run_local_prodigal(
     """Run a pinned Prodigal binary and validate its GFF3 gene-candidate output."""
     if mode not in {"single", "meta"}:
         raise ValueError("Prodigal mode must be single or meta")
-    if translation_table not in GENETIC_CODES:
-        raise ValueError("translation_table is not a supported NCBI genetic code")
+    if (
+        isinstance(translation_table, bool)
+        or not isinstance(translation_table, int)
+        or translation_table not in {1, 4, 11}
+    ):
+        raise ValueError("Prodigal supports only explicitly configured tables 1, 4 or 11")
+    if not isinstance(tool_version, str) or not tool_version.strip():
+        raise ValueError("tool_version must be non-empty caller-supplied text")
     for name, value in (
         ("timeout_seconds", timeout_seconds),
         ("max_contigs", max_contigs),
@@ -171,7 +177,7 @@ def run_local_prodigal(
         "schema": "kinetics.prodigal-gene-candidates.v1",
         "execution_mode": "local",
         "tool": "Prodigal",
-        "tool_version": "caller_supplied_executable_hash_pinned",
+        "tool_version": tool_version,
         "executable_sha256": actual_hash,
         "mode": mode,
         "translation_table": translation_table,
@@ -186,6 +192,7 @@ def run_local_prodigal(
             "Prodigal is a prokaryotic gene caller; this adapter does not support eukaryotic prediction.",
             "GFF3 syntax and coordinate checks do not establish gene-calling accuracy.",
             "The caller must approve the Prodigal binary and its license before use.",
+            "The reported Prodigal version string is caller-supplied; executable SHA-256 is verified.",
             "No functional annotation, expression, pathogenicity or organism identity is inferred.",
             "The host must enforce OS-level network isolation.",
         ],

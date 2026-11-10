@@ -157,11 +157,25 @@ def run_pinned_local_gff3_annotator(
         with output_path.open("r", encoding="utf-8", errors="strict") as stream:
             annotation = parse_gff3(stream)
         annotation_bytes = output_path.read_bytes()
-    unknown = set(annotation["sequence_ids"]) - set(contigs)
+    sequence_ids = annotation.get("sequence_ids")
+    features = annotation.get("features")
+    if not isinstance(sequence_ids, list) or not isinstance(features, list):
+        raise RuntimeError("GFF3 parser returned an invalid annotation structure")
+    unknown = set(sequence_ids) - set(contigs)
     if unknown:
         raise ValueError(f"Annotation refers to unknown contigs: {sorted(unknown)[:5]}")
-    for feature in annotation["features"]:
-        if feature["end"] > len(contigs[feature["seqid"]]):
+    for feature in features:
+        if not isinstance(feature, dict):
+            raise RuntimeError("GFF3 parser returned an invalid feature")
+        seqid, end = feature.get("seqid"), feature.get("end")
+        if (
+            not isinstance(seqid, str)
+            or isinstance(end, bool)
+            or not isinstance(end, int)
+            or seqid not in contigs
+        ):
+            raise RuntimeError("GFF3 parser returned invalid feature coordinates")
+        if end > len(contigs[seqid]):
             raise ValueError("GFF3 feature extends beyond supplied contig length")
     return {
         "schema": "kinetics.local-genome-annotation.v1",

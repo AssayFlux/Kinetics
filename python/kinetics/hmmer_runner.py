@@ -45,6 +45,8 @@ def hash_pressed_profile_pack(
     profile_path: str, *, max_bytes: int = 512 * 1024 * 1024,
 ) -> str:
     """Hash an HMM source file and all four HMMER pressed-index siblings."""
+    if isinstance(max_bytes, bool) or not isinstance(max_bytes, int) or max_bytes < 1:
+        raise ValueError("max_bytes must be a positive integer")
     source = Path(profile_path).expanduser().resolve(strict=True)
     if not source.is_file():
         raise ValueError("profile_path must be an HMM source file")
@@ -148,6 +150,8 @@ def run_local_hmmscan(
                 run_result = subprocess.run(
                     [
                         str(executable),
+                        "--cpu",
+                        "1",
                         "--noali",
                         "--domtblout",
                         str(output_path),

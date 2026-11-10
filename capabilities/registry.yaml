@@ -319,6 +319,11 @@ tools:
     status: implemented
     implementation: python/kinetics/s4_process.py
     evidence_level: none
+  - id: genome.augustus_local_gene_candidates
+    name: Hash-pinned local AUGUSTUS eukaryotic gene-candidate prediction
+    status: implemented
+    implementation: python/kinetics/augustus.py
+    evidence_level: none
   - id: genome.prodigal_local_gene_candidates
     name: Hash-pinned local Prodigal prokaryotic gene-candidate prediction
     status: implemented

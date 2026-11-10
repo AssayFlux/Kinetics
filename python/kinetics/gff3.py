@@ -161,23 +161,30 @@ def parse_gff3(
             ):
                 raise ValueError("GFF3 child feature must lie within its parent on the same sequence")
 
-    visiting: set[str] = set()
+    # Iterative DFS avoids Python recursion limits on adversarially deep graphs.
     visited: set[str] = set()
-
-    def visit(identifier: str) -> None:
-        if identifier in visiting:
-            raise ValueError("GFF3 Parent graph contains a cycle")
-        if identifier in visited:
-            return
-        visiting.add(identifier)
-        for parent in parent_graph.get(identifier, ()):
-            if parent in ids:
-                visit(parent)
-        visiting.remove(identifier)
-        visited.add(identifier)
-
-    for identifier in ids:
-        visit(identifier)
+    for root in ids:
+        if root in visited:
+            continue
+        active: set[str] = set()
+        stack: list[tuple[str, bool]] = [(root, False)]
+        while stack:
+            identifier, exiting = stack.pop()
+            if exiting:
+                active.discard(identifier)
+                visited.add(identifier)
+                continue
+            if identifier in active:
+                raise ValueError("GFF3 Parent graph contains a cycle")
+            if identifier in visited:
+                continue
+            active.add(identifier)
+            stack.append((identifier, True))
+            for parent in reversed(parent_graph.get(identifier, ())):
+                if parent in active:
+                    raise ValueError("GFF3 Parent graph contains a cycle")
+                if parent in ids and parent not in visited:
+                    stack.append((parent, False))
 
     seqids = sorted({str(feature["seqid"]) for feature in features})
     return {

@@ -140,10 +140,6 @@ def parse_hmmscan_domtblout(
         if len(hits) > max_domains:
             raise ValueError("HMMER domtblout exceeds max_domains")
 
-    for group_key, (expected_count, observed_numbers) in domain_groups.items():
-        if len(observed_numbers) != expected_count or observed_numbers != set(range(1, expected_count + 1)):
-            raise ValueError(f"HMMER profile/query {group_key!r} has incomplete domain numbering")
-
     return {
         "schema": "kinetics.hmmscan-domain-evidence.v1",
         "tool": "hmmscan",

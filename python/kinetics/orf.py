@@ -17,7 +17,7 @@ def find_orf_candidates(
     max_orfs: int = 10_000,
     max_sequence_bases: int = 100_000_000,
     max_open_starts: int = 100_000,
-    max_candidate_orf_pairs_total: int = MAX_CANDIDATE_ORF_PAIRS,
+    max_candidate_orf_pairs_total: int | None = None,
 ) -> dict[str, object]:
     """Enumerate complete start-to-stop ORFs on both strands and all frames.
 
@@ -42,6 +42,8 @@ def find_orf_candidates(
         raise ValueError("max_sequence_bases must be a positive integer")
     if not isinstance(max_open_starts, int) or isinstance(max_open_starts, bool) or max_open_starts < 1:
         raise ValueError("max_open_starts must be a positive integer")
+    if max_candidate_orf_pairs_total is None:
+        max_candidate_orf_pairs_total = MAX_CANDIDATE_ORF_PAIRS
     if (not isinstance(max_candidate_orf_pairs_total, int)
             or isinstance(max_candidate_orf_pairs_total, bool)
             or not 1 <= max_candidate_orf_pairs_total <= MAX_CANDIDATE_ORF_PAIRS):

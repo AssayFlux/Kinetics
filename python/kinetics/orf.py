@@ -17,6 +17,7 @@ def find_orf_candidates(
     max_orfs: int = 10_000,
     max_sequence_bases: int = 100_000_000,
     max_open_starts: int = 100_000,
+    max_candidate_orf_pairs_total: int = MAX_CANDIDATE_ORF_PAIRS,
 ) -> dict[str, object]:
     """Enumerate complete start-to-stop ORFs on both strands and all frames.
 
@@ -41,6 +42,10 @@ def find_orf_candidates(
         raise ValueError("max_sequence_bases must be a positive integer")
     if not isinstance(max_open_starts, int) or isinstance(max_open_starts, bool) or max_open_starts < 1:
         raise ValueError("max_open_starts must be a positive integer")
+    if (not isinstance(max_candidate_orf_pairs_total, int)
+            or isinstance(max_candidate_orf_pairs_total, bool)
+            or not 1 <= max_candidate_orf_pairs_total <= MAX_CANDIDATE_ORF_PAIRS):
+        raise ValueError("max_candidate_orf_pairs_total must be between 1 and the hard ceiling")
     dna = "".join(sequence.split()).upper().replace("U", "T")
     if not dna:
         raise ValueError("Genome sequence must not be empty")
@@ -67,7 +72,7 @@ def find_orf_candidates(
                 if codon in code.stops:
                     for start in open_starts:
                         candidate_pairs_examined += 1
-                        if candidate_pairs_examined > MAX_CANDIDATE_ORF_PAIRS:
+                        if candidate_pairs_examined > max_candidate_orf_pairs_total:
                             raise ValueError(
                                 "ORF start-to-stop candidate work exceeds "
                                 "MAX_CANDIDATE_ORF_PAIRS"
@@ -114,7 +119,7 @@ def find_orf_candidates(
             "max_orfs": max_orfs,
             "max_sequence_bases": max_sequence_bases,
             "max_open_starts_per_frame": max_open_starts,
-            "max_candidate_orf_pairs_total": MAX_CANDIDATE_ORF_PAIRS,
+            "max_candidate_orf_pairs_total": max_candidate_orf_pairs_total,
             "candidate_orf_pairs_examined": candidate_pairs_examined,
         },
         "orf_count": len(orfs),

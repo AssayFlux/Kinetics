@@ -69,3 +69,17 @@ def test_domtblout_resource_limits_and_metadata_are_strict() -> None:
         parse_hmmscan_domtblout(
             [], hmmer_version="3.4", profile_pack={**PACK, "content_sha256": "bad"},
         )
+
+
+
+def test_domtblout_rejects_inconsistent_domain_group_counts_and_duplicate_indices() -> None:
+    two_domains = ROW.replace("1 1 1e-18", "1 2 1e-18")
+    with pytest.raises(ValueError, match="incomplete domain numbering"):
+        parse_hmmscan_domtblout(
+            [two_domains], hmmer_version="3.4", profile_pack=PACK,
+        )
+    duplicate = ROW + "\\n" + ROW
+    with pytest.raises(ValueError, match="inconsistent domain indices"):
+        parse_hmmscan_domtblout(
+            duplicate.splitlines(), hmmer_version="3.4", profile_pack=PACK,
+        )

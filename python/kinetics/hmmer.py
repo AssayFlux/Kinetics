@@ -42,6 +42,8 @@ def parse_hmmscan_domtblout(
 
     hits: list[dict[str, object]] = []
     query_lengths: dict[str, int] = {}
+    profile_lengths: dict[str, int] = {}
+    domain_groups: dict[tuple[str, str], tuple[int, set[int]]] = {}
     line_count = 0
     for line_count, raw in enumerate(lines, 1):
         if line_count > max_lines:
@@ -101,6 +103,14 @@ def parse_hmmscan_domtblout(
         profile_id, query_id = fields[0], fields[3]
         if not profile_id or not query_id:
             raise ValueError(f"HMMER domtblout line {line_count} has an empty profile or query ID")
+        previous_profile_length = profile_lengths.setdefault(profile_id, profile_length)
+        if previous_profile_length != profile_length:
+            raise ValueError(f"HMMER profile {profile_id!r} has inconsistent reported lengths")
+        group_key = (profile_id, query_id)
+        group_count, group_numbers = domain_groups.setdefault(group_key, (domain_count, set()))
+        if group_count != domain_count or domain_number in group_numbers:
+            raise ValueError(f"HMMER profile/query {group_key!r} has inconsistent domain indices")
+        group_numbers.add(domain_number)
         previous_length = query_lengths.setdefault(query_id, query_length)
         if previous_length != query_length:
             raise ValueError(f"HMMER query {query_id!r} has inconsistent reported lengths")
@@ -129,6 +139,10 @@ def parse_hmmscan_domtblout(
         })
         if len(hits) > max_domains:
             raise ValueError("HMMER domtblout exceeds max_domains")
+
+    for group_key, (expected_count, observed_numbers) in domain_groups.items():
+        if len(observed_numbers) != expected_count or observed_numbers != set(range(1, expected_count + 1)):
+            raise ValueError(f"HMMER profile/query {group_key!r} has incomplete domain numbering")
 
     return {
         "schema": "kinetics.hmmscan-domain-evidence.v1",

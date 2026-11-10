@@ -36,6 +36,13 @@ def run_local_structure_prediction(
     processes. The host application is responsible for installing and approving
     the engine implementation and its model/license artifacts.
     """
+    if not isinstance(sequence, str):
+        raise TypeError("Prediction sequence must be text")
+    normalized_sequence = "".join(sequence.split()).upper()
+    if not normalized_sequence or len(normalized_sequence) > max_residues:
+        raise ValueError("Prediction sequence is empty or exceeds max_residues")
+    if any(residue not in "ACDEFGHIKLMNPQRSTVWY" for residue in normalized_sequence):
+        raise ValueError("Prediction sequence must contain canonical amino-acid residues")
     if engine.execution_mode != "local":
         raise ValueError("S4 prediction engine must declare execution_mode='local'")
     if not isinstance(engine.engine_id, str) or not engine.engine_id.strip():
@@ -44,12 +51,21 @@ def run_local_structure_prediction(
         raise ValueError("Prediction engine software_version must be non-empty")
     expected_model_fields = {"name", "version", "weights_sha256", "license"}
     expected_node_fields = {"node_id", "software_version", "run_id"}
-    if set(engine.model_provenance) != expected_model_fields:
+    if not isinstance(engine.model_provenance, dict) or set(engine.model_provenance) != expected_model_fields:
         raise ValueError("Prediction engine model_provenance is incomplete")
-    if set(engine.node_provenance) != expected_node_fields:
+    if not isinstance(engine.node_provenance, dict) or set(engine.node_provenance) != expected_node_fields:
         raise ValueError("Prediction engine node_provenance is incomplete")
 
-    envelope = engine.predict(sequence)
+    for key, value in engine.model_provenance.items():
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"Prediction model provenance {key} must be non-empty text")
+    digest = engine.model_provenance["weights_sha256"]
+    if len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+        raise ValueError("Prediction weights_sha256 must be lowercase SHA-256 hex")
+    for key, value in engine.node_provenance.items():
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"Prediction node provenance {key} must be non-empty text")
+    envelope = engine.predict(normalized_sequence)
     if not isinstance(envelope, dict):
         raise ValueError("Prediction engine must return an envelope object")
     if envelope.get("model") != engine.model_provenance:

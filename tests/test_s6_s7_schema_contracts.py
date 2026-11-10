@@ -39,3 +39,17 @@ def test_gff3_import_result_matches_versioned_schema() -> None:
     ])
     Draft202012Validator.check_schema(_schema("gff3-annotation-import.schema.json"))
     Draft202012Validator(_schema("gff3-annotation-import.schema.json")).validate(result)
+
+
+def test_gff3_transcript_cds_result_matches_versioned_schema() -> None:
+    from kinetics.gff3_transcripts import reconstruct_gff3_cds
+
+    annotation = parse_gff3([
+        "##gff-version 3\n",
+        "chr1\ts\tgene\t1\t9\t.\t+\t.\tID=g\n",
+        "chr1\ts\tmRNA\t1\t9\t.\t+\t.\tID=t;Parent=g\n",
+        "chr1\ts\tCDS\t1\t9\t.\t+\t0\tParent=t\n",
+    ])
+    result = reconstruct_gff3_cds(annotation, {"chr1": "ATGAAATAA"}, table_id=1)
+    Draft202012Validator.check_schema(_schema("gff3-transcript-cds.schema.json"))
+    Draft202012Validator(_schema("gff3-transcript-cds.schema.json")).validate(result)

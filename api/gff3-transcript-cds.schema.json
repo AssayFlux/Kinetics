@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/gff3-transcript-cds.schema.json",
+  "title": "Kinetics reconstructed GFF3 transcript CDS evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "table_id",
+    "transcript_count",
+    "total_cds_bases",
+    "transcripts",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "kinetics.gff3-transcript-cds.v1"
+    },
+    "table_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "transcript_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "total_cds_bases": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "transcripts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "transcript_id",
+          "seqid",
+          "strand",
+          "cds_segment_count",
+          "cds_length",
+          "coordinate_system",
+          "phase_consistent",
+          "segment_phases",
+          "cds_sequence",
+          "translation_status",
+          "protein_sequence",
+          "translation_reason"
+        ],
+        "properties": {
+          "transcript_id": {
+            "type": "string"
+          },
+          "seqid": {
+            "type": "string"
+          },
+          "strand": {
+            "enum": [
+              "+",
+              "-"
+            ]
+          },
+          "cds_segment_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "cds_length": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "coordinate_system": {
+            "type": "string"
+          },
+          "phase_consistent": {
+            "type": "boolean"
+          },
+          "segment_phases": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "start",
+                "end",
+                "phase",
+                "expected_phase"
+              ],
+              "properties": {
+                "start": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "end": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "phase": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2
+                },
+                "expected_phase": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2
+                }
+              }
+            }
+          },
+          "cds_sequence": {
+            "type": "string"
+          },
+          "translation_status": {
+            "enum": [
+              "translated",
+              "abstained",
+              "partial_cds"
+            ]
+          },
+          "protein_sequence": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "translation_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

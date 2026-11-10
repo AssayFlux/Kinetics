@@ -83,8 +83,14 @@ def run_local_prodigal(
     for record in records:
         if len(contigs) >= max_contigs:
             raise ValueError("Genome exceeds max_contigs")
-        if not record.identifier or record.identifier in contigs:
-            raise ValueError("Contig identifiers must be non-empty and unique")
+        if (
+            not isinstance(record.identifier, str)
+            or not record.identifier
+            or not record.identifier.isascii()
+            or any(char.isspace() or ord(char) < 33 or char == ">" for char in record.identifier)
+            or record.identifier in contigs
+        ):
+            raise ValueError("Contig identifiers must be safe, non-empty and unique")
         sequence = "".join(record.sequence.split()).upper().replace("U", "T")
         if not sequence or any(base not in "ACGTRYSWKMBDHVN" for base in sequence):
             raise ValueError(f"Contig {record.identifier!r} contains invalid DNA")

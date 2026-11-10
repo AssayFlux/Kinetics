@@ -46,7 +46,7 @@ def test_domtblout_empty_result_does_not_claim_novelty() -> None:
     ROW.replace("1e-20", "NaN"),
     ROW.replace("5 75 3 73 2 75", "101 75 3 73 2 75"),
     ROW.replace("0.98", "1.5"),
-    ROW.replace("query-1 - 80", "query-1 - 81"),
+    ROW.replace("3 73", "3 81"),
 ])
 def test_domtblout_rejects_malformed_or_inconsistent_rows(row: str) -> None:
     with pytest.raises(ValueError):

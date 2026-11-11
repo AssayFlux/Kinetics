@@ -1,0 +1,2 @@
+openmm==8.6.1
+jsonschema[format]>=4.23,<5

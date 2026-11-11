@@ -57,3 +57,16 @@ def test_ligand_site_candidates_reject_canonical_protein_residue_as_ligand() -> 
         ligand_site_candidates(
             atoms, ligand_chain="A", ligand_residue_number=1, ligand_residue_name="ALA",
         )
+
+
+def test_ligand_site_candidates_enforce_actual_pair_budget() -> None:
+    atoms = [
+        Atom(1, "C1", "LIG", "X", 9, 0.0, 0.0, 0.0, "C"),
+        Atom(2, "C2", "LIG", "X", 9, 0.5, 0.0, 0.0, "C"),
+        Atom(3, "CA", "ALA", "A", 1, 1.0, 0.0, 0.0, "C"),
+    ]
+    with pytest.raises(ValueError, match="max_candidate_pairs"):
+        ligand_site_candidates(
+            atoms, ligand_chain="X", ligand_residue_number=9,
+            ligand_residue_name="LIG", max_candidate_pairs=1,
+        )

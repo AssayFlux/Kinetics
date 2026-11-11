@@ -43,3 +43,6 @@ def test_s3_s8_explore_cards_are_real_registry_gated_actions() -> None:
     assert "S3S8Runner.inferGeneticCode" in cards
     assert "No affinity, specificity, mechanism or function is inferred." in cards
     assert "no organism-specific genetic code is assigned" in cards
+    assert "source_sha256" in PYTHON_BRIDGE.read_text(encoding="utf-8")
+    assert "generated_at_utc" in PYTHON_BRIDGE.read_text(encoding="utf-8")
+    assert "Input SHA-256" in cards

@@ -224,6 +224,9 @@ internal fun StructureSiteAnalysisCard() {
             ligandResult?.let { result ->
                 HorizontalDivider()
                 Text("Ligand-site result · ${result.optString("status")}", fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
+                result.optJSONObject("provenance")?.optString("source_sha256")?.takeIf { it.isNotBlank() }?.let {
+                    Text("Input SHA-256 ${it.take(16)}…", style = MaterialTheme.typography.labelSmall)
+                }
                 Text("${result.optInt("candidate_residue_count")} nearby residue candidates")
                 val candidates = result.optJSONArray("residue_candidates")
                 if (candidates != null) {
@@ -240,6 +243,9 @@ internal fun StructureSiteAnalysisCard() {
             apoResult?.let { result ->
                 HorizontalDivider()
                 Text("Apo-pocket result · ${result.optString("status")}", fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
+                result.optJSONObject("provenance")?.optString("source_sha256")?.takeIf { it.isNotBlank() }?.let {
+                    Text("Input SHA-256 ${it.take(16)}…", style = MaterialTheme.typography.labelSmall)
+                }
                 Text("${result.optInt("pocket_candidate_count")} coarse concavity candidates")
                 val candidates = result.optJSONArray("pocket_candidates")
                 if (candidates != null) {
@@ -327,6 +333,9 @@ internal fun GeneticCodeInferenceCard() {
             result?.let { report ->
                 HorizontalDivider()
                 Text("Result · ${report.optString("status")}", fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
+                report.optJSONObject("provenance")?.optString("source_sha256")?.takeIf { it.isNotBlank() }?.let {
+                    Text("Input SHA-256 ${it.take(16)}…", style = MaterialTheme.typography.labelSmall)
+                }
                 Text("${report.optInt("record_count")} records · ${report.optInt("codon_count")} codons")
                 if (!report.isNull("candidate_table_id")) {
                     Text(

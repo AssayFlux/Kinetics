@@ -138,9 +138,27 @@ def prepare_structure_viewer_import(source_text: str, source_format: str) -> str
     return json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
+def _analysis_provenance(source_text: str, source_format: str, tool_id: str, parameters: dict):
+    import hashlib
+    from datetime import datetime, timezone
+
+    import kinetics
+
+    return {
+        "source_sha256": hashlib.sha256(source_text.encode("utf-8")).hexdigest(),
+        "source_format": source_format,
+        "tool_id": tool_id,
+        "tool_version": kinetics.__version__,
+        "generated_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "parameters": parameters,
+    }
+
+
 def _parse_structure_atoms(source_text: str, source_format: str):
     from kinetics.structure import parse_mmcif, parse_pdb
 
+    if not isinstance(source_text, str) or len(source_text.encode("utf-8")) > 16 * 1024 * 1024:
+        raise ValueError("Structure input must be text within the 16 MiB limit")
     if source_format == "pdb":
         return parse_pdb(source_text, include_hetero=True)
     if source_format == "mmcif":
@@ -169,6 +187,17 @@ def analyze_ligand_site(
         ligand_residue_name=ligand_residue_name,
         cutoff_angstrom=cutoff_angstrom,
     )
+    result["provenance"] = _analysis_provenance(
+        source_text,
+        source_format,
+        "structure.ligand_site_candidates",
+        {
+            "ligand_chain": ligand_chain,
+            "ligand_residue_number": ligand_residue_number,
+            "ligand_residue_name": ligand_residue_name,
+            "cutoff_angstrom": cutoff_angstrom,
+        },
+    )
     return json.dumps(result, ensure_ascii=False, sort_keys=True)
 
 
@@ -180,6 +209,19 @@ def analyze_apo_pockets(source_text: str, source_format: str) -> str:
 
     atoms = _parse_structure_atoms(source_text, source_format)
     result = apo_pocket_candidates(atoms)
+    result["provenance"] = _analysis_provenance(
+        source_text,
+        source_format,
+        "structure.apo_pocket_candidates",
+        {
+            "grid_spacing_angstrom": 1.0,
+            "small_probe_radius_angstrom": 1.4,
+            "large_probe_radius_angstrom": 3.0,
+            "generic_atom_radius_angstrom": 1.7,
+            "max_grid_points": 250000,
+            "max_distance_checks": 5000000,
+        },
+    )
     return json.dumps(result, ensure_ascii=False, sort_keys=True)
 
 
@@ -192,6 +234,8 @@ def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -
 
     if not isinstance(fasta_text, str) or len(fasta_text) > 1_000_000:
         raise ValueError("FASTA input must be text within the 1,000,000-character limit")
+    if not isinstance(complete_cds, bool):
+        raise ValueError("complete_cds must be a boolean")
     records = []
     for record in iter_fasta_records(fasta_text.splitlines()):
         if len(records) >= 1_000:
@@ -202,4 +246,17 @@ def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -
             "complete_cds": complete_cds,
         })
     result = infer_genetic_code_candidates(records, min_records=3, min_codons=90)
+    from kinetics.genetic_code import GENETIC_CODES
+
+    result["provenance"] = _analysis_provenance(
+        fasta_text,
+        "fasta",
+        "sequence.genetic_code_candidate_inference",
+        {
+            "complete_cds": complete_cds,
+            "min_records": 3,
+            "min_codons": 90,
+            "candidate_table_ids": sorted(GENETIC_CODES),
+        },
+    )
     return json.dumps(result, ensure_ascii=False, sort_keys=True)

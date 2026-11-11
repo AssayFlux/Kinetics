@@ -2,7 +2,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import pytest
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator, FormatChecker, ValidationError
 ROOT=Path(__file__).resolve().parents[1]
 def check(name,record):
  schema=json.loads((ROOT/"api"/name).read_text(encoding="utf-8"))
@@ -11,7 +11,7 @@ def check(name,record):
 def test_guideline_schema_requires_research_only_not_cds():
  r={"schema_version":1,"evidence_id":"synthetic-guideline","gene_symbol":"SYN1","guideline_name":"Synthetic","guideline_version":"fixture-1","source_url":"https://example.invalid/g","source_license_status":"verify_before_use","source_release_date":"2026-01-01","genome_build":"synthetic-v1","recommendation_scope":"research_reference_only","clinical_decision_support":False,"evidence_level":"not_assessed","review_status":"draft","reviewer":{"role":"synthetic-reviewer","review_date":"2026-01-01","evidence_url":"https://example.invalid/review"}}
  check("pgx-guideline-evidence.schema.json",r); r["clinical_decision_support"]=True
- with pytest.raises(Exception): check("pgx-guideline-evidence.schema.json",r)
+ with pytest.raises(ValidationError): check("pgx-guideline-evidence.schema.json",r)
 def test_curation_schema_requires_second_review_and_no_autonomous_call():
  r={"schema_version":1,"record_id":"synthetic-record","evidence_id":"e1","source_url":"https://example.invalid/s","source_release":"fixture-1","source_sha256":"a"*64,"license_status":"verify_before_use","curation_outcome":"uncertain","curator_role":"synthetic-curator","curated_at":"2026-01-01T00:00:00Z","second_review_required":True,"autonomous_final_classification":False,"clinical_use":False}
  check("pgx-curation-record.schema.json",r); r["autonomous_final_classification"]=True

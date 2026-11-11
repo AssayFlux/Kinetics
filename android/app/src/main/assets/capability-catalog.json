@@ -40,6 +40,14 @@
     "domain": "Sequence analysis"
   },
   {
+    "id": "sequence.genetic_code_candidate_inference",
+    "name": "Conservative evidence-ranked candidate NCBI genetic-code screening with abstention",
+    "status": "implemented",
+    "implementation": "python/kinetics/genetic_code_inference.py",
+    "evidence_level": "none",
+    "domain": "Sequence analysis"
+  },
+  {
     "id": "genome.orf_candidate_scan",
     "name": "Bounded six-frame complete ORF candidate enumeration",
     "status": "implemented",
@@ -376,6 +384,22 @@
     "domain": "Structural biology"
   },
   {
+    "id": "structure.ligand_site_candidates",
+    "name": "Bounded explicit-ligand geometric protein-site candidate screening",
+    "status": "implemented",
+    "implementation": "python/kinetics/structure_pockets.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
+    "id": "structure.apo_pocket_candidates",
+    "name": "Bounded probe-grid apo cavity candidate screening with geometric limitations",
+    "status": "implemented",
+    "implementation": "python/kinetics/apo_pockets.py",
+    "evidence_level": "none",
+    "domain": "Structural biology"
+  },
+  {
     "id": "genes.catalogue_coverage_report",
     "name": "Source-snapshot gene catalogue composition and annotation completeness report",
     "status": "implemented",
@@ -516,30 +540,6 @@
     "name": "Dependency-injected local structure-prediction engine adapter with strict output validation",
     "status": "implemented",
     "implementation": "python/kinetics/s4_engine.py",
-    "evidence_level": "none",
-    "domain": "Structural biology"
-  },
-  {
-    "id": "sequence.genetic_code_candidate_inference",
-    "name": "Conservative evidence-ranked candidate NCBI genetic-code screening with abstention",
-    "status": "implemented",
-    "implementation": "python/kinetics/genetic_code_inference.py",
-    "evidence_level": "none",
-    "domain": "Sequence analysis"
-  },
-  {
-    "id": "structure.ligand_site_candidates",
-    "name": "Bounded explicit-ligand geometric protein-site candidate screening",
-    "status": "implemented",
-    "implementation": "python/kinetics/structure_pockets.py",
-    "evidence_level": "none",
-    "domain": "Structural biology"
-  },
-  {
-    "id": "structure.apo_pocket_candidates",
-    "name": "Bounded probe-grid apo cavity candidate screening with geometric limitations",
-    "status": "implemented",
-    "implementation": "python/kinetics/apo_pockets.py",
     "evidence_level": "none",
     "domain": "Structural biology"
   }

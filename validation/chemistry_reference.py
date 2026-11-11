@@ -35,13 +35,13 @@ def run() -> dict[str, Any]:
         observed = analyze_smiles(molecule["smiles"])
         expected = molecule["expected"]
         checks: dict[str, bool] = {}
-        for key in ("formula", "atom_count", "bond_count", "ring_count", "h_bond_donors", "h_bond_acceptors", "rotatable_bonds"):
+        for key in ("formula", "atom_count", "bond_count", "ring_count", "h_bond_donors", "h_bond_acceptors", "rotatable_bonds", "formal_charge", "heavy_atom_count", "aromatic_atom_count", "aliphatic_ring_count", "aromatic_ring_count"):
             checks[key] = observed[key] == expected[key]
         for key, tolerance_key in (
             ("molecular_weight", "molecular_weight_da"),
             ("exact_molecular_weight", "exact_molecular_weight_da"),
             ("tpsa_angstrom2", "tpsa_angstrom2"),
-            ("crippen_logp", "crippen_logp"),
+            ("crippen_logp", "crippen_logp"),\n            ("fraction_csp3", "fraction_csp3"),
         ):
             checks[key] = _close(observed[key], expected[key], tolerances[tolerance_key])
         results.append({

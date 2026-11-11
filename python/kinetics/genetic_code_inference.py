@@ -48,6 +48,8 @@ def infer_genetic_code_candidates(
     for table_id in selected_ids:
         if isinstance(table_id, bool) or not isinstance(table_id, int) or table_id not in GENETIC_CODES:
             raise ValueError(f"Unsupported NCBI genetic code table: {table_id}")
+    if len(selected_ids) < 2:
+        raise ValueError("At least two supported candidate tables are required for ranking")
     if len(set(selected_ids)) != len(selected_ids):
         raise ValueError("table_ids must be a non-empty sequence of unique supported IDs")
 

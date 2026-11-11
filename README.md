@@ -28,7 +28,7 @@ Kinetics is an offline-first, modular platform for computational biology and in-
 
 The current documentation index is [`docs/README.md`](docs/README.md). Track order and decision history are controlled by [`ROADMAP.md`](ROADMAP.md) and [`DECISIONS.md`](DECISIONS.md); superseded instructions are retained only as history.
 
-<sub>Latest fully passing exact-source CI: [#2183](https://github.com/AssayFlux/Kinetics/actions/runs/42572416977) on `f704716` — all five jobs passed, including Python, Android arm64 APK/AAB/JVM tests, scientific references, RDKit and SPDX. Later S1 export/S2/S8/S10 changes are in subsequent commits and their exact-source CI is pending; physical-device runtime and independent experimental validation remain open.</sub>
+<sub>Latest recorded fully passing exact-source CI: [#2275](https://github.com/AssayFlux/Kinetics/actions/runs/42738823000) on `a05339e8` — all five jobs passed, including Python, Android arm64 APK/AAB/JVM tests, scientific references, RDKit and SPDX. Later commits through `ec3178e` add S5 SVG export and viewer-state persistence; exact-source CI for the current head is not yet evidenced. Physical-device runtime and independent biological validation remain open.</sub>
 
 
 The cards below summarise the state recorded in the project roadmap. “In progress” means implementation or preparation exists; it does **not** mean the phase has passed its exit gate.
@@ -61,8 +61,8 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 
 | Phase | Workstream | Recorded implementation / preparation | Remaining gate |
 |---|---|---|---|
-| **S1** | Offline-first structure viewer | Canvas 2D renderer, bounded PDB/mmCIF SAF import, provenance and Android JSON session export | Device import/export, screenshots, accessibility and performance evidence |
-| **S2–S5** | Geometry/torsion metrics, mapping/interface contacts, prediction evidence and session export | Bounded metrics/mapping, external prediction-envelope validator and Android JSON export are implemented; no prediction engine | Experimental reference concordance, approved models, calibrated thresholds and device evidence |
+| **S1** | Offline-first structure viewer | Canvas 2D renderer, bounded PDB/mmCIF SAF import, provenance, JSON/SVG/PNG export and persisted viewer state | Exact-head CI and physical-device import/render/export, screenshots, accessibility and performance evidence |
+| **S2–S5** | Geometry/torsion metrics, mapping/interface contacts, prediction evidence and session export | S2 bounded clash/torsion metrics; S3 exact/alignment mapping and contacts; S4 hash-pinned local prediction-process boundary; S5 JSON/PNG/SVG export and viewer-state persistence | S2 calibration, S3 pocket candidates, approved S4 model/weights and exact-head/device verification |
 | **S6** | Unknown-sequence triage | Streaming FASTA/FASTQ, hash-verified local FASTA packs, exact matching and fixed-width motif scan | Licensed/versioned packs, homology/profile-HMM search and curated/calibrated benchmarks |
 | **S7** | Genome annotation | Bounded contig QC and six-frame ORF candidate enumeration | Prokaryotic/eukaryotic annotation, transcript models and curated genome validation |
 | **S8** | Genetic-code investigation | Explicit translation across 24 supported NCBI tables with exhaustive Biopython codon/start/stop comparison | Organism-specific inference truth sets, calibrated abstention and independent confirmation |

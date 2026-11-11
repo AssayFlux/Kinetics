@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/admet-validation.schema.json",
+  "title": "Kinetics ADMET research evaluation utilities",
+  "description": "Leakage-aware split, held-out metrics and similarity applicability domain; no model is trained or selected.",
+  "oneOf": [
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "method", "seed", "train_indices", "validation_indices", "test_indices", "partition_counts", "scaffold_group_count", "no_scaffold_overlap", "limitations"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "method": {"const": "Bemis-Murcko scaffold-group split"},
+        "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+        "train_indices": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
+        "validation_indices": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
+        "test_indices": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
+        "partition_counts": {"type": "array", "prefixItems": [{"type": "integer", "minimum": 1}, {"type": "integer", "minimum": 1}, {"type": "integer", "minimum": 1}], "minItems": 3, "maxItems": 3},
+        "scaffold_group_count": {"type": "integer", "minimum": 3},
+        "no_scaffold_overlap": {"const": true},
+        "limitations": {"$ref": "#/$defs/limitations"}
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "metric_scope", "sample_count", "positive_count", "negative_count", "roc_auc", "average_precision", "brier_score", "threshold", "confusion_matrix", "sensitivity", "specificity", "calibration_bins", "limitations"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "metric_scope": {"const": "binary classification research evaluation"},
+        "sample_count": {"type": "integer", "minimum": 2},
+        "positive_count": {"type": "integer", "minimum": 1},
+        "negative_count": {"type": "integer", "minimum": 1},
+        "roc_auc": {"type": "number", "minimum": 0, "maximum": 1},
+        "average_precision": {"type": "number", "minimum": 0, "maximum": 1},
+        "brier_score": {"type": "number", "minimum": 0, "maximum": 1},
+        "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "confusion_matrix": {
+          "type": "object", "additionalProperties": false,
+          "required": ["true_positive", "true_negative", "false_positive", "false_negative"],
+          "properties": {
+            "true_positive": {"type": "integer", "minimum": 0},
+            "true_negative": {"type": "integer", "minimum": 0},
+            "false_positive": {"type": "integer", "minimum": 0},
+            "false_negative": {"type": "integer", "minimum": 0}
+          }
+        },
+        "sensitivity": {"type": "number", "minimum": 0, "maximum": 1},
+        "specificity": {"type": "number", "minimum": 0, "maximum": 1},
+        "calibration_bins": {
+          "type": "array", "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["lower_probability", "upper_probability", "count", "mean_predicted_probability", "observed_positive_fraction"],
+            "properties": {
+              "lower_probability": {"type": "number", "minimum": 0, "maximum": 1},
+              "upper_probability": {"type": "number", "minimum": 0, "maximum": 1},
+              "count": {"type": "integer", "minimum": 1},
+              "mean_predicted_probability": {"type": "number", "minimum": 0, "maximum": 1},
+              "observed_positive_fraction": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        },
+        "limitations": {"$ref": "#/$defs/limitations"}
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "fingerprint", "threshold", "reference_count", "query_count", "results", "limitations"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "fingerprint": {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "radius", "bits"],
+          "properties": {
+            "type": {"const": "Morgan"},
+            "radius": {"type": "integer", "minimum": 1, "maximum": 4},
+            "bits": {"type": "integer", "minimum": 256, "maximum": 8192}
+          }
+        },
+        "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "reference_count": {"type": "integer", "minimum": 1},
+        "query_count": {"type": "integer", "minimum": 1},
+        "results": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["query_index", "nearest_reference_index", "nearest_tanimoto_similarity", "within_applicability_domain"],
+            "properties": {
+              "query_index": {"type": "integer", "minimum": 0},
+              "nearest_reference_index": {"type": "integer", "minimum": 0},
+              "nearest_tanimoto_similarity": {"type": "number", "minimum": 0, "maximum": 1},
+              "within_applicability_domain": {"type": "boolean"}
+            }
+          }
+        },
+        "limitations": {"$ref": "#/$defs/limitations"}
+      }
+    }
+  ],
+  "$defs": {
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  }
+}

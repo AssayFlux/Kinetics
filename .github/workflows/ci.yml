@@ -200,3 +200,29 @@ jobs:
             android-build.log
           if-no-files-found: warn
           retention-days: 14
+
+  vina-engine-smoke:
+    name: Pinned AutoDock Vina engine smoke check (not scientific validation)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python validation host
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: validation/requirements-vina.txt
+      - name: Install pinned Vina and schema validator
+        run: python -m pip install -r validation/requirements-vina.txt
+      - name: Run deterministic 1IEP Vina engine smoke check
+        env:
+          PYTHONPATH: python
+        run: python validation/vina_engine_smoke.py > vina-engine-smoke-result.json
+      - name: Upload engine smoke record
+        uses: actions/upload-artifact@v4
+        with:
+          name: kinetics-vina-engine-smoke-${{ github.sha }}
+          path: vina-engine-smoke-result.json
+          if-no-files-found: error
+          retention-days: 90

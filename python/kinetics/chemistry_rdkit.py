@@ -46,7 +46,7 @@ def _bounded_utf8(value: str, *, label: str, maximum: int) -> bytes:
 
 
 def _describe(
-    molecule: Any, *, source_format: str, raw_input: str, input_bytes: bytes,
+    molecule: Any, *, source_format: str, input_bytes: bytes,
     remove_hs: bool | None = None,
 ) -> dict[str, object]:
     Chem, _, version, descriptors, modules = _rdkit()
@@ -132,7 +132,7 @@ def analyze_smiles(smiles: str) -> dict[str, object]:
     Chem, _, _, _, _ = _rdkit()
     molecule = Chem.MolFromSmiles(smiles, sanitize=True)
     return _describe(
-        molecule, source_format="SMILES", raw_input=smiles, input_bytes=input_bytes,
+        molecule, source_format="SMILES", input_bytes=input_bytes,
     )
 
 

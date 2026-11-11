@@ -107,3 +107,11 @@ def test_apo_pocket_candidates_abstain_and_enforce_grid_budgets() -> None:
         apo_pocket_candidates([atom], max_grid_points=1)
     with pytest.raises(ValueError, match="max_distance_checks"):
         apo_pocket_candidates([atom], max_distance_checks=1)
+
+
+def test_apo_pocket_candidates_rejects_unknown_element_atoms() -> None:
+    from kinetics import apo_pocket_candidates
+
+    atom = Atom(1, "CA", "ALA", "A", 1, 0.0, 0.0, 0.0, "")
+    with pytest.raises(ValueError, match="No canonical protein heavy atoms"):
+        apo_pocket_candidates([atom])

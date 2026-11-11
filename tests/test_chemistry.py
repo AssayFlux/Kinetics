@@ -201,9 +201,9 @@ def test_rdkit_inputs_are_bounded_by_utf8_bytes_and_reject_nul_or_invalid_unicod
     with pytest.raises(ValueError, match="UTF-8 limit"):
         analyze_smiles("é" * 600_000)
     with pytest.raises(ValueError, match="NUL"):
-        analyze_smiles("CCO\\x00")
+        analyze_smiles("CCO\x00")
     with pytest.raises(ValueError, match="Unicode"):
-        analyze_smiles("CCO\\ud800")
+        analyze_smiles("CCO\ud800")
 
 
 def test_rdkit_morgan_similarity_rejects_boolean_or_out_of_range_parameters_and_oversize_input() -> None:

@@ -10,8 +10,6 @@ from math import isfinite
 from typing import Sequence
 
 
-
-
 def _validate_smiles_inputs(*collections: Sequence[str]) -> None:
     total_bytes = 0
     for collection in collections:
@@ -21,9 +19,13 @@ def _validate_smiles_inputs(*collections: Sequence[str]) -> None:
             try:
                 total_bytes += len(value.encode("utf-8", errors="strict"))
             except UnicodeEncodeError as error:
-                raise ValueError(f"SMILES at index {index} contains invalid Unicode") from error
+                raise ValueError(
+                    f"SMILES at index {index} contains invalid Unicode"
+                ) from error
             if total_bytes > 16 * 1024 * 1024:
                 raise ValueError("combined SMILES input exceeds the 16 MiB limit")
+
+
 def scaffold_group_split(
     smiles: Sequence[str],
     *,
@@ -222,8 +224,14 @@ def binary_admet_metrics(
         cursor = end
 
     predicted = [int(value >= threshold) for value in normalized_probabilities]
-    tp = sum(label == 1 and prediction == 1 for label, prediction in zip(normalized_labels, predicted, strict=True))
-    tn = sum(label == 0 and prediction == 0 for label, prediction in zip(normalized_labels, predicted, strict=True))
+    tp = sum(
+        label == 1 and prediction == 1
+        for label, prediction in zip(normalized_labels, predicted, strict=True)
+    )
+    tn = sum(
+        label == 0 and prediction == 0
+        for label, prediction in zip(normalized_labels, predicted, strict=True)
+    )
     fp = negatives - tn
     fn = positives - tp
     brier = sum(

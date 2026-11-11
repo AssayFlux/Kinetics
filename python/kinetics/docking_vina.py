@@ -6,6 +6,7 @@ independent redocking/cross-docking benchmarks.
 """
 from __future__ import annotations
 
+import json
 from hashlib import sha256
 from math import isfinite
 from pathlib import Path
@@ -99,6 +100,7 @@ def run_vina_docking(
 
     try:
         from vina import Vina, __version__ as vina_version
+        import vina.vina_wrapper as vina_wrapper
     except ImportError as error:
         raise RuntimeError(
             "AutoDock Vina is unavailable; install the pinned optional docking dependency"
@@ -138,6 +140,52 @@ def run_vina_docking(
             [float(component) for component in row]
             for row in energies.tolist()
         ]
+        pose_text = pose_bytes.decode("utf-8", errors="strict")
+        pose_blocks: list[str] = []
+        current: list[str] = []
+        for line in pose_text.splitlines(keepends=True):
+            if line.startswith("MODEL"):
+                if current:
+                    pose_blocks.append("".join(current))
+                current = [line]
+            elif current:
+                current.append(line)
+                if line.startswith("ENDMDL"):
+                    pose_blocks.append("".join(current))
+                    current = []
+        if current:
+            pose_blocks.append("".join(current))
+        if not pose_blocks:
+            pose_blocks = [pose_text]
+        if len(pose_blocks) != len(energy_rows):
+            raise RuntimeError("Vina pose count does not match its energy rows")
+        protocol = {
+            "center_angstrom": list(center),
+            "box_size_angstrom": list(box_size),
+            "seed": seed,
+            "exhaustiveness": exhaustiveness,
+            "n_poses_requested": n_poses,
+            "cpu": cpu,
+            "scoring_function": scoring_function,
+            "energy_range_kcal_per_mol": float(energy_range_kcal_per_mol),
+        }
+        protocol_sha256 = sha256(
+            json.dumps(protocol, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        engine_binary = Path(vina_wrapper.__file__).read_bytes()
+        if not engine_binary or len(engine_binary) > 512 * 1024 * 1024:
+            raise RuntimeError("Vina engine binary is empty or exceeds the 512 MiB hash limit")
+        engine_build_sha256 = sha256(engine_binary).hexdigest()
+        pose_results = [
+            {
+                "rank": index + 1,
+                "score": energy[0],
+                "score_unit": "kcal/mol (Vina score; not measured binding free energy)",
+                "pose_sha256": sha256(block.encode("utf-8")).hexdigest(),
+                "pose_pdbqt": block,
+            }
+            for index, (energy, block) in enumerate(zip(energy_rows, pose_blocks, strict=True))
+        ]
 
     return {
         "schema_version": 1,
@@ -147,33 +195,19 @@ def run_vina_docking(
         "engine": {
             "engine_id": "AutoDock Vina",
             "version": str(vina_version),
+            "build_sha256": engine_build_sha256,
             "scoring_function": scoring_function,
         },
         "input_hashes": {
-            "receptor_sha256": sha256(receptor_bytes).hexdigest(),
-            "ligand_sha256": sha256(ligand_bytes).hexdigest(),
+            "coordinates_or_receptor_sha256": sha256(receptor_bytes).hexdigest(),
+            "ligand_or_topology_sha256": sha256(ligand_bytes).hexdigest(),
         },
-        "protocol": {
-            "center_angstrom": list(center),
-            "box_size_angstrom": list(box_size),
-            "seed": seed,
-            "exhaustiveness": exhaustiveness,
-            "n_poses_requested": n_poses,
-            "cpu": cpu,
-            "energy_range_kcal_per_mol": float(energy_range_kcal_per_mol),
-        },
-        "score_components": {
-            "columns": [
-                "total", "inter", "intra", "torsions", "intra_best_pose"
-            ],
-            "units": "kcal/mol; engine scoring components, not measured thermodynamics",
-            "values": energy_rows,
-        },
-        "poses_pdbqt": pose_bytes.decode("utf-8", errors="strict"),
-        "pose_sha256": sha256(pose_bytes).hexdigest(),
+        "protocol": protocol,
+        "protocol_sha256": protocol_sha256,
+        "poses": pose_results,
         "limitations": [
             "Requires caller-prepared PDBQT; ligand and receptor preparation are not performed",
-            "Scoring outputs are not experimental binding free energies or binding affinities",
+            "Scores are engine outputs, not experimental binding free energies or binding affinities",
             "No redocking, cross-docking, decoy enrichment or prospective validation is performed",
             "No biological activity, efficacy, safety, ADMET or clinical prediction is produced",
             "Use only licensed structures and approved research compute",

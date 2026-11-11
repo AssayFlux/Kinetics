@@ -6,6 +6,7 @@ real RDKit sanitization/descriptor/fingerprint engine when it is installed on a 
 from __future__ import annotations
 
 from hashlib import sha256
+from math import isfinite
 from typing import Any
 
 
@@ -30,8 +31,23 @@ def rdkit_backend_info() -> dict[str, str]:
     return {"available": "true", "engine": "RDKit", "version": version.rdkitVersion}
 
 
+def _bounded_utf8(value: str, *, label: str, maximum: int) -> bytes:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{label} must be a non-empty string")
+    try:
+        encoded = value.encode("utf-8", errors="strict")
+    except UnicodeEncodeError as error:
+        raise ValueError(f"{label} must contain valid Unicode scalar values") from error
+    if len(encoded) > maximum:
+        raise ValueError(f"{label} exceeds the {maximum}-byte UTF-8 limit")
+    if b"\\x00" in encoded:
+        raise ValueError(f"{label} must not contain NUL bytes")
+    return encoded
+
+
 def _describe(
-    molecule: Any, *, source_format: str, raw_input: str, remove_hs: bool | None = None,
+    molecule: Any, *, source_format: str, raw_input: str, input_bytes: bytes,
+    remove_hs: bool | None = None,
 ) -> dict[str, object]:
     Chem, _, version, descriptors, modules = _rdkit()
     fingerprint_generator, mol_descriptors = modules
@@ -41,16 +57,28 @@ def _describe(
     # the recorded operation is clear and failure is surfaced.
     Chem.SanitizeMol(molecule)
     canonical = Chem.MolToSmiles(molecule, canonical=True, isomericSmiles=True)
-    generator = fingerprint_generator.GetMorganGenerator(radius=2, fpSize=2048)
+    radius, bits = 2, 2048
+    generator = fingerprint_generator.GetMorganGenerator(radius=radius, fpSize=bits)
     fingerprint = generator.GetFingerprint(molecule)
     chiral_centres = Chem.FindMolChiralCenters(molecule, includeUnassigned=True)
+    numeric_descriptors = {
+        "molecular_weight": float(descriptors.MolWt(molecule)),
+        "exact_molecular_weight": float(descriptors.ExactMolWt(molecule)),
+        "crippen_logp": float(descriptors.MolLogP(molecule)),
+        "tpsa_angstrom2": float(descriptors.TPSA(molecule)),
+        "fraction_csp3": float(descriptors.FractionCSP3(molecule)),
+    }
+    if not all(isfinite(value) for value in numeric_descriptors.values()):
+        raise ValueError("RDKit returned a non-finite molecular descriptor")
+    aromatic_atom_count = sum(1 for atom in molecule.GetAtoms() if atom.GetIsAromatic())
     return {
+        "descriptor_schema_version": 2,
         "engine": "RDKit",
         "engine_version": version.rdkitVersion,
         "source_format": source_format,
         "input_provenance": {
-            "sha256_utf8": sha256(raw_input.encode("utf-8")).hexdigest(),
-            "utf8_bytes": len(raw_input.encode("utf-8")),
+            "sha256_utf8": sha256(input_bytes).hexdigest(),
+            "utf8_bytes": len(input_bytes),
             "preprocessing": "none; exact supplied text passed to RDKit parser",
         },
         "representation_assumptions": {
@@ -67,23 +95,27 @@ def _describe(
             "molecular_weight_unit": "Da",
             "exact_molecular_weight_unit": "Da",
             "tpsa_unit": "angstrom^2",
+            "crippen_logp_unit": "dimensionless",
+            "fraction_csp3_unit": "dimensionless",
         },
         "sanitization": "RDKit Chem.SanitizeMol",
         "canonical_isomeric_smiles": canonical,
         "formula": mol_descriptors.CalcMolFormula(molecule),
-        "molecular_weight": descriptors.MolWt(molecule),
-        "exact_molecular_weight": descriptors.ExactMolWt(molecule),
-        "crippen_logp": descriptors.MolLogP(molecule),
-        "tpsa_angstrom2": descriptors.TPSA(molecule),
-        "h_bond_donors": descriptors.NumHDonors(molecule),
-        "h_bond_acceptors": descriptors.NumHAcceptors(molecule),
-        "rotatable_bonds": descriptors.NumRotatableBonds(molecule),
-        "ring_count": descriptors.RingCount(molecule),
-        "atom_count": molecule.GetNumAtoms(),
-        "bond_count": molecule.GetNumBonds(),
+        **numeric_descriptors,
+        "h_bond_donors": int(descriptors.NumHDonors(molecule)),
+        "h_bond_acceptors": int(descriptors.NumHAcceptors(molecule)),
+        "rotatable_bonds": int(descriptors.NumRotatableBonds(molecule)),
+        "ring_count": int(descriptors.RingCount(molecule)),
+        "aliphatic_ring_count": int(mol_descriptors.CalcNumAliphaticRings(molecule)),
+        "aromatic_ring_count": int(mol_descriptors.CalcNumAromaticRings(molecule)),
+        "formal_charge": int(mol_descriptors.CalcFormalCharge(molecule)),
+        "heavy_atom_count": int(molecule.GetNumHeavyAtoms()),
+        "aromatic_atom_count": aromatic_atom_count,
+        "atom_count": int(molecule.GetNumAtoms()),
+        "bond_count": int(molecule.GetNumBonds()),
         "chiral_centres": chiral_centres,
         "morgan_fingerprint": {
-            "algorithm": "Morgan", "radius": 2, "bits": 2048,
+            "algorithm": "Morgan", "radius": radius, "bits": bits,
             "on_bits": list(fingerprint.GetOnBits()),
         },
         "limitations": [
@@ -95,31 +127,38 @@ def _describe(
 
 
 def analyze_smiles(smiles: str) -> dict[str, object]:
-    """Parse, sanitize and describe a SMILES string using RDKit."""
-    if not isinstance(smiles, str) or not smiles.strip() or len(smiles) > 1_000_000:
-        raise ValueError("SMILES must be a non-empty string no longer than 1 MB")
+    """Parse, sanitize and describe a bounded SMILES string using RDKit."""
+    input_bytes = _bounded_utf8(smiles, label="SMILES", maximum=1_000_000)
     Chem, _, _, _, _ = _rdkit()
     molecule = Chem.MolFromSmiles(smiles, sanitize=True)
-    return _describe(molecule, source_format="SMILES", raw_input=smiles)
+    return _describe(
+        molecule, source_format="SMILES", raw_input=smiles, input_bytes=input_bytes,
+    )
 
 
 def analyze_molblock(molblock: str) -> dict[str, object]:
-    """Parse and sanitize a V2000/V3000 mol block using RDKit."""
-    if not isinstance(molblock, str) or not molblock.strip() or len(molblock) > 10_000_000:
-        raise ValueError("Mol block must be non-empty and no larger than 10 MB")
+    """Parse and sanitize a bounded V2000/V3000 mol block using RDKit."""
+    input_bytes = _bounded_utf8(molblock, label="Mol block", maximum=10_000_000)
     Chem, _, _, _, _ = _rdkit()
     molecule = Chem.MolFromMolBlock(
         molblock, sanitize=True, removeHs=False, strictParsing=True,
     )
-    return _describe(molecule, source_format="molblock", raw_input=molblock, remove_hs=False)
+    return _describe(
+        molecule, source_format="molblock", raw_input=molblock,
+        input_bytes=input_bytes, remove_hs=False,
+    )
 
 
-def morgan_tanimoto(first_smiles: str, second_smiles: str, *, radius: int = 2, bits: int = 2048) -> float:
+def morgan_tanimoto(
+    first_smiles: str, second_smiles: str, *, radius: int = 2, bits: int = 2048,
+) -> float:
     """Calculate Morgan-fingerprint Tanimoto similarity using RDKit."""
-    if not 1 <= radius <= 6 or not 256 <= bits <= 16_384 or bits & (bits - 1):
-        raise ValueError("Morgan radius must be 1..6 and bit count a power of two in 256..16384")
-    if not first_smiles or not second_smiles:
-        raise ValueError("Both SMILES inputs are required")
+    if not isinstance(radius, int) or isinstance(radius, bool) or not 1 <= radius <= 6:
+        raise ValueError("Morgan radius must be an integer in 1..6")
+    if not isinstance(bits, int) or isinstance(bits, bool) or not 256 <= bits <= 16_384 or bits & (bits - 1):
+        raise ValueError("Morgan bit count must be a power of two in 256..16384")
+    _bounded_utf8(first_smiles, label="First SMILES", maximum=1_000_000)
+    _bounded_utf8(second_smiles, label="Second SMILES", maximum=1_000_000)
     Chem, DataStructs, _, _, modules = _rdkit()
     generator_module, _ = modules
     first = Chem.MolFromSmiles(first_smiles, sanitize=True)

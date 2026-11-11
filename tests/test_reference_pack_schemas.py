@@ -181,10 +181,14 @@ def test_i2_i3_result_contracts_require_hashes_and_nonvalidated_status() -> None
     md = {
         "schema_version": 1, "job_type": "molecular_dynamics", "research_only": True,
         "validation_status": "not_independently_validated", "engine": {**engine, "platform": "CPU"},
-        "input_hashes": hashes,
+        "input_hashes": {
+            **hashes,
+            "coordinates_canonical_sha256": "7" * 64,
+            "topology_canonical_sha256": "8" * 64,
+        },
         "force_field": {
             "name": "synthetic harmonic reference", "version": "1",
-            "parameter_source_sha256": "9" * 64,
+            "parameter_source_sha256": "9" * 64, "system_sha256": "a" * 64,
         },
         "protocol": {
             "temperature_kelvin": 300, "pressure_bar": None, "timestep_fs": 1,

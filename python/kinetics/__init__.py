@@ -21,6 +21,8 @@ from .kinetics import (
     bootstrap_michaelis_menten, eadie_hofstee, fit_michaelis_menten, hanes_woolf, inhibition_rate,
     lineweaver_burk, michaelis_menten,
 )
+from .genetic_code_inference import infer_genetic_code_candidates
+from .structure_pockets import ligand_site_candidates
 from .molecular import primer_properties, scan_spcas9_ngg
 from .omics import (
     negative_binomial_differential_expression,
@@ -44,7 +46,7 @@ __all__ = [
     "bootstrap_neighbor_joining_from_alignment", "analyze_molblock", "analyze_smiles", "morgan_tanimoto", "rdkit_backend_info", "PharmVarAlleleDefinition", "PharmVarMatch", "PharmVarVariant", "match_pharmvar_haplotype", "parse_pharmvar_tsv", "AlleleMatch", "Atom", "GeneEntry", "StarAlleleDefinition", "VariantKey", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
-    "graph_descriptors", "hanes_woolf", "inhibition_rate",
+    "graph_descriptors", "hanes_woolf", "inhibition_rate", "infer_genetic_code_candidates", "ligand_site_candidates",
     "iter_alignment_records", "interaction_candidates", "iter_bam_records", "iter_fasta_records", "iter_ncbi_gene_info", "iter_ncbi_gene_info_file", "jukes_cantor_distance", "iter_sdf_records", "kmer_counts", "leaf_names", "lineweaver_burk", "match_phased_haplotype", "parse_star_allele_definitions",
     "log2_fold_change", "logistic_growth", "michaelis_menten", "normalize_small_variant",
     "needleman_wunsch", "neighbor_joining", "neighbor_joining_from_alignment", "negative_binomial_differential_expression", "parse_fasta", "parse_fastq", "parse_newick",

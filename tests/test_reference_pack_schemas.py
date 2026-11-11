@@ -195,7 +195,9 @@ def test_i2_i3_result_contracts_require_hashes_and_nonvalidated_status() -> None
             "steps": 100, "equilibration_steps": 10, "replicas": 2, "seed": 1,
             "report_interval": 10, "cpu_threads": 1, "platform": "CPU",
             "integrator": "LangevinMiddleIntegrator", "friction_per_ps": 1.0,
-            "velocity_seed_derivation": "sha256(base_seed:replica_index:velocities)[0:4] little-endian",
+            "velocity_seed_derivation": (
+                "sha256(base_seed:replica_index:velocities)[0:4] little-endian"
+            ),
         },
         "protocol_sha256": "d" * 64,
         "replicas": [

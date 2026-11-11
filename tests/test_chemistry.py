@@ -183,6 +183,9 @@ def test_rdkit_descriptor_schema_reports_chemistry_assumptions_and_extended_desc
     assert ethanol["aromatic_atom_count"] == 0
     assert ethanol["formal_charge"] == 0
     assert ethanol["fraction_csp3"] == pytest.approx(1.0)
+    assert ethanol["rule_of_five_screen"]["criterion_count"] == 4
+    assert ethanol["rule_of_five_screen"]["pass_count"] == 4
+    assert ethanol["rule_of_five_screen"]["all_criteria_pass"] is True
     assert ethanol["aliphatic_ring_count"] == 0
     assert ethanol["aromatic_ring_count"] == 0
     assert ethanol["representation_assumptions"]["crippen_logp_unit"] == "dimensionless"

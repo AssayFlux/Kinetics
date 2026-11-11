@@ -30,6 +30,15 @@ def _positive_number(name: str, value: float, *, maximum: float) -> float:
     return float(value)
 
 
+def _derive_openmm_seed(base_seed: int, replica_index: int, stream: str) -> int:
+    """Derive a deterministic positive signed-32-bit seed for one replica stream."""
+    digest = sha256(
+        f"kinetics-openmm-seed-v1:{base_seed}:{replica_index}:{stream}".encode("utf-8")
+    ).digest()
+    seed = int.from_bytes(digest[:4], "little") & 0x7FFFFFFF
+    return seed or 1
+
+
 def run_openmm_dynamics(
     system: Any,
     topology: Any,
@@ -81,8 +90,8 @@ def run_openmm_dynamics(
         raise ValueError("equilibration_steps must be an integer between 0 and 1000000")
     if not isinstance(replicas, int) or isinstance(replicas, bool) or not 2 <= replicas <= 10:
         raise ValueError("replicas must be an integer between 2 and 10")
-    if not isinstance(seed, int) or isinstance(seed, bool) or not 0 <= seed <= 2**32 - replicas:
-        raise ValueError("seed must leave room for all replica seeds in unsigned 32-bit range")
+    if not isinstance(seed, int) or isinstance(seed, bool) or not 0 <= seed <= 2**32 - 1:
+        raise ValueError("seed must be an unsigned 32-bit integer")
     if (
         not isinstance(report_interval, int)
         or isinstance(report_interval, bool)
@@ -195,7 +204,14 @@ def run_openmm_dynamics(
         "platform": "CPU",
         "integrator": "LangevinMiddleIntegrator",
         "friction_per_ps": 1.0,
-        "velocity_seed_derivation": "sha256(base_seed:replica_index:velocities)[0:4] little-endian",
+        "integrator_seed_derivation": (
+            "sha256(kinetics-openmm-seed-v1:base_seed:replica_index:integrator)"
+            "[0:4] little-endian masked to 31 bits; zero mapped to 1"
+        ),
+        "velocity_seed_derivation": (
+            "sha256(kinetics-openmm-seed-v1:base_seed:replica_index:velocities)"
+            "[0:4] little-endian masked to 31 bits; zero mapped to 1"
+        ),
     }
     protocol_sha256 = sha256(
         json.dumps(protocol, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -205,11 +221,8 @@ def run_openmm_dynamics(
     with TemporaryDirectory(prefix="kinetics-openmm-") as temporary:
         root = Path(temporary)
         for index in range(replicas):
-            replica_seed = seed + index
-            velocity_seed = int.from_bytes(
-                sha256(f"{seed}:{index + 1}:velocities".encode("utf-8")).digest()[:4],
-                "little",
-            )
+            replica_seed = _derive_openmm_seed(seed, index + 1, "integrator")
+            velocity_seed = _derive_openmm_seed(seed, index + 1, "velocities")
             replica_system = openmm.XmlSerializer.deserialize(system_xml)
             if pressure is not None:
                 replica_system.addForce(
@@ -271,7 +284,7 @@ def run_openmm_dynamics(
             replica_results.append(
                 {
                     "replica_id": index + 1,
-                    "seed": replica_seed,
+                    "integrator_seed": replica_seed,
                     "velocity_seed": velocity_seed,
                     "steps_completed": steps,
                     "initial_potential_energy": float(initial_energy),

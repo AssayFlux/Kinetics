@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from kinetics.md_openmm import run_openmm_dynamics
+from kinetics.md_openmm import _derive_openmm_seed, run_openmm_dynamics
 
 
 def _arguments() -> dict[str, object]:
@@ -43,3 +43,17 @@ def test_openmm_runner_rejects_invalid_protocol_before_loading_engine(
     arguments[key] = value
     with pytest.raises(ValueError, match=message):
         run_openmm_dynamics(object(), object(), object(), **arguments)  # type: ignore[arg-type]
+
+
+def test_openmm_seed_derivation_is_stable_distinct_and_signed_32_bit() -> None:
+    seeds = [
+        _derive_openmm_seed(base_seed, replica_index, stream)
+        for base_seed in (0, 1, 2**32 - 1)
+        for replica_index in range(1, 11)
+        for stream in ("integrator", "velocities")
+    ]
+    assert all(1 <= seed <= 2**31 - 1 for seed in seeds)
+    assert len(seeds) == len(set(seeds))
+    assert _derive_openmm_seed(2**32 - 1, 10, "integrator") == _derive_openmm_seed(
+        2**32 - 1, 10, "integrator"
+    )

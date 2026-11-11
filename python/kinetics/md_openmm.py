@@ -101,7 +101,7 @@ def run_openmm_dynamics(
         import numpy as np
         import openmm
         from openmm import app, unit
-        import openmm._openmm as openmm_binary
+        import openmm.openmm as openmm_binary
     except ImportError as error:
         raise RuntimeError(
             "OpenMM is unavailable; install the pinned optional MD engine dependency"
@@ -188,7 +188,6 @@ def run_openmm_dynamics(
             final_energy = simulation.context.getState(
                 getEnergy=True
             ).getPotentialEnergy().value_in_unit(unit.kilojoule_per_mole)
-            simulation.context.getState(getPositions=True)
             simulation = None
             integrator = None
             trajectory_bytes = trajectory_path.read_bytes()
@@ -214,7 +213,7 @@ def run_openmm_dynamics(
         "validation_status": "not_independently_validated",
         "engine": {
             "engine_id": "OpenMM",
-            "version": str(openmm.version.full_version),
+            "version": str(openmm.__version__),
             "build_sha256": engine_build_sha256,
             "platform": "CPU",
         },

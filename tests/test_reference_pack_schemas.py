@@ -121,3 +121,34 @@ def test_i5_synthetic_cohort_schema_accepts_only_aggregate_non_patient_output() 
     result = simulate_hardy_weinberg_cohort({"synthetic_locus_1": 0.25}, sample_size=100, seed=4)
     assert Draft202012Validator(schema).is_valid(result)
     assert not Draft202012Validator(schema).is_valid({**result, "data_classification": "patient_data"})
+
+
+def test_i2_i3_result_contracts_require_hashes_and_nonvalidated_status() -> None:
+    import json
+    from jsonschema import Draft202012Validator
+
+    root = Path(__file__).resolve().parents[1]
+    schema = json.loads((root / "api" / "insilico-result.schema.json").read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    hashes = {"coordinates_or_receptor_sha256": "a" * 64, "ligand_or_topology_sha256": "b" * 64}
+    engine = {"engine_id": "unapproved", "version": "unapproved", "build_sha256": "c" * 64}
+    docking = {
+        "schema_version": 1, "job_type": "docking", "research_only": True,
+        "validation_status": "not_independently_validated", "engine": engine,
+        "input_hashes": hashes, "protocol_sha256": "d" * 64,
+        "poses": [{"rank": 1, "score": -7.2, "score_unit": "engine-defined", "pose_sha256": "e" * 64}],
+        "limitations": ["Scores are not binding affinities."],
+    }
+    assert validator.is_valid(docking)
+    assert not validator.is_valid({**docking, "validation_status": "validated"})
+    md = {
+        "schema_version": 1, "job_type": "molecular_dynamics", "research_only": True,
+        "validation_status": "not_independently_validated", "engine": engine,
+        "input_hashes": hashes, "protocol_sha256": "d" * 64,
+        "replicas": [
+            {"replica_id": 1, "seed": 1, "steps_completed": 100, "initial_potential_energy": -10.0, "final_potential_energy": -9.9, "energy_unit": "kJ/mol", "trajectory_sha256": "e" * 64},
+            {"replica_id": 2, "seed": 2, "steps_completed": 100, "initial_potential_energy": -10.1, "final_potential_energy": -10.0, "energy_unit": "kJ/mol", "trajectory_sha256": "f" * 64},
+        ],
+        "limitations": ["No independent stability validation."],
+    }
+    assert validator.is_valid(md)

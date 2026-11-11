@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/pkpd-result.schema.json",
+  "title": "Kinetics research-only PK/PD reference output",
+  "description": "Closed-form educational outputs only; not dose guidance, ADMET prediction or validated PBPK.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "model", "engine", "units", "parameters", "observations", "provenance", "limitations"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "model": {"const": "single-dose one-compartment oral PK; first-order absorption and elimination"},
+        "engine": {"const": "Kinetics closed-form PKPD reference model"},
+        "units": {
+          "type": "object", "additionalProperties": false,
+          "required": ["dose_amount", "apparent_volume", "time", "rate_constants", "concentration"],
+          "properties": {
+            "dose_amount": {"const": "mg"}, "apparent_volume": {"const": "L"},
+            "time": {"const": "h"}, "rate_constants": {"const": "1/h"},
+            "concentration": {"const": "mg/L"}
+          }
+        },
+        "parameters": {
+          "type": "object", "additionalProperties": false,
+          "required": ["dose_amount_mg", "bioavailability_fraction", "absorption_rate_per_h", "elimination_rate_per_h", "apparent_volume_l"],
+          "properties": {
+            "dose_amount_mg": {"type": "number", "exclusiveMinimum": 0},
+            "bioavailability_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+            "absorption_rate_per_h": {"type": "number", "exclusiveMinimum": 0},
+            "elimination_rate_per_h": {"type": "number", "exclusiveMinimum": 0},
+            "apparent_volume_l": {"type": "number", "exclusiveMinimum": 0}
+          }
+        },
+        "observations": {
+          "type": "array", "minItems": 1, "maxItems": 10000,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["time_h", "concentration_mg_per_l"],
+            "properties": {
+              "time_h": {"type": "number", "minimum": 0},
+              "concentration_mg_per_l": {"type": "number", "minimum": 0}
+            }
+          }
+        },
+        "provenance": {
+          "type": "object", "additionalProperties": false,
+          "required": ["parameter_origin", "dose_regimen", "rate_case"],
+          "properties": {
+            "parameter_origin": {"const": "caller_supplied"},
+            "dose_regimen": {"const": "single theoretical input"},
+            "rate_case": {"enum": ["equal-rate continuous limit", "distinct first-order rates"]}
+          }
+        },
+        "limitations": {"$ref": "#/$defs/limitations"}
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "model", "engine", "units", "parameters", "observations", "provenance", "limitations"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "model": {"const": "Emax concentration-effect relationship"},
+        "engine": {"const": "Kinetics closed-form PKPD reference model"},
+        "units": {
+          "type": "object", "additionalProperties": false,
+          "required": ["concentration", "effect"],
+          "properties": {
+            "concentration": {"const": "caller-defined; must match EC50"},
+            "effect": {"const": "caller-defined"}
+          }
+        },
+        "parameters": {
+          "type": "object", "additionalProperties": false,
+          "required": ["baseline_effect", "maximum_effect_increment", "ec50", "hill_coefficient"],
+          "properties": {
+            "baseline_effect": {"type": "number"},
+            "maximum_effect_increment": {"type": "number", "minimum": 0},
+            "ec50": {"type": "number", "exclusiveMinimum": 0},
+            "hill_coefficient": {"type": "number", "exclusiveMinimum": 0}
+          }
+        },
+        "observations": {
+          "type": "array", "minItems": 1, "maxItems": 10000,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["concentration", "effect"],
+            "properties": {
+              "concentration": {"type": "number", "minimum": 0},
+              "effect": {"type": "number"}
+            }
+          }
+        },
+        "provenance": {
+          "type": "object", "additionalProperties": false,
+          "required": ["parameter_origin"],
+          "properties": {"parameter_origin": {"const": "caller_supplied"}}
+        },
+        "limitations": {"$ref": "#/$defs/limitations"}
+      }
+    }
+  ],
+  "$defs": {
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  }
+}

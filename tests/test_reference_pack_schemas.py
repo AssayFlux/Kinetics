@@ -191,3 +191,28 @@ def test_i2_i3_result_contracts_require_hashes_and_nonvalidated_status() -> None
         "limitations": ["No independent stability validation."],
     }
     assert validator.is_valid(md)
+
+
+def test_i4_pkpd_result_schema_accepts_reference_models_and_rejects_clinical_flags() -> None:
+    import json
+    from jsonschema import Draft202012Validator
+
+    from kinetics.pkpd import emax_pd, one_compartment_oral_pk
+
+    root = Path(__file__).resolve().parents[1]
+    schema = json.loads(
+        (root / "api" / "pkpd-result.schema.json").read_text(encoding="utf-8")
+    )
+    validator = Draft202012Validator(schema)
+    pk = one_compartment_oral_pk(
+        [0.0, 1.0], dose_amount_mg=10.0, bioavailability_fraction=0.5,
+        absorption_rate_per_h=1.0, elimination_rate_per_h=0.1,
+        apparent_volume_l=5.0,
+    )
+    pd = emax_pd(
+        [0.0, 1.0], baseline_effect=0.0,
+        maximum_effect_increment=1.0, ec50=0.5,
+    )
+    assert validator.is_valid(pk)
+    assert validator.is_valid(pd)
+    assert not validator.is_valid({**pk, "clinical_recommendation": "dose"})

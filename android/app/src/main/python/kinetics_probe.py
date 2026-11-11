@@ -1,5 +1,6 @@
 """R1-only on-device scientific dependency probe; not a production capability."""
 
+import json
 from io import StringIO
 
 

@@ -385,7 +385,7 @@
   },
   {
     "id": "structure.ligand_site_candidates",
-    "name": "Bounded explicit-ligand geometric protein-site candidate screening",
+    "name": "Bounded ligand-proximal protein-site candidate screening",
     "status": "implemented",
     "implementation": "python/kinetics/structure_pockets.py",
     "evidence_level": "none",

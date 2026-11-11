@@ -42,7 +42,12 @@ def infer_genetic_code_candidates(
             or not isfinite(minimum_score_margin)
             or not 0 < minimum_score_margin <= 1):
         raise ValueError("minimum_score_margin must be finite and in (0, 1]")
-    selected_ids = list(GENETIC_CODES) if table_ids is None else list(table_ids)
+    selected_ids: list[int] = []
+    table_source = GENETIC_CODES if table_ids is None else table_ids
+    for table_id in table_source:
+        if len(selected_ids) >= len(GENETIC_CODES):
+            raise ValueError("table_ids exceeds the supported candidate-table bound")
+        selected_ids.append(table_id)
     if not selected_ids:
         raise ValueError("table_ids must be a non-empty sequence of unique supported IDs")
     for table_id in selected_ids:
@@ -65,6 +70,8 @@ def infer_genetic_code_candidates(
         sequence = record.get("sequence")
         if not isinstance(sequence, str):
             raise ValueError("Each record requires a sequence string")
+        if len(sequence) > max_total_bases:
+            raise ValueError("A record exceeds max_total_bases before normalization")
         normalized = "".join(sequence.split()).upper().replace("U", "T")
         if not normalized:
             raise ValueError("Sequences must not be empty")
@@ -83,6 +90,8 @@ def infer_genetic_code_candidates(
         codons = [coding[pos:pos + 3] for pos in range(0, len(coding), 3)]
         if not codons:
             raise ValueError("Each record must contain at least one complete codon")
+        if complete and len(codons) < 2:
+            raise ValueError("A complete CDS must contain distinct start and terminal codons")
         total_bases += len(coding)
         if total_bases > max_total_bases:
             raise ValueError("Input exceeds max_total_bases")

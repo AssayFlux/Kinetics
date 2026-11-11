@@ -323,7 +323,7 @@ def tanimoto_applicability_domain(
     ):
         raise ValueError("fingerprint_bits must be an integer in [256, 8192]")
     try:
-        from rdkit import Chem, DataStructs, rdBase  # type: ignore[import-not-found]
+        from rdkit import Chem, DataStructs, rdBase
         from rdkit.Chem import rdFingerprintGenerator  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError("RDKit is required for Morgan/Tanimoto applicability-domain analysis") from error

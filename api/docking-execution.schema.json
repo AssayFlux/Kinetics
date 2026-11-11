@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/docking-execution.schema.json",
+  "title": "Kinetics owner-authorized research docking execution request",
+  "description": "Prepared PDBQT only. Requires a configured private worker and remains research-only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "job_type", "execution_authorized", "owner_approval", "engine", "receptor_pdbqt", "ligand_pdbqt", "center_angstrom", "box_size_angstrom", "seed", "exhaustiveness", "n_poses", "cpu", "scoring_function", "energy_range_kcal_per_mol"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "job_type": {"const": "docking"},
+    "execution_authorized": {"const": true},
+    "owner_approval": {"const": true},
+    "engine": {
+      "type": "object", "additionalProperties": false,
+      "required": ["engine_id", "version", "source_license_status", "dependency_audit_status"],
+      "properties": {
+        "engine_id": {"const": "AutoDock Vina"},
+        "version": {"const": "1.2.7"},
+        "source_license_status": {"const": "apache-2.0-source-reviewed"},
+        "dependency_audit_status": {"const": "pending"}
+      }
+    },
+    "receptor_pdbqt": {"type": "string", "minLength": 1, "maxLength": 16777216},
+    "ligand_pdbqt": {"type": "string", "minLength": 1, "maxLength": 2097152},
+    "center_angstrom": {"$ref": "#/$defs/vector3"},
+    "box_size_angstrom": {"$ref": "#/$defs/positive_vector3"},
+    "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "exhaustiveness": {"type": "integer", "minimum": 1, "maximum": 128},
+    "n_poses": {"type": "integer", "minimum": 1, "maximum": 20},
+    "cpu": {"type": "integer", "minimum": 1, "maximum": 32},
+    "scoring_function": {"enum": ["vina", "vinardo"]},
+    "energy_range_kcal_per_mol": {"type": "number", "exclusiveMinimum": 0, "maximum": 100}
+  },
+  "$defs": {
+    "vector3": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "positive_vector3": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number", "exclusiveMinimum": 0, "maximum": 126},
+        {"type": "number", "exclusiveMinimum": 0, "maximum": 126},
+        {"type": "number", "exclusiveMinimum": 0, "maximum": 126}
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    }
+  }
+}

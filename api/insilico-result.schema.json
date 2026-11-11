@@ -75,7 +75,7 @@
         },
         "protocol": {
           "type": "object", "additionalProperties": false,
-          "required": ["temperature_kelvin", "pressure_bar", "timestep_fs", "steps", "equilibration_steps", "replicas", "seed", "report_interval", "cpu_threads", "platform", "integrator", "friction_per_ps"],
+          "required": ["temperature_kelvin", "pressure_bar", "timestep_fs", "steps", "equilibration_steps", "replicas", "seed", "report_interval", "cpu_threads", "platform", "integrator", "friction_per_ps", "velocity_seed_derivation"],
           "properties": {
             "temperature_kelvin": {"type": "number", "exclusiveMinimum": 0, "maximum": 2000},
             "pressure_bar": {"type": ["number", "null"], "exclusiveMinimum": 0, "maximum": 10000},
@@ -88,7 +88,8 @@
             "cpu_threads": {"type": "integer", "minimum": 1, "maximum": 64},
             "platform": {"const": "CPU"},
             "integrator": {"const": "LangevinMiddleIntegrator"},
-            "friction_per_ps": {"type": "number", "exclusiveMinimum": 0}
+            "friction_per_ps": {"type": "number", "exclusiveMinimum": 0},
+            "velocity_seed_derivation": {"const": "sha256(base_seed:replica_index:velocities)[0:4] little-endian"}
           }
         },
         "protocol_sha256": {"$ref": "#/$defs/sha256"},
@@ -99,10 +100,11 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["replica_id", "seed", "steps_completed", "initial_potential_energy", "final_potential_energy", "energy_unit", "trajectory_sha256"],
+            "required": ["replica_id", "seed", "velocity_seed", "steps_completed", "initial_potential_energy", "final_potential_energy", "energy_unit", "trajectory_sha256"],
             "properties": {
               "replica_id": {"type": "integer", "minimum": 1},
               "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+              "velocity_seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
               "steps_completed": {"type": "integer", "minimum": 1},
               "initial_potential_energy": {"type": "number"},
               "final_potential_energy": {"type": "number"},

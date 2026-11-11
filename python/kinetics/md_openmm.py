@@ -100,7 +100,7 @@ def run_openmm_dynamics(
     try:
         import numpy as np  # type: ignore[import-not-found]
         import openmm  # type: ignore[import-not-found]
-        from openmm import app, unit  # type: ignore[import-not-found]
+        from openmm import app, unit
         import openmm.openmm as openmm_binary  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError(

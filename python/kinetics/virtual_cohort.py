@@ -109,6 +109,7 @@ def simulate_synthetic_additive_variant_effects(
         raise ValueError("sample_size must be an integer between 100 and 1000000")
     if (
         not isinstance(allele_frequencies, dict)
+        or not isinstance(additive_effects, dict)
         or not allele_frequencies
         or len(allele_frequencies) > 100
         or set(allele_frequencies) != set(additive_effects)

@@ -170,3 +170,49 @@ def test_sdf_stream_rejects_non_integer_budgets(kwargs: dict[str, object]) -> No
 
     with pytest.raises(ValueError, match="positive integer"):
         list(iter_sdf_stream(iter([]), **kwargs))
+
+
+def test_rdkit_descriptor_schema_reports_chemistry_assumptions_and_extended_descriptors() -> None:
+    pytest.importorskip("rdkit")
+    from kinetics.chemistry_rdkit import analyze_smiles
+
+    ethanol = analyze_smiles("CCO")
+    assert ethanol["descriptor_schema_version"] == 2
+    assert ethanol["formula"] == "C2H6O"
+    assert ethanol["heavy_atom_count"] == 3
+    assert ethanol["aromatic_atom_count"] == 0
+    assert ethanol["formal_charge"] == 0
+    assert ethanol["fraction_csp3"] == pytest.approx(1.0)
+    assert ethanol["aliphatic_ring_count"] == 0
+    assert ethanol["aromatic_ring_count"] == 0
+    assert ethanol["representation_assumptions"]["crippen_logp_unit"] == "dimensionless"
+
+    benzene = analyze_smiles("c1ccccc1")
+    assert benzene["heavy_atom_count"] == 6
+    assert benzene["aromatic_atom_count"] == 6
+    assert benzene["aromatic_ring_count"] == 1
+    assert benzene["fraction_csp3"] == pytest.approx(0.0)
+
+
+def test_rdkit_inputs_are_bounded_by_utf8_bytes_and_reject_nul_or_invalid_unicode() -> None:
+    pytest.importorskip("rdkit")
+    from kinetics.chemistry_rdkit import analyze_smiles
+
+    with pytest.raises(ValueError, match="UTF-8 limit"):
+        analyze_smiles("é" * 600_000)
+    with pytest.raises(ValueError, match="NUL"):
+        analyze_smiles("CCO\\x00")
+    with pytest.raises(ValueError, match="Unicode"):
+        analyze_smiles("CCO\\ud800")
+
+
+def test_rdkit_morgan_similarity_rejects_boolean_or_out_of_range_parameters_and_oversize_input() -> None:
+    pytest.importorskip("rdkit")
+    from kinetics.chemistry_rdkit import morgan_tanimoto
+
+    with pytest.raises(ValueError, match="integer"):
+        morgan_tanimoto("CCO", "CCO", radius=True)
+    with pytest.raises(ValueError, match="power of two"):
+        morgan_tanimoto("CCO", "CCO", bits=1000)
+    with pytest.raises(ValueError, match="UTF-8 limit"):
+        morgan_tanimoto("C" * 1_000_001, "CCO")

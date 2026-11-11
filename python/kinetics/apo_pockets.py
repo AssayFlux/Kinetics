@@ -65,8 +65,10 @@ def apo_pocket_candidates(
     spacing = float(grid_spacing_angstrom)
     reach = float(generic_atom_radius_angstrom + large_probe_radius_angstrom)
     margin = reach + spacing
-    minima = [min(getattr(atom, axis) for atom in protein) - margin for axis in ("x", "y", "z")]
-    maxima = [max(getattr(atom, axis) for atom in protein) + margin for axis in ("x", "y", "z")]
+    protein_minima = [min(getattr(atom, axis) for atom in protein) for axis in ("x", "y", "z")]
+    protein_maxima = [max(getattr(atom, axis) for atom in protein) for axis in ("x", "y", "z")]
+    minima = [value - margin for value in protein_minima]
+    maxima = [value + margin for value in protein_maxima]
     nx, ny, nz = tuple(int((high - low) / spacing) + 1 for low, high in zip(minima, maxima))
     point_count = nx * ny * nz
     if point_count > max_grid_points:
@@ -153,10 +155,18 @@ def apo_pocket_candidates(
 
     small_reachable = flood_fill(small_free)
     large_reachable = flood_fill(large_free)
-    candidate = bytearray(
-        1 if small_reachable[index] and not large_reachable[index] else 0
-        for index in range(point_count)
-    )
+    candidate = bytearray(point_count)
+    for index in range(point_count):
+        i = index % nx
+        j = (index // nx) % ny
+        k = index // (nx * ny)
+        point = (minima[0] + i * spacing, minima[1] + j * spacing, minima[2] + k * spacing)
+        inside_model_bounds = all(
+            protein_minima[axis] <= point[axis] <= protein_maxima[axis]
+            for axis in range(3)
+        )
+        if inside_model_bounds and small_reachable[index] and not large_reachable[index]:
+            candidate[index] = 1
     visited = bytearray(point_count)
     pockets: list[dict[str, object]] = []
     for start in range(point_count):

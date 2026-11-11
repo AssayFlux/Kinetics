@@ -57,7 +57,7 @@ The owner briefly authorized parallel R/S/I/P work on 2026-11-08; that sequencin
 |---|---|---|---|---|---|---|
 | I1 | Ligand prep, descriptors, drug-likeness | R1 chemistry/license | Correctness, limits, provenance | not-started — S software exit passed; eligible as next engineering scope | Engineering + Validation | 2026-11-09 |
 | I2 | Node docking/virtual screening | Node, approved licenses | Redocking RMSD and decoy enrichment | not-started — S software exit passed; eligible as next engineering scope | Engineering + Validation | 2026-11-09 |
-| I3 | Node MD | Node, engine/model/license | Stability, energy conservation, reference runs | blocked — D-019 sequencing gate; do not start until S exits | Engineering + Validation | 2026-11-09 |
+| I3 | Node MD | Node, engine/model/license | Stability, energy conservation, reference runs | not-started — S software exit passed; eligible as next engineering scope | Engineering + Validation | 2026-11-09 |
 | I4 | ADMET and PK/PD/PBPK | Approved data/models | Held-out performance and applicability domain | not-started — S software exit passed; eligible as next engineering scope; metadata-only source inventory preserved | Engineering + Validation | 2026-11-09 |
 | I5 | Variant-effect and virtual-cohort simulations, Research Mode | I4, fairness/model review | Benchmarks, ancestry portability, prediction labels | blocked — D-019 sequencing gate; do not start until S exits | Engineering + Validation | 2026-11-09 |
 

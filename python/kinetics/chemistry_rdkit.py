@@ -71,6 +71,30 @@ def _describe(
     if not all(isfinite(value) for value in numeric_descriptors.values()):
         raise ValueError("RDKit returned a non-finite molecular descriptor")
     aromatic_atom_count = sum(1 for atom in molecule.GetAtoms() if atom.GetIsAromatic())
+    h_bond_donors = int(descriptors.NumHDonors(molecule))
+    h_bond_acceptors = int(descriptors.NumHAcceptors(molecule))
+    rule_of_five_criteria = {
+        "molecular_weight_da": {
+            "observed": numeric_descriptors["molecular_weight"],
+            "maximum": 500.0,
+            "pass": numeric_descriptors["molecular_weight"] <= 500.0,
+        },
+        "crippen_logp": {
+            "observed": numeric_descriptors["crippen_logp"],
+            "maximum": 5.0,
+            "pass": numeric_descriptors["crippen_logp"] <= 5.0,
+        },
+        "h_bond_donors": {
+            "observed": h_bond_donors,
+            "maximum": 5,
+            "pass": h_bond_donors <= 5,
+        },
+        "h_bond_acceptors": {
+            "observed": h_bond_acceptors,
+            "maximum": 10,
+            "pass": h_bond_acceptors <= 10,
+        },
+    }
     return {
         "descriptor_schema_version": 2,
         "engine": "RDKit",
@@ -102,8 +126,8 @@ def _describe(
         "canonical_isomeric_smiles": canonical,
         "formula": mol_descriptors.CalcMolFormula(molecule),
         **numeric_descriptors,
-        "h_bond_donors": int(descriptors.NumHDonors(molecule)),
-        "h_bond_acceptors": int(descriptors.NumHAcceptors(molecule)),
+        "h_bond_donors": h_bond_donors,
+        "h_bond_acceptors": h_bond_acceptors,
         "rotatable_bonds": int(descriptors.NumRotatableBonds(molecule)),
         "ring_count": int(descriptors.RingCount(molecule)),
         "aliphatic_ring_count": int(mol_descriptors.CalcNumAliphaticRings(molecule)),
@@ -114,6 +138,16 @@ def _describe(
         "atom_count": int(molecule.GetNumAtoms()),
         "bond_count": int(molecule.GetNumBonds()),
         "chiral_centres": chiral_centres,
+        "rule_of_five_screen": {
+            "criteria": rule_of_five_criteria,
+            "pass_count": sum(1 for item in rule_of_five_criteria.values() if item["pass"]),
+            "criterion_count": len(rule_of_five_criteria),
+            "all_criteria_pass": all(item["pass"] for item in rule_of_five_criteria.values()),
+            "interpretation": (
+                "heuristic physicochemical screen only; not a prediction of absorption, "
+                "bioavailability, safety, efficacy or clinical suitability"
+            ),
+        },
         "morgan_fingerprint": {
             "algorithm": "Morgan", "radius": radius, "bits": bits,
             "on_bits": list(fingerprint.GetOnBits()),

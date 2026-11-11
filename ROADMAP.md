@@ -1,6 +1,6 @@
 # Kinetics — Roadmap
-**Status:** R implementation/host audit closed; Track S software implementation/audit active under D-021/D-022; S1/S4/S6/S7/S9 foundations and S5 export/state work are implemented, but S2/S3/S8 gaps and S10's gated generation prevent S exit; current-head CI/device/independent validation remain outstanding; Track I remains blocked
-**Last updated:** 2026-11-09  
+**Status:** R implementation/host audit closed; Track S S3/S8 final implementation and exact-head audit in progress under D-021/D-022; S1–S9 bounded software foundations are present and S10 generation remains intentionally disabled; external scientific/resource/device gates are carry-forward items; Track I remains blocked pending exact-source S exit audit
+**Last updated:** 2026-11-11  
 **Statuses:** not-started | in-progress | blocked | done | dropped  
 **Owners:** Project owner = repository owner; Engineering = implementation contributor. Dates are review/target dates, not completion claims.
 

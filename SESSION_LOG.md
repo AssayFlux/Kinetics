@@ -2433,3 +2433,23 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Strict-typing fix commits: `cfc8e2c01be0df9053ac2e086554f66d07587c01`, `3e82b0d06d5b2c1641491b32532f1e71ed1ff681`.
 
 - Updated the README S8 row to distinguish the new heuristic candidate-ranking software from the still-open organism-specific truth-set and calibration gates.
+
+
+## 2026-11-11 — Session 68: S3 apo-site screening and S8 candidate-boundary hardening
+
+### S3
+- Added `python/kinetics/apo_pockets.py`: bounded probe-grid candidate screening using small- and large-probe accessibility, spatial buckets, protein-model-bound filtering and hard atom/grid/distance/component ceilings.
+- Exposed `apo_pocket_candidates` through the public Python API, registered `structure.apo_pocket_candidates`, and regenerated the Android capability catalogue.
+- Added a synthetic open-cavity fixture, single-atom abstention, and grid/distance-budget tests. The result is coarse concavity evidence only; it does not estimate affinity, ligandability, function or druggability.
+
+### S8
+- Bounded candidate-table iterable materialization to the supported table count, bounded raw per-record sequence size before normalization, and rejected complete-CDS records that cannot contain distinct start and terminal codons.
+- Corrected the tied-score fixture to use distinct normalized coding sequences, so it tests a real score tie without violating the independent-evidence rule.
+- Added tests for infinite table iterables and complete-CDS minimum length.
+
+### Integration and verification
+- Fixed stale Android catalogue after adding S3/S8 registry entries.
+- Added a true S3 candidate-pair overflow test.
+- Updated README, ROADMAP, S discovery roadmap and S implementation audit.
+- The previous workflow failed at catalogue reproducibility before unit tests. The exact-head CI for the final documentation/source commit must pass before any test or APK pass is claimed.
+- Current disposition: S3/S8 software work is implemented but not yet CI-verified. Track S remains open; Track I remains blocked until exact-source CI and final S1–S10 audit pass. D-021 external validation/resource/device items remain deferred, not completed.

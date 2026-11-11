@@ -178,7 +178,7 @@ def analyze_molblock(molblock: str) -> dict[str, object]:
         molblock, sanitize=True, removeHs=False, strictParsing=True,
     )
     return _describe(
-        molecule, source_format="molblock", raw_input=molblock,
+        molecule, source_format="molblock",
         input_bytes=input_bytes, remove_hs=False,
     )
 

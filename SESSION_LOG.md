@@ -2379,3 +2379,28 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - S7 Prodigal/AUGUSTUS binaries and species models are caller-supplied; syntax/coordinate checks do not establish biological accuracy.
 - S9 profile databases and independent family/domain concordance remain external gates.
 - S1/S5 SVG export and persisted interactive view state, S3 pocket candidates and S8 translation-table inference remain software gaps; S2 calibration and physical-device evidence also remain open. Track S is **not closed** and Track I remains blocked.
+
+
+## 2026-11-11 — Session 66: Reconcile current S1–S10 source audit
+
+### Reviewed
+- Re-read NORTH_STAR, ROADMAP, DECISIONS, SESSION_LOG, the S discovery roadmap, the integrated research-platform inventory and the S implementation audit.
+- Inspected default-branch head `ec3178e09192011d9b96d5a355a07dbd731a2d35`, its S5 source-contract test diff, and source-search results for S1/S5 viewer state/export, S2 geometry, S3 pocket analysis, S4 prediction protocol, S6–S9 workflows and S10 design boundary.
+
+### Confirmed
+- S1 now has SAF structure import, offline renderer integration, provenance, JSON session export and bounded PNG/SVG export; viewer state is serializable.
+- S5 now includes SVG snapshot export and persisted interactive viewer-state serialization. This supersedes the earlier Session 65 statement that SVG/state remained absent.
+- S4/S6/S7/S9 software adapters are present as recorded in the current roadmap and Session 65.
+- S2 remains limited to bounded clash/torsion metrics without calibrated quality classification.
+- S3 pocket-candidate analysis and S8 organism-specific candidate genetic-code inference remain software gaps.
+- S10 generation remains disabled; only non-generative brief validation is implemented.
+
+### Verification boundary
+- CI #2275 passed all five jobs on exact commit `a05339e8fb2afbd0d12093972dcff81c68399b9b`.
+- Current reviewed head `ec3178e09192011d9b96d5a355a07dbd731a2d35` is later than that CI checkpoint. No exact-head passing CI was established in this session.
+- No repository test suite or Android build was executed in this session; no physical-device or independent biological validation is claimed.
+
+### Disposition / next step
+- Track S remains open and Track I remains blocked.
+- Next implement S3 pocket-candidate analysis and S8 candidate genetic-code inference as bounded, provenance-bearing, abstention-first software; do not claim biological validity without independent truth sets.
+- Reconcile the capability registry, generated Android catalogue, tests, roadmap, README and session log after those increments, then verify exact-head CI before any S exit decision.

@@ -46,3 +46,20 @@ def test_s3_s8_explore_cards_are_real_registry_gated_actions() -> None:
     assert "source_sha256" in PYTHON_BRIDGE.read_text(encoding="utf-8")
     assert "generated_at_utc" in PYTHON_BRIDGE.read_text(encoding="utf-8")
     assert "Input SHA-256" in cards
+
+
+def test_i1_android_ligand_graph_preview_is_bounded_and_registry_gated() -> None:
+    bridge = PYTHON_BRIDGE.read_text(encoding="utf-8")
+    runner = (ANDROID_JAVA / "I1ChemistryRunner.kt").read_text(encoding="utf-8")
+    card = (ANDROID_JAVA / "I1ChemistryCard.kt").read_text(encoding="utf-8")
+    ui = (ANDROID_JAVA / "KineticsUi.kt").read_text(encoding="utf-8")
+    assert "def analyze_ligand_sdf_graph(" in bridge
+    assert "analyze_sdf_graph(source_text)" in bridge
+    assert "MAX_SDF_BYTES = 16 * 1024 * 1024" in runner
+    assert '"analyze_ligand_sdf_graph"' in runner
+    assert "ActivityResultContracts.OpenDocument()" in card
+    assert "readI1LigandDocument" in card
+    assert "source_sha256" in bridge or "source_sha256" in (ROOT / "python/kinetics/chemistry.py").read_text(encoding="utf-8")
+    assert 'it.id == "chemistry.sdf_graph"' in ui
+    assert "LigandGraphPreviewCard()" in ui
+    assert "not a sanitized chemistry engine" in bridge

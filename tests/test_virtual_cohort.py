@@ -43,3 +43,52 @@ def test_synthetic_cohort_caps_total_genotype_draws() -> None:
             sample_size=1_000_000,
             seed=1,
         )
+
+
+
+def test_synthetic_additive_effects_are_reproducible_and_aggregate_only() -> None:
+    from kinetics.virtual_cohort import simulate_synthetic_additive_variant_effects
+
+    first = simulate_synthetic_additive_variant_effects(
+        {"rsSyntheticEffect": 0.5},
+        {"rsSyntheticEffect": 2.0},
+        sample_size=1000,
+        baseline_trait_mean=3.0,
+        residual_standard_deviation=0.0,
+        seed=19,
+    )
+    second = simulate_synthetic_additive_variant_effects(
+        {"rsSyntheticEffect": 0.5},
+        {"rsSyntheticEffect": 2.0},
+        sample_size=1000,
+        baseline_trait_mean=3.0,
+        residual_standard_deviation=0.0,
+        seed=19,
+    )
+    assert first == second
+    locus = first["loci"][0]
+    groups = locus["genotype_groups"]
+    assert [group["expected_trait_mean_under_model"] for group in groups] == [3.0, 5.0, 7.0]
+    assert sum(group["synthetic_count"] for group in groups) == 1000
+    assert first["data_classification"] == "synthetic_non_patient"
+    assert "individual genotypes or phenotypes" in first["limitations"][0]
+
+
+def test_synthetic_additive_effects_reject_invalid_inputs() -> None:
+    from kinetics.virtual_cohort import simulate_synthetic_additive_variant_effects
+
+    with pytest.raises(ValueError, match="same 1 to 100 loci"):
+        simulate_synthetic_additive_variant_effects(
+            {"rs1": 0.5}, {}, sample_size=100,
+            baseline_trait_mean=0.0, residual_standard_deviation=1.0, seed=1,
+        )
+    with pytest.raises(ValueError, match="sample_size"):
+        simulate_synthetic_additive_variant_effects(
+            {"rs1": 0.5}, {"rs1": 1.0}, sample_size=10,
+            baseline_trait_mean=0.0, residual_standard_deviation=1.0, seed=1,
+        )
+    with pytest.raises(ValueError, match="additive effect"):
+        simulate_synthetic_additive_variant_effects(
+            {"rs1": 0.5}, {"rs1": float("nan")}, sample_size=100,
+            baseline_trait_mean=0.0, residual_standard_deviation=1.0, seed=1,
+        )

@@ -2669,3 +2669,28 @@ The Python catalogue checker required a dataset licence URL and canonical kebab-
 - P0 remains BLOCKED / NOT APPROVED; external determinations and competent review remain outstanding.
 - P1 remains in progress until the exact-head workflow for the synthetic ploidy guard completes and the remaining audit/reference requirements are assessed.
 - P2–P7 remain not started; patient data, human-subject activity, individual PGx interpretation and Clinical Mode remain disabled.
+
+
+## 2026-11-11 — Session 81: P2–P7 research-only foundations
+
+### Starting evidence
+- Commit e9faf7165ceeb2ee9af9ed08d663c32d0be10cda exact-head workflow #42998496868 passed 9/9 jobs.
+- Python: 509 passed, 9 skipped.
+- Android arm64 debug APK: 70,389,586 bytes; SHA-256 636476de0eab15b767815499d4220219f8953ff6e04f21dbb3f42b8903c76789.
+- Android arm64 debug AAB: 40,260,318 bytes; SHA-256 a0cee244440b16f7af6ab9a55be4a1e3ad976f62520e41057269b7b99abe334b.
+- JVM tests and package alignment passed; no physical-device runtime performed.
+
+### Added
+- Synthetic PGx and PharmVar regression tests for release/digest metadata, exact haplotype matching, accession/build mismatch, ambiguous definitions and abstention.
+- P3 research-only guideline evidence schema; clinical decision support is prohibited by schema.
+- P4 curation record schema; uncertain outcome and mandatory second review; autonomous final classification and clinical use prohibited.
+- P6 risk/control and jurisdiction-review schemas; patient-data and Clinical Mode authorization hard-false.
+- P5 ethics/adviser protocol template and P2–P7 workplan.
+- Updated roadmap and documentation navigation.
+
+### Gate status
+- P0 remains BLOCKED / NOT APPROVED; external determinations and competent reviews are outstanding.
+- P1 remains in progress pending independent reference concordance, source-term review, fuzz/resource audit and device workflow validation.
+- P2–P7 are now in progress as research-only software foundations/templates, not completed operational or clinical phases.
+- No public dataset payload has been acquired or approved. No patient/human-subject data, individual clinical interpretation, recommendations, Clinical Mode, prospective study or regulated deployment is enabled.
+- Exact-head CI for the new commit is required before this increment is accepted.

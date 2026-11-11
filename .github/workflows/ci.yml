@@ -257,3 +257,19 @@ jobs:
           path: openmm-engine-smoke-result.json
           if-no-files-found: error
           retention-days: 90
+
+  private-node-worker-tests:
+    name: Private Node docking worker security tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check worker JavaScript syntax
+        run: node --check remote-node/server.mjs
+      - name: Run dependency-free worker security tests
+        working-directory: remote-node
+        run: npm test

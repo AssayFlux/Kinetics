@@ -38,7 +38,7 @@ def test_synthetic_vcf_qc_returns_aggregate_only_and_valid_schema() -> None:
     assert result["variants"][0]["missing_sample_count"] == 1
     assert result["variants"][0]["heterozygous_sample_count"] == 1
     assert result["variants"][0]["alternate_allele_count"] == 3
-    assert result["variants"][1]["alternate_allele_count"] == 2
+    assert result["variants"][1]["alternate_allele_count"] == 3
     assert "samples" not in result
     assert all("genotypes" not in variant for variant in result["variants"])
 
@@ -66,6 +66,7 @@ def test_rejects_non_synthetic_classification_and_bad_fixture_id() -> None:
     "document, message",
     [
         (VCF.replace("0/1:99", "0/3:99"), "exceeds ALT count"),
+        (VCF.replace("0/1:99", "x/.:99"), "malformed genotype allele index"),
         (VCF.replace("0/1:99", "0/1|1:99"), "mixes phased and unphased"),
         (VCF.replace("GT:GQ", "DP:GQ", 1), "one unique GT field"),
         (VCF.replace("T,G", "<DEL>,G"), "literal A/C/G/T"),
@@ -92,3 +93,9 @@ def test_enforces_resource_limits_and_requires_sample_columns() -> None:
     ) + "\n" + "\t".join(VCF.splitlines()[2].split("\t")[:8])
     with pytest.raises(ValueError, match="at least one sample"):
         _run(no_samples)
+
+
+def test_partial_missing_genotype_is_counted_as_missing() -> None:
+    result = _run(VCF.replace("0/1:99", "0/.:99"))
+    assert result["variants"][0]["called_sample_count"] == 1
+    assert result["variants"][0]["missing_sample_count"] == 2

@@ -32,13 +32,17 @@ def _parse_genotype(
         raise ValueError(f"VCF line {line_number}: genotype mixes phased and unphased separators")
     separator = "|" if "|" in value else "/" if "/" in value else None
     alleles = value.split(separator) if separator else [value]
-    if not alleles or any(not re.fullmatch(r"(?:0|[1-9][0-9]*)", item) for item in alleles):
-        if any(item == "." for item in alleles):
-            return None, separator == "|"
+    if not alleles:
         raise ValueError(f"VCF line {line_number}: malformed genotype allele index")
-    indexes = tuple(int(item) for item in alleles)
+    missing = any(item == "." for item in alleles)
+    called_tokens = [item for item in alleles if item != "."]
+    if any(not re.fullmatch(r"(?:0|[1-9][0-9]*)", item) for item in called_tokens):
+        raise ValueError(f"VCF line {line_number}: malformed genotype allele index")
+    indexes = tuple(int(item) for item in called_tokens)
     if any(index > alternate_count for index in indexes):
         raise ValueError(f"VCF line {line_number}: genotype allele index exceeds ALT count")
+    if missing:
+        return None, separator == "|"
     return indexes, separator == "|"
 
 

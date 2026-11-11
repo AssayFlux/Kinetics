@@ -41,7 +41,8 @@ def run() -> dict[str, Any]:
             ("molecular_weight", "molecular_weight_da"),
             ("exact_molecular_weight", "exact_molecular_weight_da"),
             ("tpsa_angstrom2", "tpsa_angstrom2"),
-            ("crippen_logp", "crippen_logp"),\n            ("fraction_csp3", "fraction_csp3"),
+            ("crippen_logp", "crippen_logp"),
+            ("fraction_csp3", "fraction_csp3"),
         ):
             checks[key] = _close(observed[key], expected[key], tolerances[tolerance_key])
         results.append({

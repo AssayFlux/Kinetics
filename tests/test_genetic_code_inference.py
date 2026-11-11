@@ -51,3 +51,9 @@ def test_genetic_code_inference_enforces_limits_and_supported_tables() -> None:
         infer_genetic_code_candidates(records * 2, max_records=1)
     with pytest.raises(ValueError, match="Unsupported"):
         infer_genetic_code_candidates(records, table_ids=[99])
+
+
+def test_genetic_code_inference_rejects_duplicate_records_as_nonindependent() -> None:
+    repeated = {"sequence": "ATG" + "AAA" * 20}
+    with pytest.raises(ValueError, match="duplicate coding sequences"):
+        infer_genetic_code_candidates([repeated, repeated, repeated])

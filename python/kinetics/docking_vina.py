@@ -99,8 +99,8 @@ def run_vina_docking(
         raise ValueError("energy_range_kcal_per_mol must be finite and in (0, 100]")
 
     try:
-        from vina import Vina, __version__ as vina_version
-        import vina.vina_wrapper as vina_wrapper
+        from vina import Vina, __version__ as vina_version  # type: ignore[import-not-found]
+        import vina.vina_wrapper as vina_wrapper  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError(
             "AutoDock Vina is unavailable; install the pinned optional docking dependency"

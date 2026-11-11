@@ -50,10 +50,6 @@ def one_compartment_oral_pk(
     _finite_positive("absorption_rate_per_h", absorption_rate_per_h)
     _finite_positive("elimination_rate_per_h", elimination_rate_per_h)
     _finite_positive("apparent_volume_l", apparent_volume_l)
-    if abs(absorption_rate_per_h - elimination_rate_per_h) <= 1e-12 * max(
-        absorption_rate_per_h, elimination_rate_per_h
-    ):
-        raise ValueError("absorption and elimination rates must differ for this closed form")
     if not isinstance(times, list) or not times or len(times) > 10000:
         raise ValueError("times must be a non-empty list with at most 10000 values")
     valid_times = all(
@@ -66,13 +62,33 @@ def one_compartment_oral_pk(
     if not valid_times:
         raise ValueError("times must contain finite non-negative hours")
     ka, ke = absorption_rate_per_h, elimination_rate_per_h
-    scale = bioavailability_fraction * dose_amount_mg / apparent_volume_l * ka / (ka - ke)
-    observations = [
-        {"time_h": float(t), "concentration_mg_per_l": max(
-            0.0, scale * (exp(-ke * t) - exp(-ka * t))
-        )}
-        for t in times
-    ]
+    equal_rates = abs(ka - ke) <= 1e-10 * max(ka, ke)
+    if equal_rates:
+        # Continuous limit as ka approaches ke: C(t)=F*Dose/V*k*t*exp(-k*t).
+        scale = bioavailability_fraction * dose_amount_mg / apparent_volume_l
+        observations = [
+            {
+                "time_h": float(t),
+                "concentration_mg_per_l": max(0.0, scale * ka * t * exp(-ka * t)),
+            }
+            for t in times
+        ]
+        rate_case = "equal-rate continuous limit"
+    else:
+        scale = (
+            bioavailability_fraction * dose_amount_mg / apparent_volume_l
+            * ka / (ka - ke)
+        )
+        observations = [
+            {
+                "time_h": float(t),
+                "concentration_mg_per_l": max(
+                    0.0, scale * (exp(-ke * t) - exp(-ka * t))
+                ),
+            }
+            for t in times
+        ]
+        rate_case = "distinct first-order rates"
     return {
         "schema_version": 1,
         "model": "single-dose one-compartment oral PK; first-order absorption and elimination",
@@ -92,6 +108,7 @@ def one_compartment_oral_pk(
         "provenance": {
             "parameter_origin": "caller_supplied",
             "dose_regimen": "single theoretical input",
+            "rate_case": rate_case,
         },
         "limitations": [
             "Educational/software-verification model only; not a dose calculator "
@@ -151,6 +168,7 @@ def emax_pd(
             "hill_coefficient": float(hill_coefficient),
         },
         "observations": values,
+        "provenance": {"parameter_origin": "caller_supplied"},
         "limitations": [
             "Exploratory empirical relationship; not a validated pharmacodynamic model",
             "Concentration and effect units are caller-defined and not inferred",

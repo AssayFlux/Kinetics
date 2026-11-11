@@ -2598,3 +2598,22 @@ Track P is next under R → S → I → P → G, but is not marked started in th
 - P1: public metadata and synthetic-only work may proceed. Acquired dataset entries remain empty; no patient data or individual genotype interpretation.
 - No patient/human-subject data, clinical recommendation, Clinical Mode, clinical validity claim or regulatory compliance claim is enabled.
 - Exact-head CI for the new documentation commit must be checked separately. No tests are claimed for this documentation-only increment beyond the previously cited exact-head run.
+
+
+## 2026-11-11 — Session 76: P1 public-catalogue contract alignment
+
+**Phase:** Track P / P1 — public-data metadata foundation  
+**Objective:** Close a schema/checker mismatch found during the P1 audit.
+
+### Finding
+The Python catalogue checker required a dataset licence URL and canonical kebab-case identifiers, while the JSON Schema did not fully enforce those same constraints. This allowed the declarative contract to be weaker than the runtime gate.
+
+### Change
+- Made dataset-entry license_url mandatory in the JSON Schema.
+- Added canonical kebab-case patterns for acquired dataset IDs and candidate source IDs.
+- Reworked catalogue tests to validate the committed YAML against JSON Schema Draft 2020-12 with URI/date-time format checks.
+- Added negative schema cases for missing licence URL, patient_data=true, unknown properties and noncanonical candidate IDs.
+
+### Verification
+- Tests added; not yet executed in this environment. Exact-head CI is required before claiming a pass.
+- This increment changes metadata validation only. It does not download or approve data and does not enable patient data or interpretation.

@@ -1,14 +1,27 @@
 from __future__ import annotations
+
 import copy
+import json
 import runpy
 from pathlib import Path
+
 import yaml
+from jsonschema import Draft202012Validator, FormatChecker
 
 ROOT = Path(__file__).resolve().parents[1]
-VALIDATE = runpy.run_path(str(ROOT / "scripts" / "check_public_dataset_catalog.py"))["validate_catalog"]
+VALIDATE = runpy.run_path(
+    str(ROOT / "scripts" / "check_public_dataset_catalog.py")
+)["validate_catalog"]
+SCHEMA = json.loads(
+    (ROOT / "api" / "public-dataset-catalog.schema.json").read_text(encoding="utf-8")
+)
+
 
 def _catalog() -> dict:
-    return yaml.safe_load((ROOT / "data" / "public-dataset-catalog.yaml").read_text(encoding="utf-8"))
+    return yaml.safe_load(
+        (ROOT / "data" / "public-dataset-catalog.yaml").read_text(encoding="utf-8")
+    )
+
 
 def _entry() -> dict:
     return {
@@ -26,11 +39,13 @@ def _entry() -> dict:
         "notes": "Synthetic test metadata only; no external dataset is represented.",
     }
 
+
 def test_committed_catalog_passes_and_has_no_acquired_records() -> None:
     catalog = _catalog()
     assert VALIDATE(catalog) == []
     assert catalog["entries"] == []
     assert all(item["patient_data"] is False for item in catalog["candidate_sources"])
+
 
 def test_rejects_patient_data_and_duplicate_candidate_ids() -> None:
     catalog = _catalog()
@@ -39,6 +54,7 @@ def test_rejects_patient_data_and_duplicate_candidate_ids() -> None:
     errors = VALIDATE(catalog)
     assert any("patient_data must be false" in error for error in errors)
     assert any("duplicate candidate source_id" in error for error in errors)
+
 
 def test_rejects_bad_hash_and_timezone_free_timestamp() -> None:
     catalog = _catalog()
@@ -49,6 +65,7 @@ def test_rejects_bad_hash_and_timezone_free_timestamp() -> None:
     errors = VALIDATE(catalog)
     assert any("content_sha256" in error for error in errors)
     assert any("retrieved_at" in error for error in errors)
+
 
 def test_research_approval_requires_review_evidence() -> None:
     catalog = _catalog()
@@ -64,9 +81,40 @@ def test_research_approval_requires_review_evidence() -> None:
     }
     assert VALIDATE(catalog) == []
 
+
 def test_rejects_clinical_intended_use_language() -> None:
     catalog = _catalog()
     entry = _entry()
     entry["intended_use"] = "Clinical decision support for patient stratification"
     catalog["entries"] = [entry]
     assert any("prohibited" in error for error in VALIDATE(catalog))
+
+
+def test_json_schema_matches_committed_catalog_and_python_gate() -> None:
+    Draft202012Validator.check_schema(SCHEMA)
+    validator = Draft202012Validator(SCHEMA, format_checker=FormatChecker())
+    catalog = _catalog()
+    assert list(validator.iter_errors(catalog)) == []
+    assert VALIDATE(catalog) == []
+
+
+def test_json_schema_rejects_missing_license_url_and_patient_data() -> None:
+    validator = Draft202012Validator(SCHEMA, format_checker=FormatChecker())
+    catalog = _catalog()
+    entry = _entry()
+    del entry["license_url"]
+    entry["patient_data"] = True
+    catalog["entries"] = [entry]
+    errors = list(validator.iter_errors(catalog))
+    assert any("license_url" in error.message for error in errors)
+    assert any("False was expected" in error.message for error in errors)
+
+
+def test_json_schema_rejects_unknown_fields_and_noncanonical_ids() -> None:
+    validator = Draft202012Validator(SCHEMA, format_checker=FormatChecker())
+    catalog = _catalog()
+    catalog["candidate_sources"][0]["source_id"] = "NCBI Gene"
+    catalog["candidate_sources"][0]["unreviewed_claim"] = True
+    errors = list(validator.iter_errors(catalog))
+    assert any("does not match" in error.message for error in errors)
+    assert any("Additional properties are not allowed" in error.message for error in errors)

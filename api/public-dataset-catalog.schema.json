@@ -37,12 +37,14 @@
           "intended_use",
           "retrieved_at",
           "content_sha256",
-          "patient_data"
+          "patient_data",
+          "license_url"
         ],
         "properties": {
           "dataset_id": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
           },
           "title": {
             "type": "string",
@@ -156,7 +158,8 @@
         "properties": {
           "source_id": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
           },
           "title": {
             "type": "string",

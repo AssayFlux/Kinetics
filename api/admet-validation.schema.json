@@ -6,10 +6,11 @@
   "oneOf": [
     {
       "type": "object", "additionalProperties": false,
-      "required": ["schema_version", "method", "seed", "train_indices", "validation_indices", "test_indices", "partition_counts", "scaffold_group_count", "no_scaffold_overlap", "limitations"],
+      "required": ["schema_version", "method", "engine", "seed", "train_indices", "validation_indices", "test_indices", "partition_counts", "scaffold_group_count", "no_scaffold_overlap", "limitations"],
       "properties": {
         "schema_version": {"const": 1},
         "method": {"const": "Bemis-Murcko scaffold-group split"},
+        "engine": {"$ref": "#/$defs/rdkit_engine"},
         "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
         "train_indices": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
         "validation_indices": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 0}},
@@ -63,9 +64,10 @@
     },
     {
       "type": "object", "additionalProperties": false,
-      "required": ["schema_version", "fingerprint", "threshold", "reference_count", "query_count", "results", "limitations"],
+      "required": ["schema_version", "fingerprint", "engine", "threshold", "reference_count", "query_count", "results", "limitations"],
       "properties": {
         "schema_version": {"const": 1},
+        "engine": {"$ref": "#/$defs/rdkit_engine"},
         "fingerprint": {
           "type": "object", "additionalProperties": false,
           "required": ["type", "radius", "bits"],
@@ -96,6 +98,11 @@
     }
   ],
   "$defs": {
+    "rdkit_engine": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {"name": {"const": "RDKit"}, "version": {"type": "string", "minLength": 1}}
+    },
     "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
   }
 }

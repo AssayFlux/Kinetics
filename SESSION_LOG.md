@@ -2694,3 +2694,32 @@ The Python catalogue checker required a dataset licence URL and canonical kebab-
 - P2–P7 are now in progress as research-only software foundations/templates, not completed operational or clinical phases.
 - No public dataset payload has been acquired or approved. No patient/human-subject data, individual clinical interpretation, recommendations, Clinical Mode, prospective study or regulated deployment is enabled.
 - Exact-head CI for the new commit is required before this increment is accepted.
+
+
+## 2026-11-11 — Session 82: Track P exact-head audit and evidence reconciliation
+
+**Phase:** Track P / Step 2 — audit, test and fix  
+**Base:** aee8f1e3a73dfa5136ca2472877bd541727453db
+
+### Verified
+- Exact-head GitHub Actions workflow [#43002587271](https://github.com/AssayFlux/Kinetics/actions/runs/43002587271) completed successfully: all 9/9 jobs passed.
+- Python: 522 passed, 9 skipped (optional RDKit/pysam unavailable in the Python foundation job); Ruff lint and strict mypy passed.
+- Android arm64 debug APK: 70,389,802 bytes; SHA-256 `4cd8ce2e1f5e6874e39d589e853fdb801c9322c56461a19703653d031f5f9fb5`.
+- Android arm64 debug AAB: 40,260,451 bytes; SHA-256 `90ce8bbfac2e6a17faf385bcffcee1ddcc179bde1ecc625ef93a5b25ff66bdc1`.
+- 16 KB package alignment and Android JVM unit tests passed. CI explicitly did not run an emulator or physical-device test.
+- Pinned host-side reference comparisons, OpenMM replica smoke, Vina engine smoke, RDKit descriptor and ADMET utility smoke, source SPDX inventory, and private Node worker security tests passed. These are not independent biological/clinical validation.
+- Android artifacts were uploaded as workflow artifact `kinetics-android-arm64-debug-aee8f1e3a73dfa5136ca2472877bd541727453db` (artifact ID 13847730191).
+
+### Fixes and audit
+- Corrected lint defects in the new P-track schema/PharmVar tests; this exact-head run now passes the complete workflow.
+- Reviewed P0 evidence packet, P0 control drafts, P1 boundary/implementation plan, P2–P7 workplan and decision register. Documents consistently preserve the NOT APPROVED gate and identify external evidence owners/requirements.
+
+### Gate status
+- P1/P2/P3/P4/P5/P6/P7 research-only engineering foundations and preparation now have exact-head software CI evidence for this increment. This does not mean their independent validation, licensing, human curation, ethics, risk-control verification or regulatory tasks are complete.
+- P0 remains BLOCKED / NOT APPROVED. Required competent legal/regulatory and ethics determinations, qualified independent scientific/clinical review, approved privacy/security/QMS evidence, independent validation protocol, risk acceptance and formal P0 gate decision are not present in the repository.
+- P1 authoritative reference concordance, exact-source terms review, fuzz/resource audit and device workflow validation remain open. No acquired public dataset is approved.
+- No patient/human-subject data, individual PGx clinical interpretation, diagnosis/treatment/dosing recommendation, Clinical Mode, prospective study or regulated deployment is authorized.
+- Debug APK/AAB build and CI success do not establish device runtime, scientific validity, clinical safety, regulatory clearance or production readiness.
+
+### Disposition
+Track P remains IN PROGRESS. The software audit increment is verified; external and operational exit criteria remain open. Do not mark P0–P7 or the overall Track P closed until their required evidence and approvals are actually recorded.

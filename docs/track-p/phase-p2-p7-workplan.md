@@ -38,3 +38,11 @@ Stop affected workflow for patient/identifiable data ingress, unclear source rig
 
 ## Completion semantics
 Schemas, parsers, synthetic tests and green CI close software verification only. They do not close licensing, scientific, legal, ethics, privacy, clinical, regulatory, human-study or physical-device gates. P0–P7 cannot be marked fully complete until their respective evidence exists.
+
+
+## Exact-head audit refresh (2026-11-11)
+- Commit aee8f1e3a73dfa5136ca2472877bd541727453db; [workflow #43002587271](https://github.com/AssayFlux/Kinetics/actions/runs/43002587271) passed 9/9 jobs.
+- Python 522 passed, 9 skipped; Ruff and strict mypy passed.
+- Android arm64 debug APK 70,389,802 bytes (SHA-256 `4cd8ce2e1f5e6874e39d589e853fdb801c9322c56461a19703653d031f5f9fb5`); AAB 40,260,451 bytes (SHA-256 `90ce8bbfac2e6a17faf385bcffcee1ddcc179bde1ecc625ef93a5b25ff66bdc1`). 16 KB package alignment and JVM tests passed; no emulator/physical-device runtime.
+- Host reference comparisons, OpenMM, Vina, RDKit descriptor/ADMET utility smoke checks, SPDX inventory and Node worker security tests passed. Smoke checks are not biological/clinical validation.
+- This verifies the committed software/tests only. P0 is NOT APPROVED; independent P1 reference/source/security/device evidence and P2–P7 operational/external review gates remain open.

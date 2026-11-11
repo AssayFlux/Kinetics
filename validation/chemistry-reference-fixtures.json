@@ -7,7 +7,8 @@
     "molecular_weight_da": 0.002,
     "exact_molecular_weight_da": 0.002,
     "tpsa_angstrom2": 0.02,
-    "crippen_logp": 0.03
+    "crippen_logp": 0.03,
+    "fraction_csp3": 0.0001
   },
   "molecules": [
     {

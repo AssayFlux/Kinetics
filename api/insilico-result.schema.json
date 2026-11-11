@@ -65,11 +65,12 @@
         "input_hashes": {"$ref": "#/$defs/input_hashes"},
         "force_field": {
           "type": "object", "additionalProperties": false,
-          "required": ["name", "version", "parameter_source_sha256"],
+          "required": ["name", "version", "parameter_source_sha256", "system_sha256"],
           "properties": {
             "name": {"type": "string", "minLength": 1},
             "version": {"type": "string", "minLength": 1},
-            "parameter_source_sha256": {"$ref": "#/$defs/sha256"}
+            "parameter_source_sha256": {"$ref": "#/$defs/sha256"},
+            "system_sha256": {"$ref": "#/$defs/sha256"}
           }
         },
         "protocol": {
@@ -137,7 +138,9 @@
       "required": ["coordinates_or_receptor_sha256", "ligand_or_topology_sha256"],
       "properties": {
         "coordinates_or_receptor_sha256": {"$ref": "#/$defs/sha256"},
-        "ligand_or_topology_sha256": {"$ref": "#/$defs/sha256"}
+        "ligand_or_topology_sha256": {"$ref": "#/$defs/sha256"},
+        "coordinates_canonical_sha256": {"$ref": "#/$defs/sha256"},
+        "topology_canonical_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "limitations": {

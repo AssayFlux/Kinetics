@@ -52,6 +52,8 @@ def infer_genetic_code_candidates(
         raise ValueError("table_ids must be a non-empty sequence of unique supported IDs")
 
     materialized: list[tuple[str, list[str], bool]] = []
+    seen_ids: set[str] = set()
+    seen_sequences: set[str] = set()
     total_bases = 0
     for index, record in enumerate(records):
         if len(materialized) >= max_records:
@@ -85,6 +87,12 @@ def infer_genetic_code_candidates(
         record_id = record.get("id", f"record_{index + 1}")
         if not isinstance(record_id, str) or not record_id.strip():
             raise ValueError("record id must be non-empty text")
+        if record_id in seen_ids:
+            raise ValueError("record IDs must be unique")
+        if normalized in seen_sequences:
+            raise ValueError("duplicate coding sequences cannot be counted as independent evidence")
+        seen_ids.add(record_id)
+        seen_sequences.add(normalized)
         materialized.append((record_id, codons, complete))
     if not materialized:
         raise ValueError("At least one coding-sequence record is required")

@@ -34,6 +34,7 @@ from .omics import (
 from .phylo import Node, bootstrap_neighbor_joining_from_alignment, leaf_names, jukes_cantor_distance, neighbor_joining, neighbor_joining_from_alignment, parse_newick, patristic_distance, to_newick, upgma
 from .pharmvar import (PharmVarAlleleDefinition, PharmVarMatch, PharmVarVariant, match_pharmvar_haplotype, parse_pharmvar_tsv)
 from .pgx import AlleleMatch, StarAlleleDefinition, VariantKey, match_phased_haplotype, parse_star_allele_definitions
+from .docking_vina import run_vina_docking
 from .pkpd import emax_pd, one_compartment_oral_pk
 from .protein import protein_descriptors, theoretical_pi
 from .virtual_cohort import simulate_hardy_weinberg_cohort
@@ -46,7 +47,7 @@ from .structure import (
 )
 
 __all__ = [
-    "bootstrap_neighbor_joining_from_alignment", "simulate_hardy_weinberg_cohort", "emax_pd", "one_compartment_oral_pk", "apo_pocket_candidates", "analyze_molblock", "analyze_smiles", "morgan_tanimoto", "rdkit_backend_info", "PharmVarAlleleDefinition", "PharmVarMatch", "PharmVarVariant", "match_pharmvar_haplotype", "parse_pharmvar_tsv", "AlleleMatch", "Atom", "GeneEntry", "StarAlleleDefinition", "VariantKey", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
+    "bootstrap_neighbor_joining_from_alignment", "simulate_hardy_weinberg_cohort", "emax_pd", "one_compartment_oral_pk", "run_vina_docking", "apo_pocket_candidates", "analyze_molblock", "analyze_smiles", "morgan_tanimoto", "rdkit_backend_info", "PharmVarAlleleDefinition", "PharmVarMatch", "PharmVarVariant", "match_pharmvar_haplotype", "parse_pharmvar_tsv", "AlleleMatch", "Atom", "GeneEntry", "StarAlleleDefinition", "VariantKey", "bootstrap_michaelis_menten", "Node", "SamRecord", "SequenceRecord",
     "clr_transform", "contact_pairs", "cpm", "cross_omics_correlation",
     "eadie_hofstee", "fastq_quality_summary", "fit_michaelis_menten",
     "graph_descriptors", "hanes_woolf", "inhibition_rate", "infer_genetic_code_candidates", "ligand_site_candidates",

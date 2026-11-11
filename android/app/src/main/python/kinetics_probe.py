@@ -264,7 +264,7 @@ def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -
 
 
 def analyze_ligand_sdf_graph(source_text: str):
-    """Android bridge for the bounded offline ligand graph preview."""
+    """Android bridge returning JSON for the bounded offline ligand graph preview."""
     from kinetics.chemistry import analyze_sdf_graph
 
-    return analyze_sdf_graph(source_text)
+    return json.dumps(analyze_sdf_graph(source_text), sort_keys=True)

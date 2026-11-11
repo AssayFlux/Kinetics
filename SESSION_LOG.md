@@ -2431,3 +2431,5 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 
 - First GitHub Actions validation reached Ruff successfully but mypy identified eight strict-typing errors in the new dictionary accumulators/ranking keys. Replaced unsafe object conversions with explicit typed casts in the two implementation modules. This is a code fix, not a passing-test claim; the latest exact-head workflow must rerun.
 - Strict-typing fix commits: `cfc8e2c01be0df9053ac2e086554f66d07587c01`, `3e82b0d06d5b2c1641491b32532f1e71ed1ff681`.
+
+- Updated the README S8 row to distinguish the new heuristic candidate-ranking software from the still-open organism-specific truth-set and calibration gates.

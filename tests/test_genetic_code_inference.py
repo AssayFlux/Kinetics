@@ -66,3 +66,19 @@ def test_genetic_code_inference_rejects_duplicate_records_as_nonindependent() ->
 def test_genetic_code_inference_requires_competing_candidate_tables() -> None:
     with pytest.raises(ValueError, match="At least two"):
         infer_genetic_code_candidates([{"sequence": "ATGAAA"}], table_ids=[1])
+
+
+def test_genetic_code_inference_bounds_candidate_table_iterables() -> None:
+    def endless_tables():
+        while True:
+            yield 1
+
+    with pytest.raises(ValueError, match="exceeds the supported candidate-table bound"):
+        infer_genetic_code_candidates([{"sequence": "ATGAAA"}], table_ids=endless_tables())
+
+
+def test_genetic_code_inference_requires_distinct_start_and_terminal_codons() -> None:
+    with pytest.raises(ValueError, match="distinct start and terminal"):
+        infer_genetic_code_candidates(
+            [{"sequence": "ATG", "complete_cds": True}], table_ids=[1, 4]
+        )

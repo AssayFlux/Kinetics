@@ -126,6 +126,43 @@ def run_openmm_dynamics(
     # Clone the caller's System via OpenMM's serializer to avoid mutating it between
     # replicas. The caller does not pass arbitrary XML text into this function.
     system_xml = openmm.XmlSerializer.serialize(system)
+    system_bytes = system_xml.encode("utf-8")
+    if len(system_bytes) > 256 * 1024 * 1024:
+        raise ValueError("serialized OpenMM System exceeds the 256 MiB provenance limit")
+    coordinates_canonical_sha256 = sha256(
+        np.asarray(xyz, dtype="<f8").tobytes(order="C")
+    ).hexdigest()
+    atom_manifest = [
+        {
+            "index": atom.index,
+            "name": atom.name,
+            "element": atom.element.symbol if atom.element is not None else None,
+            "residue_name": atom.residue.name,
+            "residue_id": atom.residue.id,
+            "chain_id": atom.residue.chain.id,
+        }
+        for atom in topology.atoms()
+    ]
+    bond_manifest = sorted(
+        [min(bond.atom1.index, bond.atom2.index), max(bond.atom1.index, bond.atom2.index)]
+        for bond in topology.bonds()
+    )
+    box_vectors = system.getDefaultPeriodicBoxVectors()
+    box_manifest = [
+        [float(component.value_in_unit(unit.nanometer)) for component in vector]
+        for vector in box_vectors
+    ]
+    topology_manifest = {
+        "atoms": atom_manifest,
+        "bonds": bond_manifest,
+        "default_periodic_box_vectors_nm": box_manifest,
+    }
+    topology_canonical_sha256 = sha256(
+        json.dumps(
+            topology_manifest, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
+    ).hexdigest()
+    system_sha256 = sha256(system_bytes).hexdigest()
     engine_build = Path(openmm_binary.__file__).read_bytes()
     if not engine_build or len(engine_build) > 512 * 1024 * 1024:
         raise RuntimeError("OpenMM core binary is empty or exceeds the 512 MiB hash limit")
@@ -245,11 +282,14 @@ def run_openmm_dynamics(
         "input_hashes": {
             "coordinates_or_receptor_sha256": coordinates_sha256,
             "ligand_or_topology_sha256": topology_sha256,
+            "coordinates_canonical_sha256": coordinates_canonical_sha256,
+            "topology_canonical_sha256": topology_canonical_sha256,
         },
         "force_field": {
             "name": force_field_name,
             "version": force_field_version,
             "parameter_source_sha256": parameter_source_sha256,
+            "system_sha256": system_sha256,
         },
         "protocol": protocol,
         "protocol_sha256": protocol_sha256,

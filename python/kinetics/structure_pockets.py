@@ -35,6 +35,11 @@ def ligand_site_candidates(
         raise ValueError("ligand_residue_number must be an integer")
     if not isinstance(ligand_residue_name, str) or not ligand_residue_name.strip():
         raise ValueError("ligand_residue_name must be non-empty text")
+    if ligand_residue_name.strip().upper() in {
+        "ALA", "ARG", "ASN", "ASP", "CYS", "GLN", "GLU", "GLY", "HIS", "ILE",
+        "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL",
+    }:
+        raise ValueError("Selected ligand residue name must not be a canonical amino acid")
     if isinstance(cutoff_angstrom, bool) or not isinstance(cutoff_angstrom, (int, float)) or not isfinite(cutoff_angstrom) or cutoff_angstrom <= 0:
         raise ValueError("cutoff_angstrom must be finite and positive")
     for name, value in (("max_atoms", max_atoms), ("max_candidate_pairs", max_candidate_pairs), ("max_residues", max_residues)):

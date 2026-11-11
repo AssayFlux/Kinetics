@@ -23,8 +23,14 @@ def test_private_node_worker_request_schema_requires_explicit_owner_approval() -
             "source_license_status": "apache-2.0-source-reviewed",
             "dependency_audit_status": "pending",
         },
-        "receptor_pdbqt": "ATOM      1  C   ALA A   1       0.000   0.000   0.000  1.00  0.00     0.000 C\n",
-        "ligand_pdbqt": "ATOM      1  C1  UNL     1       1.000   1.000   1.000  1.00  0.00     0.000 C\n",
+        "receptor_pdbqt": (
+            "ATOM      1  C   ALA A   1       0.000   0.000   0.000  "
+            "1.00  0.00     0.000 C\n"
+        ),
+        "ligand_pdbqt": (
+            "ATOM      1  C1  UNL     1       1.000   1.000   1.000  "
+            "1.00  0.00     0.000 C\n"
+        ),
         "center_angstrom": [0, 0, 0],
         "box_size_angstrom": [20, 20, 20],
         "seed": 1,

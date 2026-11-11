@@ -10,6 +10,20 @@ from math import isfinite
 from typing import Sequence
 
 
+
+
+def _validate_smiles_inputs(*collections: Sequence[str]) -> None:
+    total_bytes = 0
+    for collection in collections:
+        for index, value in enumerate(collection):
+            if not isinstance(value, str) or not value.strip() or len(value) > 100_000:
+                raise ValueError(f"SMILES at index {index} must be non-empty and bounded")
+            try:
+                total_bytes += len(value.encode("utf-8", errors="strict"))
+            except UnicodeEncodeError as error:
+                raise ValueError(f"SMILES at index {index} contains invalid Unicode") from error
+            if total_bytes > 16 * 1024 * 1024:
+                raise ValueError("combined SMILES input exceeds the 16 MiB limit")
 def scaffold_group_split(
     smiles: Sequence[str],
     *,
@@ -22,6 +36,7 @@ def scaffold_group_split(
         raise ValueError("smiles must be a sequence of strings")
     if not 3 <= len(smiles) <= 100_000:
         raise ValueError("smiles must contain between 3 and 100000 compounds")
+    _validate_smiles_inputs(smiles)
     if (
         not isinstance(train_fraction, (int, float))
         or isinstance(train_fraction, bool)
@@ -276,6 +291,7 @@ def tanimoto_applicability_domain(
         raise ValueError("applicability-domain inputs exceed configured limits")
     if len(reference_smiles) * len(query_smiles) > 10_000_000:
         raise ValueError("reference/query comparison count must not exceed 10000000")
+    _validate_smiles_inputs(reference_smiles, query_smiles)
     if (
         not isinstance(threshold, (int, float))
         or isinstance(threshold, bool)

@@ -83,7 +83,7 @@ jobs:
         run: PYTHONPATH=python python validation/omics_nb2_scipy_reference.py > omics-nb2-reference-result.json
       - name: Assert scientific reference comparisons passed
         run: |
-          python -c "import json; paths=['kinetics-scipy-reference-result.json','genetic-code-reference-result.json','structure-biopython-reference-result.json','phylo-biopython-reference-result.json','omics-nb2-reference-result.json']; results=[json.load(open(p, encoding='utf-8')) for p in paths]; failures=[r.get('validation_id', p) for p,r in zip(paths,results) if not r.get('overall_pass', False)]; assert not failures, f'Reference validation failed: {failures}'"
+          python -c "import json; paths=['kinetics-scipy-reference-result.json','pkpd-scipy-reference-result.json','genetic-code-reference-result.json','structure-biopython-reference-result.json','phylo-biopython-reference-result.json','omics-nb2-reference-result.json']; results=[json.load(open(p, encoding='utf-8')) for p in paths]; failures=[r.get('validation_id', p) for p,r in zip(paths,results) if not r.get('overall_pass', False)]; assert not failures, f'Reference validation failed: {failures}'"
       - name: Upload synthetic numerical and codon-table comparison records
         uses: actions/upload-artifact@v4
         with:

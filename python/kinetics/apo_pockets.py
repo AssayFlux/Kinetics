@@ -62,7 +62,7 @@ def apo_pocket_candidates(
             raise ValueError("Structure exceeds max_atoms")
         if not all(isfinite(value) for value in (atom.x, atom.y, atom.z)):
             raise ValueError("Structure contains non-finite coordinates")
-        if atom.element.strip().upper() not in {"", "H", "D"} and atom.residue.upper() in _AMINO_ACIDS:
+        if atom.element.strip().upper() not in {"H", "D", ""} and atom.residue.upper() in _AMINO_ACIDS:
             protein.append(atom)
     if not protein:
         raise ValueError("No canonical protein heavy atoms were found")

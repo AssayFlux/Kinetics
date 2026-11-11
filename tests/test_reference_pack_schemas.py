@@ -180,18 +180,31 @@ def test_i2_i3_result_contracts_require_hashes_and_nonvalidated_status() -> None
     assert not validator.is_valid({**docking, "validation_status": "validated"})
     md = {
         "schema_version": 1, "job_type": "molecular_dynamics", "research_only": True,
-        "validation_status": "not_independently_validated", "engine": engine,
-        "input_hashes": hashes, "protocol_sha256": "d" * 64,
+        "validation_status": "not_independently_validated", "engine": {**engine, "platform": "CPU"},
+        "input_hashes": hashes,
+        "force_field": {
+            "name": "synthetic harmonic reference", "version": "1",
+            "parameter_source_sha256": "9" * 64,
+        },
+        "protocol": {
+            "temperature_kelvin": 300, "pressure_bar": None, "timestep_fs": 1,
+            "steps": 100, "equilibration_steps": 10, "replicas": 2, "seed": 1,
+            "report_interval": 10, "cpu_threads": 1, "platform": "CPU",
+            "integrator": "LangevinMiddleIntegrator", "friction_per_ps": 1.0,
+        },
+        "protocol_sha256": "d" * 64,
         "replicas": [
             {
                 "replica_id": 1, "seed": 1, "steps_completed": 100,
                 "initial_potential_energy": -10.0, "final_potential_energy": -9.9,
                 "energy_unit": "kJ/mol", "trajectory_sha256": "e" * 64,
+                "trajectory_dcd_base64": "ZGF0YQ==",
             },
             {
                 "replica_id": 2, "seed": 2, "steps_completed": 100,
                 "initial_potential_energy": -10.1, "final_potential_energy": -10.0,
                 "energy_unit": "kJ/mol", "trajectory_sha256": "f" * 64,
+                "trajectory_dcd_base64": "ZGF0YQ==",
             },
         ],
         "limitations": ["No independent stability validation."],

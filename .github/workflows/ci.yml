@@ -273,3 +273,29 @@ jobs:
       - name: Run dependency-free worker security tests
         working-directory: remote-node
         run: npm test
+
+  admet-validation-smoke:
+    name: Pinned RDKit ADMET evaluation utilities smoke check (no model/data)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python validation host
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: validation/requirements-admet.txt
+      - name: Install pinned RDKit and schema validator
+        run: python -m pip install -r validation/requirements-admet.txt
+      - name: Run scaffold split, metric and applicability smoke check
+        env:
+          PYTHONPATH: python
+        run: python validation/admet_validation_smoke.py > admet-validation-smoke-result.json
+      - name: Upload ADMET utility smoke record
+        uses: actions/upload-artifact@v4
+        with:
+          name: kinetics-admet-validation-smoke-${{ github.sha }}
+          path: admet-validation-smoke-result.json
+          if-no-files-found: error
+          retention-days: 90

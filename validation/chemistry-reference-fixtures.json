@@ -24,7 +24,13 @@
         "molecular_weight": 46.069,
         "exact_molecular_weight": 46.0419,
         "tpsa_angstrom2": 20.23,
-        "crippen_logp": -0.0014
+        "crippen_logp": -0.0014,
+        "fraction_csp3": 1,
+        "formal_charge": 0,
+        "heavy_atom_count": 3,
+        "aromatic_atom_count": 0,
+        "aliphatic_ring_count": 0,
+        "aromatic_ring_count": 0
       }
     },
     {
@@ -39,9 +45,15 @@
         "h_bond_acceptors": 0,
         "rotatable_bonds": 0,
         "molecular_weight": 78.114,
-        "exact_molecular_weight": 78.0470,
-        "tpsa_angstrom2": 0.0,
-        "crippen_logp": 1.6866
+        "exact_molecular_weight": 78.047,
+        "tpsa_angstrom2": 0,
+        "crippen_logp": 1.6866,
+        "fraction_csp3": 0,
+        "formal_charge": 0,
+        "heavy_atom_count": 6,
+        "aromatic_atom_count": 6,
+        "aliphatic_ring_count": 0,
+        "aromatic_ring_count": 1
       }
     }
   ],

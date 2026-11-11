@@ -57,3 +57,8 @@ def test_genetic_code_inference_rejects_duplicate_records_as_nonindependent() ->
     repeated = {"sequence": "ATG" + "AAA" * 20}
     with pytest.raises(ValueError, match="duplicate coding sequences"):
         infer_genetic_code_candidates([repeated, repeated, repeated])
+
+
+def test_genetic_code_inference_requires_competing_candidate_tables() -> None:
+    with pytest.raises(ValueError, match="At least two"):
+        infer_genetic_code_candidates([{"sequence": "ATGAAA"}], table_ids=[1])

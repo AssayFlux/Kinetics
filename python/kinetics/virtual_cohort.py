@@ -16,17 +16,32 @@ def simulate_hardy_weinberg_cohort(
     seed: int,
 ) -> dict[str, object]:
     """Generate aggregate synthetic diploid genotype counts for independent loci."""
-    if not isinstance(sample_size, int) or isinstance(sample_size, bool) or not 1 <= sample_size <= 1_000_000:
+    valid_size = (
+        isinstance(sample_size, int)
+        and not isinstance(sample_size, bool)
+        and 1 <= sample_size <= 1_000_000
+    )
+    if not valid_size:
         raise ValueError("sample_size must be an integer between 1 and 1000000")
     if not isinstance(seed, int) or isinstance(seed, bool) or not 0 <= seed <= 2**32 - 1:
         raise ValueError("seed must be an unsigned 32-bit integer")
-    if not isinstance(allele_frequencies, dict) or not allele_frequencies or len(allele_frequencies) > 1000:
+    if (
+        not isinstance(allele_frequencies, dict)
+        or not allele_frequencies
+        or len(allele_frequencies) > 1000
+    ):
         raise ValueError("allele_frequencies must contain 1 to 1000 loci")
     normalized: dict[str, float] = {}
     for locus, frequency in allele_frequencies.items():
         if not isinstance(locus, str) or not locus or len(locus) > 128:
-            raise ValueError("locus identifiers must be non-empty strings of at most 128 characters")
-        if not isinstance(frequency, (int, float)) or isinstance(frequency, bool) or not isfinite(frequency):
+            raise ValueError(
+                "locus identifiers must be non-empty strings of at most 128 characters"
+            )
+        if (
+            not isinstance(frequency, (int, float))
+            or isinstance(frequency, bool)
+            or not isfinite(frequency)
+        ):
             raise ValueError(f"allele frequency for {locus} must be finite")
         if not 0.0 <= frequency <= 1.0:
             raise ValueError(f"allele frequency for {locus} must be between 0 and 1")
@@ -69,5 +84,8 @@ def simulate_hardy_weinberg_cohort(
             "Not representative of any real population or cohort",
             "No clinical interpretation, diagnosis, treatment or risk estimate",
         ],
-        "provenance": {"generator": "Kinetics synthetic HWE generator", "seeded_prng": "Python random.Random"},
+        "provenance": {
+            "generator": "Kinetics synthetic HWE generator",
+            "seeded_prng": "Python random.Random",
+        },
     }

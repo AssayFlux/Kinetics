@@ -17,7 +17,7 @@ test("worker defaults to loopback and docking disabled", () => {
 
 test("remote bind requires TLS and valid port", () => {
   assert.throws(() => readConfig({ KINETICS_NODE_HOST: "0.0.0.0" }), /requires TLS/);
-  assert.throws(() => readConfig({ KINETICS_NODE_PORT: "70000" }), /port/);
+  assert.throws(() => readConfig({ KINETICS_NODE_PORT: "70000" }), /PORT/);
   assert.throws(
     () => readConfig({
       KINETICS_NODE_ALLOW_DOCKING: "true",

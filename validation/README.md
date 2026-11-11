@@ -59,6 +59,6 @@ software/numerical comparison, not null/power/FDR or biological validation.
 
 ## Track I1 — pinned RDKit descriptor sanity fixtures
 
-`chemistry_reference.py` runs against the exact pinned host-only RDKit release in `requirements-rdkit.txt`. The ethanol and benzene fixtures check formula, atom/bond/ring counts, charge, heavy/aromatic atom counts, aliphatic/aromatic ring counts, fraction Csp3, molecular/exact mass, TPSA, Crippen LogP, fingerprint configuration and input SHA-256 provenance. The runner also checks that embedded NUL, invalid Unicode and inputs exceeding the UTF-8 byte ceiling are rejected before parsing.
+`chemistry_reference.py` runs against the exact pinned host-only RDKit release in `requirements-rdkit.txt`. The ethanol and benzene fixtures check formula, atom/bond/ring counts, charge, heavy/aromatic atom counts, aliphatic/aromatic ring counts, fraction Csp3, molecular/exact mass, TPSA, Crippen LogP, fingerprint configuration, Rule-of-Five screen output and input SHA-256 provenance. The runner also checks that embedded NUL, invalid Unicode and inputs exceeding the UTF-8 byte ceiling are rejected before parsing.
 
 These are deterministic descriptor/parser sanity checks, not a curated chemistry benchmark, biological-activity or ADMET validation, or evidence of Android runtime feasibility.

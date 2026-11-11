@@ -615,6 +615,14 @@ fun ExploreScreen(modifier: Modifier) {
             if (entries.any { it.id == "sequence.fastq" && it.status == "implemented" }) {
                 item { FastqQcCard() }
             }
+            if (entries.any { it.id == "structure.ligand_site_candidates" && it.status == "implemented" } &&
+                entries.any { it.id == "structure.apo_pocket_candidates" && it.status == "implemented" }
+            ) {
+                item { StructureSiteAnalysisCard() }
+            }
+            if (entries.any { it.id == "sequence.genetic_code_candidate_inference" && it.status == "implemented" }) {
+                item { GeneticCodeInferenceCard() }
+            }
             if (catalogue.isFailure) {
                 item {
                     OutlinedCard(Modifier.fillMaxWidth()) {

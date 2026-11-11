@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import json
 import sys
 import types
 from pathlib import Path
 
 import pytest
+from jsonschema import Draft202012Validator
 
 from kinetics.docking_vina import run_vina_docking
 
@@ -71,6 +73,11 @@ def test_vina_runner_returns_hash_bound_research_result(
     assert result["poses"][0]["score"] == -7.5  # type: ignore[index]
     assert len(result["poses"][0]["pose_sha256"]) == 64  # type: ignore[index]
     assert result["input_hashes"]["coordinates_or_receptor_sha256"]  # type: ignore[index]
+    schema_path = (
+        Path(__file__).resolve().parents[1] / "api" / "insilico-result.schema.json"
+    )
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    Draft202012Validator(schema).validate(result)
 
 
 @pytest.mark.parametrize(

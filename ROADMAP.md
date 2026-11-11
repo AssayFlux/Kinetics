@@ -55,11 +55,11 @@ The owner briefly authorized parallel R/S/I/P work on 2026-11-08; that sequencin
 ## Track I — In-silico lab
 | ID | Scope | Dependencies | Exit evidence | Status | Owner | Date |
 |---|---|---|---|---|---|---|
-| I1 | Ligand prep, descriptors, drug-likeness | R1 chemistry/license | Correctness, limits, provenance | not-started — S software exit passed; eligible as next engineering scope | Engineering + Validation | 2026-11-09 |
+| I1 | Ligand prep, descriptors, drug-likeness | R1 chemistry/license | Correctness, limits, provenance | in-progress — hardened host-only RDKit adapter with UTF-8 byte/NUL/Unicode bounds, expanded charge/ring/aromaticity/FractionCSP3 descriptors, explicit units/assumptions and source SHA-256; pinned ethanol/benzene fixture expanded; Android runtime remains unavailable pending ABI/license/size review | Engineering + Validation | 2026-11-11 |
 | I2 | Node docking/virtual screening | Node, approved licenses | Redocking RMSD and decoy enrichment | not-started — S software exit passed; eligible as next engineering scope | Engineering + Validation | 2026-11-09 |
-| I3 | Node MD | Node, engine/model/license | Stability, energy conservation, reference runs | not-started — S software exit passed; eligible as next engineering scope | Engineering + Validation | 2026-11-09 |
+| I3 | Node MD | Node, engine/model/license | Stability, energy conservation, reference runs | blocked — engine/force-field licence, parameter provenance, compute/security plan, reproducible equilibration/replicate protocol and independent validation required | Engineering + Validation | 2026-11-09 |
 | I4 | ADMET and PK/PD/PBPK | Approved data/models | Held-out performance and applicability domain | not-started — S software exit passed; eligible as next engineering scope; metadata-only source inventory preserved | Engineering + Validation | 2026-11-09 |
-| I5 | Variant-effect and virtual-cohort simulations, Research Mode | I4, fairness/model review | Benchmarks, ancestry portability, prediction labels | blocked — D-019 sequencing gate; do not start until S exits | Engineering + Validation | 2026-11-09 |
+| I5 | Variant-effect and virtual-cohort simulations, Research Mode | I4, fairness/model review | Benchmarks, ancestry portability, prediction labels | blocked — approved docking engine/version/licence, reproducible preparation/search-space protocol and independent redocking/cross-docking evidence required | Engineering + Validation | 2026-11-09 |
 
 ## Track P — Precision medicine (PGx first)
 Hard gate: no patient-related feature before P0; early research uses public test data only.

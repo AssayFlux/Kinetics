@@ -1,0 +1,2 @@
+vina==1.2.7
+jsonschema[format]>=4.23,<5

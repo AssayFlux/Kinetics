@@ -177,17 +177,32 @@ def run_openmm_dynamics(
             simulation.context.setPositions(positions)
             if equilibration_steps:
                 simulation.step(equilibration_steps)
-            initial_energy = simulation.context.getState(
-                getEnergy=True
-            ).getPotentialEnergy().value_in_unit(unit.kilojoule_per_mole)
+            initial_state = simulation.context.getState(getEnergy=True)
+            initial_energy = initial_state.getPotentialEnergy().value_in_unit(
+                unit.kilojoule_per_mole
+            )
+            if not isfinite(initial_energy):
+                raise RuntimeError("OpenMM returned a non-finite initial potential energy")
             trajectory_path = root / f"replica-{index + 1}.dcd"
             simulation.reporters.append(
                 app.DCDReporter(str(trajectory_path), report_interval)
             )
             simulation.step(steps)
-            final_energy = simulation.context.getState(
-                getEnergy=True
-            ).getPotentialEnergy().value_in_unit(unit.kilojoule_per_mole)
+            final_state = simulation.context.getState(getEnergy=True, getPositions=True)
+            final_energy = final_state.getPotentialEnergy().value_in_unit(
+                unit.kilojoule_per_mole
+            )
+            final_xyz = np.asarray(
+                final_state.getPositions(asNumpy=True).value_in_unit(unit.nanometer),
+                dtype=float,
+            )
+            if (
+                not isfinite(final_energy)
+                or final_xyz.shape != (atom_count, 3)
+                or not np.isfinite(final_xyz).all()
+                or np.max(np.abs(final_xyz)) > 10000
+            ):
+                raise RuntimeError("OpenMM returned non-finite or out-of-bounds final state")
             simulation = None
             integrator = None
             trajectory_bytes = trajectory_path.read_bytes()

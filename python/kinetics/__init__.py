@@ -1,14 +1,15 @@
-from .admet_validation import (
-    binary_admet_metrics,
-    scaffold_group_split,
-    tanimoto_applicability_domain,
-)
 """Kinetics offline research primitives.
 
 Source implementation does not imply independent scientific validation or clinical use.
 """
 
 __version__ = "0.1.0"
+
+from .admet_validation import (
+    binary_admet_metrics,
+    scaffold_group_split,
+    tanimoto_applicability_domain,
+)
 
 from .catalog import (
     GeneEntry, iter_ncbi_gene_info, iter_ncbi_gene_info_file, search_gene_catalog, validate_gene_catalog,

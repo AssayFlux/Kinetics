@@ -108,7 +108,7 @@ def _describe(
         "ring_count": int(descriptors.RingCount(molecule)),
         "aliphatic_ring_count": int(mol_descriptors.CalcNumAliphaticRings(molecule)),
         "aromatic_ring_count": int(mol_descriptors.CalcNumAromaticRings(molecule)),
-        "formal_charge": int(mol_descriptors.CalcFormalCharge(molecule)),
+        "formal_charge": sum(int(atom.GetFormalCharge()) for atom in molecule.GetAtoms()),
         "heavy_atom_count": int(molecule.GetNumHeavyAtoms()),
         "aromatic_atom_count": aromatic_atom_count,
         "atom_count": int(molecule.GetNumAtoms()),

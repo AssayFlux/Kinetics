@@ -10,6 +10,9 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
+docking = [
+  "vina==1.2.7",
+]
 dev = [
   "jsonschema[format]>=4.23,<5",
   "mypy>=1.10,<2",

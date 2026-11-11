@@ -53,3 +53,12 @@ is passed to the RDKit parser without preprocessing; protonation and tautomer st
 are not corrected or inferred. This is provenance disclosure, not a validated
 chemistry benchmark or evidence of biological activity. RDKit remains unbundled
 from Android pending ABI, license, dependency and size review.
+
+
+## I1 — molecular descriptor adapter hardening (2026-11-11)
+
+The optional host RDKit adapter now enforces input limits on encoded UTF-8 bytes rather than Python character count: 1 MiB for SMILES and 10 MiB for mol blocks. It rejects embedded NUL and invalid Unicode scalar input before parser invocation. Morgan similarity validates integer-only radius/bit parameters and applies the same per-input byte ceiling.
+
+Descriptor schema version 2 adds formal charge, heavy-atom count, aromatic-atom count, aliphatic/aromatic ring counts and fraction Csp3, alongside molecular formula/weight, exact mass, Crippen LogP, TPSA, H-bond donors/acceptors, rotatable bonds and ring count. Units and representation assumptions are explicit; raw input SHA-256 and exact UTF-8 byte length are retained. The pinned ethanol/benzene sanity fixtures now cover the added descriptors.
+
+**Boundary:** RDKit remains host-only and is not bundled into Android. This increment does not establish descriptor accuracy beyond the named deterministic fixtures, chemical validity across all representations, bioactivity, ADMET, docking or clinical utility. License/transitive dependency review, Android ABI/size feasibility, wider curated chemical reference sets and device integration remain open.

@@ -2568,3 +2568,33 @@ This is not scientific validation or production readiness. Vina/OpenMM/ADMET smo
 
 ### Next
 Track P is next under R → S → I → P → G, but is not marked started in this session. P0 remains blocked; only public-data metadata and synthetic/non-patient preparation may proceed before P0. No patient data, clinical interpretation or Clinical Mode is enabled.
+
+
+## 2026-11-11 — Session 75: Track P owner authorization and P0 preparation start
+
+**Phase:** Track P / Step 1 — documented base  
+**Objective:** Record owner authorization, open P-track engineering, and prepare P0 evidence without misrepresenting external approvals.
+
+### Inspected
+- Re-polled main: source SHA 3ce74d14f0e79f6c147f437db6e3bd28d44ef097.
+- Exact-head GitHub Actions workflow [#42972264169](https://github.com/AssayFlux/Kinetics/actions/runs/42972264169) completed successfully; all 9/9 jobs passed (Python foundation/registry/tests, Android arm64 APK/AAB and package tests, RDKit, SPDX, Vina smoke, OpenMM smoke, ADMET utility smoke, Node worker security and host reference comparisons).
+- Read ROADMAP, README, DECISIONS, public-data-only boundary, public dataset catalogue and documentation index.
+- Confirmed candidate public-source catalogue remains metadata-only with entries: []; candidate sources are not approved for intake.
+- Confirmed existing synthetic reference-build/contig/coordinate/digest contract and normalization tests are preparation foundations, not validated clinical interpretation.
+
+### Owner decision
+- Owner explicitly approved: “open p0 & build p track”.
+- Recorded D-022: Track P starts; P0 evidence preparation and P1 public-data/synthetic base may proceed.
+- Owner authorization is not external legal advice, ethics/IRB determination, clinical/scientific review, regulatory clearance or formal P0 gate passage.
+
+### Changes prepared
+- Added docs/track-p/p0-evidence-packet.md as a DRAFT evidence register, intended-use boundary, initial risk register and P0 exit checklist.
+- Added docs/track-p/implementation-plan.md for P0/P1 Step 1 and Step 2, stack ownership, data boundary and phase exit criteria.
+- Updated ROADMAP, README, DECISIONS, public-data boundary and docs index to show Track P started and P0 preparation active.
+
+### Disposition and open work
+- Track P Step 1: in progress; this commit establishes the documented base, not a completed P-track implementation.
+- P0: formal gate remains BLOCKED / NOT APPROVED. External determinations/reviews and formal evidence are pending.
+- P1: public metadata and synthetic-only work may proceed. Acquired dataset entries remain empty; no patient data or individual genotype interpretation.
+- No patient/human-subject data, clinical recommendation, Clinical Mode, clinical validity claim or regulatory compliance claim is enabled.
+- Exact-head CI for the new documentation commit must be checked separately. No tests are claimed for this documentation-only increment beyond the previously cited exact-head run.

@@ -203,3 +203,12 @@ The following historical decisions are retained for auditability but are no long
 - Choice: Close the R implementation/host-regression audit step, consolidate the repository documentation, and proceed to S as the next engineering track.
 - Boundary: This is not a declaration that R1–R10 are all phase-accepted, scientifically validated, device-verified, fully licensed or release-ready. Open R evidence remains in the R audit and master roadmap as carry-forward obligations; dependent S work must respect those gaps.
 - Approver: Project owner (explicit instruction in chat, 2026-11-09).
+
+
+## D-022 — Owner authorization to start Track P and prepare P0
+- Date: 2026-11-11.
+- Context: The project owner explicitly stated: “I am approving, open p0 & build p track.”
+- Choice: Start Track P in the prescribed R → S → I → P → G order. Begin P0 evidence preparation and continue the P1 public-data-only/synthetic engineering base. This authorizes project scope, engineering work and preparation.
+- Boundary: D-022 does **not** assert that P0 has passed. The formal P0 gate remains NOT APPROVED until the intended-use and governance packet is complete; applicable jurisdiction-specific legal/regulatory advice, ethics/IRB determination, qualified independent clinical/scientific review, privacy/security/QMS evidence and independent validation plans are documented; unresolved risks are dispositioned; and the project owner records the formal gate decision. No patient/human-subject data or activity, individual genotype interpretation, diagnosis/treatment/dosing recommendation, Clinical Mode or clinical claim is enabled.
+- Consequences: P0 preparation and permitted P1 public-data metadata/synthetic work are active. Candidate dataset entries remain unapproved until exact source terms and provenance are reviewed. No external approval, signature, adviser appointment or regulatory status is fabricated.
+- Approver: Project owner, explicit approval in chat on 2026-11-11.

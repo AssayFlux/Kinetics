@@ -1,6 +1,6 @@
 # Track P — Public-data-only preparation boundary
 
-**Status:** preparation only. P0 is blocked; this file does not authorize patient or human-subject work.
+**Status:** Track P started 2026-11-11 by owner authorization. P0 evidence preparation is active; the formal P0 gate remains NOT APPROVED. This file does not authorize patient or human-subject work.
 
 ## Permitted preparation
 
@@ -61,3 +61,12 @@ non-synthetic/patient classification, timezone-free timestamps, contig mismatch
 and REF/reference disagreement. This is a software contract tested on synthetic
 fixtures only; it is not an authoritative genome assembly, validated variant
 normalizer, PGx matcher or clinical interpretation engine.
+
+
+## Owner authorization and current execution state (2026-11-11)
+
+D-022 records the project owner's authorization to start Track P, prepare P0, and build the permitted P1 base. This authorization opens engineering work; it is not a substitute for external legal, ethics, clinical, scientific or regulatory determinations. The P0 gate remains NOT APPROVED until the evidence packet is complete and the owner records a separate gate decision.
+
+Execution: (1) P0 Step 1 prepares intended-use, governance, privacy, security, QMS, risk and validation evidence; (2) P1 Step 1 builds public-source metadata and synthetic reference/normalization contracts; (3) Step 2 audits, tests and fixes the base; (4) P2 interpretation and patient/clinical workflows remain disabled until P0 and their own gates pass.
+
+See p0-evidence-packet.md and implementation-plan.md.

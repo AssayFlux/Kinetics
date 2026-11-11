@@ -50,7 +50,7 @@ CDS mode. Ambiguous bases are rejected rather than guessed.
 This primitive does **not** infer the organism's genetic code, locate genes,
 identify reading frames/strands, establish gene function, or support every NCBI
 translation table. A short unknown sequence or a no-hit is not evidence of a
-novel genetic code. Candidate inference remains blocked until organism-specific
+novel genetic code. Candidate inference now has a bounded, abstention-first software screen over supplied coding-sequence records. It ranks supported tables using internal-stop and optional complete-CDS start/terminal-stop evidence only. It is not an organism-code assignment; organism-specific
 positive/negative truth sets, independent comparisons, calibrated confusion
 matrices and abstention criteria are available. The host-only
 `validation/genetic_code_biopython_reference.py` comparison exhaustively checks

@@ -8,6 +8,7 @@ from __future__ import annotations
 import json
 import math
 import sys
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
@@ -45,12 +46,43 @@ def run() -> dict[str, Any]:
             ("fraction_csp3", "fraction_csp3"),
         ):
             checks[key] = _close(observed[key], expected[key], tolerances[tolerance_key])
+        checks["descriptor_schema_version"] = observed["descriptor_schema_version"] == 2
+        checks["input_sha256"] = observed["input_provenance"]["sha256_utf8"] == sha256(
+            molecule["smiles"].encode("utf-8")
+        ).hexdigest()
+        checks["fingerprint_configuration"] = (
+            observed["morgan_fingerprint"]["algorithm"] == "Morgan"
+            and observed["morgan_fingerprint"]["radius"] == 2
+            and observed["morgan_fingerprint"]["bits"] == 2048
+        )
+        checks["fingerprint_nonempty"] = bool(observed["morgan_fingerprint"]["on_bits"])
         results.append({
             "id": molecule["id"],
             "checks": checks,
             "pass": all(checks.values()),
             "observed": {key: observed[key] for key in expected},
         })
+    # Reject hostile text before invoking the chemistry parser.
+    input_guard_checks: dict[str, bool] = {}
+    for label, value in (
+        ("embedded_nul", "CCO\\x00"),
+        ("invalid_unicode", "CCO\\ud800"),
+    ):
+        try:
+            analyze_smiles(value)
+        except ValueError:
+            input_guard_checks[label] = True
+        else:
+            input_guard_checks[label] = False
+    try:
+        analyze_smiles("é" * 600_000)
+    except ValueError:
+        input_guard_checks["utf8_byte_limit"] = True
+    else:
+        input_guard_checks["utf8_byte_limit"] = False
+    if not all(input_guard_checks.values()):
+        raise AssertionError(f"RDKit input guard failure: {input_guard_checks}")
+
     # A small explicit-atom SDF ring compares the conservative graph parser
     # against RDKit's independently parsed/sanitized molecular graph.
     counts = f"{3:3d}{3:3d}  0  0  0  0            999 V2000"
@@ -128,6 +160,7 @@ def run() -> dict[str, Any]:
         "engine": backend,
         "fixture_reference_basis": fixture["reference_basis"],
         "results": results,
+        "input_guard_checks": input_guard_checks,
         "graph_parser_comparison": graph_comparison,
         "overall_pass": all(result["pass"] for result in results) and graph_comparison["pass"],
         "limitations": fixture["limitations"] + [

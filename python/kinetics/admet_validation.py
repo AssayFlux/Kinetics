@@ -86,11 +86,6 @@ def scaffold_group_split(
     if any(not partition for partition in partitions):
         raise ValueError("scaffold groups could not populate all three partitions")
 
-    scaffold_partition = {
-        scaffold: partition_index
-        for partition_index, (_, indices) in enumerate(group_items)
-        for scaffold in [next(key for key, group in groups.items() if group is indices)]
-    }
     # Build partition membership directly from the assigned index sets for an
     # explicit no-overlap assertion, including acyclic fallback groups.
     index_partition = {
@@ -103,7 +98,6 @@ def scaffold_group_split(
     for indices in groups.values():
         if len({index_partition[index] for index in indices}) != 1:
             raise RuntimeError("a Bemis-Murcko scaffold crossed data partitions")
-    del scaffold_partition
 
     return {
         "schema_version": 1,
@@ -149,8 +143,8 @@ def binary_admet_metrics(
     normalized_labels: list[int] = []
     normalized_probabilities: list[float] = []
     for index, (label, probability) in enumerate(zip(labels, probabilities, strict=True)):
-        if label not in (0, 1) or isinstance(label, bool):
-            raise ValueError(f"label at index {index} must be 0 or 1")
+        if not isinstance(label, int) or isinstance(label, bool) or label not in (0, 1):
+            raise ValueError(f"label at index {index} must be integer 0 or 1")
         if (
             not isinstance(probability, (int, float))
             or isinstance(probability, bool)
@@ -196,15 +190,19 @@ def binary_admet_metrics(
     false_positives = 0
     previous_recall = 0.0
     average_precision = 0.0
-    for _, label in descending:
-        if label:
-            true_positives += 1
-        else:
-            false_positives += 1
+    cursor = 0
+    while cursor < len(descending):
+        end = cursor + 1
+        while end < len(descending) and descending[end][0] == descending[cursor][0]:
+            end += 1
+        tied_labels = [label for _, label in descending[cursor:end]]
+        true_positives += sum(tied_labels)
+        false_positives += len(tied_labels) - sum(tied_labels)
         recall = true_positives / positives
         precision = true_positives / (true_positives + false_positives)
         average_precision += (recall - previous_recall) * precision
         previous_recall = recall
+        cursor = end
 
     predicted = [int(value >= threshold) for value in normalized_probabilities]
     tp = sum(label == 1 and prediction == 1 for label, prediction in zip(normalized_labels, predicted, strict=True))
@@ -302,12 +300,16 @@ def tanimoto_applicability_domain(
     )
     reference_fingerprints = []
     for index, value in enumerate(reference_smiles):
+        if not isinstance(value, str) or not value.strip() or len(value) > 100_000:
+            raise ValueError(f"Reference SMILES at index {index} must be non-empty and bounded")
         molecule = Chem.MolFromSmiles(value)
         if molecule is None:
             raise ValueError(f"Invalid reference SMILES at index {index}")
         reference_fingerprints.append(generator.GetFingerprint(molecule))
     results: list[dict[str, object]] = []
     for index, value in enumerate(query_smiles):
+        if not isinstance(value, str) or not value.strip() or len(value) > 100_000:
+            raise ValueError(f"Query SMILES at index {index} must be non-empty and bounded")
         molecule = Chem.MolFromSmiles(value)
         if molecule is None:
             raise ValueError(f"Invalid query SMILES at index {index}")

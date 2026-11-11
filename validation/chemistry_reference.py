@@ -56,6 +56,11 @@ def run() -> dict[str, Any]:
             and observed["morgan_fingerprint"]["bits"] == 2048
         )
         checks["fingerprint_nonempty"] = bool(observed["morgan_fingerprint"]["on_bits"])
+        checks["rule_of_five_screen"] = (
+            observed["rule_of_five_screen"]["criterion_count"] == 4
+            and observed["rule_of_five_screen"]["pass_count"] == 4
+            and observed["rule_of_five_screen"]["all_criteria_pass"] is True
+        )
         results.append({
             "id": molecule["id"],
             "checks": checks,

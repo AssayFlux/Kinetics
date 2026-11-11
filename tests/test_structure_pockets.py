@@ -70,3 +70,40 @@ def test_ligand_site_candidates_enforce_actual_pair_budget() -> None:
             atoms, ligand_chain="X", ligand_residue_number=9,
             ligand_residue_name="LIG", max_candidate_pairs=1,
         )
+
+
+def test_apo_pocket_candidates_detects_a_probe_accessible_enclosed_cavity() -> None:
+    from math import cos, pi, sin, sqrt
+
+    from kinetics import apo_pocket_candidates
+
+    atoms = []
+    count = 600
+    shell_radius = 4.0
+    for index in range(count):
+        z = 1.0 - 2.0 * (index + 0.5) / count
+        radial = sqrt(1.0 - z * z)
+        angle = pi * (3.0 - sqrt(5.0)) * index
+        x = radial * cos(angle)
+        y = radial * sin(angle)
+        if x <= 0.4:
+            atoms.append(Atom(
+                index + 1, "CA", "ALA", "A", index + 1,
+                shell_radius * x, shell_radius * y, shell_radius * z, "C",
+            ))
+    result = apo_pocket_candidates(atoms, grid_spacing_angstrom=1.0)
+    assert result["status"] == "candidates_found"
+    assert result["pocket_candidate_count"] >= 1
+    assert result["interpretation"] == "coarse_probe_accessibility_concavity_candidates_only"
+
+
+def test_apo_pocket_candidates_abstain_and_enforce_grid_budgets() -> None:
+    from kinetics import apo_pocket_candidates
+
+    atom = Atom(1, "CA", "ALA", "A", 1, 0.0, 0.0, 0.0, "C")
+    result = apo_pocket_candidates([atom])
+    assert result["status"] == "no_apo_pocket_candidates"
+    with pytest.raises(ValueError, match="max_grid_points"):
+        apo_pocket_candidates([atom], max_grid_points=1)
+    with pytest.raises(ValueError, match="max_distance_checks"):
+        apo_pocket_candidates([atom], max_distance_checks=1)

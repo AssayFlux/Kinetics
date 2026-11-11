@@ -2545,3 +2545,26 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Downloadable debug build artifact: [13832212511](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660/artifacts/13832212511).
 - Updated README, roadmap and CI evidence to distinguish this combined software-CI pass from I-track exit acceptance.
 - **Disposition:** combined I1–I5 software CI checkpoint passed; I-track exit remains open pending remaining software integration/review and carry-forward device, licence, secure-node and independent scientific-validation gates. P0 and patient/clinical workflows remain blocked.
+
+
+## 2026-11-11 — Session 74: I-track software closure audit
+
+**Phase:** Track I / I1–I5 software exit audit  
+**Objective:** Audit the latest exact main revision, close the implemented I-track software scope, and keep real scientific/device/licensing acceptance explicitly open.
+
+### Audit and evidence
+- Confirmed exact main SHA `aabe37808a5494acb2171b6ed71d2661b4dd2453` and exact-head GitHub Actions [workflow #42970328048](https://github.com/AssayFlux/Kinetics/actions/runs/42970328048).
+- All **9/9 jobs passed**. Python suite: **490 passed, 9 skipped**; Ruff and strict mypy passed.
+- Android arm64 debug APK/AAB packaging, package checks, JVM tests and 16 KB native alignment checks passed. Artifact bundle: [13832813087](https://github.com/AssayFlux/Kinetics/actions/runs/42970328048/artifacts/13832813087), 80,653,407 bytes.
+- Pinned RDKit descriptor references, Vina engine smoke, OpenMM synthetic CPU replica smoke, ADMET utility smoke, host scientific-reference comparisons, Node docking-worker security tests and declared source SPDX inventory all passed.
+- Reviewed I1–I5 implementation modules, request/result schemas, worker boundary, component tests and Android chemistry integration. The current software contracts and automated integration checks support closing the documented I1–I5 software scope.
+- Corrected stale README/roadmap checkpoint references and added `docs/track-i-audit-2026-11-11.md`.
+
+### Disposition
+**I1–I5 software implementation and integration audit: CLOSED.**  
+**Real scientific, physical-device, licensing, dataset/model, secure-node and owner acceptance: OPEN.**
+
+This is not scientific validation or production readiness. Vina/OpenMM/ADMET smoke tests are not independent biological benchmarks; APK/AAB CI is not a physical-device run; source SPDX is not complete transitive binary/model/data licence approval.
+
+### Next
+Track P is next under R → S → I → P → G, but is not marked started in this session. P0 remains blocked; only public-data metadata and synthetic/non-patient preparation may proceed before P0. No patient data, clinical interpretation or Clinical Mode is enabled.

@@ -18,17 +18,17 @@ Kinetics is an offline-first, modular platform for computational biology and in-
 | **Product** | Offline-first Android scientific workbench |
 | **Primary mode** | Research Mode only |
 | **Engineering scope** | R1–R10, developed as one integrated platform |
-| **Active track** | I — In-silico laboratory; I1 Android graph preview and host RDKit; I2 Vina 1.2.7 runner and private Node worker; I3 OpenMM 8.6.1 CPU runner; I4 PK/PD reference models, leakage-aware ADMET evaluation utilities and gated source catalogue; I5 synthetic cohort and additive-effect simulations |
+| **Track position** | I1–I5 software implementation/integration audit closed; Track P is next and not yet started |
 | **User experience** | D-015 Light Classic visual direction; supplied dashboard/login references recorded; Compose redesign in progress |
 | **Build channel** | GitHub Actions · unsigned arm64 debug APK/AAB |
-| **Validation state** | I1-I5 combined exact-head CI passed on `026032962de7b8315cfbeaaa0e0d6c39aa0d4ef4` (9/9 jobs); Python 489 passed/9 skipped, Ruff/mypy, Vina/OpenMM/ADMET/RDKit smoke, host reference comparisons, Node worker security, SPDX, Android arm64 APK/AAB/JVM and artifact hashes passed; physical-device, secure-node, complete transitive licence review, approved force fields/data and independent scientific validation remain open |
+| **Validation state** | Exact-head `aabe37808a5494acb2171b6ed71d2661b4dd2453`, workflow #42970328048: 9/9 jobs passed; Python 490 passed/9 skipped, Ruff/mypy, Vina/OpenMM/ADMET/RDKit smoke, host reference comparisons, Node worker security, SPDX, Android arm64 APK/AAB/JVM and 16 KB alignment passed. Real scientific benchmarks, physical-device, secure-node, full transitive licence review, approved force fields/data and external validation remain open |
 | **Publication** | Methods-paper preparation only; results must come from reproducible evidence |
 
 ## Development dashboard
 
 The current documentation index is [`docs/README.md`](docs/README.md). Track order and decision history are controlled by [`ROADMAP.md`](ROADMAP.md) and [`DECISIONS.md`](DECISIONS.md); superseded instructions are retained only as history.
 
-<sub>Latest fully passing I-track exact-source checkpoint: [workflow #42967649660](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660) on `026032962de7b8315cfbeaaa0e0d6c39aa0d4ef4`. All 9 jobs passed. Physical-device runtime, independent scientific validation, approved resource licensing and secure-node deployment remain open.</sub>
+<sub>I-track software exit checkpoint: [workflow #42970328048](https://github.com/AssayFlux/Kinetics/actions/runs/42970328048) on `aabe37808a5494acb2171b6ed71d2661b4dd2453`. All 9 jobs passed. I1–I5 software implementation/integration audit is closed; real scientific/device/licensing/data/model/node acceptance remains open.</sub>
 
 
 The cards below summarise the state recorded in the project roadmap. “In progress” means implementation or preparation exists; it does **not** mean the phase has passed its exit gate.
@@ -37,8 +37,8 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 |---|---|---|---|
 | **R — Research platform** | Android foundation, secure data, scientific engines, genomics, quality and release hardening | Engineering implementation and host-side audit pass completed; device, external validation, licensing and signed-release gates remain open | **Audit closed; acceptance evidence open** |
 | **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1–S10 software scope and exact-head software CI exit audit closed; external model/data, independent validation and device gates remain carry-forward | **Software scope closed; acceptance evidence open** |
-| **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1–I5 software foundations integrated; exact-head combined CI #42967649660 passed all 9 jobs, including Python, Android APK/AAB/JVM, Vina, OpenMM, RDKit, ADMET, Node security, SPDX and scientific-reference checks. Secure node deployment, force-field/data rights, ADMET model validation, governed cohorts, device and scientific acceptance remain gated | **Software CI checkpoint passed; track exit open** |
-| **P — Precision medicine** | PGx-first research pathway and future governance | P1 public-data metadata gate, synthetic reference-build/coordinate/SHA-256 contract and regression tests implemented; no acquired datasets or genotype interpretation | **Preparation in progress; P0 blocked** |
+| **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1–I5 software implementation and integration audit closed; exact-head CI #42970328048 passed all 9 jobs. Real scientific/device/licensing/data/model/node acceptance remains open | **Software closed; real tests open** |
+| **P — Precision medicine** | PGx-first research pathway and future governance | Next track; public-data-only preparation may proceed within P0 boundaries; not started | **Not started; P0 blocked** |
 | **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open | **In progress** |
 | **G — Governance** | Security, licensing, quality system, bias and publication evidence | Requirements and inventories are documented; formal reviews and evidence gates remain open | **In progress** |
 

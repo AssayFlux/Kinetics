@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/insilico-job.schema.json",
+  "title": "Kinetics gated in-silico compute request",
+  "description": "Validation envelope only. It does not execute or authorize docking or molecular dynamics.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "job_type", "research_only", "execution_authorized", "engine", "receptor", "ligand", "preparation", "search_box", "seed"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "job_type": {"const": "docking"},
+        "research_only": {"const": true},
+        "execution_authorized": {"const": false},
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["engine_id", "version", "license_review"],
+          "properties": {
+            "engine_id": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1},
+            "license_review": {"const": "pending"}
+          }
+        },
+        "receptor": {"$ref": "#/$defs/artifact"},
+        "ligand": {"$ref": "#/$defs/artifact"},
+        "preparation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["receptor_protonation_policy", "ligand_protonation_policy", "charge_method", "atom_typing", "water_policy"],
+          "properties": {
+            "receptor_protonation_policy": {"type": "string", "minLength": 1},
+            "ligand_protonation_policy": {"type": "string", "minLength": 1},
+            "charge_method": {"type": "string", "minLength": 1},
+            "atom_typing": {"type": "string", "minLength": 1},
+            "water_policy": {"type": "string", "minLength": 1}
+          }
+        },
+        "search_box": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["center_angstrom", "size_angstrom"],
+          "properties": {
+            "center_angstrom": {"$ref": "#/$defs/vector3"},
+            "size_angstrom": {
+              "$ref": "#/$defs/vector3",
+              "allOf": [{"items": {"exclusiveMinimum": 0}}]
+            }
+          }
+        },
+        "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "job_type", "research_only", "execution_authorized", "engine", "coordinates", "topology", "force_field", "protocol"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "job_type": {"const": "molecular_dynamics"},
+        "research_only": {"const": true},
+        "execution_authorized": {"const": false},
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["engine_id", "version", "license_review"],
+          "properties": {
+            "engine_id": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1},
+            "license_review": {"const": "pending"}
+          }
+        },
+        "coordinates": {"$ref": "#/$defs/artifact"},
+        "topology": {"$ref": "#/$defs/artifact"},
+        "force_field": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version", "license_review", "parameter_source_sha256"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1},
+            "license_review": {"const": "pending"},
+            "parameter_source_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "protocol": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["temperature_kelvin", "pressure_bar", "timestep_fs", "steps", "equilibration_steps", "replicas", "seed"],
+          "properties": {
+            "temperature_kelvin": {"type": "number", "exclusiveMinimum": 0},
+            "pressure_bar": {"type": "number", "exclusiveMinimum": 0},
+            "timestep_fs": {"type": "number", "exclusiveMinimum": 0, "maximum": 10},
+            "steps": {"type": "integer", "minimum": 1, "maximum": 1000000000},
+            "equilibration_steps": {"type": "integer", "minimum": 0},
+            "replicas": {"type": "integer", "minimum": 2, "maximum": 100},
+            "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "source_sha256", "source_size_bytes"],
+      "properties": {
+        "format": {"type": "string", "minLength": 1},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "source_size_bytes": {"type": "integer", "minimum": 1, "maximum": 1073741824}
+      }
+    },
+    "vector3": {
+      "type": "array",
+      "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}],
+      "minItems": 3,
+      "maxItems": 3
+    }
+  }
+}

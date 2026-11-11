@@ -235,3 +235,25 @@ def test_i4_pkpd_result_schema_accepts_reference_models_and_rejects_clinical_fla
     assert validator.is_valid(pk)
     assert validator.is_valid(pd)
     assert not validator.is_valid({**pk, "clinical_recommendation": "dose"})
+
+
+
+def test_i5_synthetic_variant_effect_schema_rejects_patient_or_prediction_payloads() -> None:
+    import json
+    from jsonschema import Draft202012Validator
+
+    from kinetics.virtual_cohort import simulate_synthetic_additive_variant_effects
+
+    root = Path(__file__).resolve().parents[1]
+    schema = json.loads(
+        (root / "api" / "synthetic-variant-effect.schema.json").read_text(encoding="utf-8")
+    )
+    validator = Draft202012Validator(schema)
+    result = simulate_synthetic_additive_variant_effects(
+        {"synthetic_rs1": 0.3}, {"synthetic_rs1": 0.25},
+        sample_size=1000, baseline_trait_mean=1.0,
+        residual_standard_deviation=0.5, seed=5,
+    )
+    assert validator.is_valid(result)
+    assert not validator.is_valid({**result, "data_classification": "patient_data"})
+    assert not validator.is_valid({**result, "individual_predictions": []})

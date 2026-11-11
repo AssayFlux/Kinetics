@@ -2416,3 +2416,12 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Source/test commits: `a81802e7793400533953590491d59cb738466af1`, `0896335ea4334daa6fa7144e7bfbc010d350c6d7`, `5caf102efa314aa6fbe79c2417272697515d245b`, `806cde0ced16f2285b4c39300b87ce366bd5834b`, `e43a2b328de4c5a260671958f079bc33f285e591`, `cb07ad0b451455999c76e81637b92aa228d7d020`, `b9ef7468bba0bec8ce5f66634588c713ec197877`.
 - Documentation commits: `02348f4559ac914075eaccecc74c510e30827dbc`, `a19988ae00668e3dfa8e35a20fc606e3af80c890`, `5845bb7506f419bec1c2d97d337843bda4ee9840`, `3d5ee4b5f5ac9d0cf705e2f03a34e533efe08c75`, `3ca26a89fea51f07b578b7b700c6b9b7b9208c52`.
 - No local Python/Android test runner is exposed in this session. Exact-head CI must be inspected before reporting these tests as passed. Biological validation, calibrated code assignment, apo-pocket detection and complete chemical-component handling remain open. Track S is not closed; Track I remains blocked.
+
+
+### Session 67 follow-up — conservative-input review
+
+- Tightened S3 selection so a canonical amino-acid residue cannot be passed as the ligand selector; the selected ligand must be an explicitly identified noncanonical residue in the parsed atom stream.
+- Tightened S8 evidence independence: duplicate record IDs and identical normalized coding sequences are rejected rather than counted repeatedly, and at least two supported tables are required for comparative ranking.
+- Added regression tests for the S3 protein-as-ligand rejection and S8 duplicate-sequence/single-candidate rejection.
+- Follow-up commits: `fdaf37e40c6e76fb5523e40dd1c210bfc436e21e`, `d08cd5e0f3262696cf405c57ac722b37a5265830`, `aaae933eccad6c0106c43d1c8b5b6a94f0cd695a`, `0836788b4a5bd942017a9e2949534214bdd9cde9`, `2b1b21e5536272ccb5929f18228c87e59be9dc21`, `d4538a94f4002bc4db6e298d600212a6884e8167`.
+- Exact-head CI is required before treating the new tests as passed. S3 remains limited to ligand-bound geometric site candidates; S8 remains a heuristic candidate ranking only.

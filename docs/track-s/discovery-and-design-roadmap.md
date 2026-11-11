@@ -1,6 +1,6 @@
 # Track S — Protein, genome and sequence discovery roadmap
 
-**Status (2026-11-09):** Track S is now the next sequential engineering track under D-019 and owner decision D-020, after the R implementation/host-audit step closed. Step 1 (build the documented base) is underway. Existing S1 and S6–S9 source is bounded foundation work only; no viewer, homology classifier, genome annotator, genetic-code inference or protein-design capability is claimed complete. R dependency gaps remain carry-forward gates.
+**Status (2026-11-11):** Track S is the active sequential engineering track under D-019/D-022. S1–S9 now have bounded software foundations, including ligand-site and apo-pocket geometry candidates (S3), conservative genetic-code candidate screening (S8), local execution/evidence adapters (S4/S6/S7/S9), and viewer export/state work (S1/S5). Exact-head CI and final source audit remain required. D-021 external scientific validation, licensed resources/models, secure inference and physical-device evidence are explicit carry-forward gates; no scientific acceptance is implied.
 
 ## Mission
 
@@ -26,9 +26,14 @@ Turn Kinetics into a research workbench that can investigate unfamiliar DNA/RNA/
 ### S8 — Translation tables and non-standard genetic-code investigation
 - Treat “unknown genetic code” as a distinct scientific problem from merely unknown DNA sequence.
 - Support explicit NCBI translation-table selection and per-record genetic-code metadata before attempting inference.
-- Candidate-code investigation must evaluate codon usage, conserved homologs, coding-frame consistency, stop-codon depletion/reassignment evidence, organelle/taxonomic context and transcript/protein evidence.
+- Candidate-code investigation should combine codon usage, conserved homologs, coding-frame consistency, stop-codon depletion/reassignment, organelle/taxonomic context and transcript/protein evidence. The current bounded candidate helper uses coding-frame internal-stop evidence and optional complete-CDS start/terminal-stop evidence only; it is not yet a calibrated multi-evidence classifier.
 - Never silently infer a non-standard code from one short sequence. Return ranked candidate tables, supporting/contradicting evidence, sample-size limits and an unresolved state.
 - Exit evidence: organism-specific positive/negative reference sets, independent confirmation, confusion matrices, calibrated abstention thresholds and regression tests for ambiguous/low-coverage cases.
+
+### S3 — Variant, interface and pocket candidate analysis
+- Exact and bounded alignment-aware sequence-to-structure mapping, variant coordinate correspondence and inter-chain contact evidence are available with ambiguity/resource abstention.
+- Explicit-ligand site screening reports nearby protein residues; an apo probe-grid screen reports coarse concavity candidates accessible to a small probe but not a large probe.
+- Both pocket paths are geometry-only. Element-specific chemistry, waters/ions/metals, biological assemblies, insertion codes, alternate conformations and independent reference concordance remain limitations.
 
 ### S9 — Protein family, domain and structure intelligence
 - Protein physicochemical properties, signal peptides/transmembrane candidates, motifs, domains, family classification and evolutionary conservation.
@@ -166,3 +171,8 @@ The verified local FASTA-pack workflow now exposes the bounded local aligner dir
 - **S4:** a dependency-injected local prediction-engine protocol now connects an approved local worker to the existing strict envelope validator. No engine or weights are bundled; model/license, runtime and calibration gates remain open.
 - **S7:** supplied GFF3 annotations can now be reconstructed into strand-aware spliced CDS sequences and translated with an explicit genetic code. This is not de novo eukaryotic gene prediction.
 - **S9:** HMMER hmmscan domain-table output can be parsed into bounded provenance-bearing candidate profile-match evidence. A local HMMER binary and approved profile packs are still needed for live searches.
+
+
+## 2026-11-11 — S3/S8 software boundary update
+
+S3 now includes bounded explicit-ligand contact-site candidates and a coarse apo concavity candidate screen using probe accessibility. S8 now includes bounded, abstention-first candidate ranking from supplied coding-frame and optional complete-CDS evidence, with duplicate-evidence rejection and input/table bounds. These are source-level research hypotheses only; neither is a validated biological classifier. Exact-head CI and the S1–S10 audit are required before the S engineering gate can close.

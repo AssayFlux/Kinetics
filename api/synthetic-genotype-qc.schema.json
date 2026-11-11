@@ -9,6 +9,14 @@
     "data_classification",
     "fixture_id",
     "input_sha256",
+    "reference_assembly",
+    "reference_accession",
+    "reference_release",
+    "reference_contig",
+    "reference_sequence_sha256",
+    "reference_retrieved_at",
+    "coordinate_system",
+    "interpretation_performed",
     "sample_count",
     "variant_count",
     "mean_variant_call_rate",
@@ -114,6 +122,36 @@
           }
         }
       }
+    },
+    "reference_assembly": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reference_accession": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reference_release": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reference_contig": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reference_sequence_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "reference_retrieved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "coordinate_system": {
+      "const": "1-based-closed"
+    },
+    "interpretation_performed": {
+      "const": false
     }
   }
 }

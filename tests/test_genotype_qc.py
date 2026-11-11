@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+from hashlib import sha256
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, FormatChecker
 
 from kinetics.genotype_qc import aggregate_synthetic_vcf_qc
+from kinetics.variant_reference import ReferenceSequence
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = json.loads(
@@ -20,20 +22,38 @@ chrSynthetic1\t5\t.\tC\tT,G\t50\tPASS\t.\tGT\t0/2\t0/0\t1/2
 """
 
 
-def _run(document: str = VCF) -> dict:
+def _reference() -> ReferenceSequence:
+    sequence = "CAAACTGCC"
+    return ReferenceSequence(
+        assembly="synthetic-build-v1",
+        accession="SYNTHETIC:CONTIG1",
+        release="fixture-1",
+        contig="chrSynthetic1",
+        sequence=sequence,
+        sequence_sha256=sha256(sequence.encode("ascii")).hexdigest(),
+        retrieved_at="2026-11-11T00:00:00Z",
+    )
+
+
+def _run(document: str = VCF, *, reference: ReferenceSequence | None = None) -> dict:
     return aggregate_synthetic_vcf_qc(
         document,
         fixture_id="tiny-synthetic-cohort",
         data_classification="public_non_patient_synthetic",
+        reference=reference or _reference(),
     )
 
 
 def test_synthetic_vcf_qc_returns_aggregate_only_and_valid_schema() -> None:
     result = _run()
     Draft202012Validator.check_schema(SCHEMA)
-    Draft202012Validator(SCHEMA).validate(result)
+    Draft202012Validator(SCHEMA, format_checker=FormatChecker()).validate(result)
     assert result["sample_count"] == 3
     assert result["variant_count"] == 2
+    assert result["reference_assembly"] == "synthetic-build-v1"
+    assert result["reference_sequence_sha256"] == _reference().sequence_sha256
+    assert result["coordinate_system"] == "1-based-closed"
+    assert result["interpretation_performed"] is False
     assert result["variants"][0]["called_sample_count"] == 2
     assert result["variants"][0]["missing_sample_count"] == 1
     assert result["variants"][0]["heterozygous_sample_count"] == 1
@@ -54,11 +74,11 @@ def test_qc_digest_is_deterministic_and_changes_with_input() -> None:
 def test_rejects_non_synthetic_classification_and_bad_fixture_id() -> None:
     with pytest.raises(ValueError, match="Only explicitly synthetic"):
         aggregate_synthetic_vcf_qc(
-            VCF, fixture_id="fixture", data_classification="public_non_patient"
+            VCF, fixture_id="fixture", data_classification="public_non_patient", reference=_reference()
         )
     with pytest.raises(ValueError, match="kebab-case"):
         aggregate_synthetic_vcf_qc(
-            VCF, fixture_id="Not Valid", data_classification="public_non_patient_synthetic"
+            VCF, fixture_id="Not Valid", data_classification="public_non_patient_synthetic", reference=_reference()
         )
 
 
@@ -84,6 +104,7 @@ def test_enforces_resource_limits_and_requires_sample_columns() -> None:
             fixture_id="tiny-synthetic-cohort",
             data_classification="public_non_patient_synthetic",
             max_input_bytes=10,
+            reference=_reference(),
         )
     header_only = "\n".join(VCF.splitlines()[:2]) + "\n"
     with pytest.raises(ValueError, match="at least one variant"):
@@ -107,3 +128,20 @@ def test_rejects_unsupported_haploid_and_polyploid_calls(genotype: str) -> None:
     document = VCF.replace("0/1:99", f"{genotype}:99", 1)
     with pytest.raises(ValueError, match="unsupported ploidy"):
         _run(document)
+
+
+
+def test_qc_requires_matching_reference_contig_and_ref_alleles() -> None:
+    with pytest.raises(ValueError, match="reference contig"):
+        _run(VCF.replace("chrSynthetic1", "chrOther"))
+    with pytest.raises(ValueError, match="REF does not match"):
+        _run(VCF.replace("\tA\tG\t", "\tC\tG\t", 1))
+    with pytest.raises(ValueError, match="REF does not match"):
+        _run(VCF.replace("\t2\t.\tA\tG\t", "\t99\t.\tA\tG\t", 1))
+
+
+def test_qc_rejects_reference_digest_tampering() -> None:
+    from dataclasses import replace
+
+    with pytest.raises(ValueError, match="SHA-256 does not match"):
+        _run(reference=replace(_reference(), sequence_sha256="0" * 64))

@@ -12,6 +12,7 @@ from statistics import fmean
 from typing import Any
 
 from .genomics import parse_vcf
+from .variant_reference import ReferenceSequence
 
 _FIXTURE_ID = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 _LITERAL_ALLELE = re.compile(r"^[ACGT]+$")
@@ -53,6 +54,7 @@ def aggregate_synthetic_vcf_qc(
     *,
     fixture_id: str,
     data_classification: str,
+    reference: ReferenceSequence,
     max_input_bytes: int = 10 * 1024 * 1024,
     max_variants: int = 100_000,
     max_samples: int = 1_000,
@@ -66,6 +68,9 @@ def aggregate_synthetic_vcf_qc(
         raise ValueError("Only explicitly synthetic non-patient VCF fixtures are accepted")
     if not isinstance(fixture_id, str) or not _FIXTURE_ID.fullmatch(fixture_id):
         raise ValueError("fixture_id must be a lowercase kebab-case identifier")
+    if not isinstance(reference, ReferenceSequence):
+        raise TypeError("reference must be a verified ReferenceSequence")
+    reference.validate()
     _positive_limit("max_input_bytes", max_input_bytes)
     _positive_limit("max_variants", max_variants)
     _positive_limit("max_samples", max_samples)
@@ -150,6 +155,11 @@ def aggregate_synthetic_vcf_qc(
             raise ValueError(f"VCF variant {index}: chromosome must be non-empty text")
         if isinstance(pos_value, bool) or not isinstance(pos_value, int) or pos_value < 1:
             raise ValueError(f"VCF variant {index}: position must be a positive integer")
+        if chrom_value != reference.contig:
+            raise ValueError(f"VCF variant {index}: chromosome does not match reference contig")
+        reference_start = pos_value - 1
+        if reference.sequence[reference_start:reference_start + len(ref)] != ref.upper():
+            raise ValueError(f"VCF variant {index}: REF does not match the pinned reference sequence")
         variant_results.append({
             "chrom": chrom_value,
             "pos": pos_value,
@@ -170,6 +180,14 @@ def aggregate_synthetic_vcf_qc(
         "data_classification": "public_non_patient_synthetic",
         "fixture_id": fixture_id,
         "input_sha256": sha256(raw).hexdigest(),
+        "reference_assembly": reference.assembly,
+        "reference_accession": reference.accession,
+        "reference_release": reference.release,
+        "reference_contig": reference.contig,
+        "reference_sequence_sha256": reference.sequence_sha256,
+        "reference_retrieved_at": reference.retrieved_at,
+        "coordinate_system": reference.coordinate_system,
+        "interpretation_performed": False,
         "sample_count": len(sample_names),
         "variant_count": len(variant_results),
         "mean_variant_call_rate": fmean(call_rates),

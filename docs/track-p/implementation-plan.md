@@ -26,7 +26,7 @@
 1. Maintain metadata-only candidate sources; no source is approved merely because it is public.
 2. For future acquired non-patient resources, pin accession/release, exact terms, attribution, retrieval time, intended use and SHA-256; retain provenance and known limitations.
 3. Expand synthetic reference-build, contig, coordinate, REF/ALT and normalization fixtures; label every fixture synthetic.
-4. Build genotype parsing/QC only against synthetic fixtures until P0 and relevant data-use gates pass. Reject unsupported ploidy, ambiguous build/contig, malformed alleles and uncertain mappings rather than guessing.
+4. Build genotype parsing/QC only against synthetic fixtures until P0 and relevant data-use gates pass. Bind every QC result to a verified synthetic reference sequence (assembly/accession/release/contig/digest/coordinate system); reject unsupported ploidy, mismatched contigs/REF alleles, ambiguous builds, malformed alleles and uncertain mappings rather than guessing.
 5. Keep genotype-to-phenotype interpretation, star-allele calling, diplotype/phenotype assignment and guideline recommendations out of scope until later P gates and qualified review.
 
 ### P2–P7 — staged, not started
@@ -53,4 +53,4 @@ Each P phase needs documented implementation evidence, exact-source automated te
 - P0 packet is a draft; all independent review and approval items remain pending.
 - Public dataset catalogue has candidate sources only; acquired entries remain empty.
 - No patient data, human subjects, individual interpretation, clinical report or Clinical Mode is authorized.
-- P1 now includes a bounded aggregate-only synthetic VCF QC module and versioned result schema, with negative tests for malformed alleles, unsupported symbolic alleles, phase separators, missingness, resource limits and unsupported ploidy. Reference/build provenance and left-normalization fixtures remain synthetic-only. Exact-head audit and independent reference concordance are still required.
+- P1 now includes bounded aggregate-only synthetic VCF QC bound to an explicit synthetic ReferenceSequence, with build/accession/release/contig/digest/coordinate provenance and REF/contig matching. Negative tests cover malformed alleles, unsupported symbolic alleles, phase separators, missingness, resource limits, unsupported ploidy and reference tampering. Independent reference concordance and exact-head audit remain required.

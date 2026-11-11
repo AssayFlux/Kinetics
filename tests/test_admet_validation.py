@@ -65,6 +65,11 @@ def test_scaffold_split_is_deterministic_and_has_no_scaffold_overlap() -> None:
     assert not partitions[0] & partitions[2]
     assert not partitions[1] & partitions[2]
     assert sum(first["partition_counts"]) == len(smiles)
+    schema_path = (
+        Path(__file__).resolve().parents[1] / "api" / "admet-validation.schema.json"
+    )
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    Draft202012Validator(schema).validate(first)
 
 
 def test_tanimoto_applicability_domain_identifies_exact_and_distant_queries() -> None:
@@ -79,3 +84,8 @@ def test_tanimoto_applicability_domain_identifies_exact_and_distant_queries() ->
     assert result["results"][0]["nearest_tanimoto_similarity"] == 1.0
     assert result["results"][0]["within_applicability_domain"] is True
     assert result["results"][1]["within_applicability_domain"] is False
+    schema_path = (
+        Path(__file__).resolve().parents[1] / "api" / "admet-validation.schema.json"
+    )
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    Draft202012Validator(schema).validate(result)

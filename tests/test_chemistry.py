@@ -248,10 +248,10 @@ def test_bounded_sdf_graph_analysis_rejects_nul_oversize_invalid_unicode_and_mul
     atom = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
     record = "\\n".join(["carbon", "Kinetics", "", counts, atom, "M  END"])
     with pytest.raises(ValueError, match="NUL"):
-        analyze_sdf_graph(record + "\\x00")
+        analyze_sdf_graph(record + "\x00")
     with pytest.raises(ValueError, match="UTF-8 limit"):
         analyze_sdf_graph(record, max_bytes=10)
     with pytest.raises(ValueError, match="Unicode"):
-        analyze_sdf_graph(record + "\\ud800")
+        analyze_sdf_graph(record + "\ud800")
     with pytest.raises(ValueError, match="exactly one"):
-        analyze_sdf_graph(record + "\\n$$$$\\n" + record)
+        analyze_sdf_graph(record + "\n$$\n" + record)

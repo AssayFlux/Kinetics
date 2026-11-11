@@ -62,3 +62,13 @@ The optional host RDKit adapter now enforces input limits on encoded UTF-8 bytes
 Descriptor schema version 2 adds formal charge, heavy-atom count, aromatic-atom count, aliphatic/aromatic ring counts and fraction Csp3, alongside molecular formula/weight, exact mass, Crippen LogP, TPSA, H-bond donors/acceptors, rotatable bonds and ring count. It also reports a transparent four-criterion Rule-of-Five heuristic (MW, Crippen LogP, HBD and HBA) with each threshold and pass/fail result; it is not an absorption, bioavailability, safety or efficacy prediction. Units and representation assumptions are explicit; raw input SHA-256 and exact UTF-8 byte length are retained. The pinned ethanol/benzene sanity fixtures now cover the added descriptors.
 
 **Boundary:** RDKit remains host-only and is not bundled into Android. This increment does not establish descriptor accuracy beyond the named deterministic fixtures, chemical validity across all representations, bioactivity, ADMET, docking or clinical utility. License/transitive dependency review, Android ABI/size feasibility, wider curated chemical reference sets and device integration remain open.
+
+
+## I-track engineering increments (2026-11-11)
+
+- **I1:** Android accepts one bounded local SDF/MOL document for graph-only preview. Explicit-atom formula/mass and graph counts are reported with source SHA-256. This parser does not sanitize chemistry, infer implicit hydrogens, interpret stereochemistry/aromaticity or replace the separate host RDKit adapter.
+- **I2/I3:** `api/insilico-job.schema.json` defines strict docking and MD request envelopes. Both require `execution_authorized: false` and `license_review: pending`. These are validation contracts, not remote execution capabilities.
+- **I4:** `python/kinetics/pkpd.py` supplies a single-dose first-order one-compartment oral PK equation and an Emax concentration-effect relationship for deterministic software checks. All units/assumptions are explicit; no parameters are learned and no dose or treatment recommendation is generated.
+- **I5:** `python/kinetics/virtual_cohort.py` produces seeded aggregate genotype counts under an explicit Hardy-Weinberg assumption. It returns no individual genotypes and models no ancestry, linkage, phenotype, penetrance or clinical risk.
+
+These are engineering primitives, not a scientific validation package. The I-track exit remains open pending exact-head CI, I1 device verification, approved/licensed I2/I3 engines and secure node, curated I4 datasets/models with leakage-controlled external validation, and I5 public cohort governance/fairness/independent validation. No patient data or clinical interpretation is enabled.

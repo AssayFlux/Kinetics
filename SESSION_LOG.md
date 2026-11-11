@@ -2428,3 +2428,6 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 
 - Exposed both new candidate functions from the public `kinetics` package API and changed their tests to import through that public surface, covering package-level integration.
 - Public API/test commits: `38139c9e41ef874e5afe6dca0253cbe44f98fdb3`, `8580ac459560d69e0c701ec208f7c1c9d7259854`, `16d962b5c0169e28dfb6705ca5f94ed706cdb0d5`.
+
+- First GitHub Actions validation reached Ruff successfully but mypy identified eight strict-typing errors in the new dictionary accumulators/ranking keys. Replaced unsafe object conversions with explicit typed casts in the two implementation modules. This is a code fix, not a passing-test claim; the latest exact-head workflow must rerun.
+- Strict-typing fix commits: `cfc8e2c01be0df9053ac2e086554f66d07587c01`, `3e82b0d06d5b2c1641491b32532f1e71ed1ff681`.

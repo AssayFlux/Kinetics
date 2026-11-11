@@ -43,11 +43,13 @@ def infer_genetic_code_candidates(
             or not 0 < minimum_score_margin <= 1):
         raise ValueError("minimum_score_margin must be finite and in (0, 1]")
     selected_ids = list(GENETIC_CODES) if table_ids is None else list(table_ids)
-    if not selected_ids or len(set(selected_ids)) != len(selected_ids):
+    if not selected_ids:
         raise ValueError("table_ids must be a non-empty sequence of unique supported IDs")
     for table_id in selected_ids:
         if isinstance(table_id, bool) or not isinstance(table_id, int) or table_id not in GENETIC_CODES:
             raise ValueError(f"Unsupported NCBI genetic code table: {table_id}")
+    if len(set(selected_ids)) != len(selected_ids):
+        raise ValueError("table_ids must be a non-empty sequence of unique supported IDs")
 
     materialized: list[tuple[str, list[str], bool]] = []
     total_bases = 0

@@ -12,6 +12,7 @@ candidate_sources:
       - "Verify source-specific data-use and redistribution terms for the exact record set."
       - "Preserve assay identifier, protocol, units, target, organism, confidence and depositor provenance."
       - "Do not pool heterogeneous assays without endpoint harmonization."
+      - "Treat PubChem as a depositor-aggregated source; verify record-level rights and depositor terms before reuse or redistribution."
   - source_id: chembl
     title: "ChEMBL"
     source_url: "https://www.ebi.ac.uk/chembl/"
@@ -22,6 +23,7 @@ candidate_sources:
       - "Pin exact release and verify current database license and attribution."
       - "Preserve assay type, relation operator, units, target confidence and source citations."
       - "Assess duplicate measurements, censoring and assay heterogeneity."
+      - "ChEMBL is CC BY-SA 3.0; preserve attribution and review share-alike obligations. Segregate calculated properties with separate commercial terms."
   - source_id: tox21
     title: "Tox21"
     source_url: "https://ntp.niehs.nih.gov/whatwestudy/tox21"
@@ -32,4 +34,15 @@ candidate_sources:
       - "Pin exact screening release and verify reuse terms and assay metadata."
       - "Retain endpoint-specific protocol, concentration range and inactive/active definitions."
       - "Evaluate assay interference, class imbalance and applicability domain."
+      - "Public download availability is not treated as a blanket reuse licence; verify terms for the exact release."
+  - source_id: fda-dilirank-2
+    title: "FDA DILIrank 2.0"
+    source_url: "https://www.fda.gov/science-research/liver-toxicity-knowledge-base-ltkb/drug-induced-liver-injury-rank-dilirank-20-dataset"
+    candidate_use: "Drug-induced liver injury concern labels with FDA-label and literature provenance"
+    license_review_status: verify_before_intake
+    patient_data: false
+    review_requirements:
+      - "Pin exact release and verify reuse and redistribution terms before intake."
+      - "Preserve FDA label and literature evidence provenance and the ambiguous-causality category."
+      - "Do not reinterpret DILI concern categories as an individual patient risk or a clinical prediction."
 entries: []

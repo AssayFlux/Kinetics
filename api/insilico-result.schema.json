@@ -94,7 +94,7 @@
         "replicas": {
           "type": "array",
           "minItems": 2,
-          "maxItems": 100,
+          "maxItems": 10,
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -127,7 +127,8 @@
         "engine_id": {"type": "string", "minLength": 1},
         "version": {"type": "string", "minLength": 1},
         "build_sha256": {"$ref": "#/$defs/sha256"},
-        "scoring_function": {"enum": ["vina", "vinardo"]}
+        "scoring_function": {"enum": ["vina", "vinardo"]},
+        "platform": {"const": "CPU"}
       }
     },
     "input_hashes": {

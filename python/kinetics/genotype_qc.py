@@ -138,9 +138,15 @@ def aggregate_synthetic_vcf_qc(
 
         call_rate = called / len(sample_names)
         call_rates.append(call_rate)
+        chrom_value = record.get("chrom")
+        pos_value = record.get("pos")
+        if not isinstance(chrom_value, str) or not chrom_value:
+            raise ValueError(f"VCF variant {index}: chromosome must be non-empty text")
+        if isinstance(pos_value, bool) or not isinstance(pos_value, int) or pos_value < 1:
+            raise ValueError(f"VCF variant {index}: position must be a positive integer")
         variant_results.append({
-            "chrom": str(record["chrom"]),
-            "pos": int(record["pos"]),
+            "chrom": chrom_value,
+            "pos": pos_value,
             "ref": ref.upper(),
             "alt": ",".join(item.upper() for item in alternate_alleles),
             "sample_count": len(sample_names),

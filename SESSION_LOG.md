@@ -2617,3 +2617,11 @@ The Python catalogue checker required a dataset licence URL and canonical kebab-
 ### Verification
 - Tests added; not yet executed in this environment. Exact-head CI is required before claiming a pass.
 - This increment changes metadata validation only. It does not download or approve data and does not enable patient data or interpretation.
+
+
+## 2026-11-11 — Session 77: P1 CI failure triage
+
+- Exact-main workflow 42973850678 failed in the Python job's strict mypy step; all eight other jobs passed.
+- Failure: `python/kinetics/genotype_qc.py:143` converted an untyped parser field with `int(object)`.
+- Fix: explicitly validate chromosome text and positive integer position before constructing the aggregate record; this also fails closed on malformed parser output rather than coercing it.
+- Fix is committed for exact-head CI verification; no test pass is claimed until that workflow completes.

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/synthetic-genotype-qc.schema.json",
+  "title": "Kinetics aggregate synthetic genotype QC result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "data_classification",
+    "fixture_id",
+    "input_sha256",
+    "sample_count",
+    "variant_count",
+    "mean_variant_call_rate",
+    "variants"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "data_classification": {
+      "const": "public_non_patient_synthetic"
+    },
+    "fixture_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sample_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "variant_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mean_variant_call_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "variants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "chrom",
+          "pos",
+          "ref",
+          "alt",
+          "sample_count",
+          "called_sample_count",
+          "missing_sample_count",
+          "call_rate",
+          "heterozygous_sample_count",
+          "alternate_allele_count",
+          "total_called_allele_count",
+          "phased_sample_count"
+        ],
+        "properties": {
+          "chrom": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pos": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "ref": {
+            "type": "string",
+            "pattern": "^[ACGT]+$"
+          },
+          "alt": {
+            "type": "string",
+            "pattern": "^[ACGT]+(?:,[ACGT]+)*$"
+          },
+          "sample_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "called_sample_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "missing_sample_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "call_rate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "heterozygous_sample_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "alternate_allele_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "total_called_allele_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "phased_sample_count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

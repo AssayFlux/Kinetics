@@ -98,10 +98,10 @@ def run_openmm_dynamics(
         raise ValueError("steps times replicas must not exceed 50000000")
 
     try:
-        import numpy as np
-        import openmm
-        from openmm import app, unit
-        import openmm.openmm as openmm_binary
+        import numpy as np  # type: ignore[import-not-found]
+        import openmm  # type: ignore[import-not-found]
+        from openmm import app, unit  # type: ignore[import-not-found]
+        import openmm.openmm as openmm_binary  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError(
             "OpenMM is unavailable; install the pinned optional MD engine dependency"

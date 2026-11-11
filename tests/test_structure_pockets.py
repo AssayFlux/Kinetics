@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from kinetics.structure import Atom
-from kinetics.structure_pockets import ligand_site_candidates
+from kinetics import ligand_site_candidates
 
 
 def test_ligand_site_candidates_report_nearby_protein_residues_deterministically() -> None:

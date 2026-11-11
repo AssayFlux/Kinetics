@@ -6,7 +6,7 @@ It is not an apo-pocket detector, docking method, affinity score, or function pr
 from __future__ import annotations
 
 from math import floor, isfinite, sqrt
-from typing import Iterable
+from typing import Iterable, cast
 
 from .structure import Atom
 
@@ -105,13 +105,13 @@ def ligand_site_candidates(
                             "atom_contact_count": 0,
                             "minimum_distance_angstrom": distance,
                         })
-                        entry["atom_contact_count"] = int(entry["atom_contact_count"]) + 1
-                        entry["minimum_distance_angstrom"] = min(float(entry["minimum_distance_angstrom"]), distance)
+                        entry["atom_contact_count"] = cast(int, entry["atom_contact_count"]) + 1
+                        entry["minimum_distance_angstrom"] = min(cast(float, entry["minimum_distance_angstrom"]), distance)
 
     ranked = sorted(residues.values(), key=lambda item: (
-        float(item["minimum_distance_angstrom"]),
-        -int(item["atom_contact_count"]),
-        str(item["chain_id"]), int(item["residue_number"]), str(item["residue_name"]),
+        cast(float, item["minimum_distance_angstrom"]),
+        -cast(int, item["atom_contact_count"]),
+        str(item["chain_id"]), cast(int, item["residue_number"]), str(item["residue_name"]),
     ))
     return {
         "schema": "kinetics.ligand-site-candidates.v1",

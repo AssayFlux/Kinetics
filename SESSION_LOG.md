@@ -2404,3 +2404,15 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Track S remains open and Track I remains blocked.
 - Next implement S3 pocket-candidate analysis and S8 candidate genetic-code inference as bounded, provenance-bearing, abstention-first software; do not claim biological validity without independent truth sets.
 - Reconcile the capability registry, generated Android catalogue, tests, roadmap, README and session log after those increments, then verify exact-head CI before any S exit decision.
+
+
+## 2026-11-11 — Session 67: S3 ligand-site candidates and S8 genetic-code candidate ranking
+
+- Added `python/kinetics/structure_pockets.py` with explicit-ligand, bounded spatial-index screening of nearby canonical protein residues. The result is labelled ligand-proximal geometric site candidates only; it does not detect apo cavities or estimate affinity/function.
+- Added `tests/test_structure_pockets.py` for contact aggregation, missing-ligand abstention, non-finite coordinates and resource-limit rejection.
+- Added `python/kinetics/genetic_code_inference.py` with bounded ranking across supported NCBI tables from supplied coding-frame internal-stop evidence and optional complete-CDS start/terminal-stop evidence. It enforces record/base limits and abstains for insufficient evidence or a small best-vs-runner-up margin.
+- Added `tests/test_genetic_code_inference.py` for candidate ranking, low-evidence/tie abstention, malformed inputs and limits.
+- Registered both capabilities in `capabilities/registry.yaml`; updated README, ROADMAP, S-track audit, discovery roadmap and evidence contract.
+- Source/test commits: `a81802e7793400533953590491d59cb738466af1`, `0896335ea4334daa6fa7144e7bfbc010d350c6d7`, `5caf102efa314aa6fbe79c2417272697515d245b`, `806cde0ced16f2285b4c39300b87ce366bd5834b`, `e43a2b328de4c5a260671958f079bc33f285e591`, `cb07ad0b451455999c76e81637b92aa228d7d020`, `b9ef7468bba0bec8ce5f66634588c713ec197877`.
+- Documentation commits: `02348f4559ac914075eaccecc74c510e30827dbc`, `a19988ae00668e3dfa8e35a20fc606e3af80c890`, `5845bb7506f419bec1c2d97d337843bda4ee9840`, `3d5ee4b5f5ac9d0cf705e2f03a34e533efe08c75`, `3ca26a89fea51f07b578b7b700c6b9b7b9208c52`.
+- No local Python/Android test runner is exposed in this session. Exact-head CI must be inspected before reporting these tests as passed. Biological validation, calibrated code assignment, apo-pocket detection and complete chemical-component handling remain open. Track S is not closed; Track I remains blocked.

@@ -7,9 +7,12 @@ from kinetics import infer_genetic_code_candidates
 
 def test_genetic_code_inference_ranks_table_that_avoids_internal_stops() -> None:
     records = [
-        {"id": f"cds-{i}", "sequence": "ATG" + "AAA" * 10 + "TGA" + "CCC" * 10 + "TAA",
-         "complete_cds": True}
-        for i in range(3)
+        {"id": "cds-0", "sequence": "ATG" + "AAA" * 10 + "TGA" + "CCC" * 10 + "TAA",
+         "complete_cds": True},
+        {"id": "cds-1", "sequence": "ATG" + "AAG" * 10 + "TGA" + "CCG" * 10 + "TAA",
+         "complete_cds": True},
+        {"id": "cds-2", "sequence": "ATG" + "GCT" * 10 + "TGA" + "GCC" * 10 + "TAA",
+         "complete_cds": True},
     ]
     result = infer_genetic_code_candidates(records, table_ids=[1, 4], min_codons=30, minimum_score_margin=0.02)
     assert result["status"] == "candidate_table_ranked"
@@ -21,7 +24,7 @@ def test_genetic_code_inference_ranks_table_that_avoids_internal_stops() -> None
 
 def test_genetic_code_inference_abstains_on_insufficient_or_tied_evidence() -> None:
     short = infer_genetic_code_candidates(
-        [{"sequence": "ATGAAA"}, {"sequence": "ATGAAA"}],
+        [{"sequence": "ATGAAA"}, {"sequence": "ATGAAG"}],
         table_ids=[1, 4], min_codons=30,
     )
     assert short["status"] == "insufficient_evidence"

@@ -21,14 +21,14 @@ Kinetics is an offline-first, modular platform for computational biology and in-
 | **Active track** | I — In-silico laboratory; I1 Android graph preview and host RDKit; I2 Vina 1.2.7 runner and private Node worker; I3 OpenMM 8.6.1 CPU runner; I4 PK/PD reference models, leakage-aware ADMET evaluation utilities and gated source catalogue; I5 synthetic cohort and additive-effect simulations |
 | **User experience** | D-015 Light Classic visual direction; supplied dashboard/login references recorded; Compose redesign in progress |
 | **Build channel** | GitHub Actions · unsigned arm64 debug APK/AAB |
-| **Validation state** | I1 APK/JVM and pinned RDKit checkpoint passed; Vina/OpenMM engine smoke checks passed on a subsequent source revision; latest combined exact-head CI pending after lint/type fixes; secure-node deployment, force-field/data licensing, physical-device and independent scientific validation remain open |
+| **Validation state** | I1-I5 combined exact-head CI passed on `026032962de7b8315cfbeaaa0e0d6c39aa0d4ef4` (9/9 jobs); Python 489 passed/9 skipped, Ruff/mypy, Vina/OpenMM/ADMET/RDKit smoke, host reference comparisons, Node worker security, SPDX, Android arm64 APK/AAB/JVM and artifact hashes passed; physical-device, secure-node, complete transitive licence review, approved force fields/data and independent scientific validation remain open |
 | **Publication** | Methods-paper preparation only; results must come from reproducible evidence |
 
 ## Development dashboard
 
 The current documentation index is [`docs/README.md`](docs/README.md). Track order and decision history are controlled by [`ROADMAP.md`](ROADMAP.md) and [`DECISIONS.md`](DECISIONS.md); superseded instructions are retained only as history.
 
-<sub>Latest fully passing exact-source checkpoint: [I1 integration run](https://github.com/AssayFlux/Kinetics/actions/runs/42962948259) on `bbaabc52`. Subsequent I2/I3 engine smoke jobs passed on a later revision, while combined lint/type and Node-worker checks were being corrected; the latest exact-head workflow is pending. Physical-device runtime and independent scientific validation remain open.</sub>
+<sub>Latest fully passing I-track exact-source checkpoint: [workflow #42967649660](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660) on `026032962de7b8315cfbeaaa0e0d6c39aa0d4ef4`. All 9 jobs passed. Physical-device runtime, independent scientific validation, approved resource licensing and secure-node deployment remain open.</sub>
 
 
 The cards below summarise the state recorded in the project roadmap. “In progress” means implementation or preparation exists; it does **not** mean the phase has passed its exit gate.
@@ -36,8 +36,8 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 | Track | Focus | Progress recorded | Overall state |
 |---|---|---|---|
 | **R — Research platform** | Android foundation, secure data, scientific engines, genomics, quality and release hardening | Engineering implementation and host-side audit pass completed; device, external validation, licensing and signed-release gates remain open | **Audit closed; acceptance evidence open** |
-| **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1 viewer import/export, S2 geometry, S3 mapping/contact/apo-pocket candidates, S4/S6–S9 bounded workflows and S10 brief validation implemented; exact-head CI and external model/data, independent validation and device gates remain | **In progress** |
-| **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1 host RDKit descriptors plus Android graph-only SDF/MOL preview; I2 pinned Vina host runner and disabled-by-default private Node worker; I3 OpenMM CPU replica runner; I4 PK/Emax with SciPy ODE cross-check, scaffold-aware ADMET evaluation and metadata-only source catalogue; I5 synthetic HWE and additive-effect aggregate simulations. Exact-head CI pending; secure node deployment, force-field/data rights, ADMET model validation, real cohorts and device/scientific acceptance remain gated | **In progress** |
+| **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1–S10 software scope and exact-head software CI exit audit closed; external model/data, independent validation and device gates remain carry-forward | **Software scope closed; acceptance evidence open** |
+| **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1–I5 software foundations integrated; exact-head combined CI #42967649660 passed all 9 jobs, including Python, Android APK/AAB/JVM, Vina, OpenMM, RDKit, ADMET, Node security, SPDX and scientific-reference checks. Secure node deployment, force-field/data rights, ADMET model validation, governed cohorts, device and scientific acceptance remain gated | **Software CI checkpoint passed; track exit open** |
 | **P — Precision medicine** | PGx-first research pathway and future governance | P1 public-data metadata gate, synthetic reference-build/coordinate/SHA-256 contract and regression tests implemented; no acquired datasets or genotype interpretation | **Preparation in progress; P0 blocked** |
 | **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open | **In progress** |
 | **G — Governance** | Security, licensing, quality system, bias and publication evidence | Requirements and inventories are documented; formal reviews and evidence gates remain open | **In progress** |
@@ -73,11 +73,11 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 
 | Phase | Workstream | Recorded implementation / preparation | Remaining gate |
 |---|---|---|---|
-| **I1** | Ligand preparation & descriptors | Prior exploratory source work preserved; I track is blocked by sequencing | Wait until S exits before I implementation |
-| **I2** | Docking & virtual screening | Blocked by S exit gate | Secure compute node, engine/model licensing, redocking and decoy benchmarks |
-| **I3** | Molecular dynamics | Blocked by S exit gate | Approved engine, reproducibility, stability and energy-conservation references |
-| **I4** | ADMET / PK-PD / PBPK | Prior metadata-only inventory preserved; I track is blocked by sequencing | Wait until S exits before I implementation |
-| **I5** | Variant-effect & virtual-cohort research | Blocked by S exit gate | Research-only schemas, bias/ancestry review and benchmark evidence |
+| **I1** | Ligand preparation & descriptors | Host RDKit descriptor adapter; Android SAF SDF/MOL graph-only preview; 16 MiB input cap and SHA-256 provenance | Exact-head CI passed; physical-device, wider chemistry-reference and Android RDKit licence/ABI/size review |
+| **I2** | Docking & virtual screening | Pinned Vina 1.2.7 host runner, bounded PDBQT inputs, provenance, strict schemas and disabled-by-default authenticated Node worker | Engine smoke and Node security CI passed; secure deployment, complete transitive SBOM/licence review, redocking/cross-docking RMSD and decoy enrichment |
+| **I3** | Molecular dynamics | Pinned OpenMM 8.6.1 CPU runner for trusted constructed systems, seeded replicas, bounded DCD and provenance | Synthetic harmonic smoke passed; biomolecular force-field/licence selection, secure compute, convergence and independent energy/stability validation |
+| **I4** | ADMET / PK-PD / PBPK | One-compartment oral PK/Emax references with SciPy ODE comparison; scaffold split, binary metrics/calibration and Tanimoto applicability domain; metadata-only source catalogue | Exact-head smoke passed; no acquired datasets/trained ADMET model; approved source terms, external validation and PBPK remain open |
+| **I5** | Variant-effect & virtual-cohort research | Seeded synthetic aggregate HWE cohort and caller-supplied additive-effect simulation; strict non-patient schemas | Exact-head tests passed; public-cohort governance, fairness/ancestry review and independent variant-effect benchmarks remain open |
 
 ## Track P · Precision medicine (PGx first)
 
@@ -115,12 +115,13 @@ Only source metadata is catalogued at this stage; no public dataset payloads hav
 
 | Evidence item | Latest recorded state |
 |---|---|
-| **Current source revision** | `f07b1ba406120109296a381002321fbf767f17a0` |
-| **Latest passing CI** | [#2183 — all five jobs successful on `f704716`](https://github.com/AssayFlux/Kinetics/actions/runs/42572416977); later source CI pending |
-| **Current build result** | Android arm64 APK/AAB/JVM tests passed on `f704716`; session-export and subsequent S8/S10 changes await exact-source verification on `4886328` |
-| **APK / AAB** | APK 69,792,811 bytes · SHA-256 `7029555e9640fd920f22a67890fe921473582affd2538e8aaddd61a261c9e44e`; AAB 39,926,363 bytes · SHA-256 `dd6eb3cc6ddc97c9ed3036b4d6e0747c2e91ef2a6ee57f80eaa4e11e28b8cfa9` |
-| **Workflow artifact ZIP** | 79,991,103 bytes · SHA-256 `4b6211b80b9a50a773bdb38c20ee6f7026e327255844f1eeffeb696bc613d8cd` |
-| **Automated checks** | All five CI jobs passed on exact source commit `79a24eb`; Android build log reports `BUILD SUCCESSFUL` |
+| **Current source revision** | `026032962de7b8315cfbeaaa0e0d6c39aa0d4ef4` |
+| **Latest passing CI** | [#42967649660 — all 9 jobs successful](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660) |
+| **Python suite** | 498 collected; 489 passed; 9 skipped; Ruff and strict mypy passed |
+| **Android arm64 APK** | 70,388,850 bytes · SHA-256 `b767656e1d39f1954da8b4d97d7409cb854ef41ce4ded0d17b62356ba42b81a0` |
+| **Android arm64 AAB** | 40,252,958 bytes · SHA-256 `1edbb63f5fc8f0969c8137f9edc7b4f9b775b5cea5c6fa8499fb04e83bd03a80` |
+| **Android workflow artifact ZIP** | 80,652,760 bytes · SHA-256 `9ac654392a86fbc494c84bf2c44eed7e9f12c9301646f36c60035e3b5848f430`; [artifact 13832212511](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660/artifacts/13832212511) |
+| **Automated checks** | Python, Android APK/AAB/JVM, RDKit, Vina, OpenMM, ADMET, Node worker security, SPDX and pinned scientific-reference jobs all passed on the exact source revision |
 | **Emulator / physical device** | Not verified; installation and runtime evidence remain outstanding |
 | **Independent scientific validation** | Not established for the platform's research capabilities |
 | **Release readiness** | Not ready; debug artifacts are not production-signed releases |

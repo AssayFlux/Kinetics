@@ -2534,3 +2534,14 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 
 - **I4 evaluation increment:** added Bemis-Murcko scaffold-group splitting, binary ROC-AUC/average-precision/Brier/confusion-matrix/sensitivity/specificity and calibration summaries, plus Morgan/Tanimoto nearest-neighbour applicability-domain analysis. Inputs are bounded and RDKit version is recorded in structure-based outputs. A pinned RDKit CI smoke validates schemas and synthetic examples only; no ADMET data or predictive model is present.
 - **I3 provenance increment:** MD outputs now include canonical coordinate and topology hashes, serialized System hash, CPU plugin/core binary hash, separate deterministic integrator and velocity seeds, and finite final-state checks. These strengthen reproducibility but do not replace force-field source verification or scientific MD validation.
+
+
+## 2026-11-11 — Session 73: I1–I5 exact-head combined CI checkpoint
+
+- Re-polled `main` and confirmed exact source SHA `026032962de7b8315cfbeaaa0e0d6c39aa0d4ef4` matched successful workflow [#42967649660](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660).
+- All 9 jobs passed: Python foundation/registry/tests; Android arm64 debug APK/AAB build and package tests; pinned RDKit descriptor fixtures; SPDX inventory; Vina engine smoke; private Node docking-worker security tests; OpenMM CPU replica smoke; ADMET utility smoke; pinned host scientific-reference comparisons.
+- Python suite: 498 collected, 489 passed, 9 skipped; Ruff and strict mypy passed.
+- Android `:app:testDebugUnitTest`, package verification and 16 KB native ELF alignment checks passed. APK 70,388,850 bytes (SHA-256 `b767656e1d39f1954da8b4d97d7409cb854ef41ce4ded0d17b62356ba42b81a0`); AAB 40,252,958 bytes (SHA-256 `1edbb63f5fc8f0969c8137f9edc7b4f9b775b5cea5c6fa8499fb04e83bd03a80`).
+- Downloadable debug build artifact: [13832212511](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660/artifacts/13832212511).
+- Updated README, roadmap and CI evidence to distinguish this combined software-CI pass from I-track exit acceptance.
+- **Disposition:** combined I1–I5 software CI checkpoint passed; I-track exit remains open pending remaining software integration/review and carry-forward device, licence, secure-node and independent scientific-validation gates. P0 and patient/clinical workflows remain blocked.

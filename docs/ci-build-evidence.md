@@ -110,3 +110,19 @@ Commit `c157bb5a09d9dcc17a8bc7a57b60129d58e4866a`, [workflow run #2100 — succe
 - AAB: 39,953,771 bytes; SHA-256 `a851cdeaf921e8b8b40dd82184fb2ef8200bc7b660ab32c80da448cd22d5aadf`.
 - Uploaded Android artifact ZIP: [artifact 13649560656](https://github.com/AssayFlux/Kinetics/actions/runs/42560038764/artifacts/13649560656), 80,049,058 bytes; SHA-256 `3c4b135979a4b1920a7afae3fc500c2aa7ebb35a3ef0af357fa867de9be60488`.
 - This exact-source build verifies the import worker resource-lifecycle hardening. It does not establish physical-device runtime, WorkManager process-death recovery, SAF provider behavior, Chaquopy/JNI runtime, scientific validation or release signing.
+
+
+## Exact-source I1–I5 combined software CI — 2026-11-11
+
+- Source commit: `026032962de7b8315cfbeaaa0e0d6c39aa0d4ef4`.
+- Workflow: [run #42967649660 — successful](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660); all 9 jobs passed on the same source SHA.
+- Python foundation/registry/tests: 498 collected; 489 passed; 9 skipped. Ruff and strict mypy completed successfully.
+- Pinned host-side scientific-reference comparisons passed for the configured SciPy/PK-PD, genetic-code, structural, phylogenetic and omics fixtures. These are software-reference comparisons, not independent experimental validation.
+- Pinned RDKit descriptor sanity and ADMET evaluation utility smoke checks passed on synthetic fixtures; no ADMET dataset was acquired and no predictive model was trained.
+- AutoDock Vina 1.2.7 engine smoke and OpenMM 8.6.1 CPU synthetic harmonic replica smoke passed. These do not establish docking redocking/enrichment or biomolecular MD validity.
+- Private Node docking-worker security tests and declared-source SPDX inventory passed. The worker remains disabled by default and has not been deployed; SPDX output is a declared-source inventory, not a complete transitive binary licence approval.
+- Android arm64 debug build and `:app:testDebugUnitTest` passed; APK/package checks and 16 KB native ELF alignment checks passed.
+- APK: 70,388,850 bytes; SHA-256 `b767656e1d39f1954da8b4d97d7409cb854ef41ce4ded0d17b62356ba42b81a0`.
+- AAB: 40,252,958 bytes; SHA-256 `1edbb63f5fc8f0969c8137f9edc7b4f9b775b5cea5c6fa8499fb04e83bd03a80`.
+- Android artifact ZIP: [artifact 13832212511](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660/artifacts/13832212511), 80,652,760 bytes; SHA-256 `9ac654392a86fbc494c84bf2c44eed7e9f12c9301646f36c60035e3b5848f430`.
+- Verification boundaries: no emulator/physical-device installation or runtime test; no approved secure-node deployment; no complete transitive engine/model/database/font licence review; no independent docking, biomolecular MD, ADMET, cohort or variant-effect validation; no production signing/release.

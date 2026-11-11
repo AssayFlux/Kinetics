@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research-only PGx guideline evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "gene_symbol",
+    "guideline_name",
+    "guideline_version",
+    "source_url",
+    "source_license_status",
+    "source_release_date",
+    "genome_build",
+    "recommendation_scope",
+    "clinical_decision_support",
+    "evidence_level",
+    "review_status",
+    "reviewer"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "gene_symbol": {
+      "type": "string",
+      "minLength": 1
+    },
+    "guideline_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "guideline_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "source_license_status": {
+      "enum": [
+        "verify_before_use",
+        "approved_for_research",
+        "blocked"
+      ]
+    },
+    "source_release_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "genome_build": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recommendation_scope": {
+      "const": "research_reference_only"
+    },
+    "clinical_decision_support": {
+      "const": false
+    },
+    "evidence_level": {
+      "enum": [
+        "not_assessed",
+        "low",
+        "moderate",
+        "high",
+        "conflicting",
+        "insufficient"
+      ]
+    },
+    "review_status": {
+      "enum": [
+        "draft",
+        "curated",
+        "withdrawn"
+      ]
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "review_date",
+        "evidence_url"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "evidence_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

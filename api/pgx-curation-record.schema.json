@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Human-curated variant evidence record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "record_id",
+    "evidence_id",
+    "source_url",
+    "source_release",
+    "source_sha256",
+    "license_status",
+    "curation_outcome",
+    "curator_role",
+    "curated_at",
+    "second_review_required",
+    "autonomous_final_classification",
+    "clinical_use"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "record_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "evidence_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "source_release": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "license_status": {
+      "enum": [
+        "verify_before_use",
+        "approved_for_research",
+        "blocked"
+      ]
+    },
+    "curation_outcome": {
+      "enum": [
+        "accepted_for_research",
+        "rejected",
+        "uncertain",
+        "needs_more_evidence"
+      ]
+    },
+    "curator_role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "curated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "second_review_required": {
+      "const": true
+    },
+    "autonomous_final_classification": {
+      "const": false
+    },
+    "clinical_use": {
+      "const": false
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "second_reviewer_role": {
+      "type": "string"
+    },
+    "disagreement_status": {
+      "enum": [
+        "not_reviewed",
+        "agreement",
+        "disagreement",
+        "escalated"
+      ]
+    }
+  }
+}

@@ -73,7 +73,7 @@ def _describe(
     aromatic_atom_count = sum(1 for atom in molecule.GetAtoms() if atom.GetIsAromatic())
     h_bond_donors = int(descriptors.NumHDonors(molecule))
     h_bond_acceptors = int(descriptors.NumHAcceptors(molecule))
-    rule_of_five_criteria = {
+    rule_of_five_criteria: dict[str, dict[str, float | int | bool]] = {
         "molecular_weight_da": {
             "observed": numeric_descriptors["molecular_weight"],
             "maximum": 500.0,
@@ -140,9 +140,9 @@ def _describe(
         "chiral_centres": chiral_centres,
         "rule_of_five_screen": {
             "criteria": rule_of_five_criteria,
-            "pass_count": sum(1 for item in rule_of_five_criteria.values() if item["pass"]),
+            "pass_count": sum(1 for item in rule_of_five_criteria.values() if bool(item["pass"])),
             "criterion_count": len(rule_of_five_criteria),
-            "all_criteria_pass": all(item["pass"] for item in rule_of_five_criteria.values()),
+            "all_criteria_pass": all(bool(item["pass"]) for item in rule_of_five_criteria.values()),
             "interpretation": (
                 "heuristic physicochemical screen only; not a prediction of absorption, "
                 "bioavailability, safety, efficacy or clinical suitability"

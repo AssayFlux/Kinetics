@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 import yaml
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 
 
 ROOT = Path(__file__).resolve().parents[1]

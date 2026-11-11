@@ -97,3 +97,31 @@ test("disabled worker refuses docking requests", async () => {
     });
   }
 });
+
+
+test("enabled worker rejects unauthenticated docking requests before spawning", async () => {
+  const server = createNodeServer({
+    env: {
+      KINETICS_NODE_HOST: "127.0.0.1",
+      KINETICS_NODE_ALLOW_DOCKING: "true",
+      KINETICS_NODE_AUTH_TOKEN: "x".repeat(48),
+    },
+    spawnProcess: () => {
+      throw new Error("worker must not spawn without authentication");
+    },
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    const address = server.address();
+    const response = await fetch("http://127.0.0.1:" + address.port + "/v1/docking", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: "{}",
+    });
+    assert.equal(response.status, 401);
+  } finally {
+    await new Promise((resolve, reject) => {
+      server.close((error) => (error ? reject(error) : resolve()));
+    });
+  }
+});

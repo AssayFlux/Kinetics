@@ -293,8 +293,15 @@ def tanimoto_applicability_domain(
     fingerprint_bits: int = 2048,
 ) -> dict[str, object]:
     """Return nearest-reference Morgan/Tanimoto similarity for each query compound."""
-    if not reference_smiles or not query_smiles:
-        raise ValueError("reference_smiles and query_smiles must be non-empty")
+    if (
+        not isinstance(reference_smiles, Sequence)
+        or isinstance(reference_smiles, (str, bytes))
+        or not isinstance(query_smiles, Sequence)
+        or isinstance(query_smiles, (str, bytes))
+        or not reference_smiles
+        or not query_smiles
+    ):
+        raise ValueError("reference_smiles and query_smiles must be non-empty sequences")
     if len(reference_smiles) > 100_000 or len(query_smiles) > 10_000:
         raise ValueError("applicability-domain inputs exceed configured limits")
     if len(reference_smiles) * len(query_smiles) > 10_000_000:

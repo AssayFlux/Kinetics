@@ -99,3 +99,11 @@ def test_partial_missing_genotype_is_counted_as_missing() -> None:
     result = _run(VCF.replace("0/1:99", "0/.:99"))
     assert result["variants"][0]["called_sample_count"] == 1
     assert result["variants"][0]["missing_sample_count"] == 2
+
+
+
+@pytest.mark.parametrize("genotype", ["0", "0/1/1", "0/1/2", "0|1|1"])
+def test_rejects_unsupported_haploid_and_polyploid_calls(genotype: str) -> None:
+    document = VCF.replace("0/1:99", f"{genotype}:99", 1)
+    with pytest.raises(ValueError, match="unsupported ploidy"):
+        _run(document)

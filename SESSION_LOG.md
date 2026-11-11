@@ -2625,3 +2625,27 @@ The Python catalogue checker required a dataset licence URL and canonical kebab-
 - Failure: `python/kinetics/genotype_qc.py:143` converted an untyped parser field with `int(object)`.
 - Fix: explicitly validate chromosome text and positive integer position before constructing the aggregate record; this also fails closed on malformed parser output rather than coercing it.
 - Fix is committed for exact-head CI verification; no test pass is claimed until that workflow completes.
+
+
+## 2026-11-11 — Session 78: P1 synthetic genotype-QC audit hardening
+
+**Phase:** Track P / P1 — Step 2 audit, test and fix  
+**Base:** `28f26eeb3d1a617811111f5afede303eb024d672`
+
+### Audit findings
+- The first aggregate-only synthetic VCF QC implementation bounded input bytes, variant/sample counts, validated literal REF/ALT alleles and allele indexes, required one GT FORMAT field, rejected mixed phase separators, treated partial calls as missing, and emitted no sample identifiers or genotypes.
+- The P1 plan explicitly requires unsupported ploidy to fail closed. The initial parser accepted haploid and polyploid calls without a chromosome/ploidy contract; that was an implementation gap.
+- The exact-head CI workflow #42996550617 is still independently validating the preceding coordinate-type fix; this increment does not claim that run has completed.
+
+### Changes
+- Tightened synthetic genotype parsing to accept only diploid GT calls (including fully/partially missing diploid calls) and reject haploid/polyploid calls with an explicit error.
+- Added negative fixtures for haploid, triploid and higher-ploidy calls.
+- Updated P1 roadmap and implementation-plan status to reflect the actual QC foundation and remaining independent/exact-head gates.
+
+### Boundaries
+- This is synthetic-fixture software verification only. It is not an authoritative VCF implementation, genome build, PGx allele caller, clinical interpretation or scientific validation.
+- Public dataset acquired entries remain empty; no patient/human-subject data or clinical workflow is enabled.
+- P0 remains DRAFT / NOT APPROVED. P2–P7 remain not started pending their documented dependencies and approvals.
+
+### Validation
+- Tests are committed for CI; no local execution is claimed. The new exact-head workflow must pass before this increment is treated as verified.

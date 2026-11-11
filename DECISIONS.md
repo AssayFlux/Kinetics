@@ -16,6 +16,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-009 | 2026-11-08 | Parallel Track S implementation sequencing | Approved — begin independently implementable S1 preparation while R1–R10 continue; dependent rendering and S2–S5 gates remain | Project owner |
 | D-018 | 2026-11-09 | Engineering language ownership and integration standard | Approved — owner-directed target stack and shared JSON Schema contract standard | Project owner |
 | D-019 | 2026-11-09 | Sequential track execution order | Approved — R → S → I → P → G, two steps per track; supersedes D-009 parallel sequencing | Project owner |\n| D-020 | 2026-11-09 | Close R host audit and proceed to S | Approved — close the R implementation/host-regression audit on exact-source CI #2126, consolidate documentation, then begin S. Does not waive or relabel open R device, external-science, licensing, security, accessibility or release evidence | Project owner |
+| D-022 | 2026-11-11 | Start Track P and prepare P0 | Approved — start P engineering and P0 evidence preparation; formal P0 gate remains NOT APPROVED pending independent evidence and a separate owner gate decision | Project owner |
 
 ## D-000 — Direction baseline (approved)
 - Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.

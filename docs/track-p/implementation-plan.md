@@ -53,4 +53,4 @@ Each P phase needs documented implementation evidence, exact-source automated te
 - P0 packet is a draft; all independent review and approval items remain pending.
 - Public dataset catalogue has candidate sources only; acquired entries remain empty.
 - No patient data, human subjects, individual interpretation, clinical report or Clinical Mode is authorized.
-- P1 synthetic reference/normalization foundation exists; expanded QC/parser contracts and exact-head audit are next.
+- P1 now includes a bounded aggregate-only synthetic VCF QC module and versioned result schema, with negative tests for malformed alleles, unsupported symbolic alleles, phase separators, missingness, resource limits and unsupported ploidy. Reference/build provenance and left-normalization fixtures remain synthetic-only. Exact-head audit and independent reference concordance are still required.

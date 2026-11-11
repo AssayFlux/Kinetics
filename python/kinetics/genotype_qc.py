@@ -32,8 +32,10 @@ def _parse_genotype(
         raise ValueError(f"VCF line {line_number}: genotype mixes phased and unphased separators")
     separator = "|" if "|" in value else "/" if "/" in value else None
     alleles = value.split(separator) if separator else [value]
-    if not alleles:
-        raise ValueError(f"VCF line {line_number}: malformed genotype allele index")
+    # P1 deliberately supports diploid fixtures only. Haploid/polyploid calls
+    # need an explicit chromosome/ploidy contract and must not be guessed.
+    if len(alleles) != 2:
+        raise ValueError(f"VCF line {line_number}: unsupported ploidy; diploid genotypes only")
     missing = any(item == "." for item in alleles)
     called_tokens = [item for item in alleles if item != "."]
     if any(not re.fullmatch(r"(?:0|[1-9][0-9]*)", item) for item in called_tokens):

@@ -219,3 +219,39 @@ def test_rdkit_morgan_similarity_rejects_invalid_parameters_and_oversize_input()
         morgan_tanimoto("CCO", "CCO", bits=1000)
     with pytest.raises(ValueError, match="UTF-8 limit"):
         morgan_tanimoto("C" * 1_000_001, "CCO")
+
+
+def test_bounded_sdf_graph_analysis_reports_provenance_and_explicit_atom_limitations() -> None:
+    from hashlib import sha256
+
+    from kinetics.chemistry import analyze_sdf_graph
+
+    counts = f"{2:3d}{1:3d}  0  0  0  0            999 V2000"
+    atom_a = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
+    atom_b = f"{1.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'O':>3s}"
+    bond = f"{1:3d}{2:3d}{1:3d}"
+    source = "\\n".join(
+        ["ethanol-fragment", "Kinetics", "", counts, atom_a, atom_b, bond, "M  END", "$$$$"]
+    )
+    result = analyze_sdf_graph(source)
+    assert result["source_sha256"] == sha256(source.encode("utf-8")).hexdigest()
+    assert result["source_utf8_bytes"] == len(source.encode("utf-8"))
+    assert result["formula_explicit_atoms"] == "CO"
+    assert result["graph"]["atom_count"] == 2
+    assert "Implicit hydrogens are not inferred; formula and mass use explicit atoms only" in result["limitations"]
+
+
+def test_bounded_sdf_graph_analysis_rejects_nul_oversize_invalid_unicode_and_multiple_records() -> None:
+    from kinetics.chemistry import analyze_sdf_graph
+
+    counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
+    atom = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
+    record = "\\n".join(["carbon", "Kinetics", "", counts, atom, "M  END"])
+    with pytest.raises(ValueError, match="NUL"):
+        analyze_sdf_graph(record + "\\x00")
+    with pytest.raises(ValueError, match="UTF-8 limit"):
+        analyze_sdf_graph(record, max_bytes=10)
+    with pytest.raises(ValueError, match="Unicode"):
+        analyze_sdf_graph(record + "\\ud800")
+    with pytest.raises(ValueError, match="exactly one"):
+        analyze_sdf_graph(record + "\\n$$$$\\n" + record)

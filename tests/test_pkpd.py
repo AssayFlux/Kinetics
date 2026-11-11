@@ -31,7 +31,6 @@ def test_one_compartment_oral_pk_matches_closed_form_and_provenance() -> None:
     [
         {"dose_amount_mg": 0},
         {"bioavailability_fraction": 1.1},
-        {"absorption_rate_per_h": 0.2, "elimination_rate_per_h": 0.2},
         {"apparent_volume_l": 0},
     ],
 )
@@ -83,3 +82,19 @@ def test_emax_pd_rejects_negative_and_non_finite_inputs() -> None:
         emax_pd([-1.0], baseline_effect=0.0, maximum_effect_increment=1.0, ec50=1.0)
     with pytest.raises(ValueError):
         emax_pd([1.0], baseline_effect=0.0, maximum_effect_increment=1.0, ec50=0.0)
+
+
+def test_one_compartment_oral_pk_uses_continuous_limit_for_equal_rates() -> None:
+    result = one_compartment_oral_pk(
+        [0.0, 2.0],
+        dose_amount_mg=100.0,
+        bioavailability_fraction=0.8,
+        absorption_rate_per_h=0.5,
+        elimination_rate_per_h=0.5,
+        apparent_volume_l=20.0,
+    )
+    assert result["observations"][0]["concentration_mg_per_l"] == 0.0
+    assert result["observations"][1]["concentration_mg_per_l"] == pytest.approx(
+        0.8 * 100.0 / 20.0 * 0.5 * 2.0 * math.exp(-1.0)
+    )
+    assert result["provenance"]["rate_case"] == "equal-rate continuous limit"

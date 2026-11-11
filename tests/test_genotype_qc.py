@@ -97,6 +97,14 @@ def test_rejects_malformed_or_unsupported_genotypes(document: str, message: str)
         _run(document)
 
 
+def _run_with_limits(*, max_variants: int = 100_000, max_samples: int = 1_000) -> dict:
+    return aggregate_synthetic_vcf_qc(
+        VCF, fixture_id="tiny-synthetic-cohort",
+        data_classification="public_non_patient_synthetic",
+        max_variants=max_variants, max_samples=max_samples, reference=_reference(),
+    )
+
+
 def test_enforces_resource_limits_and_requires_sample_columns() -> None:
     with pytest.raises(ValueError, match="max_input_bytes"):
         aggregate_synthetic_vcf_qc(
@@ -106,6 +114,13 @@ def test_enforces_resource_limits_and_requires_sample_columns() -> None:
             max_input_bytes=10,
             reference=_reference(),
         )
+    with pytest.raises(ValueError, match="max_variants"):
+        _run_with_limits(max_variants=1)
+    with pytest.raises(ValueError, match="max_samples"):
+        _run_with_limits(max_samples=2)
+    for invalid in (0, -1, True, 1.5):
+        with pytest.raises(ValueError, match="positive integer"):
+            _run_with_limits(max_variants=invalid)
     header_only = "\n".join(VCF.splitlines()[:2]) + "\n"
     with pytest.raises(ValueError, match="at least one variant"):
         _run(header_only)

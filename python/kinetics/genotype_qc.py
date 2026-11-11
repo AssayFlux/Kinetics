@@ -80,7 +80,7 @@ def aggregate_synthetic_vcf_qc(
     if len(raw) > max_input_bytes:
         raise ValueError("VCF input exceeds configured max_input_bytes")
 
-    records = parse_vcf(document)
+    records = parse_vcf(document, max_records=max_variants, max_samples=max_samples)
     if not records:
         raise ValueError("Synthetic VCF must contain at least one variant record")
     if len(records) > max_variants:

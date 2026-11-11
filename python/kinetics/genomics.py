@@ -75,8 +75,20 @@ def parse_sam(text: str) -> list[SamRecord]:
     return records
 
 
-def parse_vcf(text: str) -> list[dict[str, object]]:
-    """Parse VCF tabular records with header/column and core scalar validation."""
+def parse_vcf(
+    text: str, *, max_records: int | None = None, max_samples: int | None = None,
+) -> list[dict[str, object]]:
+    """Parse VCF records with optional eager resource bounds.
+
+    Limits are checked while parsing, before appending records or allocating a
+    result list proportional to an oversized input. ``None`` preserves the
+    historical unbounded API for callers that explicitly need it.
+    """
+    for name, value in (("max_records", max_records), ("max_samples", max_samples)):
+        if value is not None and (
+            isinstance(value, bool) or not isinstance(value, int) or value <= 0
+        ):
+            raise ValueError(f"{name} must be a positive integer")
     header: list[str] | None = None
     variants: list[dict[str, object]] = []
     for line_number, line in enumerate(text.splitlines(), 1):
@@ -98,6 +110,8 @@ def parse_vcf(text: str) -> list[dict[str, object]]:
                 raise ValueError("VCF ninth column must be FORMAT when samples are present")
             if len(set(header[9:])) != len(header[9:]):
                 raise ValueError("VCF sample names must be unique")
+            if max_samples is not None and len(header[9:]) > max_samples:
+                raise ValueError("VCF sample count exceeds configured max_samples")
             continue
         if line.startswith("#"):
             continue
@@ -125,6 +139,8 @@ def parse_vcf(text: str) -> list[dict[str, object]]:
         genotypes = fields[9:]
         if samples and (not fields[8] or any(not value for value in genotypes)):
             raise ValueError(f"VCF line {line_number}: FORMAT/sample value is empty")
+        if max_records is not None and len(variants) >= max_records:
+            raise ValueError("VCF variant count exceeds configured max_records")
         variants.append({
             "chrom": fields[0], "pos": position, "id": fields[2], "ref": fields[3],
             "alt": fields[4], "qual": fields[5], "filter": fields[6], "info": fields[7],

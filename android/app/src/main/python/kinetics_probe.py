@@ -262,42 +262,9 @@ def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -
     return json.dumps(result, ensure_ascii=False, sort_keys=True)
 
 
+
 def analyze_ligand_sdf_graph(source_text: str):
-    """Bounded Android-safe SDF graph preview; not a sanitized chemistry engine."""
-    import hashlib
+    """Android bridge for the bounded offline ligand graph preview."""
+    from kinetics.chemistry import analyze_sdf_graph
 
-    from kinetics.chemistry import graph_descriptors, iter_sdf_records
-
-    if not isinstance(source_text, str) or not source_text.strip():
-        raise ValueError("SDF input must be non-empty text")
-    try:
-        encoded = source_text.encode("utf-8", errors="strict")
-    except UnicodeEncodeError as error:
-        raise ValueError("SDF input contains invalid Unicode scalar values") from error
-    if len(encoded) > 16 * 1024 * 1024:
-        raise ValueError("SDF input exceeds the 16 MiB UTF-8 byte limit")
-    if b"\x00" in encoded:
-        raise ValueError("SDF input must not contain NUL bytes")
-
-    records = list(iter_sdf_records(source_text))
-    if len(records) != 1:
-        raise ValueError("Choose an SDF/MOL file containing exactly one molecule record")
-    molecule = records[0]
-    graph = graph_descriptors(molecule)
-    return {
-        "schema_version": 1,
-        "engine": "Kinetics bounded SDF graph parser",
-        "source_format": molecule.get("format", "V2000"),
-        "source_sha256": hashlib.sha256(encoded).hexdigest(),
-        "source_utf8_bytes": len(encoded),
-        "formula_explicit_atoms": molecule["formula"],
-        "explicit_atom_mass_sum_da": molecule["molecular_weight"],
-        "graph": graph,
-        "limitations": [
-            "Graph-only parsing; no chemical sanitization or valence validation",
-            "Implicit hydrogens are not inferred; formula and mass use explicit atoms only",
-            "Stereochemistry, aromaticity, protonation and tautomer states are not interpreted",
-            "Not a drug-likeness, ADMET, activity, docking or clinical prediction",
-            "Use the separately validated, version-pinned RDKit host adapter for standard descriptors",
-        ],
-    }
+    return analyze_sdf_graph(source_text)

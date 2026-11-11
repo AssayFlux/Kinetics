@@ -7,7 +7,7 @@
     {
       "type": "object",
       "additionalProperties": false,
-      "required": ["schema_version", "job_type", "research_only", "validation_status", "engine", "input_hashes", "protocol_sha256", "poses", "limitations"],
+      "required": ["schema_version", "job_type", "research_only", "validation_status", "engine", "input_hashes", "protocol", "protocol_sha256", "poses", "limitations"],
       "properties": {
         "schema_version": {"const": 1},
         "job_type": {"const": "docking"},
@@ -15,6 +15,21 @@
         "validation_status": {"const": "not_independently_validated"},
         "engine": {"$ref": "#/$defs/engine"},
         "input_hashes": {"$ref": "#/$defs/input_hashes"},
+        "protocol": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["center_angstrom", "box_size_angstrom", "seed", "exhaustiveness", "n_poses_requested", "cpu", "scoring_function", "energy_range_kcal_per_mol"],
+          "properties": {
+            "center_angstrom": {"$ref": "#/$defs/vector3"},
+            "box_size_angstrom": {"$ref": "#/$defs/positive_vector3"},
+            "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+            "exhaustiveness": {"type": "integer", "minimum": 1, "maximum": 128},
+            "n_poses_requested": {"type": "integer", "minimum": 1, "maximum": 20},
+            "cpu": {"type": "integer", "minimum": 1, "maximum": 32},
+            "scoring_function": {"enum": ["vina", "vinardo"]},
+            "energy_range_kcal_per_mol": {"type": "number", "exclusiveMinimum": 0, "maximum": 100}
+          }
+        },
         "protocol_sha256": {"$ref": "#/$defs/sha256"},
         "poses": {
           "type": "array",
@@ -22,12 +37,13 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["rank", "score", "score_unit", "pose_sha256"],
+            "required": ["rank", "score", "score_unit", "pose_sha256", "pose_pdbqt"],
             "properties": {
               "rank": {"type": "integer", "minimum": 1},
               "score": {"type": "number"},
               "score_unit": {"type": "string", "minLength": 1},
               "pose_sha256": {"$ref": "#/$defs/sha256"},
+              "pose_pdbqt": {"type": "string", "minLength": 1, "maxLength": 16777216},
               "redocking_rmsd_angstrom": {"type": ["number", "null"], "minimum": 0}
             }
           }
@@ -72,6 +88,8 @@
   ],
   "$defs": {
     "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "vector3": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}], "minItems": 3, "maxItems": 3},
+    "positive_vector3": {"type": "array", "prefixItems": [{"type": "number", "exclusiveMinimum": 0}, {"type": "number", "exclusiveMinimum": 0}, {"type": "number", "exclusiveMinimum": 0}], "minItems": 3, "maxItems": 3},
     "engine": {
       "type": "object",
       "additionalProperties": false,
@@ -79,7 +97,8 @@
       "properties": {
         "engine_id": {"type": "string", "minLength": 1},
         "version": {"type": "string", "minLength": 1},
-        "build_sha256": {"$ref": "#/$defs/sha256"}
+        "build_sha256": {"$ref": "#/$defs/sha256"},
+        "scoring_function": {"enum": ["vina", "vinardo"]}
       }
     },
     "input_hashes": {

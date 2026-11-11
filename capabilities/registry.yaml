@@ -248,6 +248,11 @@ tools:
     status: implemented
     implementation: python/kinetics/structure_pockets.py
     evidence_level: none
+  - id: structure.apo_pocket_candidates
+    name: Bounded probe-grid apo cavity candidate screening with geometric limitations
+    status: implemented
+    implementation: python/kinetics/apo_pockets.py
+    evidence_level: none
   - id: genes.catalogue_coverage_report
     name: Source-snapshot gene catalogue composition and annotation completeness report
     status: implemented

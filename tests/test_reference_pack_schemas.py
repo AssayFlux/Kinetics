@@ -163,10 +163,16 @@ def test_i2_i3_result_contracts_require_hashes_and_nonvalidated_status() -> None
     docking = {
         "schema_version": 1, "job_type": "docking", "research_only": True,
         "validation_status": "not_independently_validated", "engine": engine,
-        "input_hashes": hashes, "protocol_sha256": "d" * 64,
+        "input_hashes": hashes,
+        "protocol": {
+            "center_angstrom": [0, 0, 0], "box_size_angstrom": [20, 20, 20],
+            "seed": 42, "exhaustiveness": 8, "n_poses_requested": 1, "cpu": 1,
+            "scoring_function": "vina", "energy_range_kcal_per_mol": 3.0,
+        },
+        "protocol_sha256": "d" * 64,
         "poses": [{
             "rank": 1, "score": -7.2, "score_unit": "engine-defined",
-            "pose_sha256": "e" * 64,
+            "pose_sha256": "e" * 64, "pose_pdbqt": "MODEL 1\nENDMDL\n",
         }],
         "limitations": ["Scores are not binding affinities."],
     }

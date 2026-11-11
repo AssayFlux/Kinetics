@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from typing import cast
 from hashlib import sha256
 from pathlib import Path
 
@@ -114,13 +115,13 @@ def test_enforces_resource_limits_and_requires_sample_columns() -> None:
             max_input_bytes=10,
             reference=_reference(),
         )
-    with pytest.raises(ValueError, match="max_variants"):
+    with pytest.raises(ValueError, match="max_records"):
         _run_with_limits(max_variants=1)
     with pytest.raises(ValueError, match="max_samples"):
         _run_with_limits(max_samples=2)
     for invalid in (0, -1, True, 1.5):
         with pytest.raises(ValueError, match="positive integer"):
-            _run_with_limits(max_variants=invalid)
+            _run_with_limits(max_variants=cast(int, invalid))
     header_only = "\n".join(VCF.splitlines()[:2]) + "\n"
     with pytest.raises(ValueError, match="at least one variant"):
         _run(header_only)

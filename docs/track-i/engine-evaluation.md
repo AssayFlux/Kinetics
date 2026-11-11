@@ -44,6 +44,8 @@ GROMACS 2026.4 is an available alternative and identifies LGPL-2.1-or-later in i
 | Tox21 | Official programme makes public assay data downloadable with assay descriptions and protocols. https://tox21.gov/data-and-tools/ | Candidate only; public accessibility is not treated as a blanket reuse licence; obtain exact release and terms review |
 | FDA DILIrank 2.0 | FDA describes 1,336 FDA-approved drugs and four DILI concern categories. https://www.fda.gov/science-research/liver-toxicity-knowledge-base-ltkb/drug-induced-liver-injury-rank-dilirank-20-dataset | Candidate only; preserve FDA label/literature provenance and ambiguity category; verify reuse terms and endpoint definitions |
 
+The software now includes Bemis-Murcko scaffold-group splitting, binary ROC-AUC/average-precision/Brier/calibration summaries and Morgan/Tanimoto nearest-neighbour applicability-domain utilities. The pinned RDKit CI smoke uses synthetic molecules only. Acyclic molecules fall back to canonical-SMILES grouping, so related acyclic series may still cross partitions. These utilities do not train or select a model.
+
 No dataset payload has been downloaded or ingested by this decision. No model is trained or selected. Public availability alone does not satisfy licence, endpoint, quality, leakage, applicability-domain, calibration, uncertainty or external-validation gates.
 
 ## Remaining gates

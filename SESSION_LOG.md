@@ -2453,3 +2453,12 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Updated README, ROADMAP, S discovery roadmap and S implementation audit.
 - The previous workflow failed at catalogue reproducibility before unit tests. The exact-head CI for the final documentation/source commit must pass before any test or APK pass is claimed.
 - Current disposition: S3/S8 software work is implemented but not yet CI-verified. Track S remains open; Track I remains blocked until exact-source CI and final S1–S10 audit pass. D-021 external validation/resource/device items remain deferred, not completed.
+
+
+## 2026-11-11 — Session 69: final Track S software exit audit
+
+- Re-polled exact-head workflow run 42954316831 for `77ddd0f934eb8712818af1cdf8c297140d35289b`: all jobs succeeded, including Python foundation/registry/tests, scientific reference, RDKit, SPDX and Android arm64 build/package tests.
+- Python suite: 440 passed, 4 skipped (optional RDKit/pysam dependency coverage unavailable in the Python job). Ruff, strict mypy, registry/catalogue reproducibility, scientific-reference and SPDX checks passed.
+- Android arm64 debug APK/AAB build, package alignment, JVM test task, artifact/hash verification and upload all passed. GitHub Actions artifact bundle is available from run 42954316831.
+- Completed S1–S10 software-scope reconciliation in `docs/track-s/audit-2026-11-09.md` and updated roadmap/README. S3 apo-concavity candidate screening and S8 candidate ranking are part of this exact-head result.
+- **Decision: Track S software scope CLOSED; Track I is the next engineering track.** D-021 independent scientific/experimental validation, licensed resources/models, secure inference infrastructure and physical-device verification remain explicit carry-forward obligations. S2 has no calibrated quality grade; S3/S8 outputs are heuristic candidates; S10 generation remains disabled. No scientific, clinical or release readiness is claimed.

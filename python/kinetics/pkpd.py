@@ -56,7 +56,14 @@ def one_compartment_oral_pk(
         raise ValueError("absorption and elimination rates must differ for this closed form")
     if not isinstance(times, list) or not times or len(times) > 10000:
         raise ValueError("times must be a non-empty list with at most 10000 values")
-    if not all(isinstance(t, (int, float)) and not isinstance(t, bool) and isfinite(t) and t >= 0 for t in times):
+    valid_times = all(
+        isinstance(t, (int, float))
+        and not isinstance(t, bool)
+        and isfinite(t)
+        and t >= 0
+        for t in times
+    )
+    if not valid_times:
         raise ValueError("times must contain finite non-negative hours")
     ka, ke = absorption_rate_per_h, elimination_rate_per_h
     scale = bioavailability_fraction * dose_amount_mg / apparent_volume_l * ka / (ka - ke)
@@ -82,11 +89,16 @@ def one_compartment_oral_pk(
             "apparent_volume_l": float(apparent_volume_l),
         },
         "observations": observations,
-        "provenance": {"parameter_origin": "caller_supplied", "dose_regimen": "single theoretical input"},
+        "provenance": {
+            "parameter_origin": "caller_supplied",
+            "dose_regimen": "single theoretical input",
+        },
         "limitations": [
-            "Educational/software-verification model only; not a dose calculator or treatment advice",
+            "Educational/software-verification model only; not a dose calculator "
+            "or treatment advice",
             "Assumes linear one-compartment disposition and first-order absorption/elimination",
-            "No lag time, distribution phase, saturable clearance, active metabolites or interactions",
+            "No lag time, distribution phase, saturable clearance, active metabolites "
+            "or interactions",
             "Bioavailability and apparent volume are caller assumptions, not inferred parameters",
             "No population variability, parameter uncertainty, calibration or external validation",
             "Not a PBPK model and not validated for any compound, species or patient",
@@ -123,7 +135,9 @@ def emax_pd(
     values = []
     for concentration in concentrations:
         power = float(concentration) ** hill_coefficient
-        effect = baseline_effect + maximum_effect_increment * power / (ec50 ** hill_coefficient + power)
+        effect = baseline_effect + maximum_effect_increment * power / (
+            ec50 ** hill_coefficient + power
+        )
         values.append({"concentration": float(concentration), "effect": effect})
     return {
         "schema_version": 1,

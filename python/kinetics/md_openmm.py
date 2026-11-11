@@ -149,7 +149,12 @@ def run_openmm_dynamics(
     )
     box_vectors = system.getDefaultPeriodicBoxVectors()
     box_manifest = [
-        [float(component.value_in_unit(unit.nanometer)) for component in vector]
+        [
+            float(component.value_in_unit(unit.nanometer))
+            if hasattr(component, "value_in_unit")
+            else float(component)
+            for component in vector
+        ]
         for vector in box_vectors
     ]
     topology_manifest = {

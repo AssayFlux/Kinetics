@@ -5,7 +5,7 @@ not parameter estimators, dose calculators, clinical predictions or validated PB
 """
 from __future__ import annotations
 
-from math import exp, isfinite, log
+from math import exp, isfinite
 from typing import TypedDict
 
 
@@ -23,7 +23,8 @@ class PKPDResult(TypedDict):
 def _finite_positive(name: str, value: float, *, allow_zero: bool = False) -> None:
     if not isinstance(value, (int, float)) or isinstance(value, bool) or not isfinite(value):
         raise ValueError(f"{name} must be a finite number")
-    if value < 0 if allow_zero else value <= 0:
+    invalid = value < 0 if allow_zero else value <= 0
+    if invalid:
         comparator = "non-negative" if allow_zero else "positive"
         raise ValueError(f"{name} must be {comparator}")
 

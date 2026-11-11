@@ -98,7 +98,7 @@ Every S increment must be tested against the exact commit. Host tests are regres
 - Ambiguous, gapped, missing or uncovered mappings abstain explicitly.
 - The output records the query position, reference/alternate amino acids and corresponding structure residue number. It is coordinate correspondence only.
 - No side-chain mutation modelling, stability/energy scoring, interface-effect prediction, pathogenicity or clinical interpretation is implemented.
-- Interface/pocket analysis remains gated on complete atom chemistry, validated structure inputs and independent reference benchmarks.
+- Apo-pocket analysis remains gated on complete atom chemistry and independent reference benchmarks. A bounded ligand-proximal site candidate screen is now available when the caller explicitly selects a ligand residue; it is contact evidence, not de novo pocket detection or an affinity predictor.
 
 
 #### S3 interface-contact baseline
@@ -127,7 +127,7 @@ Every S increment must be tested against the exact commit. Host tests are regres
 
 #### S8 explicit genetic-code table identifier hardening
 - Translation and ORF scanning now reject boolean, floating-point and string table identifiers instead of allowing Python's bool/int equality to select a table implicitly.
-- The supported NCBI tables remain explicitly caller-selected; no genetic-code inference is introduced.
+- The supported NCBI tables remain explicitly caller-selected for translation. A separate bounded candidate-ranking helper now screens supplied coding sequences for internal in-frame stops and optional complete-CDS start/terminal-stop consistency across supported tables. It abstains on insufficient records/codons or a small score margin. It does not incorporate taxonomic context, codon usage, homolog alignment or transcript evidence, and is not calibrated or a validated organism-specific assignment.
 
 
 #### S6/S9 — Bounded caller-supplied protein motif evidence

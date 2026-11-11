@@ -62,4 +62,4 @@ def test_i1_android_ligand_graph_preview_is_bounded_and_registry_gated() -> None
     assert "source_sha256" in bridge or "source_sha256" in (ROOT / "python/kinetics/chemistry.py").read_text(encoding="utf-8")
     assert 'it.id == "chemistry.sdf_graph"' in ui
     assert "LigandGraphPreviewCard()" in ui
-    assert "not a sanitized chemistry engine" in bridge
+    assert "Graph-only parsing; no chemical sanitization or valence validation" in (ROOT / "python/kinetics/chemistry.py").read_text(encoding="utf-8")

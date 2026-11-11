@@ -609,7 +609,7 @@ fun ExploreScreen(modifier: Modifier) {
                 }
             }
             item { StructureViewerPreview() }
-            if (entries.any { it.id == "sequence.fasta" && it.status == "implemented" }) {
+            if (entries.any { it.id == "chemistry.sdf_graph" && it.status == "implemented" }) {\n                item { LigandGraphPreviewCard() }\n            }\n            if (entries.any { it.id == "sequence.fasta" && it.status == "implemented" }) {
                 item { FastaQcCard() }
             }
             if (entries.any { it.id == "sequence.fastq" && it.status == "implemented" }) {

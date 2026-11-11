@@ -206,7 +206,7 @@ def test_rdkit_inputs_are_bounded_by_utf8_bytes_and_reject_nul_or_invalid_unicod
         analyze_smiles("CCO\ud800")
 
 
-def test_rdkit_morgan_similarity_rejects_boolean_or_out_of_range_parameters_and_oversize_input() -> None:
+def test_rdkit_morgan_similarity_rejects_invalid_parameters_and_oversize_input() -> None:
     pytest.importorskip("rdkit")
     from kinetics.chemistry_rdkit import morgan_tanimoto
 

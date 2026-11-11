@@ -136,3 +136,70 @@ def prepare_structure_viewer_import(source_text: str, source_format: str) -> str
         parser_version="kinetics-structure-parser-v1",
     )
     return json.dumps(result, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def _parse_structure_atoms(source_text: str, source_format: str):
+    from kinetics.structure import parse_mmcif, parse_pdb
+
+    if source_format == "pdb":
+        return parse_pdb(source_text, include_hetero=True)
+    if source_format == "mmcif":
+        return parse_mmcif(source_text, include_hetero=True)
+    raise ValueError("Structure format must be pdb or mmcif")
+
+
+def analyze_ligand_site(
+    source_text: str,
+    source_format: str,
+    ligand_chain: str,
+    ligand_residue_number: int,
+    ligand_residue_name: str,
+    cutoff_angstrom: float = 5.0,
+) -> str:
+    """Run the bounded S3 explicit-ligand geometric site candidate screen."""
+    import json
+
+    from kinetics import ligand_site_candidates
+
+    atoms = _parse_structure_atoms(source_text, source_format)
+    result = ligand_site_candidates(
+        atoms,
+        ligand_chain=ligand_chain,
+        ligand_residue_number=ligand_residue_number,
+        ligand_residue_name=ligand_residue_name,
+        cutoff_angstrom=cutoff_angstrom,
+    )
+    return json.dumps(result, ensure_ascii=False, sort_keys=True)
+
+
+def analyze_apo_pockets(source_text: str, source_format: str) -> str:
+    """Run the bounded S3 apo probe-grid concavity candidate screen."""
+    import json
+
+    from kinetics import apo_pocket_candidates
+
+    atoms = _parse_structure_atoms(source_text, source_format)
+    result = apo_pocket_candidates(atoms)
+    return json.dumps(result, ensure_ascii=False, sort_keys=True)
+
+
+def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -> str:
+    """Run S8 candidate-table screening on bounded caller-supplied FASTA records."""
+    import json
+
+    from kinetics import infer_genetic_code_candidates
+    from kinetics.sequence import iter_fasta_records
+
+    if not isinstance(fasta_text, str) or len(fasta_text) > 1_000_000:
+        raise ValueError("FASTA input must be text within the 1,000,000-character limit")
+    records = []
+    for record in iter_fasta_records(fasta_text.splitlines()):
+        if len(records) >= 1_000:
+            raise ValueError("FASTA input exceeds the 1,000-record S8 limit")
+        records.append({
+            "id": record.identifier,
+            "sequence": record.sequence,
+            "complete_cds": complete_cds,
+        })
+    result = infer_genetic_code_candidates(records, min_records=3, min_codons=90)
+    return json.dumps(result, ensure_ascii=False, sort_keys=True)

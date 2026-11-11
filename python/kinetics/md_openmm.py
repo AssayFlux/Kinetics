@@ -129,7 +129,17 @@ def run_openmm_dynamics(
     engine_build = Path(openmm_binary.__file__).read_bytes()
     if not engine_build or len(engine_build) > 512 * 1024 * 1024:
         raise RuntimeError("OpenMM core binary is empty or exceeds the 512 MiB hash limit")
-    engine_build_sha256 = sha256(engine_build).hexdigest()
+    engine_digest = sha256(engine_build)
+    plugin_directory = Path(openmm.Platform.getDefaultPluginsDirectory())
+    cpu_plugins = sorted(plugin_directory.glob("*CPU*")) if plugin_directory.is_dir() else []
+    for plugin_path in cpu_plugins:
+        if plugin_path.is_file():
+            plugin_bytes = plugin_path.read_bytes()
+            if len(plugin_bytes) > 512 * 1024 * 1024:
+                raise RuntimeError("OpenMM CPU plugin exceeds the 512 MiB hash limit")
+            engine_digest.update(plugin_path.name.encode("utf-8"))
+            engine_digest.update(plugin_bytes)
+    engine_build_sha256 = engine_digest.hexdigest()
     protocol = {
         "temperature_kelvin": temperature,
         "pressure_bar": pressure,
@@ -248,6 +258,7 @@ def run_openmm_dynamics(
             "Caller must construct and validate the molecular system and topology",
             "No protein/ligand parameterization, protonation or solvent preparation is performed",
             "CPU-only reference execution; GPU plugins and platform-specific licenses are not included",
+            "System virtual sites or particles beyond the topology atom count are not accepted",
             "No independent stability, energy-conservation, ensemble or experimental validation is implied",
             "Trajectory and energy outputs are research artifacts, not biological efficacy or clinical predictions",
         ],

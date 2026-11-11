@@ -55,6 +55,7 @@ def test_i1_android_ligand_graph_preview_is_bounded_and_registry_gated() -> None
     ui = (ANDROID_JAVA / "KineticsUi.kt").read_text(encoding="utf-8")
     assert "def analyze_ligand_sdf_graph(" in bridge
     assert "analyze_sdf_graph(source_text)" in bridge
+    assert "json.dumps(analyze_sdf_graph(source_text), sort_keys=True)" in bridge
     assert "MAX_SDF_BYTES = 16 * 1024 * 1024" in runner
     assert '"analyze_ligand_sdf_graph"' in runner
     assert "ActivityResultContracts.OpenDocument()" in card

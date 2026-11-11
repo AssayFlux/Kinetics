@@ -190,6 +190,7 @@ def run_openmm_dynamics(
         "platform": "CPU",
         "integrator": "LangevinMiddleIntegrator",
         "friction_per_ps": 1.0,
+        "velocity_seed_derivation": "sha256(base_seed:replica_index:velocities)[0:4] little-endian",
     }
     protocol_sha256 = sha256(
         json.dumps(protocol, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -200,6 +201,10 @@ def run_openmm_dynamics(
         root = Path(temporary)
         for index in range(replicas):
             replica_seed = seed + index
+            velocity_seed = int.from_bytes(
+                sha256(f"{seed}:{index + 1}:velocities".encode("utf-8")).digest()[:4],
+                "little",
+            )
             replica_system = openmm.XmlSerializer.deserialize(system_xml)
             if pressure is not None:
                 replica_system.addForce(
@@ -223,7 +228,7 @@ def run_openmm_dynamics(
             )
             simulation.context.setPositions(positions)
             simulation.context.setVelocitiesToTemperature(
-                temperature * unit.kelvin, replica_seed
+                temperature * unit.kelvin, velocity_seed
             )
             if equilibration_steps:
                 simulation.step(equilibration_steps)
@@ -262,6 +267,7 @@ def run_openmm_dynamics(
                 {
                     "replica_id": index + 1,
                     "seed": replica_seed,
+                    "velocity_seed": velocity_seed,
                     "steps_completed": steps,
                     "initial_potential_energy": float(initial_energy),
                     "final_potential_energy": float(final_energy),

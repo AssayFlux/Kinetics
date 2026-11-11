@@ -19,7 +19,7 @@ This is a dependency-free Node 22 HTTP/TLS front end for the pinned Python AutoD
 From the repository root, install the project and pinned docking extra in a dedicated virtual environment:
 
 ```sh
-python -m pip install -e '.[docking]'
+python -m pip install -e '.[dev,docking]'
 cd remote-node
 npm test
 KINETICS_NODE_AUTH_TOKEN="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')" \

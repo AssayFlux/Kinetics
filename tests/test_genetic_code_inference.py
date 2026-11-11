@@ -27,7 +27,11 @@ def test_genetic_code_inference_abstains_on_insufficient_or_tied_evidence() -> N
     assert short["status"] == "insufficient_evidence"
     assert short["candidate_table_id"] is None
     tied = infer_genetic_code_candidates(
-        [{"sequence": "ATG" + "AAA" * 20}] * 3,
+        [
+            {"id": "tie-a", "sequence": "ATG" + "AAA" * 20},
+            {"id": "tie-b", "sequence": "ATG" + "AAG" * 20},
+            {"id": "tie-c", "sequence": "ATG" + "GCT" * 20},
+        ],
         table_ids=[1, 4], min_codons=30,
     )
     assert tied["status"] == "ambiguous_candidates"

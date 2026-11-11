@@ -40,7 +40,7 @@ def _bounded_utf8(value: str, *, label: str, maximum: int) -> bytes:
         raise ValueError(f"{label} must contain valid Unicode scalar values") from error
     if len(encoded) > maximum:
         raise ValueError(f"{label} exceeds the {maximum}-byte UTF-8 limit")
-    if b"\\x00" in encoded:
+    if b"\x00" in encoded:
         raise ValueError(f"{label} must not contain NUL bytes")
     return encoded
 

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://assayflux.github.io/Kinetics/api/synthetic-variant-effect.schema.json",
+  "title": "Synthetic aggregate additive variant-effect simulation output",
+  "description": "Caller-supplied toy effects on synthetic data only; no individual or clinical predictions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "simulation", "data_classification", "sample_size", "seed", "trait_units", "baseline_trait_mean", "residual_standard_deviation", "loci", "assumptions", "limitations", "provenance"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "simulation": {"const": "synthetic independent-locus additive genotype-to-trait model"},
+    "data_classification": {"const": "synthetic_non_patient"},
+    "sample_size": {"type": "integer", "minimum": 100, "maximum": 1000000},
+    "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "trait_units": {"type": "string", "minLength": 1},
+    "baseline_trait_mean": {"type": "number"},
+    "residual_standard_deviation": {"type": "number", "minimum": 0},
+    "loci": {
+      "type": "array", "minItems": 1, "maxItems": 100,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["locus_id", "alternate_allele_frequency", "caller_supplied_additive_effect", "genotype_groups", "observed_aggregate_count"],
+        "properties": {
+          "locus_id": {"type": "string", "minLength": 1, "maxLength": 128},
+          "alternate_allele_frequency": {"type": "number", "minimum": 0, "maximum": 1},
+          "caller_supplied_additive_effect": {"type": "number"},
+          "observed_aggregate_count": {"type": "integer", "minimum": 0},
+          "genotype_groups": {
+            "type": "array", "minItems": 3, "maxItems": 3,
+            "prefixItems": [
+              {"$ref": "#/$defs/genotype_group"},
+              {"$ref": "#/$defs/genotype_group"},
+              {"$ref": "#/$defs/genotype_group"}
+            ]
+          }
+        }
+      }
+    },
+    "assumptions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["generator", "seeded_prng", "parameter_origin"],
+      "properties": {
+        "generator": {"const": "Kinetics synthetic additive variant-effect simulator"},
+        "seeded_prng": {"const": "Python random.Random"},
+        "parameter_origin": {"const": "caller_supplied"}
+      }
+    }
+  },
+  "$defs": {
+    "genotype_group": {
+      "type": "object", "additionalProperties": false,
+      "required": ["genotype", "alternate_allele_dosage", "synthetic_count", "observed_trait_mean", "observed_trait_variance", "expected_trait_mean_under_model"],
+      "properties": {
+        "genotype": {"enum": ["reference_homozygous", "heterozygous", "alternate_homozygous"]},
+        "alternate_allele_dosage": {"type": "integer", "minimum": 0, "maximum": 2},
+        "synthetic_count": {"type": "integer", "minimum": 0},
+        "observed_trait_mean": {"type": ["number", "null"]},
+        "observed_trait_variance": {"type": ["number", "null"], "minimum": 0},
+        "expected_trait_mean_under_model": {"type": "number"}
+      }
+    }
+  }
+}

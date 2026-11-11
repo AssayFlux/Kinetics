@@ -222,6 +222,9 @@ def run_openmm_dynamics(
                 {"Threads": str(cpu_threads), "DeterministicForces": "true"},
             )
             simulation.context.setPositions(positions)
+            simulation.context.setVelocitiesToTemperature(
+                temperature * unit.kelvin, replica_seed
+            )
             if equilibration_steps:
                 simulation.step(equilibration_steps)
             initial_state = simulation.context.getState(getEnergy=True)

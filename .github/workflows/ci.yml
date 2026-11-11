@@ -71,6 +71,8 @@ jobs:
         run: python -m pip install -r validation/requirements-scipy.txt -r validation/requirements-biopython.txt
       - name: Compare exploratory Michaelis-Menten fit with SciPy
         run: PYTHONPATH=python python validation/kinetics_scipy_reference.py > kinetics-scipy-reference-result.json
+      - name: Compare oral PK closed form with independent SciPy ODE
+        run: PYTHONPATH=python python validation/pkpd_scipy_reference.py > pkpd-scipy-reference-result.json
       - name: Compare explicit genetic-code tables with Biopython
         run: PYTHONPATH=python python validation/genetic_code_biopython_reference.py > genetic-code-reference-result.json
       - name: Compare PDB parsing, contacts and superposed RMSD with Biopython and NumPy
@@ -88,6 +90,7 @@ jobs:
           name: kinetics-host-reference-results-${{ github.sha }}
           path: |
             kinetics-scipy-reference-result.json
+            pkpd-scipy-reference-result.json
             genetic-code-reference-result.json
             structure-biopython-reference-result.json
             phylo-biopython-reference-result.json

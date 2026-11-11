@@ -2482,3 +2482,18 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - The payload explicitly states this is not an absorption, bioavailability, safety, efficacy or clinical-suitability prediction.
 - Added optional RDKit unit coverage and pinned ethanol/benzene reference-run assertions for the screen.
 - The earlier exact-head workflow attempt exposed one test-name lint violation and the then-current descriptor code exposed an unavailable RDKit API call; both were corrected. A fresh exact-head workflow is required before claiming the fixes pass.
+
+
+## 2026-11-11 — Session 71: I-track engineering foundations
+**Phase:** Track I / I1–I5
+**Objective:** Advance all software work that can be responsibly completed without claiming external engine, data, licensing or scientific-validation gates.
+
+- I1: added an Android SAF SDF/MOL import and graph-only preview card, Chaquopy runner and Python bridge. Input is bounded to 16 MiB, strict UTF-8 and NUL checks are applied, one molecule record is required, and source SHA-256 is reported. Added regression tests for the Python graph core and Android integration contract.
+- I2/I3: added `api/insilico-job.schema.json` with strict docking and MD request variants. It records source hashes, preparation, search-box/protocol, force-field and seed metadata. Both variants hard-code execution disabled and licence review pending; no docking or MD engine is executed.
+- I4: added `python/kinetics/pkpd.py` with a first-order single-dose one-compartment oral PK reference equation and Emax relationship, explicit units, bounded series and strong non-clinical limitations. Added unit tests and package exports. No ADMET model or dose recommendation is claimed.
+- I5: added seeded synthetic aggregate Hardy-Weinberg genotype-count generation, a strict JSON result schema and tests. No individual-level data, ancestry labels, phenotype or variant-effect prediction is produced.
+- Added strict schema tests for I2/I3 and I5; updated roadmap and research boundaries.
+
+**Validation:** The preceding I1-only combined source revision `e5888232cd0f58c48c3a000aca260f31b551937b` passed its exact-head workflow, including Python tests, pinned RDKit and scientific-reference checks, SPDX generation, arm64 APK/AAB build, JVM tests and artifact verification. This does not validate the later I1–I5 changes in this session. The combined I1–I5 source revision requires a fresh exact-head CI run; no pass is claimed until it completes.
+
+**Remaining external gates:** approved docking/MD engines and licences, secure compute, independent redocking and MD reference benchmarks, licensed/curated ADMET datasets and externally validated models, population/fairness-reviewed public cohorts and variant-effect validation, physical-device verification, and all relevant scientific acceptance evidence. P0 remains blocked; no patient or clinical workflows are enabled.

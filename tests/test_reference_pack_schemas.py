@@ -195,17 +195,18 @@ def test_i2_i3_result_contracts_require_hashes_and_nonvalidated_status() -> None
             "steps": 100, "equilibration_steps": 10, "replicas": 2, "seed": 1,
             "report_interval": 10, "cpu_threads": 1, "platform": "CPU",
             "integrator": "LangevinMiddleIntegrator", "friction_per_ps": 1.0,
+            "velocity_seed_derivation": "sha256(base_seed:replica_index:velocities)[0:4] little-endian",
         },
         "protocol_sha256": "d" * 64,
         "replicas": [
             {
-                "replica_id": 1, "seed": 1, "steps_completed": 100,
+                "replica_id": 1, "seed": 1, "velocity_seed": 11, "steps_completed": 100,
                 "initial_potential_energy": -10.0, "final_potential_energy": -9.9,
                 "energy_unit": "kJ/mol", "trajectory_sha256": "e" * 64,
                 "trajectory_dcd_base64": "ZGF0YQ==",
             },
             {
-                "replica_id": 2, "seed": 2, "steps_completed": 100,
+                "replica_id": 2, "seed": 2, "velocity_seed": 12, "steps_completed": 100,
                 "initial_potential_energy": -10.1, "final_potential_energy": -10.0,
                 "energy_unit": "kJ/mol", "trajectory_sha256": "f" * 64,
                 "trajectory_dcd_base64": "ZGF0YQ==",

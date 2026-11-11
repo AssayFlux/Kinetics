@@ -18,10 +18,10 @@ Kinetics is an offline-first, modular platform for computational biology and in-
 | **Product** | Offline-first Android scientific workbench |
 | **Primary mode** | Research Mode only |
 | **Engineering scope** | R1–R10, developed as one integrated platform |
-| **Active track** | I — In-silico laboratory; I1 chemistry descriptor foundation in progress; I2/I3/I5 remain gated |
+| **Active track** | I — In-silico laboratory; I1 Android ligand graph preview and host RDKit descriptors in progress; I2/I3 contracts, I4 PK/PD primitives and I5 synthetic cohort scaffolding added; external gates remain |
 | **User experience** | D-015 Light Classic visual direction; supplied dashboard/login references recorded; Compose redesign in progress |
 | **Build channel** | GitHub Actions · unsigned arm64 debug APK/AAB |
-| **Validation state** | S software CI passed; I1 exact-head validation pending; physical-device and independent scientific validation remain open |
+| **Validation state** | S software CI passed; I1–I5 combined exact-head validation pending; physical-device, engine/license and independent scientific validation remain open |
 | **Publication** | Methods-paper preparation only; results must come from reproducible evidence |
 
 ## Development dashboard
@@ -37,7 +37,7 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 |---|---|---|---|
 | **R — Research platform** | Android foundation, secure data, scientific engines, genomics, quality and release hardening | Engineering implementation and host-side audit pass completed; device, external validation, licensing and signed-release gates remain open | **Audit closed; acceptance evidence open** |
 | **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1 viewer import/export, S2 geometry, S3 mapping/contact/apo-pocket candidates, S4/S6–S9 bounded workflows and S10 brief validation implemented; exact-head CI and external model/data, independent validation and device gates remain | **In progress** |
-| **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1 host-only RDKit descriptor adapter hardened; exact-head CI pending; docking/MD/ADMET/virtual-cohort work remains gated by engine, license, dataset and validation requirements | **In progress** |
+| **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1 host RDKit descriptors plus Android graph-only SDF/MOL preview; I2/I3 non-executable job contracts; I4 PK/Emax reference primitives; I5 synthetic aggregate HWE generator. Exact-head CI pending; docking/MD execution, ADMET models, real cohorts and scientific/device validation remain gated | **In progress** |
 | **P — Precision medicine** | PGx-first research pathway and future governance | P1 public-data metadata gate, synthetic reference-build/coordinate/SHA-256 contract and regression tests implemented; no acquired datasets or genotype interpretation | **Preparation in progress; P0 blocked** |
 | **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open | **In progress** |
 | **G — Governance** | Security, licensing, quality system, bias and publication evidence | Requirements and inventories are documented; formal reviews and evidence gates remain open | **In progress** |

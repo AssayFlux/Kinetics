@@ -2474,3 +2474,11 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Expanded ethanol/benzene pinned sanity fixtures and validation assertions; added optional RDKit tests for extended descriptors and adversarial input bounds.
 - RDKit remains a host-only optional dependency; Android integration is not claimed. Docking, MD and ADMET remain behind their documented engine/license/data/validation gates.
 - Exact-head CI for the final I1 source revision is pending. No tests are claimed passed in this session until that workflow completes.
+
+
+### I1 follow-up — Rule-of-Five heuristic
+
+- Added an explicit four-criterion Rule-of-Five physicochemical screen to the RDKit descriptor payload, including observed values, thresholds and per-criterion pass/fail.
+- The payload explicitly states this is not an absorption, bioavailability, safety, efficacy or clinical-suitability prediction.
+- Added optional RDKit unit coverage and pinned ethanol/benzene reference-run assertions for the screen.
+- The earlier exact-head workflow attempt exposed one test-name lint violation and the then-current descriptor code exposed an unavailable RDKit API call; both were corrected. A fresh exact-head workflow is required before claiming the fixes pass.

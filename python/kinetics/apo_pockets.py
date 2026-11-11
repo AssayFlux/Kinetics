@@ -38,13 +38,18 @@ def apo_pocket_candidates(
     ):
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError(f"{name} must be a positive integer")
-    for name, value in (
+    for name, numeric_value in (
         ("grid_spacing_angstrom", grid_spacing_angstrom),
         ("small_probe_radius_angstrom", small_probe_radius_angstrom),
         ("large_probe_radius_angstrom", large_probe_radius_angstrom),
         ("generic_atom_radius_angstrom", generic_atom_radius_angstrom),
     ):
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not isfinite(value) or value <= 0:
+        if (
+            isinstance(numeric_value, bool)
+            or not isinstance(numeric_value, (int, float))
+            or not isfinite(numeric_value)
+            or numeric_value <= 0
+        ):
             raise ValueError(f"{name} must be finite and positive")
     if small_probe_radius_angstrom >= large_probe_radius_angstrom:
         raise ValueError("small probe radius must be smaller than large probe radius")
@@ -220,7 +225,7 @@ def apo_pocket_candidates(
             "centroid_angstrom": centroid,
         })
     pockets.sort(key=lambda pocket: (
-        -int(pocket["grid_point_count"]),
+        -cast(int, pocket["grid_point_count"]),
         tuple(cast(list[float], pocket["centroid_angstrom"])),
     ))
     for rank, pocket in enumerate(pockets, start=1):

@@ -42,7 +42,7 @@ def scaffold_group_split(
         raise ValueError("seed must be an unsigned 32-bit integer")
 
     try:
-        from rdkit import Chem  # type: ignore[import-not-found]
+        from rdkit import Chem, rdBase  # type: ignore[import-not-found]
         from rdkit.Chem.Scaffolds import MurckoScaffold  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError("RDKit is required for Bemis-Murcko scaffold splitting") from error
@@ -102,6 +102,7 @@ def scaffold_group_split(
     return {
         "schema_version": 1,
         "method": "Bemis-Murcko scaffold-group split",
+        "engine": {"name": "RDKit", "version": rdBase.rdkitVersion},
         "seed": seed,
         "train_indices": sorted(partitions[0]),
         "validation_indices": sorted(partitions[1]),
@@ -112,6 +113,7 @@ def scaffold_group_split(
         "limitations": [
             "Requires curated structures and endpoint harmonization",
             "Scaffold grouping does not eliminate every source of chemical or temporal leakage",
+            "Acyclic molecules fall back to canonical SMILES groups; related acyclic series may still cross partitions",
             "Not a model-performance result or evidence of clinical applicability",
         ],
     }
@@ -290,7 +292,7 @@ def tanimoto_applicability_domain(
     ):
         raise ValueError("fingerprint_bits must be an integer in [256, 8192]")
     try:
-        from rdkit import Chem, DataStructs  # type: ignore[import-not-found]
+        from rdkit import Chem, DataStructs, rdBase  # type: ignore[import-not-found]
         from rdkit.Chem import rdFingerprintGenerator  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError("RDKit is required for Morgan/Tanimoto applicability-domain analysis") from error
@@ -330,6 +332,7 @@ def tanimoto_applicability_domain(
     return {
         "schema_version": 1,
         "fingerprint": {"type": "Morgan", "radius": radius, "bits": fingerprint_bits},
+        "engine": {"name": "RDKit", "version": rdBase.rdkitVersion},
         "threshold": float(threshold),
         "reference_count": len(reference_smiles),
         "query_count": len(query_smiles),

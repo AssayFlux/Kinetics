@@ -42,8 +42,8 @@ def scaffold_group_split(
         raise ValueError("seed must be an unsigned 32-bit integer")
 
     try:
-        from rdkit import Chem
-        from rdkit.Chem.Scaffolds import MurckoScaffold
+        from rdkit import Chem  # type: ignore[import-not-found]
+        from rdkit.Chem.Scaffolds import MurckoScaffold  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError("RDKit is required for Bemis-Murcko scaffold splitting") from error
 
@@ -290,8 +290,8 @@ def tanimoto_applicability_domain(
     ):
         raise ValueError("fingerprint_bits must be an integer in [256, 8192]")
     try:
-        from rdkit import Chem, DataStructs
-        from rdkit.Chem import rdFingerprintGenerator
+        from rdkit import Chem, DataStructs  # type: ignore[import-not-found]
+        from rdkit.Chem import rdFingerprintGenerator  # type: ignore[import-not-found]
     except ImportError as error:
         raise RuntimeError("RDKit is required for Morgan/Tanimoto applicability-domain analysis") from error
 

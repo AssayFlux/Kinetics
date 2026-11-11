@@ -49,3 +49,11 @@ def test_ligand_site_candidates_enforce_bounds_and_finite_coordinates() -> None:
     with pytest.raises(ValueError, match="max_candidate_pairs"):
         ligand_site_candidates([ligand, protein], ligand_chain="X", ligand_residue_number=9,
                                ligand_residue_name="LIG", max_candidate_pairs=0)
+
+
+def test_ligand_site_candidates_reject_canonical_protein_residue_as_ligand() -> None:
+    atoms = [Atom(1, "CA", "ALA", "A", 1, 0.0, 0.0, 0.0, "C")]
+    with pytest.raises(ValueError, match="canonical amino acid"):
+        ligand_site_candidates(
+            atoms, ligand_chain="A", ligand_residue_number=1, ligand_residue_name="ALA",
+        )

@@ -438,3 +438,39 @@ def iter_sdf_stream(
     parsed = parse_buffer()
     if parsed:
         yield parsed
+
+
+def analyze_sdf_graph(text: str, *, max_bytes: int = 16 * 1024 * 1024) -> dict[str, object]:
+    """Return bounded graph-only metadata and source provenance for one SDF/MOL record."""
+    if not isinstance(max_bytes, int) or isinstance(max_bytes, bool) or max_bytes < 1:
+        raise ValueError("max_bytes must be a positive integer")
+    if not isinstance(text, str) or not text.strip():
+        raise ValueError("SDF input must be non-empty text")
+    try:
+        encoded = text.encode("utf-8", errors="strict")
+    except UnicodeEncodeError as error:
+        raise ValueError("SDF input contains invalid Unicode scalar values") from error
+    if len(encoded) > max_bytes:
+        raise ValueError(f"SDF input exceeds the {max_bytes}-byte UTF-8 limit")
+    if b"\x00" in encoded:
+        raise ValueError("SDF input must not contain NUL bytes")
+    records = list(iter_sdf_records(text))
+    if len(records) != 1:
+        raise ValueError("Expected exactly one molecule record")
+    molecule = records[0]
+    return {
+        "schema_version": 1,
+        "engine": "Kinetics bounded SDF graph parser",
+        "source_format": molecule.get("format", "V2000"),
+        "source_sha256": hashlib.sha256(encoded).hexdigest(),
+        "source_utf8_bytes": len(encoded),
+        "formula_explicit_atoms": molecule["formula"],
+        "explicit_atom_mass_sum_da": molecule["molecular_weight"],
+        "graph": graph_descriptors(molecule),
+        "limitations": [
+            "Graph-only parsing; no chemical sanitization or valence validation",
+            "Implicit hydrogens are not inferred; formula and mass use explicit atoms only",
+            "Stereochemistry, aromaticity, protonation and tautomer states are not interpreted",
+            "Not a drug-likeness, ADMET, activity, docking or clinical prediction",
+        ],
+    }

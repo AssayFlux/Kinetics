@@ -276,7 +276,7 @@ def analyze_ligand_sdf_graph(source_text: str):
         raise ValueError("SDF input contains invalid Unicode scalar values") from error
     if len(encoded) > 16 * 1024 * 1024:
         raise ValueError("SDF input exceeds the 16 MiB UTF-8 byte limit")
-    if b"\\x00" in encoded:
+    if b"\x00" in encoded:
         raise ValueError("SDF input must not contain NUL bytes")
 
     records = list(iter_sdf_records(source_text))

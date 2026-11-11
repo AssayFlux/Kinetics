@@ -140,7 +140,12 @@ export function createNodeServer({ env = process.env, spawnProcess = spawn } = {
           windowsHide: true,
           stdio: ["pipe", "pipe", "pipe"],
           env: {
-            ...env,
+            PATH: env.PATH || process.env.PATH || "",
+            HOME: env.HOME || process.env.HOME || "",
+            TMPDIR: env.TMPDIR || "/tmp",
+            LANG: env.LANG || "C.UTF-8",
+            VIRTUAL_ENV: env.VIRTUAL_ENV || "",
+            LD_LIBRARY_PATH: env.LD_LIBRARY_PATH || "",
             PYTHONPATH: [path.join(ROOT, "python"), env.PYTHONPATH || ""].filter(Boolean).join(path.delimiter),
             PYTHONUNBUFFERED: "1",
           },

@@ -70,3 +70,54 @@ def test_admet_candidate_catalog_is_metadata_only_and_unapproved() -> None:
     for source in catalog["candidate_sources"]:
         assert source["license_review_status"] == "verify_before_intake"
         assert source["patient_data"] is False
+
+
+def test_i2_i3_job_contracts_are_strictly_non_executable_and_validate_inputs() -> None:
+    import json
+    from jsonschema import Draft202012Validator
+
+    root = Path(__file__).resolve().parents[1]
+    schema = json.loads((root / "api" / "insilico-job.schema.json").read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    artifact = {"format": "pdb", "source_sha256": "a" * 64, "source_size_bytes": 100}
+    docking = {
+        "schema_version": 1, "job_type": "docking", "research_only": True,
+        "execution_authorized": False,
+        "engine": {"engine_id": "candidate-engine", "version": "unapproved", "license_review": "pending"},
+        "receptor": artifact, "ligand": {**artifact, "format": "sdf"},
+        "preparation": {
+            "receptor_protonation_policy": "caller-declared", "ligand_protonation_policy": "caller-declared",
+            "charge_method": "not-run", "atom_typing": "not-run", "water_policy": "caller-declared",
+        },
+        "search_box": {"center_angstrom": [0, 0, 0], "size_angstrom": [20, 20, 20]},
+        "seed": 42,
+    }
+    assert validator.is_valid(docking)
+    assert not validator.is_valid({**docking, "execution_authorized": True})
+    assert not validator.is_valid({**docking, "search_box": {"center_angstrom": [0, 0, 0], "size_angstrom": [20, 0, 20]}})
+    md = {
+        "schema_version": 1, "job_type": "molecular_dynamics", "research_only": True,
+        "execution_authorized": False,
+        "engine": {"engine_id": "candidate-md", "version": "unapproved", "license_review": "pending"},
+        "coordinates": artifact, "topology": {**artifact, "format": "topology"},
+        "force_field": {"name": "unapproved", "version": "unapproved", "license_review": "pending", "parameter_source_sha256": "b" * 64},
+        "protocol": {
+            "temperature_kelvin": 300, "pressure_bar": 1, "timestep_fs": 2,
+            "steps": 100000, "equilibration_steps": 10000, "replicas": 3, "seed": 7,
+        },
+    }
+    assert validator.is_valid(md)
+    assert not validator.is_valid({**md, "protocol": {**md["protocol"], "replicas": 1}})
+
+
+def test_i5_synthetic_cohort_schema_accepts_only_aggregate_non_patient_output() -> None:
+    import json
+    from jsonschema import Draft202012Validator
+
+    from kinetics.virtual_cohort import simulate_hardy_weinberg_cohort
+
+    root = Path(__file__).resolve().parents[1]
+    schema = json.loads((root / "api" / "virtual-cohort.schema.json").read_text(encoding="utf-8"))
+    result = simulate_hardy_weinberg_cohort({"synthetic_locus_1": 0.25}, sample_size=100, seed=4)
+    assert Draft202012Validator(schema).is_valid(result)
+    assert not Draft202012Validator(schema).is_valid({**result, "data_classification": "patient_data"})

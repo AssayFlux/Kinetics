@@ -13,7 +13,7 @@ def test_binary_admet_metrics_are_correct_for_perfect_and_tied_scores() -> None:
     perfect = binary_admet_metrics([0, 0, 1, 1], [0.05, 0.2, 0.8, 0.95])
     assert perfect["roc_auc"] == 1.0
     assert perfect["average_precision"] == 1.0
-    assert perfect["brier_score"] < 0.01
+    assert perfect["brier_score"] < 0.03
     assert perfect["sensitivity"] == 1.0
     assert perfect["specificity"] == 1.0
 

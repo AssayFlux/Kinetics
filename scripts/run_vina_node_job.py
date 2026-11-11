@@ -54,4 +54,4 @@ if __name__ == "__main__":
     except Exception as error:
         message = str(error).replace("\n", " ")[:1000]
         sys.stderr.write(f"docking job rejected or failed: {message}\n")
-        raise SystemExit(2)
+        raise SystemExit(2) from error

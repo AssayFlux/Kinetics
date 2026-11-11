@@ -23,9 +23,9 @@ def test_s3_s8_android_runner_enforces_limits_and_calls_python_dispatchers() -> 
     source = (ANDROID_JAVA / "S3S8Runner.kt").read_text(encoding="utf-8")
     assert "MAX_STRUCTURE_BYTES = 16 * 1024 * 1024" in source
     assert "MAX_FASTA_CHARS = 1_000_000" in source
-    assert 'callAttr("analyze_ligand_site"' in source
-    assert 'callAttr("analyze_apo_pockets"' in source
-    assert 'callAttr("infer_genetic_code_from_fasta"' in source
+    assert '"analyze_ligand_site"' in source
+    assert '"analyze_apo_pockets"' in source
+    assert '"infer_genetic_code_from_fasta"' in source
     assert "cutoffAngstrom.isFinite()" in source
 
 

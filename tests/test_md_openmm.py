@@ -30,7 +30,7 @@ def _arguments() -> dict[str, object]:
         ("temperature_kelvin", 0.0, "temperature_kelvin"),
         ("steps", 0, "steps"),
         ("replicas", 1, "replicas"),
-        ("seed", 2**32 - 1, "seed"),
+        ("seed", 2**32, "seed"),
         ("report_interval", 101, "report_interval"),
         ("cpu_threads", 0, "cpu_threads"),
         ("pressure_bar", 0.0, "pressure_bar"),

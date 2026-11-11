@@ -2462,3 +2462,15 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Android arm64 debug APK/AAB build, package alignment, JVM test task, artifact/hash verification and upload all passed. GitHub Actions artifact bundle is available from run 42954316831.
 - Completed S1–S10 software-scope reconciliation in `docs/track-s/audit-2026-11-09.md` and updated roadmap/README. S3 apo-concavity candidate screening and S8 candidate ranking are part of this exact-head result.
 - **Decision: Track S software scope CLOSED; Track I is the next engineering track.** D-021 independent scientific/experimental validation, licensed resources/models, secure inference infrastructure and physical-device verification remain explicit carry-forward obligations. S2 has no calibrated quality grade; S3/S8 outputs are heuristic candidates; S10 generation remains disabled. No scientific, clinical or release readiness is claimed.
+
+
+## 2026-11-11 — Session 70: I1 chemistry descriptor hardening
+**Phase:** Track I / I1
+**Objective:** Start I in roadmap order by hardening the existing host-only RDKit chemistry adapter and its pinned reference checks.
+
+- Added strict UTF-8 byte ceilings (1 MiB SMILES, 10 MiB mol block), embedded-NUL rejection and invalid-Unicode rejection before RDKit parser calls.
+- Hardened Morgan Tanimoto parameter validation against booleans/non-integers and applied input byte limits to both operands.
+- Versioned the descriptor output schema to v2; added formal charge, heavy/aromatic atom counts, aliphatic/aromatic ring counts and fraction Csp3, with explicit units/assumptions and finite-number checks.
+- Expanded ethanol/benzene pinned sanity fixtures and validation assertions; added optional RDKit tests for extended descriptors and adversarial input bounds.
+- RDKit remains a host-only optional dependency; Android integration is not claimed. Docking, MD and ADMET remain behind their documented engine/license/data/validation gates.
+- Exact-head CI for the final I1 source revision is pending. No tests are claimed passed in this session until that workflow completes.

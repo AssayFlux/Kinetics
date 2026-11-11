@@ -230,7 +230,7 @@ def test_bounded_sdf_graph_analysis_reports_provenance_and_explicit_atom_limitat
     atom_a = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
     atom_b = f"{1.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'O':>3s}"
     bond = f"{1:3d}{2:3d}{1:3d}"
-    source = "\\n".join(
+    source = "\n".join(
         ["ethanol-fragment", "Kinetics", "", counts, atom_a, atom_b, bond, "M  END", "$$$$"]
     )
     result = analyze_sdf_graph(source)
@@ -246,7 +246,7 @@ def test_bounded_sdf_graph_analysis_rejects_nul_oversize_invalid_unicode_and_mul
 
     counts = f"{1:3d}{0:3d}  0  0  0  0            999 V2000"
     atom = f"{0.0:10.4f}{0.0:10.4f}{0.0:10.4f} {'C':>3s}"
-    record = "\\n".join(["carbon", "Kinetics", "", counts, atom, "M  END"])
+    record = "\n".join(["carbon", "Kinetics", "", counts, atom, "M  END"])
     with pytest.raises(ValueError, match="NUL"):
         analyze_sdf_graph(record + "\x00")
     with pytest.raises(ValueError, match="UTF-8 limit"):
@@ -254,4 +254,4 @@ def test_bounded_sdf_graph_analysis_rejects_nul_oversize_invalid_unicode_and_mul
     with pytest.raises(ValueError, match="Unicode"):
         analyze_sdf_graph(record + "\ud800")
     with pytest.raises(ValueError, match="exactly one"):
-        analyze_sdf_graph(record + "\n$$\n" + record)
+        analyze_sdf_graph(record + "\n" + "$$" + "\n" + record)

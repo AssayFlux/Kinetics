@@ -6,7 +6,7 @@ This is a hypothesis generator, not organism identification or a calibrated clas
 from __future__ import annotations
 
 from math import isfinite
-from typing import Iterable, Mapping
+from typing import Iterable, Mapping, cast
 
 from .genetic_code import GENETIC_CODES
 
@@ -130,9 +130,9 @@ def infer_genetic_code_candidates(
             "invalid_terminal_stop_count": invalid_terminal_stops,
             "complete_cds_count": complete_records,
         })
-    scores.sort(key=lambda item: (float(item["penalty"]), int(item["table_id"])))
+    scores.sort(key=lambda item: (cast(float, item["penalty"]), cast(int, item["table_id"])))
     enough = len(materialized) >= min_records and total_codons >= min_codons
-    margin = float(scores[1]["penalty"]) - float(scores[0]["penalty"]) if len(scores) > 1 else 0.0
+    margin = cast(float, scores[1]["penalty"]) - cast(float, scores[0]["penalty"]) if len(scores) > 1 else 0.0
     selected = enough and margin >= minimum_score_margin
     warnings = [
         "Ranking uses only supplied coding-frame and optional complete-CDS evidence.",

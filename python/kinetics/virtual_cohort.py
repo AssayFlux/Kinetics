@@ -47,6 +47,9 @@ def simulate_hardy_weinberg_cohort(
             raise ValueError(f"allele frequency for {locus} must be between 0 and 1")
         normalized[locus] = float(frequency)
 
+    if sample_size * len(normalized) > 10_000_000:
+        raise ValueError("sample_size times locus count must not exceed 10000000")
+
     rng = random.Random(seed)
     results: list[dict[str, object]] = []
     for locus in sorted(normalized):

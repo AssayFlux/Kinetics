@@ -55,3 +55,10 @@ independent SciPy maximum-likelihood optimizer on fixed synthetic raw counts.
 It uses the same recorded size factors and fixed moment dispersion, then checks
 coefficients, Fisher-information standard errors and Wald p-values. This is a
 software/numerical comparison, not null/power/FDR or biological validation.
+
+
+## Track I1 — pinned RDKit descriptor sanity fixtures
+
+`chemistry_reference.py` runs against the exact pinned host-only RDKit release in `requirements-rdkit.txt`. The ethanol and benzene fixtures check formula, atom/bond/ring counts, charge, heavy/aromatic atom counts, aliphatic/aromatic ring counts, fraction Csp3, molecular/exact mass, TPSA, Crippen LogP, fingerprint configuration and input SHA-256 provenance. The runner also checks that embedded NUL, invalid Unicode and inputs exceeding the UTF-8 byte ceiling are rejected before parsing.
+
+These are deterministic descriptor/parser sanity checks, not a curated chemistry benchmark, biological-activity or ADMET validation, or evidence of Android runtime feasibility.

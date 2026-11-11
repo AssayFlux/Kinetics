@@ -2425,3 +2425,6 @@ Run exact-source CI, inspect the S6 changes and continue the S1/S6–S9 document
 - Added regression tests for the S3 protein-as-ligand rejection and S8 duplicate-sequence/single-candidate rejection.
 - Follow-up commits: `fdaf37e40c6e76fb5523e40dd1c210bfc436e21e`, `d08cd5e0f3262696cf405c57ac722b37a5265830`, `aaae933eccad6c0106c43d1c8b5b6a94f0cd695a`, `0836788b4a5bd942017a9e2949534214bdd9cde9`, `2b1b21e5536272ccb5929f18228c87e59be9dc21`, `d4538a94f4002bc4db6e298d600212a6884e8167`.
 - Exact-head CI is required before treating the new tests as passed. S3 remains limited to ligand-bound geometric site candidates; S8 remains a heuristic candidate ranking only.
+
+- Exposed both new candidate functions from the public `kinetics` package API and changed their tests to import through that public surface, covering package-level integration.
+- Public API/test commits: `38139c9e41ef874e5afe6dca0253cbe44f98fdb3`, `8580ac459560d69e0c701ec208f7c1c9d7259854`, `16d962b5c0169e28dfb6705ca5f94ed706cdb0d5`.

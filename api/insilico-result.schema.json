@@ -27,6 +27,7 @@
             "n_poses_requested": {"type": "integer", "minimum": 1, "maximum": 20},
             "cpu": {"type": "integer", "minimum": 1, "maximum": 32},
             "scoring_function": {"enum": ["vina", "vinardo"]},
+        "platform": {"const": "CPU"},
             "energy_range_kcal_per_mol": {"type": "number", "exclusiveMinimum": 0, "maximum": 100}
           }
         },
@@ -54,7 +55,7 @@
     {
       "type": "object",
       "additionalProperties": false,
-      "required": ["schema_version", "job_type", "research_only", "validation_status", "engine", "input_hashes", "protocol_sha256", "replicas", "limitations"],
+      "required": ["schema_version", "job_type", "research_only", "validation_status", "engine", "input_hashes", "force_field", "protocol", "protocol_sha256", "replicas", "limitations"],
       "properties": {
         "schema_version": {"const": 1},
         "job_type": {"const": "molecular_dynamics"},
@@ -62,6 +63,33 @@
         "validation_status": {"const": "not_independently_validated"},
         "engine": {"$ref": "#/$defs/engine"},
         "input_hashes": {"$ref": "#/$defs/input_hashes"},
+        "force_field": {
+          "type": "object", "additionalProperties": false,
+          "required": ["name", "version", "parameter_source_sha256"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1},
+            "version": {"type": "string", "minLength": 1},
+            "parameter_source_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "protocol": {
+          "type": "object", "additionalProperties": false,
+          "required": ["temperature_kelvin", "pressure_bar", "timestep_fs", "steps", "equilibration_steps", "replicas", "seed", "report_interval", "cpu_threads", "platform", "integrator", "friction_per_ps"],
+          "properties": {
+            "temperature_kelvin": {"type": "number", "exclusiveMinimum": 0, "maximum": 2000},
+            "pressure_bar": {"type": ["number", "null"], "exclusiveMinimum": 0, "maximum": 10000},
+            "timestep_fs": {"type": "number", "exclusiveMinimum": 0, "maximum": 4},
+            "steps": {"type": "integer", "minimum": 1, "maximum": 10000000},
+            "equilibration_steps": {"type": "integer", "minimum": 0, "maximum": 1000000},
+            "replicas": {"type": "integer", "minimum": 2, "maximum": 10},
+            "seed": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+            "report_interval": {"type": "integer", "minimum": 1},
+            "cpu_threads": {"type": "integer", "minimum": 1, "maximum": 64},
+            "platform": {"const": "CPU"},
+            "integrator": {"const": "LangevinMiddleIntegrator"},
+            "friction_per_ps": {"type": "number", "exclusiveMinimum": 0}
+          }
+        },
         "protocol_sha256": {"$ref": "#/$defs/sha256"},
         "replicas": {
           "type": "array",
@@ -78,7 +106,8 @@
               "initial_potential_energy": {"type": "number"},
               "final_potential_energy": {"type": "number"},
               "energy_unit": {"type": "string", "minLength": 1},
-              "trajectory_sha256": {"$ref": "#/$defs/sha256"}
+              "trajectory_sha256": {"$ref": "#/$defs/sha256"},
+              "trajectory_dcd_base64": {"type": "string", "minLength": 1, "maxLength": 44739244}
             }
           }
         },

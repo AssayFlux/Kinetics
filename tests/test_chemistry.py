@@ -254,4 +254,4 @@ def test_bounded_sdf_graph_analysis_rejects_nul_oversize_invalid_unicode_and_mul
     with pytest.raises(ValueError, match="Unicode"):
         analyze_sdf_graph(record + "\ud800")
     with pytest.raises(ValueError, match="exactly one"):
-        analyze_sdf_graph(record + "\n" + "$$" + "\n" + record)
+        analyze_sdf_graph(record + "\n" + "$" * 4 + "\n" + record)

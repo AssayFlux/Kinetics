@@ -26,12 +26,12 @@ The eventual PGx research scope is a future objective, not a current authorizati
 | P0-E02 | Jurisdiction and product classification assessment, including privacy, health-data and medical-device rules | Pending; qualified external advice required | Legal/regulatory adviser |
 | P0-E03 | Research ethics / IRB / IEC determination and approval or documented non-applicability, as applicable | Pending; competent ethics determination required | Research lead + ethics body |
 | P0-E04 | Qualified clinical pharmacology / PGx and scientific adviser review, conflicts and scope | Pending; no adviser review claimed | Project owner |
-| P0-E05 | Data inventory, lawful basis/authority, privacy impact assessment, minimisation, retention/deletion and data-subject handling | To be drafted; no patient intake | Privacy lead / legal adviser |
-| P0-E06 | Threat model, security architecture, access control, encryption/key lifecycle, logging, incident response and recovery | Existing security docs need P-specific review | Security owner |
-| P0-E07 | Software quality lifecycle: requirements, risk controls, traceability, verification, change control, defect/CAPA and release records | Outline pending; no QMS certification claimed | Engineering + owner |
+| P0-E05 | Data inventory, lawful basis/authority, privacy impact assessment, minimisation, retention/deletion and data-subject handling | Engineering data-boundary and lifecycle draft in p0-controls-draft.md; legal/privacy review and lawful-basis determination pending | Privacy lead / legal adviser |
+| P0-E06 | Threat model, security architecture, access control, encryption/key lifecycle, logging, incident response and recovery | P-specific threat-model draft in p0-controls-draft.md; security review and control verification pending | Security owner |
+| P0-E07 | Software quality lifecycle: requirements, risk controls, traceability, verification, change control, defect/CAPA and release records | Draft lifecycle outline in p0-controls-draft.md; owner/adviser approval pending; no QMS certification claimed | Engineering + owner |
 | P0-E08 | Dataset/source terms, attribution, redistribution and intended-use review for each exact release | Candidate catalogue only; no acquired entries approved | Data curator + legal reviewer |
-| P0-E09 | Independent scientific validation strategy, truth sets, metrics, subgroup/bias analysis and abstention | Plan pending; no clinical validation claimed | Independent scientific reviewers |
-| P0-E10 | Incident, stop-work, withdrawal, breach escalation and safe disablement procedure | Draft pending | Owner + security/privacy leads |
+| P0-E09 | Independent scientific validation strategy, truth sets, metrics, subgroup/bias analysis and abstention | Draft staged validation matrix in p0-controls-draft.md; independent reviewer approval pending; no clinical validation claimed | Independent scientific reviewers |
+| P0-E10 | Incident, stop-work, withdrawal, breach escalation and safe disablement procedure | Draft stop-work and incident workflow in p0-controls-draft.md; owner/security/privacy review pending | Owner + security/privacy leads |
 | P0-E11 | Consolidated risk register with mitigations, residual-risk acceptance and owners | Initial draft below; review pending | Engineering + owner + advisers |
 | P0-E12 | Final evidence review and explicit owner P0 gate decision recorded in DECISIONS.md | Not eligible until prerequisites evidenced | Project owner |
 
@@ -57,6 +57,8 @@ The eventual PGx research scope is a future objective, not a current authorizati
 | Security compromise or data exposure | Minimise data, local-first design, threat model, access/key controls, incident plan | Open; security review and verification required |
 
 This is not a completed risk analysis. Severity, likelihood, detectability, acceptability criteria, control verification and residual-risk sign-off require qualified review.
+
+P-specific data governance, threat-model, quality-lifecycle, validation and stop-work drafts are collected in [p0-controls-draft.md](p0-controls-draft.md). They are engineering working documents, not approvals.
 
 ## 6. External determinations and reviews
 Repository changes cannot manufacture:

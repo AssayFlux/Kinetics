@@ -2649,3 +2649,23 @@ The Python catalogue checker required a dataset licence URL and canonical kebab-
 
 ### Validation
 - Tests are committed for CI; no local execution is claimed. The new exact-head workflow must pass before this increment is treated as verified.
+
+
+## 2026-11-11 — Session 79: P0 internal control drafts and CI evidence reconciliation
+
+### Verified evidence
+- Exact-source workflow #42996550617 on 28f26eeb3d1a617811111f5afede303eb024d672 completed successfully: all 9 jobs passed.
+- The Android job built arm64 debug APK/AAB, passed package alignment and JVM unit tests, and uploaded artifacts. CI explicitly did not run an emulator or physical device.
+- Artifact measurements: APK 70,389,746 bytes, SHA-256 64de505b3636d12d2e7b85683413021dc44cf1fe1eb6aa9c9e6b0d5ebd84112c; AAB 40,259,732 bytes, SHA-256 30db5ec820e6b9f0465db176d552b10bb1a4f77098771b425a7bae3999ba380e.
+- Exact-head workflow #42997277628 on 9532d2056d4e0eb7ffda7cd5d6c256ff7aadb71b: Python job passed 507 tests with 9 optional-dependency skips; full workflow still running at this log entry.
+
+### P0 preparation
+- Added docs/track-p/p0-controls-draft.md with engineering drafts for intended use, data governance, threat model, quality lifecycle, staged validation and stop-work/incident response.
+- Linked the draft from the P0 evidence packet and documentation index.
+- Corrected the escaped line break in the decision register so D-020 and D-022 are distinct rows.
+- The new drafts do not represent legal/privacy advice, ethics determination, independent clinical/scientific review, QMS certification or formal P0 approval.
+
+### Current gate status
+- P0 remains BLOCKED / NOT APPROVED; external determinations and competent review remain outstanding.
+- P1 remains in progress until the exact-head workflow for the synthetic ploidy guard completes and the remaining audit/reference requirements are assessed.
+- P2–P7 remain not started; patient data, human-subject activity, individual PGx interpretation and Clinical Mode remain disabled.

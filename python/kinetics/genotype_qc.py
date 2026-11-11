@@ -57,7 +57,11 @@ def aggregate_synthetic_vcf_qc(
     max_variants: int = 100_000,
     max_samples: int = 1_000,
 ) -> dict[str, Any]:
-    """Return variant-level aggregate QC; never return sample identifiers or genotypes."""
+    """Return aggregate QC for a caller-asserted synthetic fixture only.
+
+    The classification argument is not a patient-data detector or privacy filter.
+    Callers must only supply generated synthetic fixtures through this API.
+    """
     if data_classification != "public_non_patient_synthetic":
         raise ValueError("Only explicitly synthetic non-patient VCF fixtures are accepted")
     if not isinstance(fixture_id, str) or not _FIXTURE_ID.fullmatch(fixture_id):

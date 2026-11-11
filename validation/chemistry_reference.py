@@ -65,8 +65,8 @@ def run() -> dict[str, Any]:
     # Reject hostile text before invoking the chemistry parser.
     input_guard_checks: dict[str, bool] = {}
     for label, value in (
-        ("embedded_nul", "CCO\\x00"),
-        ("invalid_unicode", "CCO\\ud800"),
+        ("embedded_nul", "CCO\x00"),
+        ("invalid_unicode", "CCO\ud800"),
     ):
         try:
             analyze_smiles(value)
@@ -162,7 +162,7 @@ def run() -> dict[str, Any]:
         "results": results,
         "input_guard_checks": input_guard_checks,
         "graph_parser_comparison": graph_comparison,
-        "overall_pass": all(result["pass"] for result in results) and graph_comparison["pass"],
+        "overall_pass": all(result["pass"] for result in results) and graph_comparison["pass"] and all(input_guard_checks.values()),
         "limitations": fixture["limitations"] + [
             "The SDF comparison is a synthetic explicit-atom graph/coordinate concordance check only.",
             "It does not validate stereochemistry, aromaticity models, implicit-hydrogen inference, tautomer/protonation behavior or Android RDKit feasibility.",

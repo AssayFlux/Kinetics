@@ -34,3 +34,12 @@ def test_synthetic_cohort_rejects_invalid_inputs(
 ) -> None:
     with pytest.raises(ValueError):
         simulate_hardy_weinberg_cohort(frequencies, sample_size=sample_size, seed=seed)
+
+
+def test_synthetic_cohort_caps_total_genotype_draws() -> None:
+    with pytest.raises(ValueError, match="locus count"):
+        simulate_hardy_weinberg_cohort(
+            {f"locus_{index}": 0.5 for index in range(11)},
+            sample_size=1_000_000,
+            seed=1,
+        )

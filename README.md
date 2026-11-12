@@ -1,18 +1,10 @@
 <!-- KINETICS · BY ASSAYFLUX -->
-
 <p align="center">
-  <img
-    src="https://capsule-render.vercel.app/api?type=waving&height=220&section=header&color=0:800020,45:D4AF37,75:800020,100:1F2A6B"
-    alt="Indian heritage decorative banner"
-    width="100%"
-  />
-</p>
-<p align="center">
-  <img src="Assets/Kinetics%20By%20AssayFlux©.png" alt="Kinetics guilloche DNA logo" width="100%">
+  <img src="Assets/Kinetics%20By%20AssayFlux©.png" alt="Kinetics guilloche DNA logo" width="150%">
 </p>
 
 <p align="center">
-  <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="Animated rainbow DNA helix" width="47%">
+  <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="Animated rainbow DNA helix" width="67%">
 </p>
 
 <p align="center">
@@ -330,32 +322,22 @@ flowchart TD
 </p>
 
 
-<table width="100%" border="1" bordercolor="#B18B5E"
-       cellpadding="18" cellspacing="0" bgcolor="#F6F0E3">
+<table width="100%" border="1" cellpadding="15" cellspacing="0">
   <tr>
     <td align="center">
 
       <p align="center">
-        <strong><em>
-          LET EVERY HELIX CARRY A QUESTION ;
-          LET EVERY ANSWER CARRY ITS EVIDENCE.
-        </em></strong>
-        <br><br>
+        <strong><em>LET EVERY HELIX CARRY A QUESTION ; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
+        <br>
         <sub>Md Safarujjaman</sub>
       </p>
 
       <p align="right">
-        <img
-          src="Assets/Author%27s%20Signature.svg"
-          alt="Author's signature"
-          width="20%">
+        <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" width="20%">
       </p>
 
       <p align="center">
-        <img
-          src="Assets/Section%20Breaker%20With%20Author%20Details.jpg"
-          alt="Kinetics by AssayFlux title strip"
-          width="100%">
+        <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
       </p>
 
     </td>

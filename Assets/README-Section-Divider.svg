@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="72" viewBox="0 0 1200 72"
+     role="img" aria-labelledby="title desc">
+  <title id="title">Kinetics animated gradient section divider</title>
+  <desc id="desc">A transparent rounded outline derived from the expandable Kinetics border artwork.</desc>
+  <defs>
+    <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B68CFF"/>
+      <stop offset="25%" stop-color="#56CFE1"/>
+      <stop offset="50%" stop-color="#67D6A3"/>
+      <stop offset="75%" stop-color="#F6C76A"/>
+      <stop offset="100%" stop-color="#F28CB8"/>
+      <animateTransform attributeName="gradientTransform" type="rotate"
+                        from="0 0.5 0.5" to="360 0.5 0.5"
+                        dur="12s" repeatCount="indefinite"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="9" width="1180" height="54" rx="22" ry="22"
+        fill="none" stroke="url(#dividerGradient)" stroke-width="2.5"
+        stroke-linejoin="round">
+    <animate attributeName="stroke-width" values="2;3;2"
+             dur="5s" repeatCount="indefinite"/>
+  </rect>
+  <path d="M600 25 L611 36 L600 47 L589 36 Z"
+        fill="none" stroke="#D4AF37" stroke-width="1.8"/>
+</svg>

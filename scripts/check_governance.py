@@ -28,6 +28,7 @@ def validate() -> list[str]:
     errors: list[str] = []
     required = [
         "docs/track-g/implementation-plan.md",
+        "docs/track-g/audit-report-2026-11-12.md",
         "docs/track-g/control-evidence-register.md",
         "docs/track-g/roles-and-review-cadence.md",
         "docs/track-g/requirements-traceability.csv",

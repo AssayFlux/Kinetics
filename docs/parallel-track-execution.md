@@ -2,7 +2,7 @@
 
 **ARCHIVED — DO NOT USE FOR CURRENT SEQUENCING**
 
-**Historical owner direction:** 2026-11-08. This document recorded a temporary instruction to execute R/S/I/P concurrently. On 2026-11-09, D-019 explicitly superseded that sequencing permission. The current controlling order is **R → S → I → P → G**, with two steps per track. This file is retained only for decision history; do not use its parallel work lanes or immediate deliverables as current instructions. Refer to `DECISIONS.md` D-019 and the current sequencing gate in `ROADMAP.md`.
+**Historical owner direction:** 2026-11-08. This document recorded a temporary instruction to execute R/S/I/P concurrently. On 2026-11-09, D-019 explicitly superseded that sequencing permission. D-023 (2026-11-12) now controls the current order: **R → S → I → P → G → U**, with two steps per track. This file is retained only for decision history; do not use its parallel work lanes or immediate deliverables as current instructions. Refer to `DECISIONS.md` D-023 and the current sequencing gate in `ROADMAP.md`.
 
 ## Operating rules
 

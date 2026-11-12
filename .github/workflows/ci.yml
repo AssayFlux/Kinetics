@@ -196,6 +196,13 @@ jobs:
         working-directory: android
         run: >-
           "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon --stacktrace :app:testDebugUnitTest
+      - name: Capture resolved dependency graphs and artifact hashes
+        working-directory: android
+        run: |
+          "$HOME/.cache/kinetics/gradle-8.13/gradle-8.13/bin/gradle" --no-daemon :app:dependencies --configuration debugRuntimeClasspath > ../gradle-debug-runtime-dependencies.txt
+          cargo tree --locked --all-features --manifest-path native-rust/Cargo.toml > ../cargo-dependency-tree.txt
+          sha256sum native-rust/Cargo.lock > ../cargo-lock-sha256.txt
+          find "$HOME/.gradle/caches/modules-2/files-2.1" -type f \\( -name '*.jar' -o -name '*.aar' -o -name '*.pom' -o -name '*.module' \\) -print0 | sort -z | xargs -0 -r sha256sum > ../gradle-resolved-artifact-sha256.txt
       - name: Verify APK/AAB artifacts and record hashes
         run: python scripts/check_android_artifacts.py
       - name: Upload debug APK, AAB and build log
@@ -207,6 +214,10 @@ jobs:
             android/app/build/outputs/apk/debug/app-debug.apk
             android/app/build/outputs/bundle/debug/app-debug.aab
             android-build.log
+            gradle-debug-runtime-dependencies.txt
+            cargo-dependency-tree.txt
+            cargo-lock-sha256.txt
+            gradle-resolved-artifact-sha256.txt
           if-no-files-found: warn
           retention-days: 14
 

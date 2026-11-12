@@ -2764,3 +2764,13 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 - Existing partial U0–U3 source and documentation are retained as pre-existing work, not erased or retroactively accepted. Further Track U implementation and its audit follow G's two-step gate; U4–U6 retain their documented dependencies and exit criteria.
 - Updated NORTH_STAR, ROADMAP, README, CONTRIBUTING, engineering integration standard, docs index, archived parallel-work protocol, Track G plan/register and CHANGELOG to align with D-023.
 - No track status, scientific validation, physical-device verification, license clearance, external approval or P0 status is changed by this sequencing decision. Patient/clinical workflows remain disabled.
+
+
+## 2026-11-12 — README redesign and asset-root consolidation
+
+- Rebuilt the root README as a concise project landing page: supplied organization/Kinetics GIFs, compact project snapshot, D-023 track order, scoped engineering-gate status, collapsible track details, coloured navigation badges and owner-supplied UI reference images.
+- Defined the displayed percentages narrowly as documented engineering-gate closure; did not claim scientific, clinical, legal, regulatory or release compliance. P0 remains NOT APPROVED.
+- Audited the two case-sensitive root directories. `Assets/Brand Logo.svg` and `assets/brand/brand-logo.svg` were the same Git blob; the remaining legacy assets were moved into `assets/brand/` and `assets/design-previews/` by reusing their original Git blob SHAs.
+- Renamed the former `Assets/Kinetics.png` path to `assets/brand/kinetics-background.jpg` because its bytes are JPEG; no conversion or recompression was performed. The original Android background blob remains identical.
+- Updated active brand and UI documentation. Historical decision/session records retain old path strings where they accurately describe past events.
+- Consolidation commit: `300d2446b931bce947e870932077c666700cffb1`. README and documentation edits follow in this session.

@@ -142,7 +142,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 </p>
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,c,rust,nodejs,html,css,android,js,githubactions,bash,cmake,git,github,linux&perline=6" alt="Technology icons">
+  <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,rust,nodejs,html,css,js,bash,cmake,git,github,linux&perline=5" alt="Technology icons">
 </p>
 
 | LAYER | TECHNOLOGY |

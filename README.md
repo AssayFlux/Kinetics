@@ -21,11 +21,10 @@
   <img src="https://img.shields.io/github/languages/top/AssayFlux/Kinetics?style=for-the-badge&label=TOP%20LANGUAGE&color=0B6E6E" alt="Top language">
 </p>
 
-<p align="center"><strong>PRE-RELEASE &nbsp;·&nbsp; RESEARCH USE ONLY</strong></p>
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=RESEARCH+USE+ONLY" alt="Kinetics tagline">
+</p>
 
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## ABOUT
 

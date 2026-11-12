@@ -41,7 +41,7 @@ These are useful foundations, not evidence that all controls are operating or in
 | G6 | Publication and research integrity | Manuscript claim-to-evidence matrix; methods/reproducibility checklist; authorship/contribution and conflict-of-interest declarations; citation and data/code availability plan | Author approvals, external peer review and journal/editor decisions |
 | G7 | Operational governance | Incident response, stop-work, change/rollback, release authorization, access review, backup/recovery and periodic governance review records | Named responsible operators, tested exercises and owner acceptance |
 
-## 4. Execution order
+## 5. Execution order
 
 1. **G0 — inventory and evidence map:** reconcile existing policies, schemas, scripts, CI jobs and evidence records; identify duplicates and missing owners.
 2. **G1 — security:** resolve the two threat-model documents into one canonical control map without deleting history; add testable abuse cases and vulnerability response evidence.

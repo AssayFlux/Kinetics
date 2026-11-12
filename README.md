@@ -271,10 +271,10 @@ flowchart TD
   <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1100&color=6877B5&center=true&vCenter=true&width=1000&height=45&lines=Kinetics'e+hoş+geldiniz;Vítejte+v+Kinetics;Witamy+w+Kinetics;Welkom+bij+Kinetics;Welcome+to+Kinetics;Bienvenue+à+Kinetics;Benvenuti+a+Kinetics;Добро+пожаловать+в+Kinetics;欢迎来到+Kinetics;Kineticsへようこそ" alt="Welcome — 9">
 </p>
 
+
 <p align="right">
   <img    src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=35&pause=1000&color=CE93D8&width=1000&height=80&lines=LET+EVERY+HELIX+CARRY+A+QUESTION;LET+EVERY+ANSWER+CARRY+ITS+EVIDENCE;Md+Safarujjaman"
-    alt="Quote"
-  >
+    alt="Quote">
 </p>
 
 <p align="right">

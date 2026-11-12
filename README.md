@@ -208,112 +208,6 @@ flowchart TD
     class CONTRACTS,CHECKS,CI gold;
     class PY,NATIVE,VIEW,SCI,OPTIONAL,VINA teal;
 ```
-
-## QUICK START
-<details>
-  <summary><strong>PREREQUISITES</strong></summary>
-
-  - Python **3.10 or newer**, Git and a virtual environment for Python development.
-  - Optional Android build: Linux x86_64 or x86_64 WSL2, JDK 17, Python 3.11.17 exactly, Rust/Cargo, Android SDK platform 36, NDK 28.2.13676358, Build Tools 36.0.0, CMake 3.22.1, `patchelf` and `patch`.
-  - Optional Node worker tests: Node.js 22 or newer.
-  - The Android build script downloads checksum-pinned Gradle 8.13. Termux is not a supported build host for this toolchain.
-</details>
-
-<details>
-  <summary><strong>PYTHON INSTALLATION</strong></summary>
-
-  ```bash
-  python -m venv .venv
-  source .venv/bin/activate
-  python -m pip install --upgrade pip
-  python -m pip install -r requirements-dev.txt
-  python -m pip install -e .
-  ```
-
-  Windows PowerShell activation:
-
-  ```powershell
-  .venv\Scripts\Activate.ps1
-  ```
-
-  Optional engine extras:
-
-  ```bash
-  python -m pip install -e ".[docking]"
-  python -m pip install -e ".[md]"
-  ```
-</details>
-
-<details>
-  <summary><strong>PYTHON API EXAMPLE</strong></summary>
-
-  ```python
-  from kinetics import parse_fasta
-
-  records = parse_fasta(">demo\nACGT")
-  print(records[0])
-  ```
-
-  This documents the public function shape; it was not executed as part of this README update. No verified root-level CLI entry point is claimed.
-</details>
-
-<details>
-  <summary><strong>TESTS AND STATIC CHECKS</strong></summary>
-
-  ```bash
-  pytest
-  ruff check scripts tests
-  mypy scripts python/kinetics
-  python scripts/check_registry.py
-  python scripts/check_governance.py
-  scripts/reproduce-all
-  ```
-
-  Optional Node worker tests:
-
-  ```bash
-  cd remote-node
-  npm test
-  ```
-
-  CI also defines pinned scientific reference comparisons, chemistry smoke fixtures, source SBOM inventory, Android arm64 debug packaging, JVM tests and package-alignment checks. A passing host smoke check is not independent scientific validation or physical-device verification.
-</details>
-
-<details>
-  <summary><strong>ANDROID DEBUG BUILD</strong></summary>
-
-  On a supported Linux x86_64 / x86_64 WSL2 host:
-
-  ```bash
-  chmod +x scripts/build_android_local.sh
-  scripts/build_android_local.sh
-  ```
-
-  The script builds debug APK/AAB outputs and performs package-alignment checks. It does not install the app, run an emulator or verify a physical device.
-</details>
-
-## REPOSITORY MAP
-| PATH | PURPOSE |
-|---|---|
-| `android/` | Kotlin app, Compose, JNI, Rust and embedded Python |
-| `python/kinetics/` | Scientific Python package |
-| `api/` · `schemas/` | Versioned contracts and reusable schemas |
-| `capabilities/` · `domains/` · `engines/` | Capability, domain and engine metadata |
-| `benchmarks/` · `validation/` · `tests/` | Reference fixtures, checks and regression tests |
-| `governance/` · `paper/` · `docs/` | Assurance records, manuscript planning and documentation |
-| `scripts/` · `sbom/` · `.github/workflows/` | Build, validation, inventory and CI automation |
-| `remote-node/` · `web/viewers/` | Optional research worker and offline viewers |
-| `data/` · `datapacks/` · `design/` | Catalogues, manifests and design inputs |
-| `Assets/` | Brand artwork, animations and design references (see the asset library below) |
-
-## RESEARCH AND SAFETY BOUNDARIES
-
-- Kinetics is a research-engineering prototype. It is not clinically validated, is not a medical device and must not be used for diagnosis, treatment or dosing decisions.
-- **P0 remains BLOCKED / NOT APPROVED.** Patient-data workflows, human-subject activity and Clinical Mode are not authorised.
-- The optional Node worker is a private research boundary, binds to loopback by default and is disabled by default. Docking requires explicit enablement and bearer authentication; documented routes are `GET /health` and `POST /v1/docking`. The worker does not expose molecular-dynamics execution.
-- No production service deployment, public API availability, independent docking validity, signed public release or physical-device verification is claimed.
-- CI builds debug artifacts. Test definitions and green host checks do not replace independent scientific, security, licensing or device evidence.
-
 ## NEXT GATES
 | TRACK | NEXT REQUIRED WORK |
 |:---:|---|
@@ -332,17 +226,8 @@ flowchart TD
 
 ## BRAND IDENTITY
 <p align="center">
-  <img src="Assets/Organization%20Logo%204%E2%98%851.png" alt="AssayFlux wordmark" width="100%">
+  <img src="Assets/Organization%20Logo%204%E2%98%851.gif" alt="AssayFlux wordmark" width="100%">
 </p>
-
-<details>
-  <summary><strong>ANIMATED ORGANISATION MARK</strong></summary>
-
-  <p align="center">
-    <img src="Assets/Organization%20Logo%201%E2%98%851.gif" alt="AssayFlux animated square organisation mark" width="40%">
-  </p>
-</details>
-
 ## THE JOURNEYS
 <p align="center">
   <img src="Assets/Section%20Breaker%20Black%20Background.jpg" alt="Author details strip" width="100%">

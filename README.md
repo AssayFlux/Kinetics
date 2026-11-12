@@ -14,9 +14,6 @@
   />
 </p>
 
-
-
-
 <p align="center">
   <img
     src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=17&pause=1800&color=D4AF37&center=true&vCenter=true&width=950&lines=INVITING+RESEARCHERS%2C+SCIENTISTS+AND+INSTITUTIONS;LET+US+ADVANCE+SCIENTIFIC+DISCOVERY+TOGETHER;BUILT+FOR+RIGOROUS+RESEARCH+AND+REPRODUCIBLE+WORKFLOWS;COLLABORATION+BEGINS+WITH+QUESTIONS+AND+GROWS+THROUGH+EVIDENCE;AUTHORED+BY+MD+SAFARUJJAMAN+%7C+ASSAYFLUX+SCIENTIFIC+SYSTEMS"
@@ -173,18 +170,6 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 ## STATUS AND PROGRESS
 <p align="center">
   <img src="Assets/Japanese%20Culture.png" alt="Illustrated Japanese heritage scene with Mount Fuji, torii gate, pagoda and cherry blossom" width="100%">
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/TRACK%20R-SOFTWARE%20AUDIT%20CLOSED-3B5D2A?style=for-the-badge" alt="Track R: software audit closed">
-  <img src="https://img.shields.io/badge/TRACK%20S-SOFTWARE%20SCOPE%20CLOSED-3B5D2A?style=for-the-badge" alt="Track S: software scope closed">
-  <img src="https://img.shields.io/badge/TRACK%20I-SOFTWARE%20AUDIT%20CLOSED-3B5D2A?style=for-the-badge" alt="Track I: software audit closed">
-  <br>
-  <img src="https://img.shields.io/badge/TRACK%20P-IN%20PROGRESS-FF9933?style=for-the-badge" alt="Track P: in progress">
-  <img src="https://img.shields.io/badge/TRACK%20G-PLANNING%20BASELINE%20DRAFTED-D4AF37?style=for-the-badge" alt="Track G: planning baseline drafted">
-  <img src="https://img.shields.io/badge/TRACK%20U-SEQUENCED%20AFTER%20G-1F2A6B?style=for-the-badge" alt="Track U: sequenced after G">
-  <br>
-  <img src="https://img.shields.io/badge/P0-BLOCKED%20%2F%20NOT%20APPROVED-B71C1C?style=for-the-badge" alt="P0: blocked, not approved">
 </p>
 
 | TRACK | SCOPE | CURRENT SOFTWARE POSITION | OPEN GATE |

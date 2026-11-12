@@ -1,7 +1,7 @@
 # Track G — governance, assurance and publication readiness
 
 **Status:** planning baseline created 2026-11-12; implementation not yet accepted.  
-**Sequence:** Track G follows the Track P engineering exit. G planning and inventory may proceed now; G implementation is sequenced after P's exact-head software verification is green.  
+**Sequence:** Track G follows the Track P engineering exit. Track U follows Track G in the current **R → S → I → P → G → U** order (D-023). G planning and inventory may proceed while P verification is completed; G implementation remains gated by P's exact-head software verification. Further U implementation begins only after G's two-step gate is assessed and reported. Existing partial U0–U3 work is retained as a pre-existing baseline.  
 **Scope:** research-only governance for the unreleased Kinetics platform. This plan is not a legal opinion, ethics determination, security certification, QMS certification, regulatory clearance or publication endorsement.
 
 ## 1. Purpose
@@ -27,7 +27,7 @@ These are useful foundations, not evidence that all controls are operating or in
 ## 3. Current execution status (2026-11-12)
 
 - **G0 inventory:** initial control/evidence register drafted at `docs/track-g/control-evidence-register.md`, covering G0–G7 controls, current evidence, accountable role categories, next actions and external blockers. It is a draft; named role assignment and owner acceptance remain open.
-- **G1–G7 implementation:** not yet accepted as started. Under D-019's strict R → S → I → P → G sequence, implementation proceeds after Track P exact-head software verification. Track P's latest workflow #43131601029 has passed Python (531 passed, 9 optional skips), reference/engine smoke, SPDX and Node security jobs; Android APK/AAB build is still running. No P closure or G implementation start is declared while that job is pending.
+- **G1–G7 implementation:** not yet accepted as started. Under D-023's strict R → S → I → P → G → U sequence, G implementation proceeds after Track P exact-head software verification; Track U is the next sequential track only after G's two-step gate. Track P's latest workflow #43131601029 has passed Python (531 passed, 9 optional skips), reference/engine smoke, SPDX and Node security jobs; Android APK/AAB build is still running. No P closure or G implementation start is declared while that job is pending.
 
 ## 4. Work packages
 

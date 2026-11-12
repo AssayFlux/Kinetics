@@ -1,185 +1,360 @@
-<p align="center" style="white-space: nowrap;">
-  <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="140" height="140" style="object-fit: contain; vertical-align: middle;">
+<!--
+Kinetics README
+Placeholder asset: assets/demo.gif (add a real, current application capture before release).
+Language percentages are intentionally not fabricated; see the source-statistics TODO below.
+-->
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:17324D,50:256D85,100:5BC0BE&height=180&section=header&text=KINETICS&fontSize=48&fontColor=FFFFFF&fontAlignY=38&desc=Offline-first%20scientific%20research%20workbench&descAlignY=60&descSize=16" alt="Kinetics banner" width="100%">
+</p>
+
+<p align="center">
+  <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="112" height="112">
   &nbsp;&nbsp;
-  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width="140" height="140" style="object-fit: contain; vertical-align: middle;">
+  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width="112" height="112">
   &nbsp;&nbsp;
-  <img src="assets/brand/kinetics-logo.gif" alt="Kinetics animated logo" width="140" height="140" style="object-fit: contain; vertical-align: middle;">
+  <img src="assets/brand/kinetics-logo.gif" alt="Kinetics animated logo" width="112" height="112">
 </p>
 
 <h1 align="center">Kinetics</h1>
 <p align="center">
-  <strong>Offline-first scientific research workbench</strong><br>
-  Android-native · Reproducible · Provenance-aware · Research-only
+  <strong>Explore biology. Reproduce the work. Keep the evidence.</strong>
+</p>
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=IBM+Plex+Mono&weight=500&size=16&pause=1200&color=38BDF8&center=true&vCenter=true&width=720&lines=Android-native+%C2%B7+Offline-first;Python+%C2%B7+Kotlin+%C2%B7+Rust+%C2%B7+C%2B%2B;Reproducible+workflows+%C2%B7+Explicit+provenance;Research-only+%C2%B7+Evidence-led" alt="Kinetics project tagline">
 </p>
 
 <p align="center">
-  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
-  <img src="https://img.shields.io/badge/platform-Android%20%7C%20Linux-3B6B68" alt="Platform">
-  <img src="https://img.shields.io/badge/mode-Research%20only-7B1E34" alt="Research only">
-  <img src="https://img.shields.io/badge/license-Apache--2.0-D9A441" alt="Apache 2.0">
-  <img src="https://img.shields.io/badge/release-pre--release-lightgrey" alt="Pre-release">
+  <a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=for-the-badge&label=license" alt="Apache 2.0 license"></a>
+  <img src="https://img.shields.io/badge/version-0.0.0-lightgrey?style=for-the-badge" alt="Pre-release version 0.0.0">
+  <a href="https://github.com/AssayFlux/Kinetics/stargazers"><img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=for-the-badge" alt="GitHub stars"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/forks"><img src="https://img.shields.io/github/forks/AssayFlux/Kinetics?style=for-the-badge" alt="GitHub forks"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/issues"><img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=for-the-badge" alt="Open issues"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/commits/main"><img src="https://img.shields.io/github/last-commit/AssayFlux/Kinetics?style=for-the-badge" alt="Last commit"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=for-the-badge&label=CI" alt="GitHub Actions CI"></a>
 </p>
 
-Kinetics is a modular workbench for computational biology and in-silico research. It combines an Android-native experience with Python, C++ and Rust scientific components, reproducible workflows and provenance-aware outputs.
+<p align="center">
+  <strong>Pre-release · Research use only · Not clinically validated</strong>
+</p>
 
-<blockquote>
-  <strong>Development status:</strong> This is an active pre-release project, not a validated scientific product or production release. Research Mode only. Patient/clinical data, individual clinical interpretation, treatment recommendations and Clinical Mode remain disabled.
-</blockquote>
+---
 
-## Project snapshot
+## Demo
+
+<p align="center">
+  <!-- TODO: Replace assets/demo.gif with a short, genuine capture of the current running application. -->
+  <img src="assets/demo.gif" alt="Kinetics application demo — placeholder asset to be added" width="88%">
+  <br>
+  <em>Demo asset pending. The dashboard and login images currently in the repository are design references, not screenshots of a completed app.</em>
+</p>
+
+## About Kinetics
+
+Kinetics is an open-source, modular scientific research workbench designed around an **Android-native, offline-first experience**. Its repository combines scientific Python modules, a Kotlin/Jetpack Compose Android application, selected Rust and C++ native components, versioned data contracts, and reproducibility and governance tooling.
+
+The codebase explores workflows across genomics, sequence analysis, structural biology, computational chemistry, enzyme kinetics, omics and research-oriented pharmacology utilities. A capability registry connects tools with engines, data packs and scientific domains. Results are designed to retain input hashes, parameters, versions, units and other provenance needed to inspect or reproduce an analysis.
+
+Kinetics is an evolving engineering prototype. Source code, automated tests, independent scientific validation, physical-device verification and formal acceptance are tracked as distinct evidence states.
+
+### Why this project?
+
+- **Research workflows that can travel:** an Android-first architecture with local/offline constraints and a separately gated optional compute worker.
+- **Evidence, not just output:** versioned schemas, explicit units, provenance metadata, reference comparisons and conservative failure boundaries.
+- **A visible path to trust:** capability and governance registers distinguish implementation from validation, licensing, device support and external approval.
+
+> [!IMPORTANT]
+> **Research-only boundary:** Kinetics is not a validated medical device or clinical decision-support system. P0 remains **BLOCKED / NOT APPROVED**. Patient/clinical data, identifiable human-subject activity, individual clinical interpretation, diagnosis, treatment or dosing recommendations, and Clinical Mode are not authorized. Do not use outputs for patient care.
+
+## What exists in the codebase
+
+| 🧬 Biology & sequence | 🧪 Chemistry & quantitative research |
+|---|---|
+| FASTA/FASTQ parsing, sequence statistics, alignment and k-mer utilities | Molecular graph and SMILES/MolBlock analysis through an optional RDKit adapter |
+| SAM/BAM/VCF parsing and small-variant normalization utilities | AutoDock Vina docking runner for caller-prepared PDBQT inputs |
+| ORF, GFF3, genome QC and annotation helpers | OpenMM molecular-dynamics runner with explicit setup limitations |
+| HMMER/BLASTP/Augustus/Prodigal adapters and evidence-oriented workflows | Michaelis–Menten models, fitting and exploratory transforms |
+| Phylogenetic distance, neighbour joining, UPGMA and Newick utilities | PK/PD reference models, omics statistics and synthetic cohort utilities |
+| PGx/PharmVar parsing and synthetic/reference-bound genotype QC foundations | ADMET evaluation metrics and applicability-domain utilities; no bundled predictive model |
+
+| 🧩 Platform & integration | 🔎 Quality & governance |
+|---|---|
+| Kotlin + Jetpack Compose Android app foundation | pytest suite and GitHub Actions validation workflow |
+| Python package under `python/kinetics/` | Ruff, mypy and pre-commit configuration |
+| Rust Android arm64 library and C++/JNI build integration | JSON Schema contracts and capability registry checks |
+| Offline structure viewer in HTML/CSS/JavaScript | Scientific reference-comparison and engine smoke workflows |
+| Optional Node 22 research docking worker, disabled by default | Source dependency inventory, threat model, privacy and governance registers |
+
+Feature names describe code present in the repository, not a promise that every workflow is complete, independently validated or supported on every device. See the [capability registry](capabilities/registry.yaml), [research-readiness audit](docs/research-grade-readiness-audit-2026-11-12.md) and [documentation index](docs/README.md).
+
+## Engineering progress
+
+The percentages below are the repository's **documented track engineering-gate status**, not a percentage of scientific validity, clinical readiness, release readiness or regulatory compliance.
 
 <table>
-  <tr>
-    <td width="33%" align="center"><strong>6 tracks</strong><br>Owner-approved sequence</td>
-    <td width="33%" align="center"><strong>Android-first</strong><br>Offline-first architecture</td>
-    <td width="33%" align="center"><strong>Research only</strong><br>No clinical deployment</td>
-  </tr>
-  <tr>
-    <td align="center"><strong>R → S → I</strong><br>Software exit gates closed</td>
-    <td align="center"><strong>P → G → U</strong><br>Current and upcoming work</td>
-    <td align="center"><strong>Evidence-led</strong><br>Build ≠ validation</td>
-  </tr>
+  <thead>
+    <tr><th align="left">Track</th><th align="left">Scope</th><th align="left">Engineering gate</th><th align="left">Evidence still open</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>R</strong></td><td>Research platform, Android foundation, scientific primitives</td>
+      <td><img src="https://img.shields.io/badge/100%25-software%20audit%20closed-238636?style=flat" alt="R software audit closed"></td>
+      <td>Physical-device, independent scientific, licensing and release evidence</td>
+    </tr>
+    <tr>
+      <td><strong>S</strong></td><td>Structure, sequence discovery, annotation and protein intelligence</td>
+      <td><img src="https://img.shields.io/badge/100%25-software%20scope%20closed-238636?style=flat" alt="S software scope closed"></td>
+      <td>Independent references, approved resources/models and device evidence</td>
+    </tr>
+    <tr>
+      <td><strong>I</strong></td><td>In-silico chemistry, docking, MD, ADMET and PK/PD utilities</td>
+      <td><img src="https://img.shields.io/badge/100%25-software%20audit%20closed-238636?style=flat" alt="I software audit closed"></td>
+      <td>Real scientific benchmarks, data/model licences, secure node and device tests</td>
+    </tr>
+    <tr>
+      <td><strong>P</strong></td><td>PGx-first precision-medicine research preparation</td>
+      <td><img src="https://img.shields.io/badge/in%20progress-not%20accepted-yellow?style=flat" alt="P in progress"></td>
+      <td>P0 external determinations, independent evidence and formal owner gate; P0 is not approved</td>
+    </tr>
+    <tr>
+      <td><strong>G</strong></td><td>Security, supply chain, quality, privacy and scientific/publication integrity</td>
+      <td><img src="https://img.shields.io/badge/0%25%20accepted-gate%20open-red?style=flat" alt="G gate open"></td>
+      <td>Exact-head audit, independent reviews, role appointments and operating exercises</td>
+    </tr>
+    <tr>
+      <td><strong>U</strong></td><td>Design system, Android UX and research workflows</td>
+      <td><img src="https://img.shields.io/badge/0%25%20accepted-gate%20not%20started-red?style=flat" alt="U gate not started"></td>
+      <td>Further sequential implementation follows G; prior U0–U3 work remains partial baseline</td>
+    </tr>
+  </tbody>
 </table>
 
-## Track order & progress
+<sub>Estimate method: values reproduce the track-level engineering-gate statements in the current project status documentation and D-023. “100%” means that track's documented software implementation/audit gate was closed; “0% accepted” means the formal track exit gate has not been accepted, not that no source exists. P is deliberately not assigned a made-up percentage.</sub>
 
-**Canonical order: R → S → I → P → G → U** · Decision D-023 · 12 November 2026.
-
-The percentages below measure **documented engineering-gate closure only**, not scientific, clinical, legal, regulatory or release compliance. A completed software gate does not close its external acceptance obligations.
-
-| Track | Focus | Engineering gate | Remaining position |
-|---|---|---:|---|
-| **R** · Research platform | Android foundation, storage, scientific engines, genomics and hardening | **100%** · software audit closed | Physical-device, scientific, licensing and release evidence open |
-| **S** · Structure & discovery | Structure viewer, sequence triage, genome annotation and protein intelligence | **100%** · software scope closed | Independent references, licensed resources/models and device evidence open |
-| **I** · In-silico lab | Chemistry, docking, molecular dynamics, ADMET and simulations | **100%** · software audit closed | Real scientific benchmarks, data/model licences, secure node and device tests open |
-| **P** · Precision medicine | PGx-first research foundation and governance | **In progress** | Latest recorded software CI passed 9/9 jobs; P0 remains **NOT APPROVED** and external evidence gates remain open |
-| **G** · Governance | Security, supply chain, quality, privacy, scientific integrity and publication | **0% accepted** | G0–G7 engineering controls in progress; exact-head CI, owner acceptance and external reviews/exercises remain open |
-| **U** · User experience | Brand system, app shell, authentication and research workflows | **0% accepted** | Partial U0–U3 work is retained as baseline; further sequential work follows G |
-
-<details>
-  <summary><strong>How to read the percentages</strong></summary>
-
-  - 100% means the documented software implementation/audit gate for that track was recorded as closed.
-  - 0% accepted means no formal track exit gate has been accepted yet; it does not mean no source code or planning exists.
-  - P is shown as in progress rather than assigned an invented percentage: software checks have passed, but the formal track/P0 gate is not accepted.
-  - No overall scientific or regulatory compliance percentage is claimed. Independent validation, legal/ethics/privacy determinations, licensing decisions and physical-device acceptance are separate evidence gates.
-</details>
-
-## Product experience
+## Current project status
 
 <p align="center">
-  <img src="assets/design-previews/dashboard-reference.jpg" alt="Owner-supplied Kinetics dashboard design reference" width="48%">
-  <img src="assets/design-previews/login-reference.jpg" alt="Owner-supplied Kinetics login design reference" width="48%">
+  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/Build-GitHub%20Actions%20configured-238636?style=for-the-badge" alt="Build configured"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/tree/main/tests"><img src="https://img.shields.io/badge/Tests-62%20test%20modules-2563EB?style=for-the-badge" alt="62 test modules"></a>
+  <img src="https://img.shields.io/badge/Release-pre--release-lightgrey?style=for-the-badge" alt="Pre-release">
+  <img src="https://img.shields.io/badge/Clinical%20use-not%20approved-red?style=for-the-badge" alt="Clinical use not approved">
 </p>
 
-The active product direction is D-015 Light Classic, with Dark Classic and System appearance. These are owner-supplied design references, not screenshots of a completed application. Real app screens, accessibility, device behaviour and brand integration are verified separately.
+- **Build / CI:** GitHub Actions is configured. The latest run inspected during this README audit passed on commit `50366e8`; use the live workflow badge for current status.
+- **Tests:** 62 Python test modules are present. The CI workflow also defines Android JVM tests, scientific reference comparisons, native-engine smoke checks and Node worker security tests.
+- **Coverage:** no verified coverage percentage is published; none is claimed here.
+- **Deployment:** no production deployment is claimed. Android CI artifacts are debug APK/AAB outputs.
+- **Maintenance:** the repository is actively changing; see [recent commits](https://github.com/AssayFlux/Kinetics/commits/main).
+- **Contributions:** read [CONTRIBUTING.md](CONTRIBUTING.md) and the active roadmap before proposing work. The repository does not declare an unconditional PR acceptance policy.
 
-## DNA particle animation generator
+## Technology
 
-Kinetics includes a minimal, transparent, dotted DNA double-helix loader. The standalone [HTML5 Canvas animation](assets/brand/kinetics_dna_loader.html) is the live 60 FPS reference; [assets/brand/DNA.py](assets/brand/DNA.py) generates that HTML source and exports a transparent animated GIF for app integration. This is a **brand/loading visual**, not a biological DNA analysis or molecular-structure simulation.
+<p align="center">
+  <a href="https://skillicons.dev/icons?i=python,kotlin,cpp,rust,js,html,css,bash,cmake,gradle,githubactions"><img src="https://skillicons.dev/icons?i=python,kotlin,cpp,rust,js,html,css,bash,cmake,gradle,githubactions" alt="Python, Kotlin, C++, Rust, JavaScript, HTML, CSS, Bash, CMake, Gradle and GitHub Actions"></a>
+</p>
+
+| Layer | Technologies in repository |
+|---|---|
+| Android | Kotlin, Jetpack Compose, AndroidX, Gradle, Chaquopy |
+| Scientific core | Python 3.10+, NumPy; optional Biopython, RDKit, AutoDock Vina and OpenMM |
+| Native | C++17, JNI/NDK, Rust 1.88 toolchain |
+| Visualisation | HTML5, CSS, JavaScript, Android WebView |
+| Contracts & metadata | JSON Schema, YAML, SPDX source inventory |
+| Quality | pytest, Ruff, mypy, pre-commit, GitHub Actions |
+| Optional worker | Node.js 22, dependency-free HTTP/TLS service |
+
+The root package metadata is in [pyproject.toml](pyproject.toml). Optional extras are declared there; validation-only pinned dependency sets live under `validation/`. Third-party engines, models, datasets, fonts and artwork may carry separate terms.
 
 <details>
-  <summary><strong>Animation specifications</strong></summary>
+  <summary><strong>Source-language mix and repository statistics</strong></summary>
 
-  | Parameter | Configuration |
-  |---|---:|
-  | Strands | 2 intertwined strands |
-  | Dots | 15 per strand (30 total) |
-  | Motion | Opposing phase-shifted sine waves |
-  | Simulated depth | Cosine-based z depth |
-  | Dot radius | 2.5–6 px |
-  | Dot opacity | 0.4–1.0 |
-  | Palette | `#7dd3fc`, `#38bdf8`, `#3b82f6`, `#818cf8` |
-  | Canvas | 360 × 120 px, transparent |
-  | Canvas animation | `requestAnimationFrame` (display-refresh rate, target 60 FPS) |
-  | GIF export | 180 frames, 50 FPS by default |
-  | Background | Fully transparent |
-
-  Each strand is sampled evenly along the horizontal axis. Dots are sorted by z depth so rear-facing dots render first and front-facing dots appear on top. Radius and opacity increase toward the viewer. No connecting rungs, background, border or decorative shadow are drawn.
+  - A dated repository audit records **356 tracked files** across **55 non-root directories** at its audited revision.
+  - The current `tests/` directory contains **62 test modules**.
+  - Python is the primary scientific implementation language. Kotlin, C++17 and Rust are used in the Android/native stack; JavaScript, HTML and CSS support the offline viewer; Bash/YAML support build and CI automation.
+  - **TODO — exact language line-count percentages:** publish a reproducible source-only LOC report (for example, GitHub Linguist or cloc output), excluding generated assets, lockfiles, vendored material and documentation. Percentages are intentionally omitted rather than guessed.
+  - No root `package.json`, `requirements.txt`, `go.mod`, `Cargo.toml`, `.env.example`, Dockerfile or Compose file is present. Node package metadata is isolated in `remote-node/package.json`; Rust metadata is under `android/native-rust/Cargo.toml`.
+  - The optional Node worker documents two HTTP routes: `GET /health` and `POST /v1/docking`.
 </details>
 
-<details>
-  <summary><strong>Generate the animation assets</strong></summary>
+## Quick start
 
-  Requirements: Python 3, Pillow and NumPy.
+### 1. Python development environment
+
+<details>
+  <summary><strong>Install the development dependencies</strong></summary>
+
+  Python 3.10 or newer is declared by the package metadata. The CI workflow currently uses Python 3.11.
 
   ```bash
-  python -m pip install pillow numpy
-  python assets/brand/DNA.py
+  python -m venv .venv
+  source .venv/bin/activate
+  python -m pip install --upgrade pip
+  python -m pip install -r requirements-dev.txt
+  python -m pip install -e .
   ```
 
-  By default, the script writes `kinetics_dna_loader.html` and `kinetics_dna_loader.gif` beside `DNA.py`. Override the destination or GIF dimensions/frame count with `--output-dir`, `--width`, `--height` and `--frames`. GIF frame timing is quantized to 10 ms increments by the GIF format; the HTML Canvas animation uses `requestAnimationFrame` for smooth display-refresh animation.
+  Windows PowerShell activation:
+
+  ```powershell
+  .venv\Scripts\Activate.ps1
+  ```
+
+  The base project declares no mandatory Python runtime dependencies. Optional engine extras are separate:
+
+  ```bash
+  python -m pip install -e ".[docking]"
+  python -m pip install -e ".[md]"
+  ```
+
+  These extras install pinned AutoDock Vina or OpenMM dependencies; they do not supply receptor/ligand preparation, force fields, datasets or independent scientific validation.
 </details>
 
-**Integration status:** the standalone Canvas source and Python GIF generator are committed. Embedding the GIF/Canvas into Android app screens and validating its appearance on physical devices remain separate integration and test tasks.
-
-## Engineering principles
-
-- **Offline-first:** local research workflows and explicit boundaries for optional remote compute.
-- **Reproducible:** pinned inputs, parameters, versions, seeds and output provenance.
-- **Evidence-aware:** distinguish implementation, automated tests, independent scientific validation and real-device acceptance.
-- **Safe by default:** bounded parsing/resources, explicit abstention and no invented scientific conclusions.
-- **Research-only:** no patient/clinical workflow or treatment/dosing recommendation.
-
-## Current safeguards
-
-- P0 remains **BLOCKED / NOT APPROVED**.
-- No patient data, human-subject activity, individual PGx interpretation or Clinical Mode.
-- Public availability does not imply data/model redistribution rights.
-- CI green does not establish biological accuracy, independent security review or physical-device operation.
-- Debug APK/AAB artifacts are not signed production releases.
-
-## Explore the repository
-
-<p>
-  <a href="ROADMAP.md"><img src="https://img.shields.io/badge/ROADMAP-track%20plan-7B1E34" alt="Roadmap"></a>
-  <a href="DECISIONS.md"><img src="https://img.shields.io/badge/DECISIONS-owner%20decisions-D9A441" alt="Decisions"></a>
-  <a href="docs/README.md"><img src="https://img.shields.io/badge/DOCS-documentation%20index-3B6B68" alt="Documentation"></a>
-  <a href="docs/track-g/implementation-plan.md"><img src="https://img.shields.io/badge/GOVERNANCE-Track%20G-6C5B7B" alt="Track G"></a>
-  <a href="assets/brand/README.md"><img src="https://img.shields.io/badge/BRAND-assets-8A5967" alt="Brand assets"></a>
-  <a href="paper/manuscript-skeleton.md"><img src="https://img.shields.io/badge/PAPER-methods%20draft-596B7A" alt="Manuscript"></a>
-</p>
+### 2. Run tests and repository checks
 
 <details>
-  <summary><strong>Track R — Research platform</strong></summary>
+  <summary><strong>Run the Python test suite</strong></summary>
 
-  Android/runtime foundation, secure local storage, sequence and structural analysis, chemistry, phylogenetics, omics, gene catalogue and quality/release hardening. Software audit is closed; device, scientific, licensing and release acceptance remain open.
+  ```bash
+  pytest
+  ```
+
+  Run the repository's reproduction entry point:
+
+  ```bash
+  scripts/reproduce-all
+  ```
+
+  Run the configured static checks:
+
+  ```bash
+  ruff check scripts tests
+  mypy scripts python/kinetics
+  python scripts/check_registry.py
+  python scripts/check_governance.py
+  ```
+
+  CI runs additional catalogue, generated-file, scientific-reference, engine-smoke and Android checks. See [the workflow definition](.github/workflows/ci.yml).
 </details>
+
+### 3. Build the Android debug artifacts
 
 <details>
-  <summary><strong>Track S — Structure, sequence & discovery</strong></summary>
+  <summary><strong>Linux x86_64 / x86_64 WSL2 build prerequisites</strong></summary>
 
-  Structure viewer and geometry, variant/interface evidence, prediction boundary, session export, unknown-sequence triage, genome annotation, genetic-code investigation, protein intelligence and constrained design. Software scope is closed; independent validation and approved resources remain open.
+  The checked-in build script requires JDK 17, Python **3.11.18**, Rust/Cargo and rustup, Android SDK platform 36, Android NDK **28.2.13676358**, Build Tools **36.0.0**, CMake **3.22.1**, `patchelf`, `patch`, Git, curl and standard shell utilities. The script downloads a checksum-pinned Gradle 8.13 distribution.
+
+  Set `ANDROID_HOME` or `ANDROID_SDK_ROOT` to the installed SDK location, then run from the repository root:
+
+  ```bash
+  chmod +x scripts/build_android_local.sh
+  scripts/build_android_local.sh
+  ```
+
+  Outputs are a debug APK and debug AAB under `android/app/build/outputs/`. The script explicitly does **not** run an emulator or physical-device test. Termux/Android itself is not a supported build host for this pinned toolchain.
+
+  See [local Android build notes](docs/local-android-build.md).
 </details>
+
+### 4. Optional private research node
 
 <details>
-  <summary><strong>Track I — In-silico laboratory</strong></summary>
+  <summary><strong>Run the dependency-free Node 22 worker tests</strong></summary>
 
-  Ligand preparation, docking, molecular dynamics, ADMET/PK-PD utilities and synthetic variant/cohort research. Software implementation/integration audit is closed; real scientific benchmarks, licensing, secure compute and device tests remain open.
+  The worker is disabled for docking by default and is not a production deployment.
+
+  ```bash
+  cd remote-node
+  npm test
+  ```
+
+  For its install/run procedure, required environment variables, TLS boundary and security limitations, follow [remote-node/README.md](remote-node/README.md). Do not commit tokens, certificates or private keys.
 </details>
 
-<details>
-  <summary><strong>Track P — Precision medicine</strong></summary>
+### Environment configuration
 
-  PGx-first research preparation (P0–P7). Internal schemas and software checks do not constitute clinical approval. P0 remains NOT APPROVED; external legal, ethics, privacy, security, regulatory and scientific evidence is outstanding.
-</details>
+There is no root `.env.example` and the Python development workflow does not require a project-wide environment file. The optional research node uses the environment variables documented in its own README. Configure secrets through the host environment or secret manager; never add them to Git.
 
-<details>
-  <summary><strong>Track G — Governance</strong></summary>
+## Repository structure
 
-  G0–G7: governance map, security assurance, licensing/supply chain, software quality, privacy/data governance, scientific integrity/bias, publication integrity and operations. The initial plan and evidence register are drafts, not accepted controls or certifications.
-</details>
+```text
+Kinetics/
+├── android/             # Kotlin app, Compose design system, JNI, Rust and embedded Python
+├── api/                 # Versioned API and cross-component JSON Schemas
+├── assets/              # Brand assets and design references
+├── benchmarks/          # Benchmark protocols and fixtures
+├── capabilities/        # Capability registry and status metadata
+├── cpp/                 # Native C++ implementation and build integration
+├── data/                # Source catalogues and metadata
+├── datapacks/           # Data-pack manifests / planned pack content
+├── design/              # Design tokens and generated design inputs
+├── docs/                # Architecture, track plans, audits and UI specifications
+├── domains/             # Scientific domain metadata
+├── engines/             # Engine metadata and integration points
+├── governance/           # Governance and assurance registers
+├── paper/               # Manuscript planning and claim-evidence ledger
+├── python/kinetics/     # Scientific Python package
+├── remote-node/         # Optional, disabled-by-default Node docking worker
+├── rust/                # Rust source and integration area
+├── schemas/             # Reusable domain/data schemas
+├── scripts/             # Build, generation, validation and inventory scripts
+├── sbom/                # Software bill-of-materials materials
+├── tests/               # Python regression and contract tests
+├── validation/          # Pinned independent-reference and engine smoke checks
+├── web/viewers/         # Offline HTML/CSS/JavaScript structure viewer
+├── .github/workflows/   # GitHub Actions CI
+├── pyproject.toml       # Python package metadata and tool configuration
+├── requirements-dev.txt # Python development dependencies
+├── ROADMAP.md           # Canonical track plan
+├── DECISIONS.md         # Owner decisions and supersession history
+├── NORTH_STAR.md        # Mission, product boundaries and direction
+└── LICENSE              # Apache License 2.0
+```
 
-<details>
-  <summary><strong>Track U — User experience</strong></summary>
+Some directories intentionally contain metadata, placeholders or planned extension points. Their presence does not mean a complete engine or product feature is delivered. For the canonical navigation map, see [docs/README.md](docs/README.md).
 
-  U0–U6: design system, adaptive shell, privacy/lock, research workflow screens, scientific visualisations, genomics/PGx research screens and accessibility/localisation. Partial U0–U3 source is pre-existing baseline; the next sequential U implementation follows G under D-023.
-</details>
+## Roadmap
 
-## Build & verification
+The owner-approved execution order is **R → S → I → P → G → U** (Decision D-023). Track sequencing and gate requirements are defined in [ROADMAP.md](ROADMAP.md).
 
-GitHub Actions is the source of current automated build/test status. Historical passing runs are not evidence for a different commit. Physical Android-device testing and independent scientific validation remain separate.
+- [x] R — Research platform software audit recorded closed.
+- [x] S — Structure, sequence and discovery software scope recorded closed.
+- [x] I — In-silico laboratory software audit recorded closed.
+- [ ] P — Complete the permitted research-only engineering base; P0 external evidence and formal approval remain blocked.
+- [ ] G — Complete G0–G7 engineering audit, exact-head verification, independent reviews and operating exercises.
+- [ ] U — Resume sequential UI implementation after G's gate is assessed; audit and verify on target devices.
+- [ ] Publish reproducible, capability-level scientific reference and benchmark evidence.
+- [ ] Complete data/model/dependency licensing decisions and release-grade SBOM coverage.
+- [ ] Complete physical Android device, offline-mode, accessibility and recovery verification.
+- [ ] Add a real application demo capture and final approved logo/loader integration evidence.
+
+See the [full roadmap](ROADMAP.md), [current G audit](docs/track-g/audit-report-2026-11-12.md) and [P implementation plan](docs/track-p/implementation-plan.md) for details.
+
+## Contributing
+
+Contributions should follow the current roadmap, owner decisions, integration standard and evidence gates.
+
+1. Read [NORTH_STAR.md](NORTH_STAR.md), [ROADMAP.md](ROADMAP.md) and [DECISIONS.md](DECISIONS.md).
+2. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/ENGINEERING_INTEGRATION_STANDARD.md](docs/ENGINEERING_INTEGRATION_STANDARD.md).
+3. Work only on an active, permitted item; preserve track order R → S → I → P → G → U.
+4. Add or update tests, schemas, provenance and licensing evidence alongside implementation.
+5. Report checks run, checks not run, limitations and the next step. Never claim scientific validation or device support without its evidence.
 
 ## License
 
-Project code: Apache-2.0. Third-party engines, dependencies, models, datasets, fonts and assets retain their own terms and require separate review.
+Kinetics project code is distributed under the [Apache License 2.0](LICENSE). Third-party dependencies, engines, datasets, models, fonts and visual assets may have separate licences and redistribution conditions. Review the relevant upstream terms before bundling or redistributing them.
+
+## Contact
+
+- **Repository:** [github.com/AssayFlux/Kinetics](https://github.com/AssayFlux/Kinetics)
+- **Maintainer / project owner:** [AssayFlux](https://github.com/AssayFlux)
+- **Issues and questions:** [GitHub Issues](https://github.com/AssayFlux/Kinetics/issues)
+- **Project documentation:** [docs/README.md](docs/README.md)
+
+---
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:5BC0BE,50:256D85,100:17324D&height=110&section=footer" alt="" width="100%">
+  <strong>Made with ❤️ by Md Safarujjaman</strong>
+  <br>
+  <sub>Build carefully. Measure honestly. Share reproducibly.</sub>
+</p>

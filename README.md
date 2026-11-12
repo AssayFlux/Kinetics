@@ -55,7 +55,7 @@
 
 The repository brings together foundations for sequence and genomics, structural biology, chemistry and docking, molecular dynamics, kinetics and PK/PD, and omics/pharmacogenomics. Kinetics prioritises reproducibility, provenance, bounded inputs and explicit limitations. It remains an evolving research-engineering prototype, not a clinically validated platform.
 
-The visual identity uses a restrained Indian-heritage palette: royal maroon, antique gold, warm ivory, sandstone, indigo, peacock teal and charcoal. Original local SVG ornaments provide the toran, mandala, jali and chapter treatments.
+The visual identity uses a restrained Indian-heritage palette: royal maroon, antique gold, warm ivory, sandstone, indigo, peacock teal and charcoal. Original local SVG ornaments provide the toran, mandala, jali and chapter treatments. GitHub does not provide reliable full-page README backgrounds or arbitrary Markdown fonts, so each chapter uses its own locally stored SVG panel while ordinary documentation remains system-font text.
 
 ### WHY THIS PROJECT?
 
@@ -104,10 +104,6 @@ The visual identity uses a restrained Indian-heritage palette: royal maroon, ant
 | CONTRIBUTIONS | Follow CONTRIBUTING.md and the owner-controlled integration and track gates. |
 
 
-
-<p align="center">
-  <img src="assets/cards/track-gates.svg" alt="Six engineering track gates: R, S and I software scopes closed; P and G in progress; U sequenced after G" width="100%">
-</p>
 
 <p align="center">
   <img src="assets/cards/track-gates.svg" alt="Six-track engineering status overview" width="100%">

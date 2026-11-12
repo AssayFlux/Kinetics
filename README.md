@@ -9,11 +9,11 @@ Language percentages are intentionally not fabricated; see the source-statistics
 </p>
 
 <p align="center">
-  <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="112" height="112">
+  <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="140" height="112">
   &nbsp;&nbsp;
-  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width="112" height="112">
+  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width="140" height="112">
   &nbsp;&nbsp;
-  <img src="assets/brand/kinetics-logo.gif" alt="Kinetics animated logo" width="112" height="112">
+  <img src="assets/brand/kinetics-logo.gif" alt="Kinetics animated logo" width="140" height="112">
 </p>
 
 <h1 align="center">Kinetics</h1>

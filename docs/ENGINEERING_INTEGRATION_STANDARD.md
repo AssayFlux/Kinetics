@@ -163,5 +163,5 @@ Ask short, specific questions before coding when an essential requirement is amb
 - No patient/PHI data or clinical recommendations before the existing P0 gate.
 - No diagnosis, treatment, dosing, pathogenicity or efficacy claims without the applicable validation and governance.
 - No runtime executable downloads, hidden telemetry or unreviewed dependencies.
-- Follow D-016 build/test/fix/evidence cycle and the owner's current R → S → I → P → G sequencing instruction. Do not work tracks in parallel unless the owner changes that instruction.
-- The owner’s two-step rule applies to each track: Step 1 documented base implementation; Step 2 integration audit, tests and corrections. Report percentages only after that track's two-step gate, with the denominator clearly stated.
+- Follow D-016 build/test/fix/evidence cycle and the owner's current **R → S → I → P → G → U** sequencing instruction (D-023). Do not work tracks in parallel unless the owner changes that instruction. Existing partial U0–U3 work is retained as historical/pre-existing baseline; further U implementation follows G's two-step gate.
+- The owner’s two-step rule applies to each track, including G and U: Step 1 documented base implementation; Step 2 integration audit, tests and corrections. Report percentages only after that track's two-step gate, with the denominator clearly stated.

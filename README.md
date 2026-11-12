@@ -1,7 +1,11 @@
 <!-- KINETICS · BY ASSAYFLUX -->
 
 <p align="center">
- <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6Balt="Kinetics banner" width="100%">
+  <img
+    src="https://capsule-render.vercel.app/api?type=waving&height=220&section=header&text=AssayFlux&fontSize=65&fontColor=F5F0E6&fontAlignY=38&desc=Scientific%20Systems&descSize=18&descAlignY=58&color=0:800020,45:D4AF37,75:800020,100:1F2A6B"
+    alt="AssayFlux Indian Heritage Banner"
+    width="100%"
+  />
 </p>
 <p align="center">
   <img src="Assets/Kinetics%20By%20AssayFlux©.png" alt="Kinetics guilloche DNA logo" width="100%">

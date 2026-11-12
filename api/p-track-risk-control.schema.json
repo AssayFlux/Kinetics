@@ -75,6 +75,40 @@
     "evidence_url": {
       "type": "string",
       "format": "uri"
+    },
+    "risk_acceptance_role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "risk_accepted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "risk_acceptance_evidence_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "residual_risk_status": {
+            "const": "accepted"
+          }
+        },
+        "required": [
+          "residual_risk_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "risk_acceptance_role",
+          "risk_accepted_at",
+          "risk_acceptance_evidence_url"
+        ]
+      }
+    }
+  ]
 }

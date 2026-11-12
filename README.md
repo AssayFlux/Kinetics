@@ -2,8 +2,8 @@
 
 <p align="center">
   <img
-    src="https://capsule-render.vercel.app/api?type=waving&height=220&section=header&text=AssayFlux&fontSize=65&fontColor=F5F0E6&fontAlignY=38&desc=Scientific%20Systems&descSize=18&descAlignY=58&color=0:800020,45:D4AF37,75:800020,100:1F2A6B"
-    alt="AssayFlux Indian Heritage Banner"
+    src="https://capsule-render.vercel.app/api?type=waving&height=220&section=header&color=0:800020,45:D4AF37,75:800020,100:1F2A6B"
+    alt="Indian heritage decorative banner"
     width="100%"
   />
 </p>
@@ -329,20 +329,39 @@ flowchart TD
   <img src="Assets/Section%20Breaker%20White%20Background.jpg" alt="Author details strip" width="100%">
 </p>
 
-<p align="centre">
-  <strong><em>LET EVERY HELIX CARRY A QUESTION ; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
-  <br>
-  <sub> Md Safarujjaman </sub>
-</p>
-<p align="right">
-  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" width="20%">
-</p>
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="Assets/Section%20Breaker%20With%20Author%20Details.jpg">
-    <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
-  </picture>
-</p>
+
+<table width="100%" border="1" bordercolor="#B18B5E"
+       cellpadding="18" cellspacing="0" bgcolor="#F6F0E3">
+  <tr>
+    <td align="center">
+
+      <p align="center">
+        <strong><em>
+          LET EVERY HELIX CARRY A QUESTION ;
+          LET EVERY ANSWER CARRY ITS EVIDENCE.
+        </em></strong>
+        <br><br>
+        <sub>Md Safarujjaman</sub>
+      </p>
+
+      <p align="right">
+        <img
+          src="Assets/Author%27s%20Signature.svg"
+          alt="Author's signature"
+          width="20%">
+      </p>
+
+      <p align="center">
+        <img
+          src="Assets/Section%20Breaker%20With%20Author%20Details.jpg"
+          alt="Kinetics by AssayFlux title strip"
+          width="100%">
+      </p>
+
+    </td>
+  </tr>
+</table>
+
 
 <!-- ALTERNATE LINES:
 1. BUILD WITH CURIOSITY; PROVE WITH EVIDENCE; LEAVE A TRACE WORTH FOLLOWING.

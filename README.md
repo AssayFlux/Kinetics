@@ -17,7 +17,7 @@ LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS
 
 <h1 align="center"><strong>KINETICS</strong></h1>
 <p align="center">
-  <strong><strong>EXPLORE BIOLOGY. REPRODUCE THE WORK. KEEP THE EVIDENCE.</strong></strong>
+  <strong>EXPLORE BIOLOGY. REPRODUCE THE WORK. KEEP THE EVIDENCE.</strong>
 </p>
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=IBM+Plex+Mono&weight=500&size=16&pause=1200&color=38BDF8&center=true&vCenter=true&width=720&lines=Android-native+%C2%B7+Offline-first;Python+%C2%B7+Kotlin+%C2%B7+Rust+%C2%B7+C%2B%2B;Reproducible+workflows+%C2%B7+Explicit+provenance;Research-only+%C2%B7+Evidence-led" alt="Kinetics project tagline">
@@ -34,7 +34,7 @@ LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS
 </p>
 
 <p align="center">
-  <strong><strong>PRE-RELEASE · RESEARCH USE ONLY · NOT CLINICALLY VALIDATED</strong></strong>
+  <strong>PRE-RELEASE · RESEARCH USE ONLY · NOT CLINICALLY VALIDATED</strong>
 </p>
 
 ---
@@ -42,7 +42,7 @@ LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS
 ## **VISUAL PREVIEW**
 
 <p align="center">
-  <strong><strong>APP DASHBOARD AND LOGIN — UI DESIGN REFERENCES</strong></strong>
+  <strong>APP DASHBOARD AND LOGIN — UI DESIGN REFERENCES</strong>
 </p>
 
 <table>
@@ -108,32 +108,32 @@ LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS
   </thead>
   <tbody>
     <tr>
-      <td><strong><strong>R</strong></strong></td><td><strong>RESEARCH PLATFORM, ANDROID FOUNDATION, SCIENTIFIC PRIMITIVES</strong></td>
+      <td><strong>R</strong></td><td><strong>RESEARCH PLATFORM, ANDROID FOUNDATION, SCIENTIFIC PRIMITIVES</strong></td>
       <td><img src="https://img.shields.io/badge/100%25-software%20audit%20closed-238636?style=flat" alt="R software audit closed"></td>
       <td><strong>PHYSICAL-DEVICE, INDEPENDENT SCIENTIFIC, LICENSING AND RELEASE EVIDENCE</strong></td>
     </tr>
     <tr>
-      <td><strong><strong>S</strong></strong></td><td><strong>STRUCTURE, SEQUENCE DISCOVERY, ANNOTATION AND PROTEIN INTELLIGENCE</strong></td>
+      <td><strong>S</strong></td><td><strong>STRUCTURE, SEQUENCE DISCOVERY, ANNOTATION AND PROTEIN INTELLIGENCE</strong></td>
       <td><img src="https://img.shields.io/badge/100%25-software%20scope%20closed-238636?style=flat" alt="S software scope closed"></td>
       <td><strong>INDEPENDENT REFERENCES, APPROVED RESOURCES/MODELS AND DEVICE EVIDENCE</strong></td>
     </tr>
     <tr>
-      <td><strong><strong>I</strong></strong></td><td><strong>IN-SILICO CHEMISTRY, DOCKING, MD, ADMET AND PK/PD UTILITIES</strong></td>
+      <td><strong>I</strong></td><td><strong>IN-SILICO CHEMISTRY, DOCKING, MD, ADMET AND PK/PD UTILITIES</strong></td>
       <td><img src="https://img.shields.io/badge/100%25-software%20audit%20closed-238636?style=flat" alt="I software audit closed"></td>
       <td><strong>REAL SCIENTIFIC BENCHMARKS, DATA/MODEL LICENCES, SECURE NODE AND DEVICE TESTS</strong></td>
     </tr>
     <tr>
-      <td><strong><strong>P</strong></strong></td><td><strong>PGX-FIRST PRECISION-MEDICINE RESEARCH PREPARATION</strong></td>
+      <td><strong>P</strong></td><td><strong>PGX-FIRST PRECISION-MEDICINE RESEARCH PREPARATION</strong></td>
       <td><img src="https://img.shields.io/badge/in%20progress-not%20accepted-yellow?style=flat" alt="P in progress"></td>
       <td><strong>P0 EXTERNAL DETERMINATIONS, INDEPENDENT EVIDENCE AND FORMAL OWNER GATE; P0 IS NOT APPROVED</strong></td>
     </tr>
     <tr>
-      <td><strong><strong>G</strong></strong></td><td><strong>SECURITY, SUPPLY CHAIN, QUALITY, PRIVACY AND SCIENTIFIC/PUBLICATION INTEGRITY</strong></td>
+      <td><strong>G</strong></td><td><strong>SECURITY, SUPPLY CHAIN, QUALITY, PRIVACY AND SCIENTIFIC/PUBLICATION INTEGRITY</strong></td>
       <td><img src="https://img.shields.io/badge/0%25%20accepted-gate%20open-red?style=flat" alt="G gate open"></td>
       <td><strong>EXACT-HEAD AUDIT, INDEPENDENT REVIEWS, ROLE APPOINTMENTS AND OPERATING EXERCISES</strong></td>
     </tr>
     <tr>
-      <td><strong><strong>U</strong></strong></td><td><strong>DESIGN SYSTEM, ANDROID UX AND RESEARCH WORKFLOWS</strong></td>
+      <td><strong>U</strong></td><td><strong>DESIGN SYSTEM, ANDROID UX AND RESEARCH WORKFLOWS</strong></td>
       <td><img src="https://img.shields.io/badge/0%25%20accepted-gate%20not%20started-red?style=flat" alt="U gate not started"></td>
       <td><strong>FURTHER SEQUENTIAL IMPLEMENTATION FOLLOWS G; PRIOR U0–U3 WORK REMAINS PARTIAL BASELINE</strong></td>
     </tr>
@@ -177,7 +177,7 @@ LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS
 **THE ROOT PACKAGE METADATA IS IN PYPROJECT.TOML. OPTIONAL EXTRAS ARE DECLARED THERE; VALIDATION-ONLY PINNED DEPENDENCY SETS LIVE UNDER `validation/`. THIRD-PARTY ENGINES, MODELS, DATASETS, FONTS AND ARTWORK MAY CARRY SEPARATE TERMS.**
 
 <details>
-  <summary><strong><strong>SOURCE-LANGUAGE MIX AND REPOSITORY STATISTICS</strong></strong></summary>
+  <summary><strong>SOURCE-LANGUAGE MIX AND REPOSITORY STATISTICS</strong></summary>
 
   - **A DATED REPOSITORY AUDIT RECORDS 356 TRACKED FILES ACROSS 55 NON-ROOT DIRECTORIES AT ITS AUDITED REVISION.**
   - **THE CURRENT `tests/` DIRECTORY CONTAINS 62 TEST MODULES.**
@@ -192,7 +192,7 @@ LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS
 ### **1. PYTHON DEVELOPMENT ENVIRONMENT**
 
 <details>
-  <summary><strong><strong>INSTALL THE DEVELOPMENT DEPENDENCIES</strong></strong></summary>
+  <summary><strong>INSTALL THE DEVELOPMENT DEPENDENCIES</strong></summary>
 
 **  PYTHON 3.10 OR NEWER IS DECLARED BY THE PACKAGE METADATA. THE CI WORKFLOW CURRENTLY USES PYTHON 3.11.**
 
@@ -223,7 +223,7 @@ LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS
 ### **2. RUN TESTS AND REPOSITORY CHECKS**
 
 <details>
-  <summary><strong><strong>RUN THE PYTHON TEST SUITE</strong></strong></summary>
+  <summary><strong>RUN THE PYTHON TEST SUITE</strong></summary>
 
   ```bash
   pytest
@@ -250,7 +250,7 @@ LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS
 ### **3. BUILD THE ANDROID DEBUG ARTIFACTS**
 
 <details>
-  <summary><strong><strong>LINUX X86_64 / X86_64 WSL2 BUILD PREREQUISITES</strong></strong></summary>
+  <summary><strong>LINUX X86_64 / X86_64 WSL2 BUILD PREREQUISITES</strong></summary>
 
 **  THE CHECKED-IN BUILD SCRIPT REQUIRES JDK 17, PYTHON 3.11.18, RUST/CARGO AND RUSTUP, ANDROID SDK PLATFORM 36, ANDROID NDK 28.2.13676358, BUILD TOOLS 36.0.0, CMAKE 3.22.1, `patchelf`, `patch`, GIT, CURL AND STANDARD SHELL UTILITIES. THE SCRIPT DOWNLOADS A CHECKSUM-PINNED GRADLE 8.13 DISTRIBUTION.**
 
@@ -269,7 +269,7 @@ LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS
 ### **4. OPTIONAL PRIVATE RESEARCH NODE**
 
 <details>
-  <summary><strong><strong>RUN THE DEPENDENCY-FREE NODE 22 WORKER TESTS</strong></strong></summary>
+  <summary><strong>RUN THE DEPENDENCY-FREE NODE 22 WORKER TESTS</strong></summary>
 
 **  THE WORKER IS DISABLED FOR DOCKING BY DEFAULT AND IS NOT A PRODUCTION DEPLOYMENT.**
 
@@ -366,5 +366,5 @@ Kinetics/
 <p align="center">
   <img src="assets/brand/owner-signature.svg" alt="MD SAFARUJJAMAN — PROJECT OWNER SIGNATURE OVER KINETICS BACKGROUND" width="100%">
   <br>
-  <sub><strong><strong>BUILD CAREFULLY. MEASURE HONESTLY. SHARE REPRODUCIBLY.</strong></strong></sub>
+  <sub><strong>BUILD CAREFULLY. MEASURE HONESTLY. SHARE REPRODUCIBLY.</strong></sub>
 </p>

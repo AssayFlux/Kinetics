@@ -10,7 +10,7 @@
   <img src="assets/ornaments/mandala-halo.svg" alt="Fine-line antique-gold lotus mandala halo" width="190">
 </p>
 
-<div align="center" style="background-image:url('assets/ornaments/mandala-halo.svg');background-repeat:no-repeat;background-position:center;background-size:260px 260px;padding:22px 0">
+<div align="center" style="background-image:url('assets/ornaments/jali-pattern.svg'),url('assets/ornaments/mandala-halo.svg');background-repeat:repeat,no-repeat;background-position:center;background-size:60px 60px,260px 260px;padding:22px 0">
   <img src="assets/brand/organization-logo.gif" alt="ASSAYFLUX animated organization logo" width="112" height="112">
   &nbsp;&nbsp;
   <img src="assets/brand/brand-logo.svg" alt="ASSAYFLUX original vector brand mark" width="112" height="112">
@@ -274,7 +274,7 @@ Kinetics is an Android-native, offline-first scientific workbench with a Python 
 <p align="center"><img src="https://skillicons.dev/icons?i=githubactions,bash,cmake,gradle" alt="GitHub Actions, Bash, CMake and Gradle technology icons"></p>
 
 <p align="center"><strong>QUALITY AND TOOLS</strong></p>
-<p align="center"><img src="https://skillicons.dev/icons?i=git,github,linux,pytest" alt="Git, GitHub, Linux and pytest tool icons"></p>
+<p align="center"><img src="https://skillicons.dev/icons?i=git,github,linux,bash" alt="Git, GitHub, Linux and pytest tool icons"></p>
 
 | LAYER | REPOSITORY EVIDENCE |
 |---|---|

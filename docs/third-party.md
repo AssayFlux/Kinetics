@@ -169,3 +169,15 @@ GitHub Actions run [#1904](https://github.com/AssayFlux/Kinetics/actions/runs/42
 - Android JVM unit-test task, APK ZIP alignment, native ELF alignment and package size/integrity checks passed in CI. The APK contains arm64-v8a native libraries, including the embedded CPython 3.11 runtime and Kinetics native library.
 
 This is debug build/package evidence only. No emulator or physical-device installation, offline-runtime, cold-start, memory, thermal or user-flow verification was performed. The build does not close the transitive/file-level license audit or approve Chaquopy, Biopython, SciPy, RDKit or any other engine for production distribution.
+
+
+## Track G dependency decision register and CI evidence
+
+The current component-by-component decision ledger is maintained at [`docs/track-g/dependency-decision-register.csv`](track-g/dependency-decision-register.csv). Empty artifact hashes, unassigned reviewers, candidate-only entries and NOT-APPROVED redistribution states are deliberate OPEN values; do not fill them with inferred approvals.
+
+The Android CI build now archives:
+- the resolved Gradle `debugRuntimeClasspath` dependency report;
+- the Rust `cargo tree --locked --all-features` report and `Cargo.lock` SHA-256;
+- SHA-256 hashes for cached Maven JAR/AAR/POM/module artifacts.
+
+These files improve traceability but are not a complete SPDX/CycloneDX SBOM, do not yet inventory all Python/native/runtime artifacts, and do not establish license clearance. The source-dependency SPDX document remains a declared-source inventory. G2-01 and G2-02 therefore remain PARTIAL/OPEN until full resolved coverage, exact artifact/license review and redistribution decisions are evidenced.

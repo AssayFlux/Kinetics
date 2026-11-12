@@ -1,8 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
   <title id="title">MD SAFARUJJAMAN — PROJECT OWNER</title>
-  <desc id="desc">Owner's name in a formal signature treatment over the Kinetics background artwork.</desc>
+  <desc id="desc">Owner's name in a formal signature treatment over the Kinetics background artwork with a subtle, slow colour shift.</desc>
   <defs>
-    <linearGradient id="veil" x2="0" y2="1"><stop stop-color="#071b2b" stop-opacity=".62"/><stop offset="1" stop-color="#071b2b" stop-opacity=".82"/></linearGradient>
+    <linearGradient id="veil" x2="0" y2="1">
+      <stop stop-color="#071b2b" stop-opacity=".62"><animate attributeName="stop-color" values="#071b2b;#102c3a;#14283e;#071b2b" dur="22s" repeatCount="indefinite"/></stop>
+      <stop offset="1" stop-color="#071b2b" stop-opacity=".82"><animate attributeName="stop-color" values="#071b2b;#123746;#1b3047;#071b2b" dur="22s" repeatCount="indefinite"/></stop>
+    </linearGradient>
   </defs>
   <image href="https://raw.githubusercontent.com/AssayFlux/Kinetics/main/assets/brand/kinetics-background.jpg" width="1200" height="300" preserveAspectRatio="xMidYMid slice"/>
   <rect width="1200" height="300" fill="url(#veil)"/>

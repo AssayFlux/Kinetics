@@ -7,7 +7,7 @@ Kinetics is governed by NORTH_STAR.md, ROADMAP.md and DECISIONS.md. Read those f
 - Use `api/engine-envelope-v1.schema.json` as the semantic contract for cross-component engine messages; do not silently fork field definitions.
 - Every engineering update must include a **Check** section and a **Next step**.
 - Work only on an active roadmap item; respect every owner approval gate.
-- Preserve the five-track scope and approved language plan. Do not add languages, engines, datasets, models, dependencies or engine tiers without review and approval.
+- Preserve the six-track scope and approved language plan. Execute tracks strictly in **R → S → I → P → G → U** order (D-023), using the two-step build-then-audit gate for each. Do not resume further Track U implementation until Track G's gate is assessed and reported. Do not add languages, engines, datasets, models, dependencies or engine tiers without review and approval.
 - Never claim a capability is implemented, validated or device-verified without committed evidence.
 - Do not add real patient data, secrets, binaries or bulk document collections.
 - Do not select or change the project license.

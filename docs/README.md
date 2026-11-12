@@ -46,7 +46,13 @@ This is the navigation index for the Kinetics repository. Use the living decisio
 | Release hardening | [Release hardening](release-hardening.md) |
 | Release gate checklist | [Release checklist](release-checklist.md) |
 
-## 5. Governance and historical material
+## 5. Repository structure and governance
+
+- [Repository research-readiness audit](research-grade-readiness-audit-2026-11-12.md) inventories the tracked tree, identifies documentation/status drift and sets out a staged, link-safe reorganisation plan.
+- Treat `api/` as versioned API/message and evidence contracts; `schemas/` as reusable domain/data schemas. Keep `data/` source catalogues distinct from `datapacks/` manifests and payloads.
+- `Assets/` is legacy artwork; `assets/` is the canonical direction for current lowercase asset organisation. Do not rename or delete either until every reference and content hash has been audited.
+
+## 6. Governance and historical material
 
 - [Historical parallel-track protocol](parallel-track-execution.md) is **superseded by D-019** and must not be followed.
 - [Original master](origin/KINETICS_MASTER.md) is preserved as read-only historical source.

@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="Animated rainbow DNA helix" width="90%">
+  <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="Animated rainbow DNA helix" width="40%">
 </p>
 
 <p align="center">

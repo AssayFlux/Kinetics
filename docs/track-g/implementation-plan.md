@@ -15,6 +15,7 @@ G is a cross-cutting assurance track. It does not authorize patient data, human-
 The repository already contains:
 - Root Apache-2.0 project license and a third-party inventory with candidate-only engine assessments.
 - Source-dependency SPDX generation and CI checks, plus a generated source dependency SBOM.
+- Initial G0 control/evidence register at `docs/track-g/control-evidence-register.md`, covering G0–G7 controls and open external blockers; owner acceptance and named role assignment remain pending.
 - Engineering threat models at `governance/threat-model.md` and `docs/security-threat-model.md`, both explicitly not independent assessments.
 - `SECURITY.md` and `PRIVACY.md` with unreleased-project boundaries and future requirements.
 - Dataset intake policy, validation evidence index, pinned synthetic/software-reference comparison jobs and reproducibility manifests.
@@ -54,7 +55,7 @@ These are useful foundations, not evidence that all controls are operating or in
 
 Each package will be implemented in small auditable increments, with exact-head CI and separate external evidence status.
 
-## 5. Mandatory invariants
+## 6. Mandatory invariants
 
 - Research Mode only; patient/clinical data and human-subject activity remain prohibited until all applicable approvals and the formal P0 gate are complete.
 - No Clinical Mode, patient-specific interpretation, diagnosis, treatment/dosing recommendation or clinical claims.
@@ -66,7 +67,7 @@ Each package will be implemented in small auditable increments, with exact-head 
 - A manuscript claim must point to reproducible data, code, methods and evidence at the exact release/commit.
 - Unknown, missing, conflicting or unreviewed evidence remains open; do not convert it to pass by wording.
 
-## 6. Initial exit criteria
+## 7. Initial exit criteria
 
 Track G engineering scope can be considered implemented only when:
 - Every governance control has a stable identifier, accountable role, evidence location, status and review cadence.
@@ -78,7 +79,7 @@ Track G engineering scope can be considered implemented only when:
 
 Track G overall acceptance remains open until required independent reviews, legal/privacy determinations, owner risk decisions and operational exercises are evidenced. This does not supersede or unlock P0.
 
-## 7. First audit backlog
+## 8. First audit backlog
 
 - Reconcile `governance/threat-model.md` with `docs/security-threat-model.md`; choose one canonical maintained control set and link the other as history or a scoped supplement.
 - Determine whether `sbom/source-dependencies.spdx.json` represents source declarations only or the complete resolved/bundled build graph; document gaps and add binary/artifact coverage where feasible.
@@ -88,6 +89,6 @@ Track G overall acceptance remains open until required independent reviews, lega
 - Inventory Android data flows, permissions, exported components, backup behavior, SAF exports, logs and any optional network/remote-node path.
 - Establish a manuscript claims matrix before drafting performance, novelty, accuracy, offline capability or clinical relevance claims.
 
-## 8. Change control
+## 9. Change control
 
 This plan is the Track G planning baseline. Amendments must preserve the distinction between engineering implementation and external acceptance. Any change that would enable patient/clinical data, human-subject activity or Clinical Mode requires a separate formal P0 review and explicit owner decision; Track G work cannot grant that permission.

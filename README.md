@@ -17,11 +17,9 @@ Language percentages are intentionally not fabricated; see the source-statistics
 <p align="center">
   <strong>My DNA animation design</strong>
   <br>
-  <a href="https://htmlpreview.github.io/?https://github.com/AssayFlux/Kinetics/blob/main/assets/brand/kinetics_dna_loader.html">▶ Open the animated DNA loader</a>
-  ·
-  <a href="assets/brand/kinetics_dna_loader.html">View HTML source</a>
+  <img src="assets/brand/kinetics_dna_loader.gif" alt="Transparent looping Kinetics DNA animation designed by the project owner" width="480">
   <br>
-  <sub>Original animation design by the project owner · HTML5 Canvas · no GIF required</sub>
+  <sub>Original design by the project owner · smooth transparent loop · editable HTML5 Canvas source: <code>assets/brand/kinetics_dna_loader.html</code></sub>
 </p>
 
 <h1 align="center">Kinetics</h1>
@@ -53,11 +51,9 @@ Language percentages are intentionally not fabricated; see the source-statistics
 <p align="center">
   <strong>DNA animation — designed by the project owner</strong>
   <br>
-  <a href="https://htmlpreview.github.io/?https://github.com/AssayFlux/Kinetics/blob/main/assets/brand/kinetics_dna_loader.html">▶ Play the HTML animation</a>
-  ·
-  <a href="assets/brand/kinetics_dna_loader.html">Inspect the standalone HTML</a>
+  <img src="assets/brand/kinetics_dna_loader.gif" alt="Smooth transparent Kinetics DNA loader animation" width="480">
   <br>
-  <sub>The animation runs from HTML5 Canvas; it is intentionally not exported as a GIF.</sub>
+  <sub>Transparent looping GIF preview · original standalone HTML5 Canvas source: <code>assets/brand/kinetics_dna_loader.html</code></sub>
 </p>
 
 <p align="center">

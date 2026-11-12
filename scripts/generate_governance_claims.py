@@ -43,7 +43,10 @@ def render(registry_path: Path = ROOT / "capabilities/registry.yaml") -> str:
             "limitations": (
                 "Inspect exact validation record, reviewer, source terms and device evidence"
                 if validated else
-                "No independent validation, device verification or redistribution approval inferred"
+                (
+                    "No independent validation, device verification or "
+                    "redistribution approval inferred"
+                )
             ),
         })
     rows.sort(key=lambda row: row["capability_id"])

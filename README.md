@@ -247,10 +247,8 @@ flowchart TD
 </p>
 
 
-<p align="left">
-  <strong><em>LET EVERY HELIX CARRY A QUESTION ; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
-  <br>
-  <sub>Md Safarujjaman</sub>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=CE93D8&width=850&height=35&lines=LET+EVERY+HELIX+CARRY+A+QUESTION;LET+EVERY+ANSWER+CARRY+ITS+EVIDENCE;Md+Safarujjaman" alt="Quote">
 </p>
 
 <p align="right">

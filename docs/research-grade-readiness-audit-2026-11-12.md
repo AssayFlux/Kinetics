@@ -115,3 +115,8 @@ Kinetics will earn research-grade credibility by publishing transparent methods,
 - The GitHub tree and targeted file reads establish repository structure and document contents at the audited SHA, not runtime correctness.
 - No external benchmark, competitor comparison, license counsel, ethics determination, clinical review or regulatory advice was performed.
 - Findings should be re-audited after the next substantial repository migration or release.
+
+
+## Follow-up correction — asset-root consolidation (2026-11-12)
+
+After this audit snapshot, the case-sensitive artwork directories were reconciled. The legacy root-level `Assets/` files were moved into the canonical lowercase `assets/brand/` and `assets/design-previews/` locations by reusing their original Git blob SHAs. The duplicate organization SVG was already present byte-for-byte as `assets/brand/brand-logo.svg`; the former `Assets/Kinetics.png` was renamed to `assets/brand/kinetics-background.jpg` because the bytes are JPEG. No supplied binary artwork was converted or recompressed. Active asset documentation and the README now use the lowercase paths. This follow-up does not claim that the separate docs-folder migration or other audit recommendations are complete.

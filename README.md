@@ -59,10 +59,6 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
   </tr>
 </table>
 
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## SCIENTIFIC CAPABILITIES
 
 <p align="center">
@@ -87,18 +83,12 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
     <td align="center"><img src="https://api.iconify.design/lucide/scroll-text.svg?color=%23800020" width="28" height="28" alt=""><br><strong>GOVERNANCE &amp; PROVENANCE</strong><br>Capability registry, JSON Schema contracts, source inventory and evidence controls.</td>
   </tr>
 </table>
-
 <p align="center">
   <img src="Assets/Laboratory.gif" alt="Animated laboratory glassware illustration" width="100%">
 </p>
 
-<sub>Source implementation does not mean every workflow is complete or enabled, nor that a method has independent scientific validation. The animations above are illustrations, not application output.</sub>
-
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## DESIGN PREVIEWS
+<p align="center"><img src="Assets/README-Expandable-Animated-Gradient-Border.svg" alt="" width="100%"></p>
 
 <p align="center">
   <img src="Assets/European%20Culture.png" alt="Illustrated European heritage scene with a colosseum, cathedral dome, statues and fountain" width="100%">
@@ -119,9 +109,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 
 <sub>These are layout references, not captures of the running app. Verified device screenshots and a recorded demo will be added after installation and runtime verification on a physical Android device.</sub>
 
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
+<p align="center"><img src="Assets/README-Expandable-Animated-Gradient-Border.svg" alt="" width="100%"></p>
 
 ## STATUS AND PROGRESS
 

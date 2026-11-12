@@ -118,7 +118,9 @@ def parse_star_allele_definitions(
         if not isinstance(raw, list):
             raise ValueError("Allele variants must be arrays")
         if len(raw) > max_variants_per_definition:
-            raise ValueError("Allele variant count exceeds configured max_variants_per_definition")
+            raise ValueError(
+                "Allele variant count exceeds configured max_variants_per_definition"
+            )
         result: set[VariantKey] = set()
         for item in raw:
             if not isinstance(item, dict):

@@ -19,13 +19,16 @@ The project must demonstrate, by measurement rather than assumption, that:
 
 No thesis statement becomes a product or paper claim until supported by repository evidence.
 
-## Five tracks
+## Six tracks
+
+The current sequential execution order is **R → S → I → P → G → U** (D-023). Each track follows the two-step build-then-audit gate; dependencies and independent acceptance evidence remain mandatory.
 
 - **R — Research platform:** Android shell, scientific runtime, registry, data packs, provenance, core tools, validation and release hardening.
 - **S — Structure excellence:** structure ingestion/preparation, quality assessment, analysis, variant mapping, offline visualisation and benchmarks.
 - **I — In-silico lab:** computational hypothesis generation for chemistry, docking, MD, ADMET and PK/PD, with explicit applicability limits and benchmark evidence.
 - **P — Precision medicine:** pharmacogenomics first; research-only pipeline until clinical and regulatory gates are met.
-- **G — Governance:** privacy, security, consent, licensing, quality practices, fairness and paper-evidence controls from day one.
+- **G — Governance:** privacy, security, consent, licensing, quality practices, fairness and paper-evidence controls.
+- **U — User interface:** accessible, secure and responsive user experience, design system, app shell, research workflows, scientific viewers, settings and usability evidence. Existing partial U0–U3 work is retained; further sequential U implementation follows G.
 
 ## Intended users
 

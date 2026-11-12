@@ -68,5 +68,28 @@
         "type": "string"
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "review_status": {
+            "enum": [
+              "advice_received",
+              "owner_disposition_pending"
+            ]
+          }
+        },
+        "required": [
+          "review_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "advice_evidence_url",
+          "product_classification"
+        ]
+      }
+    }
+  ]
 }

@@ -56,3 +56,12 @@ Schemas, parsers, synthetic tests and green CI close software verification only.
 - These changes reduce parser resource-exhaustion exposure; they do not establish source licensing, biological correctness, comprehensive gene coverage or clinical interpretation.
 - Latest code/test commits: `30c55ca47fa633a020f3c6fbc9bc3b204b85c3fd` (PharmVar) and preceding PGx commits `bbaa01f16f02fb3aa8dccaab2c3474189d7ae74b`, `76f76dde2eb923733318384e65bf6a8f2fe808de`.
 - Exact-head CI for the latest main revision has not yet been observed; tests, Ruff, strict mypy and all nine workflow jobs remain pending. Do not count this increment as verified until the exact-head workflow passes.
+
+
+## 2026-11-12 — P4/P6/P7 evidence-contract hardening (verification pending)
+
+- P4 curation records now distinguish pending, completed, disagreement and escalated second review. A research-accepted curation record requires completed second review with reviewer role, timestamp and HTTPS evidence reference; autonomous final classification and clinical use remain hard false.
+- P6 residual-risk records that claim acceptance now require an accountable role, timestamp and evidence reference.
+- P7 jurisdiction records marked advice-received or owner-disposition-pending now require advice evidence and a product-classification field. Patient-data and Clinical Mode authorization remain hard false.
+- Added negative/positive synthetic schema tests for these conditions. These are contract checks, not actual reviews, risk acceptances or jurisdiction advice.
+- Exact-head CI for these additions is pending; do not claim verification until the main-branch workflow completes.

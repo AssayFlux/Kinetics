@@ -150,6 +150,9 @@ At start read NORTH_STAR, ROADMAP, DECISIONS and latest SESSION_LOG; state phase
 - See docs/research-platform-implementation.md for the current implementation inventory and unfinished scope.
 
 ## Track U — User interface (owner specification 2026-11-08)
+
+**Current sequencing (D-023):** U is the sixth and final track, after G. U0–U3 contain partial implementation created before this order was adopted; that work is retained as the baseline, not treated as fully accepted. Further U implementation and its two-step audit resume only after Track G's two-step gate is assessed and reported. U4–U6 remain subject to their listed R/S/I/P/U dependencies and exit evidence.
+
 | ID | Scope | Dependency | Exit gate | Status |
 |---|---|---|---|---|
 | U0 | D-015 Light Classic/Dark Classic semantic tokens, owner-brand asset contract, generator, Compose primitives/gallery and screenshot harness | R0 | Tokens compile deterministically; owner assets preserved; screenshot, contrast and accessibility evidence reviewed | in-progress — D-015 is the sole active visual direction; Light/Dark/System theme plumbing and local biometric lock screen are implemented in source and CI #2039 passed; reference-image comparison, original logo integration, full screen system and quality evidence remain open |

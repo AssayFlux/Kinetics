@@ -232,6 +232,7 @@ flowchart TD
     width="100%"
   >
 </p>
+
 ## THE JOURNEYS
 <p align="center">
   <img src="Assets/Section%20Breaker%20Black%20Background.jpg" alt="Author details strip" width="100%">

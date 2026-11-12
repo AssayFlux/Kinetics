@@ -55,6 +55,7 @@ def test_curation_schema_requires_second_review_and_no_autonomous_call():
         "curator_role": "synthetic-curator",
         "curated_at": "2026-01-01T00:00:00Z",
         "second_review_required": True,
+        "second_review_status": "pending",
         "autonomous_final_classification": False,
         "clinical_use": False,
     }
@@ -95,3 +96,35 @@ def test_jurisdiction_contract_cannot_enable_patient_or_clinical_use():
     record["patient_data_authorized"] = True
     with pytest.raises(ValidationError):
         check("p-track-jurisdiction-review.schema.json", record)
+
+
+
+def test_accepted_curation_requires_completed_evidenced_second_review():
+    record = {
+        "schema_version": 1,
+        "record_id": "synthetic-accepted-record",
+        "evidence_id": "e1",
+        "source_url": "https://example.invalid/s",
+        "source_release": "fixture-1",
+        "source_sha256": "b" * 64,
+        "license_status": "approved_for_research",
+        "curation_outcome": "accepted_for_research",
+        "curator_role": "synthetic-curator",
+        "curated_at": "2026-01-01T00:00:00Z",
+        "second_review_required": True,
+        "second_review_status": "pending",
+        "autonomous_final_classification": False,
+        "clinical_use": False,
+    }
+    with pytest.raises(ValidationError):
+        check("pgx-curation-record.schema.json", record)
+    record.update({
+        "second_review_status": "completed",
+        "second_reviewer_role": "independent-synthetic-reviewer",
+        "second_reviewed_at": "2026-01-02T00:00:00Z",
+        "second_review_evidence_url": "https://example.invalid/review",
+    })
+    check("pgx-curation-record.schema.json", record)
+    record.pop("second_review_evidence_url")
+    with pytest.raises(ValidationError):
+        check("pgx-curation-record.schema.json", record)

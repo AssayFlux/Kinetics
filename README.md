@@ -1,6 +1,5 @@
 <!--
 Kinetics README
-Placeholder asset: assets/demo.gif (add a real, current application capture before release).
 Language percentages are intentionally not fabricated; see the source-statistics TODO below.
 -->
 
@@ -17,9 +16,13 @@ Language percentages are intentionally not fabricated; see the source-statistics
 </p>
 
 <p align="center">
-  <strong>Animated DNA loader source:</strong> <code>assets/brand/kinetics_dna_loader.html</code>
+  <strong>My DNA animation design</strong>
   <br>
-  <sub>Open the standalone HTML file in a modern browser to run the Canvas animation.</sub>
+  <a href="https://htmlpreview.github.io/?https://github.com/AssayFlux/Kinetics/blob/main/assets/brand/kinetics_dna_loader.html">▶ Open the animated DNA loader</a>
+  ·
+  <a href="assets/brand/kinetics_dna_loader.html">View HTML source</a>
+  <br>
+  <sub>Original animation design by the project owner · HTML5 Canvas · no GIF required</sub>
 </p>
 
 <h1 align="center">Kinetics</h1>
@@ -49,9 +52,13 @@ Language percentages are intentionally not fabricated; see the source-statistics
 ## Visual preview
 
 <p align="center">
-  <strong>DNA loader:</strong> <code>assets/brand/kinetics_dna_loader.html</code>
+  <strong>DNA animation — designed by the project owner</strong>
   <br>
-  <sub>Standalone HTML5 Canvas animation · run locally in a browser</sub>
+  <a href="https://htmlpreview.github.io/?https://github.com/AssayFlux/Kinetics/blob/main/assets/brand/kinetics_dna_loader.html">▶ Play the HTML animation</a>
+  ·
+  <a href="assets/brand/kinetics_dna_loader.html">Inspect the standalone HTML</a>
+  <br>
+  <sub>The animation runs from HTML5 Canvas; it is intentionally not exported as a GIF.</sub>
 </p>
 
 <p align="center">

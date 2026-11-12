@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <img src="Assets/Kinetics%20By%20AssayFlux©.png" alt="Kinetics guilloche DNA logo" height="200">
+  <img src="Assets/Kinetics%20By%20AssayFlux©.png" alt="Kinetics guilloche DNA logo" width="100%">
 </p>
 
 <p align="center">
@@ -89,9 +89,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 </table>
 
 <p align="center">
-  <img src="Assets/DNA.gif" alt="Animated pink and teal DNA double helix" width="39%">
-  &nbsp;&nbsp;
-  <img src="Assets/Laboratory.gif" alt="Animated laboratory glassware illustration" width="39%">
+  <img src="Assets/Laboratory.gif" alt="Animated laboratory glassware illustration" width="100%">
 </p>
 
 <sub>Source implementation does not mean every workflow is complete or enabled, nor that a method has independent scientific validation. The animations above are illustrations, not application output.</sub>

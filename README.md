@@ -8,17 +8,17 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="Assets/Section%20Breaker%20Black%20Background.jpg">
-    <img src="Assets/Section%20Breaker%20White%20Background.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="Assets/Section%20Breaker%20With%20Author%20Details.jpg">
+    <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
   </picture>
 </p>
 
 <p align="center">
-  <img src="Assets/Kinetics%20Guilloche%20Logo.svg" alt="Kinetics guilloche DNA logo" height="170">
+  <img src="Assets/Kinetics%20By%20AssayFlux©.png" alt="Kinetics guilloche DNA logo" height="200">
 </p>
 
 <p align="center">
-  <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="Animated rainbow DNA helix" width="62%">
+  <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="Animated rainbow DNA helix" width="90%">
 </p>
 
 <p align="center">
@@ -35,7 +35,7 @@
   <img src="https://img.shields.io/github/languages/top/AssayFlux/Kinetics?style=for-the-badge&label=TOP%20LANGUAGE&color=0B6E6E" alt="Top language">
 </p>
 
-<p align="center"><strong>PRE-RELEASE &nbsp;·&nbsp; RESEARCH USE ONLY &nbsp;·&nbsp; NOT CLINICALLY VALIDATED &nbsp;·&nbsp; NOT A MEDICAL DEVICE</strong></p>
+<p align="center"><strong>PRE-RELEASE &nbsp;·&nbsp; RESEARCH USE ONLY</strong></p>
 
 <p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
 

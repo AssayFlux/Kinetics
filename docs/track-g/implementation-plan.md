@@ -1,7 +1,7 @@
 # Track G — governance, assurance and publication readiness
 
 **Status:** Track G implementation in progress (2026-11-12); G0–G7 engineering controls are being built and audited. Formal Track G acceptance remains OPEN.  
-**Sequence:** Track G follows the Track P engineering exit. Track U follows Track G in the current **R → S → I → P → G → U** order (D-023). P's software workflow #43131601029 passed 9/9 jobs on commit `553056b3c51373913e8c8936802971fbd532f4e0`. The subsequent README-only main workflow #43135437515 is pending; current-head G acceptance therefore still requires its own exact-head CI. G engineering work has started under the owner's instruction. Further U implementation begins only after G's two-step gate is assessed and reported. Existing partial U0–U3 work is retained as a pre-existing baseline.  
+**Sequence:** Track G follows the Track P engineering exit. Track U follows Track G in the current **R → S → I → P → G → U** order (D-023). P software workflow #43131601029 passed 9/9 jobs on commit `553056b3c51373913e8c8936802971fbd532f4e0`; P0 and external gates remain open. G engineering is underway under the owner's instruction. G workflow #43136845552 failed only at the Python lint step (one overlong line in the new claims generator); the issue was corrected in commit `e5d89df3ee3279e6b670f5aab7b5f3a17c20a05a`, and subsequent governance-checker/tests commits are on main. Exact-head CI #43139841217 for commit `c2c7ee099efe8f7da269e0afd8e4873f06ecdb4d` is pending. Further U implementation begins only after G's two-step gate is assessed and reported. Existing partial U0–U3 work is retained as a pre-existing baseline.  
 **Scope:** research-only governance for the unreleased Kinetics platform. This plan is not a legal opinion, ethics determination, security certification, QMS certification, regulatory clearance or publication endorsement.
 
 ## 1. Purpose
@@ -26,7 +26,7 @@ These are useful foundations, not evidence that all controls are operating or in
 
 ## 3. Current execution status (2026-11-12)
 
-- **P prerequisite evidence:** workflow #43131601029 completed successfully with 9/9 jobs on commit `553056b3c51373913e8c8936802971fbd532f4e0`. This is the recorded P software verification evidence; it does not close P0 or external gates. A later README-only workflow #43135437515 is pending at the time of this update.
+- **P prerequisite evidence:** workflow #43131601029 completed successfully with 9/9 jobs on commit `553056b3c51373913e8c8936802971fbd532f4e0`. This records P software verification only; P0 and external gates remain open.
 - **G0:** canonical register, status vocabulary, role/cadence model and initial requirements traceability are present. Owner acceptance of governance policy and named non-owner role appointments remain open.
 - **G1:** security threat model now has a canonical app/data/native/WebView/supply-chain scope; UI threat cases are maintained as a scoped supplement. A 16-case security verification matrix exists; fuzzing, device tests, vulnerability-channel exercise and independent assessment remain open.
 - **G2:** source-only SPDX limitations are explicit; exact artifact/data/model license decisions and resolved transitive dependency coverage remain open. No scientific engine/model/database is approved for bundling.
@@ -87,15 +87,19 @@ Track G engineering scope can be considered implemented only when:
 
 Track G overall acceptance remains open until required independent reviews, legal/privacy determinations, owner risk decisions and operational exercises are evidenced. This does not supersede or unlock P0.
 
-## 8. First audit backlog
+## 8. Audit findings and remaining work
 
-- Reconcile `governance/threat-model.md` with `docs/security-threat-model.md`; choose one canonical maintained control set and link the other as history or a scoped supplement.
-- Determine whether `sbom/source-dependencies.spdx.json` represents source declarations only or the complete resolved/bundled build graph; document gaps and add binary/artifact coverage where feasible.
-- Extend `docs/third-party.md` from candidate notes into a per-artifact decision register with exact version, hash, source, license text, attribution, redistribution status, transitive coverage and reviewer evidence.
-- Reconcile the current `SECURITY.md` statement about R1–R10 being in progress with the actual track-specific software audit states.
-- Add a capability-to-evidence index covering implementation, tests, synthetic references, independent scientific validation, device verification, licensing and release status.
-- Inventory Android data flows, permissions, exported components, backup behavior, SAF exports, logs and any optional network/remote-node path.
-- Establish a manuscript claims matrix before drafting performance, novelty, accuracy, offline capability or clinical relevance claims.
+The initial repository-level audit backlog has been addressed in the G implementation increment: the threat-model documents are now a canonical model plus UI supplement; the source-only SPDX limitation is explicit; a component decision register exists; SECURITY.md and the roadmap were reconciled; a generated capability claims matrix exists; source-level Android data flows are inventoried; and the manuscript claim ledger is linked. These artifacts remain draft/partial controls until their operating and independent evidence is complete.
+
+The remaining audit actions are tracked by control ID in `control-evidence-register.md` and `requirements-traceability.csv`. Highest-priority items:
+- exact-head CI and test of all G checks, including the claims-matrix reproducibility test;
+- merged APK/AAB manifest and actual device/privacy/security tests;
+- complete resolved dependency inventory (including Python wheels and build plugins), artifact-to-license mapping and qualified redistribution decisions;
+- independent security assessment and retest;
+- qualified privacy/legal/QMS advice and any applicable ethics determinations;
+- independent scientific truth sets, bias/missingness analysis and claim-level validation;
+- named qualified role appointments, author declarations and reproducible literature review;
+- incident, access-review and backup/recovery exercises with dated records.
 
 ## 9. Change control
 

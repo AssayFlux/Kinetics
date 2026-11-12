@@ -5,7 +5,7 @@ The repository now contains an Android Research Mode application prototype with 
 
 ## Intended principles
 - Offline-first operation; no telemetry by default.
-- Local genomic and research data remains on-device unless the user explicitly configures a remote node and consents to a specific transfer.
+- Local genomic and research data remains on-device in the current Android app. Remote-node processing is not enabled by the current app manifest; any future client-side transfer requires a separately reviewed feature, explicit permission, destination-specific consent and renewed security/privacy/P0 gates.
 - No sensitive data in diagnostic logs.
 - Encryption at rest and in transit before sensitive workflows.
 - Purpose-specific, revocable consent; data minimisation; de-identification where appropriate; secure deletion.

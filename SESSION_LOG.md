@@ -2787,7 +2787,7 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 - Added a 16-case security verification matrix; device/fuzz/independent review results remain open.
 - Added source-level data-flow and information-asset inventory based on the inspected Android manifest, build configuration and policies.
 - Added dependency decision register and CI capture of resolved Gradle/Cargo dependency reports plus Maven artifact hashes; the checked-in SPDX generator remains a declared-source inventory, not a full release SBOM. Updated the third-party inventory and release checklist to state this limitation explicitly.
-- Generated a 130-entry capability claims matrix with conservative wording; current registry entries do not become scientifically validated by implementation.
+- Generated a 68-tool capability claims matrix with conservative wording; current registry entries do not become scientifically validated by implementation.
 - Added publication integrity protocol, operational incident/rollback/access/recovery procedures, and an empty CAPA register.
 - Added governance structural checker, capability matrix generator and pytest coverage; wired both checks into CI.
 - Updated README, roadmap, documentation index, SECURITY.md and changelog to reflect active G work and corrected the stale R1–R10 security status.
@@ -2809,3 +2809,7 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 
 ### Gate status
 **G0–G7 engineering implementation is IN PROGRESS. Track G is not accepted or closed. P0 remains BLOCKED / NOT APPROVED. Track U remains gated after G under D-023.**
+
+
+### Audit correction — capability matrix scope
+The first generated claims CSV incorrectly included entries outside the registry's `tools` collection (including UI screen catalogue records). The generator reads only `tools`; the matrix and test expectation have been corrected to **68 tool capabilities**. UI screen entries are not mislabelled as executable tool capabilities. The exact-head CI must confirm the regenerated CSV matches the generator.

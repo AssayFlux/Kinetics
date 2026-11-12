@@ -1,53 +1,81 @@
 <!-- KINETICS · ASSAYFLUX SCIENTIFIC SYSTEMS -->
 
 <p align="center">
-  <img src="Assets/Organization%20Logo%201%E2%98%851.gif" alt="ASSAYFLUX animated organisation mark" height="104">
-  &nbsp;&nbsp;&nbsp;
-  <img src="Assets/Kinetics%20Guilloche%20Logo.svg" alt="KINETICS guilloche DNA logo" height="104">
-  &nbsp;&nbsp;&nbsp;
-  <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="KINETICS animated rainbow DNA helix" height="104">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS&fontSize=46&fontColor=FFF8E7&font=Marcellus%20SC&fontAlignY=42" alt="Kinetics banner" width="100%">
 </p>
-
-<h1 align="center">KINETICS</h1>
-
-<p align="center"><strong>OFFLINE-FIRST SCIENTIFIC RESEARCH WORKBENCH</strong></p>
-<p align="center">ANDROID · PYTHON · NATIVE COMPUTE · REPRODUCIBLE WORKFLOWS</p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/VERSION-0.0.0-D4AF37?style=flat-square" alt="Version 0.0.0">
-  <img src="https://img.shields.io/badge/LICENSE-Apache--2.0-800020?style=flat-square" alt="Apache License 2.0">
-  <img src="https://img.shields.io/badge/STATUS-PRE--RELEASE-0B6E6E?style=flat-square" alt="Pre-release">
-  <img src="https://img.shields.io/badge/INTENDED%20USE-RESEARCH%20ONLY-1F2A6B?style=flat-square" alt="Research use only">
-  <img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=flat-square&label=CI" alt="Current GitHub Actions workflow status">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="Assets/Section%20Breaker%20Black%20Background.jpg">
+    <img src="Assets/Section%20Breaker%20White%20Background.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
+  </picture>
 </p>
 
-<p align="center"><strong>RESEARCH USE ONLY · NOT CLINICALLY VALIDATED · NOT A MEDICAL DEVICE</strong></p>
+<p align="center">
+  <img src="Assets/Kinetics%20Guilloche%20Logo.svg" alt="Kinetics guilloche DNA logo" height="170">
+</p>
+
+<p align="center">
+  <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="Animated rainbow DNA helix" width="62%">
+</p>
+
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=OFFLINE-FIRST+SCIENTIFIC+RESEARCH;REPRODUCIBLE+WORKFLOWS.+TRACEABLE+EVIDENCE.;ANDROID+%C2%B7+PYTHON+%C2%B7+NATIVE+COMPUTE;RESEARCH+ONLY.+VALIDATION+BEFORE+CLAIMS." alt="Kinetics tagline">
+</p>
+
+<p align="center">
+  <a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=for-the-badge&label=LICENSE&color=800020" alt="License"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=for-the-badge&label=BUILD" alt="Build status"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/stargazers"><img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=for-the-badge&label=STARS&color=D4AF37" alt="Stars"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/forks"><img src="https://img.shields.io/github/forks/AssayFlux/Kinetics?style=for-the-badge&label=FORKS&color=0B6E6E" alt="Forks"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/issues"><img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=for-the-badge&label=ISSUES&color=1F2A6B" alt="Issues"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/commits/main"><img src="https://img.shields.io/github/last-commit/AssayFlux/Kinetics?style=for-the-badge&label=LAST%20COMMIT&color=800020" alt="Last commit"></a>
+  <img src="https://img.shields.io/github/languages/top/AssayFlux/Kinetics?style=for-the-badge&label=TOP%20LANGUAGE&color=0B6E6E" alt="Top language">
+</p>
+
+<p align="center"><strong>PRE-RELEASE &nbsp;·&nbsp; RESEARCH USE ONLY &nbsp;·&nbsp; NOT CLINICALLY VALIDATED &nbsp;·&nbsp; NOT A MEDICAL DEVICE</strong></p>
 
 <p align="center">
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
 
-<h2 align="center"><img src="https://api.iconify.design/lucide/atom.svg?color=%23800020" width="24" height="24" alt=""> 01 · PROJECT IDENTITY</h2>
+## ABOUT
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+**Kinetics** is an open-source scientific research workbench from **AssayFlux Scientific Systems**. It combines an Android-native, offline-first application with a Python research core and selected C++ and Rust components. Sequence, structure, chemistry, kinetics and omics foundations sit behind versioned contracts and a capability registry.
 
-**KINETICS** is an open-source, modular scientific research workbench from **ASSAYFLUX SCIENTIFIC SYSTEMS**.
-
-Its engineering direction combines an Android-native, offline-first application with a scientific Python core, selected C++ and Rust components, versioned contracts, a capability registry and reproducibility tooling.
+The project prioritises reproducibility, provenance, bounded inputs and explicit limitations. It is a research-engineering prototype, not a clinically validated platform.
 
 <table>
   <tr>
-    <td align="center" width="50%">
-      <img src="https://api.iconify.design/lucide/microscope.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>RESEARCH DOMAINS</strong>
-      <br>Sequence and genomics · Structural biology · Chemistry and docking · Molecular dynamics · Kinetics and PK/PD · Omics and pharmacogenomics
+    <td align="center" width="33%"><img src="https://api.iconify.design/lucide/microscope.svg?color=%23800020" width="28" height="28" alt=""><br><strong>RESEARCH</strong><br>Modular scientific workflows with clearly scoped capabilities.</td>
+    <td align="center" width="33%"><img src="https://api.iconify.design/lucide/fingerprint.svg?color=%23800020" width="28" height="28" alt=""><br><strong>REPRODUCIBILITY</strong><br>Inputs, parameters, versions, units and provenance are preserved.</td>
+    <td align="center" width="33%"><img src="https://api.iconify.design/lucide/shield-check.svg?color=%23800020" width="28" height="28" alt=""><br><strong>EVIDENCE</strong><br>Implementation, tests, independent validation and device verification stay separate.</td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
+</p>
+
+## VISION
+
+<p align="center">
+  <img src="Assets/Astronaut.png" alt="Astronaut holding a glowing jellyfish-like light against a star field" width="78%">
+</p>
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="Assets/Goal.png" alt="Line-art illustration of a young explorer with goggles on a rooftop looking toward a distant tower" width="100%">
+      <br><sub><strong>GOAL</strong></sub>
     </td>
-    <td align="center" width="50%">
-      <img src="https://api.iconify.design/lucide/shield-check.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>ENGINEERING PRINCIPLES</strong>
-      <br>Offline-first workflows · Traceable inputs · Bounded capabilities · Reproducible methods · Explicit limitations
+    <td align="center" width="33%">
+      <img src="Assets/My%20Character.png" alt="Line-art character in overalls with goggles, scarf and tool belt" width="100%">
+      <br><sub><strong>MY CHARACTER</strong></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="Assets/Her%20Character.png" alt="Line-art character in overalls with blue pigtails and a satchel" width="100%">
+      <br><sub><strong>HER CHARACTER</strong></sub>
     </td>
   </tr>
 </table>
@@ -56,10 +84,72 @@ Its engineering direction combines an Android-native, offline-first application 
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
 
-<h2 align="center"><img src="https://api.iconify.design/lucide/git-branch.svg?color=%23800020" width="24" height="24" alt=""> 02 · TRACK STATUS</h2>
+## SCIENTIFIC CAPABILITIES
+
+<table>
+  <tr>
+    <td align="center" width="50%"><img src="https://api.iconify.design/lucide/dna.svg?color=%23800020" width="28" height="28" alt=""><br><strong>SEQUENCE &amp; GENOMICS</strong><br>FASTA/FASTQ, alignment, k-mer utilities, SAM/BAM/VCF foundations and variant normalisation.</td>
+    <td align="center" width="50%"><img src="https://api.iconify.design/lucide/network.svg?color=%23800020" width="28" height="28" alt=""><br><strong>STRUCTURAL BIOLOGY</strong><br>PDB/mmCIF parsing, contacts, RMSD and bounded structure-analysis foundations.</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://api.iconify.design/lucide/flask-conical.svg?color=%23800020" width="28" height="28" alt=""><br><strong>CHEMISTRY &amp; DOCKING</strong><br>Molecular graph and SMILES/MOLBLOCK utilities; optional RDKit and AutoDock Vina adapters.</td>
+    <td align="center"><img src="https://api.iconify.design/lucide/activity.svg?color=%23800020" width="28" height="28" alt=""><br><strong>MOLECULAR DYNAMICS</strong><br>Optional OpenMM runner with explicit setup and force-field limitations.</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://api.iconify.design/lucide/chart-line.svg?color=%23800020" width="28" height="28" alt=""><br><strong>KINETICS &amp; PK/PD</strong><br>Michaelis–Menten models and exploratory pharmacokinetic/pharmacodynamic utilities.</td>
+    <td align="center"><img src="https://api.iconify.design/lucide/chart-bar.svg?color=%23800020" width="28" height="28" alt=""><br><strong>OMICS &amp; PGx</strong><br>Exploratory statistics, synthetic cohort utilities and research-only pharmacogenomics parsing.</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://api.iconify.design/lucide/smartphone.svg?color=%23800020" width="28" height="28" alt=""><br><strong>ANDROID WORKBENCH</strong><br>Kotlin and Jetpack Compose foundation with offline-first constraints.</td>
+    <td align="center"><img src="https://api.iconify.design/lucide/scroll-text.svg?color=%23800020" width="28" height="28" alt=""><br><strong>GOVERNANCE &amp; PROVENANCE</strong><br>Capability registry, JSON Schema contracts, source inventory and evidence controls.</td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="Assets/DNA.gif" alt="Animated pink and teal DNA double helix" width="39%">
+  &nbsp;&nbsp;
+  <img src="Assets/Laboratory.gif" alt="Animated laboratory glassware illustration" width="39%">
+</p>
+
+<sub>Source implementation does not mean every workflow is complete or enabled, nor that a method has independent scientific validation. The animations above are illustrations, not application output.</sub>
 
 <p align="center">
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
+</p>
+
+## DESIGN PREVIEWS
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="Assets/App%20UI%20-%20Dashboard%20Design.jpg" alt="Kinetics dashboard layout design reference" width="55%">
+      <br><sub><strong>DASHBOARD · DESIGN REFERENCE</strong></sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="Assets/App%20UI%20-%20Login%20Page%20Design.jpg" alt="Kinetics login page layout design reference" width="55%">
+      <br><sub><strong>LOGIN · DESIGN REFERENCE</strong></sub>
+    </td>
+  </tr>
+</table>
+
+<sub>These are layout references, not captures of the running app. Verified device screenshots and a recorded demo will be added after installation and runtime verification on a physical Android device.</sub>
+
+<p align="center">
+  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
+</p>
+
+## STATUS AND PROGRESS
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TRACK%20R-SOFTWARE%20AUDIT%20CLOSED-3B5D2A?style=for-the-badge" alt="Track R: software audit closed">
+  <img src="https://img.shields.io/badge/TRACK%20S-SOFTWARE%20SCOPE%20CLOSED-3B5D2A?style=for-the-badge" alt="Track S: software scope closed">
+  <img src="https://img.shields.io/badge/TRACK%20I-SOFTWARE%20AUDIT%20CLOSED-3B5D2A?style=for-the-badge" alt="Track I: software audit closed">
+  <br>
+  <img src="https://img.shields.io/badge/TRACK%20P-IN%20PROGRESS-FF9933?style=for-the-badge" alt="Track P: in progress">
+  <img src="https://img.shields.io/badge/TRACK%20G-PLANNING%20BASELINE%20DRAFTED-D4AF37?style=for-the-badge" alt="Track G: planning baseline drafted">
+  <img src="https://img.shields.io/badge/TRACK%20U-SEQUENCED%20AFTER%20G-1F2A6B?style=for-the-badge" alt="Track U: sequenced after G">
+  <br>
+  <img src="https://img.shields.io/badge/P0-BLOCKED%20%2F%20NOT%20APPROVED-B71C1C?style=for-the-badge" alt="P0: blocked, not approved">
 </p>
 
 | TRACK | SCOPE | CURRENT SOFTWARE POSITION | OPEN GATE |
@@ -73,82 +163,40 @@ Its engineering direction combines an Android-native, offline-first application 
 
 <p align="center"><strong>CURRENT ORDER: R → S → I → P → G → U · DECISION D-023</strong></p>
 
-<sub>“Closed” refers only to the documented software/audit scope. It does not close independent scientific validation, licensing, physical-device, regulatory, clinical or release obligations. No overall compliance percentage is claimed.</sub>
+<sub>"Closed" refers only to the documented software and audit scope. It does not close independent scientific validation, licensing, physical-device, regulatory, clinical or release obligations. No completion percentage or overall compliance figure is claimed.</sub>
+
+| ENGINEERING AREA | POSITION |
+|---|---|
+| BUILD | GitHub Actions CI is configured. Read the live badge above for the current head. |
+| TESTS | pytest and Android JVM test tasks are defined in CI. |
+| COVERAGE | No verified coverage percentage is published. |
+| DEPLOYMENT | No production deployment or signed public release. CI builds debug artifacts only. |
 
 <p align="center">
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
 
-<h2 align="center"><img src="https://api.iconify.design/lucide/flask-conical.svg?color=%23800020" width="24" height="24" alt=""> 03 · SCIENTIFIC CAPABILITIES</h2>
+## TECHNOLOGY STACK
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,rust,nodejs,html,css,js,githubactions,bash,cmake,git,github,linux" alt="Technology icons">
+</p>
+
+| LAYER | TECHNOLOGY |
+|---|---|
+| ANDROID | Kotlin, Jetpack Compose, AndroidX, Gradle, Chaquopy |
+| PYTHON | Python 3.10+, setuptools, pytest, Ruff, mypy |
+| NATIVE | C++17, JNI/NDK, Rust |
+| OPTIONAL ENGINES | RDKit, AutoDock Vina 1.2.7, OpenMM 8.6.1 |
+| VIEWER | HTML5, CSS, JavaScript, Android WebView |
+| WORKER | Node.js 22+, dependency-free HTTP/TLS worker |
+| CONTRACTS | JSON Schema, YAML, SPDX source inventory |
 
 <p align="center">
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
 
-<table>
-  <tr>
-    <td align="center" width="50%">
-      <img src="https://api.iconify.design/lucide/dna.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>SEQUENCE & GENOMICS</strong>
-      <br>FASTA/FASTQ, alignment, k-mer utilities, SAM/BAM/VCF foundations and variant normalisation.
-    </td>
-    <td align="center" width="50%">
-      <img src="https://api.iconify.design/lucide/network.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>STRUCTURAL BIOLOGY</strong>
-      <br>PDB/mmCIF parsing, contacts, RMSD and bounded structure-analysis foundations.
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://api.iconify.design/lucide/flask-conical.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>CHEMISTRY & DOCKING</strong>
-      <br>Molecular graph and SMILES/MOLBLOCK utilities; optional RDKit and AutoDock Vina adapters.
-    </td>
-    <td align="center">
-      <img src="https://api.iconify.design/lucide/activity.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>MOLECULAR DYNAMICS</strong>
-      <br>Optional OpenMM runner with explicit setup and force-field limitations.
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://api.iconify.design/lucide/chart-line.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>KINETICS & PK/PD</strong>
-      <br>Michaelis–Menten models and exploratory pharmacokinetic/pharmacodynamic utilities.
-    </td>
-    <td align="center">
-      <img src="https://api.iconify.design/lucide/bar-chart-3.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>OMICS & PGx</strong>
-      <br>Exploratory statistics, synthetic cohort utilities and research-only pharmacogenomics parsing.
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://api.iconify.design/lucide/smartphone.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>ANDROID WORKBENCH</strong>
-      <br>Kotlin and Jetpack Compose application foundation with offline-first constraints.
-    </td>
-    <td align="center">
-      <img src="https://api.iconify.design/lucide/shield-check.svg?color=%23800020" width="28" height="28" alt="">
-      <br><strong>GOVERNANCE & PROVENANCE</strong>
-      <br>Capability registry, JSON Schema contracts, source inventory and evidence controls.
-    </td>
-  </tr>
-</table>
-
-<sub>Source implementation does not mean every workflow is complete or enabled, nor that a scientific method has independent validation.</sub>
-
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
-
-<h2 align="center"><img src="https://api.iconify.design/lucide/network.svg?color=%23800020" width="24" height="24" alt=""> 04 · SYSTEM ARCHITECTURE</h2>
-
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
-
-The diagram shows repository-level boundaries. Optional engines and the Node worker are not implied to be enabled in the Android application.
+## SYSTEM ARCHITECTURE
 
 ```mermaid
 flowchart TD
@@ -163,17 +211,21 @@ flowchart TD
     NODE["OPTIONAL NODE 22 WORKER · DISABLED BY DEFAULT"] -.-> VINA["AUTHENTICATED DOCKING ROUTE"]
     CI["GITHUB ACTIONS"] --> CHECKS["TESTS · VALIDATION · GOVERNANCE"]
     CONTRACTS --> CHECKS
+    classDef royal fill:#800020,color:#FFF8E7,stroke:#D4AF37,stroke-width:2px;
+    classDef gold fill:#D4AF37,color:#1A1210,stroke:#800020,stroke-width:1px;
+    classDef teal fill:#0B6E6E,color:#FFF8E7,stroke:#D4AF37,stroke-width:1px;
+    class ANDROID,APP,NODE royal;
+    class CONTRACTS,CHECKS,CI gold;
+    class PY,NATIVE,VIEW,SCI,OPTIONAL,VINA teal;
 ```
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
-
-<h2 align="center"><img src="https://api.iconify.design/lucide/terminal.svg?color=%23800020" width="24" height="24" alt=""> 05 · QUICK START</h2>
+<sub>The diagram shows repository-level boundaries. Optional engines and the Node worker are not implied to be enabled in the Android application.</sub>
 
 <p align="center">
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
+
+## QUICK START
 
 <details>
   <summary><strong>PREREQUISITES</strong></summary>
@@ -261,11 +313,7 @@ flowchart TD
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
 
-<h2 align="center"><img src="https://api.iconify.design/lucide/folder-tree.svg?color=%23800020" width="24" height="24" alt=""> 06 · REPOSITORY MAP</h2>
-
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+## REPOSITORY MAP
 
 | PATH | PURPOSE |
 |---|---|
@@ -278,7 +326,7 @@ flowchart TD
 | `scripts/` · `sbom/` · `.github/workflows/` | Build, validation, inventory and CI automation |
 | `remote-node/` · `web/viewers/` | Optional research worker and offline viewers |
 | `data/` · `datapacks/` · `design/` | Catalogues, manifests and design inputs |
-| `Assets/` | Brand artwork, animations and design references |
+| `Assets/` | Brand artwork, animations and design references (see the asset library below) |
 
 <sub>This is a concise directory map, not a claim that every directory is a complete product module.</sub>
 
@@ -286,11 +334,7 @@ flowchart TD
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
 
-<h2 align="center"><img src="https://api.iconify.design/lucide/shield-check.svg?color=%23800020" width="24" height="24" alt=""> 07 · RESEARCH & SAFETY BOUNDARIES</h2>
-
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+## RESEARCH AND SAFETY BOUNDARIES
 
 - Kinetics is a research-engineering prototype. It is not clinically validated, is not a medical device and must not be used for diagnosis, treatment or dosing decisions.
 - **P0 remains BLOCKED / NOT APPROVED.** Patient-data workflows, human-subject activity and Clinical Mode are not authorised.
@@ -302,11 +346,7 @@ flowchart TD
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
 
-<h2 align="center"><img src="https://api.iconify.design/lucide/milestone.svg?color=%23800020" width="24" height="24" alt=""> 08 · NEXT GATES</h2>
-
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+## NEXT GATES
 
 | TRACK | NEXT REQUIRED WORK |
 |:---:|---|
@@ -319,40 +359,127 @@ flowchart TD
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
 
-<h2 align="center"><img src="https://api.iconify.design/lucide/book-open-check.svg?color=%23800020" width="24" height="24" alt=""> 09 · CONTRIBUTION & LICENSING</h2>
+## HERITAGE ARTWORK SERIES
+
+<p align="center">
+  <img src="Assets/Human%20Revolution.png" alt="Illustrated timeline of human evolution from early primates to modern people, with fossils and tools below" width="100%">
+  <br><sub><strong>HUMAN REVOLUTION</strong></sub>
+</p>
+
+<p align="center">
+  <img src="Assets/Indian%20Peninsula%20Culture.png" alt="Illustrated Indian peninsula heritage scene with a palace, domed mausoleum, temple tower, peacock and elephant" width="100%">
+  <br><sub><strong>INDIAN PENINSULA</strong></sub>
+</p>
+
+<details>
+  <summary><strong>VIEW THE REMAINING SIX PANORAMAS</strong></summary>
+
+  <p align="center">
+    <img src="Assets/African%20Culture.png" alt="Illustrated African heritage scene with savanna wildlife, rock temple and clay architecture" width="100%">
+    <br><sub><strong>AFRICAN</strong></sub>
+  </p>
+  <p align="center">
+    <img src="Assets/Central%20Asian%20Culture.png" alt="Illustrated Central Asian heritage scene with a blue-domed mosque, reflecting pool and mountains" width="100%">
+    <br><sub><strong>CENTRAL ASIAN</strong></sub>
+  </p>
+  <p align="center">
+    <img src="Assets/Chinese%20Culture.png" alt="Illustrated Chinese heritage scene with pagodas, a dragon, arched bridge and junk boat" width="100%">
+    <br><sub><strong>CHINESE</strong></sub>
+  </p>
+  <p align="center">
+    <img src="Assets/European%20Culture.png" alt="Illustrated European heritage scene with a colosseum, cathedral dome, statues and fountain" width="100%">
+    <br><sub><strong>EUROPEAN</strong></sub>
+  </p>
+  <p align="center">
+    <img src="Assets/Japanese%20Culture.png" alt="Illustrated Japanese heritage scene with Mount Fuji, torii gate, pagoda and cherry blossom" width="100%">
+    <br><sub><strong>JAPANESE</strong></sub>
+  </p>
+  <p align="center">
+    <img src="Assets/Mayan%20Civilizational%20Culture.png" alt="Illustrated Mayan and Andean heritage scene with a stepped pyramid, mountain citadel, llamas and a macaw" width="100%">
+    <br><sub><strong>MAYAN CIVILIZATIONAL</strong></sub>
+  </p>
+</details>
 
 <p align="center">
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
+
+## BRAND IDENTITY
+
+<p align="center">
+  <img src="Assets/Organization%20Logo%204%E2%98%851.png" alt="AssayFlux wordmark" width="46%">
+</p>
+
+<p align="center">
+  <a href="Assets/Kinetics%20By%20AssayFlux%C2%A9.png"><strong>FULL-RESOLUTION KINETICS BY ASSAYFLUX LOCKUP (PNG)</strong></a>
+  &nbsp;·&nbsp;
+  <a href="Assets/DNA%20Rainbow%20Helix.html"><strong>RAINBOW HELIX SOURCE (HTML CANVAS)</strong></a>
+</p>
+
+<details>
+  <summary><strong>ANIMATED ORGANISATION MARK</strong></summary>
+
+  <p align="center">
+    <img src="Assets/Organization%20Logo%201%E2%98%851.gif" alt="AssayFlux animated square organisation mark" width="40%">
+  </p>
+</details>
+
+<p align="center">
+  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
+</p>
+
+## CONTRIBUTION AND LICENSING
 
 1. Read `NORTH_STAR.md`, `ROADMAP.md`, `DECISIONS.md` and `CONTRIBUTING.md`.
 2. Follow `docs/ENGINEERING_INTEGRATION_STANDARD.md` and the active sequential track gate.
 3. Add or update tests, schemas, provenance and licensing evidence with implementation.
 4. Report checks run, checks not run, limitations and remaining gates. Never imply scientific or device validation without evidence.
 
-**LICENSE:** Apache License 2.0. Third-party dependencies, engines, datasets, models, fonts and visual assets may have separate terms; review upstream conditions before bundling or redistribution.
+**License:** Apache License 2.0. Third-party dependencies, engines, datasets, models, fonts and visual assets may have separate terms; review upstream conditions before bundling or redistribution.
 
-<sub>Release housekeeping: `pyproject.toml` and `CITATION.cff` declare version `0.0.0`, while `python/kinetics/__init__.py` exposes `0.1.0`. Resolve this mismatch before release.</sub>
+<details>
+  <summary><strong>ASSET LIBRARY · EVERY FILE IN <code>Assets/</code></strong></summary>
+
+  | FILE | USED FOR |
+  |---|---|
+  | `Section Breaker Black Background.jpg` · `Section Breaker White Background.jpg` | Title strip in the header (dark / light mode) |
+  | `Kinetics Guilloche Logo.svg` | Project logo in the header |
+  | `DNA Rainbow Helix.gif` · `DNA Rainbow Helix.html` | Header animation · interactive canvas source |
+  | `Astronaut.png` · `Goal.png` · `My Character.png` · `Her Character.png` | Vision section |
+  | `DNA.gif` · `Laboratory.gif` | Animated illustrations under capabilities |
+  | `App UI - Dashboard Design.jpg` · `App UI - Login Page Design.jpg` | Design previews |
+  | `Human Revolution.png` · `Indian Peninsula Culture.png` | Heritage series (featured) |
+  | `African` · `Central Asian` · `Chinese` · `European` · `Japanese` · `Mayan Civilizational` `Culture.png` | Heritage series (collapsed gallery) |
+  | `Organization Logo 4★1.png` · `Organization Logo 1★1.gif` | Brand identity |
+  | `Kinetics By AssayFlux©.png` | Linked full-resolution lockup (21 MB, not embedded) |
+  | `README-Section-Divider.svg` | Section dividers |
+  | `Author's Signature.svg` · `Section Breaker With Author Details.jpg` | Footer |
+  | `Expandable Animated Gradient Border.svg` | Reusable UI frame, not embedded (needs live text measurement) |
+  | `White Page 9★12.jpg` · `White Page 12★9.jpg` · `White Page 10★10.jpg` | Blank page canvases, not used in the README |
+</details>
 
 <p align="center">
   <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
 </p>
 
-<h2 align="center"><img src="https://api.iconify.design/lucide/pen-line.svg?color=%23800020" width="24" height="24" alt=""> 10 · ACKNOWLEDGEMENTS</h2>
-
 <p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
+  <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Author details strip" width="100%">
 </p>
 
 <p align="center">
-  WITH GRATITUDE TO THE OPEN-SOURCE SCIENTIFIC, BIOINFORMATICS, ANDROID AND DEVELOPER-TOOL COMMUNITIES.
+  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" height="110">
+  <br>
+  <strong><em>LET EVERY HELIX CARRY A QUESTION; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
+  <br>
+  <sub>ASSAYFLUX SCIENTIFIC SYSTEMS · KINETICS · MADE IN INDIA</sub>
 </p>
 
-<p align="center">
-  <img src="Assets/Author%27s%20Signature.svg" alt="Owner-provided signature artwork" height="88">
-</p>
+<!-- ALTERNATE LINES:
+1. BUILD WITH CURIOSITY; PROVE WITH EVIDENCE; LEAVE A TRACE WORTH FOLLOWING.
+2. FROM A SINGLE QUESTION, WEAVE A THOUSAND REPRODUCIBLE DISCOVERIES.
+3. LET PATIENCE SHAPE THE METHOD AND INTEGRITY SHAPE THE RESULT.
+-->
 
 <p align="center">
-  <strong>ASSAYFLUX SCIENTIFIC SYSTEMS · KINETICS</strong>
-  <br><em>LET EVERY HELIX CARRY A QUESTION; LET EVERY ANSWER CARRY ITS EVIDENCE.</em>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1F2A6B,50:800020,100:D4AF37&height=100&section=footer" alt="" width="100%">
 </p>

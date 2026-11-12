@@ -25,6 +25,8 @@ def validate() -> list[str]:
         "docs/track-g/control-evidence-register.md",
         "docs/track-g/roles-and-review-cadence.md",
         "docs/track-g/requirements-traceability.csv",
+        "docs/track-g/dependency-decision-register.csv",
+        "docs/track-g/capability-claims-matrix.csv",
         "docs/track-g/capa-register.csv",
         "docs/track-g/data-flow-inventory.md",
         "docs/track-g/security-verification-matrix.md",

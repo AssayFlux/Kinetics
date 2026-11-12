@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kinetics DNA Loader</title>
+<style>
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: transparent;
+  }
+  body {
+    display: grid;
+    place-items: center;
+  }
+  canvas {
+    display: block;
+    width: min(100vw, 360px);
+    height: auto;
+    aspect-ratio: 3 / 1;
+    background: transparent;
+  }
+</style>
+</head>
+<body>
+<canvas id="kinetics-dna" width="360" height="120"
+        role="img" aria-label="Animated blue DNA double helix loader"></canvas>
+<script>
+(() => {
+  "use strict";
+
+  const canvas = document.getElementById("kinetics-dna");
+  const ctx = canvas.getContext("2d", { alpha: true });
+  const WIDTH = 360;
+  const HEIGHT = 120;
+  const COUNT = 15;
+  const AMPLITUDE = 31;
+  const ROTATION_MS = 3600;
+  const COLORS = ["#7dd3fc", "#38bdf8", "#3b82f6", "#818cf8"];
+
+  function colorAt(t) {
+    const scaled = t * (COLORS.length - 1);
+    const segment = Math.min(Math.floor(scaled), COLORS.length - 2);
+    const mix = scaled - segment;
+    const a = COLORS[segment].match(/[0-9a-f]{2}/gi).map(v => parseInt(v, 16));
+    const b = COLORS[segment + 1].match(/[0-9a-f]{2}/gi).map(v => parseInt(v, 16));
+    const rgb = a.map((v, i) => Math.round(v + (b[i] - v) * mix));
+    return "rgb(" + rgb.join(",") + ")";
+  }
+
+  function draw(timestamp) {
+    const phase = ((timestamp % ROTATION_MS) / ROTATION_MS) * Math.PI * 2;
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+    const dots = [];
+    for (let strand = 0; strand < 2; strand++) {
+      for (let i = 0; i < COUNT; i++) {
+        const u = i / (COUNT - 1);
+        const x = 24 + u * (WIDTH - 48);
+        const angle = u * Math.PI * 3.2 + phase + strand * Math.PI;
+        const z = Math.cos(angle);
+        const y = HEIGHT / 2 + AMPLITUDE * Math.sin(angle);
+        const depth = (z + 1) / 2;
+        const radius = 2.5 + depth * (6 - 2.5);
+        const opacity = 0.4 + depth * 0.6;
+        dots.push({ x, y, z, radius, opacity, color: colorAt(u) });
+      }
+    }
+
+    dots.sort((a, b) => a.z - b.z);
+    for (const dot of dots) {
+      ctx.globalAlpha = dot.opacity;
+      ctx.fillStyle = dot.color;
+      ctx.beginPath();
+      ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

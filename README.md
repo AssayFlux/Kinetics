@@ -17,7 +17,7 @@ Language percentages are intentionally not fabricated; see the source-statistics
 <p align="center">
   <strong>My DNA animation design</strong>
   <br>
-  <img src="assets/brand/kinetics_dna_loader.gif" alt="Transparent looping Kinetics DNA animation designed by the project owner" width="480">
+  <img src="assets/brand/rainbow-helix.gif" alt="Transparent looping Kinetics DNA animation designed by the project owner" width="480">
   <br>
   <sub>Original design by the project owner · smooth transparent loop · editable HTML5 Canvas source: <code>assets/brand/kinetics_dna_loader.html</code></sub>
 </p>

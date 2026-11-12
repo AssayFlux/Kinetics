@@ -5,7 +5,7 @@
   <em>Android-native · Reproducible · Provenance-aware · Research-only</em>
 </p>
 
-Kinetics is an offline-first, modular platform for computational biology and in-silico research. Engineering tracks execute in the owner-approved order **R → S → I → P → G**, with implementation, automated regression, independent scientific validation, device verification and release acceptance recorded separately. The project remains under active development; implementation progress is not scientific validation or release readiness.
+Kinetics is an offline-first, modular platform for computational biology and in-silico research. Engineering tracks execute in the owner-approved order **R → S → I → P → G → U** (D-023), with implementation, automated regression, independent scientific validation, device verification and release acceptance recorded separately. The project remains under active development; implementation progress is not scientific validation or release readiness.
 
 > **Current release state:** Pre-release development. Kinetics is not yet a validated scientific application or a production release. Clinical and patient-data workflows are disabled.
 
@@ -39,8 +39,8 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 | **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1–S10 software scope and exact-head software CI exit audit closed; external model/data, independent validation and device gates remain carry-forward | **Software scope closed; acceptance evidence open** |
 | **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1–I5 software implementation and integration audit closed; exact-head CI #42970328048 passed all 9 jobs. Real scientific/device/licensing/data/model/node acceptance remains open | **Software closed; real tests open** |
 | **P — Precision medicine** | PGx-first research pathway and future governance | Started 2026-11-11; P0 preparation and P1 public-data-only base in progress | **Started; P0 preparation active, formal gate not approved** |
-| **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open | **In progress** |
 | **G — Governance** | Security, licensing, quality system, bias and publication evidence | Requirements and inventories are documented; formal reviews and evidence gates remain open | **In progress** |
+| **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open. Further sequential U work follows G under D-023 | **In progress; sequenced after G** |
 
 ## Track R · Research platform
 

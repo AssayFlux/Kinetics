@@ -65,3 +65,10 @@ Schemas, parsers, synthetic tests and green CI close software verification only.
 - P7 jurisdiction records marked advice-received or owner-disposition-pending now require advice evidence and a product-classification field. Patient-data and Clinical Mode authorization remain hard false.
 - Added negative/positive synthetic schema tests for these conditions. These are contract checks, not actual reviews, risk acceptances or jurisdiction advice.
 - Exact-head CI for these additions is pending; do not claim verification until the main-branch workflow completes.
+
+
+## P1/P2 additional audit note — 2026-11-12
+
+- VCF parsing now enforces record/sample limits during parsing, and P1 QC retains its input-byte, variant and sample ceilings. The commits `5da06c905fd2be7d60bd3bfd37bd429a8dff4aaf` and `51e607424398db4b75dc31dfbf0ca880a3c0d171` contain this hardening; fresh exact-head CI is still required.
+- PharmVar variant construction now rejects boolean coordinates (Python bool is an int subclass), with synthetic negative tests.
+- These code changes have not yet been independently reference-compared or run through the complete exact-head workflow.

@@ -6,6 +6,8 @@ import csv
 import re
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 CONTROL_ID = re.compile(r"\bG[0-7]-\d{2}\b")
 
@@ -74,6 +76,62 @@ def validate() -> list[str]:
             unmapped = sorted(expected - mapped)
             if unmapped:
                 errors.append("Controls missing traceability rows: " + ", ".join(unmapped))
+
+    dependency_path = ROOT / "docs/track-g/dependency-decision-register.csv"
+    if dependency_path.is_file():
+        headers, rows = _read_csv(dependency_path)
+        required_columns = {
+            "component_id", "version", "ecosystem", "scope", "source_or_coordinate",
+            "artifact_sha256", "license_status", "redistribution_status", "reviewer", "status",
+        }
+        if not required_columns.issubset(headers):
+            errors.append("Dependency decision register is missing required columns")
+        component_ids = [row.get("component_id", "").strip() for row in rows]
+        if any(not item for item in component_ids):
+            errors.append("Dependency decision register contains an empty component_id")
+        if len(component_ids) != len(set(component_ids)):
+            errors.append("Dependency decision register contains duplicate component_id values")
+        for row in rows:
+            if not row.get("license_status", "").strip() or not row.get(
+                "redistribution_status", ""
+            ).strip():
+                errors.append(
+                    "Dependency decision register must explicitly state license and "
+                    "redistribution status for every component"
+                )
+                break
+
+    claim_path = ROOT / "docs/track-g/capability-claims-matrix.csv"
+    registry_path = ROOT / "capabilities/registry.yaml"
+    if claim_path.is_file() and registry_path.is_file():
+        headers, rows = _read_csv(claim_path)
+        required_columns = {
+            "capability_id", "capability_name", "implementation_path",
+            "implementation_status", "evidence_level", "validation_status",
+            "device_status", "license_status", "permitted_claim", "limitations",
+        }
+        if not required_columns.issubset(headers):
+            errors.append("Capability claims matrix is missing required columns")
+        claim_ids = [row.get("capability_id", "").strip() for row in rows]
+        if any(not item for item in claim_ids):
+            errors.append("Capability claims matrix contains an empty capability_id")
+        if len(claim_ids) != len(set(claim_ids)):
+            errors.append("Capability claims matrix contains duplicate capability_id values")
+        registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+        registry_ids = {
+            str(tool.get("id", "")) for tool in registry.get("tools", [])
+        }
+        if set(claim_ids) != registry_ids:
+            errors.append("Capability claims matrix IDs do not match capabilities/registry.yaml")
+        for row in rows:
+            if not row.get("device_status", "").strip() or not row.get(
+                "license_status", ""
+            ).strip():
+                errors.append(
+                    "Capability claims matrix must explicitly state device and license "
+                    "status for every capability"
+                )
+                break
 
     capa_path = ROOT / "docs/track-g/capa-register.csv"
     if capa_path.is_file():

@@ -5,7 +5,7 @@
 
 ## Current architecture observations
 
-The Android manifest declares one exported launcher activity and no permissions. In particular, no INTERNET permission is declared in the inspected manifest. The application sets `allowBackup=false` and `usesCleartextTraffic=false`. These are source observations; merged-manifest and installed-device verification remain required for each build.
+The Android manifest declares one exported launcher activity and no permissions. In particular, no INTERNET permission is declared in the inspected manifest. The application sets `allowBackup=false` and `usesCleartextTraffic=false`. No dedicated `backup_rules.xml` or `data_extraction_rules.xml` file was found at the inspected source paths; Android-version/OEM backup behavior must still be verified from the merged manifest and on-device. These are source observations, not installed-device proof.
 
 The app build config embeds Python 3.11 with pinned Biopython 1.88 and NumPy 1.26.2 wheels from the repository's local wheel directory. App dependencies include Compose, WorkManager, WebKit and biometric libraries. A dependency declaration does not prove a feature is reachable or that a data flow exists.
 

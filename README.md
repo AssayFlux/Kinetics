@@ -4,6 +4,8 @@
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS&fontSize=46&fontColor=FFF8E7&font=Marcellus%20SC&fontAlignY=42" alt="Kinetics banner" width="100%">
 </p>
 
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="Assets/Section%20Breaker%20Black%20Background.jpg">
@@ -35,11 +37,15 @@
 
 <p align="center"><strong>PRE-RELEASE &nbsp;·&nbsp; RESEARCH USE ONLY &nbsp;·&nbsp; NOT CLINICALLY VALIDATED &nbsp;·&nbsp; NOT A MEDICAL DEVICE</strong></p>
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## ABOUT
+
+<p align="center">
+  <img src="Assets/Indian%20Peninsula%20Culture.png" alt="Illustrated Indian peninsula heritage scene with a palace, domed mausoleum, temple tower, peacock and elephant" width="100%">
+</p>
 
 **Kinetics** is an open-source scientific research workbench from **AssayFlux Scientific Systems**. It combines an Android-native, offline-first application with a Python research core and selected C++ and Rust components. Sequence, structure, chemistry, kinetics and omics foundations sit behind versioned contracts and a capability registry.
 
@@ -53,38 +59,15 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
   </tr>
 </table>
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
 
-## VISION
-
-<p align="center">
-  <img src="Assets/Astronaut.png" alt="Astronaut holding a glowing jellyfish-like light against a star field" width="78%">
-</p>
-
-<table>
-  <tr>
-    <td align="center" width="33%">
-      <img src="Assets/Goal.png" alt="Line-art illustration of a young explorer with goggles on a rooftop looking toward a distant tower" width="100%">
-      <br><sub><strong>GOAL</strong></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="Assets/My%20Character.png" alt="Line-art character in overalls with goggles, scarf and tool belt" width="100%">
-      <br><sub><strong>MY CHARACTER</strong></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="Assets/Her%20Character.png" alt="Line-art character in overalls with blue pigtails and a satchel" width="100%">
-      <br><sub><strong>HER CHARACTER</strong></sub>
-    </td>
-  </tr>
-</table>
-
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## SCIENTIFIC CAPABILITIES
+
+<p align="center">
+  <img src="Assets/Human%20Revolution.png" alt="Illustrated timeline of human evolution from early primates to modern people, with fossils and tools below" width="100%">
+</p>
 
 <table>
   <tr>
@@ -113,11 +96,15 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 
 <sub>Source implementation does not mean every workflow is complete or enabled, nor that a method has independent scientific validation. The animations above are illustrations, not application output.</sub>
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## DESIGN PREVIEWS
+
+<p align="center">
+  <img src="Assets/European%20Culture.png" alt="Illustrated European heritage scene with a colosseum, cathedral dome, statues and fountain" width="100%">
+</p>
 
 <table>
   <tr>
@@ -134,11 +121,15 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 
 <sub>These are layout references, not captures of the running app. Verified device screenshots and a recorded demo will be added after installation and runtime verification on a physical Android device.</sub>
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## STATUS AND PROGRESS
+
+<p align="center">
+  <img src="Assets/Japanese%20Culture.png" alt="Illustrated Japanese heritage scene with Mount Fuji, torii gate, pagoda and cherry blossom" width="100%">
+</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/TRACK%20R-SOFTWARE%20AUDIT%20CLOSED-3B5D2A?style=for-the-badge" alt="Track R: software audit closed">
@@ -172,11 +163,15 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | COVERAGE | No verified coverage percentage is published. |
 | DEPLOYMENT | No production deployment or signed public release. CI builds debug artifacts only. |
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## TECHNOLOGY STACK
+
+<p align="center">
+  <img src="Assets/Chinese%20Culture.png" alt="Illustrated Chinese heritage scene with pagodas, a dragon, arched bridge and junk boat" width="100%">
+</p>
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,rust,nodejs,html,css,js,githubactions,bash,cmake,git,github,linux" alt="Technology icons">
@@ -192,11 +187,15 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | WORKER | Node.js 22+, dependency-free HTTP/TLS worker |
 | CONTRACTS | JSON Schema, YAML, SPDX source inventory |
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## SYSTEM ARCHITECTURE
+
+<p align="center">
+  <img src="Assets/Central%20Asian%20Culture.png" alt="Illustrated Central Asian heritage scene with a blue-domed mosque, reflecting pool and mountains" width="100%">
+</p>
 
 ```mermaid
 flowchart TD
@@ -221,11 +220,15 @@ flowchart TD
 
 <sub>The diagram shows repository-level boundaries. Optional engines and the Node worker are not implied to be enabled in the Android application.</sub>
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## QUICK START
+
+<p align="center">
+  <img src="Assets/African%20Culture.png" alt="Illustrated African heritage scene with savanna wildlife, rock temple and clay architecture" width="100%">
+</p>
 
 <details>
   <summary><strong>PREREQUISITES</strong></summary>
@@ -309,11 +312,15 @@ flowchart TD
   The script builds debug APK/AAB outputs and performs package-alignment checks. It does not install the app, run an emulator or verify a physical device.
 </details>
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## REPOSITORY MAP
+
+<p align="center">
+  <img src="Assets/Mayan%20Civilizational%20Culture.png" alt="Illustrated Mayan and Andean heritage scene with a stepped pyramid, mountain citadel, llamas and a macaw" width="100%">
+</p>
 
 | PATH | PURPOSE |
 |---|---|
@@ -330,9 +337,9 @@ flowchart TD
 
 <sub>This is a concise directory map, not a claim that every directory is a complete product module.</sub>
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## RESEARCH AND SAFETY BOUNDARIES
 
@@ -342,9 +349,9 @@ flowchart TD
 - No production service deployment, public API availability, independent docking validity, signed public release or physical-device verification is claimed.
 - CI builds debug artifacts. Test definitions and green host checks do not replace independent scientific, security, licensing or device evidence.
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## NEXT GATES
 
@@ -355,54 +362,22 @@ flowchart TD
 | **U** | Resume sequential implementation only after G's two-step gate is assessed. Retain partial U0–U3 as baseline, not as accepted completion. |
 | **CROSS-CUTTING** | Independent scientific benchmarks; data/model/dependency licensing and SBOM coverage; physical Android, offline, accessibility and recovery verification; real application demo. |
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
 
-## HERITAGE ARTWORK SERIES
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
-<p align="center">
-  <img src="Assets/Human%20Revolution.png" alt="Illustrated timeline of human evolution from early primates to modern people, with fossils and tools below" width="100%">
-  <br><sub><strong>HUMAN REVOLUTION</strong></sub>
-</p>
+## CONTRIBUTION AND LICENSING
 
-<p align="center">
-  <img src="Assets/Indian%20Peninsula%20Culture.png" alt="Illustrated Indian peninsula heritage scene with a palace, domed mausoleum, temple tower, peacock and elephant" width="100%">
-  <br><sub><strong>INDIAN PENINSULA</strong></sub>
-</p>
+1. Read `NORTH_STAR.md`, `ROADMAP.md`, `DECISIONS.md` and `CONTRIBUTING.md`.
+2. Follow `docs/ENGINEERING_INTEGRATION_STANDARD.md` and the active sequential track gate.
+3. Add or update tests, schemas, provenance and licensing evidence with implementation.
+4. Report checks run, checks not run, limitations and remaining gates. Never imply scientific or device validation without evidence.
 
-<details>
-  <summary><strong>VIEW THE REMAINING SIX PANORAMAS</strong></summary>
+**License:** Apache License 2.0. Third-party dependencies, engines, datasets, models, fonts and visual assets may have separate terms; review upstream conditions before bundling or redistribution.
 
-  <p align="center">
-    <img src="Assets/African%20Culture.png" alt="Illustrated African heritage scene with savanna wildlife, rock temple and clay architecture" width="100%">
-    <br><sub><strong>AFRICAN</strong></sub>
-  </p>
-  <p align="center">
-    <img src="Assets/Central%20Asian%20Culture.png" alt="Illustrated Central Asian heritage scene with a blue-domed mosque, reflecting pool and mountains" width="100%">
-    <br><sub><strong>CENTRAL ASIAN</strong></sub>
-  </p>
-  <p align="center">
-    <img src="Assets/Chinese%20Culture.png" alt="Illustrated Chinese heritage scene with pagodas, a dragon, arched bridge and junk boat" width="100%">
-    <br><sub><strong>CHINESE</strong></sub>
-  </p>
-  <p align="center">
-    <img src="Assets/European%20Culture.png" alt="Illustrated European heritage scene with a colosseum, cathedral dome, statues and fountain" width="100%">
-    <br><sub><strong>EUROPEAN</strong></sub>
-  </p>
-  <p align="center">
-    <img src="Assets/Japanese%20Culture.png" alt="Illustrated Japanese heritage scene with Mount Fuji, torii gate, pagoda and cherry blossom" width="100%">
-    <br><sub><strong>JAPANESE</strong></sub>
-  </p>
-  <p align="center">
-    <img src="Assets/Mayan%20Civilizational%20Culture.png" alt="Illustrated Mayan and Andean heritage scene with a stepped pyramid, mountain citadel, llamas and a macaw" width="100%">
-    <br><sub><strong>MAYAN CIVILIZATIONAL</strong></sub>
-  </p>
-</details>
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## BRAND IDENTITY
 
@@ -424,43 +399,53 @@ flowchart TD
   </p>
 </details>
 
-<p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
-</p>
-
-## CONTRIBUTION AND LICENSING
-
-1. Read `NORTH_STAR.md`, `ROADMAP.md`, `DECISIONS.md` and `CONTRIBUTING.md`.
-2. Follow `docs/ENGINEERING_INTEGRATION_STANDARD.md` and the active sequential track gate.
-3. Add or update tests, schemas, provenance and licensing evidence with implementation.
-4. Report checks run, checks not run, limitations and remaining gates. Never imply scientific or device validation without evidence.
-
-**License:** Apache License 2.0. Third-party dependencies, engines, datasets, models, fonts and visual assets may have separate terms; review upstream conditions before bundling or redistribution.
-
 <details>
   <summary><strong>ASSET LIBRARY · EVERY FILE IN <code>Assets/</code></strong></summary>
 
   | FILE | USED FOR |
   |---|---|
+  | `README-Section-Frame-Top.svg` · `README-Section-Frame-Bottom.svg` | Animated gradient frame around every section, derived from the Expandable Animated Gradient Border |
+  | `Expandable Animated Gradient Border.svg` | Source artwork for the frame (full box needs live text measurement, so it is not embedded as-is) |
   | `Section Breaker Black Background.jpg` · `Section Breaker White Background.jpg` | Title strip in the header (dark / light mode) |
   | `Kinetics Guilloche Logo.svg` | Project logo in the header |
   | `DNA Rainbow Helix.gif` · `DNA Rainbow Helix.html` | Header animation · interactive canvas source |
-  | `Astronaut.png` · `Goal.png` · `My Character.png` · `Her Character.png` | Vision section |
+  | `Indian Peninsula` · `Human Revolution` · `European` · `Japanese` · `Chinese` · `Central Asian` · `African` · `Mayan Civilizational` | Section banners: About, Capabilities, Design previews, Status, Stack, Architecture, Quick start, Repository map |
   | `DNA.gif` · `Laboratory.gif` | Animated illustrations under capabilities |
   | `App UI - Dashboard Design.jpg` · `App UI - Login Page Design.jpg` | Design previews |
-  | `Human Revolution.png` · `Indian Peninsula Culture.png` | Heritage series (featured) |
-  | `African` · `Central Asian` · `Chinese` · `European` · `Japanese` · `Mayan Civilizational` `Culture.png` | Heritage series (collapsed gallery) |
   | `Organization Logo 4★1.png` · `Organization Logo 1★1.gif` | Brand identity |
   | `Kinetics By AssayFlux©.png` | Linked full-resolution lockup (21 MB, not embedded) |
-  | `README-Section-Divider.svg` | Section dividers |
+  | `Astronaut.png` · `Goal.png` · `My Character.png` · `Her Character.png` | Closing section |
   | `Author's Signature.svg` · `Section Breaker With Author Details.jpg` | Footer |
-  | `Expandable Animated Gradient Border.svg` | Reusable UI frame, not embedded (needs live text measurement) |
+  | `README-Section-Divider.svg` | Retired in favour of the frame; kept for reuse |
   | `White Page 9★12.jpg` · `White Page 12★9.jpg` · `White Page 10★10.jpg` | Blank page canvases, not used in the README |
 </details>
 
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
+
+<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
+
+## THE JOURNEY
+
 <p align="center">
-  <img src="Assets/README-Section-Divider.svg" alt="" width="100%">
+  <img src="Assets/Astronaut.png" alt="Astronaut holding a glowing jellyfish-like light against a star field" width="78%">
 </p>
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="Assets/Goal.png" alt="Line-art illustration of a young explorer with goggles on a rooftop looking toward a distant tower" width="100%">
+      <br><sub><strong>GOAL</strong></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="Assets/My%20Character.png" alt="Line-art character in overalls with goggles, scarf and tool belt" width="100%">
+      <br><sub><strong>MY CHARACTER</strong></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="Assets/Her%20Character.png" alt="Line-art character in overalls with blue pigtails and a satchel" width="100%">
+      <br><sub><strong>HER CHARACTER</strong></sub>
+    </td>
+  </tr>
+</table>
 
 <p align="center">
   <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Author details strip" width="100%">
@@ -479,6 +464,8 @@ flowchart TD
 2. FROM A SINGLE QUESTION, WEAVE A THOUSAND REPRODUCIBLE DISCOVERIES.
 3. LET PATIENCE SHAPE THE METHOD AND INTEGRITY SHAPE THE RESULT.
 -->
+
+<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1F2A6B,50:800020,100:D4AF37&height=100&section=footer" alt="" width="100%">

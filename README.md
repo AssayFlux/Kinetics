@@ -102,10 +102,6 @@
 </p>
 
 ## ABOUT
-<p align="center">
-  <img src="Assets/Indian%20Peninsula%20Culture.png" alt="Illustrated Indian peninsula heritage scene with a palace, domed mausoleum, temple tower, peacock and elephant" width="100%">
-</p>
-
 **Kinetics** is an open-source scientific research workbench from **AssayFlux Scientific Systems**. It combines an Android-native, offline-first application with a Python research core and selected C++ and Rust components. Sequence, structure, chemistry, kinetics and omics foundations sit behind versioned contracts and a capability registry.
 
 The project prioritises reproducibility, provenance, bounded inputs and explicit limitations. It is a research-engineering prototype, not a clinically validated platform.
@@ -123,10 +119,6 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 </p>
 
 ## SCIENTIFIC CAPABILITIES
-<p align="center">
-  <img src="Assets/Human%20Revolution.png" alt="Illustrated timeline of human evolution from early primates to modern people, with fossils and tools below" width="100%">
-</p>
-
 <table>
   <tr>
     <td align="center" width="50%"><img src="https://api.iconify.design/lucide/dna.svg?color=%23800020" width="28" height="28" alt=""><br><strong>SEQUENCE &amp; GENOMICS</strong><br>FASTA/FASTQ, alignment, k-mer utilities, SAM/BAM/VCF foundations and variant normalisation.</td>
@@ -150,10 +142,6 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 </p>
 
 ## DESIGN PREVIEWS
-<p align="center">
-  <img src="Assets/European%20Culture.png" alt="Illustrated European heritage scene with a colosseum, cathedral dome, statues and fountain" width="100%">
-</p>
-
 <table>
   <tr>
     <td align="center" width="50%">
@@ -168,10 +156,6 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 </table>
 
 ## STATUS AND PROGRESS
-<p align="center">
-  <img src="Assets/Japanese%20Culture.png" alt="Illustrated Japanese heritage scene with Mount Fuji, torii gate, pagoda and cherry blossom" width="100%">
-</p>
-
 | TRACK | SCOPE | CURRENT SOFTWARE POSITION | OPEN GATE |
 |:---:|---|---|---|
 | **R** | Research platform | **SOFTWARE AUDIT CLOSED** | Device, independent scientific, licensing and release evidence remain. |
@@ -189,11 +173,6 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | DEPLOYMENT | No production deployment or signed public release. CI builds debug artifacts only. |
 
 ## TECHNOLOGY STACK
-
-<p align="center">
-  <img src="Assets/Chinese%20Culture.png" alt="Illustrated Chinese heritage scene with pagodas, a dragon, arched bridge and junk boat" width="100%">
-</p>
-
 <p align="center">
   <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,rust,nodejs,html,css,js,bash,cmake,git,github,linux&perline=5" alt="Technology icons">
 </p>
@@ -209,10 +188,6 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | CONTRACTS | JSON Schema, YAML, SPDX source inventory |
 
 ## SYSTEM ARCHITECTURE
-<p align="center">
-  <img src="Assets/Central%20Asian%20Culture.png" alt="Illustrated Central Asian heritage scene with a blue-domed mosque, reflecting pool and mountains" width="100%">
-</p>
-
 ```mermaid
 flowchart TD
     USER["RESEARCH USER"] --> ANDROID["ANDROID · KOTLIN / COMPOSE"]
@@ -235,10 +210,6 @@ flowchart TD
 ```
 
 ## QUICK START
-<p align="center">
-  <img src="Assets/African%20Culture.png" alt="Illustrated African heritage scene with savanna wildlife, rock temple and clay architecture" width="100%">
-</p>
-
 <details>
   <summary><strong>PREREQUISITES</strong></summary>
 
@@ -322,10 +293,6 @@ flowchart TD
 </details>
 
 ## REPOSITORY MAP
-<p align="center">
-  <img src="Assets/Mayan%20Civilizational%20Culture.png" alt="Illustrated Mayan and Andean heritage scene with a stepped pyramid, mountain citadel, llamas and a macaw" width="100%">
-</p>
-
 | PATH | PURPOSE |
 |---|---|
 | `android/` | Kotlin app, Compose, JNI, Rust and embedded Python |
@@ -409,14 +376,36 @@ flowchart TD
 
 
 
-#CULTURAL REPRESENTATION
+## CULTURAL REPRESENTATIONS
 
 
+<p align="center">
+  <img src="Assets/Indian%20Peninsula%20Culture.png" alt="Illustrated Indian peninsula heritage scene with a palace, domed mausoleum, temple tower, peacock and elephant" width="100%">
+</p>
 
+<p align="center">
+  <img src="Assets/African%20Culture.png" alt="Illustrated African heritage scene with savanna wildlife, rock temple and clay architecture" width="100%">
+</p>
 
+<p align="center">
+  <img src="Assets/European%20Culture.png" alt="Illustrated European heritage scene with a colosseum, cathedral dome, statues and fountain" width="100%">
+</p>
+<p align="center">
+  <img src="Assets/Japanese%20Culture.png" alt="Illustrated Japanese heritage scene with Mount Fuji, torii gate, pagoda and cherry blossom" width="100%">
+</p>
+<p align="center">
+  <img src="Assets/Chinese%20Culture.png" alt="Illustrated Chinese heritage scene with pagodas, a dragon, arched bridge and junk boat" width="100%">
+</p>
+<p align="center">
+  <img src="Assets/Central%20Asian%20Culture.png" alt="Illustrated Central Asian heritage scene with a blue-domed mosque, reflecting pool and mountains" width="100%">
+</p>
 
-
-
+<p align="center">
+  <img src="Assets/Mayan%20Civilizational%20Culture.png" alt="Illustrated Mayan and Andean heritage scene with a stepped pyramid, mountain citadel, llamas and a macaw" width="100%">
+</p>
+<p align="center">
+  <img src="Assets/Human%20Revolution.png" alt="Illustrated timeline of human evolution from early primates to modern people, with fossils and tools below" width="100%">
+</p>
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Noto+Serif+Bengali&weight=600&size=17&pause=1800&color=E85D75&center=true&vCenter=true&width=1000&lines=বাংলা+ও+অসমীয়া: অ আ ই ঈ উ ঊ ঋ এ ঐ ও ঔ ক খ গ ঘ ঙ চ ছ জ ঝ ঞ ট ঠ ড ঢ ণ ত থ দ ধ ন প ফ ব ভ ম য ৰ ৱ ল শ ষ স হ" alt="Bengali and Assamese" />
   <br>

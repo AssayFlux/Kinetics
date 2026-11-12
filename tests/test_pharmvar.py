@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from typing import cast
 
 import pytest
 
@@ -83,4 +84,34 @@ def test_pharmvar_rejects_digest_release_and_accession_mismatch():
             defs(),
             phase_confirmed=True,
             call_complete=True,
+        )
+
+
+def test_pharmvar_parser_enforces_input_and_row_bounds():
+    digest = hashlib.sha256(TSV.encode()).hexdigest()
+    common = {
+        "source_release": "fixture-1",
+        "source_url": "https://example.invalid/source",
+        "source_sha256": digest,
+        "license_id": "CC0 synthetic test only",
+        "expected_release": "fixture-1",
+    }
+    with pytest.raises(ValueError, match="max_input_bytes"):
+        parse_pharmvar_tsv(TSV, **common, max_input_bytes=1)
+    with pytest.raises(ValueError, match="max_rows"):
+        parse_pharmvar_tsv(TSV, **common, max_rows=1)
+    for invalid in (0, -1, True, 1.5):
+        with pytest.raises(ValueError, match="positive integer"):
+            parse_pharmvar_tsv(TSV, **common, max_rows=invalid)
+
+
+def test_pharmvar_parser_rejects_non_text_input():
+    with pytest.raises(TypeError, match="text or bytes"):
+        parse_pharmvar_tsv(
+            cast(str, None),
+            source_release="fixture-1",
+            source_url="https://example.invalid/source",
+            source_sha256=hashlib.sha256(TSV.encode()).hexdigest(),
+            license_id="CC0 synthetic test only",
+            expected_release="fixture-1",
         )

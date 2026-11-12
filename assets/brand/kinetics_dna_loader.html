@@ -16,11 +16,13 @@
 <script>
 /* ---------- Settings: tweak these ---------- */
 const CONFIG = {
-  dots: 18,            // dots per strand
-  widthRatio: 0.38,    // helix width relative to viewport width (max capped below)
-  maxWidth: 760,       // px
-  amplitude: 0.17,     // wave height relative to helix width
-  turns: 1.6,          // how many full twists across the helix
+  dots: 26,            // dots per strand
+  widthRatio: 0.55,    // helix width relative to viewport width (max capped below)
+  maxWidth: 1100,      // px
+  amplitude: 0.12,     // wave height relative to helix width
+  turns: 2.3,          // how many full twists across the helix
+  pulse: 0.12,         // gentle size breathing (0.12 = ±12%)
+  pulseSpeed: 1.6,     // breathing speed
   speed: 0.9,          // rotation speed (radians / second)
   dotSize: 11,         // base dot radius (px at 1x)
   hueSpan: 300,        // rainbow spread across the helix (degrees)
@@ -50,12 +52,12 @@ function draw(now) {
   const t = reduceMotion ? 0 : now / 1000;
   ctx.clearRect(0, 0, W, H);
 
-  const width = Math.min(W * CONFIG.widthRatio * 1.6, CONFIG.maxWidth, W * 0.9);
+  const width = Math.min(W * CONFIG.widthRatio * 1.6, CONFIG.maxWidth, W * 0.92);
   const amp = width * CONFIG.amplitude;
   const left = (W - width) / 2;
   const step = width / (CONFIG.dots - 1);
   const cy = H / 2;
-  const scale = Math.max(0.6, Math.min(1.6, width / 560));
+  const scale = Math.max(0.5, Math.min(1.6, width / 760));
   const items = [];
 
   for (let i = 0; i < CONFIG.dots; i++) {
@@ -72,7 +74,8 @@ function draw(now) {
       const depth = (z + 1) / 2;              // 0 .. 1
       items.push({
         x, y, depth,
-        r: CONFIG.dotSize * scale * (0.5 + 0.6 * depth),
+        r: CONFIG.dotSize * scale * (0.5 + 0.6 * depth)
+           * (1 + CONFIG.pulse * Math.sin(t * CONFIG.pulseSpeed - i * 0.45 + s * 1.2)),
         hue: (hue + s * 40) % 360,
         a: 0.45 + 0.55 * depth,
         l: CONFIG.lightness + (1 - depth) * 8 // back dots slightly lighter

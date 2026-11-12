@@ -1,7 +1,7 @@
 <!-- KINETICS · BY ASSAYFLUX -->
 
 <p align="center">
- <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS&fontSize=46&fontColor=FFF8E7&font=Great%20Vibes&fontAlignY=42" alt="Kinetics banner" width="100%">
+ <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS BY ASSAYFLUX&fontSize=46&fontColor=FFF8E7&font=Great%20Vibes&fontAlignY=42" alt="Kinetics banner" width="100%">
 </p>
 <p align="center">
   <picture>
@@ -324,13 +324,9 @@ flowchart TD
 </details>
 
 ## THE JOURNEY
-<table>
-  <tr>
-    <td align="center" width="100%">
-      <img src="Assets/Goal.png" alt="Line-art illustration of a young explorer with goggles on a rooftop looking toward a distant tower" width="100%">
-    </td>
-  </tr>
-</table>
+<p align="center">
+ <img src="Assets/Goal.png" alt="Line-art illustration of a young explorer with goggles on a rooftop looking toward a distant tower" width="100%">
+</p>
 
 <p align="center">
   <img src="Assets/Section%20Breaker%20White%20Background.jpg" alt="Author details strip" width="100%">
@@ -342,7 +338,7 @@ flowchart TD
   <sub> Md Safarujjaman </sub>
 </p>
 <p align="right">
-  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" height="20%">
+  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" width="20%">
 </p>
 <p align="center">
   <picture>

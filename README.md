@@ -10,16 +10,8 @@ Language percentages are intentionally not fabricated; see the source-statistics
 <p align="center">
   <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="200" height="200">
   &nbsp;&nbsp;
-  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width=200" height="200">
+  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width="200" height="200">
   &nbsp;&nbsp;
-</p>
-
-<p align="center">
-  <strong>My DNA animation design</strong>
-  <br>
-  <img src="assets/brand/rainbow-helix.gif" alt="Transparent looping Kinetics DNA animation designed by the project owner" width="480">
-  <br>
-  <sub>Original design by the project owner · smooth transparent loop · editable HTML5 Canvas source: <code>assets/brand/kinetics_dna_loader.html</code></sub>
 </p>
 
 <h1 align="center">Kinetics</h1>
@@ -51,9 +43,9 @@ Language percentages are intentionally not fabricated; see the source-statistics
 <p align="center">
   <strong>DNA animation — designed by the project owner</strong>
   <br>
-  <img src="assets/brand/kinetics_dna_loader.gif" alt="Smooth transparent Kinetics DNA loader animation" width="480">
+  <img src="assets/brand/rainbow-helix.gif" alt="Rainbow Helix animated DNA design by the project owner" width="480">
   <br>
-  <sub>Transparent looping GIF preview · original standalone HTML5 Canvas source: <code>assets/brand/kinetics_dna_loader.html</code></sub>
+  <sub>Original HTML5 Canvas design, presented as a looping GIF</sub>
 </p>
 
 <p align="center">
@@ -82,8 +74,6 @@ Kinetics is an open-source, modular scientific research workbench designed aroun
 The codebase explores workflows across genomics, sequence analysis, structural biology, computational chemistry, enzyme kinetics, omics and research-oriented pharmacology utilities. A capability registry connects tools with engines, data packs and scientific domains. Results are designed to retain input hashes, parameters, versions, units and other provenance needed to inspect or reproduce an analysis.
 
 Kinetics is an evolving engineering prototype. Source code, automated tests, independent scientific validation, physical-device verification and formal acceptance are tracked as distinct evidence states.
-
-The standalone DNA animation is implemented in `assets/brand/kinetics_dna_loader.html` using HTML5 Canvas. The earlier GIF export has been removed; use the HTML file as the live animation source.
 
 ### Why this project?
 
@@ -168,7 +158,7 @@ The percentages below are the repository's **documented track engineering-gate s
   <img src="https://img.shields.io/badge/Clinical%20use-not%20approved-red?style=for-the-badge" alt="Clinical use not approved">
 </p>
 
-- **Build / CI:** GitHub Actions is configured. The latest run inspected during this README audit passed on commit `50366e8`; use the live workflow badge for current status.
+- **Build / CI:** GitHub Actions validation is configured; use the live workflow badge above for current status.
 - **Tests:** 62 Python test modules are present. The CI workflow also defines Android JVM tests, scientific reference comparisons, native-engine smoke checks and Node worker security tests.
 - **Coverage:** no verified coverage percentage is published; none is claimed here.
 - **Deployment:** no production deployment is claimed. Android CI artifacts are debug APK/AAB outputs.

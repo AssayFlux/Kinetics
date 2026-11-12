@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=OFFLINE-FIRST+SCIENTIFIC+RESEARCH;REPRODUCIBLE+WORKFLOWS.+TRACEABLE+EVIDENCE.;ANDROID+%C2%B7+PYTHON+%C2%B7+NATIVE+COMPUTE;RESEARCH+ONLY.+VALIDATION+BEFORE+CLAIMS." alt="Kinetics tagline">
+  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=OFFLINE+FIRST+SCIENTIFIC+RESEARCH;REPRODUCIBLE+WORKFLOWS;TRACEABLE+EVIDENCE;ANDROID;PYTHON;KOTLIN;GRADLE;C++;RUST;NODE+JS;HTML;CSS; JAVASCRIPT;BASH;LINUX+NATIVE+COMPUTING;FOR+RESEARCH+ONLY;VALIDATION+BEFORE+CLAIMS+IS+THE+KEY" alt="Kinetics tagline">
 </p>
 
 <p align="center">
@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=RESEARCH+USE+ONLY" alt="Kinetics tagline">
+  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=WE+ARE+WELCOMING+RESEARCHERS+AND+ORGANIZATIONS" alt="Kinetics tagline">
 </p>
 
 

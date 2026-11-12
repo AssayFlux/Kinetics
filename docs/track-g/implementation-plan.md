@@ -116,7 +116,7 @@ The following repository artifacts now form the G engineering baseline:
 - `docs/track-g/capa-register.csv` — blank corrective/preventive action register; no fictitious findings inserted.
 - `docs/track-g/security-verification-matrix.md` — 16 security/device/supply-chain verification cases with honest OPEN/PARTIAL status.
 - `docs/track-g/data-flow-inventory.md` — source-level inventory based on the inspected manifest and policy files.
-- `docs/track-g/capability-claims-matrix.csv` and `scripts/generate_governance_claims.py` — 130 capability entries, conservative claim wording, validation/device/license gaps.
+- `docs/track-g/capability-claims-matrix.csv` and `scripts/generate_governance_claims.py` — 68 tool capability entries, conservative claim wording, validation/device/license gaps.
 - `docs/track-g/publication-integrity.md` — claim, authorship, reproducibility and submission protocol.
 - `docs/track-g/operational-controls.md` — incident, stop-work, access, backup/recovery and tabletop procedures.
 - `scripts/check_governance.py` and `tests/test_governance.py` — structural validation of governance artifacts and control traceability.

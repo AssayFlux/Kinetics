@@ -59,8 +59,22 @@ class AlleleMatch:
 
 def parse_star_allele_definitions(
     document: str, *, expected_source_release: str,
+    max_input_bytes: int = 2 * 1024 * 1024,
+    max_definitions: int = 10_000,
+    max_variants_per_definition: int = 1_000,
 ) -> list[StarAlleleDefinition]:
-    """Load a JSON definition pack with mandatory source, build and license metadata."""
+    """Load a bounded JSON definition pack with mandatory provenance metadata."""
+    for name, limit in (
+        ("max_input_bytes", max_input_bytes),
+        ("max_definitions", max_definitions),
+        ("max_variants_per_definition", max_variants_per_definition),
+    ):
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError(f"{name} must be a positive integer")
+    if not isinstance(document, str):
+        raise TypeError("PGx definition pack must be text")
+    if len(document.encode("utf-8")) > max_input_bytes:
+        raise ValueError("PGx definition pack exceeds configured max_input_bytes")
     try:
         value = json.loads(document)
     except json.JSONDecodeError as error:
@@ -94,6 +108,8 @@ def parse_star_allele_definitions(
     raw_definitions = value.get("definitions")
     if not isinstance(raw_definitions, list) or not raw_definitions:
         raise ValueError("PGx definition pack must contain allele definitions")
+    if len(raw_definitions) > max_definitions:
+        raise ValueError("PGx definition count exceeds configured max_definitions")
 
     definitions: list[StarAlleleDefinition] = []
     seen: set[tuple[str, str, str]] = set()
@@ -101,6 +117,8 @@ def parse_star_allele_definitions(
     def variants(raw: object) -> frozenset[VariantKey]:
         if not isinstance(raw, list):
             raise ValueError("Allele variants must be arrays")
+        if len(raw) > max_variants_per_definition:
+            raise ValueError("Allele variant count exceeds configured max_variants_per_definition")
         result: set[VariantKey] = set()
         for item in raw:
             if not isinstance(item, dict):

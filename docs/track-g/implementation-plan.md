@@ -106,6 +106,8 @@ This plan is the Track G planning baseline. Amendments must preserve the distinc
 
 The following repository artifacts now form the G engineering baseline:
 - `docs/track-g/roles-and-review-cadence.md` — accountable role model and review triggers; non-owner appointments are explicitly unassigned.
+- `docs/track-g/dependency-decision-register.csv` — exact candidate versions/scopes and unresolved license/hash decisions.
+- CI Android job now archives the resolved Gradle debug runtime graph, Cargo dependency tree, Cargo.lock digest and hashes of cached Maven artifacts; this is raw dependency evidence, not yet a complete SPDX SBOM or license clearance.
 - `docs/track-g/requirements-traceability.csv` — G0–G7 requirement-to-control map.
 - `docs/track-g/capa-register.csv` — blank corrective/preventive action register; no fictitious findings inserted.
 - `docs/track-g/security-verification-matrix.md` — 16 security/device/supply-chain verification cases with honest OPEN/PARTIAL status.

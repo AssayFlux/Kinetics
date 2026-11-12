@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+========================================================
+  PREMIUM DYNAMIC EXPANDABLE SVG BORDER
+========================================================
+
+  DESIGN:
+  Minimal animated gradient border with an open,
+  transparent interior for independent typography.
+
+  FEATURES:
+  1. Continuously animated multi-colour gradient.
+  2. Expandable frame dimensions.
+  3. Rounded, elegant corners.
+  4. Transparent writing area.
+  5. Responsive vector scaling.
+  6. Text-safe internal spacing.
+
+  IMPORTANT EXPANSION INSTRUCTIONS:
+  When text is added, the HOST APPLICATION must measure
+  the rendered text and resize this SVG accordingly.
+
+  Recommended calculation:
+
+  frameWidth  = textWidth  + (padding * 2)
+  frameHeight = textHeight + (padding * 2)
+
+  Recommended minimum padding: 40px.
+
+  For multiline text, measure the complete text block,
+  including line spacing.
+
+  Update the SVG viewBox and border dimensions together.
+  Never stretch the border disproportionately.
+
+  When text is removed, allow the frame to shrink while
+  respecting its minimum dimensions.
+
+  Use JavaScript getBBox() or equivalent text measurement.
+  Pure SVG cannot automatically measure arbitrary external
+  text and resize its own viewBox.
+
+========================================================
+-->
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%"
+     height="100%"
+     viewBox="0 0 1200 300"
+     preserveAspectRatio="xMidYMid meet">
+
+  <defs>
+
+    <!-- Animated premium colour spectrum -->
+    <linearGradient id="animatedBorder"
+                    x1="0%" y1="0%"
+                    x2="100%" y2="0%">
+
+      <stop offset="0%" stop-color="#B68CFF"/>
+      <stop offset="25%" stop-color="#56CFE1"/>
+      <stop offset="50%" stop-color="#67D6A3"/>
+      <stop offset="75%" stop-color="#F6C76A"/>
+      <stop offset="100%" stop-color="#F28CB8"/>
+
+      <!-- Continuously shift the gradient colours -->
+      <animateTransform
+        attributeName="gradientTransform"
+        type="rotate"
+        from="0 0.5 0.5"
+        to="360 0.5 0.5"
+        dur="12s"
+        repeatCount="indefinite"/>
+
+    </linearGradient>
+
+  </defs>
+
+  <!--
+  ======================================================
+    EXPANDABLE BORDER FRAME
+  ======================================================
+
+  INITIAL DIMENSIONS:
+  Width  = 1160px
+  Height = 260px
+
+  To expand:
+  1. Increase width and/or height.
+  2. Adjust viewBox to match the new dimensions.
+  3. Preserve 20px outer clearance.
+  4. Keep the text inside with at least 40px padding.
+
+  Example:
+  If the content requires 1500 x 500px,
+  use viewBox="0 0 1540 540"
+  and update the rectangle to:
+  x="20" y="20"
+  width="1500" height="500".
+  ======================================================
+  -->
+
+  <rect id="expandableBorder"
+        x="20"
+        y="20"
+        width="1160"
+        height="260"
+        rx="28"
+        ry="28"
+        fill="none"
+        stroke="url(#animatedBorder)"
+        stroke-width="3"
+        stroke-linejoin="round">
+
+    <!-- Subtle breathing animation -->
+    <animate
+      attributeName="stroke-width"
+      values="2.5;3.5;2.5"
+      dur="5s"
+      repeatCount="indefinite"/>
+
+  </rect>
+
+  <!--
+  ======================================================
+    TEXT PLACEMENT AREA
+  ======================================================
+
+  The interior is intentionally transparent.
+
+  Do not add a background rectangle here.
+
+  External text can use:
+  - Any font family.
+  - Any font size or weight.
+  - Left, centre or right alignment.
+  - Single-line or multiline content.
+  - Multiple independent text elements.
+
+  Keep a minimum 40px distance from the border.
+
+  The host application should measure all text elements
+  and recalculate the frame dimensions whenever content
+  changes.
+  ======================================================
+  -->
+
+</svg>

@@ -2744,3 +2744,13 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 
 
 - Additional P1/P2 audit: confirmed VCF record/sample limits are applied during parsing; added boolean-coordinate rejection for PharmVar typed records with negative tests. Exact-head CI and independent reference comparison remain pending.
+
+
+## 2026-11-12 — Repository-wide documentation and structure audit
+
+- Audited the complete GitHub recursive tree at `dafc3cad56bc6b9b9b49cc30f9e5f65bbd655c47`: 356 tracked files across 55 non-root directories; tree response was not truncated. Reviewed canonical direction files, README, docs index, architecture/integration standard, validation, security, licensing, CI evidence, Track P documents, citation metadata and session history.
+- Added `docs/research-grade-readiness-audit-2026-11-12.md` with inventory, status/documentation drift, naming/layout issues, research-grade evidence requirements and a staged reorganisation plan.
+- Updated `docs/README.md`, root README and ROADMAP to link the audit, align P2–P7 software-preparation status, and clearly state that latest parser/schema hardening still needs exact-head CI. Earlier green workflows are historical, not current-head verification.
+- Identified case-distinct `Assets/` and `assets/` trees and a very large append-only session log. No mass moves or deletes were made: asset consolidation requires full reference/hash audit; historical session entries are preserved.
+- No local build, test suite, Ruff, mypy, device test, independent scientific validation or external review was run as part of this documentation audit.
+- Current status: documentation navigation and readiness audit improved; research-grade scientific validation and release readiness are not established. P0 remains BLOCKED / NOT APPROVED; patient/clinical workflows remain disabled.

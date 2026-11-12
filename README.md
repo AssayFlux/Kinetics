@@ -226,7 +226,11 @@ flowchart TD
 
 ## BRAND IDENTITY
 <p align="center">
-  <img src="Assets/Organization%20Logo%100%E2%100%851.gif" alt="AssayFlux wordmark" width="100%">
+  <img
+    src="Assets/Organization%20Logo%201%E2%98%851.gif"
+    alt="AssayFlux wordmark"
+    width="100%"
+  >
 </p>
 ## THE JOURNEYS
 <p align="center">
@@ -292,22 +296,196 @@ flowchart TD
   <img src="Assets/Human%20Revolution.png" alt="Illustrated timeline of human evolution from early primates to modern people, with fossils and tools below" width="100%">
 </p>
 
-<p align="center">
-  <img
-    src="https://readme-typing-svg.demolab.com/?font=Noto+Serif+Bengali&weight=600&size=22&pause=1000&color=E85D75&center=true&vCenter=true&width=900&height=55&lines=%E0%A6%AC%E0%A6%BE%E0%A6%82%E0%A6%B2%E0%A6%BE%3A%20%E0%A6%85%20%E0%A6%86%20%E0%A6%87%20%E0%A6%88%20%E0%A6%89%20%E0%A6%8A%20%E0%A6%8B%20%E0%A6%8F%20%E0%A6%90%20%E0%A6%93%20%E0%A6%94"
-    alt="Bengali alphabet"
-  />
-  <br>
-  <img
-    src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Devanagari&weight=600&size=22&pause=1000&color=D4AF37&center=true&vCenter=true&width=900&height=55&lines=%E0%A4%B9%E0%A4%BF%E0%A4%A8%E0%A5%8D%E0%A4%A6%E0%A5%80%3A%20%E0%A4%85%20%E0%A4%86%20%E0%A4%87%20%E0%A4%88%20%E0%A4%89%20%E0%A4%8A%20%E0%A4%8B%20%E0%A4%8F%20%E0%A4%90%20%E0%A4%93%20%E0%A4%94"
-    alt="Hindi alphabet"
-  />
-  <br>
-  <img
-    src="https://readme-typing-svg.demolab.com/?font=Cinzel+Decorative&weight=600&size=22&pause=1000&color=42A5A5&center=true&vCenter=true&width=900&height=55&lines=ENGLISH%3A%20A%20B%20C%20D%20E%20F%20G%20H%20I%20J%20K%20L%20M%20N%20O%20P%20Q%20R%20S%20T%20U%20V%20W%20X%20Y%20Z"
-    alt="English alphabet"
-  />
+
+
+<!-- KINETICS — 50-LANGUAGE WELCOME MESSAGE
+     Each language has its own typing animation and colour.
+     Alignment alternates: LEFT, RIGHT, LEFT, RIGHT...
+     To add another language, duplicate an image block and
+     place it at the next alternating alignment.
+-->
+
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=D4AF37&width=850&height=35&lines=Welcome+to+Kinetics" alt="English">
 </p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Bengali&weight=600&size=19&pause=1000&color=E85D75&width=850&height=35&lines=কাইনেটিক্সে+স্বাগতম" alt="Bengali">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Devanagari&weight=600&size=19&pause=1000&color=42A5A5&width=850&height=35&lines=किनेटिक्स+में+आपका+स्वागत+है" alt="Hindi">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Gurmukhi&weight=600&size=19&pause=1000&color=C084FC&width=850&height=35&lines=ਕਾਈਨੇਟਿਕਸ+ਵਿੱਚ+ਤੁਹਾਡਾ+ਸਵਾਗਤ+ਹੈ" alt="Punjabi">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Tamil&weight=600&size=19&pause=1000&color=E6A15C&width=850&height=35&lines=கினெட்டிக்ஸுக்கு+வரவேற்கிறோம்" alt="Tamil">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Telugu&weight=600&size=19&pause=1000&color=70B7E3&width=850&height=35&lines=కైనెటిక్స్‌కు+స్వాగతం" alt="Telugu">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Kannada&weight=600&size=19&pause=1000&color=E879A9&width=850&height=35&lines=ಕೈನೆಟಿಕ್ಸ್‌ಗೆ+ಸ್ವಾಗತ" alt="Kannada">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Malayalam&weight=600&size=19&pause=1000&color=9BCE78&width=850&height=35&lines=കൈനറ്റിക്സിലേക്ക്+സ്വാഗതം" alt="Malayalam">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Gujarati&weight=600&size=19&pause=1000&color=DAA65A&width=850&height=35&lines=કિનેટિક્સમાં+આપનું+સ્વાગત+છે" alt="Gujarati">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Oriya&weight=600&size=19&pause=1000&color=6CC5B0&width=850&height=35&lines=କାଇନେଟିକ୍ସକୁ+ସ୍ୱାଗତ" alt="Odia">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Devanagari&weight=600&size=19&pause=1000&color=B39DDB&width=850&height=35&lines=किनेटिक्समा+स्वागत+छ" alt="Nepali">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Devanagari&weight=600&size=19&pause=1000&color=E89A72&width=850&height=35&lines=किनेटिक्समध्ये+आपले+स्वागत+आहे" alt="Marathi">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Devanagari&weight=600&size=19&pause=1000&color=80CBC4&width=850&height=35&lines=किनेटिक्समध्ये+आपले+स्वागत+आहे" alt="Konkani">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Devanagari&weight=600&size=19&pause=1000&color=F48FB1&width=850&height=35&lines=काइनेटिक्स+में+स्वागत+है" alt="Sanskrit">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=81A1C1&width=850&height=35&lines=Kinetics+માં+આપનું+સ્વાગત" alt="Sindhi">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=E6B566&width=850&height=35&lines=Welcome+to+Kinetics" alt="Assamese">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=79C99E&width=850&height=35&lines=Kinetics+க்கு+வரவேற்கிறோம்" alt="Tulu">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Arabic&weight=600&size=19&pause=1000&color=CE93D8&width=850&height=35&lines=مرحباً+بكم+في+كينتيكس" alt="Arabic">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Arabic&weight=600&size=19&pause=1000&color=F4A261&width=850&height=35&lines=به+کینتیکس+خوش+آمدید" alt="Persian">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Arabic&weight=600&size=19&pause=1000&color=7BC8A4&width=850&height=35&lines=كەينېتىكسقا+خۇش+كەلدىڭىز" alt="Uyghur">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+Arabic&weight=600&size=19&pause=1000&color=E57373&width=850&height=35&lines=أهلاً+وسهلاً+بكم+في+كينيتكس" alt="Urdu">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+SC&weight=600&size=19&pause=1000&color=64B5F6&width=850&height=35&lines=欢迎来到Kinetics" alt="Chinese">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+JP&weight=600&size=19&pause=1000&color=FFB74D&width=850&height=35&lines=Kineticsへようこそ" alt="Japanese">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans+KR&weight=600&size=19&pause=1000&color=81C784&width=850&height=35&lines=키네틱스에+오신+것을+환영합니다" alt="Korean">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=BA68C8&width=850&height=35&lines=Chào+mừng+đến+với+Kinetics" alt="Vietnamese">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=4DB6AC&width=850&height=35&lines=ยินดีต้อนรับสู่+Kinetics" alt="Thai">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=F06292&width=850&height=35&lines=Selamat+datang+ke+Kinetics" alt="Indonesian">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=9575CD&width=850&height=35&lines=Selamat+datang+ke+Kinetics" alt="Malay">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=FF8A65&width=850&height=35&lines=Maligayang+pagdating+sa+Kinetics" alt="Filipino">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=66BB6A&width=850&height=35&lines=ยินดีต้อนรับสู่+Kinetics" alt="Lao">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=42A5F5&width=850&height=35&lines=សូមស្វាគមន៍មកកាន់+Kinetics" alt="Khmer">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=AB8B63&width=850&height=35&lines=Chào+mừng+đến+với+Kinetics" alt="Vietnamese alternate">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=D4AF37&width=850&height=35&lines=Bienvenue+chez+Kinetics" alt="French">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=80CBC4&width=850&height=35&lines=Bienvenido+a+Kinetics" alt="Spanish">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=E6A15C&width=850&height=35&lines=Benvenuti+in+Kinetics" alt="Italian">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=9FA8DA&width=850&height=35&lines=Willkommen+bei+Kinetics" alt="German">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=F48FB1&width=850&height=35&lines=Bienvenue+à+Kinetics" alt="French alternate">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=81C784&width=850&height=35&lines=Bem-vindo+ao+Kinetics" alt="Portuguese">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=FFB74D&width=850&height=35&lines=Bienvenido+a+Kinetics" alt="Spanish alternate">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=64B5F6&width=850&height=35&lines=Welkom+bij+Kinetics" alt="Dutch">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=CE93D8&width=850&height=35&lines=Välkommen+till+Kinetics" alt="Swedish">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=4DB6AC&width=850&height=35&lines=Velkommen+til+Kinetics" alt="Norwegian">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=E57373&width=850&height=35&lines=Velkommen+til+Kinetics" alt="Danish">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=9CCC65&width=850&height=35&lines=Välkommen+till+Kinetics" alt="Icelandic">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=BA68C8&width=850&height=35&lines=Καλώς+ήρθατε+στο+Kinetics" alt="Greek">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=F4A261&width=850&height=35&lines=Добро+пожаловать+в+Kinetics" alt="Russian">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=80CBC4&width=850&height=35&lines=Ласкаво+просимо+до+Kinetics" alt="Ukrainian">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=7986CB&width=850&height=35&lines=Добре+дошли+в+Kinetics" alt="Bulgarian">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=E6B566&width=850&height=35&lines=Bine+ați+venit+la+Kinetics" alt="Romanian">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=81C784&width=850&height=35&lines=Üdvözöljük+a+Kineticsben" alt="Hungarian">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=F06292&width=850&height=35&lines=Vítejte+v+Kinetics" alt="Czech">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=64B5F6&width=850&height=35&lines=Witamy+w+Kinetics" alt="Polish">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=AB8B63&width=850&height=35&lines=Vitajte+v+Kinetics" alt="Slovak">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=9575CD&width=850&height=35&lines=Laipni+lūdzam+Kinetics" alt="Latvian">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=4DB6AC&width=850&height=35&lines=Tere+tulemast+Kineticsisse" alt="Estonian">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=E879A9&width=850&height=35&lines=Välkommen+till+Kinetics" alt="Finnish">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Cinzel&weight=600&size=19&pause=1000&color=9CCC65&width=850&height=35&lines=ברוכים+הבאים+ל-Kinetics" alt="Hebrew">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=FFB74D&width=850&height=35&lines=Karibu+Kinetics" alt="Swahili">
+</p>
+<p align="left">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=80CBC4&width=850&height=35&lines=Bienvenue+à+Kinetics" alt="Haitian Creole">
+</p>
+<p align="right">
+  <img src="https://readme-typing-svg.demolab.com/?font=Noto+Sans&weight=600&size=19&pause=1000&color=CE93D8&width=850&height=35&lines=Bienvenido+a+Kinetics" alt="Galician">
+</p>
+
 
 
 <p align="center">

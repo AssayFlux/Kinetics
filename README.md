@@ -57,6 +57,8 @@ The codebase explores workflows across genomics, sequence analysis, structural b
 
 Kinetics is an evolving engineering prototype. Source code, automated tests, independent scientific validation, physical-device verification and formal acceptance are tracked as distinct evidence states.
 
+The brand assets also include a small transparent dotted DNA-loader experiment: [the Python generator](assets/brand/DNA.py) produces the standalone Canvas source and an optional GIF export. The existing animated Kinetics logo above is the available README animation; a separate app-demo capture has not yet been added.
+
 ### Why this project?
 
 - **Research workflows that can travel:** an Android-first architecture with local/offline constraints and a separately gated optional compute worker.

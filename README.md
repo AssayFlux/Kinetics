@@ -76,28 +76,30 @@ The active product direction is D-015 Light Classic, with Dark Classic and Syste
 
 ## DNA particle animation generator
 
-Kinetics includes a Python script at [assets/brand/DNA.py](assets/brand/DNA.py) for generating a wide, transparent, animated rainbow DNA double-helix banner. It is a **decorative brand-visual asset generator**, not a biological DNA analysis or molecular-structure simulation tool.
+Kinetics includes a minimal, transparent, dotted DNA double-helix loader. The standalone [HTML5 Canvas animation](assets/brand/kinetics_dna_loader.html) is the live 60 FPS reference; [assets/brand/DNA.py](assets/brand/DNA.py) generates that HTML source and exports a transparent animated GIF for app integration. This is a **brand/loading visual**, not a biological DNA analysis or molecular-structure simulation.
 
 <details>
   <summary><strong>Animation specifications</strong></summary>
 
-  | Parameter | Current configuration |
+  | Parameter | Configuration |
   |---|---:|
-  | Canvas | 2800 × 400 px (7:1) |
-  | Strands | 2 |
-  | Particles | 260 per strand (520 total) |
-  | Helix turns | 10 |
-  | Frames | 120 |
-  | Frame duration | 160 ms |
-  | Total loop duration | 19.2 seconds |
-  | Background | Transparent |
-  | Output | `rainbow_dna_ultra_long.gif` |
+  | Strands | 2 intertwined strands |
+  | Dots | 15 per strand (30 total) |
+  | Motion | Opposing phase-shifted sine waves |
+  | Simulated depth | Cosine-based z depth |
+  | Dot radius | 2.5–6 px |
+  | Dot opacity | 0.4–1.0 |
+  | Palette | `#7dd3fc`, `#38bdf8`, `#3b82f6`, `#818cf8` |
+  | Canvas | 360 × 120 px, transparent |
+  | Canvas animation | `requestAnimationFrame` (display-refresh rate, target 60 FPS) |
+  | GIF export | 180 frames, 50 FPS by default |
+  | Background | Fully transparent |
 
-  The renderer draws glossy spherical particles, sorts them by depth for overlap, applies a moving HSV rainbow gradient and a subtle breathing-size effect, then writes an indexed GIF using a shared palette.
+  Each strand is sampled evenly along the horizontal axis. Dots are sorted by z depth so rear-facing dots render first and front-facing dots appear on top. Radius and opacity increase toward the viewer. No connecting rungs, background, border or decorative shadow are drawn.
 </details>
 
 <details>
-  <summary><strong>Run the generator</strong></summary>
+  <summary><strong>Generate the animation assets</strong></summary>
 
   Requirements: Python 3, Pillow and NumPy.
 
@@ -106,10 +108,10 @@ Kinetics includes a Python script at [assets/brand/DNA.py](assets/brand/DNA.py) 
   python assets/brand/DNA.py
   ```
 
-  The GIF is written to the script's current working directory. Run the command from the repository root if you want the output there. The script currently renders 120 frames at 160 ms each (19.2 seconds, approximately 6.25 fps).
+  By default, the script writes `kinetics_dna_loader.html` and `kinetics_dna_loader.gif` beside `DNA.py`. Override the destination or GIF dimensions/frame count with `--output-dir`, `--width`, `--height` and `--frames`. GIF frame timing is quantized to 10 ms increments by the GIF format; the HTML Canvas animation uses `requestAnimationFrame` for smooth display-refresh animation.
 </details>
 
-**Current scope:** the script produces a preconfigured horizontal particle animation. It does not yet provide an interactive editor, user-facing colour/geometry controls, camera controls or a real-time 3D scene. Those would be separate future capabilities and should be designed against the intended visual reference before implementation.
+**Integration status:** the standalone Canvas source and Python GIF generator are committed. Embedding the GIF/Canvas into Android app screens and validating its appearance on physical devices remain separate integration and test tasks.
 
 ## Engineering principles
 

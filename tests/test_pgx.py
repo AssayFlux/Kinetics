@@ -1,7 +1,10 @@
 from __future__ import annotations
-import hashlib, json
-import pytest
+
+import hashlib
+import json
 from typing import cast
+
+import pytest
 from kinetics.pgx import VariantKey, match_phased_haplotype, parse_star_allele_definitions
 
 def pack() -> str:

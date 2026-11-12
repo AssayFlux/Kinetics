@@ -2754,3 +2754,13 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 - Identified case-distinct `Assets/` and `assets/` trees and a very large append-only session log. No mass moves or deletes were made: asset consolidation requires full reference/hash audit; historical session entries are preserved.
 - No local build, test suite, Ruff, mypy, device test, independent scientific validation or external review was run as part of this documentation audit.
 - Current status: documentation navigation and readiness audit improved; research-grade scientific validation and release readiness are not established. P0 remains BLOCKED / NOT APPROVED; patient/clinical workflows remain disabled.
+
+
+## 2026-11-12 — D-023 adds Track U after Track G
+
+- Owner directed that Track U be added after Track G in the sequential execution chain and that all governing documents be updated.
+- Added D-023: current order is **R → S → I → P → G → U**, with the existing two-step base-build then audit/test/fix gate applied to every track.
+- D-023 supersedes D-019 only as to the current track list/order. D-019 remains historical evidence for the earlier five-track order; the superseded parallel-track permission in D-009 remains inactive.
+- Existing partial U0–U3 source and documentation are retained as pre-existing work, not erased or retroactively accepted. Further Track U implementation and its audit follow G's two-step gate; U4–U6 retain their documented dependencies and exit criteria.
+- Updated NORTH_STAR, ROADMAP, README, CONTRIBUTING, engineering integration standard, docs index, archived parallel-work protocol, Track G plan/register and CHANGELOG to align with D-023.
+- No track status, scientific validation, physical-device verification, license clearance, external approval or P0 status is changed by this sequencing decision. Patient/clinical workflows remain disabled.

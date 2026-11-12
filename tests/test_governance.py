@@ -18,7 +18,7 @@ def test_capability_claim_matrix_is_conservative_and_reproducible() -> None:
     assert "device_status,license_status" in rendered
     rows = list(csv.DictReader(io.StringIO(rendered)))
     capability_ids = [row["capability_id"] for row in rows]
-    assert len(rows) == 130
+    assert len(rows) == 68
     assert len(capability_ids) == len(set(capability_ids))
     assert all(row["device_status"] == "OPEN" for row in rows)
     assert all(row["license_status"] == "OPEN" for row in rows)

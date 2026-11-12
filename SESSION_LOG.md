@@ -2741,3 +2741,6 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 - P7 jurisdiction statuses indicating received advice or pending owner disposition now require advice evidence and a product-classification field.
 - Added synthetic schema tests. These contracts do not constitute human curation, risk sign-off, legal advice or regulatory classification.
 - Exact-head CI remains pending; all affected checks must pass before this increment is verified. P0 remains NOT APPROVED and clinical/patient workflows remain disabled.
+
+
+- Additional P1/P2 audit: confirmed VCF record/sample limits are applied during parsing; added boolean-coordinate rejection for PharmVar typed records with negative tests. Exact-head CI and independent reference comparison remain pending.

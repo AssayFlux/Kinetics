@@ -49,3 +49,37 @@ def test_overlapping_best_definitions_abstain_as_ambiguous():
 def test_variant_key_rejects_bool_coordinate_and_nonliteral_allele():
     with pytest.raises(ValueError): VariantKey("b","c",True,"A","G")
     with pytest.raises(ValueError): VariantKey("b","c",1,"N","G")
+
+
+def test_pgx_definition_parser_enforces_resource_bounds():
+    with pytest.raises(ValueError, match="max_input_bytes"):
+        parse_star_allele_definitions(
+            pack(), expected_source_release="fixture-1", max_input_bytes=1
+        )
+    with pytest.raises(ValueError, match="max_definitions"):
+        parse_star_allele_definitions(
+            pack(), expected_source_release="fixture-1", max_definitions=1
+        )
+    value = json.loads(pack())
+    value["definitions"][0]["excluded_variants"] = [
+        {"chromosome": "chr1", "position": 2, "ref": "A", "alt": "G"},
+        {"chromosome": "chr1", "position": 3, "ref": "C", "alt": "T"},
+    ]
+    with pytest.raises(ValueError, match="max_variants_per_definition"):
+        parse_star_allele_definitions(
+            json.dumps(value), expected_source_release="fixture-1",
+            max_variants_per_definition=1,
+        )
+    for invalid in (0, -1, True, 1.5):
+        with pytest.raises(ValueError, match="positive integer"):
+            parse_star_allele_definitions(
+                pack(), expected_source_release="fixture-1",
+                max_definitions=invalid,
+            )
+
+
+def test_pgx_definition_parser_rejects_non_text_input():
+    with pytest.raises(TypeError, match="must be text"):
+        parse_star_allele_definitions(
+            None, expected_source_release="fixture-1"
+        )

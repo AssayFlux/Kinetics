@@ -18,6 +18,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-019 | 2026-11-09 | Sequential track execution order | Approved — R → S → I → P → G, two steps per track; supersedes D-009 parallel sequencing | Project owner |
 | D-020 | 2026-11-09 | Close R host audit and proceed to S | Approved — close the R implementation/host-regression audit on exact-source CI #2126, consolidate documentation, then begin S. Does not waive or relabel open R device, external-science, licensing, security, accessibility or release evidence | Project owner |
 | D-022 | 2026-11-11 | Start Track P and prepare P0 | Approved — start P engineering and P0 evidence preparation; formal P0 gate remains NOT APPROVED pending independent evidence and a separate owner gate decision | Project owner |
+| D-023 | 2026-11-12 | Add Track U after Track G in sequential execution order | Approved — current order is R → S → I → P → G → U; supersedes D-019's five-track order while preserving its historical record and two-step gate | Project owner |
 
 ## D-000 — Direction baseline (approved)
 - Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.
@@ -214,3 +215,13 @@ The following historical decisions are retained for auditability but are no long
 - Boundary: D-022 does **not** assert that P0 has passed. The formal P0 gate remains NOT APPROVED until the intended-use and governance packet is complete; applicable jurisdiction-specific legal/regulatory advice, ethics/IRB determination, qualified independent clinical/scientific review, privacy/security/QMS evidence and independent validation plans are documented; unresolved risks are dispositioned; and the project owner records the formal gate decision. No patient/human-subject data or activity, individual genotype interpretation, diagnosis/treatment/dosing recommendation, Clinical Mode or clinical claim is enabled.
 - Consequences: P0 preparation and permitted P1 public-data metadata/synthetic work are active. Candidate dataset entries remain unapproved until exact source terms and provenance are reviewed. No external approval, signature, adviser appointment or regulatory status is fabricated.
 - Approver: Project owner, explicit approval in chat on 2026-11-11.
+
+
+## D-023 — Add Track U after Track G in the sequential execution order
+- Date: 2026-11-12.
+- Context: The project owner explicitly instructed: “Add u track after G track in the order chain. Update all necessary documents.” The existing roadmap defines Track U as the User Interface track, with phases U0–U6.
+- Choice: Set the current sequential engineering order to **R → S → I → P → G → U**. Track U follows Track G and must pass the same two-step rule: (1) build the documented base; (2) audit, test and fix the remaining base gaps.
+- Supersession: This decision supersedes D-019 only as to the track list/order. D-019 remains a valid historical record of the earlier R → S → I → P → G order and its two-step execution model. D-009's parallel-track permission remains superseded. This decision does not reinstate parallel execution.
+- Track U carry-forward: Existing U0–U3 source and documentation created before this decision are retained as pre-existing partial work; they are not erased or retroactively treated as fully accepted. Further sequential Track U implementation and its audit begin only after Track G's two-step gate has been assessed and reported. U4–U6 remain subject to their documented dependencies and exit criteria.
+- Consequences and boundaries: Update current direction, roadmap, contribution guidance, documentation index and Track G sequencing references. Track dependencies, exact-head CI, device/accessibility/security evidence and all scientific/licensing/privacy/regulatory gates remain mandatory. This decision does not waive P0 or authorize patient data, human-subject activity, Clinical Mode or regulated deployment.
+- Approver: Project owner, explicit instruction in chat on 2026-11-12.

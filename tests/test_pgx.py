@@ -1,6 +1,7 @@
 from __future__ import annotations
 import hashlib, json
 import pytest
+from typing import cast
 from kinetics.pgx import VariantKey, match_phased_haplotype, parse_star_allele_definitions
 
 def pack() -> str:
@@ -74,12 +75,12 @@ def test_pgx_definition_parser_enforces_resource_bounds():
         with pytest.raises(ValueError, match="positive integer"):
             parse_star_allele_definitions(
                 pack(), expected_source_release="fixture-1",
-                max_definitions=invalid,
+                max_definitions=cast(int, invalid),
             )
 
 
 def test_pgx_definition_parser_rejects_non_text_input():
     with pytest.raises(TypeError, match="must be text"):
         parse_star_allele_definitions(
-            None, expected_source_release="fixture-1"
+            cast(str, None), expected_source_release="fixture-1"
         )

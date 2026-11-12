@@ -74,6 +74,43 @@ The percentages below measure **documented engineering-gate closure only**, not 
 
 The active product direction is D-015 Light Classic, with Dark Classic and System appearance. These are owner-supplied design references, not screenshots of a completed application. Real app screens, accessibility, device behaviour and brand integration are verified separately.
 
+## DNA particle animation generator
+
+Kinetics includes a Python script at [assets/brand/DNA.py](assets/brand/DNA.py) for generating a wide, transparent, animated rainbow DNA double-helix banner. It is a **decorative brand-visual asset generator**, not a biological DNA analysis or molecular-structure simulation tool.
+
+<details>
+  <summary><strong>Animation specifications</strong></summary>
+
+  | Parameter | Current configuration |
+  |---|---:|
+  | Canvas | 2800 × 400 px (7:1) |
+  | Strands | 2 |
+  | Particles | 260 per strand (520 total) |
+  | Helix turns | 10 |
+  | Frames | 120 |
+  | Frame duration | 160 ms |
+  | Total loop duration | 19.2 seconds |
+  | Background | Transparent |
+  | Output | `rainbow_dna_ultra_long.gif` |
+
+  The renderer draws glossy spherical particles, sorts them by depth for overlap, applies a moving HSV rainbow gradient and a subtle breathing-size effect, then writes an indexed GIF using a shared palette.
+</details>
+
+<details>
+  <summary><strong>Run the generator</strong></summary>
+
+  Requirements: Python 3, Pillow and NumPy.
+
+  ```bash
+  python -m pip install pillow numpy
+  python assets/brand/DNA.py
+  ```
+
+  The GIF is written to the script's current working directory. Run the command from the repository root if you want the output there. The script currently renders 120 frames at 160 ms each (19.2 seconds, approximately 6.25 fps).
+</details>
+
+**Current scope:** the script produces a preconfigured horizontal particle animation. It does not yet provide an interactive editor, user-facing colour/geometry controls, camera controls or a real-time 3D scene. Those would be separate future capabilities and should be designed against the intended visual reference before implementation.
+
 ## Engineering principles
 
 - **Offline-first:** local research workflows and explicit boundaries for optional remote compute.

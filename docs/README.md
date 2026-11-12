@@ -32,6 +32,7 @@ This is the navigation index for the Kinetics repository. Use the living decisio
 | I — In-silico laboratory | [Software implementation/integration audit (closed)](track-i-audit-2026-11-11.md), [Research boundaries](track-i/research-boundaries.md), [engine and data-source evaluation](track-i/engine-evaluation.md) |
 | P — Precision medicine preparation | [P0 evidence packet](track-p/p0-evidence-packet.md), [P0 control drafts](track-p/p0-controls-draft.md), [implementation plan](track-p/implementation-plan.md), [Public-data-only boundary](track-p/public-data-only-preparation.md), [public dataset catalog](track-p/public-dataset-catalog.md) |
 | G — Governance and assurance | [Track G implementation plan](track-g/implementation-plan.md), [G0 control/evidence register](track-g/control-evidence-register.md) |
+| U — User interface | [UI/UX specification](android-ui-ux-spec.md), [UI document set](ui/ui-spec.md), [design system](ui/kinetics-visual-design-system.md), [device matrix](ui/device-matrix.md), [screen map](ui/screen-map.md) |
 | UI / design system | [UI/UX specification](android-ui-ux-spec.md), [UI document set](ui/ui-spec.md), [root UI spec](../KINETICS_UI_SPEC.md) |
 
 ## 4. Validation, security and release
@@ -55,6 +56,7 @@ This is the navigation index for the Kinetics repository. Use the living decisio
 
 ## 6. Governance and historical material
 
+- Current sequential order is **R → S → I → P → G → U** under D-023; D-019 is retained as the historical five-track decision it was when approved.
 - [Historical parallel-track protocol](parallel-track-execution.md) is **superseded by D-019** and must not be followed.
 - [Original master](origin/KINETICS_MASTER.md) is preserved as read-only historical source.
 - [Change history](../CHANGELOG.md) records user-visible project changes.

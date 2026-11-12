@@ -16,7 +16,8 @@
     "curated_at",
     "second_review_required",
     "autonomous_final_classification",
-    "clinical_use"
+    "clinical_use",
+    "second_review_status"
   ],
   "properties": {
     "schema_version": {
@@ -85,7 +86,8 @@
       }
     },
     "second_reviewer_role": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "disagreement_status": {
       "enum": [
@@ -94,6 +96,73 @@
         "disagreement",
         "escalated"
       ]
+    },
+    "second_review_status": {
+      "enum": [
+        "pending",
+        "completed",
+        "disagreement",
+        "escalated"
+      ]
+    },
+    "second_reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "second_review_evidence_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "second_review_status": {
+            "enum": [
+              "completed",
+              "disagreement",
+              "escalated"
+            ]
+          }
+        },
+        "required": [
+          "second_review_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "second_reviewer_role",
+          "second_reviewed_at",
+          "second_review_evidence_url"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "curation_outcome": {
+            "const": "accepted_for_research"
+          }
+        },
+        "required": [
+          "curation_outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "second_review_status": {
+            "const": "completed"
+          }
+        },
+        "required": [
+          "second_review_status",
+          "second_reviewer_role",
+          "second_reviewed_at",
+          "second_review_evidence_url"
+        ]
+      }
+    }
+  ]
 }

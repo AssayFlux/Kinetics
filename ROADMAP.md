@@ -1,8 +1,10 @@
 # Kinetics — Roadmap
 **Status:** R implementation/host audit closed; S1–S10 software scope closed; I1–I5 software implementation and integration audit closed on `aabe37808a5494acb2171b6ed71d2661b4dd2453` (workflow #42970328048, 9/9 jobs passed); real scientific, external dataset/model, third-party licensing, secure-node deployment and physical-device validation remain open carry-forward acceptance gates.
-**Last updated:** 2026-11-11  
+**Last updated:** 2026-11-12  
 **Statuses:** not-started | in-progress | blocked | done | dropped  
 **Owners:** Project owner = repository owner; Engineering = implementation contributor. Dates are review/target dates, not completion claims.
+
+The 2026-11-12 [repository research-readiness audit](docs/research-grade-readiness-audit-2026-11-12.md) records documentation and structure findings; its recommendations do not change the owner-approved track order or safety gates.
 
 This roadmap operationalises the archived master. A phase is complete only when exit evidence exists in the repository and required owner approval is recorded.
 

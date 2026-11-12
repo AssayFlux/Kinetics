@@ -86,6 +86,8 @@ def parse_pharmvar_tsv(
     if isinstance(document, bytes):
         raw_bytes = document
     elif isinstance(document, str):
+        if len(document) > max_input_bytes:
+            raise ValueError("PharmVar TSV exceeds configured max_input_bytes")
         raw_bytes = document.encode("utf-8")
     else:
         raise TypeError("PharmVar TSV document must be text or bytes")

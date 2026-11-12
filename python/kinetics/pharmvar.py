@@ -100,7 +100,7 @@ def parse_pharmvar_tsv(
         line for line in io.StringIO(text)
         if line.strip() and not line.lstrip().startswith("#")
     )
-    reader = csv.DictReader(source_lines, delimiter="\\t")
+    reader = csv.DictReader(source_lines, delimiter="\t")
     if reader.fieldnames is None:
         raise ValueError("PharmVar TSV header is missing")
     normalized_headers = [normalize(name) for name in reader.fieldnames]

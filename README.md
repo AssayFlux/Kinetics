@@ -26,7 +26,7 @@ Kinetics is an offline-first, modular platform for computational biology and in-
 
 ## Development dashboard
 
-The current documentation index is [`docs/README.md`](docs/README.md). Track order and decision history are controlled by [`ROADMAP.md`](ROADMAP.md) and [`DECISIONS.md`](DECISIONS.md); superseded instructions are retained only as history.
+The current documentation index is [`docs/README.md`](docs/README.md). The [2026-11-12 repository research-readiness audit](docs/research-grade-readiness-audit-2026-11-12.md) records the tree inventory, documentation gaps and staged reorganisation plan. Track order and decision history are controlled by [`ROADMAP.md`](ROADMAP.md) and [`DECISIONS.md`](DECISIONS.md); superseded instructions are retained only as history.
 
 <sub>I-track software exit checkpoint: [workflow #42970328048](https://github.com/AssayFlux/Kinetics/actions/runs/42970328048) on `aabe37808a5494acb2171b6ed71d2661b4dd2453`. All 9 jobs passed. I1–I5 software implementation/integration audit is closed; real scientific/device/licensing/data/model/node acceptance remains open.</sub>
 
@@ -89,14 +89,14 @@ The cards below summarise the state recorded in the project roadmap. “In progr
 |---|---|---|
 | **P0** | Intended use, legal/ethics/regulatory review, qualified advisers and governance evidence | **Preparation in progress; formal gate blocked / not approved** |
 | **P1** | Genotype ingestion, QC and build-aware annotation | **Public-data/synthetic base in progress; patient data and interpretation gated** |
-| **P2** | Expandable PGx star-allele/diplotype/phenotype research | Not started |
-| **P3** | Guideline mapping and research reports | Not started |
-| **P4** | Evidence assistant with human curator | Not started |
-| **P5** | Adviser review and usability evaluation | Not started |
-| **P6** | Clinical governance, audit and internal validation | Not started |
-| **P7** | Regulatory planning and prospective evaluation | Not started |
+| **P2** | PGx allele-definition and phased-haplotype research foundation | Parser hardening and synthetic negative tests implemented; exact-head CI and licensed reference concordance pending |
+| **P3** | Guideline evidence mapping and research reports | Research-only schema contract implemented; licensed source mapping and independent review pending |
+| **P4** | Human-curated variant evidence records | Two-reviewer evidence contract implemented; qualified curator appointments and operational adjudication pending |
+| **P5** | Ethics/adviser protocol preparation | Protocol template drafted; competent ethics determination and approvals pending |
+| **P6** | Risk/control and governance evidence | Evidence-backed risk acceptance schema implemented; independent security/privacy/QMS review pending |
+| **P7** | Regulatory and prospective-evaluation preparation | Jurisdiction evidence contract implemented; qualified advice, approvals and prospective evidence pending |
 
-Only source metadata is catalogued at this stage; no public dataset payloads have been acquired through this preparation work. A gene's presence in a catalogue must never be mistaken for a validated caller or interpretation.
+P2–P7 schema/template work is research-only engineering preparation, not operational review or approval. Only source metadata is catalogued at this stage; no public dataset payloads have been acquired through this preparation work. A gene's presence in a catalogue must never be mistaken for a validated caller or interpretation.
 
 ## Product design & experience
 
@@ -115,15 +115,13 @@ Only source metadata is catalogued at this stage; no public dataset payloads hav
 
 | Evidence item | Latest recorded state |
 |---|---|
-| **Current source revision** | `026032962de7b8315cfbeaaa0e0d6c39aa0d4ef4` |
-| **Latest passing CI** | [#42967649660 — all 9 jobs successful](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660) |
-| **Python suite** | 498 collected; 489 passed; 9 skipped; Ruff and strict mypy passed |
-| **Android arm64 APK** | 70,388,850 bytes · SHA-256 `b767656e1d39f1954da8b4d97d7409cb854ef41ce4ded0d17b62356ba42b81a0` |
-| **Android arm64 AAB** | 40,252,958 bytes · SHA-256 `1edbb63f5fc8f0969c8137f9edc7b4f9b775b5cea5c6fa8499fb04e83bd03a80` |
-| **Android workflow artifact ZIP** | 80,652,760 bytes · SHA-256 `9ac654392a86fbc494c84bf2c44eed7e9f12c9301646f36c60035e3b5848f430`; [artifact 13832212511](https://github.com/AssayFlux/Kinetics/actions/runs/42967649660/artifacts/13832212511) |
-| **Automated checks** | Python, Android APK/AAB/JVM, RDKit, Vina, OpenMM, ADMET, Node worker security, SPDX and pinned scientific-reference jobs all passed on the exact source revision |
+| **Audited repository revision** | `dafc3cad56bc6b9b9b49cc30f9e5f65bbd655c47` was the source tree reviewed in the 2026-11-12 documentation audit; subsequent documentation-only audit commits are listed in Git history |
+| **Latest passing CI** | Earlier exact-head checkpoints are recorded in [CI evidence](docs/ci-build-evidence.md); the current parser/schema hardening has no confirmed exact-head workflow result yet |
+| **Python / lint / type checks** | Latest parser and evidence-schema regression tests are committed; execution, Ruff and strict mypy on the current head are pending |
+| **Android artifacts** | Previous successful arm64 APK/AAB builds are historical checkpoints, not artifacts from the current head |
+| **Automated checks** | Do not infer current-head success from prior workflow runs; re-run the complete workflow against current main before declaring this revision verified |
 | **Emulator / physical device** | Not verified; installation and runtime evidence remain outstanding |
-| **Independent scientific validation** | Not established for the platform's research capabilities |
+| **Independent scientific validation** | Not established for the platform's research capabilities; synthetic tests and host smoke checks are not experimental validation |
 | **Release readiness** | Not ready; debug artifacts are not production-signed releases |
 
 Every substantial implementation cycle follows D-016: implement a meaningful vertical slice, build the exact revision, run relevant automated and scientific-reference tests, inspect the artifact, exercise it on available Android targets, fix failures and record exact evidence. Missing device access, reference data or external approval is recorded as **not run / blocked**, never as a pass.

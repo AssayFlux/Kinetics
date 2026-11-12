@@ -45,8 +45,11 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
   </tr>
 </table>
 
-## SCIENTIFIC CAPABILITIES
+<p align="center">
+  <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
+</p>
 
+## SCIENTIFIC CAPABILITIES
 <p align="center">
   <img src="Assets/Human%20Revolution.png" alt="Illustrated timeline of human evolution from early primates to modern people, with fossils and tools below" width="100%">
 </p>
@@ -312,7 +315,11 @@ flowchart TD
   </p>
 </details>
 
-## THE JOURNEY
+## THE JOURNEYS
+<p align="center">
+  <img src="Assets/Section%20Breaker%20Black%20Background.jpg" alt="Author details strip" width="100%">
+</p>
+
 <p align="center">
  <img src="Assets/Goal.png" alt="Line-art illustration of a young explorer with goggles on a rooftop looking toward a distant tower" width="100%">
 </p>
@@ -322,19 +329,16 @@ flowchart TD
 </p>
 
 
-<p align="center">
+<p align="left">
   <strong><em>LET EVERY HELIX CARRY A QUESTION ; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
   <br>
   <sub>Md Safarujjaman</sub>
 </p>
 
 <p align="right">
-  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" width="20%">
+  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" width="40%">
 </p>
 
-<p align="center">
-  <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
-</p>
 
 <!-- ALTERNATE LINES:
 1. BUILD WITH CURIOSITY; PROVE WITH EVIDENCE; LEAVE A TRACE WORTH FOLLOWING.

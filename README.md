@@ -376,6 +376,46 @@ flowchart TD
   </p>
 </details>
 
+## THE JOURNEYS
+<p align="center">
+  <img src="Assets/Section%20Breaker%20Black%20Background.jpg" alt="Author details strip" width="100%">
+</p>
+
+<p align="center">
+ <img src="Assets/Goal.png" alt="Line-art illustration of a young explorer with goggles on a rooftop looking toward a distant tower" width="100%">
+</p>
+
+<p align="center">
+  <img src="Assets/Section%20Breaker%20White%20Background.jpg" alt="Author details strip" width="100%">
+</p>
+
+
+<p align="left">
+  <strong><em>LET EVERY HELIX CARRY A QUESTION ; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
+  <br>
+  <sub>Md Safarujjaman</sub>
+</p>
+
+<p align="right">
+  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" width="40%">
+</p>
+
+
+<!-- ALTERNATE LINES:
+1. BUILD WITH CURIOSITY; PROVE WITH EVIDENCE; LEAVE A TRACE WORTH FOLLOWING.
+2. FROM A SINGLE QUESTION, WEAVE A THOUSAND REPRODUCIBLE DISCOVERIES.
+3. LET PATIENCE SHAPE THE METHOD AND INTEGRITY SHAPE THE RESULT.
+-->
+
+
+
+#CULTURAL REPRESENTATION
+
+
+
+
+
+
 
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Noto+Serif+Bengali&weight=600&size=17&pause=1800&color=E85D75&center=true&vCenter=true&width=1000&lines=বাংলা+ও+অসমীয়া: অ আ ই ঈ উ ঊ ঋ এ ঐ ও ঔ ক খ গ ঘ ঙ চ ছ জ ঝ ঞ ট ঠ ড ঢ ণ ত থ দ ধ ন প ফ ব ভ ম য ৰ ৱ ল শ ষ স হ" alt="Bengali and Assamese" />
@@ -420,36 +460,6 @@ flowchart TD
 </p>
 
 
-## THE JOURNEYS
-<p align="center">
-  <img src="Assets/Section%20Breaker%20Black%20Background.jpg" alt="Author details strip" width="100%">
-</p>
-
-<p align="center">
- <img src="Assets/Goal.png" alt="Line-art illustration of a young explorer with goggles on a rooftop looking toward a distant tower" width="100%">
-</p>
-
-<p align="center">
-  <img src="Assets/Section%20Breaker%20White%20Background.jpg" alt="Author details strip" width="100%">
-</p>
-
-
-<p align="left">
-  <strong><em>LET EVERY HELIX CARRY A QUESTION ; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
-  <br>
-  <sub>Md Safarujjaman</sub>
-</p>
-
-<p align="right">
-  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" width="40%">
-</p>
-
-
-<!-- ALTERNATE LINES:
-1. BUILD WITH CURIOSITY; PROVE WITH EVIDENCE; LEAVE A TRACE WORTH FOLLOWING.
-2. FROM A SINGLE QUESTION, WEAVE A THOUSAND REPRODUCIBLE DISCOVERIES.
-3. LET PATIENCE SHAPE THE METHOD AND INTEGRITY SHAPE THE RESULT.
--->
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1F2A6B,50:800020,100:D4AF37&height=100&section=footer" alt="" width="100%">
 </p>

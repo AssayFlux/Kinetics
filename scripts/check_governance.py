@@ -15,7 +15,11 @@ def _read_csv(path: Path) -> tuple[list[str], list[dict[str, str]]]:
         reader = csv.DictReader(handle)
         if reader.fieldnames is None:
             raise ValueError(f"{path.relative_to(ROOT)} has no CSV header")
-        return list(reader.fieldnames), list(reader)
+        rows = [
+            {str(key): str(value or "") for key, value in row.items() if key is not None}
+            for row in reader
+        ]
+        return list(reader.fieldnames), rows
 
 
 def validate() -> list[str]:

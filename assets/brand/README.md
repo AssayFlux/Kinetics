@@ -1,14 +1,26 @@
-# Owner-supplied brand assets
+# Canonical brand and logo assets
 
-The owner-provided organization master is stored at `Assets/Brand Logo.svg`. The file at `assets/brand/brand-logo.svg` is an exact Git-blob copy of that master (same SHA); it has not been redrawn, recoloured, simplified or optimized.
+All repository artwork now lives under the single lowercase **`assets/`** tree. The former root-level `Assets/` directory has been consolidated; its files were moved by reusing their original Git blobs, so the supplied binary artwork was not recompressed or edited.
 
-## Remaining owner-approved inputs
-- `app-logo.svg`: Kinetics app mark as an editable master vector. The repository also contains `Assets/Kinetics.gif`; it is preserved as supplied but is not silently converted into a different logo.
-- `app-logo-foreground.svg`: transparent adaptive-icon foreground derived/approved by the owner.
-- `app-logo-monochrome.svg`: owner-approved single-colour mark for themed/notification icons.
-- `app-logo-background.svg` or `app-logo-background.txt`: approved background artwork or solid hex colour.
-- `brand-logo-light.svg` and `brand-logo-dark.svg`: owner-approved variants. The master is not automatically recoloured to create these.
-- `brand-usage.md`: official hex colours, minimum size, clear space, forbidden changes, approved backgrounds and permissions.
+## Brand masters
 
-## Build policy
-Debug builds may use the explicitly marked app-icon placeholders while the UI is being developed. Release builds remain blocked by `verifyOwnerBrandAssets` until every required owner-approved asset and usage rule is supplied. Do not infer brand colours from artwork.
+| Asset | Purpose |
+|---|---|
+| `brand-logo.svg` | Owner-supplied organization/brand master vector. This is byte-identical to the former `Assets/Brand Logo.svg` (same Git blob SHA). |
+| `organization-logo.gif` | Owner-supplied animated organization logo, preserved byte-for-byte from the former `Assets/Organization Logo.gif`. |
+| `kinetics-logo.gif` | Owner-supplied Kinetics animation/logo, preserved byte-for-byte from the former `Assets/Kinetics.gif`. |
+| `kinetics-background.jpg` | Original image formerly named `Kinetics.png`; its bytes are JPEG, so the canonical filename correctly uses `.jpg`. The Android drawable uses the same blob. |
+| `app-logo.svg` | Development placeholder for a separately approved square app icon; not interchangeable with the organization logo. |
+| `app-logo-foreground.svg`, `app-logo-monochrome.svg` | Adaptive/monochrome icon placeholders pending final owner-approved app-mark assets. |
+
+## Design references
+
+- `../design-previews/dashboard-reference.jpg` — owner-supplied dashboard reference.
+- `../design-previews/login-reference.jpg` — owner-supplied login reference.
+- `../design-previews/laboratory.gif` — supplied laboratory animation/reference.
+
+## Brand usage and release gate
+
+See [brand-usage.md](brand-usage.md) for the remaining owner-confirmation items. Official brand colour values, minimum size, clear space, approved backgrounds, variant permissions and usage/clearance terms are not inferred from artwork.
+
+Debug builds may use explicitly marked app-icon placeholders during development. Release builds remain blocked by `verifyOwnerBrandAssets` until every required owner-approved app asset and usage rule is supplied. Preserve the owner artwork; do not recolour, redraw, crop, stretch, simplify or optimize it without explicit approval.

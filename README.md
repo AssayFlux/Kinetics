@@ -290,7 +290,7 @@ Kinetics is an Android-native, offline-first scientific workbench with a Python 
 
 The following is a repository-level component map. It does not imply that every optional engine or remote path is enabled in the Android application.
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
     USER["RESEARCH USER"] --> ANDROID["ANDROID APP<br/>KOTLIN + JETPACK COMPOSE"]
     ANDROID --> APP["APP ORCHESTRATION"]
@@ -309,7 +309,7 @@ flowchart TD
     class ANDROID,APP,NODE royal;
     class CONTRACTS,CHECKS,CI gold;
     class PY,NATIVE,VIEW,SCI,OPT,VINA teal;
-\`\`\`
+```
 
 ## 14 · QUICK START
 

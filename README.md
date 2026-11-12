@@ -23,7 +23,7 @@
   <img src="https://img.shields.io/badge/PACKAGE-0.0.0-D4AF37?style=for-the-badge" alt="Python distribution metadata version 0.0.0">
   <a href="https://github.com/AssayFlux/Kinetics/stargazers"><img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=for-the-badge&label=STARS&color=800020" alt="GitHub stars"></a>
   <a href="https://github.com/AssayFlux/Kinetics/issues"><img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=for-the-badge&label=ISSUES&color=1F2A6B" alt="Open GitHub issues"></a>
-  <a href="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=for-the-badge&label=CI" alt="GitHub Actions CI status for main"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=for-the-badge&label=CI" alt="GitHub Actions CI status for main"></a>
 </p>
 
 <p align="center"><strong>PRE-RELEASE · RESEARCH USE ONLY · NOT CLINICALLY VALIDATED</strong></p>
@@ -325,6 +325,12 @@ Kinetics/
 ├── validation/              # Pinned reference and engine smoke checks
 ├── web/viewers/             # Offline HTML/CSS/JavaScript viewers
 ├── .github/workflows/       # GitHub Actions CI
+├── CHANGELOG.md             # User-visible change history
+├── CITATION.cff             # Citation metadata
+├── KINETICS_UI_SPEC.md      # Owner-directed UI specification
+├── PRIVACY.md               # Privacy and data-handling policy
+├── SECURITY.md              # Security reporting and policy
+├── SESSION_LOG.md           # Append-only engineering history
 ├── pyproject.toml           # Python package metadata and tool configuration
 ├── requirements-dev.txt     # Development dependencies
 ├── ROADMAP.md               # Canonical track plan

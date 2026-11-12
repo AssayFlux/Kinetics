@@ -1,4 +1,7 @@
 <p align="center">
+  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width="210">
+</p>
+<p align="center">
   <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="190">
   &nbsp;&nbsp;&nbsp;
   <img src="assets/brand/kinetics-logo.gif" alt="Kinetics animated logo" width="170">

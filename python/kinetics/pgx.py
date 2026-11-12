@@ -73,6 +73,8 @@ def parse_star_allele_definitions(
             raise ValueError(f"{name} must be a positive integer")
     if not isinstance(document, str):
         raise TypeError("PGx definition pack must be text")
+    if len(document) > max_input_bytes:
+        raise ValueError("PGx definition pack exceeds configured max_input_bytes")
     if len(document.encode("utf-8")) > max_input_bytes:
         raise ValueError("PGx definition pack exceeds configured max_input_bytes")
     try:

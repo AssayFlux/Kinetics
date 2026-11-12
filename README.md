@@ -8,8 +8,12 @@
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=OFFLINE+FIRST+SCIENTIFIC+RESEARCH;REPRODUCIBLE+WORKFLOWS;TRACEABLE+EVIDENCE;ANDROID;PYTHON;KOTLIN;GRADLE;C++;RUST;NODE+JS;HTML;CSS; JAVASCRIPT;BASH;LINUX+NATIVE+COMPUTING;FOR+RESEARCH+ONLY;VALIDATION+BEFORE+CLAIMS+IS+THE+KEY" alt="Kinetics tagline">
+  <img
+    src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=850&lines=OFFLINE+FIRST+SCIENTIFIC+RESEARCH;REPRODUCIBLE+WORKFLOWS;TRACEABLE+EVIDENCE;ANDROID;PYTHON;KOTLIN;GRADLE;C%2B%2B;RUST;NODE.JS;HTML;CSS;JAVASCRIPT;BASH;LINUX+NATIVE+COMPUTING;FOR+RESEARCH+ONLY;VALIDATION+BEFORE+CLAIMS+IS+THE+KEY"
+    alt="Kinetics tagline"
+  />
 </p>
+
 
 <p align="center">
   <a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=for-the-badge&label=LICENSE&color=800020" alt="License"></a>

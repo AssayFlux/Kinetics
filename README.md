@@ -114,9 +114,6 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
   </tr>
 </table>
 
-<p align="center">
-  <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
-</p>
 
 ## SCIENTIFIC CAPABILITIES
 <table>
@@ -316,6 +313,10 @@ flowchart TD
   <img src="Assets/Human%20Revolution.png" alt="Illustrated timeline of human evolution from early primates to modern people, with fossils and tools below" width="100%">
 </p>
 
+
+<p align="center">
+  <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
+</p>
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1F2A6B,50:800020,100:D4AF37&height=100&section=footer" alt="" width="100%">

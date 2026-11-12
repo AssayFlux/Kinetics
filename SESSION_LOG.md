@@ -2786,7 +2786,7 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 - Consolidated the application-wide security threat model and retained UI-specific threats as a scoped supplement.
 - Added a 16-case security verification matrix; device/fuzz/independent review results remain open.
 - Added source-level data-flow and information-asset inventory based on the inspected Android manifest, build configuration and policies.
-- Added dependency decision register and CI capture of resolved Gradle/Cargo dependency reports plus Maven artifact hashes; the checked-in SPDX generator remains a declared-source inventory, not a full release SBOM.
+- Added dependency decision register and CI capture of resolved Gradle/Cargo dependency reports plus Maven artifact hashes; the checked-in SPDX generator remains a declared-source inventory, not a full release SBOM. Updated the third-party inventory and release checklist to state this limitation explicitly.
 - Generated a 130-entry capability claims matrix with conservative wording; current registry entries do not become scientifically validated by implementation.
 - Added publication integrity protocol, operational incident/rollback/access/recovery procedures, and an empty CAPA register.
 - Added governance structural checker, capability matrix generator and pytest coverage; wired both checks into CI.

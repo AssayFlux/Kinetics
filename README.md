@@ -1,10 +1,9 @@
-<p align="center">
-  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width="210">
-</p>
-<p align="center">
-  <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="190">
-  &nbsp;&nbsp;&nbsp;
-  <img src="assets/brand/kinetics-logo.gif" alt="Kinetics animated logo" width="170">
+<p align="center" style="white-space: nowrap;">
+  <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="150" height="100" style="object-fit: contain; vertical-align: middle;">
+  &nbsp;&nbsp;
+  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width="150" height="100" style="object-fit: contain; vertical-align: middle;">
+  &nbsp;&nbsp;
+  <img src="assets/brand/kinetics-logo.gif" alt="Kinetics animated logo" width="150" height="100" style="object-fit: contain; vertical-align: middle;">
 </p>
 
 <h1 align="center">Kinetics</h1>

@@ -2774,3 +2774,38 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 - Renamed the former `Assets/Kinetics.png` path to `assets/brand/kinetics-background.jpg` because its bytes are JPEG; no conversion or recompression was performed. The original Android background blob remains identical.
 - Updated active brand and UI documentation. Historical decision/session records retain old path strings where they accurately describe past events.
 - Consolidation commit: `300d2446b931bce947e870932077c666700cffb1`. README and documentation edits follow in this session.
+
+
+## 2026-11-12 — Track G implementation increment 1
+**Phase:** Track G / G0–G7 engineering controls  
+**Objective:** Convert the initial governance plan into traceable repository controls while preserving external acceptance gates.
+
+### Implemented
+- Expanded the G0–G7 control/evidence register and requirements traceability.
+- Added role/accountability and review-cadence model; unassigned roles are explicitly marked rather than invented.
+- Consolidated the application-wide security threat model and retained UI-specific threats as a scoped supplement.
+- Added a 16-case security verification matrix; device/fuzz/independent review results remain open.
+- Added source-level data-flow and information-asset inventory based on the inspected Android manifest, build configuration and policies.
+- Added dependency decision register and CI capture of resolved Gradle/Cargo dependency reports plus Maven artifact hashes; the checked-in SPDX generator remains a declared-source inventory, not a full release SBOM.
+- Generated a 130-entry capability claims matrix with conservative wording; current registry entries do not become scientifically validated by implementation.
+- Added publication integrity protocol, operational incident/rollback/access/recovery procedures, and an empty CAPA register.
+- Added governance structural checker, capability matrix generator and pytest coverage; wired both checks into CI.
+- Updated README, roadmap, documentation index, SECURITY.md and changelog to reflect active G work and corrected the stale R1–R10 security status.
+
+### Validation status
+- Repository writes were accepted by GitHub and the generated claims matrix contains 130 capability rows.
+- Exact-head CI for the latest G revision is pending at the time of this entry. Earlier intermediate runs were cancelled as newer commits superseded them; they are not treated as test passes.
+- No local execution, independent security review, legal/privacy determination, device audit, ethics decision, tabletop exercise, access review or recovery drill is claimed.
+
+### Open / blockers
+- Verify CI on the final exact head; fix all failures and rerun.
+- Resolve Gradle/Cargo/Python/native dependency graph and exact artifact/license coverage; no third-party bundle approval is implied.
+- Appoint qualified security, scientific, privacy, quality, data and release role-holders.
+- Complete independent mobile security assessment and retest.
+- Complete jurisdiction-specific privacy/legal review and applicable ethics determinations.
+- Run synthetic-only incident, backup/recovery and access-review exercises; record evidence and CAPA.
+- Establish independent scientific protocols/truth sets, subgroup/missingness reports and claim-level validation.
+- Complete authorship/COI declarations and a reproducible literature/novelty review before any paper submission.
+
+### Gate status
+**G0–G7 engineering implementation is IN PROGRESS. Track G is not accepted or closed. P0 remains BLOCKED / NOT APPROVED. Track U remains gated after G under D-023.**

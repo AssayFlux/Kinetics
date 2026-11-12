@@ -2723,3 +2723,12 @@ The Python catalogue checker required a dataset licence URL and canonical kebab-
 
 ### Disposition
 Track P remains IN PROGRESS. The software audit increment is verified; external and operational exit criteria remain open. Do not mark P0–P7 or the overall Track P closed until their required evidence and approvals are actually recorded.
+
+
+## 2026-11-12 — Track P parser resource-bound audit increment
+
+- Audited the P1 synthetic VCF ingestion and P2 PGx definition/PharmVar parsing boundaries.
+- Added default byte/record/variant ceilings to PGx JSON and PharmVar TSV parsers, plus fail-closed type/limit validation and synthetic regression tests.
+- Updated the P2 workplan and roadmap to record the engineering increment and explicitly leave exact-head CI pending.
+- No authoritative public data was downloaded or approved. No patient/human-subject data, individual clinical interpretation, clinical recommendation or Clinical Mode was enabled.
+- P0 remains BLOCKED / NOT APPROVED. Independent reference concordance, exact-source terms review, fuzz/security assessment, operational curation/ethics, privacy/QMS, qualified jurisdiction advice and P7 regulatory/prospective evidence remain open.

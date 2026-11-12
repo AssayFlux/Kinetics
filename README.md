@@ -15,7 +15,7 @@
 **<img src="assets/brand/rainbow-helix.gif" alt="RAINBOW DNA DOUBLE HELIX" width="480">**
 **</p>**
 
-**<h1 align="center"><strong>KINETICS</strong></h1>**
+**<h1 align="center">KINETICS</h1>**
 **<p align="center">**
 **<strong>EXPLORE BIOLOGY. REPRODUCE THE WORK. KEEP THE EVIDENCE.</strong>**
 **</p>**

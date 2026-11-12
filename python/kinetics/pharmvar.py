@@ -13,6 +13,11 @@ from dataclasses import dataclass
 from typing import Iterable
 
 
+def normalize(value: str) -> str:
+    """Normalize TSV header labels for matching documented column aliases."""
+    return re.sub(r"[^a-z0-9]+", "", value.casefold())
+
+
 @dataclass(frozen=True)
 class PharmVarVariant:
     reference_accession: str

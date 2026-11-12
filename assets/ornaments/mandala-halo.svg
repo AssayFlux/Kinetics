@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="520" viewBox="0 0 520 520" role="img" aria-labelledby="t d">
+<title id="t">Mandala halo ornament</title><desc id="d">Fine-line lotus and radial mandala ornament in antique gold.</desc>
+<g fill="none" stroke="#d4af37" stroke-width="2" opacity=".55" transform="translate(260 260)">
+<circle r="238"/><circle r="218" stroke-dasharray="2 9"/><circle r="180"/><circle r="145" stroke-dasharray="3 7"/>
+<g id="petal"><path d="M0-42C-40-86-36-144 0-184C36-144 40-86 0-42Z"/><path d="M0-66C-18-96-17-130 0-153C17-130 18-96 0-66Z"/></g>
+<use href="#petal" transform="rotate(30)"/><use href="#petal" transform="rotate(60)"/><use href="#petal" transform="rotate(90)"/><use href="#petal" transform="rotate(120)"/><use href="#petal" transform="rotate(150)"/><use href="#petal" transform="rotate(180)"/><use href="#petal" transform="rotate(210)"/><use href="#petal" transform="rotate(240)"/><use href="#petal" transform="rotate(270)"/><use href="#petal" transform="rotate(300)"/><use href="#petal" transform="rotate(330)"/>
+<path d="M0-110L0-238M0 110L0 238M-110 0H-238M110 0H238" opacity=".45"/>
+<circle r="22"/><circle r="8" fill="#d4af37" fill-opacity=".35"/>
+</g></svg>

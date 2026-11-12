@@ -364,20 +364,14 @@ This is a documentation-level map of the main areas, not a claim that every dire
 
 ## 11 · ROADMAP
 
-The current sequential order is **R → S → I → P → G → U**, under D-023.
+The current sequential order is **R → S → I → P → G → U**, under D-023. The engineering state of each track is recorded once in the status table above; this chapter records the next gate themes rather than repeating that table.
 
-| TRACK | DIRECTION | GATE |
-|---|---|---|
-| **R** | Research platform foundations | Software audit closed; external evidence remains carry-forward. |
-| **S** | Structure, sequence and discovery | Software scope closed; independent references, licensing and device evidence remain open. |
-| **I** | In-silico laboratory | Software audit closed; scientific benchmarks, licensing and device evidence remain open. |
-| **P** | Permitted research-only engineering base | In progress; **P0 BLOCKED / NOT APPROVED**; external and acceptance gates remain open. |
-| **G** | Governance, assurance and publication integrity | In progress; exact engineering acceptance, independent reviews and operating evidence remain open. |
-| **U** | User interface and experience | Sequenced after G; existing U0–U3 work remains partial baseline, not accepted completion. |
+- **P:** complete the permitted research-only engineering base and its exact-source software audit. P0 remains **BLOCKED / NOT APPROVED**; independent, licensing, operational and device acceptance remain separate.
+- **G:** complete and audit the G0–G7 engineering controls, then obtain the required independent reviews, owner decisions and dated operating evidence.
+- **U:** resume sequential UI work only after G's two-step gate has been assessed and reported. Existing U0–U3 work remains partial baseline, not accepted completion.
+- **Cross-track evidence:** build capability-level scientific reference reports, complete data/model/dependency licensing decisions and release-grade SBOM coverage, verify named Android devices and offline workflows, and capture a real application demo only after installation and runtime checks.
 
-Further roadmap work includes capability-level independent scientific reference evidence, data/model/dependency licensing decisions, release-grade SBOM coverage, physical Android device and offline workflow verification, and a real application demo after verified installation.
-
-The [canonical roadmap](ROADMAP.md) and [decision log](DECISIONS.md) remain authoritative. The README does not replace their phase-level exit criteria.
+The [canonical roadmap](ROADMAP.md), [decision log](DECISIONS.md), [Track P evidence packet](docs/track-p/p0-evidence-packet.md) and [Track G audit](docs/track-g/audit-report-2026-11-12.md) remain authoritative. This README does not replace their phase-level exit criteria.
 
 <p align="center">
   <img src="assets/ornaments/royal-chapter-cream.svg" alt="Cream parchment contribution and licensing chapter ornament" width="100%">

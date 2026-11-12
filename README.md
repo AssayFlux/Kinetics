@@ -21,7 +21,7 @@ Kinetics is an offline-first, modular platform for computational biology and in-
 | **Track position** | I1–I5 software implementation/integration audit closed; Track P started 2026-11-11 (P0 preparation + P1 public-data-only base) |
 | **User experience** | D-015 Light Classic visual direction; supplied dashboard/login references recorded; Compose redesign in progress |
 | **Build channel** | GitHub Actions · unsigned arm64 debug APK/AAB |
-| **Validation state** | Exact-head `aabe37808a5494acb2171b6ed71d2661b4dd2453`, workflow #42970328048: 9/9 jobs passed; Python 490 passed/9 skipped, Ruff/mypy, Vina/OpenMM/ADMET/RDKit smoke, host reference comparisons, Node worker security, SPDX, Android arm64 APK/AAB/JVM and 16 KB alignment passed. Real scientific benchmarks, physical-device, secure-node, full transitive licence review, approved force fields/data and external validation remain open |
+| **Validation state** | Earlier I-track checkpoint `aabe37808a5494acb2171b6ed71d2661b4dd2453` / workflow #42970328048 passed 9/9 jobs. This is historical evidence, not verification of current main: the latest P1/P2 parser and P4/P6/P7 schema changes still need exact-head CI. Real scientific benchmarks, physical-device, secure-node, full transitive licence review, approved data and external validation remain open |
 | **Publication** | Methods-paper preparation only; results must come from reproducible evidence |
 
 ## Development dashboard

@@ -102,7 +102,7 @@ def test_pharmvar_parser_enforces_input_and_row_bounds():
         parse_pharmvar_tsv(TSV, **common, max_rows=1)
     for invalid in (0, -1, True, 1.5):
         with pytest.raises(ValueError, match="positive integer"):
-            parse_pharmvar_tsv(TSV, **common, max_rows=invalid)
+            parse_pharmvar_tsv(TSV, **common, max_rows=cast(int, invalid))
 
 
 def test_pharmvar_parser_rejects_non_text_input():

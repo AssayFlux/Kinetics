@@ -88,8 +88,6 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 </p>
 
 ## DESIGN PREVIEWS
-<p align="center"><img src="Assets/README-Expandable-Animated-Gradient-Border.svg" alt="" width="100%"></p>
-
 <p align="center">
   <img src="Assets/European%20Culture.png" alt="Illustrated European heritage scene with a colosseum, cathedral dome, statues and fountain" width="100%">
 </p>
@@ -107,12 +105,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
   </tr>
 </table>
 
-<sub>These are layout references, not captures of the running app. Verified device screenshots and a recorded demo will be added after installation and runtime verification on a physical Android device.</sub>
-
-<p align="center"><img src="Assets/README-Expandable-Animated-Gradient-Border.svg" alt="" width="100%"></p>
-
 ## STATUS AND PROGRESS
-
 <p align="center">
   <img src="Assets/Japanese%20Culture.png" alt="Illustrated Japanese heritage scene with Mount Fuji, torii gate, pagoda and cherry blossom" width="100%">
 </p>
@@ -138,20 +131,12 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | **G** | Governance and assurance | **PLANNING BASELINE DRAFTED** | G0–G7 controls exist in draft; full implementation and acceptance remain gated by P verification. |
 | **U** | User interface and experience | **SEQUENCED AFTER G** | Partial U0–U3 work is retained; further sequential work follows G's two-step gate assessment. |
 
-<p align="center"><strong>CURRENT ORDER: R → S → I → P → G → U · DECISION D-023</strong></p>
-
-<sub>"Closed" refers only to the documented software and audit scope. It does not close independent scientific validation, licensing, physical-device, regulatory, clinical or release obligations. No completion percentage or overall compliance figure is claimed.</sub>
-
 | ENGINEERING AREA | POSITION |
 |---|---|
 | BUILD | GitHub Actions CI is configured. Read the live badge above for the current head. |
 | TESTS | pytest and Android JVM test tasks are defined in CI. |
 | COVERAGE | No verified coverage percentage is published. |
 | DEPLOYMENT | No production deployment or signed public release. CI builds debug artifacts only. |
-
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
 
 ## TECHNOLOGY STACK
 
@@ -160,7 +145,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 </p>
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,rust,nodejs,html,css,js,githubactions,bash,cmake,git,github,linux" alt="Technology icons">
+  <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,c,rust,nodejs,html,css, android,chaquopy,ruff,pytest,rdkit,openmm,ndk,js,githubactions,bash,cmake,git,github,linux" alt="Technology icons">
 </p>
 
 | LAYER | TECHNOLOGY |
@@ -173,12 +158,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | WORKER | Node.js 22+, dependency-free HTTP/TLS worker |
 | CONTRACTS | JSON Schema, YAML, SPDX source inventory |
 
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## SYSTEM ARCHITECTURE
-
 <p align="center">
   <img src="Assets/Central%20Asian%20Culture.png" alt="Illustrated Central Asian heritage scene with a blue-domed mosque, reflecting pool and mountains" width="100%">
 </p>
@@ -204,14 +184,7 @@ flowchart TD
     class PY,NATIVE,VIEW,SCI,OPTIONAL,VINA teal;
 ```
 
-<sub>The diagram shows repository-level boundaries. Optional engines and the Node worker are not implied to be enabled in the Android application.</sub>
-
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## QUICK START
-
 <p align="center">
   <img src="Assets/African%20Culture.png" alt="Illustrated African heritage scene with savanna wildlife, rock temple and clay architecture" width="100%">
 </p>
@@ -298,12 +271,7 @@ flowchart TD
   The script builds debug APK/AAB outputs and performs package-alignment checks. It does not install the app, run an emulator or verify a physical device.
 </details>
 
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## REPOSITORY MAP
-
 <p align="center">
   <img src="Assets/Mayan%20Civilizational%20Culture.png" alt="Illustrated Mayan and Andean heritage scene with a stepped pyramid, mountain citadel, llamas and a macaw" width="100%">
 </p>
@@ -321,12 +289,6 @@ flowchart TD
 | `data/` · `datapacks/` · `design/` | Catalogues, manifests and design inputs |
 | `Assets/` | Brand artwork, animations and design references (see the asset library below) |
 
-<sub>This is a concise directory map, not a claim that every directory is a complete product module.</sub>
-
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## RESEARCH AND SAFETY BOUNDARIES
 
 - Kinetics is a research-engineering prototype. It is not clinically validated, is not a medical device and must not be used for diagnosis, treatment or dosing decisions.
@@ -335,12 +297,7 @@ flowchart TD
 - No production service deployment, public API availability, independent docking validity, signed public release or physical-device verification is claimed.
 - CI builds debug artifacts. Test definitions and green host checks do not replace independent scientific, security, licensing or device evidence.
 
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## NEXT GATES
-
 | TRACK | NEXT REQUIRED WORK |
 |:---:|---|
 | **P** | Complete exact-head software verification and the permitted research-only base. P0 requires its separate external evidence and owner gate decision. |
@@ -348,12 +305,7 @@ flowchart TD
 | **U** | Resume sequential implementation only after G's two-step gate is assessed. Retain partial U0–U3 as baseline, not as accepted completion. |
 | **CROSS-CUTTING** | Independent scientific benchmarks; data/model/dependency licensing and SBOM coverage; physical Android, offline, accessibility and recovery verification; real application demo. |
 
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## CONTRIBUTION AND LICENSING
-
 1. Read `NORTH_STAR.md`, `ROADMAP.md`, `DECISIONS.md` and `CONTRIBUTING.md`.
 2. Follow `docs/ENGINEERING_INTEGRATION_STANDARD.md` and the active sequential track gate.
 3. Add or update tests, schemas, provenance and licensing evidence with implementation.
@@ -361,20 +313,9 @@ flowchart TD
 
 **License:** Apache License 2.0. Third-party dependencies, engines, datasets, models, fonts and visual assets may have separate terms; review upstream conditions before bundling or redistribution.
 
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## BRAND IDENTITY
-
 <p align="center">
-  <img src="Assets/Organization%20Logo%204%E2%98%851.png" alt="AssayFlux wordmark" width="46%">
-</p>
-
-<p align="center">
-  <a href="Assets/Kinetics%20By%20AssayFlux%C2%A9.png"><strong>FULL-RESOLUTION KINETICS BY ASSAYFLUX LOCKUP (PNG)</strong></a>
-  &nbsp;·&nbsp;
-  <a href="Assets/DNA%20Rainbow%20Helix.html"><strong>RAINBOW HELIX SOURCE (HTML CANVAS)</strong></a>
+  <img src="Assets/Organization%20Logo%204%E2%98%851.png" alt="AssayFlux wordmark" width="100%">
 </p>
 
 <details>
@@ -406,43 +347,30 @@ flowchart TD
   | `White Page 9★12.jpg` · `White Page 12★9.jpg` · `White Page 10★10.jpg` | Blank page canvases, not used in the README |
 </details>
 
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 ## THE JOURNEY
-
 <p align="center">
-  <img src="Assets/Astronaut.png" alt="Astronaut holding a glowing jellyfish-like light against a star field" width="78%">
+  <img src="Assets/Astronaut.png" alt="Astronaut holding a glowing jellyfish-like light against a star field" width="100%">
 </p>
 
 <table>
   <tr>
-    <td align="center" width="33%">
+    <td align="center" width="100%">
       <img src="Assets/Goal.png" alt="Line-art illustration of a young explorer with goggles on a rooftop looking toward a distant tower" width="100%">
-      <br><sub><strong>GOAL</strong></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="Assets/My%20Character.png" alt="Line-art character in overalls with goggles, scarf and tool belt" width="100%">
-      <br><sub><strong>MY CHARACTER</strong></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="Assets/Her%20Character.png" alt="Line-art character in overalls with blue pigtails and a satchel" width="100%">
-      <br><sub><strong>HER CHARACTER</strong></sub>
     </td>
   </tr>
 </table>
 
 <p align="center">
-  <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Author details strip" width="100%">
+  <img src="Assets/Section%20Breaker%20White%20Background.jpg" alt="Author details strip" width="100%">
 </p>
 
-<p align="center">
+<p align="right">
   <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" height="110">
-  <br>
+</p>
+<p align="centre">
   <strong><em>LET EVERY HELIX CARRY A QUESTION; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
   <br>
-  <sub>ASSAYFLUX SCIENTIFIC SYSTEMS · KINETICS · MADE IN INDIA</sub>
+  <sub>ASSAYFLUX · KINETICS · MADE IN INDIA</sub>
 </p>
 
 <!-- ALTERNATE LINES:
@@ -450,9 +378,6 @@ flowchart TD
 2. FROM A SINGLE QUESTION, WEAVE A THOUSAND REPRODUCIBLE DISCOVERIES.
 3. LET PATIENCE SHAPE THE METHOD AND INTEGRITY SHAPE THE RESULT.
 -->
-
-<p align="center"><img src="Assets/README-Section-Frame-Bottom.svg" alt="" width="100%"></p>
-
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1F2A6B,50:800020,100:D4AF37&height=100&section=footer" alt="" width="100%">
 </p>

@@ -1,15 +1,8 @@
 <!-- KINETICS · BY ASSAYFLUX -->
 
 <p align="center">
- <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text🇮🇳&fontSize=46&fontColor=FFF8E7&font=Great%20Vibes&fontAlignY=42" alt="Kinetics banner" width="100%">
+ <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6Balt="Kinetics banner" width="100%">
 </p>
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="Assets/Section%20Breaker%20With%20Author%20Details.jpg">
-    <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
-  </picture>
-</p>
-
 <p align="center">
   <img src="Assets/Kinetics%20By%20AssayFlux©.png" alt="Kinetics guilloche DNA logo" width="100%">
 </p>

@@ -104,15 +104,7 @@
   <img src="https://img.shields.io/badge/Intended_Use-Research_Only-8B7058?style=flat-square">
 </p>
 
-
-
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•" alt="Kinetics tagline">
-</p>
-
-
 ## ABOUT
-
 <p align="center">
   <img src="Assets/Indian%20Peninsula%20Culture.png" alt="Illustrated Indian peninsula heritage scene with a palace, domed mausoleum, temple tower, peacock and elephant" width="100%">
 </p>
@@ -398,6 +390,50 @@ flowchart TD
     <img src="Assets/Organization%20Logo%201%E2%98%851.gif" alt="AssayFlux animated square organisation mark" width="40%">
   </p>
 </details>
+
+
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Serif+Bengali&weight=600&size=17&pause=1800&color=E85D75&center=true&vCenter=true&width=1000&lines=বাংলা+ও+অসমীয়া: অ আ ই ঈ উ ঊ ঋ এ ঐ ও ঔ ক খ গ ঘ ঙ চ ছ জ ঝ ঞ ট ঠ ড ঢ ণ ত থ দ ধ ন প ফ ব ভ ম য ৰ ৱ ল শ ষ স হ" alt="Bengali and Assamese" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Devanagari&weight=600&size=17&pause=1800&color=D4AF37&center=true&vCenter=true&width=1000&lines=हिन्दी मराठी नेपाली संस्कृत कोंकणी मैथिली डोगरी बोडो: अ आ इ ई उ ऊ ऋ ए ऐ ओ औ क ख ग घ ङ च छ ज झ ञ ट ठ ड ढ ण त थ द ध न प फ ब भ म य र ल व श ष स ह क्ष त्र ज्ञ" alt="Devanagari languages" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Gujarati&weight=600&size=17&pause=1800&color=42A5A5&center=true&vCenter=true&width=1000&lines=ગુજરાતી: અ આ ઇ ઈ ઉ ઊ ઋ એ ઐ ઓ ઔ ક ખ ગ ઘ ઙ ચ છ જ ઝ ઞ ટ ઠ ડ ઢ ણ ત થ દ ધ ન પ ફ બ ભ મ ય ર લ વ શ ષ સ હ" alt="Gujarati" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Gurmukhi&weight=600&size=17&pause=1800&color=5B8DEF&center=true&vCenter=true&width=1000&lines=ਪੰਜਾਬੀ: ੳ ਅ ੲ ਸ ਹ ਕ ਖ ਗ ਘ ਙ ਚ ਛ ਜ ਝ ਞ ਟ ਠ ਡ ਢ ਣ ਤ ਥ ਦ ਧ ਨ ਪ ਫ ਬ ਭ ਮ ਯ ਰ ਲ ਵ ੜ" alt="Punjabi" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Oriya&weight=600&size=17&pause=1800&color=E58B45&center=true&vCenter=true&width=1000&lines=ଓଡ଼ିଆ: ଅ ଆ ଇ ଈ ଉ ଊ ଋ ଏ ଐ ଓ ଔ କ ଖ ଗ ଘ ଙ ଚ ଛ ଜ ଝ ଞ ଟ ଠ ଡ ଢ ଣ ତ ଥ ଦ ଧ ନ ପ ଫ ବ ଭ ମ ଯ ର ଲ ଶ ଷ ସ ହ" alt="Odia" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Tamil&weight=600&size=17&pause=1800&color=B58AD9&center=true&vCenter=true&width=1000&lines=தமிழ்: அ ஆ இ ஈ உ ஊ எ ஏ ஐ ஒ ஓ ஔ ஃ க ங ச ஞ ட ண த ந ப ம ய ர ல வ ழ ள ற ன" alt="Tamil" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Telugu&weight=600&size=17&pause=1800&color=E06C9F&center=true&vCenter=true&width=1000&lines=తెలుగు: అ ఆ ఇ ఈ ఉ ఊ ఋ ఎ ఏ ఐ ఒ ఓ ఔ క ఖ గ ఘ ఙ చ ఛ జ ఝ ఞ ట ఠ డ ఢ ణ త థ ద ధ న ప ఫ బ భ మ య ర ల వ శ ష స హ" alt="Telugu" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Kannada&weight=600&size=17&pause=1800&color=78A88A&center=true&vCenter=true&width=1000&lines=ಕನ್ನಡ: ಅ ಆ ಇ ಈ ಉ ಊ ಋ ಎ ಏ ಐ ಒ ಓ ಔ ಕ ಖ ಗ ಘ ಙ ಚ ಛ ಜ ಝ ಞ ಟ ಠ ಡ ಢ ಣ ತ ಥ ದ ಧ ನ ಪ ಫ ಬ ಭ ಮ ಯ ರ ಲ ವ ಶ ಷ ಸ ಹ" alt="Kannada" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Malayalam&weight=600&size=17&pause=1800&color=58A6A6&center=true&vCenter=true&width=1000&lines=മലയാളം: അ ആ ഇ ഈ ഉ ഊ ഋ എ ഏ ഐ ഒ ഓ ഔ ക ഖ ഗ ഘ ങ ച ഛ ജ ഝ ഞ ട ഠ ഡ ഢ ണ ത ഥ ദ ധ ന പ ഫ ബ ഭ മ യ ര ല വ ശ ഷ സ ഹ" alt="Malayalam" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Meetei+Mayek&weight=600&size=17&pause=1800&color=C28B58&center=true&vCenter=true&width=1000&lines=মৈতৈলোন্: ꯑ ꯒ ꯔ ꯕ ꯗ ꯘ ꯡ ꯢ ꯣ ꯤ ꯥ ꯦ ꯧ ꯨ ꯩ ꯪ ꯫ ꯀ ꯁ ꯂ ꯃ ꯄ ꯅ ꯆ ꯇ ꯈ ꯉ ꯊ ꯋ ꯌ ꯍ" alt="Meitei" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+Ol+Chiki&weight=600&size=17&pause=1800&color=A6A64D&center=true&vCenter=true&width=1000&lines=ᱥᱟᱱᱛᱟᱲᱤ: ᱚ ᱛ ᱜ ᱝ ᱞ ᱟ ᱠ ᱡ ᱢ ᱣ ᱤ ᱥ ᱦ ᱧ ᱨ ᱩ ᱪ ᱫ ᱬ ᱭ ᱮ ᱯ ᱰ ᱱ ᱲ ᱳ ᱴ ᱵ ᱶ" alt="Santali" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Naskh+Arabic&weight=600&size=17&pause=1800&color=8B9FE8&center=true&vCenter=true&width=1000&lines=اردو سندھی کشمیری: ا ب پ ت ٹ ث ج چ ح خ د ڈ ذ ر ڑ ز ژ س ش ص ض ط ظ ع غ ف ق ک گ ل م ن و ہ ھ ی" alt="Urdu, Sindhi and Kashmiri" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=17&pause=1800&color=F0C75E&center=true&vCenter=true&width=1000&lines=ENGLISH: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z" alt="English" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+SC&weight=600&size=17&pause=1800&color=DE6B62&center=true&vCenter=true&width=1000&lines=中文: 汉字 字形 语言 文化 学习 科学 技术" alt="Chinese" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Serif+JP&weight=600&size=17&pause=1800&color=D98A9A&center=true&vCenter=true&width=1000&lines=日本語: あ い う え お か き く け こ さ し す せ そ た ち つ て と ア イ ウ エ オ カ キ ク ケ コ" alt="Japanese" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Sans+KR&weight=600&size=17&pause=1800&color=8F80D6&center=true&vCenter=true&width=1000&lines=한국어: ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ ㅏ ㅑ ㅓ ㅕ ㅗ ㅛ ㅜ ㅠ ㅡ ㅣ" alt="Korean" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Naskh+Arabic&weight=600&size=17&pause=1800&color=45A99A&center=true&vCenter=true&width=1000&lines=العربية: ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي" alt="Arabic" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Serif&weight=600&size=17&pause=1800&color=76A9D8&center=true&vCenter=true&width=1000&lines=РУССКИЙ: А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я" alt="Russian" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Serif&weight=600&size=17&pause=1800&color=B69BDB&center=true&vCenter=true&width=1000&lines=ΕΛΛΗΝΙΚΆ: Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω" alt="Greek" />
+  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=Noto+Serif&weight=600&size=17&pause=1800&color=D98C50&center=true&vCenter=true&width=1000&lines=ESPAÑOL: A B C D E F G H I J K L M N Ñ O P Q R S T U V W X Y Z" alt="Spanish" />
+</p>
+
 
 ## THE JOURNEYS
 <p align="center">

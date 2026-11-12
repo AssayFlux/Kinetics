@@ -115,3 +115,14 @@ def test_pharmvar_parser_rejects_non_text_input():
             license_id="CC0 synthetic test only",
             expected_release="fixture-1",
         )
+
+
+
+@pytest.mark.parametrize(("start", "stop"), [(True, 1), (1, False)])
+def test_pharmvar_variant_rejects_boolean_coordinates(start, stop):
+    from kinetics.pharmvar import PharmVarVariant
+
+    with pytest.raises(ValueError, match="coordinates must be integers"):
+        PharmVarVariant(
+            "NG_SYNTHETIC.1", start, stop, "A", "G", "snv"
+        )

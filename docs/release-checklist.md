@@ -6,7 +6,7 @@
 - [ ] Clean-checkout local debug build succeeds with pinned JDK/Gradle/SDK/NDK/CMake.
 - [ ] Gradle distribution checksum and every downloaded wheel checksum are verified.
 - [ ] Static direct-dependency inventory is generated with `scripts/generate_source_sbom.py`.
-- [ ] Full resolved dependency graph and SPDX/CycloneDX release SBOM (including transitive artifacts, checksums and native libraries) are generated and archived.
+- [ ] Full resolved dependency graph and SPDX/CycloneDX release SBOM (including transitive artifacts, checksums and native libraries) are generated and archived. CI's Gradle/Cargo reports and Maven cache hashes are supporting raw evidence only, not a complete SBOM.
 - [ ] Every direct/transitive runtime dependency has exact version, source, license and notice review.
 - [ ] Native ELF 16 KB alignment and APK alignment verified for every packaged native library.
 - [ ] Build provenance includes source commit, toolchain versions, commands, APK/AAB hashes and sizes.

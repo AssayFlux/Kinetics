@@ -4,17 +4,18 @@ Language percentages are intentionally not fabricated; see the source-statistics
 -->
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:17324D,50:256D85,100:5BC0BE&height=180&section=header&text=KINETICS&fontSize=48&fontColor=FFFFFF&fontAlignY=38&desc=Offline-first%20scientific%20research%20workbench&descAlignY=60&descSize=16" alt="Kinetics banner" width="100%">
+  <img src="assets/brand/readme-header.svg" alt="KINETICS — ASSAYFLUX animated colour header" width="100%">
 </p>
 
 <p align="center">
-  <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="200" height="200">
-  &nbsp;&nbsp;
-  <img src="assets/brand/brand-logo.svg" alt="AssayFlux original SVG brand logo" width="200" height="200">
-  &nbsp;&nbsp;
+  <img src="assets/brand/organization-logo.gif" alt="ASSAYFLUX ORGANIZATION LOGO" width="200">
 </p>
 
-<h1 align="center">Kinetics</h1>
+<p align="center">
+  <img src="assets/brand/rainbow-helix.gif" alt="RAINBOW DNA DOUBLE HELIX" width="480">
+</p>
+
+<h1 align="center">KINETICS</h1>
 <p align="center">
   <strong>Explore biology. Reproduce the work. Keep the evidence.</strong>
 </p>
@@ -39,14 +40,6 @@ Language percentages are intentionally not fabricated; see the source-statistics
 ---
 
 ## Visual preview
-
-<p align="center">
-  <strong>DNA animation — designed by the project owner</strong>
-  <br>
-  <img src="assets/brand/rainbow-helix.gif" alt="Rainbow Helix animated DNA design by the project owner" width="480">
-  <br>
-  <sub>Original HTML5 Canvas design, presented as a looping GIF</sub>
-</p>
 
 <p align="center">
   <strong>App dashboard and login — UI design references</strong>
@@ -371,8 +364,7 @@ Kinetics project code is distributed under the Apache License 2.0. Third-party d
 ---
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:5BC0BE,50:256D85,100:17324D&height=110&section=footer" alt="" width="100%">
-  <strong>Made with ❤️ by Md Safarujjaman</strong>
+  <img src="assets/brand/owner-signature.svg" alt="MD SAFARUJJAMAN — PROJECT OWNER SIGNATURE OVER KINETICS BACKGROUND" width="100%">
   <br>
-  <sub>Build carefully. Measure honestly. Share reproducibly.</sub>
+  <sub><strong>BUILD CAREFULLY. MEASURE HONESTLY. SHARE REPRODUCIBLY.</strong></sub>
 </p>

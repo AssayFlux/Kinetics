@@ -1,11 +1,8 @@
 <!-- KINETICS · BY ASSAYFLUX -->
 
 <p align="center">
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS&fontSize=46&fontColor=FFF8E7&font=Great%20Vibes&fontAlignY=42" alt="Kinetics banner" width="100%">
+ <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS&fontSize=46&fontColor=FFF8E7&font=Great%20Vibes&fontAlignY=42" alt="Kinetics banner" width="100%">
 </p>
-
-<p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
-
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="Assets/Section%20Breaker%20With%20Author%20Details.jpg">
@@ -340,12 +337,18 @@ flowchart TD
 </p>
 
 <p align="centre">
-  <strong><em>LET EVERY HELIX CARRY A QUESTION; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
+  <strong><em>LET EVERY HELIX CARRY A QUESTION ; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
   <br>
-  <sub>ASSAYFLUX · KINETICS · MADE IN INDIA</sub>
+  <sub> Md Safarujjaman </sub>
 </p>
 <p align="right">
-  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" height="110">
+  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" height="20%">
+</p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="Assets/Section%20Breaker%20With%20Author%20Details.jpg">
+    <img src="Assets/Section%20Breaker%20With%20Author%20Details.jpg" alt="Kinetics by AssayFlux title strip" width="100%">
+  </picture>
 </p>
 
 <!-- ALTERNATE LINES:

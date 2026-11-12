@@ -1,7 +1,7 @@
 # Track G — governance, assurance and publication readiness
 
-**Status:** planning baseline created 2026-11-12; implementation not yet accepted.  
-**Sequence:** Track G follows the Track P engineering exit. Track U follows Track G in the current **R → S → I → P → G → U** order (D-023). G planning and inventory may proceed while P verification is completed; G implementation remains gated by P's exact-head software verification. Further U implementation begins only after G's two-step gate is assessed and reported. Existing partial U0–U3 work is retained as a pre-existing baseline.  
+**Status:** Track G implementation in progress (2026-11-12); G0–G7 engineering controls are being built and audited. Formal Track G acceptance remains OPEN.  
+**Sequence:** Track G follows the Track P engineering exit. Track U follows Track G in the current **R → S → I → P → G → U** order (D-023). P's software workflow #43131601029 passed 9/9 jobs on commit `553056b3c51373913e8c8936802971fbd532f4e0`. The subsequent README-only main workflow #43135437515 is pending; current-head G acceptance therefore still requires its own exact-head CI. G engineering work has started under the owner's instruction. Further U implementation begins only after G's two-step gate is assessed and reported. Existing partial U0–U3 work is retained as a pre-existing baseline.  
 **Scope:** research-only governance for the unreleased Kinetics platform. This plan is not a legal opinion, ethics determination, security certification, QMS certification, regulatory clearance or publication endorsement.
 
 ## 1. Purpose
@@ -26,8 +26,16 @@ These are useful foundations, not evidence that all controls are operating or in
 
 ## 3. Current execution status (2026-11-12)
 
-- **G0 inventory:** initial control/evidence register drafted at `docs/track-g/control-evidence-register.md`, covering G0–G7 controls, current evidence, accountable role categories, next actions and external blockers. It is a draft; named role assignment and owner acceptance remain open.
-- **G1–G7 implementation:** not yet accepted as started. Under D-023's strict R → S → I → P → G → U sequence, G implementation proceeds after Track P exact-head software verification; Track U is the next sequential track only after G's two-step gate. Track P's latest workflow #43131601029 has passed Python (531 passed, 9 optional skips), reference/engine smoke, SPDX and Node security jobs; Android APK/AAB build is still running. No P closure or G implementation start is declared while that job is pending.
+- **P prerequisite evidence:** workflow #43131601029 completed successfully with 9/9 jobs on commit `553056b3c51373913e8c8936802971fbd532f4e0`. This is the recorded P software verification evidence; it does not close P0 or external gates. A later README-only workflow #43135437515 is pending at the time of this update.
+- **G0:** canonical register, status vocabulary, role/cadence model and initial requirements traceability are present. Owner acceptance of governance policy and named non-owner role appointments remain open.
+- **G1:** security threat model now has a canonical app/data/native/WebView/supply-chain scope; UI threat cases are maintained as a scoped supplement. A 16-case security verification matrix exists; fuzzing, device tests, vulnerability-channel exercise and independent assessment remain open.
+- **G2:** source-only SPDX limitations are explicit; exact artifact/data/model license decisions and resolved transitive dependency coverage remain open. No scientific engine/model/database is approved for bundling.
+- **G3:** requirements traceability, blank CAPA register and release evidence controls are present; test-level coverage, operating review records and QMS applicability advice remain open.
+- **G4:** source-level data-flow inventory reflects the inspected manifest and policies; merged-manifest, provider/device behavior, qualified privacy advice and jurisdiction decisions remain open.
+- **G5:** generated capability-claims matrix covers 130 registry entries and does not imply scientific validation; independent truth sets, subgroup analysis and reviewer-approved protocols remain open.
+- **G6:** publication integrity protocol and existing empty claim ledger are linked; authorship declarations, reproducible literature review and peer/editor decisions remain open.
+- **G7:** incident/stop-work/rollback/access/recovery procedures and tabletop templates exist; no tabletop, access review or recovery exercise is claimed complete.
+- **Track U:** remains sixth in the approved order and does not start until G's two-step gate is assessed and reported.
 
 ## 4. Work packages
 
@@ -92,3 +100,19 @@ Track G overall acceptance remains open until required independent reviews, lega
 ## 9. Change control
 
 This plan is the Track G planning baseline. Amendments must preserve the distinction between engineering implementation and external acceptance. Any change that would enable patient/clinical data, human-subject activity or Clinical Mode requires a separate formal P0 review and explicit owner decision; Track G work cannot grant that permission.
+
+
+## 10. Implementation record (2026-11-12)
+
+The following repository artifacts now form the G engineering baseline:
+- `docs/track-g/roles-and-review-cadence.md` — accountable role model and review triggers; non-owner appointments are explicitly unassigned.
+- `docs/track-g/requirements-traceability.csv` — G0–G7 requirement-to-control map.
+- `docs/track-g/capa-register.csv` — blank corrective/preventive action register; no fictitious findings inserted.
+- `docs/track-g/security-verification-matrix.md` — 16 security/device/supply-chain verification cases with honest OPEN/PARTIAL status.
+- `docs/track-g/data-flow-inventory.md` — source-level inventory based on the inspected manifest and policy files.
+- `docs/track-g/capability-claims-matrix.csv` and `scripts/generate_governance_claims.py` — 130 capability entries, conservative claim wording, validation/device/license gaps.
+- `docs/track-g/publication-integrity.md` — claim, authorship, reproducibility and submission protocol.
+- `docs/track-g/operational-controls.md` — incident, stop-work, access, backup/recovery and tabletop procedures.
+- `scripts/check_governance.py` and `tests/test_governance.py` — structural validation of governance artifacts and control traceability.
+
+These files are implementation evidence, not evidence that external reviews or operating exercises have passed. The exact-head CI result and any failures must be appended after the final G code/doc increment.

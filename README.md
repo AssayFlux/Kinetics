@@ -1,7 +1,7 @@
 <!-- KINETICS · BY ASSAYFLUX -->
 
 <p align="center">
- <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS BY ASSAYFLUX&fontSize=46&fontColor=FFF8E7&font=Great%20Vibes&fontAlignY=42" alt="Kinetics banner" width="100%">
+ <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS-BY-ASSAYFLUX&fontSize=46&fontColor=FFF8E7&font=Great%20Vibes&fontAlignY=42" alt="Kinetics banner" width="100%">
 </p>
 <p align="center">
   <picture>

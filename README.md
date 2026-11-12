@@ -1,7 +1,7 @@
-<!-- KINETICS · ASSAYFLUX SCIENTIFIC SYSTEMS -->
+<!-- KINETICS · BY ASSAYFLUX -->
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS&fontSize=46&fontColor=FFF8E7&font=Marcellus%20SC&fontAlignY=42" alt="Kinetics banner" width="100%">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:800020,55:D4AF37,100:1F2A6B&height=150&section=header&text=KINETICS&fontSize=46&fontColor=FFF8E7&font=Great%20Vibes&fontAlignY=42" alt="Kinetics banner" width="100%">
 </p>
 
 <p align="center"><img src="Assets/README-Section-Frame-Top.svg" alt="" width="100%"></p>
@@ -145,7 +145,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 </p>
 
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,c,rust,nodejs,html,css, android,chaquopy,ruff,pytest,rdkit,openmm,ndk,js,githubactions,bash,cmake,git,github,linux" alt="Technology icons">
+  <img src="https://skillicons.dev/icons?i=androidstudio,kotlin,gradle,python,cpp,c,rust,nodejs,html,css,android,js,githubactions,bash,cmake,git,github,linux&perline=6" alt="Technology icons">
 </p>
 
 | LAYER | TECHNOLOGY |
@@ -326,32 +326,7 @@ flowchart TD
   </p>
 </details>
 
-<details>
-  <summary><strong>ASSET LIBRARY · EVERY FILE IN <code>Assets/</code></strong></summary>
-
-  | FILE | USED FOR |
-  |---|---|
-  | `README-Section-Frame-Top.svg` · `README-Section-Frame-Bottom.svg` | Animated gradient frame around every section, derived from the Expandable Animated Gradient Border |
-  | `Expandable Animated Gradient Border.svg` | Source artwork for the frame (full box needs live text measurement, so it is not embedded as-is) |
-  | `Section Breaker Black Background.jpg` · `Section Breaker White Background.jpg` | Title strip in the header (dark / light mode) |
-  | `Kinetics Guilloche Logo.svg` | Project logo in the header |
-  | `DNA Rainbow Helix.gif` · `DNA Rainbow Helix.html` | Header animation · interactive canvas source |
-  | `Indian Peninsula` · `Human Revolution` · `European` · `Japanese` · `Chinese` · `Central Asian` · `African` · `Mayan Civilizational` | Section banners: About, Capabilities, Design previews, Status, Stack, Architecture, Quick start, Repository map |
-  | `DNA.gif` · `Laboratory.gif` | Animated illustrations under capabilities |
-  | `App UI - Dashboard Design.jpg` · `App UI - Login Page Design.jpg` | Design previews |
-  | `Organization Logo 4★1.png` · `Organization Logo 1★1.gif` | Brand identity |
-  | `Kinetics By AssayFlux©.png` | Linked full-resolution lockup (21 MB, not embedded) |
-  | `Astronaut.png` · `Goal.png` · `My Character.png` · `Her Character.png` | Closing section |
-  | `Author's Signature.svg` · `Section Breaker With Author Details.jpg` | Footer |
-  | `README-Section-Divider.svg` | Retired in favour of the frame; kept for reuse |
-  | `White Page 9★12.jpg` · `White Page 12★9.jpg` · `White Page 10★10.jpg` | Blank page canvases, not used in the README |
-</details>
-
 ## THE JOURNEY
-<p align="center">
-  <img src="Assets/Astronaut.png" alt="Astronaut holding a glowing jellyfish-like light against a star field" width="100%">
-</p>
-
 <table>
   <tr>
     <td align="center" width="100%">
@@ -364,13 +339,13 @@ flowchart TD
   <img src="Assets/Section%20Breaker%20White%20Background.jpg" alt="Author details strip" width="100%">
 </p>
 
-<p align="right">
-  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" height="110">
-</p>
 <p align="centre">
   <strong><em>LET EVERY HELIX CARRY A QUESTION; LET EVERY ANSWER CARRY ITS EVIDENCE.</em></strong>
   <br>
   <sub>ASSAYFLUX · KINETICS · MADE IN INDIA</sub>
+</p>
+<p align="right">
+  <img src="Assets/Author%27s%20Signature.svg" alt="Author's signature" height="110">
 </p>
 
 <!-- ALTERNATE LINES:

@@ -2732,3 +2732,12 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 - Updated the P2 workplan and roadmap to record the engineering increment and explicitly leave exact-head CI pending.
 - No authoritative public data was downloaded or approved. No patient/human-subject data, individual clinical interpretation, clinical recommendation or Clinical Mode was enabled.
 - P0 remains BLOCKED / NOT APPROVED. Independent reference concordance, exact-source terms review, fuzz/security assessment, operational curation/ethics, privacy/QMS, qualified jurisdiction advice and P7 regulatory/prospective evidence remain open.
+
+
+## 2026-11-12 — P4/P6/P7 evidence-contract hardening
+
+- P4 accepted-for-research curation records now require completed second review with reviewer role, timestamp and evidence URL; pending and escalated states remain explicit.
+- P6 residual-risk acceptance now requires an accountable role, timestamp and evidence URL.
+- P7 jurisdiction statuses indicating received advice or pending owner disposition now require advice evidence and a product-classification field.
+- Added synthetic schema tests. These contracts do not constitute human curation, risk sign-off, legal advice or regulatory classification.
+- Exact-head CI remains pending; all affected checks must pass before this increment is verified. P0 remains NOT APPROVED and clinical/patient workflows remain disabled.

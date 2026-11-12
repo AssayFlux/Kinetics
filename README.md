@@ -18,7 +18,7 @@ Kinetics is an offline-first, modular platform for computational biology and in-
 | **Product** | Offline-first Android scientific workbench |
 | **Primary mode** | Research Mode only |
 | **Engineering scope** | R1–R10, developed as one integrated platform |
-| **Track position** | I1–I5 software implementation/integration audit closed; Track P started 2026-11-11 (P0 preparation + P1 public-data-only base) |
+| **Track position** | Track P software/evidence work is current; G planning/inventory is prepared; Track U is sequenced after G under D-023 |
 | **User experience** | D-015 Light Classic visual direction; supplied dashboard/login references recorded; Compose redesign in progress |
 | **Build channel** | GitHub Actions · unsigned arm64 debug APK/AAB |
 | **Validation state** | Earlier I-track checkpoint `aabe37808a5494acb2171b6ed71d2661b4dd2453` / workflow #42970328048 passed 9/9 jobs. This is historical evidence, not verification of current main: the latest P1/P2 parser and P4/P6/P7 schema changes still need exact-head CI. Real scientific benchmarks, physical-device, secure-node, full transitive licence review, approved data and external validation remain open |

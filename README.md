@@ -53,7 +53,7 @@ The percentages below measure **documented engineering-gate closure only**, not 
 | **S** · Structure & discovery | Structure viewer, sequence triage, genome annotation and protein intelligence | **100%** · software scope closed | Independent references, licensed resources/models and device evidence open |
 | **I** · In-silico lab | Chemistry, docking, molecular dynamics, ADMET and simulations | **100%** · software audit closed | Real scientific benchmarks, data/model licences, secure node and device tests open |
 | **P** · Precision medicine | PGx-first research foundation and governance | **In progress** | Latest recorded software CI passed 9/9 jobs; P0 remains **NOT APPROVED** and external evidence gates remain open |
-| **G** · Governance | Security, supply chain, quality, privacy, scientific integrity and publication | **0% accepted** | Planning/register baseline drafted; G0 owner acceptance and G1–G7 implementation/reviews remain open |
+| **G** · Governance | Security, supply chain, quality, privacy, scientific integrity and publication | **0% accepted** | G0–G7 engineering controls in progress; exact-head CI, owner acceptance and external reviews/exercises remain open |
 | **U** · User experience | Brand system, app shell, authentication and research workflows | **0% accepted** | Partial U0–U3 work is retained as baseline; further sequential work follows G |
 
 <details>

@@ -14,31 +14,100 @@
   />
 </p>
 
+
+
+
 <p align="center">
-  <a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=flat-square&label=LICENSE&labelColor=302A35&color=9B6A7A" alt="License">
-  </a>
-  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=flat-square&label=BUILD&labelColor=263B38&color=739B83" alt="Build status">
-  </a>
-  <a href="https://github.com/AssayFlux/Kinetics/stargazers">
-    <img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=flat-square&label=STARS&labelColor=45372D&color=C69B58" alt="Stars">
-  </a>
-  <a href="https://github.com/AssayFlux/Kinetics/forks">
-    <img src="https://img.shields.io/github/forks/AssayFlux/Kinetics?style=flat-square&label=FORKS&labelColor=263C50&color=7399B5" alt="Forks">
-  </a>
-  <a href="https://github.com/AssayFlux/Kinetics/issues">
-    <img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=flat-square&label=ISSUES&labelColor=49344B&color=A98AB8" alt="Issues">
-  </a>
-  <a href="https://github.com/AssayFlux/Kinetics/commits/main">
-    <img src="https://img.shields.io/github/last-commit/AssayFlux/Kinetics?style=flat-square&label=LAST%20COMMIT&labelColor=493B32&color=B88C72" alt="Last commit">
-  </a>
-  <img src="https://img.shields.io/github/languages/top/AssayFlux/Kinetics?style=flat-square&label=TOP%20LANGUAGE&labelColor=293D3D&color=78AFA5" alt="Top language">
+  <img
+    src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=17&pause=1800&color=D4AF37&center=true&vCenter=true&width=950&lines=INVITING+RESEARCHERS%2C+SCIENTISTS+AND+INSTITUTIONS;LET+US+ADVANCE+SCIENTIFIC+DISCOVERY+TOGETHER;BUILT+FOR+RIGOROUS+RESEARCH+AND+REPRODUCIBLE+WORKFLOWS;COLLABORATION+BEGINS+WITH+QUESTIONS+AND+GROWS+THROUGH+EVIDENCE;AUTHORED+BY+MD+SAFARUJJAMAN+%7C+ASSAYFLUX+SCIENTIFIC+SYSTEMS"
+    alt="Kinetics research collaboration invitation — Author Md Safarujjaman"
+  />
 </p>
 
 
+<!-- ═══════════════ REPOSITORY STATUS ═══════════════ -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=WE+ARE+WELCOMING+RESEARCHERS+AND+ORGANIZATIONS" alt="Kinetics tagline">
+  <a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=flat-square&label=LICENSE&labelColor=302A35&color=9B6A7A">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=flat-square&label=CI&labelColor=263B38&color=739B83">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/stargazers">
+    <img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=flat-square&label=STARS&labelColor=45372D&color=C69B58">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/forks">
+    <img src="https://img.shields.io/github/forks/AssayFlux/Kinetics?style=flat-square&label=FORKS&labelColor=263C50&color=7399B5">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/issues">
+    <img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=flat-square&label=ISSUES&labelColor=49344B&color=A98AB8">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/pulls">
+    <img src="https://img.shields.io/github/issues-pr/AssayFlux/Kinetics?style=flat-square&label=PULL%20REQUESTS&labelColor=354A48&color=78AFA5">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/commits/main">
+    <img src="https://img.shields.io/github/last-commit/AssayFlux/Kinetics?style=flat-square&label=LAST%20COMMIT&labelColor=493B32&color=B88C72">
+  </a>
+  <img src="https://img.shields.io/github/languages/top/AssayFlux/Kinetics?style=flat-square&label=TOP%20LANGUAGE&labelColor=293D3D&color=78AFA5">
+</p>
+
+<!-- ═══════════════ CORE TECHNOLOGY ═══════════════ -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-416B83?style=flat-square&logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/Kotlin-Android-7657A6?style=flat-square&logo=kotlin&logoColor=white">
+  <img src="https://img.shields.io/badge/C%2B%2B-17-557A95?style=flat-square&logo=cplusplus&logoColor=white">
+  <img src="https://img.shields.io/badge/Rust-Native-B47752?style=flat-square&logo=rust&logoColor=white">
+  <img src="https://img.shields.io/badge/JavaScript-Web-C39B43?style=flat-square&logo=javascript&logoColor=white">
+  <img src="https://img.shields.io/badge/Node.js-22-548B65?style=flat-square&logo=nodedotjs&logoColor=white">
+  <img src="https://img.shields.io/badge/SQLite-Database-587D9C?style=flat-square&logo=sqlite&logoColor=white">
+</p>
+
+<!-- ═══════════════ ANDROID & BUILD ECOSYSTEM ═══════════════ -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Android-Native-578A69?style=flat-square&logo=android&logoColor=white">
+  <img src="https://img.shields.io/badge/Jetpack_Compose-UI-6E75A6?style=flat-square&logo=jetpackcompose&logoColor=white">
+  <img src="https://img.shields.io/badge/Gradle-Build-477C75?style=flat-square&logo=gradle&logoColor=white">
+  <img src="https://img.shields.io/badge/Android_NDK-C%2B%2B-658B6C?style=flat-square&logo=android&logoColor=white">
+  <img src="https://img.shields.io/badge/JNI-Interop-8A765C?style=flat-square">
+  <img src="https://img.shields.io/badge/Chaquopy-Python_Android-527D73?style=flat-square">
+</p>
+
+<!-- ═══════════════ SCIENTIFIC ECOSYSTEM ═══════════════ -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Scientific_Computing-Research-456D78?style=flat-square">
+  <img src="https://img.shields.io/badge/Sequence_Analysis-Foundation-668A78?style=flat-square">
+  <img src="https://img.shields.io/badge/Structural_Biology-Research-657B9B?style=flat-square">
+  <img src="https://img.shields.io/badge/Chemistry-RDKit-527C85?style=flat-square">
+  <img src="https://img.shields.io/badge/Molecular_Docking-AutoDock_Vina-92704D?style=flat-square">
+  <img src="https://img.shields.io/badge/Molecular_Dynamics-OpenMM-716B9A?style=flat-square">
+  <img src="https://img.shields.io/badge/Kinetics-Research-956D7D?style=flat-square">
+</p>
+
+<!-- ═══════════════ QUALITY & REPRODUCIBILITY ═══════════════ -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Testing-pytest-658B79?style=flat-square&logo=pytest&logoColor=white">
+  <img src="https://img.shields.io/badge/Linting-Ruff-C18A48?style=flat-square">
+  <img src="https://img.shields.io/badge/Type_Checking-mypy-647E9B?style=flat-square">
+  <img src="https://img.shields.io/badge/JSON_Schema-Contracts-8B789C?style=flat-square">
+  <img src="https://img.shields.io/badge/SBOM-Generation-527D75?style=flat-square">
+  <img src="https://img.shields.io/badge/Provenance-Traceability-9B7955?style=flat-square">
+  <img src="https://img.shields.io/badge/Reproducibility-Workflows-657F70?style=flat-square">
+  <img src="https://img.shields.io/badge/Validation-Evidence-986D78?style=flat-square">
+</p>
+
+<!-- ═══════════════ PROJECT IDENTITY ═══════════════ -->
+<p align="center">
+  <img src="https://img.shields.io/badge/ASSAYFLUX-Scientific_Systems-800020?style=flat-square">
+  <img src="https://img.shields.io/badge/Architecture-Modular-78649A?style=flat-square">
+  <img src="https://img.shields.io/badge/Workflow-Offline_First-527C72?style=flat-square">
+  <img src="https://img.shields.io/badge/Development-Pre--Release-B18B5E?style=flat-square">
+  <img src="https://img.shields.io/badge/Intended_Use-Research_Only-8B7058?style=flat-square">
+</p>
+
+
+
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•+•" alt="Kinetics tagline">
 </p>
 
 

@@ -65,4 +65,4 @@ An item remains OPEN when evidence is absent, stale, unreviewed, ambiguous or no
 - External evidence must record the issuing organisation/person's qualified role and the exact scope/date; do not upload confidential material without permission.
 - Re-open a control when its dependency, intended use, jurisdiction, release artifact or material implementation changes.
 
-**Initial inventory result:** G0 register drafted. G0 is not accepted until owner review, accountable role assignment and evidence links are completed. Track P's exact-head Android build remains pending; strict R → S → I → P → G execution is preserved.
+**Initial inventory result:** G0 register drafted. G0 is not accepted until owner review, accountable role assignment and evidence links are completed. Track P's exact-head Android build remains pending; strict R → S → I → P → G → U execution is preserved under D-023; U follows G.

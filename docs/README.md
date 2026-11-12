@@ -31,6 +31,7 @@ This is the navigation index for the Kinetics repository. Use the living decisio
 | S — Structure, sequence and discovery | [S roadmap](track-s/discovery-and-design-roadmap.md), [S1 viewer](track-s/structure-viewer-contract.md), [S2 quality metrics](track-s/structure-quality-metrics.md), [S4 prediction boundary](track-s/structure-prediction-boundary.md), [S6 unknown-sequence evidence](track-s/unknown-sequence-evidence-contract.md), [S7 contig QC](track-s/genome-contig-qc.md) |
 | I — In-silico laboratory | [Software implementation/integration audit (closed)](track-i-audit-2026-11-11.md), [Research boundaries](track-i/research-boundaries.md), [engine and data-source evaluation](track-i/engine-evaluation.md) |
 | P — Precision medicine preparation | [P0 evidence packet](track-p/p0-evidence-packet.md), [P0 control drafts](track-p/p0-controls-draft.md), [implementation plan](track-p/implementation-plan.md), [Public-data-only boundary](track-p/public-data-only-preparation.md), [public dataset catalog](track-p/public-dataset-catalog.md) |
+| G — Governance and assurance | [Track G implementation plan](track-g/implementation-plan.md) |
 | UI / design system | [UI/UX specification](android-ui-ux-spec.md), [UI document set](ui/ui-spec.md), [root UI spec](../KINETICS_UI_SPEC.md) |
 
 ## 4. Validation, security and release

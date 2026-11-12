@@ -14,16 +14,28 @@
   />
 </p>
 
-
 <p align="center">
-  <a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=for-the-badge&label=LICENSE&color=800020" alt="License"></a>
-  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=for-the-badge&label=BUILD" alt="Build status"></a>
-  <a href="https://github.com/AssayFlux/Kinetics/stargazers"><img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=for-the-badge&label=STARS&color=D4AF37" alt="Stars"></a>
-  <a href="https://github.com/AssayFlux/Kinetics/forks"><img src="https://img.shields.io/github/forks/AssayFlux/Kinetics?style=for-the-badge&label=FORKS&color=0B6E6E" alt="Forks"></a>
-  <a href="https://github.com/AssayFlux/Kinetics/issues"><img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=for-the-badge&label=ISSUES&color=1F2A6B" alt="Issues"></a>
-  <a href="https://github.com/AssayFlux/Kinetics/commits/main"><img src="https://img.shields.io/github/last-commit/AssayFlux/Kinetics?style=for-the-badge&label=LAST%20COMMIT&color=800020" alt="Last commit"></a>
-  <img src="https://img.shields.io/github/languages/top/AssayFlux/Kinetics?style=for-the-badge&label=TOP%20LANGUAGE&color=0B6E6E" alt="Top language">
+  <a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=flat-square&label=LICENSE&labelColor=302A35&color=9B6A7A" alt="License">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=flat-square&label=BUILD&labelColor=263B38&color=739B83" alt="Build status">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/stargazers">
+    <img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=flat-square&label=STARS&labelColor=45372D&color=C69B58" alt="Stars">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/forks">
+    <img src="https://img.shields.io/github/forks/AssayFlux/Kinetics?style=flat-square&label=FORKS&labelColor=263C50&color=7399B5" alt="Forks">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/issues">
+    <img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=flat-square&label=ISSUES&labelColor=49344B&color=A98AB8" alt="Issues">
+  </a>
+  <a href="https://github.com/AssayFlux/Kinetics/commits/main">
+    <img src="https://img.shields.io/github/last-commit/AssayFlux/Kinetics?style=flat-square&label=LAST%20COMMIT&labelColor=493B32&color=B88C72" alt="Last commit">
+  </a>
+  <img src="https://img.shields.io/github/languages/top/AssayFlux/Kinetics?style=flat-square&label=TOP%20LANGUAGE&labelColor=293D3D&color=78AFA5" alt="Top language">
 </p>
+
 
 <p align="center">
   <img src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&size=18&pause=1500&color=D4AF37&center=true&vCenter=true&width=780&lines=WE+ARE+WELCOMING+RESEARCHERS+AND+ORGANIZATIONS" alt="Kinetics tagline">

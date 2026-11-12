@@ -128,3 +128,45 @@ def test_accepted_curation_requires_completed_evidenced_second_review():
     record.pop("second_review_evidence_url")
     with pytest.raises(ValidationError):
         check("pgx-curation-record.schema.json", record)
+
+
+
+def test_risk_acceptance_requires_evidence_and_accountable_role():
+    record = {
+        "schema_version": 1,
+        "risk_id": "P-002",
+        "hazard": "synthetic fixture",
+        "initial_severity": "moderate",
+        "initial_likelihood": "unlikely",
+        "control": "bounded parser",
+        "verification_status": "verified",
+        "residual_risk_status": "accepted",
+        "owner_role": "engineering",
+        "patient_data_scope": "prohibited_until_p0_approval",
+    }
+    with pytest.raises(ValidationError):
+        check("p-track-risk-control.schema.json", record)
+    record.update({
+        "risk_acceptance_role": "qualified-owner-review",
+        "risk_accepted_at": "2026-01-02T00:00:00Z",
+        "risk_acceptance_evidence_url": "https://example.invalid/risk-acceptance",
+    })
+    check("p-track-risk-control.schema.json", record)
+
+
+def test_jurisdiction_advice_status_requires_source_evidence():
+    record = {
+        "schema_version": 1,
+        "jurisdiction": "synthetic-jurisdiction",
+        "intended_use_version": "draft-1",
+        "review_status": "advice_received",
+        "reviewer_role": "qualified-reviewer",
+        "review_date": "2026-01-01",
+        "patient_data_authorized": False,
+        "clinical_mode_authorized": False,
+        "product_classification": "undetermined",
+    }
+    with pytest.raises(ValidationError):
+        check("p-track-jurisdiction-review.schema.json", record)
+    record["advice_evidence_url"] = "https://example.invalid/advice"
+    check("p-track-jurisdiction-review.schema.json", record)

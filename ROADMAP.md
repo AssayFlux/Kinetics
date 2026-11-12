@@ -213,7 +213,7 @@ A build may be called tested only when its exact artifact has a recorded success
 
 
 ### Track execution order — D-019 (2026-11-09)
-D-019 supersedes D-009's parallel-track sequencing. Current execution is strictly R → S → I → P → G, with a two-step base-build and audit gate for each track. Do not start S until R's two-step gate is assessed and reported; do not start I until S is assessed, and so on.
+At the time of D-019 (2026-11-09), it superseded D-009's parallel-track sequencing and set the then-current order to R → S → I → P → G, with a two-step base-build and audit gate for each track. D-023 (2026-11-12) later superseded that five-track order and now controls the current R → S → I → P → G → U sequence. This paragraph records D-019's historical effect; it is not the current sequencing instruction.
 
 
 ## R-track evidence refresh — 2026-11-09 (CI #2101)

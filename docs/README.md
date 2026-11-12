@@ -52,7 +52,7 @@ This is the navigation index for the Kinetics repository. Use the living decisio
 
 - [Repository research-readiness audit](research-grade-readiness-audit-2026-11-12.md) inventories the tracked tree, identifies documentation/status drift and sets out a staged, link-safe reorganisation plan.
 - Treat `api/` as versioned API/message and evidence contracts; `schemas/` as reusable domain/data schemas. Keep `data/` source catalogues distinct from `datapacks/` manifests and payloads.
-- `Assets/` is legacy artwork; `assets/` is the canonical direction for current lowercase asset organisation. Do not rename or delete either until every reference and content hash has been audited.
+- `assets/` is the single canonical artwork root. The legacy root-level `Assets/` directory was consolidated on 2026-11-12 after a content-hash/reference audit; original binary blobs were preserved byte-for-byte. Historical decision/session records may still mention the former paths as accurate records of past work.
 
 ## 6. Governance and historical material
 

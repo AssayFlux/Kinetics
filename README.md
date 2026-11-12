@@ -3,62 +3,62 @@
 **LANGUAGE PERCENTAGES ARE INTENTIONALLY NOT FABRICATED; SEE THE SOURCE-STATISTICS TODO BELOW.**
 -->
 
-**<p align="center">**
-**<img src="assets/brand/readme-header.svg" alt="KINETICS — ASSAYFLUX animated colour header" width="100%">**
-**</p>**
+<p align="center">
+  <img src="assets/brand/readme-header.svg" alt="KINETICS — ASSAYFLUX animated colour header" width="100%">
+</p>
 
-**<p align="center">**
-**<img src="assets/brand/organization-logo.gif" alt="ASSAYFLUX ORGANIZATION LOGO" width="200">**
-**</p>**
+<p align="center">
+  <img src="assets/brand/organization-logo.gif" alt="ASSAYFLUX ORGANIZATION LOGO" width="200">
+</p>
 
-**<p align="center">**
-**<img src="assets/brand/rainbow-helix.gif" alt="RAINBOW DNA DOUBLE HELIX" width="480">**
-**</p>**
+<p align="center">
+  <img src="assets/brand/rainbow-helix.gif" alt="RAINBOW DNA DOUBLE HELIX" width="480">
+</p>
 
-**<h1 align="center">KINETICS</h1>**
-**<p align="center">**
-**<strong>EXPLORE BIOLOGY. REPRODUCE THE WORK. KEEP THE EVIDENCE.</strong>**
-**</p>**
-**<p align="center">**
-**<img src="https://readme-typing-svg.demolab.com?font=IBM+Plex+Mono&weight=500&size=16&pause=1200&color=38BDF8&center=true&vCenter=true&width=720&lines=Android-native+%C2%B7+Offline-first;Python+%C2%B7+Kotlin+%C2%B7+Rust+%C2%B7+C%2B%2B;Reproducible+workflows+%C2%B7+Explicit+provenance;Research-only+%C2%B7+Evidence-led" alt="Kinetics project tagline">**
-**</p>**
+<h1 align="center">KINETICS</h1>
+<p align="center">
+  <strong>EXPLORE BIOLOGY. REPRODUCE THE WORK. KEEP THE EVIDENCE.</strong>
+</p>
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=IBM+Plex+Mono&weight=500&size=16&pause=1200&color=38BDF8&center=true&vCenter=true&width=720&lines=Android-native+%C2%B7+Offline-first;Python+%C2%B7+Kotlin+%C2%B7+Rust+%C2%B7+C%2B%2B;Reproducible+workflows+%C2%B7+Explicit+provenance;Research-only+%C2%B7+Evidence-led" alt="Kinetics project tagline">
+</p>
 
-**<p align="center">**
-**<a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=for-the-badge&label=license" alt="Apache 2.0 license"></a>**
-**<img src="https://img.shields.io/badge/version-0.0.0-lightgrey?style=for-the-badge" alt="Pre-release version 0.0.0">**
-**<a href="https://github.com/AssayFlux/Kinetics/stargazers"><img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=for-the-badge" alt="GitHub stars"></a>**
-**<a href="https://github.com/AssayFlux/Kinetics/forks"><img src="https://img.shields.io/github/forks/AssayFlux/Kinetics?style=for-the-badge" alt="GitHub forks"></a>**
-**<a href="https://github.com/AssayFlux/Kinetics/issues"><img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=for-the-badge" alt="Open issues"></a>**
-**<a href="https://github.com/AssayFlux/Kinetics/commits/main"><img src="https://img.shields.io/github/last-commit/AssayFlux/Kinetics?style=for-the-badge" alt="Last commit"></a>**
-**<a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=for-the-badge&label=CI" alt="GitHub Actions CI"></a>**
-**</p>**
+<p align="center">
+  <a href="https://github.com/AssayFlux/Kinetics/blob/main/LICENSE"><img src="https://img.shields.io/github/license/AssayFlux/Kinetics?style=for-the-badge&label=license" alt="Apache 2.0 license"></a>
+  <img src="https://img.shields.io/badge/version-0.0.0-lightgrey?style=for-the-badge" alt="Pre-release version 0.0.0">
+  <a href="https://github.com/AssayFlux/Kinetics/stargazers"><img src="https://img.shields.io/github/stars/AssayFlux/Kinetics?style=for-the-badge" alt="GitHub stars"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/forks"><img src="https://img.shields.io/github/forks/AssayFlux/Kinetics?style=for-the-badge" alt="GitHub forks"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/issues"><img src="https://img.shields.io/github/issues/AssayFlux/Kinetics?style=for-the-badge" alt="Open issues"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/commits/main"><img src="https://img.shields.io/github/last-commit/AssayFlux/Kinetics?style=for-the-badge" alt="Last commit"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/AssayFlux/Kinetics/ci.yml?branch=main&style=for-the-badge&label=CI" alt="GitHub Actions CI"></a>
+</p>
 
-**<p align="center">**
-**<strong>PRE-RELEASE · RESEARCH USE ONLY · NOT CLINICALLY VALIDATED</strong>**
-**</p>**
+<p align="center">
+  <strong>PRE-RELEASE · RESEARCH USE ONLY · NOT CLINICALLY VALIDATED</strong>
+</p>
 
 ---
 
 ## **VISUAL PREVIEW**
 
-**<p align="center">**
-**<strong>APP DASHBOARD AND LOGIN — UI DESIGN REFERENCES</strong>**
-**</p>**
+<p align="center">
+  <strong>APP DASHBOARD AND LOGIN — UI DESIGN REFERENCES</strong>
+</p>
 
-**<table>**
-**<tr>**
-**<td align="center" width="50%">**
-**<img src="assets/design-previews/dashboard-reference.jpg" alt="Kinetics dashboard design reference" width="100%">**
-**<sub>DASHBOARD CONCEPT</sub>**
-**</td>**
-**<td align="center" width="50%">**
-**<img src="assets/design-previews/login-reference.jpg" alt="Kinetics login page design reference" width="100%">**
-**<sub>LOGIN CONCEPT</sub>**
-**</td>**
-**</tr>**
-**</table>**
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="assets/design-previews/dashboard-reference.jpg" alt="Kinetics dashboard design reference" width="100%">
+      <sub>DASHBOARD CONCEPT</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="assets/design-previews/login-reference.jpg" alt="Kinetics login page design reference" width="100%">
+      <sub>LOGIN CONCEPT</sub>
+    </td>
+  </tr>
+</table>
 
-**<p align="center"><em>THESE ARE EXISTING DESIGN-PREVIEW ASSETS, NOT VERIFIED CAPTURES OF A RUNNING OR PRODUCTION-READY APP. A REAL IN-APP WALKTHROUGH CAN BE ADDED AFTER DEVICE CAPTURE.</em></p>**
+<p align="center"><em>THESE ARE EXISTING DESIGN-PREVIEW ASSETS, NOT VERIFIED CAPTURES OF A RUNNING OR PRODUCTION-READY APP. A REAL IN-APP WALKTHROUGH CAN BE ADDED AFTER DEVICE CAPTURE.</em></p>
 
 ## **ABOUT KINETICS**
 
@@ -74,8 +74,8 @@
 - **EVIDENCE, NOT JUST OUTPUT: VERSIONED SCHEMAS, EXPLICIT UNITS, PROVENANCE METADATA, REFERENCE COMPARISONS AND CONSERVATIVE FAILURE BOUNDARIES.**
 - **A VISIBLE PATH TO TRUST: CAPABILITY AND GOVERNANCE REGISTERS DISTINGUISH IMPLEMENTATION FROM VALIDATION, LICENSING, DEVICE SUPPORT AND EXTERNAL APPROVAL.**
 
-> **[!IMPORTANT]**
-> **RESEARCH-ONLY BOUNDARY: KINETICS IS NOT A VALIDATED MEDICAL DEVICE OR CLINICAL DECISION-SUPPORT SYSTEM. P0 REMAINS BLOCKED / NOT APPROVED. PATIENT/CLINICAL DATA, IDENTIFIABLE HUMAN-SUBJECT ACTIVITY, INDIVIDUAL CLINICAL INTERPRETATION, DIAGNOSIS, TREATMENT OR DOSING RECOMMENDATIONS, AND CLINICAL MODE ARE NOT AUTHORIZED. DO NOT USE OUTPUTS FOR PATIENT CARE.**
+> [!IMPORTANT]
+> RESEARCH-ONLY BOUNDARY: KINETICS IS NOT A VALIDATED MEDICAL DEVICE OR CLINICAL DECISION-SUPPORT SYSTEM. P0 REMAINS BLOCKED / NOT APPROVED. PATIENT/CLINICAL DATA, IDENTIFIABLE HUMAN-SUBJECT ACTIVITY, INDIVIDUAL CLINICAL INTERPRETATION, DIAGNOSIS, TREATMENT OR DOSING RECOMMENDATIONS, AND CLINICAL MODE ARE NOT AUTHORIZED. DO NOT USE OUTPUTS FOR PATIENT CARE.
 
 ## **WHAT EXISTS IN THE CODEBASE**
 
@@ -102,54 +102,54 @@
 
 **THE PERCENTAGES BELOW ARE THE REPOSITORY'S DOCUMENTED TRACK ENGINEERING-GATE STATUS, NOT A PERCENTAGE OF SCIENTIFIC VALIDITY, CLINICAL READINESS, RELEASE READINESS OR REGULATORY COMPLIANCE.**
 
-**<table>**
-**<thead>**
-**<tr><th align="left">TRACK</th><th align="left">SCOPE</th><th align="left">ENGINEERING GATE</th><th align="left">EVIDENCE STILL OPEN</th></tr>**
-**</thead>**
-**<tbody>**
-**<tr>**
-**<td><strong>R</strong></td><td>RESEARCH PLATFORM, ANDROID FOUNDATION, SCIENTIFIC PRIMITIVES</td>**
-**<td><img src="https://img.shields.io/badge/100%25-software%20audit%20closed-238636?style=flat" alt="R software audit closed"></td>**
-**<td>PHYSICAL-DEVICE, INDEPENDENT SCIENTIFIC, LICENSING AND RELEASE EVIDENCE</td>**
-**</tr>**
-**<tr>**
-**<td><strong>S</strong></td><td>STRUCTURE, SEQUENCE DISCOVERY, ANNOTATION AND PROTEIN INTELLIGENCE</td>**
-**<td><img src="https://img.shields.io/badge/100%25-software%20scope%20closed-238636?style=flat" alt="S software scope closed"></td>**
-**<td>INDEPENDENT REFERENCES, APPROVED RESOURCES/MODELS AND DEVICE EVIDENCE</td>**
-**</tr>**
-**<tr>**
-**<td><strong>I</strong></td><td>IN-SILICO CHEMISTRY, DOCKING, MD, ADMET AND PK/PD UTILITIES</td>**
-**<td><img src="https://img.shields.io/badge/100%25-software%20audit%20closed-238636?style=flat" alt="I software audit closed"></td>**
-**<td>REAL SCIENTIFIC BENCHMARKS, DATA/MODEL LICENCES, SECURE NODE AND DEVICE TESTS</td>**
-**</tr>**
-**<tr>**
-**<td><strong>P</strong></td><td>PGX-FIRST PRECISION-MEDICINE RESEARCH PREPARATION</td>**
-**<td><img src="https://img.shields.io/badge/in%20progress-not%20accepted-yellow?style=flat" alt="P in progress"></td>**
-**<td>P0 EXTERNAL DETERMINATIONS, INDEPENDENT EVIDENCE AND FORMAL OWNER GATE; P0 IS NOT APPROVED</td>**
-**</tr>**
-**<tr>**
-**<td><strong>G</strong></td><td>SECURITY, SUPPLY CHAIN, QUALITY, PRIVACY AND SCIENTIFIC/PUBLICATION INTEGRITY</td>**
-**<td><img src="https://img.shields.io/badge/0%25%20accepted-gate%20open-red?style=flat" alt="G gate open"></td>**
-**<td>EXACT-HEAD AUDIT, INDEPENDENT REVIEWS, ROLE APPOINTMENTS AND OPERATING EXERCISES</td>**
-**</tr>**
-**<tr>**
-**<td><strong>U</strong></td><td>DESIGN SYSTEM, ANDROID UX AND RESEARCH WORKFLOWS</td>**
-**<td><img src="https://img.shields.io/badge/0%25%20accepted-gate%20not%20started-red?style=flat" alt="U gate not started"></td>**
-**<td>FURTHER SEQUENTIAL IMPLEMENTATION FOLLOWS G; PRIOR U0–U3 WORK REMAINS PARTIAL BASELINE</td>**
-**</tr>**
-**</tbody>**
-**</table>**
+<table>
+  <thead>
+    <tr><th align="left">TRACK</th><th align="left">SCOPE</th><th align="left">ENGINEERING GATE</th><th align="left">EVIDENCE STILL OPEN</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>R</strong></td><td>RESEARCH PLATFORM, ANDROID FOUNDATION, SCIENTIFIC PRIMITIVES</td>
+      <td><img src="https://img.shields.io/badge/100%25-software%20audit%20closed-238636?style=flat" alt="R software audit closed"></td>
+      <td>PHYSICAL-DEVICE, INDEPENDENT SCIENTIFIC, LICENSING AND RELEASE EVIDENCE</td>
+    </tr>
+    <tr>
+      <td><strong>S</strong></td><td>STRUCTURE, SEQUENCE DISCOVERY, ANNOTATION AND PROTEIN INTELLIGENCE</td>
+      <td><img src="https://img.shields.io/badge/100%25-software%20scope%20closed-238636?style=flat" alt="S software scope closed"></td>
+      <td>INDEPENDENT REFERENCES, APPROVED RESOURCES/MODELS AND DEVICE EVIDENCE</td>
+    </tr>
+    <tr>
+      <td><strong>I</strong></td><td>IN-SILICO CHEMISTRY, DOCKING, MD, ADMET AND PK/PD UTILITIES</td>
+      <td><img src="https://img.shields.io/badge/100%25-software%20audit%20closed-238636?style=flat" alt="I software audit closed"></td>
+      <td>REAL SCIENTIFIC BENCHMARKS, DATA/MODEL LICENCES, SECURE NODE AND DEVICE TESTS</td>
+    </tr>
+    <tr>
+      <td><strong>P</strong></td><td>PGX-FIRST PRECISION-MEDICINE RESEARCH PREPARATION</td>
+      <td><img src="https://img.shields.io/badge/in%20progress-not%20accepted-yellow?style=flat" alt="P in progress"></td>
+      <td>P0 EXTERNAL DETERMINATIONS, INDEPENDENT EVIDENCE AND FORMAL OWNER GATE; P0 IS NOT APPROVED</td>
+    </tr>
+    <tr>
+      <td><strong>G</strong></td><td>SECURITY, SUPPLY CHAIN, QUALITY, PRIVACY AND SCIENTIFIC/PUBLICATION INTEGRITY</td>
+      <td><img src="https://img.shields.io/badge/0%25%20accepted-gate%20open-red?style=flat" alt="G gate open"></td>
+      <td>EXACT-HEAD AUDIT, INDEPENDENT REVIEWS, ROLE APPOINTMENTS AND OPERATING EXERCISES</td>
+    </tr>
+    <tr>
+      <td><strong>U</strong></td><td>DESIGN SYSTEM, ANDROID UX AND RESEARCH WORKFLOWS</td>
+      <td><img src="https://img.shields.io/badge/0%25%20accepted-gate%20not%20started-red?style=flat" alt="U gate not started"></td>
+      <td>FURTHER SEQUENTIAL IMPLEMENTATION FOLLOWS G; PRIOR U0–U3 WORK REMAINS PARTIAL BASELINE</td>
+    </tr>
+  </tbody>
+</table>
 
-**<sub>ESTIMATE METHOD: VALUES REPRODUCE THE TRACK-LEVEL ENGINEERING-GATE STATEMENTS IN THE CURRENT PROJECT STATUS DOCUMENTATION AND D-023. “100%” MEANS THAT TRACK'S DOCUMENTED SOFTWARE IMPLEMENTATION/AUDIT GATE WAS CLOSED; “0% ACCEPTED” MEANS THE FORMAL TRACK EXIT GATE HAS NOT BEEN ACCEPTED, NOT THAT NO SOURCE EXISTS. P IS DELIBERATELY NOT ASSIGNED A MADE-UP PERCENTAGE.</sub>**
+<sub>ESTIMATE METHOD: VALUES REPRODUCE THE TRACK-LEVEL ENGINEERING-GATE STATEMENTS IN THE CURRENT PROJECT STATUS DOCUMENTATION AND D-023. “100%” MEANS THAT TRACK'S DOCUMENTED SOFTWARE IMPLEMENTATION/AUDIT GATE WAS CLOSED; “0% ACCEPTED” MEANS THE FORMAL TRACK EXIT GATE HAS NOT BEEN ACCEPTED, NOT THAT NO SOURCE EXISTS. P IS DELIBERATELY NOT ASSIGNED A MADE-UP PERCENTAGE.</sub>
 
 ## **CURRENT PROJECT STATUS**
 
-**<p align="center">**
-**<a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/Build-GitHub%20Actions%20configured-238636?style=for-the-badge" alt="Build configured"></a>**
-**<a href="https://github.com/AssayFlux/Kinetics/tree/main/tests"><img src="https://img.shields.io/badge/Tests-62%20test%20modules-2563EB?style=for-the-badge" alt="62 test modules"></a>**
-**<img src="https://img.shields.io/badge/Release-pre--release-lightgrey?style=for-the-badge" alt="Pre-release">**
-**<img src="https://img.shields.io/badge/Clinical%20use-not%20approved-red?style=for-the-badge" alt="Clinical use not approved">**
-**</p>**
+<p align="center">
+  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://img.shields.io/badge/Build-GitHub%20Actions%20configured-238636?style=for-the-badge" alt="Build configured"></a>
+  <a href="https://github.com/AssayFlux/Kinetics/tree/main/tests"><img src="https://img.shields.io/badge/Tests-62%20test%20modules-2563EB?style=for-the-badge" alt="62 test modules"></a>
+  <img src="https://img.shields.io/badge/Release-pre--release-lightgrey?style=for-the-badge" alt="Pre-release">
+  <img src="https://img.shields.io/badge/Clinical%20use-not%20approved-red?style=for-the-badge" alt="Clinical use not approved">
+</p>
 
 - **BUILD / CI: GITHUB ACTIONS VALIDATION IS CONFIGURED; USE THE LIVE WORKFLOW BADGE ABOVE FOR CURRENT STATUS.**
 - **TESTS: 62 PYTHON TEST MODULES ARE PRESENT. THE CI WORKFLOW ALSO DEFINES ANDROID JVM TESTS, SCIENTIFIC REFERENCE COMPARISONS, NATIVE-ENGINE SMOKE CHECKS AND NODE WORKER SECURITY TESTS.**
@@ -160,9 +160,9 @@
 
 ## **TECHNOLOGY**
 
-**<p align="center">**
-**<a href="https://skillicons.dev/icons?i=python,kotlin,cpp,rust,js,html,css,bash,cmake,gradle,githubactions"><img src="https://skillicons.dev/icons?i=python,kotlin,cpp,rust,js,html,css,bash,cmake,gradle,githubactions" alt="Python, Kotlin, C++, Rust, JavaScript, HTML, CSS, Bash, CMake, Gradle and GitHub Actions"></a>**
-**</p>**
+<p align="center">
+  <a href="https://skillicons.dev/icons?i=python,kotlin,cpp,rust,js,html,css,bash,cmake,gradle,githubactions"><img src="https://skillicons.dev/icons?i=python,kotlin,cpp,rust,js,html,css,bash,cmake,gradle,githubactions" alt="Python, Kotlin, C++, Rust, JavaScript, HTML, CSS, Bash, CMake, Gradle and GitHub Actions"></a>
+</p>
 
 | **LAYER** | **TECHNOLOGIES IN REPOSITORY** |
 |---|---|
@@ -176,8 +176,8 @@
 
 **THE ROOT PACKAGE METADATA IS IN PYPROJECT.TOML. OPTIONAL EXTRAS ARE DECLARED THERE; VALIDATION-ONLY PINNED DEPENDENCY SETS LIVE UNDER `VALIDATION/`. THIRD-PARTY ENGINES, MODELS, DATASETS, FONTS AND ARTWORK MAY CARRY SEPARATE TERMS.**
 
-**<details>**
-**<summary><strong>SOURCE-LANGUAGE MIX AND REPOSITORY STATISTICS</strong></summary>**
+<details>
+  <summary><strong>SOURCE-LANGUAGE MIX AND REPOSITORY STATISTICS</strong></summary>
 
   - **A DATED REPOSITORY AUDIT RECORDS 356 TRACKED FILES ACROSS 55 NON-ROOT DIRECTORIES AT ITS AUDITED REVISION.**
   - **THE CURRENT `TESTS/` DIRECTORY CONTAINS 62 TEST MODULES.**
@@ -185,14 +185,14 @@
   - **TODO — EXACT LANGUAGE LINE-COUNT PERCENTAGES: PUBLISH A REPRODUCIBLE SOURCE-ONLY LOC REPORT (FOR EXAMPLE, GITHUB LINGUIST OR CLOC OUTPUT), EXCLUDING GENERATED ASSETS, LOCKFILES, VENDORED MATERIAL AND DOCUMENTATION. PERCENTAGES ARE INTENTIONALLY OMITTED RATHER THAN GUESSED.**
   - **NO ROOT `PACKAGE.JSON`, `REQUIREMENTS.TXT`, `GO.MOD`, `CARGO.TOML`, `.ENV.EXAMPLE`, DOCKERFILE OR COMPOSE FILE IS PRESENT. NODE PACKAGE METADATA IS ISOLATED IN `REMOTE-NODE/PACKAGE.JSON`; RUST METADATA IS UNDER `ANDROID/NATIVE-RUST/CARGO.TOML`.**
   - **THE OPTIONAL NODE WORKER DOCUMENTS TWO HTTP ROUTES: `GET /HEALTH` AND `POST /V1/DOCKING`.**
-**</details>**
+</details>
 
 ## **QUICK START**
 
 ### **1. PYTHON DEVELOPMENT ENVIRONMENT**
 
-**<details>**
-**<summary><strong>INSTALL THE DEVELOPMENT DEPENDENCIES</strong></summary>**
+<details>
+  <summary><strong>INSTALL THE DEVELOPMENT DEPENDENCIES</strong></summary>
 
 **PYTHON 3.10 OR NEWER IS DECLARED BY THE PACKAGE METADATA. THE CI WORKFLOW CURRENTLY USES PYTHON 3.11.**
 
@@ -218,12 +218,12 @@
   ```
 
 **THESE EXTRAS INSTALL PINNED AUTODOCK VINA OR OPENMM DEPENDENCIES; THEY DO NOT SUPPLY RECEPTOR/LIGAND PREPARATION, FORCE FIELDS, DATASETS OR INDEPENDENT SCIENTIFIC VALIDATION.**
-**</details>**
+</details>
 
 ### **2. RUN TESTS AND REPOSITORY CHECKS**
 
-**<details>**
-**<summary><strong>RUN THE PYTHON TEST SUITE</strong></summary>**
+<details>
+  <summary><strong>RUN THE PYTHON TEST SUITE</strong></summary>
 
   ```BASH
   PYTEST
@@ -245,12 +245,12 @@
   ```
 
 **CI RUNS ADDITIONAL CATALOGUE, GENERATED-FILE, SCIENTIFIC-REFERENCE, ENGINE-SMOKE AND ANDROID CHECKS. SEE THE WORKFLOW DEFINITION.**
-**</details>**
+</details>
 
 ### **3. BUILD THE ANDROID DEBUG ARTIFACTS**
 
-**<details>**
-**<summary><strong>LINUX X86_64 / X86_64 WSL2 BUILD PREREQUISITES</strong></summary>**
+<details>
+  <summary><strong>LINUX X86_64 / X86_64 WSL2 BUILD PREREQUISITES</strong></summary>
 
 **THE CHECKED-IN BUILD SCRIPT REQUIRES JDK 17, PYTHON 3.11.18, RUST/CARGO AND RUSTUP, ANDROID SDK PLATFORM 36, ANDROID NDK 28.2.13676358, BUILD TOOLS 36.0.0, CMAKE 3.22.1, `PATCHELF`, `PATCH`, GIT, CURL AND STANDARD SHELL UTILITIES. THE SCRIPT DOWNLOADS A CHECKSUM-PINNED GRADLE 8.13 DISTRIBUTION.**
 
@@ -264,12 +264,12 @@
 **OUTPUTS ARE A DEBUG APK AND DEBUG AAB UNDER `ANDROID/APP/BUILD/OUTPUTS/`. THE SCRIPT EXPLICITLY DOES NOT RUN AN EMULATOR OR PHYSICAL-DEVICE TEST. TERMUX/ANDROID ITSELF IS NOT A SUPPORTED BUILD HOST FOR THIS PINNED TOOLCHAIN.**
 
 **SEE LOCAL ANDROID BUILD NOTES.**
-**</details>**
+</details>
 
 ### **4. OPTIONAL PRIVATE RESEARCH NODE**
 
-**<details>**
-**<summary><strong>RUN THE DEPENDENCY-FREE NODE 22 WORKER TESTS</strong></summary>**
+<details>
+  <summary><strong>RUN THE DEPENDENCY-FREE NODE 22 WORKER TESTS</strong></summary>
 
 **THE WORKER IS DISABLED FOR DOCKING BY DEFAULT AND IS NOT A PRODUCTION DEPLOYMENT.**
 
@@ -279,7 +279,7 @@
   ```
 
 **FOR ITS INSTALL/RUN PROCEDURE, REQUIRED ENVIRONMENT VARIABLES, TLS BOUNDARY AND SECURITY LIMITATIONS, FOLLOW REMOTE-NODE/README.MD. DO NOT COMMIT TOKENS, CERTIFICATES OR PRIVATE KEYS.**
-**</details>**
+</details>
 
 ### **ENVIRONMENT CONFIGURATION**
 
@@ -363,8 +363,8 @@ KINETICS/
 
 ---
 
-**<p align="center">**
-**<img src="assets/brand/owner-signature.svg" alt="MD SAFARUJJAMAN — PROJECT OWNER SIGNATURE OVER KINETICS BACKGROUND" width="100%">**
-**<br>**
-**<sub><strong>BUILD CAREFULLY. MEASURE HONESTLY. SHARE REPRODUCIBLY.</strong></sub>**
-**</p>**
+<p align="center">
+  <img src="assets/brand/owner-signature.svg" alt="MD SAFARUJJAMAN — PROJECT OWNER SIGNATURE OVER KINETICS BACKGROUND" width="100%">
+  <br>
+  <sub><strong>BUILD CAREFULLY. MEASURE HONESTLY. SHARE REPRODUCIBLY.</strong></sub>
+</p>

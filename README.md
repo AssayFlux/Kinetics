@@ -1,9 +1,8 @@
 <!-- KINETICS · ASSAYFLUX SCIENTIFIC SYSTEMS -->
 
-<p align="center">
-  <table>
-    <tr>
-      <td align="center" width="33%">
+<table>
+  <tr>
+    <td align="center" width="33%">
         <img src="Assets/Organization%20Logo%201%E2%98%851.gif" alt="AssayFlux animated organization logo" height="104">
       </td>
       <td align="center" width="34%">
@@ -12,9 +11,8 @@
       <td align="center" width="33%">
         <img src="Assets/DNA%20Rainbow%20Helix.gif" alt="Animated rainbow DNA double helix" height="104">
       </td>
-    </tr>
-  </table>
-</p>
+  </tr>
+</table>
 
 <h1 align="center">KINETICS</h1>
 <p align="center">

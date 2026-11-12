@@ -26,7 +26,10 @@ class PharmVarVariant:
     def __post_init__(self) -> None:
         if not self.reference_accession.strip():
             raise ValueError("PharmVar variant requires a reference accession")
-        if not isinstance(self.start, int) or not isinstance(self.stop, int):
+        if (
+            isinstance(self.start, bool) or not isinstance(self.start, int)
+            or isinstance(self.stop, bool) or not isinstance(self.stop, int)
+        ):
             raise ValueError("PharmVar variant coordinates must be integers")
         if self.start < 1 or self.stop < self.start:
             raise ValueError("PharmVar variant coordinates must be positive and ordered")

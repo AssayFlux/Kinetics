@@ -70,30 +70,39 @@ def parse_pharmvar_tsv(
     document: str | bytes, *, source_release: str, source_url: str,
     source_sha256: str, license_id: str,
     expected_release: str,
+    max_input_bytes: int = 10 * 1024 * 1024,
+    max_rows: int = 100_000,
 ) -> list[PharmVarAlleleDefinition]:
-    """Parse the documented nine-column PharmVar TSV and verify the source checksum."""
+    """Parse a bounded, release-pinned PharmVar TSV and verify its exact-byte checksum."""
     if not source_release or source_release != expected_release:
         raise ValueError("PharmVar release does not match the pinned expected release")
     if not source_url.startswith("https://") or not license_id.strip():
         raise ValueError("PharmVar source HTTPS URL and license identifier are mandatory")
     if not re.fullmatch(r"[a-fA-F0-9]{64}", source_sha256):
         raise ValueError("PharmVar source SHA-256 must be 64 hexadecimal characters")
-    raw_bytes = document if isinstance(document, bytes) else document.encode("utf-8")
+    for name, limit in (("max_input_bytes", max_input_bytes), ("max_rows", max_rows)):
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            raise ValueError(f"{name} must be a positive integer")
+    if isinstance(document, bytes):
+        raw_bytes = document
+    elif isinstance(document, str):
+        raw_bytes = document.encode("utf-8")
+    else:
+        raise TypeError("PharmVar TSV document must be text or bytes")
+    if len(raw_bytes) > max_input_bytes:
+        raise ValueError("PharmVar TSV exceeds configured max_input_bytes")
     actual_hash = hashlib.sha256(raw_bytes).hexdigest()
     if actual_hash.lower() != source_sha256.lower():
         raise ValueError("PharmVar TSV SHA-256 does not match the pinned source checksum")
     text = raw_bytes.decode("utf-8-sig", errors="strict")
 
-    lines = [line for line in text.splitlines() if line.strip() and not line.lstrip().startswith("#")]
-    if len(lines) < 2:
-        raise ValueError("PharmVar TSV must contain a header and at least one data row")
-    reader = csv.DictReader(io.StringIO("\n".join(lines)), delimiter="\t")
+    source_lines = (
+        line for line in io.StringIO(text)
+        if line.strip() and not line.lstrip().startswith("#")
+    )
+    reader = csv.DictReader(source_lines, delimiter="\\t")
     if reader.fieldnames is None:
         raise ValueError("PharmVar TSV header is missing")
-
-    def normalize(value: str) -> str:
-        return "".join(character for character in value.casefold() if character.isalnum())
-
     normalized_headers = [normalize(name) for name in reader.fieldnames]
     if any(not name for name in normalized_headers):
         raise ValueError("PharmVar TSV header contains an empty column name")
@@ -123,7 +132,11 @@ def parse_pharmvar_tsv(
 
     grouped: dict[tuple[str, str, str], list[PharmVarVariant]] = {}
     reference_groups: set[tuple[str, str, str]] = set()
+    row_count = 0
     for line_number, row in enumerate(reader, 2):
+        row_count += 1
+        if row_count > max_rows:
+            raise ValueError("PharmVar TSV exceeds configured max_rows")
         if None in row or any(row.get(column) is None for column in reader.fieldnames):
             raise ValueError(f"PharmVar TSV line {line_number}: row must contain exactly nine fields")
         gene = (row.get(selected["gene"]) or "").strip()

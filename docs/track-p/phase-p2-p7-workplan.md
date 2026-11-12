@@ -46,3 +46,13 @@ Schemas, parsers, synthetic tests and green CI close software verification only.
 - Android arm64 debug APK 70,389,802 bytes (SHA-256 `4cd8ce2e1f5e6874e39d589e853fdb801c9322c56461a19703653d031f5f9fb5`); AAB 40,260,451 bytes (SHA-256 `90ce8bbfac2e6a17faf385bcffcee1ddcc179bde1ecc625ef93a5b25ff66bdc1`). 16 KB package alignment and JVM tests passed; no emulator/physical-device runtime.
 - Host reference comparisons, OpenMM, Vina, RDKit descriptor/ADMET utility smoke checks, SPDX inventory and Node worker security tests passed. Smoke checks are not biological/clinical validation.
 - This verifies the committed software/tests only. P0 is NOT APPROVED; independent P1 reference/source/security/device evidence and P2–P7 operational/external review gates remain open.
+
+
+## 2026-11-12 — bounded PGx parser hardening (verification pending)
+
+- P2 audit identified that the provenance-aware JSON allele-definition parser and PharmVar TSV adapter accepted caller-supplied content without explicit byte/record ceilings.
+- Added fail-closed positive-integer limits: PGx JSON packs default to 2 MiB, 10,000 definitions and 1,000 variants per definition; PharmVar TSV defaults to 10 MiB and 100,000 data rows. Non-text inputs and invalid limit values are rejected.
+- Added synthetic negative tests for byte, definition, variant and row limits, plus invalid input types.
+- These changes reduce parser resource-exhaustion exposure; they do not establish source licensing, biological correctness, comprehensive gene coverage or clinical interpretation.
+- Latest code/test commits: `30c55ca47fa633a020f3c6fbc9bc3b204b85c3fd` (PharmVar) and preceding PGx commits `bbaa01f16f02fb3aa8dccaab2c3474189d7ae74b`, `76f76dde2eb923733318384e65bf6a8f2fe808de`.
+- Exact-head CI for the latest main revision has not yet been observed; tests, Ruff, strict mypy and all nine workflow jobs remain pending. Do not count this increment as verified until the exact-head workflow passes.

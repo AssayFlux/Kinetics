@@ -1,150 +1,144 @@
-# Kinetics
-
 <p align="center">
-  <strong>Offline-first scientific research workbench</strong><br/>
-  <em>Android-native · Reproducible · Provenance-aware · Research-only</em>
+  <img src="assets/brand/organization-logo.gif" alt="AssayFlux animated organization logo" width="190">
+  &nbsp;&nbsp;&nbsp;
+  <img src="assets/brand/kinetics-logo.gif" alt="Kinetics animated logo" width="170">
 </p>
 
-Kinetics is an offline-first, modular platform for computational biology and in-silico research. Engineering tracks execute in the owner-approved order **R → S → I → P → G → U** (D-023), with implementation, automated regression, independent scientific validation, device verification and release acceptance recorded separately. The project remains under active development; implementation progress is not scientific validation or release readiness.
+<h1 align="center">Kinetics</h1>
+<p align="center">
+  <strong>Offline-first scientific research workbench</strong><br>
+  Android-native · Reproducible · Provenance-aware · Research-only
+</p>
 
-> **Current release state:** Pre-release development. Kinetics is not yet a validated scientific application or a production release. Clinical and patient-data workflows are disabled.
+<p align="center">
+  <a href="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml"><img src="https://github.com/AssayFlux/Kinetics/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <img src="https://img.shields.io/badge/platform-Android%20%7C%20Linux-3B6B68" alt="Platform">
+  <img src="https://img.shields.io/badge/mode-Research%20only-7B1E34" alt="Research only">
+  <img src="https://img.shields.io/badge/license-Apache--2.0-D9A441" alt="Apache 2.0">
+  <img src="https://img.shields.io/badge/release-pre--release-lightgrey" alt="Pre-release">
+</p>
 
----
-
-## Project at a glance
-
-| Project card | Current position |
-|---|---|
-| **Product** | Offline-first Android scientific workbench |
-| **Primary mode** | Research Mode only |
-| **Engineering scope** | R1–R10, developed as one integrated platform |
-| **Track position** | Track P software/evidence work is current; G planning/inventory is prepared; Track U is sequenced after G under D-023 |
-| **User experience** | D-015 Light Classic visual direction; supplied dashboard/login references recorded; Compose redesign in progress |
-| **Build channel** | GitHub Actions · unsigned arm64 debug APK/AAB |
-| **Validation state** | Earlier I-track checkpoint `aabe37808a5494acb2171b6ed71d2661b4dd2453` / workflow #42970328048 passed 9/9 jobs. This is historical evidence, not verification of current main: the latest P1/P2 parser and P4/P6/P7 schema changes still need exact-head CI. Real scientific benchmarks, physical-device, secure-node, full transitive licence review, approved data and external validation remain open |
-| **Publication** | Methods-paper preparation only; results must come from reproducible evidence |
-
-## Development dashboard
-
-The current documentation index is [`docs/README.md`](docs/README.md). The [2026-11-12 repository research-readiness audit](docs/research-grade-readiness-audit-2026-11-12.md) records the tree inventory, documentation gaps and staged reorganisation plan. Track order and decision history are controlled by [`ROADMAP.md`](ROADMAP.md) and [`DECISIONS.md`](DECISIONS.md); superseded instructions are retained only as history.
-
-<sub>I-track software exit checkpoint: [workflow #42970328048](https://github.com/AssayFlux/Kinetics/actions/runs/42970328048) on `aabe37808a5494acb2171b6ed71d2661b4dd2453`. All 9 jobs passed. I1–I5 software implementation/integration audit is closed; real scientific/device/licensing/data/model/node acceptance remains open.</sub>
-
-
-The cards below summarise the state recorded in the project roadmap. “In progress” means implementation or preparation exists; it does **not** mean the phase has passed its exit gate.
-
-| Track | Focus | Progress recorded | Overall state |
-|---|---|---|---|
-| **R — Research platform** | Android foundation, secure data, scientific engines, genomics, quality and release hardening | Engineering implementation and host-side audit pass completed; device, external validation, licensing and signed-release gates remain open | **Audit closed; acceptance evidence open** |
-| **S — Structure & discovery** | Structure analysis, unknown-sequence investigation, genome annotation and protein intelligence | S1–S10 software scope and exact-head software CI exit audit closed; external model/data, independent validation and device gates remain carry-forward | **Software scope closed; acceptance evidence open** |
-| **I — In-silico laboratory** | Chemistry, docking, molecular dynamics, ADMET and simulation | I1–I5 software implementation and integration audit closed; exact-head CI #42970328048 passed all 9 jobs. Real scientific/device/licensing/data/model/node acceptance remains open | **Software closed; real tests open** |
-| **P — Precision medicine** | PGx-first research pathway and future governance | Started 2026-11-11; P0 preparation and P1 public-data-only base in progress | **Started; P0 preparation active, formal gate not approved** |
-| **G — Governance** | Security, licensing, quality system, bias and publication evidence | Requirements and inventories are documented; formal reviews and evidence gates remain open | **In progress** |
-| **U — User experience** | Brand system, app shell, authentication, dashboard and research workflows | D-015 Light Classic/Dark Classic/System shell and a local biometric/device-credential app-lock screen are implemented in source; full screen system, brand integration and device verification remain open. Further sequential U work follows G under D-023 | **In progress; sequenced after G** |
-
-## Track R · Research platform
-
-| Phase | Workstream | Recorded implementation | Remaining acceptance focus |
-|---|---|---|---|
-| **R1** | Android & runtime foundation | Reproducible arm64 debug APK/AAB build lane, runtime probes and dependency inventory | Device runtime, cold-start/memory, engine decisions and complete license audit |
-| **R2** | Storage & workflow | Compose/SQLite/SAF/WorkManager, encrypted chunk storage, provenance, recovery-state handling and orphan inventory | Interrupted export, migration fixtures, recovery review and device lifecycle tests |
-| **R3** | Core scientific analysis | Sequence, protein and kinetics primitives; diagnostics and host-side SciPy comparison | Independent reference datasets, experimental validation, uncertainty and app integration |
-| **R4** | Sequence & variant formats | FASTA/FASTQ, SAM/VCF, bounded BAM core decoding, QC and normalization primitives | Reference concordance, CRAM Android integration, broader format coverage and benchmarks |
-| **R5** | Structural biology | PDB/mmCIF atom parsing, contacts, RMSD, approximate SASA and interaction-candidate screening | Full format semantics, secondary structure and fixed-reference validation |
-| **R6** | Chemistry | SDF V2000/V3000 subset, streaming ingestion, graph descriptors and bounded matching/fingerprints | Stereochemistry, aromaticity, production engine and license/benchmark review |
-| **R7** | Phylogenetics | Newick, UPGMA/NJ, Jukes–Cantor distances and seeded bootstrap support | ML/Bayesian methods, model selection, search and independent concordance |
-| **R8** | Omics & statistics | Normalisation, correlation, growth, diversity and exploratory differential-analysis primitives | Count-model calibration, repeated measures and broader reference validation |
-| **R9** | Gene & domain catalogue | NCBI Gene annotation ingestion/search and coverage reporting | Versioned domain packs, comprehensive PGx definitions and validated interpretation |
-| **R10** | Quality & release hardening | Registry integrity checks, CI build lane and security/accessibility/release requirements | Transitive SBOM, threat-model review, accessibility/device/performance evidence and signed release |
-
-## Track S · Structure, sequence & discovery
-
-| Phase | Workstream | Recorded implementation / preparation | Remaining gate |
-|---|---|---|---|
-| **S1** | Offline-first structure viewer | Canvas 2D renderer, bounded PDB/mmCIF SAF import, provenance, JSON/SVG/PNG export and persisted viewer state | Exact-head CI and physical-device import/render/export, screenshots, accessibility and performance evidence |
-| **S2–S5** | Geometry/torsion metrics, mapping/interface contacts, prediction evidence and session export | S2 bounded clash/torsion metrics; S3 exact/alignment mapping, inter-chain contacts, ligand-site and apo-pocket geometry candidates; S4 hash-pinned local prediction-process boundary; S5 JSON/PNG/SVG export and viewer-state persistence | S2 calibration, S3 chemical/assembly semantics and independent references, approved S4 model/weights and exact-head/device verification |
-| **S6** | Unknown-sequence triage | Bounded FASTA/FASTQ and hash-verified packs; exact/Smith–Waterman search; hash-pinned BLASTP/HMMER adapters and motif evidence | Licensed/versioned reference packs, independent concordance and calibrated thresholds |
-| **S7** | Genome annotation | Bounded ORF/contig QC; hash-pinned Prodigal/AUGUSTUS runners; GFF3 validation and CDS reconstruction | Approved/versioned species models, organism-diverse reference concordance and functional annotation validation |
-| **S8** | Genetic-code investigation | Explicit translation across 24 supported NCBI tables plus bounded candidate-table ranking from coding-frame/internal-stop and optional complete-CDS evidence, with low-evidence/tie abstention | Taxonomic/codon-usage/homolog/transcript evidence, organism-specific truth sets, calibration and independent confirmation |
-| **S9** | Protein/structure intelligence | Protein descriptors, motif scan, exact/alignment-aware mapping, interface evidence and HMMER domain-evidence parsing/ranking | Licensed profile databases, independent family/domain concordance and calibrated thresholds |
-| **S10** | Constrained protein design | Typed non-generative brief validator with mandatory human-review and release gates; generation remains blocked | Approved model/data, secure compute, independent benchmarks, biosafety and wet-lab validation |
-
-## Track I · In-silico laboratory
-
-| Phase | Workstream | Recorded implementation / preparation | Remaining gate |
-|---|---|---|---|
-| **I1** | Ligand preparation & descriptors | Host RDKit descriptor adapter; Android SAF SDF/MOL graph-only preview; 16 MiB input cap and SHA-256 provenance | Exact-head CI passed; physical-device, wider chemistry-reference and Android RDKit licence/ABI/size review |
-| **I2** | Docking & virtual screening | Pinned Vina 1.2.7 host runner, bounded PDBQT inputs, provenance, strict schemas and disabled-by-default authenticated Node worker | Engine smoke and Node security CI passed; secure deployment, complete transitive SBOM/licence review, redocking/cross-docking RMSD and decoy enrichment |
-| **I3** | Molecular dynamics | Pinned OpenMM 8.6.1 CPU runner for trusted constructed systems, seeded replicas, bounded DCD and provenance | Synthetic harmonic smoke passed; biomolecular force-field/licence selection, secure compute, convergence and independent energy/stability validation |
-| **I4** | ADMET / PK-PD / PBPK | One-compartment oral PK/Emax references with SciPy ODE comparison; scaffold split, binary metrics/calibration and Tanimoto applicability domain; metadata-only source catalogue | Exact-head smoke passed; no acquired datasets/trained ADMET model; approved source terms, external validation and PBPK remain open |
-| **I5** | Variant-effect & virtual-cohort research | Seeded synthetic aggregate HWE cohort and caller-supplied additive-effect simulation; strict non-patient schemas | Exact-head tests passed; public-cohort governance, fairness/ancestry review and independent variant-effect benchmarks remain open |
-
-## Track P · Precision medicine (PGx first)
+Kinetics is a modular workbench for computational biology and in-silico research. It combines an Android-native experience with Python, C++ and Rust scientific components, reproducible workflows and provenance-aware outputs.
 
 <blockquote>
-  **Track P started 2026-11-11 by project-owner authorization. P0 preparation is active; the formal P0 gate remains NOT APPROVED.** Public-data metadata and synthetic/non-patient engineering may proceed. Patient data, human-subject work, individual interpretation, clinical recommendations and Clinical Mode remain disabled until all applicable external determinations, reviews and evidence are complete and the owner records the formal P0 decision. See [P0 evidence packet](docs/track-p/p0-evidence-packet.md) and [P-track base plan](docs/track-p/implementation-plan.md).
+  <strong>Development status:</strong> This is an active pre-release project, not a validated scientific product or production release. Research Mode only. Patient/clinical data, individual clinical interpretation, treatment recommendations and Clinical Mode remain disabled.
 </blockquote>
 
-| Phase | Workstream | Current state |
-|---|---|---|
-| **P0** | Intended use, legal/ethics/regulatory review, qualified advisers and governance evidence | **Preparation in progress; formal gate blocked / not approved** |
-| **P1** | Genotype ingestion, QC and build-aware annotation | **Public-data/synthetic base in progress; patient data and interpretation gated** |
-| **P2** | PGx allele-definition and phased-haplotype research foundation | Parser hardening and synthetic negative tests implemented; exact-head CI and licensed reference concordance pending |
-| **P3** | Guideline evidence mapping and research reports | Research-only schema contract implemented; licensed source mapping and independent review pending |
-| **P4** | Human-curated variant evidence records | Two-reviewer evidence contract implemented; qualified curator appointments and operational adjudication pending |
-| **P5** | Ethics/adviser protocol preparation | Protocol template drafted; competent ethics determination and approvals pending |
-| **P6** | Risk/control and governance evidence | Evidence-backed risk acceptance schema implemented; independent security/privacy/QMS review pending |
-| **P7** | Regulatory and prospective-evaluation preparation | Jurisdiction evidence contract implemented; qualified advice, approvals and prospective evidence pending |
+## Project snapshot
 
-P2–P7 schema/template work is research-only engineering preparation, not operational review or approval. Only source metadata is catalogued at this stage; no public dataset payloads have been acquired through this preparation work. A gene's presence in a catalogue must never be mistaken for a validated caller or interpretation.
+<table>
+  <tr>
+    <td width="33%" align="center"><strong>6 tracks</strong><br>Owner-approved sequence</td>
+    <td width="33%" align="center"><strong>Android-first</strong><br>Offline-first architecture</td>
+    <td width="33%" align="center"><strong>Research only</strong><br>No clinical deployment</td>
+  </tr>
+  <tr>
+    <td align="center"><strong>R → S → I</strong><br>Software exit gates closed</td>
+    <td align="center"><strong>P → G → U</strong><br>Current and upcoming work</td>
+    <td align="center"><strong>Evidence-led</strong><br>Build ≠ validation</td>
+  </tr>
+</table>
 
-## Product design & experience
+## Track order & progress
 
-| Area | Current direction | Verification still required |
-|---|---|---|
-| **Visual authority** | D-015 Light Classic: warm ivory, deep maroon, restrained gold and peacock teal; coherent Dark Classic and System options | Contrast measurements and full theme coverage |
-| **Layout** | Spacious rounded surfaces, central workspace carousel, adjacent-card previews and stacked research cards | Complete adaptive screen implementation and screenshot review |
-| **Typography** | Cormorant Garamond display, IBM Plex Sans UI, IBM Plex Mono scientific data; limited Great Vibes accent only where appropriate | Font licensing, glyph coverage, offline packaging and size review |
-| **Brand assets** | Owner-supplied logo artwork must remain unchanged | Correct integration on splash, navigation, login and export surfaces |
-| **Authentication** | Local biometric/device-credential app lock is distinct from a user account | Lifecycle, fallback, recovery and device testing; no cloud account is implied |
-| **Accessibility** | Touch targets, dynamic type, semantics, RTL, keyboard/switch access and reduced motion are requirements | Automated contrast and accessibility checks plus device evidence |
+**Canonical order: R → S → I → P → G → U** · Decision D-023 · 12 November 2026.
 
-**Superseded visual directions are discontinued for active development.** Neon, Obsidian Cyan and earlier palettes remain historical records only; D-015 is the sole active visual authority.
+The percentages below measure **documented engineering-gate closure only**, not scientific, clinical, legal, regulatory or release compliance. A completed software gate does not close its external acceptance obligations.
+
+| Track | Focus | Engineering gate | Remaining position |
+|---|---|---:|---|
+| **R** · Research platform | Android foundation, storage, scientific engines, genomics and hardening | **100%** · software audit closed | Physical-device, scientific, licensing and release evidence open |
+| **S** · Structure & discovery | Structure viewer, sequence triage, genome annotation and protein intelligence | **100%** · software scope closed | Independent references, licensed resources/models and device evidence open |
+| **I** · In-silico lab | Chemistry, docking, molecular dynamics, ADMET and simulations | **100%** · software audit closed | Real scientific benchmarks, data/model licences, secure node and device tests open |
+| **P** · Precision medicine | PGx-first research foundation and governance | **In progress** | Latest recorded software CI passed 9/9 jobs; P0 remains **NOT APPROVED** and external evidence gates remain open |
+| **G** · Governance | Security, supply chain, quality, privacy, scientific integrity and publication | **0% accepted** | Planning/register baseline drafted; G0 owner acceptance and G1–G7 implementation/reviews remain open |
+| **U** · User experience | Brand system, app shell, authentication and research workflows | **0% accepted** | Partial U0–U3 work is retained as baseline; further sequential work follows G |
+
+<details>
+  <summary><strong>How to read the percentages</strong></summary>
+
+  - 100% means the documented software implementation/audit gate for that track was recorded as closed.
+  - 0% accepted means no formal track exit gate has been accepted yet; it does not mean no source code or planning exists.
+  - P is shown as in progress rather than assigned an invented percentage: software checks have passed, but the formal track/P0 gate is not accepted.
+  - No overall scientific or regulatory compliance percentage is claimed. Independent validation, legal/ethics/privacy determinations, licensing decisions and physical-device acceptance are separate evidence gates.
+</details>
+
+## Product experience
+
+<p align="center">
+  <img src="assets/design-previews/dashboard-reference.jpg" alt="Owner-supplied Kinetics dashboard design reference" width="48%">
+  <img src="assets/design-previews/login-reference.jpg" alt="Owner-supplied Kinetics login design reference" width="48%">
+</p>
+
+The active product direction is D-015 Light Classic, with Dark Classic and System appearance. These are owner-supplied design references, not screenshots of a completed application. Real app screens, accessibility, device behaviour and brand integration are verified separately.
+
+## Engineering principles
+
+- **Offline-first:** local research workflows and explicit boundaries for optional remote compute.
+- **Reproducible:** pinned inputs, parameters, versions, seeds and output provenance.
+- **Evidence-aware:** distinguish implementation, automated tests, independent scientific validation and real-device acceptance.
+- **Safe by default:** bounded parsing/resources, explicit abstention and no invented scientific conclusions.
+- **Research-only:** no patient/clinical workflow or treatment/dosing recommendation.
+
+## Current safeguards
+
+- P0 remains **BLOCKED / NOT APPROVED**.
+- No patient data, human-subject activity, individual PGx interpretation or Clinical Mode.
+- Public availability does not imply data/model redistribution rights.
+- CI green does not establish biological accuracy, independent security review or physical-device operation.
+- Debug APK/AAB artifacts are not signed production releases.
+
+## Explore the repository
+
+<p>
+  <a href="ROADMAP.md"><img src="https://img.shields.io/badge/ROADMAP-track%20plan-7B1E34" alt="Roadmap"></a>
+  <a href="DECISIONS.md"><img src="https://img.shields.io/badge/DECISIONS-owner%20decisions-D9A441" alt="Decisions"></a>
+  <a href="docs/README.md"><img src="https://img.shields.io/badge/DOCS-documentation%20index-3B6B68" alt="Documentation"></a>
+  <a href="docs/track-g/implementation-plan.md"><img src="https://img.shields.io/badge/GOVERNANCE-Track%20G-6C5B7B" alt="Track G"></a>
+  <a href="assets/brand/README.md"><img src="https://img.shields.io/badge/BRAND-assets-8A5967" alt="Brand assets"></a>
+  <a href="paper/manuscript-skeleton.md"><img src="https://img.shields.io/badge/PAPER-methods%20draft-596B7A" alt="Manuscript"></a>
+</p>
+
+<details>
+  <summary><strong>Track R — Research platform</strong></summary>
+
+  Android/runtime foundation, secure local storage, sequence and structural analysis, chemistry, phylogenetics, omics, gene catalogue and quality/release hardening. Software audit is closed; device, scientific, licensing and release acceptance remain open.
+</details>
+
+<details>
+  <summary><strong>Track S — Structure, sequence & discovery</strong></summary>
+
+  Structure viewer and geometry, variant/interface evidence, prediction boundary, session export, unknown-sequence triage, genome annotation, genetic-code investigation, protein intelligence and constrained design. Software scope is closed; independent validation and approved resources remain open.
+</details>
+
+<details>
+  <summary><strong>Track I — In-silico laboratory</strong></summary>
+
+  Ligand preparation, docking, molecular dynamics, ADMET/PK-PD utilities and synthetic variant/cohort research. Software implementation/integration audit is closed; real scientific benchmarks, licensing, secure compute and device tests remain open.
+</details>
+
+<details>
+  <summary><strong>Track P — Precision medicine</strong></summary>
+
+  PGx-first research preparation (P0–P7). Internal schemas and software checks do not constitute clinical approval. P0 remains NOT APPROVED; external legal, ethics, privacy, security, regulatory and scientific evidence is outstanding.
+</details>
+
+<details>
+  <summary><strong>Track G — Governance</strong></summary>
+
+  G0–G7: governance map, security assurance, licensing/supply chain, software quality, privacy/data governance, scientific integrity/bias, publication integrity and operations. The initial plan and evidence register are drafts, not accepted controls or certifications.
+</details>
+
+<details>
+  <summary><strong>Track U — User experience</strong></summary>
+
+  U0–U6: design system, adaptive shell, privacy/lock, research workflow screens, scientific visualisations, genomics/PGx research screens and accessibility/localisation. Partial U0–U3 source is pre-existing baseline; the next sequential U implementation follows G under D-023.
+</details>
 
 ## Build & verification
 
-| Evidence item | Latest recorded state |
-|---|---|
-| **Audited repository revision** | `dafc3cad56bc6b9b9b49cc30f9e5f65bbd655c47` was the source tree reviewed in the 2026-11-12 documentation audit; subsequent documentation-only audit commits are listed in Git history |
-| **Latest passing CI** | Earlier exact-head checkpoints are recorded in [CI evidence](docs/ci-build-evidence.md); the current parser/schema hardening has no confirmed exact-head workflow result yet |
-| **Python / lint / type checks** | Latest parser and evidence-schema regression tests are committed; execution, Ruff and strict mypy on the current head are pending |
-| **Android artifacts** | Previous successful arm64 APK/AAB builds are historical checkpoints, not artifacts from the current head |
-| **Automated checks** | Do not infer current-head success from prior workflow runs; re-run the complete workflow against current main before declaring this revision verified |
-| **Emulator / physical device** | Not verified; installation and runtime evidence remain outstanding |
-| **Independent scientific validation** | Not established for the platform's research capabilities; synthetic tests and host smoke checks are not experimental validation |
-| **Release readiness** | Not ready; debug artifacts are not production-signed releases |
-
-Every substantial implementation cycle follows D-016: implement a meaningful vertical slice, build the exact revision, run relevant automated and scientific-reference tests, inspect the artifact, exercise it on available Android targets, fix failures and record exact evidence. Missing device access, reference data or external approval is recorded as **not run / blocked**, never as a pass.
-
-## Research integrity & publication
-
-- Research Mode only; no patient/clinical workflows.
-- Predictions are hypotheses, not experimental proof or clinical advice.
-- Outputs must preserve provenance, versions, parameters, uncertainty, warnings and limitations.
-- Scientific claims require independent reference validation; software tests alone do not establish scientific validity.
-- The manuscript is a working methods-paper skeleton. Results, performance figures and comparative claims are reserved for reproducible evidence in the repository.
-
-## Essential project documents
-
-| Document | Purpose |
-|---|---|
-| [Roadmap](ROADMAP.md) | Canonical phases, dependencies, status and exit gates |
-| [Parallel-track protocol](docs/parallel-track-execution.md) | Rules for concurrent R/S/I/P work |
-| [Integrated implementation inventory](docs/research-platform-implementation.md) | Detailed implemented and unfinished engineering scope |
-| [Visual design system](docs/ui/kinetics-visual-design-system.md) | Current D-015 brand and interface authority |
-| [UI specification](docs/ui/ui-spec.md) | Screen, interaction, accessibility and verification requirements |
-| [Research manuscript skeleton](paper/manuscript-skeleton.md) | Publication structure and evidence requirements |
+GitHub Actions is the source of current automated build/test status. Historical passing runs are not evidence for a different commit. Physical Android-device testing and independent scientific validation remain separate.
 
 ## License
 
-Kinetics project code is licensed under [Apache-2.0](LICENSE). Third-party dependencies, engines, models, fonts, renderers and datasets retain their own terms and require separate review before bundling or redistribution.
+Project code: Apache-2.0. Third-party engines, dependencies, models, datasets, fonts and assets retain their own terms and require separate review.

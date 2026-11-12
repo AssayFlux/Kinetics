@@ -1,1 +1,0 @@
-PLACEHOLDER — owner must supply an approved adaptive-icon background colour (hex) or SVG. No colour is selected.

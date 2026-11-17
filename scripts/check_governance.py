@@ -168,7 +168,15 @@ def validate() -> list[str]:
     roles_path = ROOT / "docs/track-g/roles-and-review-cadence.md"
     if roles_path.is_file():
         roles = roles_path.read_text(encoding="utf-8")
-        for role in ("G-ROLE-SEC", "G-ROLE-SC", "G-ROLE-DATA", "G-ROLE-PRIV", "G-ROLE-QUALITY", "G-ROLE-RELEASE", "G-ROLE-PUB"):
+        for role in (
+            "G-ROLE-SEC",
+            "G-ROLE-SC",
+            "G-ROLE-DATA",
+            "G-ROLE-PRIV",
+            "G-ROLE-QUALITY",
+            "G-ROLE-RELEASE",
+            "G-ROLE-PUB",
+        ):
             role_rows = [line for line in roles.splitlines() if role in line and line.startswith("|")]
             if len(role_rows) != 1 or "UNASSIGNED" not in role_rows[0]:
                 errors.append(f"{role} must remain explicitly UNASSIGNED until appointed")

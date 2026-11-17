@@ -1,6 +1,6 @@
 # Track G — accountability and review cadence
 
-**Effective date:** 2026-11-12  
+**Effective date:** 2026-11-17  
 **Authority:** D-023 sequencing; repository owner instruction to execute Track G.  
 **Status:** role model defined; named non-owner appointments and governance-policy acceptance remain open.
 

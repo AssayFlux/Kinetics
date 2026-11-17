@@ -7,7 +7,7 @@
 
 ### Light
 
-- **Kinetics Light Classic** (kinetics_light_classic) — background #FBF4E6, primary #7B1E34, secondary #146C70.
+- **Kinetics Light Classic** (kinetics_light_classic) — background #FAF9F6, primary #292929, secondary #292929.
 - **Porcelain Blue** (porcelain_blue) — background #F7FAFF, primary #315D91, secondary #6685AD.
 - **Ivory Sage** (ivory_sage) — background #FAFBF7, primary #54745D, secondary #829B83.
 - **Cloud Lilac** (cloud_lilac) — background #FBFAFF, primary #7565A8, secondary #9B8CC5.
@@ -15,7 +15,7 @@
 
 ### Dark
 
-- **Kinetics Dark Classic** (kinetics_dark_classic) — background #120E18, primary #E3B655, secondary #4FB3B0.
+- **Kinetics Dark Classic** (kinetics_dark_classic) — background #121212, primary #E8E8E8, secondary #E8E8E8.
 - **Obsidian Cyan** (obsidian_cyan) — background #070B12, primary #39D7E8, secondary #6B9CFF.
 - **Midnight Violet** (midnight_violet) — background #0B0915, primary #A78BFA, secondary #7C8CFF.
 - **Graphite Ice** (graphite_ice) — background #0B0F12, primary #9AD8F2, secondary #6EA9C7.
@@ -40,8 +40,8 @@
 
 ## Shared layout tokens
 
-- Spacing: 4, 8, 12, 16, 24, 32, 48, 64 dp.
-- Corner radii: 4, 8, 12, 16, 28 dp.
+- Spacing: 4, 8, 12, 16, 20, 24, 32, 40 dp.
+- Corner radii: 8, 10, 12, 16, 20 dp.
 - Minimum touch target: 48 dp.
 - Target spacing: 8 dp.
 - Maximum readable content width: 840 dp.

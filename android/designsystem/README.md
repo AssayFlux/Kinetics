@@ -1,17 +1,11 @@
 # Kinetics Design System
 
-**Status:** skeleton; not a complete component library or gallery.
+**Status:** Shared Compose primitives are being built for owner V1 monochrome UI (D-024); implementation and visual evidence remain in progress.
 
-The Android library module now compiles generated Compose palette/spacing tokens from `design/tokens.json`; the app shell consumes the Obsidian Cyan, Light and Neon generated palettes. A reusable development-only `KineticsComponentGallery` composable previews those palette families and Material 3 components. It includes the owner-supplied Home background, Home/Work/Explore/Settings, window-responsive navigation and a centred 840dp readable-content cap.
+The Android design-system module compiles generated Compose semantic palettes and spacing/radius tokens from design/tokens.json using scripts/gen_design_tokens.py. KineticsLightClassic and KineticsDarkClassic are the active V1 palettes; other legacy palette entries are retained only as non-selectable historical/catalogue data until removed through the token audit.
 
-Current navigation uses stable Material 3 NavigationBar, NavigationRail and PermanentNavigationDrawer with a live app-window classifier. It is not yet NavigationSuiteScaffold or fold-posture aware.
+Shared V1 primitives are in KineticsComponents.kt: primary and secondary actions, outlined panels, text-labelled status, section headings and fields. These are foundational components, not evidence that every app screen has migrated to them.
 
-U0 exit still requires:
-- add a debug-only route/activity that hosts the component gallery and screenshot tests;
-- reusable semantic status/tier, Research Mode and connectivity components;
-- adaptive navigation suite and fold/hinge posture support;
-- component gallery with every component/theme/window size;
-- screenshot-test harness, automated accessibility checks and token-only styling lint;
-- device evidence and owner-approved visual gate.
+The component gallery is a development surface, not production navigation. Responsive navigation currently uses Material 3 NavigationBar, NavigationRail and PermanentNavigationDrawer with a live window classifier and 840dp readable-content cap. Fold/hinge-aware behavior is not implemented or claimed.
 
-Do not claim U0 complete until these run and are recorded.
+Generated files must not be edited manually. Run the generator and CI reproducibility check after every token change. Contrast, screenshot, accessibility and device verification remain open.

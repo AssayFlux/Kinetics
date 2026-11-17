@@ -158,7 +158,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | **S** | Structure, sequence and discovery | **SOFTWARE SCOPE CLOSED** | Independent references, licensed resources/models and device evidence remain. |
 | **I** | In-silico laboratory | **SOFTWARE AUDIT CLOSED** | Scientific benchmarks, licensing, secure-node and device evidence remain. |
 | **P** | Precision Medicine (PGx First) | **SOFTWARE FOUNDATION CLOSED** | P0 remains BLOCKED / NOT APPROVED; independent scientific, licensing, ethics, legal and device gates remain open. |
-| **G** | Governance, assurance and publication readiness | **ENGINEERING FOUNDATION IMPLEMENTED; FINAL AUDIT IN PROGRESS** | Independent reviews, complete SBOM/licensing, device checks, owner acceptance and operating exercises remain open. |
+| **G** | Governance, assurance and publication readiness | **ENGINEERING FOUNDATION CLOSED — EXACT-HEAD CI PASS** | Overall acceptance remains open: independent reviews, complete SBOM/licensing, device checks, owner policy acceptance and operating exercises remain. |
 | **U** | User interface and experience | **SEQUENCED AFTER G** | Partial U0–U3 work is retained; further sequential work follows G's two-step gate assessment. |
 
 | ENGINEERING AREA | POSITION |

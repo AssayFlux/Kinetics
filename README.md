@@ -157,8 +157,8 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | **R** | Research platform | **SOFTWARE AUDIT CLOSED** | Device, independent scientific, licensing and release evidence remain. |
 | **S** | Structure, sequence and discovery | **SOFTWARE SCOPE CLOSED** | Independent references, licensed resources/models and device evidence remain. |
 | **I** | In-silico laboratory | **SOFTWARE AUDIT CLOSED** | Scientific benchmarks, licensing, secure-node and device evidence remain. |
-| **P** | Precision-medicine research preparation | **IN PROGRESS** | Exact-head verification remains open. **P0 is BLOCKED / NOT APPROVED.** |
-| **G** | Governance and assurance | **PLANNING BASELINE DRAFTED** | G0–G7 controls exist in draft; full implementation and acceptance remain gated by P verification. |
+| **P** | Precision Medicine (PGx First) | **SOFTWARE FOUNDATION CLOSED** | P0 remains BLOCKED / NOT APPROVED; independent scientific, licensing, ethics, legal and device gates remain open. |
+| **G** | Governance, assurance and publication readiness | **ENGINEERING FOUNDATION IMPLEMENTED; FINAL AUDIT IN PROGRESS** | Independent reviews, complete SBOM/licensing, device checks, owner acceptance and operating exercises remain open. |
 | **U** | User interface and experience | **SEQUENCED AFTER G** | Partial U0–U3 work is retained; further sequential work follows G's two-step gate assessment. |
 
 | ENGINEERING AREA | POSITION |
@@ -207,8 +207,8 @@ flowchart TD
 ## NEXT GATES
 | TRACK | NEXT REQUIRED WORK |
 |:---:|---|
-| **P** | Complete exact-head software verification and the permitted research-only base. P0 requires its separate external evidence and owner gate decision. |
-| **G** | Move from draft G0–G7 controls into the two-step build/audit only after P's gate is assessed; obtain independent reviews and operating evidence. |
+| **P** | Carry forward P0 and independent scientific/source/licensing/device evidence. No patient or clinical workflows are authorized. |
+| **G** | Finish the exact-head G0–G7 engineering audit, then hand the sequence to U. External assurance and operational evidence remain carry-forward gates. |
 | **U** | Resume sequential implementation only after G's two-step gate is assessed. Retain partial U0–U3 as baseline, not as accepted completion. |
 | **CROSS-CUTTING** | Independent scientific benchmarks; data/model/dependency licensing and SBOM coverage; physical Android, offline, accessibility and recovery verification; real application demo. |
 

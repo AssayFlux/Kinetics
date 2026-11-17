@@ -1,7 +1,7 @@
 # Track G0 — governance control and evidence register
 
-**Baseline date:** 2026-11-12  
-**Status:** G0–G7 engineering control framework implemented in repository at draft/partial maturity; formal Track G acceptance remains OPEN.  
+**Baseline date:** 2026-11-17  
+**Status:** G0–G7 bounded research-only engineering framework implemented; baseline exact-head automated checks passed on workflow #44098272029 (9/9 jobs). Formal Track G acceptance remains OPEN; no independent or operational approval is inferred.  
 **Authority:** Owner instruction to execute G; D-023 sequence R → S → I → P → G → U.  
 **Scope:** research-only software governance. This register is not an approval, certification, legal opinion, ethics determination or independent review.
 
@@ -16,7 +16,7 @@
 
 An item remains OPEN when evidence is absent, stale, unreviewed, ambiguous or not linked to the exact release/commit. Draft and partial controls do not count as accepted.
 
-## Control register
+## Exact-head automated evidence (2026-11-17)\n\n- Baseline exact main head: `622ffc1705fda3161478b710fe2f5a4af65c6287`.\n- Workflow [#44098272029](https://github.com/AssayFlux/Kinetics/actions/runs/44098272029): 9/9 jobs passed.\n- Governance checker and generated claims-matrix reproducibility check passed in the Python job; Ruff and mypy passed; pytest reported 534 passed, 9 skipped.\n- Android arm64 debug APK/AAB build, package alignment and JVM tests passed. The subsequent CI increment adds Gradle runtime/build-environment reports, Cargo tree/metadata, resolved artifact hashes and Android Python-wheel hashes.\n- Dependency reports are raw evidence, not a complete SBOM or license decision. Device, external review, ethics, legal, privacy, scientific and operational gates remain OPEN.\n\n## Control register
 
 | ID | Control / required outcome | Current repository evidence | Status | Accountable role | Next action / acceptance evidence |
 |---|---|---|---|---|---|

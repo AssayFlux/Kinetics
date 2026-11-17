@@ -159,7 +159,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | **I** | In-silico laboratory | **SOFTWARE AUDIT CLOSED** | Scientific benchmarks, licensing, secure-node and device evidence remain. |
 | **P** | Precision Medicine (PGx First) | **SOFTWARE FOUNDATION CLOSED** | P0 remains BLOCKED / NOT APPROVED; independent scientific, licensing, ethics, legal and device gates remain open. |
 | **G** | Governance, assurance and publication readiness | **ENGINEERING FOUNDATION CLOSED — EXACT-HEAD CI PASS** | Overall acceptance remains open: independent reviews, complete SBOM/licensing, device checks, owner policy acceptance and operating exercises remain. |
-| **U** | User interface and experience | **SEQUENCED AFTER G** | Partial U0–U3 work is retained; further sequential work follows G's two-step gate assessment. |
+| **U** | User interface and experience | **STARTED — STEP 1 BASE IMPLEMENTATION** | Owner V1 monochrome UI specification adopted (D-024); U0–U3 remain partial baseline; U4–U6 remain dependency-gated. Step 2 audit not yet run. |
 
 | ENGINEERING AREA | POSITION |
 |---|---|

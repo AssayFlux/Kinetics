@@ -178,8 +178,12 @@ def validate() -> list[str]:
             "G-ROLE-PUB",
         ):
             role_rows = [line for line in roles.splitlines() if role in line and line.startswith("|")]
-            if len(role_rows) != 1 or "UNASSIGNED" not in role_rows[0]:
-                errors.append(f"{role} must remain explicitly UNASSIGNED until appointed")
+            if len(role_rows) != 1:
+                errors.append(f"{role} must have exactly one accountability row")
+                continue
+            columns = [column.strip() for column in role_rows[0].strip("|").split("|")]
+            if len(columns) != 4 or not columns[2] or not columns[3]:
+                errors.append(f"{role} must record an assignment state and independence limitation")
 
     operations_path = ROOT / "docs/track-g/operational-controls.md"
     if operations_path.is_file():
@@ -187,8 +191,16 @@ def validate() -> list[str]:
         if "No exercise is marked complete by this template" not in operations:
             errors.append("Operational procedure must distinguish templates from completed exercises")
         for exercise in ("OPS-TT-01", "OPS-TT-02", "OPS-TT-03", "OPS-TT-04", "OPS-TT-05"):
-            if exercise not in operations:
-                errors.append(f"Missing operational tabletop scenario {exercise}")
+            exercise_rows = [
+                line for line in operations.splitlines()
+                if line.startswith("|") and exercise in line
+            ]
+            if len(exercise_rows) != 1:
+                errors.append(f"Missing or duplicate operational tabletop scenario {exercise}")
+                continue
+            status = exercise_rows[0].strip("|").split("|")[-1].strip()
+            if status != "NOT RUN" and not status.startswith("COMPLETED — evidence:"):
+                errors.append(f"{exercise} needs NOT RUN or a completed status with evidence")
 
     claim_path = ROOT / "paper/claim-evidence-ledger.csv"
     if claim_path.is_file():

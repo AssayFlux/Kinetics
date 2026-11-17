@@ -2813,3 +2813,18 @@ Track P remains IN PROGRESS. The software audit increment is verified; external 
 
 ### Audit correction — capability matrix scope
 The first generated claims CSV incorrectly included entries outside the registry's `tools` collection (including UI screen catalogue records). The generator reads only `tools`; the matrix and test expectation have been corrected to **68 tool capabilities**. UI screen entries are not mislabelled as executable tool capabilities. The exact-head CI must confirm the regenerated CSV matches the generator.
+
+
+## 2026-11-17 — Track P bounded software-scope closure audit
+
+### Work performed
+- Re-read the current Track P implementation plan, P0 evidence packet, P0 controls draft, P2–P7 workplan, public-data boundary, dataset catalogue, schemas, source modules and tests.
+- Confirmed the main baseline was `7967ccb0288ea1d5b82af18f8ab8d886d18d4733`.
+- Inspected exact-head workflow [#44078534173](https://github.com/AssayFlux/Kinetics/actions/runs/44078534173): 9/9 jobs passed. Python: 534 passed, 9 skipped; Ruff and strict mypy passed. Android arm64 APK/AAB build, package alignment and JVM tests passed.
+- Recorded the distinction between bounded software implementation closure and the still-open external/scientific/operational acceptance gates.
+
+### Disposition
+**P1–P7 bounded research-only software foundation: CLOSED.** P0 and the full Precision Medicine track: **OPEN / BLOCKED**. The public dataset catalogue remains metadata-only with no acquired entries. No independent PGx concordance, licensed source corpus, ethics determination, qualified clinical review, legal/regulatory advice, privacy/security/QMS approval, operational curator evidence or physical-device runtime acceptance is recorded. No patient data, human-subject activity, individual interpretation, clinical recommendations or Clinical Mode are authorized.
+
+### No fabricated closure
+The owner’s authorization starts engineering work; it does not substitute for competent external determinations or a formal P0 gate decision. This audit does not claim scientific or clinical validation and does not waive any carry-forward obligation.

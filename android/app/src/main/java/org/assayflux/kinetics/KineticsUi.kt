@@ -115,9 +115,6 @@ internal fun KineticsAppShell(
                 }
             }
 
-            val drawerState = rememberDrawerState(DrawerValue.Closed)
-            val drawerScope = rememberCoroutineScope()
-
             @Composable
             fun AppBar(showMenu: Boolean) {
                 Row(

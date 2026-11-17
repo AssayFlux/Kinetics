@@ -1,4 +1,4 @@
-# Track P — P0–P7 engineering workplan
+# Track P — Precision Medicine (PGx First): P0–P7 engineering workplan
 
 **Scope:** research-only, synthetic fixtures and public non-patient metadata. **Overall:** in progress; P0 NOT APPROVED; no patient/clinical authorization.
 
@@ -58,17 +58,29 @@ Schemas, parsers, synthetic tests and green CI close software verification only.
 - Exact-head CI for the latest main revision has not yet been observed; tests, Ruff, strict mypy and all nine workflow jobs remain pending. Do not count this increment as verified until the exact-head workflow passes.
 
 
-## 2026-11-12 — P4/P6/P7 evidence-contract hardening (verification pending)
+## 2026-11-12 — P4/P6/P7 evidence-contract hardening (exact-head CI subsequently passed)
 
 - P4 curation records now distinguish pending, completed, disagreement and escalated second review. A research-accepted curation record requires completed second review with reviewer role, timestamp and HTTPS evidence reference; autonomous final classification and clinical use remain hard false.
 - P6 residual-risk records that claim acceptance now require an accountable role, timestamp and evidence reference.
 - P7 jurisdiction records marked advice-received or owner-disposition-pending now require advice evidence and a product-classification field. Patient-data and Clinical Mode authorization remain hard false.
 - Added negative/positive synthetic schema tests for these conditions. These are contract checks, not actual reviews, risk acceptances or jurisdiction advice.
-- Exact-head CI for these additions is pending; do not claim verification until the main-branch workflow completes.
+- The subsequent exact-main-head workflow #44078534173 passed 9/9 jobs on 2026-11-17. This verifies the committed software/contracts only; it does not establish actual curation, risk acceptance or jurisdiction advice.
 
 
 ## P1/P2 additional audit note — 2026-11-12
 
 - VCF parsing now enforces record/sample limits during parsing, and P1 QC retains its input-byte, variant and sample ceilings. The commits `5da06c905fd2be7d60bd3bfd37bd429a8dff4aaf` and `51e607424398db4b75dc31dfbf0ca880a3c0d171` contain this hardening; fresh exact-head CI is still required.
 - PharmVar variant construction now rejects boolean coordinates (Python bool is an int subclass), with synthetic negative tests.
-- These code changes have not yet been independently reference-compared or run through the complete exact-head workflow.
+- These code changes are included in the exact-main-head workflow #44078534173, which passed 9/9 jobs on 2026-11-17. Independent authoritative reference comparison remains open.
+
+
+## 2026-11-17 — Track P bounded software-scope audit
+
+- Audited the current `main` head `7967ccb0288ea1d5b82af18f8ab8d886d18d4733`.
+- Exact-head GitHub Actions workflow [#44078534173](https://github.com/AssayFlux/Kinetics/actions/runs/44078534173) completed successfully: 9/9 jobs.
+- Python foundation job: 543 collected; 534 passed and 9 skipped because optional RDKit/pysam packages were unavailable in that job. Ruff and strict mypy passed.
+- Android arm64 debug APK/AAB build, package-alignment verification and JVM unit tests passed. No emulator or physical-device runtime is claimed.
+- The workflow also passed host-side numerical/reference smoke comparisons, source SPDX inventory and private Node worker security tests. Those checks are not PGx biological concordance, clinical validation or external security certification.
+- P1/P2 synthetic-only parser/QC/matcher foundations and P3–P7 research-only evidence contracts are therefore considered **software-foundation complete** for this bounded scope.
+- **Full Track P is not closed.** P0 remains BLOCKED / NOT APPROVED; independent source/licence review, authoritative PGx concordance, fuzzing, device tests, operational curation, ethics, privacy/security/QMS, legal/regulatory advice and explicit owner acceptance remain open.
+- Patient data, human-subject work, individual interpretation, clinical recommendations and Clinical Mode remain prohibited/disabled.

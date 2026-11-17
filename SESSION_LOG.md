@@ -2839,3 +2839,35 @@ The owner’s authorization starts engineering work; it does not substitute for 
 - Extended Android CI dependency evidence capture to include Gradle build environment, Cargo metadata and Python wheel hashes alongside existing runtime graph, Cargo tree and artifact hashes.
 - Reconciled the roadmap into G0–G7 and updated implementation plan, control register, traceability and SECURITY.md with exact-head evidence and remaining limitations.
 - **Disposition:** G0–G7 bounded research-only software foundation implemented/automated-check verified. Overall Track G remains OPEN pending owner policy acceptance, qualified role appointments, full SBOM and license review, independent security/privacy/scientific/legal reviews, merged-manifest/device verification, operational tabletop/access/recovery exercises and publication author/literature evidence. No external approval or exercise is fabricated. Track U remains gated on G's two-step assessment under D-023.
+
+
+## 2026-11-17 — Track U start: owner V1 design and Step 1 base
+**Phase:** Track U / Step 1 — documented base implementation
+**Baseline:** main commit e6c98e0b506223aed65b00d1c39f0916ef2a0446
+**Branch:** track-u-step1-base
+
+### Gate assessment
+- Track G bounded G0–G7 engineering foundation was reported CLOSED on exact main commit 31b1618c4e843d0ec90feb2ceae0d0e4fb1615b1; workflow 44108451571 passed 9/9 jobs.
+- Overall Track G acceptance remains OPEN for independent reviews, complete resolved SBOM/licensing, device verification, named specialist appointments, owner policy/risk acceptance and operational exercises. These remain carry-forward obligations; none is waived by starting U.
+- This satisfies the D-023 sequencing prerequisite to start Track U engineering.
+
+### Owner design direction
+- Added D-024 adopting the owner's complete Premium Minimal Monochrome Design System — V1 as the active UI visual authority, superseding D-015 only where visual direction conflicts.
+- Preserved non-conflicting constraints: original assets byte-for-byte, real KINETICS workflows, native Compose, Research Mode only, no fabricated accounts/jobs/results, and all existing security/privacy/licensing gates.
+
+### Step 1 base work committed on this branch
+- Added docs/track-u/implementation-plan.md with U0–U6 scope, product truth, integration contracts, two-step gate and evidence requirements.
+- Updated KINETICS_UI_SPEC.md, docs/ui/ui-spec.md, docs/ui/kinetics-visual-design-system.md and docs/android-ui-ux-spec.md to the V1 authority.
+- Migrated canonical active Light/Dark token values and shared spacing/radius values in design/tokens.json; regenerated GeneratedTokens.kt and kinetics-tokens.css.
+- Added shared Compose V1 primitives in android/designsystem/.../KineticsComponents.kt.
+- Updated screen map, device matrix, design-system README, UI quality report, docs index, roadmap and root README status.
+
+### Not verified / not done
+- No CI run, Kotlin compile, APK/AAB build or automated test result has yet been inspected for this branch.
+- No running-app screenshots, visual reference comparison, contrast measurements, TalkBack/200% font-scale/RTL checks or emulator/physical-device tests are claimed.
+- Existing Home/Work/Explore/Settings source has not yet been fully migrated to the new primitives and V1 component measurements.
+- Search/onboarding, full destination map, security/privacy surfaces, durable result viewers and U4–U6 remain incomplete or dependency-gated.
+- No Track U completion percentage is reported before Step 1 and Step 2 are both assessed.
+
+### Next
+Continue U0 token/component integration into actual screens, run exact-branch CI, inspect failures and fix them; then proceed through U1–U3 real workflow integration before Step 2 audit. Keep U4/U5 blocked until their S/P/I dependencies and licence/performance gates pass.

@@ -53,7 +53,7 @@ def test_security_and_data_flow_inventories_have_complete_stable_ids() -> None:
     assert len(flow_ids) == len(set(flow_ids)) == 8
 
 
-def test_operational_templates_do_not_claim_exercises_were_run() -> None:
+def test_operational_templates_keep_exercise_status_and_evidence_explicit() -> None:
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]

@@ -2871,3 +2871,32 @@ The owner’s authorization starts engineering work; it does not substitute for 
 
 ### Next
 Continue U0 token/component integration into actual screens, run exact-branch CI, inspect failures and fix them; then proceed through U1–U3 real workflow integration before Step 2 audit. Keep U4/U5 blocked until their S/P/I dependencies and licence/performance gates pass.
+
+
+## 2026-11-17 — Track U implementation continuation
+**Branch:** track-u-step1-base  
+**PR:** #76  
+**Latest source head at entry:** fe5d464367130f7dc14644e1f83b0852754e9665
+
+### Additional implementation
+- Corrected generated component catalogue so the deterministic design-token check no longer sees stale palette/spacing/radius documentation.
+- Replaced the old serif/display typography mapping with the owner's refined sans-serif V1 scale; scientific text uses tabular monospace.
+- Rebuilt the development component gallery around the shared V1 controls and compact flat grouping.
+- Replaced text-glyph navigation symbols with one outlined Material icon family and fixed the remaining stale glyph reference.
+- Added the standard Material Icons Core dependency; no new viewer/scientific runtime dependency was introduced.
+
+### Verification status
+- Workflow 44123373855 failed only because docs/ui/component-catalogue.md was stale after token generation; Android build was still in progress when that run was superseded.
+- On the corrected catalogue head 0f7e145a518aa6057a2941f123d48bd1eea8da5e, the Python foundation/registry/tests job passed; other host-side scientific smoke/security/SPDX jobs passed. Android arm64 APK/AAB job was still running at last inspection.
+- Exact latest head fe5d464367130f7dc14644e1f83b0852754e9665 has a new pull-request workflow run queued/pending. No result is claimed for that head yet.
+- No UI screenshot, contrast, TalkBack, 200% font-scale, RTL, emulator or physical-device evidence is claimed.
+
+### Remaining track work
+- App bar and navigation drawer still need full integration and exact dimension verification across compact/standard/large/tablet windows.
+- Search/onboarding and all settings/security/privacy surfaces need implementation against actual supported app behavior.
+- Review local biometric lifecycle/recovery, encrypted settings/data inventory/deletion disclosures, and decide FLAG_SECURE/Recents behavior only with documented threat/privacy review.
+- Finish durable result/provenance views and verify all workflow states with actual ResearchStore/WorkManager paths.
+- U4 viewers remain blocked on S1–S3 interfaces, dependency licence/security review and low-end-device performance evidence.
+- U5 remains blocked on P1–P3 and I2–I4; no clinical interpretation is permitted while P0 is blocked.
+- U6 needs actual screenshot/contrast/accessibility/window/device evidence; CI compilation alone is insufficient.
+- Step 2 exact-head integration audit has not run. Track U remains OPEN.

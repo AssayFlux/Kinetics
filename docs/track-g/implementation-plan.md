@@ -27,14 +27,14 @@ These are useful foundations, not evidence that all controls are operating or in
 ## 3. Current execution status (2026-11-12)
 
 - **P prerequisite evidence:** workflow #43131601029 completed successfully with 9/9 jobs on commit `553056b3c51373913e8c8936802971fbd532f4e0`. This records P software verification only; P0 and external gates remain open.
-- **G0:** canonical register, status vocabulary, role/cadence model and initial requirements traceability are present. Owner acceptance of governance policy and named non-owner role appointments remain open.
-- **G1:** security threat model now has a canonical app/data/native/WebView/supply-chain scope; UI threat cases are maintained as a scoped supplement. A 16-case security verification matrix exists; fuzzing, device tests, vulnerability-channel exercise and independent assessment remain open.
-- **G2:** source-only SPDX limitations are explicit; exact artifact/data/model license decisions and resolved transitive dependency coverage remain open. No scientific engine/model/database is approved for bundling.
+- **G0:** canonical register, status vocabulary, role/cadence model and exact eight-row requirements traceability are present; structural completeness is CI-checked. Owner policy acceptance and named non-owner role appointments remain open.
+- **G1:** canonical app/data/native/WebView/supply-chain threat model and scoped UI supplement; 16-case matrix IDs are CI-checked. Source manifest offline/backup guardrails pass CI; fuzzing, merged-manifest/device tests, vulnerability-channel exercise and independent assessment remain open.
+- **G2:** source-only SPDX limitations are explicit; CI captures Gradle runtime/build-environment graphs, Cargo tree/metadata, resolved artifact hashes and Android Python-wheel hashes. These raw inventories are not a complete SBOM; exact artifact/data/model license decisions and transitive license review remain open. No scientific engine/model/database is approved for bundling.
 - **G3:** requirements traceability, blank CAPA register and release evidence controls are present; test-level coverage, operating review records and QMS applicability advice remain open.
-- **G4:** source-level data-flow inventory reflects the inspected manifest and policies; merged-manifest, provider/device behavior, qualified privacy advice and jurisdiction decisions remain open.
+- **G4:** eight source-level data flows are CI-checked and Android offline/backup configuration guards pass; merged-manifest, provider/device behavior, qualified privacy advice and jurisdiction decisions remain open.
 - **G5:** generated capability-claims matrix covers 130 registry entries and does not imply scientific validation; independent truth sets, subgroup analysis and reviewer-approved protocols remain open.
 - **G6:** publication integrity protocol and existing empty claim ledger are linked; authorship declarations, reproducible literature review and peer/editor decisions remain open.
-- **G7:** incident/stop-work/rollback/access/recovery procedures and tabletop templates exist; no tabletop, access review or recovery exercise is claimed complete.
+- **G7:** incident/stop-work/rollback/access/recovery procedures and five tabletop scenarios are CI-checked as templates; no tabletop, access review or recovery exercise is claimed complete.
 - **Track U:** remains sixth in the approved order and does not start until G's two-step gate is assessed and reported.
 
 ## 4. Work packages

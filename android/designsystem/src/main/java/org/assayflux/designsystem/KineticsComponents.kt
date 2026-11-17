@@ -2,7 +2,6 @@ package org.assayflux.designsystem
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -162,7 +161,7 @@ fun KineticsField(
         onValueChange = onValueChange,
         modifier = modifier.fillMaxWidth(),
         label = { Text(label, fontSize = 12.sp) },
-        supportingText = supportingText?.let { message -> { Text(message, fontSize = 12.sp) } },
+        supportingText = { if (!supportingText.isNullOrBlank()) Text(supportingText, fontSize = 12.sp) },
         isError = isError,
         singleLine = singleLine,
         shape = RoundedCornerShape(10.dp),

@@ -4,7 +4,7 @@
 **Repository:** `AssayFlux/Kinetics`, branch `main`  
 **Engineering baseline:** `7fdfce3147b5df2e4be6261beba48c7a41bf0bbe`  
 **Prior exact-head baseline workflow:** [#44098272029](https://github.com/AssayFlux/Kinetics/actions/runs/44098272029), 9/9 jobs passed.  
-**Final audit-increment workflow:** [#44106428668](https://github.com/AssayFlux/Kinetics/actions/runs/44106428668); result to be confirmed after this documentation increment.
+**Final audit-increment verification:** consult the main-branch CI history after the final audit and documentation updates. The exact-head baseline result cited below is the verified pre-increment run.
 
 ## Decision
 
@@ -37,7 +37,7 @@ Workflow [#44098272029](https://github.com/AssayFlux/Kinetics/actions/runs/44098
 - Android arm64 debug APK/AAB build, package alignment and JVM unit tests: passed.
 - Host numerical/reference and engine smoke jobs, dependency inventory job and Node worker security tests: passed.
 
-The final G increment adds explicit validation of the 16 security test IDs, eight data-flow IDs, eight G requirement rows, unassigned specialist roles and five not-run tabletop templates. It also adds regression tests and expands raw dependency evidence capture. The final increment must pass workflow [#44106428668](https://github.com/AssayFlux/Kinetics/actions/runs/44106428668) before this audit can be called exact-head verified.
+The final G increment adds explicit validation of the 16 security test IDs, eight data-flow IDs, eight G requirement rows, accountable-role assignment states and evidence-gated tabletop status rows. It also adds regression tests and expands raw dependency evidence capture. A successful exact-head workflow on the final documentation commit is required before this audit can be called exact-head verified.
 
 ## Explicit non-claims and open gates
 

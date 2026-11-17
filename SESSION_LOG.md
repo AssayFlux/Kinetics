@@ -2828,3 +2828,14 @@ The first generated claims CSV incorrectly included entries outside the registry
 
 ### No fabricated closure
 The owner’s authorization starts engineering work; it does not substitute for competent external determinations or a formal P0 gate decision. This audit does not claim scientific or clinical validation and does not waive any carry-forward obligation.
+
+
+## 2026-11-17 — Track G governance engineering verification
+
+- Audited current `main` at `622ffc1705fda3161478b710fe2f5a4af65c6287`, including G0–G7 plans/registers, source threat model, privacy/security policies, CI, claims generator, checker, tests, dependency register and operational templates.
+- Baseline exact-head workflow [#44098272029](https://github.com/AssayFlux/Kinetics/actions/runs/44098272029) passed 9/9 jobs. Python governance checker and claims-matrix reproducibility check passed; Ruff/mypy passed; pytest reported 534 passed and 9 skipped. Android arm64 debug APK/AAB build, package alignment and JVM tests passed.
+- Strengthened governance structural validation for all 16 security test IDs, eight data-flow IDs, exact G requirement rows, explicit unassigned specialist roles and the five not-run tabletop templates.
+- Added regression tests for security/data-flow inventory completeness and for not misrepresenting tabletop templates as completed exercises.
+- Extended Android CI dependency evidence capture to include Gradle build environment, Cargo metadata and Python wheel hashes alongside existing runtime graph, Cargo tree and artifact hashes.
+- Reconciled the roadmap into G0–G7 and updated implementation plan, control register, traceability and SECURITY.md with exact-head evidence and remaining limitations.
+- **Disposition:** G0–G7 bounded research-only software foundation implemented/automated-check verified. Overall Track G remains OPEN pending owner policy acceptance, qualified role appointments, full SBOM and license review, independent security/privacy/scientific/legal reviews, merged-manifest/device verification, operational tabletop/access/recovery exercises and publication author/literature evidence. No external approval or exercise is fabricated. Track U remains gated on G's two-step assessment under D-023.

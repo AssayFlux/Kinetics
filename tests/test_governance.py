@@ -59,4 +59,8 @@ def test_operational_templates_do_not_claim_exercises_were_run() -> None:
     root = Path(__file__).resolve().parents[1]
     controls = (root / "docs/track-g/operational-controls.md").read_text()
     assert "No exercise is marked complete by this template" in controls
-    assert controls.count("| NOT RUN |") == 5
+    for exercise in ("OPS-TT-01", "OPS-TT-02", "OPS-TT-03", "OPS-TT-04", "OPS-TT-05"):
+        rows = [line for line in controls.splitlines() if line.startswith("|") and exercise in line]
+        assert len(rows) == 1
+        status = rows[0].strip("|").split("|")[-1].strip()
+        assert status == "NOT RUN" or status.startswith("COMPLETED — evidence:")

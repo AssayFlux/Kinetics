@@ -147,7 +147,7 @@ internal fun KineticsAppShell(
                             NavigationRailItem(
                                 selected = tab == item,
                                 onClick = { tab = item },
-                                icon = { Text(item.glyph, fontSize = 20.sp) },
+                                icon = { KineticsTabIcon(item) },
                                 label = { Text(item.label) },
                                 alwaysShowLabel = true,
                             )

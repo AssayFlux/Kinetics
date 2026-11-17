@@ -1,8 +1,10 @@
 # Track G — governance, assurance and publication readiness
 
-**Sequence:** Track P's bounded software foundation is closed; P0 and its external gates remain open. Track G follows P under D-023. Track U is next in the sequential **R → S → I → P → G → U** order after G's two-step engineering gate is assessed and reported; pre-existing partial U0–U3 work is retained as a baseline. G's independent reviews, owner decisions and operating evidence remain carry-forward obligations and are not waived by software implementation.
-**Sequence:** Track G follows the Track P engineering exit. Track U follows Track G in the current **R → S → I → P → G → U** order (D-023). P software workflow #43131601029 passed 9/9 jobs on commit `553056b3c51373913e8c8936802971fbd532f4e0`; P0 and external gates remain open. G engineering is underway under the owner's instruction. G workflow #43136845552 failed only at the Python lint step (one overlong line in the new claims generator); the issue was corrected in commit `e5d89df3ee3279e6b670f5aab7b5f3a17c20a05a`, and subsequent governance-checker/tests commits are on main. Exact-head CI #43139841217 for commit `c2c7ee099efe8f7da269e0afd8e4873f06ecdb4d` is pending. Further U implementation begins only after G's two-step gate is assessed and reported. Existing partial U0–U3 work is retained as a pre-existing baseline.  
-**Scope:** research-only governance for the unreleased Kinetics platform. This plan is not a legal opinion, ethics determination, security certification, QMS certification, regulatory clearance or publication endorsement.
+**Engineering exit: CLOSED (2026-11-17).** G0–G7 bounded research-only governance software foundation is implemented and passed exact-head CI on `main` commit `31b1618c4e843d0ec90feb2ceae0d0e4fb1615b1`; workflow [#44108451571](https://github.com/AssayFlux/Kinetics/actions/runs/44108451571) completed successfully with 9/9 jobs. The Python job reports 536 passed, 9 skipped; Ruff, mypy, governance checks and generated capability-claims reproducibility passed. The Android arm64 debug APK/AAB build, package alignment and JVM unit tests passed.
+
+**Overall Track G acceptance: OPEN.** Independent security/privacy/scientific/legal reviews, complete resolved SBOM and licensing decisions, physical-device verification, named specialist appointments, owner policy/risk acceptance and operational exercises remain open. These are explicit carry-forward obligations, not blockers to the bounded engineering foundation closure. Track U follows G under D-023; pre-existing partial U0–U3 work remains a baseline, not accepted completion.
+
+**Scope:** research-only governance for the unreleased Kinetics platform. This plan is not a legal opinion, ethics determination, security certification, QMS certification, regulatory clearance or publication endorsement. P0 remains BLOCKED / NOT APPROVED.
 
 ## 1. Purpose
 
@@ -124,11 +126,13 @@ The following repository artifacts now form the G engineering baseline:
 These files are implementation evidence, not evidence that external reviews or operating exercises have passed. The exact-head CI result and any failures must be appended after the final G code/doc increment.
 
 
-## 11. Exact-head engineering verification update (2026-11-17)
+## 11. Final exact-head engineering verification and closure (2026-11-17)
 
-- Exact main revision before the G verification increment: `622ffc1705fda3161478b710fe2f5a4af65c6287`.
-- Baseline exact-head workflow [#44098272029](https://github.com/AssayFlux/Kinetics/actions/runs/44098272029) completed successfully with 9/9 jobs.
-- The Python foundation job ran the governance checker, claims-matrix reproducibility check, Ruff, mypy and pytest; result: 534 passed, 9 skipped.
-- The Android job built the arm64 debug APK/AAB, passed package alignment and JVM tests, and captured Gradle runtime/build-environment graphs, Cargo tree/metadata, dependency artifact hashes and Android Python-wheel hashes after the verification increment.
-- These are engineering checks and raw dependency evidence. They are not a complete SPDX/CycloneDX SBOM, license clearance, independent security/privacy assessment, scientific validation, physical-device test or operational exercise.
-- G0–G7 engineering foundation is considered implemented/automated-check verified within this bounded research-only scope. Formal Track G acceptance remains OPEN.
+- Final main revision: `31b1618c4e843d0ec90feb2ceae0d0e4fb1615b1`.
+- Exact-head workflow [#44108451571](https://github.com/AssayFlux/Kinetics/actions/runs/44108451571) completed successfully: **9/9 jobs passed**.
+- Python foundation job: **536 passed, 9 skipped**; Ruff, mypy, governance structure/register checks and generated capability-claims reproducibility passed.
+- Android arm64 debug APK/AAB build, package alignment and JVM unit-test task passed; dependency graphs and artifact hashes were captured.
+- Other passing jobs: pinned Vina engine smoke check, private Node docking-worker security tests, RDKit descriptor sanity fixtures, RDKit ADMET utility smoke check, scientific reference comparisons, declared-source SPDX inventory and OpenMM CPU replica smoke check.
+- The nine skipped Python tests require optional RDKit/pysam packages not installed in the Python foundation job; separate pinned RDKit and engine jobs passed their scoped smoke checks.
+- **Disposition:** G0–G7 bounded research-only engineering foundation is **CLOSED**. This is an engineering milestone only, not a complete SBOM, license clearance, independent security/privacy assessment, scientific validation, physical-device test, QMS/legal/ethics decision or operational acceptance.
+- **Overall Track G acceptance remains OPEN.** External assurance, qualified appointments, owner policy/risk decisions and operational exercises remain carry-forward gates. P0 remains BLOCKED / NOT APPROVED. Track U is next in the D-023 sequence.

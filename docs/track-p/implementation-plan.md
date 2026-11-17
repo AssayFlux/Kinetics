@@ -1,4 +1,4 @@
-# Track P — implementation and verification plan
+# Track P — Precision Medicine (PGx First): implementation and verification plan
 
 **Track status:** STARTED 2026-11-11 by project-owner authorization (D-022).  
 **Execution model:** two steps — (1) build the documented base; (2) audit, test and fix the base.  
@@ -29,13 +29,13 @@
 4. Build genotype parsing/QC only against synthetic fixtures until P0 and relevant data-use gates pass. Bind every QC result to a verified synthetic reference sequence (assembly/accession/release/contig/digest/coordinate system); reject unsupported ploidy, mismatched contigs/REF alleles, ambiguous builds, malformed alleles and uncertain mappings rather than guessing.
 5. Keep genotype-to-phenotype interpretation, star-allele calling, diplotype/phenotype assignment and guideline recommendations out of scope until later P gates and qualified review.
 
-### P2–P7 — staged, not started
-- **P2:** expandable PGx allele/diplotype/phenotype research after P1 evidence, source/tool licences, adviser review and owner scope decision.
-- **P3:** versioned guideline mapping with source licensing and bounded research wording.
-- **P4:** evidence assistant with human curator; no autonomous final classification.
-- **P5:** adviser review/usability study only after ethics determination and required approvals.
-- **P6:** governance, audit, access controls and internal validation; Clinical Mode remains disabled unless separately authorized after all requirements.
-- **P7:** jurisdiction-specific regulatory planning and prospective evaluation only under approved protocol and oversight.
+### P2–P7 — bounded research-only software foundations implemented; operational gates remain open
+- **P2:** provenance-bearing PGx definition and PharmVar parsers, conservative phased haplotype matching, digest/release checks, input ceilings and abstention on ambiguous, incomplete or unphased inputs. Synthetic fixtures only; no clinical star-allele caller, diplotype/phenotype inference, CNV/SV caller or treatment output.
+- **P3:** versioned research-only guideline evidence schema; clinical decision support is hard-disabled. No executable recommendation mapping or licensed guideline corpus.
+- **P4:** human-curation record contract with explicit second-review states and evidence requirements. No qualified curator appointments, real adjudications or operational curation service.
+- **P5:** ethics/adviser protocol template only. No ethics submission, determination, recruitment or human-subject study.
+- **P6:** risk/control and residual-risk evidence contracts. No completed independent security/privacy/QMS assessment, verified control dossier or accepted residual-risk record.
+- **P7:** jurisdiction-review and regulatory-evidence contract. No qualified jurisdiction advice, regulator engagement, clearance or prospective evaluation.
 
 ## Step 2 — audit, test and fix
 - Verify schema contracts and negative cases; malformed, ambiguous, out-of-range and mismatched-reference inputs must fail closed.
@@ -46,11 +46,14 @@
 - Review Research Mode wording; no diagnostic, treatment, dosing or patient-specific recommendations.
 - Record defects, risk decisions, evidence links and owner disposition. CI success is not scientific or clinical validation.
 
-## Exit criteria
-Each P phase needs documented implementation evidence, exact-source automated tests, applicable independent reference validation, source/licence review, security/privacy review and explicit owner acceptance. P0 additionally requires external determinations and a formal gate decision. Physical-device tests and any human-subject/clinical evaluation are separate evidence classes.
+## Exit criteria and closure semantics
+The **bounded software foundation** for P1–P7 is closed only when the exact-head automated workflow passes and the repository records the implemented contracts, tests and limitations. This does not close the full Precision Medicine track: P0 and all external, scientific, source/licensing, operational, device, ethics, privacy, security, regulatory and owner-acceptance gates remain open. P0 cannot be passed by owner authorization alone; it requires the competent external determinations and a separate formal owner gate decision. Physical-device tests and any human-subject/clinical evaluation are separate evidence classes.
 
-## Current open items
-- P0 packet is a draft; all independent review and approval items remain pending.
-- Public dataset catalogue has candidate sources only; acquired entries remain empty.
-- No patient data, human subjects, individual interpretation, clinical report or Clinical Mode is authorized.
-- P1 now includes bounded aggregate-only synthetic VCF QC bound to an explicit synthetic ReferenceSequence, with build/accession/release/contig/digest/coordinate provenance and REF/contig matching. Negative tests cover malformed alleles, unsupported symbolic alleles, phase separators, missingness, resource limits, unsupported ploidy and reference tampering. Independent reference concordance and exact-head audit remain required.
+## Current open items and verified software baseline
+- **P0 remains BLOCKED / NOT APPROVED.** The evidence packet is a draft; competent legal, ethics, clinical/scientific, privacy, security and regulatory determinations and formal owner gate disposition are not recorded.
+- The public dataset catalogue contains candidate metadata only; acquired entries remain empty. No third-party source payload is approved or acquired by this track.
+- **P1:** aggregate-only synthetic VCF QC and reference-bound provenance are implemented. Independent authoritative reference concordance, exact-source terms review, fuzz/resource audit and device workflow verification remain open.
+- **P2:** parser/matcher contracts and synthetic regression coverage are implemented; licensed real-source packs, independent biological concordance, broad gene coverage and structural-variant/CNV support remain open.
+- **P3–P7:** research-only schemas, templates and validation contracts are implemented; guideline mapping, curator operations, ethics determination, completed risk/control verification and jurisdiction-specific advice remain open.
+- Exact-head baseline before this documentation closure: commit `7967ccb0288ea1d5b82af18f8ab8d886d18d4733`; workflow [#44078534173](https://github.com/AssayFlux/Kinetics/actions/runs/44078534173), 9/9 jobs passed. Python suite: 534 passed, 9 skipped (optional RDKit/pysam dependencies unavailable in that job); Ruff and strict mypy passed. Android arm64 APK/AAB build, package alignment and JVM tests passed. This is software/CI evidence, not independent PGx validation or device runtime acceptance.
+- No patient data, human subjects, individual interpretation, clinical report, treatment/dosing recommendation or Clinical Mode is authorized.

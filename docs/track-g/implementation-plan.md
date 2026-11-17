@@ -1,6 +1,6 @@
 # Track G — governance, assurance and publication readiness
 
-**Status:** Track G implementation in progress (2026-11-12); G0–G7 engineering controls are being built and audited. Formal Track G acceptance remains OPEN.  
+**Status (2026-11-17):** G0–G7 bounded research-only governance software foundation implemented; exact-head automated workflow #44098272029 passed 9/9 jobs. Overall Track G acceptance remains OPEN pending owner policy acceptance, named role appointments, independent reviews, complete licensing evidence, device verification and operational exercises.  
 **Sequence:** Track G follows the Track P engineering exit. Track U follows Track G in the current **R → S → I → P → G → U** order (D-023). P software workflow #43131601029 passed 9/9 jobs on commit `553056b3c51373913e8c8936802971fbd532f4e0`; P0 and external gates remain open. G engineering is underway under the owner's instruction. G workflow #43136845552 failed only at the Python lint step (one overlong line in the new claims generator); the issue was corrected in commit `e5d89df3ee3279e6b670f5aab7b5f3a17c20a05a`, and subsequent governance-checker/tests commits are on main. Exact-head CI #43139841217 for commit `c2c7ee099efe8f7da269e0afd8e4873f06ecdb4d` is pending. Further U implementation begins only after G's two-step gate is assessed and reported. Existing partial U0–U3 work is retained as a pre-existing baseline.  
 **Scope:** research-only governance for the unreleased Kinetics platform. This plan is not a legal opinion, ethics determination, security certification, QMS certification, regulatory clearance or publication endorsement.
 
@@ -122,3 +122,13 @@ The following repository artifacts now form the G engineering baseline:
 - `scripts/check_governance.py` and `tests/test_governance.py` — structural validation of governance artifacts and control traceability.
 
 These files are implementation evidence, not evidence that external reviews or operating exercises have passed. The exact-head CI result and any failures must be appended after the final G code/doc increment.
+
+
+## 11. Exact-head engineering verification update (2026-11-17)
+
+- Exact main revision before the G verification increment: `622ffc1705fda3161478b710fe2f5a4af65c6287`.
+- Baseline exact-head workflow [#44098272029](https://github.com/AssayFlux/Kinetics/actions/runs/44098272029) completed successfully with 9/9 jobs.
+- The Python foundation job ran the governance checker, claims-matrix reproducibility check, Ruff, mypy and pytest; result: 534 passed, 9 skipped.
+- The Android job built the arm64 debug APK/AAB, passed package alignment and JVM tests, and captured Gradle runtime/build-environment graphs, Cargo tree/metadata, dependency artifact hashes and Android Python-wheel hashes after the verification increment.
+- These are engineering checks and raw dependency evidence. They are not a complete SPDX/CycloneDX SBOM, license clearance, independent security/privacy assessment, scientific validation, physical-device test or operational exercise.
+- G0–G7 engineering foundation is considered implemented/automated-check verified within this bounded research-only scope. Formal Track G acceptance remains OPEN.

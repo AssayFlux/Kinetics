@@ -15,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material.Icon
@@ -97,6 +98,8 @@ internal fun KineticsAppShell(
             val navigationMode = classifyNavigationMode(maxWidth.value, maxHeight.value)
             val useDrawer = navigationMode == NavigationMode.Drawer
             val useRail = navigationMode == NavigationMode.Rail
+            val drawerState = rememberDrawerState(DrawerValue.Closed)
+            val drawerScope = rememberCoroutineScope()
 
             @Composable
             fun Screen(modifier: Modifier) {
@@ -112,36 +115,87 @@ internal fun KineticsAppShell(
                 }
             }
 
+            val drawerState = rememberDrawerState(DrawerValue.Closed)
+            val drawerScope = rememberCoroutineScope()
+
+            @Composable
+            fun AppBar(showMenu: Boolean) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().height(56.dp).padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (showMenu) {
+                        IconButton(
+                            onClick = { drawerScope.launch { drawerState.open() } },
+                            modifier = Modifier.size(48.dp),
+                        ) {
+                            Icon(Icons.Outlined.Menu, contentDescription = "Open navigation menu")
+                        }
+                    } else {
+                        Spacer(Modifier.width(48.dp))
+                    }
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+                        Text("KINETICS", style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold, letterSpacing = 1.1.sp)
+                        Text(tab.label, style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            }
+
             @Composable
             fun NavigationItems() {
                 KineticsTab.entries.forEach { item ->
                     NavigationDrawerItem(
                         selected = tab == item,
-                        onClick = { tab = item },
+                        onClick = {
+                            tab = item
+                            drawerScope.launch { drawerState.close() }
+                        },
                         icon = { KineticsTabIcon(item) },
                         label = { Text(item.label) },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
                     )
                 }
             }
 
             when {
-                useDrawer -> PermanentNavigationDrawer(
+                useDrawer -> ModalNavigationDrawer(
+                    drawerState = drawerState,
+                    gesturesEnabled = true,
                     drawerContent = {
-                        PermanentDrawerSheet(Modifier.width(280.dp)) {
-                            Spacer(Modifier.height(24.dp))
-                            Text("KINETICS", modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
-                                color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                        ModalDrawerSheet(
+                            modifier = Modifier.fillMaxHeight().widthIn(max = 340.dp),
+                            drawerContainerColor = MaterialTheme.colorScheme.surface,
+                        ) {
+                            Column(
+                                Modifier.fillMaxWidth().height(160.dp).padding(horizontal = 24.dp, vertical = 20.dp),
+                                verticalArrangement = Arrangement.Bottom,
+                            ) {
+                                Text("KINETICS", style = MaterialTheme.typography.headlineSmall,
+                                    fontWeight = FontWeight.SemiBold, letterSpacing = 1.4.sp)
+                                Spacer(Modifier.height(6.dp))
+                                Text("COMPUTATIONAL RESEARCH", style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.sp)
+                            }
+                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                            Spacer(Modifier.height(12.dp))
                             NavigationItems()
+                            Spacer(Modifier.weight(1f))
+                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                            Text("RESEARCH MODE", modifier = Modifier.padding(horizontal = 24.dp, vertical = 18.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     },
                 ) {
-                    Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
-                        Screen(Modifier.padding(padding))
-                    }
+                    Scaffold(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        topBar = { AppBar(showMenu = true) },
+                    ) { padding -> Screen(Modifier.padding(padding)) }
                 }
                 useRail -> Row(Modifier.fillMaxSize()) {
-                    NavigationRail {
+                    NavigationRail(containerColor = MaterialTheme.colorScheme.surface) {
                         Spacer(Modifier.height(12.dp))
                         KineticsTab.entries.forEach { item ->
                             NavigationRailItem(
@@ -156,12 +210,17 @@ internal fun KineticsAppShell(
                     Scaffold(
                         modifier = Modifier.weight(1f),
                         containerColor = MaterialTheme.colorScheme.background,
+                        topBar = { AppBar(showMenu = false) },
                     ) { padding -> Screen(Modifier.padding(padding)) }
                 }
                 else -> Scaffold(
                     containerColor = MaterialTheme.colorScheme.background,
+                    topBar = { AppBar(showMenu = true) },
                     bottomBar = {
-                        NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+                        NavigationBar(
+                            modifier = Modifier.heightIn(min = 64.dp),
+                            containerColor = MaterialTheme.colorScheme.surface,
+                        ) {
                             KineticsTab.entries.forEach { item ->
                                 NavigationBarItem(
                                     selected = tab == item, onClick = { tab = item },

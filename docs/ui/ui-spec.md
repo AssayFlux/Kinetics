@@ -1,49 +1,111 @@
-# Kinetics UI specification — current approved direction
+# Kinetics UI specification — owner-supplied V1
 
-**Current authority:** `docs/ui/kinetics-visual-design-system.md` (D-015, owner-approved 2026-11-08).  
-**Status:** Design direction approved; native Compose implementation and evidence remain in progress.
+**Authority:** D-024, 2026-11-17. This 20-section specification is the active visual and interaction contract for Track U.  
+**Platform:** Native Android Jetpack Compose.  
+**Product scope:** KINETICS Research Mode only; no clinical or fabricated functionality.
 
-## Current visual contract
-- Default: **Light Classic** — warm ivory/cream, deep maroon, restrained gold and peacock teal.
-- Appearance: coherent Dark Classic and System options; no neon theme as a product direction.
-- Composition: rounded hero/surfaces, spacious central horizontal workspace carousel with adjacent cards partially visible, pagination dots and stacked cards below.
-- Screens: splash, login, dashboard, navigation drawer, profile/settings and appearance, implemented only with real capabilities and real app state.
-- Typography roles: Great Vibes (limited wordmark accent, only if logo has no wordmark), Cormorant Garamond display, IBM Plex Sans functional UI, IBM Plex Mono scientific data; font binaries require licence/glyph/size/offline review.
-- Motifs: optional curated Indian classical/folk-inspired SVG system, with factual attribution, cultural review, contrast tests, deterministic rotation and Daily/Pin/Off controls. Do not enable before its gates pass.
-- Preserve owner-supplied logos and reference images byte-for-byte. Never invent metrics, jobs, ETAs, projects, analysis outputs or authentication capability.
+## 1. Design philosophy
+Minimalist, elegant, professional, monochromatic, readable and functional. Use refined typography, generous whitespace, thin line icons, subtle borders, consistent dimensions and native mobile interaction patterns. Avoid excessive gradients, shadows, rounding, decorative illustrations, colour, crowded screens and unnecessary animation.
 
-## Architecture and quality constraints
-- Native Jetpack Compose; retain MVVM/UDF, typed orchestration and scientific/domain separation.
-- Existing verified responsive window-class/navigation strategy remains active; do not claim fold-aware behaviour without WindowManager integration and tests.
-- Minimum 48dp touch targets, dynamic type, screen-reader semantics, visible focus, RTL, keyboard/switch navigation and reduced-motion support.
-- Automated WCAG AA contrast checks: 4.5:1 normal text and 3:1 large text/essential non-text controls, including worst-case motif backgrounds.
-- One canonical token source; generated outputs are not manually edited.
-- Existing licensing, privacy, security, offline-first and Research Mode-only public-build rules remain mandatory.
+## 2. Viewport and grid
+Reference viewport: **393 × 852 dp**. Responsive targets: compact 360 × 800 dp; large 430 × 932 dp; tablets 600 dp and wider. Use responsive constraints, not fixed coordinates.
 
-## Historical directions — not current instructions
-D-009's three neutral proposals, D-010/D-011 dark-futuristic/Obsidian Cyan default, and D-014's earlier Light Classic navy/teal palette and font proposal are superseded by D-015. They remain in `DECISIONS.md` for audit history only. D-012 responsive navigation and D-013 owner layout references remain active where compatible.
+Horizontal measurements:
+- Main screen padding: 20 dp standard, 16 dp compact, 24 dp large.
+- Section spacing: 24 dp standard, 16 dp compact.
+- Card padding: 16 dp.
+- Component spacing: 8 dp small, 12 dp standard, 20 dp large.
 
-## Evidence and implementation status
-The generated six-screen concept is a visual reference, not a running-app screenshot. Palette values and font families are documented in the canonical design system but still require contrast/licence verification. No screen, motif, accessibility outcome, screenshot or device support is complete until implementation and evidence are committed.
+4 dp spacing rhythm: 4, 8, 12, 16, 20, 24, 32 and 40 dp.
 
-## Required next work
-Follow the inventory → semantic tokens → shared Compose primitives → real-data screen refinement → optional motif system → screenshot/contrast/accessibility tests → owner review sequence in the canonical design system.
+## 3. Typography
+Use a refined, readable sans-serif with system fallback and font scaling. Large title 28 sp semibold; page title 24 sp semibold; section 20 sp semibold; subheading 16 sp medium; body 14 sp regular; secondary 13 sp regular; caption 12 sp regular; metadata 11 sp medium; button 14 sp medium. Align baselines, use comfortable line height and tabular numerals for statistics. Avoid unnecessary uppercase; allow natural wrapping.
 
-## Supersession and implementation enforcement — D-016
-Old active design directions are discontinued. Do not implement or restore neon, Obsidian Cyan or pre-D-015 palettes. They remain historical records only. D-015 is the sole active design authority.
+## 4. Exact monochrome colour system
+### Light
+| Role | Hex |
+|---|---|
+| Main background | #FAF9F6 |
+| Primary surface | #FFFFFF |
+| Secondary surface | #F2F1ED |
+| Primary text | #171717 |
+| Secondary text | #686868 |
+| Disabled text | #A3A3A3 |
+| Border | #E5E3DE |
+| Divider | #ECEAE6 |
+| Icon | #292929 |
 
-The required real-app destinations are splash/onboarding, authentication, dashboard, navigation, profile/security and appearance. They must use actual app state and original owner-supplied assets. Approved concept art is not evidence that a screen exists.
+### Dark
+| Role | Hex |
+|---|---|
+| Main background | #121212 |
+| Primary surface | #1B1B1B |
+| Secondary surface | #242424 |
+| Primary text | #F5F5F5 |
+| Secondary text | #A5A5A5 |
+| Disabled text | #686868 |
+| Border | #333333 |
+| Divider | #292929 |
+| Icon | #E8E8E8 |
 
-### Authentication and biometric acceptance
-- No invented cloud account, remote identity provider or server-side sign-in.
-- Clearly label local app lock separately from account authentication.
-- Use AndroidX BiometricPrompt with device capability/enrollment checks, explicit opt-in, secure credential fallback, lockout/error handling, lifecycle-safe invocation and Keystore-backed key use where appropriate.
-- Never collect, persist or process biometric templates. Never report success unless the cryptographic/authentication operation succeeds.
-- Define first-run, disabled biometrics, no enrollment, unavailable hardware, temporary/permanent lockout, credential fallback, key invalidation and recovery behavior.
-- Provide a user-visible way to disable biometric unlock and recover access without destroying encrypted research data.
+Semantic colours are reserved for success (muted green), warning (muted amber), error (muted red) and information (muted blue). Pair status colour with text/icon. Appearance modes: System, Light, Dark. Contrast must be measured; do not claim WCAG conformance without evidence.
 
-### Working-control acceptance
-Tests must prove each interactive element's state transition, navigation, persistence or platform action. Inert decorative controls are unacceptable. Planned/unavailable capabilities must be visibly identified and cannot be presented as runnable. Theme selection must persist across process death and restart. Profile/security settings must be backed by implemented storage and actions.
+## 5. Shape and radius
+Small buttons 8 dp; fields 10 dp; standard cards 12 dp; large cards 16 dp; dialogs 20 dp; bottom sheets 20 dp top corners; avatars circular. Do not round every element excessively.
 
-### Build/test cycle
-Every substantial increment must be built, regression-tested and inspected before acceptance. Record exact commit, APK/AAB hash, workflow, test commands/results, screenshots and device details. Never claim all systems work based on compilation alone. See ROADMAP and DECISIONS D-016.
+## 6. Application bar
+56 dp height, 16 dp horizontal padding, 24 dp leading/trailing icons and minimum 48 × 48 dp touch targets. Hamburger, page title/brand and contextual action/account avatar where appropriate.
+
+## 7. Navigation drawer
+Width-to-height proportion 3:5, maximum 85% of available width; header 150–180 dp; rows 48–52 dp; icons 22–24 dp; 16 dp horizontal padding; 4 dp vertical item spacing. Profile header, grouped destinations, clear active state, thin separators and settings/account actions near bottom. The actual destination list must reflect implemented routes.
+
+## 8. Buttons
+Primary 48 dp high, min width 112 dp, 20 dp horizontal padding, 10 dp radius. Secondary 44 dp high, 16 dp padding, 10 dp radius and subtle border. Text button 40 dp high with 12 dp padding. Icon button minimum touch target 48 × 48 dp and 24 dp icon. Implement default, pressed, disabled, loading and focused states.
+
+## 9. Input fields
+Standard 52 dp, compact 44 dp, 12 sp label, 15 sp input, 14 dp horizontal padding, 10 dp radius and 1 dp border. Include only applicable real text/password/search/dropdown/number/multiline controls with helper, validation, focus and error states.
+
+## 10. Cards and information panels
+Use cards only for meaningful grouping. Standard: 16 dp padding, 12 dp radius, 1 dp border, 12 dp internal spacing. Compact: 12 dp padding and 10 dp radius. Large panel: 20 dp padding and 16 dp radius. Prefer flat sections and lists where clearer.
+
+## 11. Lists
+Minimum row height 56 dp, 16 dp horizontal padding, 22–24 dp leading icon, 14 sp title, 12 sp subtitle and 20–24 dp trailing action. Use 1 dp separators where useful; long lists scroll naturally.
+
+## 12. Iconography
+One minimalist line-icon family; standard 24 dp, small 18 dp, large 28 dp, approximately 1.75–2 dp stroke. Maintain optical alignment and monochromatic treatment.
+
+## 13. Dialogs and bottom sheets
+Dialogs: maximum 340 dp phone width, 24 dp margin/padding, 20 dp radius, 20 sp title and 14 sp body. Bottom sheets: 20 dp top radius, 20 dp horizontal padding, 32 × 4 dp drag indicator and 16 dp content spacing. Dialogs for important confirmations; sheets for contextual actions.
+
+## 14. Bottom navigation
+Only where appropriate: 64–72 dp high excluding system insets, 24 dp icons, 11 sp labels and at most five destinations. Do not force it onto layouts better served by the adaptive rail/drawer.
+
+## 15. Avatars and status
+Avatar sizes 32, 40, 48 and 72 dp. Status dot 8 dp; standard badge 24 dp high, 8 dp horizontal padding and 6 dp radius. Status text accompanies colour where clarity matters. Do not invent an account avatar/profile.
+
+## 16. Data and statistics
+Primary statistic 24–28 sp, label 12 sp and support 11–12 sp. Charts use minimal axes, subtle grid lines, clear labels and no unnecessary gradients. Prioritise readability and explicit units/provenance.
+
+## 17. Scrolling and safe areas
+Respect status/navigation bars, keyboard insets and safe drawing areas. Prevent clipping and overlap; keep important bottom actions reachable with the keyboard open.
+
+## 18. Interaction and animation
+Button feedback 100–150 ms; small state transition 150–200 ms; screen transition 200–250 ms; bottom sheet 200–300 ms. Use restrained fade/slide and respect reduced motion; no bounce/parallax decoration.
+
+## 19. Responsive rules
+Compact: 16 dp padding, accessible actions, natural scroll and no horizontal overflow. Standard: 20 dp. Large: 24 dp and readable content width. Tablet: max content width where appropriate, two-column layouts and side navigation where beneficial.
+
+## 20. Final quality requirements
+Consistent spacing, typography, radii, icons and component heights; balanced whitespace; clear hierarchy; accessible contrast; responsive layouts; light/dark appearance; realistic interactive states; pixel-consistent alignment.
+
+## Product and engineering constraints
+- The active visual system does not change KINETICS product scope or architecture.
+- Home/Work/Explore/Settings must use real app state and supported operations.
+- No runnable capability without a real registry entry, dispatcher, input/result contract and tests.
+- Local biometric app lock must not be represented as cloud account authentication.
+- Preserve all owner assets byte-for-byte. Font binaries, icon libraries and other dependencies require licence/glyph/platform review.
+- No patient/clinical data, diagnosis, treatment, dosing or Clinical Mode. P0 remains blocked.
+- Screenshot concepts are not running-app evidence. Device and accessibility status remain NOT RUN until recorded.
+
+## Track U
+The two-step execution plan and exact evidence requirements are in docs/track-u/implementation-plan.md. This document defines the desired UI, not a completion claim.

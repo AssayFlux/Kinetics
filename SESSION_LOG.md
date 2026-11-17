@@ -2900,3 +2900,25 @@ Continue U0 token/component integration into actual screens, run exact-branch CI
 - U5 remains blocked on P1–P3 and I2–I4; no clinical interpretation is permitted while P0 is blocked.
 - U6 needs actual screenshot/contrast/accessibility/window/device evidence; CI compilation alone is insufficient.
 - Step 2 exact-head integration audit has not run. Track U remains OPEN.
+
+
+## 2026-11-17 — Track U application shell continuation
+**Branch:** track-u-step1-base  
+**PR:** #76  
+**Source changes:** e08d2699c290dc42bb8c0ff1946823d8d4a8ee02 and 778747d7b6f0e797f6124ec54b81e5ef80186af2
+
+### Implemented
+- Added the V1 56dp application bar with a real menu action and current destination context.
+- Replaced the compact-width permanent drawer with a gesture-enabled modal drawer, constrained to a maximum 340dp width, with grouped brand header, real Home/Work/Explore/Settings destinations and selection/close behavior.
+- Retained adaptive navigation rail for expanded windows and bottom navigation for compact windows; all routes continue to use existing app screens.
+- Updated the UI quality report to distinguish implemented source behavior from unrun visual/device acceptance.
+
+### Exact-head verification
+- Workflow 44124996311 on prior source head 49f169f497058bfe02fd9f66c712b11b19eafc86: Python foundation/registry/tests, token reproducibility, SPDX inventory, scientific reference comparisons, RDKit descriptor sanity, OpenMM replica smoke, ADMET utility smoke and private Node security tests passed. Pinned Vina smoke and Android arm64 APK/AAB build were still running at last inspection.
+- New source commits have triggered additional PR workflows. Kotlin compilation, APK/AAB build, JVM tests and UI behavior are not yet claimed for the latest source head.
+- No screenshot, contrast, TalkBack, 200% font-scale, RTL, keyboard/switch navigation, emulator or physical-device evidence is claimed.
+
+### Remaining
+- App shell still needs exact-head build validation and visual inspection against the 393×852dp reference, plus compact/standard/large/tablet checks.
+- Search/onboarding, security/privacy surfaces and full result/provenance presentation remain open.
+- U4/U5 remain dependency-gated; U6 evidence remains outstanding. Step 2 audit has not run. Track U remains OPEN.

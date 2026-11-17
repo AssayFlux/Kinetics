@@ -6,54 +6,77 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 /**
- * D-015 role-based typography.
- *
- * System serif/sans/monospace families are deliberate fallbacks while the
- * requested Cormorant Garamond, IBM Plex Sans and IBM Plex Mono binaries
- * undergo exact-version, licence, Indic-glyph and offline-size review.
- * Great Vibes is not used until the owner logo's wordmark is visually audited.
+ * Owner V1 typography: refined sans-serif throughout. System font fallback is
+ * deliberate until any bundled family passes licence, Indic glyph and offline review.
  */
 private val BaseTypography = Typography()
 
 val KineticsTypography = BaseTypography.copy(
     displayLarge = BaseTypography.displayLarge.copy(
-        fontFamily = FontFamily.Serif,
-        fontWeight = FontWeight.Normal,
-        letterSpacing = (-0.4).sp,
+        fontFamily = FontFamily.SansSerif, fontSize = 28.sp,
+        fontWeight = FontWeight.SemiBold, letterSpacing = 0.sp,
     ),
     displayMedium = BaseTypography.displayMedium.copy(
-        fontFamily = FontFamily.Serif,
-        fontWeight = FontWeight.Normal,
+        fontFamily = FontFamily.SansSerif, fontSize = 28.sp,
+        fontWeight = FontWeight.SemiBold,
     ),
     displaySmall = BaseTypography.displaySmall.copy(
-        fontFamily = FontFamily.Serif,
-        fontWeight = FontWeight.Normal,
+        fontFamily = FontFamily.SansSerif, fontSize = 24.sp,
+        fontWeight = FontWeight.SemiBold,
     ),
     headlineLarge = BaseTypography.headlineLarge.copy(
-        fontFamily = FontFamily.Serif,
+        fontFamily = FontFamily.SansSerif, fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold,
     ),
     headlineMedium = BaseTypography.headlineMedium.copy(
-        fontFamily = FontFamily.Serif,
+        fontFamily = FontFamily.SansSerif, fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold,
     ),
     headlineSmall = BaseTypography.headlineSmall.copy(
-        fontFamily = FontFamily.Serif,
+        fontFamily = FontFamily.SansSerif, fontSize = 20.sp,
         fontWeight = FontWeight.SemiBold,
     ),
-    titleLarge = BaseTypography.titleLarge.copy(fontFamily = FontFamily.SansSerif),
-    titleMedium = BaseTypography.titleMedium.copy(fontFamily = FontFamily.SansSerif),
-    titleSmall = BaseTypography.titleSmall.copy(fontFamily = FontFamily.SansSerif),
-    bodyLarge = BaseTypography.bodyLarge.copy(fontFamily = FontFamily.SansSerif),
-    bodyMedium = BaseTypography.bodyMedium.copy(fontFamily = FontFamily.SansSerif),
-    bodySmall = BaseTypography.bodySmall.copy(fontFamily = FontFamily.SansSerif),
-    labelLarge = BaseTypography.labelLarge.copy(fontFamily = FontFamily.SansSerif),
-    labelMedium = BaseTypography.labelMedium.copy(fontFamily = FontFamily.SansSerif),
-    labelSmall = BaseTypography.labelSmall.copy(fontFamily = FontFamily.SansSerif),
+    titleLarge = BaseTypography.titleLarge.copy(
+        fontFamily = FontFamily.SansSerif, fontSize = 20.sp,
+        fontWeight = FontWeight.SemiBold,
+    ),
+    titleMedium = BaseTypography.titleMedium.copy(
+        fontFamily = FontFamily.SansSerif, fontSize = 16.sp,
+        fontWeight = FontWeight.Medium,
+    ),
+    titleSmall = BaseTypography.titleSmall.copy(
+        fontFamily = FontFamily.SansSerif, fontSize = 14.sp,
+        fontWeight = FontWeight.Medium,
+    ),
+    bodyLarge = BaseTypography.bodyLarge.copy(
+        fontFamily = FontFamily.SansSerif, fontSize = 16.sp,
+        fontWeight = FontWeight.Normal,
+    ),
+    bodyMedium = BaseTypography.bodyMedium.copy(
+        fontFamily = FontFamily.SansSerif, fontSize = 14.sp,
+        fontWeight = FontWeight.Normal,
+    ),
+    bodySmall = BaseTypography.bodySmall.copy(
+        fontFamily = FontFamily.SansSerif, fontSize = 13.sp,
+        fontWeight = FontWeight.Normal,
+    ),
+    labelLarge = BaseTypography.labelLarge.copy(
+        fontFamily = FontFamily.SansSerif, fontSize = 14.sp,
+        fontWeight = FontWeight.Medium,
+    ),
+    labelMedium = BaseTypography.labelMedium.copy(
+        fontFamily = FontFamily.SansSerif, fontSize = 12.sp,
+        fontWeight = FontWeight.Regular,
+    ),
+    labelSmall = BaseTypography.labelSmall.copy(
+        fontFamily = FontFamily.SansSerif, fontSize = 11.sp,
+        fontWeight = FontWeight.Medium,
+    ),
 )
 
-/** Scientific identifiers and numeric summaries use a stable monospaced fallback. */
+/** Scientific identifiers and numeric summaries use tabular monospace fallback. */
 val KineticsScientificTextStyle = BaseTypography.bodyMedium.copy(
     fontFamily = FontFamily.Monospace,
+    fontFeatureSettings = "tnum",
     letterSpacing = 0.sp,
 )

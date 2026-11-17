@@ -36,3 +36,27 @@ def test_dependency_register_never_implies_unreviewed_clearance() -> None:
     assert all(row["license_status"] for row in rows)
     assert all(row["redistribution_status"] for row in rows)
     assert all(row["reviewer"] for row in rows)
+
+
+def test_security_and_data_flow_inventories_have_complete_stable_ids() -> None:
+    from pathlib import Path
+    import re
+
+    root = Path(__file__).resolve().parents[1]
+    security = (root / "docs/track-g/security-verification-matrix.md").read_text()
+    flows = (root / "docs/track-g/data-flow-inventory.md").read_text()
+    security_ids = re.findall(r"\|\s*(SEC-\d{3})\s*\|", security)
+    flow_ids = re.findall(r"\|\s*(DF-\d{2})\s*\|", flows)
+    assert set(security_ids) == {f"SEC-{number:03d}" for number in range(1, 17)}
+    assert len(security_ids) == len(set(security_ids)) == 16
+    assert set(flow_ids) == {f"DF-{number:02d}" for number in range(1, 9)}
+    assert len(flow_ids) == len(set(flow_ids)) == 8
+
+
+def test_operational_templates_do_not_claim_exercises_were_run() -> None:
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    controls = (root / "docs/track-g/operational-controls.md").read_text()
+    assert "No exercise is marked complete by this template" in controls
+    assert controls.count("| NOT RUN |") == 5

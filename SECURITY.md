@@ -2,7 +2,7 @@
 
 ## Current status
 
-Kinetics is an unreleased, research-only application under active development. The R, S and I software scopes have recorded engineering closure; Track P software verification is recorded on its exact implementation revision, while P0 remains BLOCKED / NOT APPROVED. Track G is in progress and Track U follows it under D-023. Physical-device validation, independent security assessment, qualified privacy/legal determinations, complete third-party clearance and production release authorization remain open. CI builds are unsigned debug artifacts, not a production release.
+Kinetics is an unreleased, research-only application under active development. The R, S and I software scopes have recorded engineering closure; Track P software verification is recorded on its exact implementation revision, while P0 remains BLOCKED / NOT APPROVED. Track G's bounded research-only governance software foundation has passed exact-head automated checks (workflow #44098272029, 9/9 jobs); overall governance acceptance remains OPEN and Track U follows it under D-023. Physical-device validation, independent security assessment, qualified privacy/legal determinations, complete third-party clearance and production release authorization remain open. CI builds are unsigned debug artifacts, not a production release.
 
 Do not submit real patient, identifiable human-subject or clinical data as an issue, pull request, test fixture or attachment.
 

@@ -169,6 +169,8 @@ def validate() -> list[str]:
     if roles_path.is_file():
         roles = roles_path.read_text(encoding="utf-8")
         for role in (
+            "G-ROLE-OWNER",
+            "G-ROLE-ENG",
             "G-ROLE-SEC",
             "G-ROLE-SC",
             "G-ROLE-DATA",

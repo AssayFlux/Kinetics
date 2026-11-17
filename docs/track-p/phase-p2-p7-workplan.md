@@ -48,14 +48,14 @@ Schemas, parsers, synthetic tests and green CI close software verification only.
 - This verifies the committed software/tests only. P0 is NOT APPROVED; independent P1 reference/source/security/device evidence and P2–P7 operational/external review gates remain open.
 
 
-## 2026-11-12 — bounded PGx parser hardening (verification pending)
+## 2026-11-12 — bounded PGx parser hardening (exact-head verification later confirmed)
 
 - P2 audit identified that the provenance-aware JSON allele-definition parser and PharmVar TSV adapter accepted caller-supplied content without explicit byte/record ceilings.
 - Added fail-closed positive-integer limits: PGx JSON packs default to 2 MiB, 10,000 definitions and 1,000 variants per definition; PharmVar TSV defaults to 10 MiB and 100,000 data rows. Non-text inputs and invalid limit values are rejected.
 - Added synthetic negative tests for byte, definition, variant and row limits, plus invalid input types.
 - These changes reduce parser resource-exhaustion exposure; they do not establish source licensing, biological correctness, comprehensive gene coverage or clinical interpretation.
 - Latest code/test commits: `30c55ca47fa633a020f3c6fbc9bc3b204b85c3fd` (PharmVar) and preceding PGx commits `bbaa01f16f02fb3aa8dccaab2c3474189d7ae74b`, `76f76dde2eb923733318384e65bf6a8f2fe808de`.
-- Exact-head CI for the latest main revision has not yet been observed; tests, Ruff, strict mypy and all nine workflow jobs remain pending. Do not count this increment as verified until the exact-head workflow passes.
+- Subsequent exact-main-head workflow #44078534173 passed 9/9 jobs on 2026-11-17, including the Python unit-test, Ruff and strict-mypy steps. This confirms software verification only; independent PGx reference concordance remains open.
 
 
 ## 2026-11-12 — P4/P6/P7 evidence-contract hardening (exact-head CI subsequently passed)
@@ -69,7 +69,7 @@ Schemas, parsers, synthetic tests and green CI close software verification only.
 
 ## P1/P2 additional audit note — 2026-11-12
 
-- VCF parsing now enforces record/sample limits during parsing, and P1 QC retains its input-byte, variant and sample ceilings. The commits `5da06c905fd2be7d60bd3bfd37bd429a8dff4aaf` and `51e607424398db4b75dc31dfbf0ca880a3c0d171` contain this hardening; fresh exact-head CI is still required.
+- VCF parsing enforces record/sample limits during parsing, and P1 QC retains input-byte, variant and sample ceilings. The changes are included in exact-main-head workflow #44078534173, passed 2026-11-17; independent reference concordance and fuzz/resource audit remain open.
 - PharmVar variant construction now rejects boolean coordinates (Python bool is an int subclass), with synthetic negative tests.
 - These code changes are included in the exact-main-head workflow #44078534173, which passed 9/9 jobs on 2026-11-17. Independent authoritative reference comparison remains open.
 

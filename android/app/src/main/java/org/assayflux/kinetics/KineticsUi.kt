@@ -12,6 +12,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.WorkOutline
+import androidx.compose.material.Icon
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import kotlinx.coroutines.Dispatchers
@@ -34,8 +40,19 @@ import org.assayflux.designsystem.KineticsTypography
 import org.assayflux.designsystem.KineticsScientificTextStyle
 import org.json.JSONArray
 
-internal enum class KineticsTab(val label: String, val glyph: String) {
-    Home("Home", "⌂"), Work("Work", "▤"), Explore("Explore", "⌕"), Settings("Settings", "⚙")
+internal enum class KineticsTab(val label: String) {
+    Home("Home"), Work("Work"), Explore("Explore"), Settings("Settings")
+}
+
+@Composable
+private fun KineticsTabIcon(tab: KineticsTab) {
+    val image = when (tab) {
+        KineticsTab.Home -> Icons.Outlined.Home
+        KineticsTab.Work -> Icons.Outlined.WorkOutline
+        KineticsTab.Explore -> Icons.Outlined.Explore
+        KineticsTab.Settings -> Icons.Outlined.Settings
+    }
+    Icon(image, contentDescription = null)
 }
 
 @Composable
@@ -101,7 +118,7 @@ internal fun KineticsAppShell(
                     NavigationDrawerItem(
                         selected = tab == item,
                         onClick = { tab = item },
-                        icon = { Text(item.glyph, fontSize = 20.sp) },
+                        icon = { KineticsTabIcon(item) },
                         label = { Text(item.label) },
                         modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                     )
@@ -148,7 +165,7 @@ internal fun KineticsAppShell(
                             KineticsTab.entries.forEach { item ->
                                 NavigationBarItem(
                                     selected = tab == item, onClick = { tab = item },
-                                    icon = { Text(item.glyph, fontSize = 20.sp, modifier = Modifier.semantics { contentDescription = item.label }) },
+                                    icon = { KineticsTabIcon(item) },
                                     label = { Text(item.label) },
                                 )
                             }

@@ -74,6 +74,8 @@ def validate() -> list[str]:
                 mapped.update(CONTROL_ID.findall(row["control_ids"]))
             if len(requirement_ids) != len(set(requirement_ids)):
                 errors.append("Duplicate requirement_id in traceability CSV")
+            if len(rows) != 8 or set(requirement_ids) != {f"G-REQ-{n:03d}" for n in range(1, 9)}:
+                errors.append("Requirements traceability must contain exactly G-REQ-001 through G-REQ-008")
             unmapped = sorted(expected - mapped)
             if unmapped:
                 errors.append("Controls missing traceability rows: " + ", ".join(unmapped))
@@ -149,10 +151,36 @@ def validate() -> list[str]:
     if security_path.is_file():
         security = security_path.read_text(encoding="utf-8")
         test_ids = re.findall(r"\|\s*(SEC-\d{3})\s*\|", security)
+        expected_test_ids = {f"SEC-{number:03d}" for number in range(1, 17)}
         if len(test_ids) != len(set(test_ids)):
             errors.append("Duplicate security verification test IDs")
-        if not test_ids:
-            errors.append("Security verification matrix contains no test IDs")
+        if set(test_ids) != expected_test_ids:
+            errors.append("Security verification matrix must contain SEC-001 through SEC-016 exactly")
+
+    data_flow_path = ROOT / "docs/track-g/data-flow-inventory.md"
+    if data_flow_path.is_file():
+        data_flow = data_flow_path.read_text(encoding="utf-8")
+        flow_ids = re.findall(r"\|\s*(DF-\d{2})\s*\|", data_flow)
+        expected_flow_ids = {f"DF-{number:02d}" for number in range(1, 9)}
+        if len(flow_ids) != len(set(flow_ids)) or set(flow_ids) != expected_flow_ids:
+            errors.append("Data-flow inventory must contain DF-01 through DF-08 exactly once")
+
+    roles_path = ROOT / "docs/track-g/roles-and-review-cadence.md"
+    if roles_path.is_file():
+        roles = roles_path.read_text(encoding="utf-8")
+        for role in ("G-ROLE-SEC", "G-ROLE-SC", "G-ROLE-DATA", "G-ROLE-PRIV", "G-ROLE-QUALITY", "G-ROLE-RELEASE", "G-ROLE-PUB"):
+            role_rows = [line for line in roles.splitlines() if role in line and line.startswith("|")]
+            if len(role_rows) != 1 or "UNASSIGNED" not in role_rows[0]:
+                errors.append(f"{role} must remain explicitly UNASSIGNED until appointed")
+
+    operations_path = ROOT / "docs/track-g/operational-controls.md"
+    if operations_path.is_file():
+        operations = operations_path.read_text(encoding="utf-8")
+        if "No exercise is marked complete by this template" not in operations:
+            errors.append("Operational procedure must distinguish templates from completed exercises")
+        for exercise in ("OPS-TT-01", "OPS-TT-02", "OPS-TT-03", "OPS-TT-04", "OPS-TT-05"):
+            if exercise not in operations:
+                errors.append(f"Missing operational tabletop scenario {exercise}")
 
     claim_path = ROOT / "paper/claim-evidence-ledger.csv"
     if claim_path.is_file():

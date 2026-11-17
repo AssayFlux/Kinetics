@@ -166,7 +166,7 @@ private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Mo
       Column(Modifier.fillMaxWidth().widthIn(max = 840.dp).padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(Modifier.padding(top = 20.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-            Text(eyebrow.uppercase(), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
+            Text(eyebrow, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium)
             Text(title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
             Text(subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
         }
@@ -214,7 +214,7 @@ private fun HomeScreen(
             else items(jobs.take(4), key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis) }
             item {
                 Section("Device health", "Run checks", onRuntime)
-                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
+                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Dot(MaterialTheme.colorScheme.primary)
@@ -259,8 +259,8 @@ private fun WorkspaceCarousel(
             when (page) {
                 0 -> Card(
                     onClick = onImport,
-                    modifier = Modifier.fillMaxWidth().height(218.dp),
-                    shape = RoundedCornerShape(26.dp),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 168.dp),
+                    shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = heroContainer),
                 ) {
                     Column(
@@ -345,7 +345,7 @@ private fun WorkspaceCarousel(
 
 @Composable
 private fun Metric(label: String, value: String, modifier: Modifier) {
-    OutlinedCard(modifier, shape = RoundedCornerShape(18.dp)) {
+    OutlinedCard(modifier, shape = RoundedCornerShape(12.dp)) {
         Column(Modifier.padding(11.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold, maxLines = 1)
             Text(value, style = KineticsScientificTextStyle.copy(fontSize = MaterialTheme.typography.headlineMedium.fontSize, fontWeight = FontWeight.Bold))
@@ -394,7 +394,7 @@ private fun WorkScreen(
                     }
                 }
             }
-            item { Button(onClick = onImport, Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp)) { Text("+  Import new data") } }
+            item { Button(onClick = onImport, Modifier.fillMaxWidth(), shape = RoundedCornerShape(10.dp)) { Text("Import new data") } }
             if (filtered.isEmpty()) item { Empty("No matching research jobs", "Try another search or import a dataset to begin.") }
             else items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis) }
         }
@@ -638,7 +638,7 @@ fun ExploreScreen(modifier: Modifier) {
                 }
             }
             items(groups, key = { it.first }) { (domain, tools) ->
-                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
+                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
                     Column(
                         Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -844,7 +844,7 @@ private fun SettingsScreen(
                         FilterChip(selected = themeFamily == key, onClick = { onThemeFamilyChange(key) }, label = { Text(label) }, modifier = Modifier.weight(1f))
                     }
                 }
-                Text("Calligraphic brand accent, editorial display, clear sans-serif UI and monospaced scientific data. Font files remain gated on licence and glyph review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("System sans-serif typography is used. Additional font files require licence and glyph review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             } }
             item { SettingGroup(
                 "SECURITY · BIOMETRIC APP UNLOCK",
@@ -886,7 +886,7 @@ private fun SettingsScreen(
 private fun SettingGroup(title: String, description: String, content: @Composable () -> Unit = {}) {
     OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
-            Text(title, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
+            Text(title, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
             Text(description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             content()
         }
@@ -896,8 +896,8 @@ private fun SettingGroup(title: String, description: String, content: @Composabl
 
 @Composable
 private fun InfoPill(label: String) {
-    Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(50)) {
-        Text(label, Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+    Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(6.dp)) {
+        Text(label, Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
@@ -907,7 +907,7 @@ private fun InfoPill(label: String) {
 private fun Empty(title: String, detail: String) {
     OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
         Column(Modifier.fillMaxWidth().padding(22.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("✧", color = MaterialTheme.colorScheme.primary, fontSize = 30.sp)
+            Text("No recent items", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
             Text(title, fontWeight = FontWeight.Bold)
             Text(detail, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
@@ -985,7 +985,7 @@ internal fun BiometricLockScreen(
             ) {
                 Card(
                     modifier = Modifier.fillMaxWidth().widthIn(max = 480.dp),
-                    shape = RoundedCornerShape(28.dp),
+                    shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     border = androidx.compose.foundation.BorderStroke(
                         1.dp, MaterialTheme.colorScheme.outline,
@@ -1052,7 +1052,7 @@ internal fun BiometricLockScreen(
 
 @Composable
 private fun Footer() {
-    Text("KINETICS  •  RESEARCH MODE ONLY  •  NOT FOR CLINICAL USE",
+    Text("KINETICS · Research Mode only · Not for clinical use",
         Modifier.fillMaxWidth().padding(vertical = 8.dp), color = MaterialTheme.colorScheme.onSurfaceVariant,
         style = MaterialTheme.typography.labelSmall, letterSpacing = .8.sp)
 }

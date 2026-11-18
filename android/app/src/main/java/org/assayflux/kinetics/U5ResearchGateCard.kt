@@ -18,7 +18,7 @@ internal fun U5ResearchGateCard() {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("PGx · NOT ENABLED", style = MaterialTheme.typography.titleSmall)
             Text(
-                "P2 parsers and phased-definition matching remain research software foundations. The project owner declares institutional approval for research testing; use patient-derived data only within the approval scope and with required safeguards. Individual genotype interpretation, star-allele/diplotype/phenotype assignment and guideline recommendations are not enabled by this notice.",
+                "Genetic variant parsers and phased-definition matching remain research software foundations. The project owner declares institutional approval for research testing; use patient-derived data only within the approval scope and with required safeguards. Individual genotype interpretation, star-allele/diplotype/phenotype assignment and guideline recommendations are not enabled by this notice.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

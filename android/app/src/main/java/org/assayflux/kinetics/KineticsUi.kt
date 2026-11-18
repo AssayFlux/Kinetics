@@ -694,7 +694,7 @@ private fun ServiceDetailScreen(
                     capabilityId = "genes.catalogue_coverage_report",
                     title = "Gene catalogue snapshot report",
                     description = "Summarize a bounded, source-release-pinned NCBI gene_info TSV snapshot. Reports composition and missing annotations only; it does not claim genome-wide completeness.",
-                    sample = "{\\"source_release\\":\\"NCBI Gene 2025-01\\",\\"gene_info_tsv\\":\\"9606\\\\t1\\\\tA1BG\\\\t-\\\\tA1B\\\\t-\\\\t19\\\\t19q13.43\\\\talpha-1-B glycoprotein\\\\tprotein-coding\\\\tA1BG\\\\talpha-1-B glycoprotein\\\\tApproved\\\\t-\\\\t20250101\\\\tgene\\"}",
+                    sample = "{\"source_release\":\"NCBI Gene 2025-01\",\"gene_info_tsv\":\"9606\\t1\\tA1BG\\t-\\tA1B\\t-\\t19\\t19q13.43\\talpha-1-B glycoprotein\\tprotein-coding\\tA1BG\\talpha-1-B glycoprotein\\tApproved\\t-\\t20250101\\tgene\"}",
                     actionLabel = "Summarize gene snapshot",
                 ) }
             }

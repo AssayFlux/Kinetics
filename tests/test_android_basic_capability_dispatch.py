@@ -466,9 +466,9 @@ def test_gene_catalogue_snapshot_report_mobile_route_is_source_scoped():
     import json
 
     gene_info = (
-        "9606\\t1\\tA1BG\\t-\\tA1B\\t-\\t19\\t19q13.43\\talpha-1-B glycoprotein"
-        "\\tprotein-coding\\tA1BG\\talpha-1-B glycoprotein\\tApproved\\t-"
-        "\\t20250101\\tgene"
+        "9606\t1\tA1BG\t-\tA1B\t-\t19\t19q13.43\talpha-1-B glycoprotein"
+        "\tprotein-coding\tA1BG\talpha-1-B glycoprotein\tApproved\t-"
+        "\t20250101\tgene"
     )
     report = _run_probe(
         "genes.catalogue_coverage_report",

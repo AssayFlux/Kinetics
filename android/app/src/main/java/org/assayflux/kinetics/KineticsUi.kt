@@ -309,7 +309,7 @@ private fun ProfileAvatarButton(onClick: () -> Unit) {
     val context = LocalContext.current
     val uri = context.getSharedPreferences("kinetics_preferences", Context.MODE_PRIVATE)
         .getString("local_profile_avatar_uri", null)
-    val bitmap by produceState<android.graphics.Bitmap?>(initialValue = null, uri) {
+    val bitmap by produceState<android.graphics.Bitmap?>(null, uri) {
         value = withContext(Dispatchers.IO) {
             uri?.let { raw ->
                 runCatching {
@@ -359,7 +359,7 @@ private fun ProfileScreen(biometricEnabled: Boolean, biometricAvailable: Boolean
             preferences.edit().putString("local_profile_avatar_uri", avatarUri).apply()
         }
     }
-    val avatarBitmap by produceState<android.graphics.Bitmap?>(initialValue = null, avatarUri) {
+    val avatarBitmap by produceState<android.graphics.Bitmap?>(null, avatarUri) {
         value = withContext(Dispatchers.IO) {
             avatarUri?.let { raw ->
                 runCatching {

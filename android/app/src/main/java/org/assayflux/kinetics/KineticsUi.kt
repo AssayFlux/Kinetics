@@ -286,6 +286,7 @@ internal fun KineticsAppShell(
             }
       }
     }
+  }
 }
 
 @Composable

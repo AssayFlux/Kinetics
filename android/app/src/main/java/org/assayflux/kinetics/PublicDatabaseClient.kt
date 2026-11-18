@@ -207,6 +207,6 @@ internal class PublicDatabaseClient {
         private const val READ_TIMEOUT_MS = 20_000
         private const val MAX_METADATA_BYTES = 2 * 1024 * 1024
         private const val MAX_SEQUENCE_BYTES = 5 * 1024 * 1024
-        private const val MAX_STRUCTURE_BYTES = 24 * 1024 * 1024
+        private const val MAX_STRUCTURE_BYTES = 16 * 1024 * 1024
     }
 }

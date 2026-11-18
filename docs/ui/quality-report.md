@@ -11,7 +11,7 @@
 | Large text | 200% without clipping/overlap | NOT RUN | — |
 | Display size | Largest supported setting | NOT RUN | — |
 | Responsiveness | Full device/window matrix | NOT RUN | device-matrix.md |
-| Navigation logic | Boundary tests for bottom/rail/drawer | SOURCE TEST PRESENT; exact-head CI pending; modal drawer/app bar integrated | WindowLayoutTest.kt; KineticsUi.kt |
+| Navigation logic | Owner hamburger drawer; Home/Work/Settings/Search and avatar profile | SOURCE IMPLEMENTED; exact-head CI and device interaction pending | KineticsUi.kt |
 | Fold/hinge behavior | WindowManager posture and hinge avoidance | NOT IMPLEMENTED | — |
 | Performance | Macrobenchmark/Perfetto on named low-end arm64 device | NOT RUN | — |
 | Robustness | Soak test; process death/rotation/resize state | NOT RUN | — |
@@ -25,7 +25,7 @@ No “best”, WCAG-conformant, accessible, device-responsive, performant or pro
 - Active visual contract: owner-supplied monochrome V1 (D-024); exact palette and component dimensions are documented in docs/ui/ui-spec.md.
 - Canonical token source migrated for active Light/Dark palettes and V1 spacing/radius values; Compose and WebView generated outputs refreshed.
 - Initial reusable Compose primitives added in android/designsystem/.../KineticsComponents.kt.
-- Integrated a 56dp app bar and gesture-enabled modal navigation drawer for compact navigation; adaptive rail and bottom navigation retain the same four real destinations. This is source implementation, not screenshot or device acceptance.
+- Integrated a 56dp app bar and gesture-enabled modal navigation drawer; owner-approved blueprint now removes persistent bottom navigation and rail. This is source implementation, not screenshot or device acceptance.
 - NOT YET VERIFIED: exact-main APK/AAB artifact and hashes, screenshot rendering, semantic contrast, TalkBack, 200% font scale, RTL, keyboard/switch navigation, device matrix and physical-device behavior.
 - Existing owner logo/reference assets have not been altered. Actual integration remains open pending path/role audit.
 
@@ -46,3 +46,5 @@ No “best”, WCAG-conformant, accessible, device-responsive, performant or pro
 - Profile discloses that remote account identity is not configured. Biometric unlock remains an Android-managed local device lock.
 - Python regression tests now assert the owner carousel structure, capability count, ID-based navigation, five-indicator window and four dashboard panels.
 - **Not yet passed:** exact-head Android compile/JVM tests for the latest source, owner-image screenshot comparison, contrast/touch-target measurement, TalkBack, 200% font scale, RTL, keyboard/switch navigation, device matrix, physical-device performance and independent security/scientific reviews.
+
+- Header refinement: Search moved into the hamburger drawer so the Home header presents the hamburger at left and profile/avatar at right, matching the owner reference.

@@ -34,6 +34,7 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
+import java.util.zip.GZIPInputStream
 
 private data class VcfQcDocument(val name: String, val text: String)
 
@@ -43,12 +44,13 @@ private fun readVcfQcDocument(context: Context, uri: Uri): VcfQcDocument {
     )?.use { cursor ->
         if (cursor.moveToFirst()) cursor.getString(0) else null
     } ?: uri.lastPathSegment ?: "variants.vcf"
-    require(name.endsWith(".vcf", ignoreCase = true)) {
-        "Select an uncompressed .vcf file. VCF.GZ is not supported by this screen."
+    require(name.endsWith(".vcf", ignoreCase = true) || name.endsWith(".vcf.gz", ignoreCase = true)) {
+        "Select a .vcf or .vcf.gz file."
     }
     val input = context.contentResolver.openInputStream(uri)
         ?: error("The selected VCF document could not be opened.")
-    val bytes = input.use { stream ->
+    val decodedInput = if (name.endsWith(".gz", ignoreCase = true)) GZIPInputStream(input) else input
+    val bytes = decodedInput.use { stream ->
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(16 * 1024)
         var total = 0
@@ -57,7 +59,7 @@ private fun readVcfQcDocument(context: Context, uri: Uri): VcfQcDocument {
             if (count < 0) break
             total += count
             require(total <= GenomicsVcfQcRunner.MAX_INPUT_BYTES) {
-                "VCF input exceeds the 5 MiB limit."
+                "Expanded VCF input exceeds the 5 MiB processing limit."
             }
             output.write(buffer, 0, count)
         }
@@ -111,7 +113,7 @@ internal fun GenomicsVcfQcCard() {
                 onClick = { picker.launch(arrayOf("text/vcf", "text/plain", "*/*")) },
                 enabled = !busy,
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text("Choose VCF file") }
+            ) { Text("Choose VCF / VCF.GZ file") }
             selectedName?.let { Text("File: $it", style = MaterialTheme.typography.labelMedium) }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = consentConfirmed, onCheckedChange = {

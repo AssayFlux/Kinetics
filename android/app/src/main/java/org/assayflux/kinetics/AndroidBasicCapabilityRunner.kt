@@ -12,6 +12,9 @@ internal object AndroidBasicCapabilityRunner {
         "protein.descriptors",
         "molecular.primer_screen",
         "molecular.crispr_pam",
+        "genome.orf_candidate_scan",
+        "kinetics.michaelis_menten",
+        "phylo.newick",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {
@@ -22,7 +25,7 @@ internal object AndroidBasicCapabilityRunner {
         }
         if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
         return Python.getInstance().getModule("kinetics_probe")
-            .callAttr("run_basic_sequence_capability", capabilityId, sequenceText)
+            .callAttr("run_android_basic_capability", capabilityId, sequenceText)
             .toString()
     }
 }

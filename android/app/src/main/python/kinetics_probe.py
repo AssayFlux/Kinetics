@@ -264,7 +264,7 @@ def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -
 
 
 
-def run_basic_sequence_capability(capability_id: str, sequence_text: str) -> str:
+def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
     """Explicit allow-list for bounded Android sequence/protein utilities."""
     import json
 
@@ -303,8 +303,54 @@ def run_basic_sequence_capability(capability_id: str, sequence_text: str) -> str
             "Reports SpCas9 NGG PAM locations only",
             "No guide efficacy, off-target, editing outcome or safety prediction",
         ]
+    elif capability_id == "genome.orf_candidate_scan":
+        from kinetics.orf import find_orf_candidates
+        sequence = "".join(sequence_text.split()).upper()
+        if len(sequence) > 1_000_000:
+            raise ValueError("Genome sequence exceeds the 1,000,000-base mobile limit")
+        result = find_orf_candidates(
+            sequence,
+            table_id=11,
+            min_protein_length=30,
+            max_orfs=200,
+            max_sequence_bases=1_000_000,
+            max_open_starts=10_000,
+            max_candidate_orf_pairs_total=100_000,
+        )
+        limitations = [
+            "Heuristic complete ORF enumeration only; not a gene prediction or annotation pipeline",
+            "Uses explicitly selected NCBI genetic code table 11; no genetic-code inference",
+            "Eukaryotic genes with introns are not represented by this ORF scan",
+        ]
+    elif capability_id == "kinetics.michaelis_menten":
+        import math
+        from kinetics.kinetics import michaelis_menten
+        parts = [part.strip() for part in sequence_text.split(",")]
+        if len(parts) != 3:
+            raise ValueError("Enter substrate concentration, Vmax and Km as three comma-separated numbers")
+        try:
+            substrate, vmax, km = (float(part) for part in parts)
+        except ValueError as exc:
+            raise ValueError("All three Michaelis–Menten inputs must be numeric") from exc
+        if not all(math.isfinite(value) for value in (substrate, vmax, km)):
+            raise ValueError("Michaelis–Menten inputs must be finite numbers")
+        result = {"rate": michaelis_menten(substrate, vmax, km),
+                  "substrate": substrate, "vmax": vmax, "km": km}
+        limitations = [
+            "Deterministic model calculation only; no parameter fitting or uncertainty estimate",
+            "Units must be consistent across substrate, Vmax and Km",
+        ]
+    elif capability_id == "phylo.newick":
+        from kinetics.phylo import leaf_names, parse_newick, to_newick
+        root = parse_newick(sequence_text)
+        leaves = leaf_names(root)
+        result = {"leaf_count": len(leaves), "leaves": leaves, "normalized_newick": to_newick(root)}
+        limitations = [
+            "Parses caller-supplied Newick topology and branch lengths only",
+            "Does not infer a tree or assess evolutionary model fit",
+        ]
     else:
-        raise ValueError("This capability is not exposed by the Android sequence runner")
+        raise ValueError("This capability is not exposed by the Android basic runner")
 
     return json.dumps({
         "capability_id": capability_id,

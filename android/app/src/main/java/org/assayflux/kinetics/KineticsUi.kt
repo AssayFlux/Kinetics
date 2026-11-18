@@ -442,6 +442,9 @@ private fun ServiceDetailScreen(
         "protein.descriptors",
         "molecular.primer_screen",
         "molecular.crispr_pam",
+        "genome.orf_candidate_scan",
+        "kinetics.michaelis_menten",
+        "phylo.newick",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -471,7 +474,7 @@ private fun ServiceDetailScreen(
             if (capability?.id == "sequence.fastq") item { FastqQcCard() }
             if (capability?.id == "sequence.genetic_code_candidate_inference") item { GeneticCodeInferenceCard() }
             if (capability?.id == "protein.descriptors") {
-                item { BasicSequenceCapabilityCard(
+                item { BasicResearchCapabilityCard(
                     capabilityId = "protein.descriptors",
                     title = "Protein sequence descriptors",
                     description = "Calculate composition, estimated molecular mass, mean hydropathy and theoretical pI for an unmodified linear peptide.",
@@ -480,7 +483,7 @@ private fun ServiceDetailScreen(
                 ) }
             }
             if (capability?.id == "molecular.primer_screen") {
-                item { BasicSequenceCapabilityCard(
+                item { BasicResearchCapabilityCard(
                     capabilityId = "molecular.primer_screen",
                     title = "Primer property screen",
                     description = "Bounded Wallace-rule GC/Tm screening for one unambiguous 15–40 nt primer. Not an oligo design or wet-lab validation tool.",
@@ -488,8 +491,35 @@ private fun ServiceDetailScreen(
                     actionLabel = "Screen primer",
                 ) }
             }
+            if (capability?.id == "genome.orf_candidate_scan") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "genome.orf_candidate_scan",
+                    title = "Six-frame ORF candidate scan",
+                    description = "Enumerate complete start-to-stop ORFs on both strands using explicit NCBI table 11 and a bounded mobile workload. Not gene annotation.",
+                    sample = "ATG" + "GCT".repeat(29) + "TAA",
+                    actionLabel = "Scan ORFs",
+                ) }
+            }
+            if (capability?.id == "kinetics.michaelis_menten") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "kinetics.michaelis_menten",
+                    title = "Michaelis–Menten rate calculator",
+                    description = "Calculate v = Vmax·[S]/(Km+[S]). Enter three comma-separated non-negative values: substrate concentration, Vmax and Km.",
+                    sample = "10,100,5",
+                    actionLabel = "Calculate rate",
+                ) }
+            }
+            if (capability?.id == "phylo.newick") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "phylo.newick",
+                    title = "Newick tree parser",
+                    description = "Parse a Newick tree and return leaf labels and a normalized serialization. This does not infer a phylogeny from sequence data.",
+                    sample = "((A:0.1,B:0.2):0.3,C:0.4);",
+                    actionLabel = "Parse tree",
+                ) }
+            }
             if (capability?.id == "molecular.crispr_pam") {
-                item { BasicSequenceCapabilityCard(
+                item { BasicResearchCapabilityCard(
                     capabilityId = "molecular.crispr_pam",
                     title = "SpCas9 NGG PAM scan",
                     description = "Locate NGG PAM triplets on both strands and report 0-based half-open coordinates. No guide efficacy or editing outcome is predicted.",
@@ -1063,7 +1093,7 @@ private fun loadCapabilityCatalogue(context: Context): List<CapabilityEntry> {
 }
 
 @Composable
-private fun BasicSequenceCapabilityCard(
+private fun BasicResearchCapabilityCard(
     capabilityId: String,
     title: String,
     description: String,
@@ -1091,7 +1121,7 @@ private fun BasicSequenceCapabilityCard(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Sequence input") },
+                label = { Text("Research input") },
                 minLines = 3,
                 maxLines = 6,
                 supportingText = { Text("Processed locally · maximum 1,000,000 characters") },

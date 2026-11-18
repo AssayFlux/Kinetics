@@ -474,7 +474,7 @@ private fun WorkspaceCarousel(
                 1 -> Card(
                     onClick = onOpenWork,
                     modifier = Modifier.fillMaxWidth().height(218.dp),
-                    shape = RoundedCornerShape(26.dp),
+                    shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                 ) {
                     Column(
@@ -496,7 +496,7 @@ private fun WorkspaceCarousel(
                 else -> Card(
                     onClick = onRuntime,
                     modifier = Modifier.fillMaxWidth().height(218.dp),
-                    shape = RoundedCornerShape(26.dp),
+                    shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 ) {
                     Column(
@@ -577,7 +577,7 @@ private fun WorkScreen(
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
             item {
                 OutlinedTextField(query, { query = it }, Modifier.fillMaxWidth(), singleLine = true,
-                    shape = RoundedCornerShape(16.dp), label = { Text("Search research jobs") })
+                    shape = RoundedCornerShape(10.dp), label = { Text("Search research jobs") })
             }
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -607,10 +607,10 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
     var provenanceExpanded by rememberSaveable(job.id) { mutableStateOf(false) }
     var showPhredDialog by rememberSaveable(job.id) { mutableStateOf(false) }
     var selectedPhredOffset by rememberSaveable(job.id) { mutableIntStateOf(33) }
-    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
+    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(40.dp).clip(RoundedCornerShape(13.dp)).background(MaterialTheme.colorScheme.surfaceVariant), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(40.dp).clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.surfaceVariant), contentAlignment = Alignment.Center) {
                     Text(if (success) "✓" else if (issue) "!" else "▤", fontSize = 19.sp,
                         color = if (issue) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 }
@@ -647,7 +647,7 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(12.dp),
                     ) {
                         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             Text("IMPORT PROVENANCE", style = MaterialTheme.typography.labelMedium,
@@ -791,7 +791,7 @@ private fun StatePill(state: String) {
     }
     Surface(
         color = MaterialTheme.colorScheme.surfaceVariant,
-        shape = RoundedCornerShape(50),
+        shape = RoundedCornerShape(6.dp),
         modifier = Modifier.semantics { contentDescription = "Job status: $text" },
     ) {
         Text(text, Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
@@ -860,7 +860,7 @@ fun ExploreScreen(modifier: Modifier, initialQuery: String = "") {
             }
             item {
                 Card(
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     ),
@@ -998,7 +998,7 @@ private fun FastaQcCard() {
     var result by remember { mutableStateOf<SequenceQcResult?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
 
-    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
+    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text("FASTA quick quality check", style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold)
@@ -1072,7 +1072,7 @@ private fun FastqQcCard() {
     var running by remember { mutableStateOf(false) }
     var result by remember { mutableStateOf<FastqQcResult?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
-    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
+    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text("FASTQ read-quality check", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Text("Wrapped FASTQ parsing. Quality encoding must be selected explicitly; it is never guessed.",
@@ -1199,7 +1199,7 @@ private fun SettingsScreen(
 
 @Composable
 private fun SettingGroup(title: String, description: String, content: @Composable () -> Unit = {}) {
-    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
+    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
             Text(title, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
             Text(description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -1220,7 +1220,7 @@ private fun InfoPill(label: String) {
 
 @Composable
 private fun Empty(title: String, detail: String) {
-    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
+    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
         Column(Modifier.fillMaxWidth().padding(22.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("No recent items", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
             Text(title, fontWeight = FontWeight.Bold)
@@ -1335,7 +1335,7 @@ internal fun BiometricLockScreen(
                         if (error != null) {
                             Surface(
                                 color = MaterialTheme.colorScheme.errorContainer,
-                                shape = RoundedCornerShape(14.dp),
+                                shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Text(
@@ -1349,7 +1349,7 @@ internal fun BiometricLockScreen(
                         Button(
                             onClick = onRetry,
                             modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-                            shape = RoundedCornerShape(16.dp),
+                            shape = RoundedCornerShape(10.dp),
                         ) {
                             Text("Try again")
                         }

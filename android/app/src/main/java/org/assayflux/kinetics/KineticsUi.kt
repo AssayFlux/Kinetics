@@ -472,7 +472,7 @@ private fun ServiceDetailScreen(
                 item { StructureSiteAnalysisCard() }
             }
             if (capability?.id == "chemistry.sdf_graph") item { LigandGraphPreviewCard() }
-            if (domain == "Genomics" || domain == "Variant") {
+            if (capability?.id == "genomics.sam_vcf") {
                 item { GenomicsVcfQcCard() }
                 item { U5ResearchGateCard() }
             }

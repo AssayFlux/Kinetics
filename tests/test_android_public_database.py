@@ -62,8 +62,8 @@ def test_public_reference_cache_has_explicit_quota_and_clear_all() -> None:
     assert "MAX_RECORDS = 50" in store
     assert "enforceCacheQuota(protectedId = id)" in store
     assert "ORDER BY saved_at ASC" in store
-    assert "fun totalBytes()" in store
-    assert "fun recordCount()" in store
+    assert "fun totalBytes(): Long" in store
+    assert "fun recordCount(): Int" in store
     assert "fun deleteAll()" in store
     card = (ANDROID / "PublicDatabaseCard.kt").read_text()
     assert "store.deleteAll()" in card

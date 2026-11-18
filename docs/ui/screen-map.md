@@ -1,6 +1,6 @@
 # Screen map and capability mapping
 
-**Current shell:** Home · Work · Explore · Settings. The complete product destinations below remain planned until implemented and connected to real app state and registry capabilities. Navigation adapts from bottom bar to rail to permanent drawer based on the live app window.
+**Current implemented shell:** Home · Work · Explore · Settings. The table distinguishes implemented surfaces, bounded research workflows and intentionally unavailable future destinations. Planned rows are not exposed as fake navigation actions. Navigation adapts from bottom bar to rail to permanent drawer based on the live app window.
 
 | Screen ID | Screen | Registry capability | Current status |
 |---|---|---|---|
@@ -38,7 +38,7 @@ Explore describes capability maturity; it is not a promise that all research too
 | Screen ID | Screen | Required behavior | Current status |
 |---|---|---|---|
 | ui.splash | Brand splash | Owner assets, platform launch behavior, no artificial delay | planned; original artwork integration pending |
-| ui.auth | Local app-lock/authentication boundary | Honest local-vs-account distinction, secure fallback and recovery | not implemented; do not invent cloud identity; local biometric app-lock is a separate implemented screen |
+| ui.auth | Local app-lock/authentication boundary | Honest local-vs-account distinction, secure fallback and recovery | local biometric/device-credential lock screen implemented; lifecycle/device recovery acceptance remains open; no cloud identity |
 | ui.biometric | Biometric unlock | AndroidX BiometricPrompt, enrollment/capability checks, Keystore-backed operation, lockout and recovery | source implemented; ARM64 build/JVM task passed CI #2039; device verification and recovery review pending |
 | ui.dashboard | D-015 dashboard | Owner-reference composition, real workspace carousel, owner brand, truthful live data and empty states | horizontal carousel source exists; full D-015 visual refinement, reference-image comparison, brand integration and screenshot/device verification pending |
 | ui.navigation | Navigation/drawer | Every destination navigates or is explicitly unavailable | partial; four destinations only |

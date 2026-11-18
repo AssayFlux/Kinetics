@@ -1,6 +1,6 @@
 # UI quality report
 
-**Status:** NOT PASSED. This report distinguishes source-level checks from visual/device evidence. Last updated: 2026-11-18. Prior exact-main run 44215395344 failed Android Kotlin compilation because KineticsOnboardingScreen.kt imported rememberSaveable from both runtime and runtime.saveable; this work package removes the invalid import. Re-run exact-main CI before claiming build success. See `docs/track-u/completion-audit.md` for the complete Track U gap register.
+**Status:** NOT PASSED. This report distinguishes source-level checks from visual/device evidence. Last updated: 2026-11-18. Android arm64 APK/AAB build and JVM tests passed on commit 841aebd64605a167797fb42e8d49e2fa66557be5 (workflow #44216522668); this is not the latest commit. Python CI on 3300b97c84114cb3ba6eb31fa7655247956430e6 found two VCF fixture failures (538 passed, 2 failed, 9 skipped); the fixture delimiter correction is committed as ad0b1d7b0f0594489cf4623b74df022d80619659, and exact-head verification is pending. No current-head APK success is claimed. See docs/track-u/completion-audit.md for the complete Track U gap register.
 
 | Area | Acceptance bar | Result | Evidence |
 |---|---|---|---|

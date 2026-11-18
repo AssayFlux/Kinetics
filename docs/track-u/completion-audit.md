@@ -3,9 +3,9 @@
 **Audit date:** 2026-11-18  
 **Repository:** `AssayFlux/Kinetics`  
 **Target branch:** `main` only  
-**Audited baseline before U4/U5 integration:** `47bca816aa53331f92b37a5f93ce8dd601bbf5fc`  
+**Current engineering review baseline:** `ad0b1d7b0f0594489cf4623b74df022d80619659`  
 **Audit and quality-report documentation commit:** `cb79b9110ff50a69b1b58d78a8b13e3c8843cf3b`  
-**Status:** **OPEN — foundation merged; product integration and acceptance remain incomplete**  
+**Status:** **ENGINEERING INTEGRATION IN PROGRESS — distinguish code work from external/device acceptance**  
 **Design authority:** D-024, owner-supplied Premium Minimal Monochrome V1. Semantic decision colours may be used for status only; monochrome remains the visual authority.
 
 This is an evidence-based gap register, not a completion claim. A source file existing does not prove a complete user journey, accessibility, security assurance, device compatibility or release readiness. Do not mark a row complete without the evidence named below.
@@ -80,3 +80,11 @@ A CI compile/build is not proof of UI acceptance, scientific validity, clinical 
 Track U may be described as **engineering-complete** only after U0–U6 engineering tasks have either passed their explicit acceptance criteria or are documented as externally blocked with an owner, dependency, evidence and non-claim. It may be described as **release-ready** only after all required independent, accessibility, security, scientific and physical-device approvals are separately satisfied.
 
 **Current decision: Track U is OPEN.** The merged commit is a foundation milestone, not Track U completion.
+
+## 6. Engineering work versus external acceptance
+
+Engineering closure is not held open merely because a scientific or ethics approval is pending. Complete all work that can be completed safely in code: user journeys, local workflows, input bounds, deterministic outputs, persistence where appropriate, recovery, export, automated regression tests, UI states, accessibility semantics, build reproducibility and documentation.
+
+The following are external/owner gates rather than ordinary coding tasks: ethics approval for a defined protocol; data-use permissions and licences; qualified clinical/PGx review; independent scientific concordance; owner risk decisions; physical-device testing where no device is attached to CI. The app must not imply that those approvals have been granted.
+
+The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. It records the supported research-only demo path, local data handling, explicit exclusions and evidence gaps without claiming ethics approval.

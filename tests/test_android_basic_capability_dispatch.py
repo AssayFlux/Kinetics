@@ -546,13 +546,13 @@ def test_mobile_nb2_variant_and_viewer_payload_engines_execute():
     variant = _run_probe("variant.reference_checked_normalization", json.dumps({
         "reference": reference, "chrom": "chrT", "position": 2, "ref": "C", "alt": "T",
     }))
-    assert variant["result"]["reference_sequence_sha256"] == reference["sequence_sha256"]
+    assert variant["reference_sequence_sha256"] == reference["sequence_sha256"]
 
     glm = _run_probe("omics.nb2_glm", json.dumps({
         "counts": [[10, 12, 20, 22], [30, 28, 31, 29]],
         "condition": [0, 0, 1, 1], "feature_ids": ["geneA", "geneB"],
     }))
-    assert len(glm["result"]) == 2
+    assert len(glm) == 2
 
     viewer = _run_probe("structure.viewer_payload", json.dumps({
         "source_format": "pdb",
@@ -561,7 +561,7 @@ def test_mobile_nb2_variant_and_viewer_payload_engines_execute():
             "residue_number": 1, "x": 0.0, "y": 0.0, "z": 0.0, "element": "C",
         }],
     }))
-    assert viewer["result"]["payload"]["atom_count"] == 1
+    assert viewer["payload"]["atom_count"] == 1
 
 
 def test_mobile_pgx_incomplete_phase_returns_no_call():
@@ -578,4 +578,4 @@ def test_mobile_pgx_incomplete_phase_returns_no_call():
         "gene_symbol": "GENE", "genome_build": "GRCh-test",
         "observed_variants": [], "phase_confirmed": False, "call_complete": False,
     }))
-    assert result["result"]["match"]["status"] == "no_call_unphased"
+    assert result["match"]["status"] == "no_call_unphased"

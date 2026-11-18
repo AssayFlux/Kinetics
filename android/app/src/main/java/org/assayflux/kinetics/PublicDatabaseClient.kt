@@ -11,6 +11,7 @@ import java.time.Instant
 data class PublicDatabaseHit(
     val source: String, val accession: String, val title: String,
     val organism: String? = null, val description: String? = null,
+    val database: String? = null,
 )
 
 data class PublicScientificRecord(
@@ -45,6 +46,33 @@ internal class PublicDatabaseClient {
                 title = item.optString("name", "Gene $id"),
                 organism = item.optJSONObject("organism")?.optString("scientificname"),
                 description = item.optString("description").takeIf(String::isNotBlank),
+            )
+        }
+    }
+
+    fun searchNcbiSequence(database: String, query: String, limit: Int = 20): List<PublicDatabaseHit> {
+        require(database in setOf("nuccore", "protein")) { "Choose NCBI nucleotide or protein records" }
+        val term = checkedQuery(query)
+        val count = checkedLimit(limit)
+        val searchUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi" +
+            "?db=$database&term=${encode(term)}&retmode=json&retmax=$count&tool=kinetics"
+        val search = JSONObject(request(searchUrl, MAX_METADATA_BYTES))
+        val ids = search.getJSONObject("esearchresult").optJSONArray("idlist") ?: return emptyList()
+        if (ids.length() == 0) return emptyList()
+        val idList = (0 until ids.length()).joinToString(",") { ids.getString(it) }
+        val summaryUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi" +
+            "?db=$database&id=${encode(idList)}&retmode=json&tool=kinetics"
+        val summary = JSONObject(request(summaryUrl, MAX_METADATA_BYTES)).getJSONObject("result")
+        return (0 until ids.length()).mapNotNull { index ->
+            val id = ids.getString(index)
+            val item = summary.optJSONObject(id) ?: return@mapNotNull null
+            PublicDatabaseHit(
+                source = if (database == "nuccore") "NCBI Nucleotide" else "NCBI Protein",
+                accession = item.optString("accessionversion").takeIf(String::isNotBlank) ?: id,
+                title = item.optString("title", "NCBI record $id"),
+                organism = item.optString("organism").takeIf(String::isNotBlank),
+                description = "NCBI $database reference record",
+                database = database,
             )
         }
     }

@@ -14,6 +14,9 @@ def test_home_routes_to_real_offline_structure_and_chemistry_viewers() -> None:
         ROOT / "android/app/src/main/java/org/assayflux/kinetics/I1ChemistryCard.kt"
     ).read_text()
     assert "ServiceDetailScreen" in ui
+    assert "ENGINE SOURCE REGISTERED" in ui
+    assert "Android workflow: not connected" in ui
+    assert "A registered Python engine is not automatically runnable" in ui
     assert "HorizontalPager(" in ui
     assert "OPEN SERVICE" in ui
     assert "fun ExploreScreen" not in ui

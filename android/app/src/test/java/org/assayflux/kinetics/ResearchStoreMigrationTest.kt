@@ -210,7 +210,7 @@ class ResearchStoreMigrationTest {
             assertTrue(store.startImport("cancelled-finalize"))
             assertTrue(store.cancelActiveImport("cancelled-finalize"))
             assertTrue(encryptedDir.isDirectory || encryptedDir.mkdirs())
-            encryptedFile.writeBytes(ByteArray(LocalCrypto.HEADER_BYTES + 1))
+            encryptedFile.writeBytes(ByteArray(LocalCrypto.HEADER_BYTES.toInt() + 1))
             val finalization = runCatching {
                 store.completeImport(
                     "cancelled-finalize", "e".repeat(64), 1, encryptedFile.absolutePath,

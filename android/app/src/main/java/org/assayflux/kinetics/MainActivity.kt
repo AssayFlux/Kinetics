@@ -406,25 +406,27 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
             }
         },
         onCancel = { job ->
-            WorkManager.getInstance(activity).cancelUniqueWork("import-" + job.id)
-            // Persist a resumable terminal state even if a queued worker never starts
-            // and therefore cannot observe isStopped or call its cancellation handler.
-            store.updateJob(
-                job.id, "cancelled",
-                message = "Cancellation requested. Any encrypted partial input is retained and may be resumed.",
-            )
+            // Commit the terminal state first. ImportWorker finalization checks this same
+            // state inside its database transaction, so a late worker cannot resurrect it.
+            if (store.cancelActiveImport(job.id)) {
+                WorkManager.getInstance(activity).cancelUniqueWork("import-" + job.id)
+                notice = "Import cancelled. Any authenticated encrypted partial input is retained for resume."
+            } else {
+                notice = "This import is already complete or is no longer active; its state was not changed."
+            }
             jobs = store.recentJobs()
         },
         onResume = { job ->
             val savedUri = store.inputUri(job.id)
-            if (savedUri != null) {
+            if (savedUri != null && store.queueImportForResume(job.id)) {
                 val request = OneTimeWorkRequestBuilder<ImportWorker>()
                     .setInputData(workDataOf(ImportWorker.KEY_JOB_ID to job.id, ImportWorker.KEY_URI to savedUri))
                     .addTag("kinetics-import").build()
                 WorkManager.getInstance(activity).enqueueUniqueWork(
                     "import-" + job.id, ExistingWorkPolicy.REPLACE, request)
-                store.updateJob(job.id, "queued", message = "Resume queued")
                 jobs = store.recentJobs()
+            } else {
+                notice = "This job is not in a resumable state."
             }
         },
         onDelete = { job -> deleteTarget = job },

@@ -35,7 +35,9 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                 )
                 return Result.failure()
             }
-            store.updateJob(jobId, "running")
+            check(store.startImport(jobId)) {
+                "Import is no longer queued; a cancelled or completed job cannot be started"
+            }
             val digest = MessageDigest.getInstance("SHA-256")
             val partialPrefixDigest = MessageDigest.getInstance("SHA-256")
             val chunkContext = "kinetics-import:$jobId"
@@ -134,6 +136,9 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
             }
 
             require(byteCount > 0L) { "Empty research inputs are not accepted" }
+            if (isStopped || store.isJobCancelled(jobId)) {
+                return markCancelled(store, jobId, partial, byteCount)
+            }
             val hash = digest.digest().joinToString("") { "%02x".format(it) }
             val encryptedDirectory = File(applicationContext.noBackupFilesDir, "research-inputs")
                 .apply { mkdirs() }
@@ -144,6 +149,13 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
             check(partial.renameTo(destination)) { "Encrypted import could not be finalized" }
             finalizedFile = destination
 
+            if (isStopped || store.isJobCancelled(jobId)) {
+                check(destination.renameTo(partial)) {
+                    "Cancelled encrypted import could not be restored to its resumable partial file"
+                }
+                finalizedFile = null
+                return markCancelled(store, jobId, partial, byteCount)
+            }
             store.completeImport(jobId, hash, byteCount, destination.absolutePath)
             finalizedFile = null
             Result.success()
@@ -151,6 +163,10 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
             // If metadata commit fails, restore the encrypted staging file for safe retry.
             finalizedFile?.let { file ->
                 if (!file.renameTo(partial)) file.delete()
+            }
+            finalizedFile = null
+            if (isStopped || store.isJobCancelled(jobId)) {
+                return markCancelled(store, jobId, partial, byteCount)
             }
             val detail = error.message ?: error.javaClass.simpleName
             val state = if (

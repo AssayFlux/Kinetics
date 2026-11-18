@@ -179,6 +179,42 @@ class ResearchStoreMigrationTest {
         store.close()
     }
 
+    @Test
+    fun cancellationWinsAgainstLateImportStartAndCannotDowngradeCompletedJobs() {
+        val store = ResearchStore(context)
+        try {
+            store.createJob("cancel-race", "sample.fa", "content://sample")
+            assertTrue(store.startImport("cancel-race"))
+            assertTrue(store.isJobCancelled("cancel-race").not())
+            assertTrue(store.cancelActiveImport("cancel-race"))
+            assertTrue(store.isJobCancelled("cancel-race"))
+            assertFalse(store.startImport("cancel-race"))
+            assertFalse(store.cancelActiveImport("cancel-race"))
+
+            store.createJob("completed-import", "done.fa", "content://done")
+            store.updateJob("completed-import", "succeeded", hash = "d".repeat(64), bytes = 10)
+            assertFalse(store.cancelActiveImport("completed-import"))
+            assertFalse(store.isJobCancelled("completed-import"))
+        } finally {
+            store.close()
+        }
+    }
+
+    @Test
+    fun resumeTransitionsOnlyFailedOrCancelledJobsBackToQueued() {
+        val store = ResearchStore(context)
+        try {
+            store.createJob("resume-job", "sample.fa", "content://sample")
+            assertFalse(store.queueImportForResume("resume-job"))
+            store.updateJob("resume-job", "cancelled")
+            assertTrue(store.queueImportForResume("resume-job"))
+            assertFalse(store.queueImportForResume("resume-job"))
+            assertTrue(store.startImport("resume-job"))
+        } finally {
+            store.close()
+        }
+    }
+
     private fun tableExists(db: SQLiteDatabase, name: String): Boolean =
         db.rawQuery(
             "SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",

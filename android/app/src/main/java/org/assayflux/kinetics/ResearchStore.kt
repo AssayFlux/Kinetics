@@ -116,6 +116,56 @@ class ResearchStore(context: Context) :
         writableDatabase.update("jobs", values, "id=?", arrayOf(id))
     }
 
+    /** Atomically claim a queued import; a cancelled job cannot be resurrected by a late worker. */
+    fun startImport(id: String): Boolean {
+        val values = ContentValues().apply {
+            put("state", "running")
+            put("updated_at", System.currentTimeMillis())
+        }
+        return writableDatabase.update(
+            "jobs", values, "id=? AND state='queued'", arrayOf(id),
+        ) == 1
+    }
+
+    /** Queue only an explicitly resumable failed/cancelled import before scheduling its worker. */
+    fun queueImportForResume(id: String): Boolean {
+        val values = ContentValues().apply {
+            put("state", "queued")
+            put("message", "Resume queued")
+            put("updated_at", System.currentTimeMillis())
+        }
+        return writableDatabase.update(
+            "jobs", values, "id=? AND state IN ('cancelled','failed')", arrayOf(id),
+        ) == 1
+    }
+
+    /** Cancellation wins atomically against import finalization; completed jobs are never downgraded. */
+    fun cancelActiveImport(id: String): Boolean {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            val values = ContentValues().apply {
+                put("state", "cancelled")
+                put("message", "Cancellation requested. Any encrypted partial input is retained and may be resumed.")
+                put("updated_at", System.currentTimeMillis())
+            }
+            val changed = db.update(
+                "jobs", values, "id=? AND state IN ('queued','running')", arrayOf(id),
+            ) == 1
+            if (changed) {
+                db.delete("analysis_results", "job_id=?", arrayOf(id))
+                db.setTransactionSuccessful()
+            }
+            return changed
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    fun isJobCancelled(id: String): Boolean = readableDatabase.rawQuery(
+        "SELECT state FROM jobs WHERE id=?", arrayOf(id),
+    ).use { cursor -> cursor.moveToFirst() && cursor.getString(0) == "cancelled" }
+
     /** Resolve only canonical finalized KDAT files inside the dedicated no-backup directory. */
     private fun resolveEncryptedInput(path: String): File {
         val root = File(appContext.noBackupFilesDir, "research-inputs").canonicalFile
@@ -135,6 +185,12 @@ class ResearchStore(context: Context) :
         val db = writableDatabase
         db.beginTransaction()
         try {
+            val currentState = db.rawQuery(
+                "SELECT state FROM jobs WHERE id=?", arrayOf(id),
+            ).use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
+            check(currentState == "running") {
+                "Import cannot be finalized after cancellation or outside the running state"
+            }
             val values = ContentValues().apply {
                 put("state", "succeeded")
                 put("sha256", hash)

@@ -240,3 +240,12 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - The report intentionally returns no genome-wide coverage percentage: its scope is only the supplied snapshot. This is not a substitute for the in-app live NCBI Gene search/retrieval adapter.
 - The reconciled Android catalogue count is **48/68 connected; 20 remain unconnected**, plus the separate public reference-database service.
 - Exact-head CI remains pending; no APK/device acceptance is claimed.
+
+
+## 22. Experimental structure coordinate comparison — 2026-11-18
+
+- Added `structure.experimental_ca_comparison` to the Structure service page and the bounded local bridge.
+- The action parses two caller-supplied PDB structures, requires at least three CA residues in each, enforces 900 KB combined input and 5,000 atoms per structure, and records SHA-256 hashes of both source texts.
+- Comparison requires exact chain/residue/residue-name correspondence and reports superposed CA RMSD only. It does not perform alignment, calculate TM-score, validate biological function or certify experimental accuracy.
+- The reconciled Android catalogue count is **49/68 connected; 19 remain unconnected**, plus the separate public reference-database service.
+- Exact-head CI remains pending; no APK or device acceptance is claimed.

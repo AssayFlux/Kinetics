@@ -990,6 +990,41 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Deterministic model calculation only; no parameter fitting or uncertainty estimate",
             "Units must be consistent across substrate, Vmax and Km",
         ]
+    elif capability_id == "structure.experimental_ca_comparison":
+        import hashlib
+        from kinetics.structure import parse_pdb
+        from kinetics.structure_prediction import compare_predicted_to_experimental_ca
+        try:
+            parameters = json.loads(sequence_text)
+            predicted_pdb = parameters["predicted_pdb"]
+            experimental_pdb = parameters["experimental_pdb"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with predicted_pdb and experimental_pdb text") from exc
+        if not isinstance(predicted_pdb, str) or not isinstance(experimental_pdb, str):
+            raise ValueError("Both structure inputs must be PDB text")
+        predicted_bytes = predicted_pdb.encode("utf-8")
+        experimental_bytes = experimental_pdb.encode("utf-8")
+        if len(predicted_bytes) + len(experimental_bytes) > 900_000:
+            raise ValueError("Combined PDB inputs exceed the 900 KB mobile limit")
+        predicted_atoms = parse_pdb(predicted_pdb, include_hetero=False)
+        experimental_atoms = parse_pdb(experimental_pdb, include_hetero=False)
+        if len(predicted_atoms) > 5_000 or len(experimental_atoms) > 5_000:
+            raise ValueError("Each structure is limited to 5,000 parsed atoms")
+        for label, atoms in (("Predicted", predicted_atoms), ("Experimental", experimental_atoms)):
+            if sum(atom.name.strip().upper() == "CA" for atom in atoms) < 3:
+                raise ValueError(f"{label} structure requires at least three CA residues")
+        result = compare_predicted_to_experimental_ca(
+            predicted_atoms,
+            experimental_atoms,
+            predicted_source_sha256=hashlib.sha256(predicted_bytes).hexdigest(),
+            experimental_source_sha256=hashlib.sha256(experimental_bytes).hexdigest(),
+            max_residues=5_000,
+        )
+        limitations = [
+            "Exact chain/residue/residue-name correspondence is required; no alignment is performed",
+            "CA RMSD depends on supplied correspondence and is not an all-atom quality score",
+            "No TM-score, confidence calibration, biological function or experimental validity is inferred",
+        ]
     elif capability_id == "structure.prediction_envelope_validation":
         from kinetics.structure_prediction import validate_prediction_envelope
         try:

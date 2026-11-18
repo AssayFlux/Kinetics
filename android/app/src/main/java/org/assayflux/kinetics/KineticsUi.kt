@@ -468,6 +468,7 @@ private fun ServiceDetailScreen(
         "protein.design_brief_validation",
         "structure.geometry_screen_metrics",
         "structure.prediction_envelope_validation",
+        "structure.experimental_ca_comparison",
         "phylo.nj_site_bootstrap",
         "structure.exact_sequence_mapping",
         "structure.chain_interface_contacts",
@@ -777,6 +778,15 @@ private fun ServiceDetailScreen(
                     description = "Validate the structure-prediction envelope, input sequence hash, model/node provenance, viewer payload and confidence fields. This validates structure only; it does not run a prediction model or certify accuracy.",
                     sample = "{\"sequence\":\"G\",\"envelope\":{\"schema\":\"kinetics.structure-prediction.v1\",\"input_sequence_sha256\":\"333e0a1e27815d0ceee55c473fe3dc93d56c63e3bee2b3b4aee8eed6d70191a3\",\"sequence_length\":1,\"model\":{\"name\":\"Example model\",\"version\":\"1\",\"weights_sha256\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"license\":\"CC0-1.0\"},\"node\":{\"node_id\":\"local-example\",\"software_version\":\"1\",\"run_id\":\"sample\"},\"created_at\":\"2026-11-18T06:00:00Z\",\"predicted_structure\":{\"schema\":\"kinetics.structure-view.v1\",\"source_format\":\"pdb\",\"coordinate_unit\":\"angstrom\",\"atom_count\":1,\"atoms\":[{\"serial\":1,\"name\":\"CA\",\"residue\":\"GLY\",\"chain\":\"A\",\"residue_number\":1,\"element\":\"C\",\"xyz\":[0.0,0.0,0.0]}],\"limitations\":[\"Coordinates only\"]},\"confidence\":{\"plddt_per_residue\":[75.0],\"mean_plddt\":75.0,\"pae_mean_angstrom\":null,\"pae_max_angstrom\":null},\"limitations\":[\"Unverified example envelope\"]}}",
                     actionLabel = "Validate prediction record",
+                ) }
+            }
+            if (capability?.id == "structure.experimental_ca_comparison") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "structure.experimental_ca_comparison",
+                    title = "Experimental CA comparison",
+                    description = "Compare caller-supplied predicted and experimental PDB coordinates using exact chain/residue correspondence and superposed CA RMSD. No alignment or biological validation is inferred.",
+                    sample = "{\"predicted_pdb\":\"ATOM      1  CA  ALA A   1      12.000  13.800   9.500  1.00 20.00           C\\nATOM      2  CA  GLY A   2      13.000  13.800   9.500  1.00 20.00           C\\nATOM      3  CA  SER A   3      12.000  14.800   9.500  1.00 20.00           C\\nTER\\nEND\\n\",\"experimental_pdb\":\"ATOM      1  CA  ALA A   1      12.000  13.800   9.500  1.00 20.00           C\\nATOM      2  CA  GLY A   2      13.000  13.800   9.500  1.00 20.00           C\\nATOM      3  CA  SER A   3      12.000  14.800   9.500  1.00 20.00           C\\nTER\\nEND\\n\"}",
+                    actionLabel = "Compare structures",
                 ) }
             }
             if (capability?.id == "structure.exact_sequence_mapping") {

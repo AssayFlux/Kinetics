@@ -484,3 +484,28 @@ def test_gene_catalogue_snapshot_route_is_allow_listed():
     assert capability_id in UI
     assert capability_id in RUNNER
     assert capability_id in PROBE
+
+
+def test_experimental_ca_comparison_mobile_route_reports_coordinate_only_rmsd():
+    import json
+
+    pdb = (
+        "ATOM      1  CA  ALA A   1      12.000  13.800   9.500  1.00 20.00           C\n"
+        "ATOM      2  CA  GLY A   2      13.000  13.800   9.500  1.00 20.00           C\n"
+        "ATOM      3  CA  SER A   3      12.000  14.800   9.500  1.00 20.00           C\n"
+        "TER\nEND\n"
+    )
+    result = _run_probe(
+        "structure.experimental_ca_comparison",
+        json.dumps({"predicted_pdb": pdb, "experimental_pdb": pdb}),
+    )
+    assert result["status"] == "coordinate_comparison_only"
+    assert result["matched_ca_residues"] == 3
+    assert result["superposed_ca_rmsd_angstrom"] < 1e-9
+
+
+def test_experimental_ca_comparison_route_is_allow_listed():
+    capability_id = "structure.experimental_ca_comparison"
+    assert capability_id in UI
+    assert capability_id in RUNNER
+    assert capability_id in PROBE

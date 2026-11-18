@@ -39,6 +39,7 @@ internal object AndroidBasicCapabilityRunner {
         "protein.design_brief_validation",
         "structure.geometry_screen_metrics",
         "structure.prediction_envelope_validation",
+        "structure.experimental_ca_comparison",
         "phylo.nj_site_bootstrap",
         "structure.exact_sequence_mapping",
         "structure.chain_interface_contacts",

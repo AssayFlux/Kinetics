@@ -1,8 +1,7 @@
 ## Target release
 
 - [ ] v0.1.0 stabilization
-- [ ] v0.1.1 patch/hardening
-- [ ] v0.1.2 scientific rulebook development
+- [ ] v0.1.1 next release (integration, hardening and scientific rulebook foundation)
 - [ ] Other (explain below)
 
 ## Change summary
@@ -29,7 +28,7 @@ Describe the user-visible and engineering changes.
 ## Baseline safety
 
 - [ ] This change does not modify a frozen release tag or its source commit
-- [ ] If a critical v0.1.0 defect is found after freeze, this is a new patch release branch and does not rewrite v0.1.0
+- [ ] If a critical v0.1.0 defect is found after freeze, deliver the fix in a new version without rewriting v0.1.0
 - [ ] No force push or history rewrite of shared branches
 
 ## Limitations and risks

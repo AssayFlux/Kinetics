@@ -24,9 +24,9 @@
 | Analysis result and parameters | analysis_results table in SQLite | App-private SQLite; currently plaintext JSON |
 | Temporary decrypted analysis input | App-private cache | Deleted by normal cleanup; stale prefixed files older than 24 hours are cleaned at store startup; crash residue can exist until cleanup |
 | Preferences | Private SharedPreferences | App-private; not encrypted separately |
-| Exported input/result/provenance | User-selected SAF destination | Outside app control after export |
+| Public reference payload | App-private no-backup public-records/*.kdat | Android Keystore AES-256-GCM chunk encryption; public record metadata index remains plaintext SQLite |\n| Public record metadata and FASTA QC result | kinetics-public-records.db | App-private SQLite; not separately encrypted |\n| Exported input/result/provenance | User-selected SAF destination | Outside app control after export |
 
-The source manifest declares allowBackup=false and no INTERNET permission. Merged-manifest, runtime traffic and device/OEM verification are still required before those source-level facts can be treated as deployment evidence.
+The source manifest now declares INTERNET solely for user-initiated public-reference retrieval. The transport client restricts HTTPS to explicit NCBI, UniProt and RCSB hosts, uses GET only, rejects redirects and applies timeouts/response ceilings. Cleartext traffic remains disabled. Imported patient inputs are not sent to providers. Merged-manifest, runtime traffic capture, provider endpoint audit and device/OEM verification remain required.
 
 ## Explicitly not implemented or not accepted
 
@@ -56,3 +56,16 @@ The source manifest declares allowBackup=false and no INTERNET permission. Merge
 - User cancellation first commits a terminal cancelled state; a late worker cannot overwrite it with succeeded. A cancelled or failed import is explicitly moved back to queued before resume scheduling.
 - A WorkManager-recreated worker can reclaim a durable running state after process death and continue from the authenticated encrypted partial file.
 - Automated ResearchStore tests cover cancellation, non-downgrade of completed jobs, explicit resume transitions and process-restart re-claim. Exact-head CI is pending; device/process-kill testing remains open.
+
+
+## User-initiated public-reference network boundary — 2026-11-18
+
+- INTERNET permission is now present to support explicit searches/retrieval from public reference providers only.
+- Current allow-list: NCBI E-utilities, UniProt REST and RCSB PDB file endpoint. Requests are HTTPS GET, no redirects, bounded by connect/read timeouts and response-size ceilings.
+- Search terms and public accessions are sent to those providers. Patient sequences, VCFs, sample identifiers, local file URIs, job metadata and analysis results must never be included in provider requests.
+- The public source payload is encrypted using the existing Android Keystore AES-GCM chunked file format. Its metadata index and FASTA QC result JSON remain plaintext in app-private SQLite; this is disclosed and must be addressed or explicitly risk-accepted before release.
+- The public cache is user-deletable. Secure flash erasure is not claimed.
+- Network retrieval is not remote analysis: sequence QC and structure parsing/viewing run locally on-device.
+- Required next checks: merged-manifest audit, runtime packet capture, DNS/redirect/host allow-list tests, provider terms/rate-limit review, cancellation/retry behavior and named-device offline/online tests.
+
+**Decision:** The app is no longer strictly network-permission-free. It remains local-first with explicit, narrowly scoped public-reference retrieval; no patient-data upload, telemetry or remote compute is introduced.

@@ -80,7 +80,7 @@ internal fun GenomicsVcfQcCard() {
     var selectedUri by remember { mutableStateOf<Uri?>(null) }
     var selectedName by remember { mutableStateOf<String?>(null) }
     var report by remember { mutableStateOf<JSONObject?>(null) }
-    var status by remember { mutableStateOf("Choose a synthetic or authorized public non-patient VCF file.") }
+    var status by remember { mutableStateOf("Choose a VCF dataset covered by your institutional research authorization.") }
     var error by remember { mutableStateOf<String?>(null) }
     var busy by remember { mutableStateOf(false) }
 
@@ -119,12 +119,12 @@ internal fun GenomicsVcfQcCard() {
                     report = null
                 })
                 Text(
-                    "I confirm this file contains only synthetic or authorized public non-patient data.",
+                    "I confirm I am authorized under the applicable institutional approval to use this dataset for this research.",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
             Text(
-                "This declaration is an operator attestation, not automated verification of data origin. Do not select patient, clinical, identifiable or human-subject data.",
+                "This is an operator attestation, not automated verification. Use only data within the approved protocol, with required consent, access controls and data minimisation. Do not use this exploratory QC output for diagnosis or treatment decisions.",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

@@ -27,6 +27,8 @@ internal object AndroidBasicCapabilityRunner {
         "omics.normalisation",
         "omics.cross_correlation",
         "phylo.jukes_cantor_nj",
+        "genome.gff3_annotation_import",
+        "genome.gff3_transcript_cds_reconstruction",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

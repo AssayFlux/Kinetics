@@ -519,6 +519,58 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Uses the Jukes–Cantor substitution model and caller-supplied alignment",
             "No alignment generation, model selection, bootstrap support or phylogenetic confidence",
         ]
+    elif capability_id == "genome.gff3_annotation_import":
+        from kinetics.gff3 import parse_gff3
+        if len(sequence_text.encode("utf-8")) > 1_000_000:
+            raise ValueError("GFF3 input exceeds the 1 MB mobile limit")
+        result = parse_gff3(
+            sequence_text.splitlines(),
+            max_lines=100_000,
+            max_features=50_000,
+            max_attribute_bytes=16_384,
+            max_total_attribute_bytes=8 * 1024 * 1024,
+        )
+        limitations = [
+            "Structural annotation validation only; no gene function or variant effect is inferred",
+            "Feature, parent-graph and coordinate checks are bounded to 50,000 features",
+        ]
+    elif capability_id == "genome.gff3_transcript_cds_reconstruction":
+        from kinetics.gff3 import parse_gff3
+        from kinetics.gff3_transcripts import reconstruct_gff3_cds
+        try:
+            parameters = json.loads(sequence_text)
+            gff3_text = parameters["gff3"]
+            contigs = parameters["contigs"]
+            table_id = parameters.get("table_id", 11)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with gff3, contigs and optional table_id") from exc
+        if not isinstance(gff3_text, str) or not isinstance(contigs, dict):
+            raise ValueError("gff3 must be text and contigs must be a name-to-sequence object")
+        if len(gff3_text.encode("utf-8")) > 1_000_000:
+            raise ValueError("GFF3 annotation exceeds the 1 MB mobile limit")
+        if len(contigs) > 1_000 or sum(
+            len(value) for value in contigs.values() if isinstance(value, str)
+        ) > 1_000_000:
+            raise ValueError("Contigs are limited to 1,000 sequences and 1 MB total bases")
+        annotation = parse_gff3(
+            gff3_text.splitlines(),
+            max_lines=100_000,
+            max_features=50_000,
+            max_attribute_bytes=16_384,
+            max_total_attribute_bytes=8 * 1024 * 1024,
+        )
+        result = reconstruct_gff3_cds(
+            annotation,
+            contigs,
+            table_id=table_id,
+            max_transcripts=10_000,
+            max_total_cds_bases=1_000_000,
+        )
+        limitations = [
+            "CDS reconstruction follows supplied GFF3 coordinates and phases; annotation quality is not inferred",
+            "Only complete canonical CDSs with valid caller-selected table translation can pass CDS validation",
+            "No gene function, expression, pathogenicity or clinical interpretation is performed",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

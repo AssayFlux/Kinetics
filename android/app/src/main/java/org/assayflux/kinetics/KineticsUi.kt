@@ -457,6 +457,8 @@ private fun ServiceDetailScreen(
         "omics.normalisation",
         "omics.cross_correlation",
         "phylo.jukes_cantor_nj",
+        "genome.gff3_annotation_import",
+        "genome.gff3_transcript_cds_reconstruction",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -645,6 +647,24 @@ private fun ServiceDetailScreen(
                     description = "Infer a neighbour-joining tree from caller-supplied aligned DNA sequences using pairwise-deletion Jukes–Cantor distances. Input JSON includes named sequences.",
                     sample = "{\"sequences\":{\"A\":\"ACGTACGTACGTACGTACGT\",\"B\":\"ACGTACGTACGTACGTACGA\",\"C\":\"ACGTACGTACGTACGTACGG\"}}",
                     actionLabel = "Build NJ tree",
+                ) }
+            }
+            if (capability?.id == "genome.gff3_annotation_import") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "genome.gff3_annotation_import",
+                    title = "GFF3 annotation validation",
+                    description = "Validate GFF3 version, feature coordinates, IDs and Parent relationships. No gene function is inferred.",
+                    sample = "##gff-version 3\nchr1\tKinetics\tgene\t1\t100\t.\t+\t.\tID=gene1",
+                    actionLabel = "Validate annotation",
+                ) }
+            }
+            if (capability?.id == "genome.gff3_transcript_cds_reconstruction") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "genome.gff3_transcript_cds_reconstruction",
+                    title = "GFF3 transcript CDS reconstruction",
+                    description = "Reconstruct spliced CDS from validated GFF3 and supplied contigs. Input JSON contains gff3, contigs and optional table_id.",
+                    sample = "{\"gff3\":\"##gff-version 3\\nchr1\\tKinetics\\tgene\\t1\\t9\\t.\\t+\\t.\\tID=g1\\nchr1\\tKinetics\\tmRNA\\t1\\t9\\t.\\t+\\t.\\tID=t1;Parent=g1\\nchr1\\tKinetics\\tCDS\\t1\\t9\\t.\\t+\\t0\\tID=c1;Parent=t1\",\"contigs\":{\"chr1\":\"ATGGCTTAA\"},\"table_id\":11}",
+                    actionLabel = "Reconstruct CDS",
                 ) }
             }
             if (capability?.id == "structure.ligand_site_candidates" ||

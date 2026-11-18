@@ -107,3 +107,5 @@ def test_owner_blueprint_has_one_actionable_card_per_capability() -> None:
     assert "DashboardPanel(\"LOCAL DATA & REFERENCES\"" in ui
     assert "NavigationBar(" not in ui
     assert "NavigationRail(" not in ui
+    assert 'label = { Text("Search") }' in ui
+    assert 'contentDescription = "Open profile"' in ui

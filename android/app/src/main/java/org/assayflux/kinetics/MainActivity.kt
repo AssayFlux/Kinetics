@@ -431,7 +431,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
         },
         biometricEnabled = biometricEnabled,
         biometricAvailable = BiometricUnlock.canAuthenticate(activity),
-        debugBuild = BuildConfig.DEBUG,
+        debugBuild = (activity.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0,
         onBiometricChange = { enabled ->
             if (!enabled || BiometricUnlock.canAuthenticate(activity)) {
                 preferences.edit().putBoolean("biometric_unlock_enabled", enabled).apply()

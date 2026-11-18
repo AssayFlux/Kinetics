@@ -36,6 +36,7 @@ import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
 import java.util.Locale
+import java.util.zip.GZIPInputStream
 
 private data class S3StructureDocument(val name: String, val format: String, val text: String)
 
@@ -45,14 +46,16 @@ private fun readS3StructureDocument(context: Context, uri: Uri): S3StructureDocu
     )?.use { cursor ->
         if (cursor.moveToFirst()) cursor.getString(0) else null
     } ?: uri.lastPathSegment ?: "structure"
+    val lowerName = name.lowercase(Locale.ROOT).removeSuffix(".gz")
     val format = when {
-        name.endsWith(".pdb", ignoreCase = true) || name.endsWith(".ent", ignoreCase = true) -> "pdb"
-        name.endsWith(".cif", ignoreCase = true) || name.endsWith(".mmcif", ignoreCase = true) -> "mmcif"
-        else -> error("Select a .pdb, .ent, .cif or .mmcif structure file.")
+        lowerName.endsWith(".pdb") || lowerName.endsWith(".ent") -> "pdb"
+        lowerName.endsWith(".cif") || lowerName.endsWith(".mmcif") -> "mmcif"
+        else -> error("Select PDB, ENT, CIF, mmCIF or a .gz-compressed version.")
     }
     val input = context.contentResolver.openInputStream(uri)
         ?: error("The selected structure document could not be opened.")
-    val bytes = input.use { stream ->
+    val decoded = if (name.endsWith(".gz", ignoreCase = true)) GZIPInputStream(input) else input
+    val bytes = decoded.use { stream ->
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(32 * 1024)
         var total = 0
@@ -82,7 +85,7 @@ internal fun StructureSiteAnalysisCard() {
     var sourceText by remember { mutableStateOf<String?>(null) }
     var sourceFormat by remember { mutableStateOf("pdb") }
     var sourceName by remember { mutableStateOf<String?>(null) }
-    var message by remember { mutableStateOf("Choose a local PDB or mmCIF file to screen structure-site candidates.") }
+    var message by remember { mutableStateOf("Choose a local PDB or mmCIF file (compressed .gz is supported) to screen structure-site candidates.") }
     var chain by rememberSaveable { mutableStateOf("A") }
     var residueNumber by rememberSaveable { mutableStateOf("") }
     var residueName by rememberSaveable { mutableStateOf("") }

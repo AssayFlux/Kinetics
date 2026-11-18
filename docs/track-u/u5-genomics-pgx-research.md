@@ -9,7 +9,7 @@
 
 - Home now exposes a VCF record-structure QC card when the repository's genomics.sam_vcf source capability is present.
 - Android SAF accepts uncompressed .vcf and bounded .vcf.gz files, with strict UTF-8 decoding, NUL rejection and a 5 MiB input ceiling.
-- The user must confirm institutional authorization for the selected dataset before analysis is enabled. This is an operator declaration, not automated data-origin verification. This is an operator declaration, not automated data-origin verification.
+- The user must confirm institutional authorization for the selected dataset before analysis is enabled. This is an operator declaration, not automated data-origin verification.
 - The Python parser applies hard ceilings of 10,000 variant records and 32 sample columns.
 - The result contains aggregate record, contig, filter, missing-QUAL, SNV and multiallelic counts plus source SHA-256 and tool metadata.
 - Sample names and genotype strings are never returned in the result. The UI does not persist the VCF or result in ResearchStore and does not offer an export from this screen.

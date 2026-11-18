@@ -163,3 +163,11 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - The Android app now exposes 21 of 68 catalogue capabilities through dedicated Android forms and the local Python bridge. The separate public-reference-database service makes 22 Android workflows; 47 catalogue capabilities remain unconnected.
 - The integration matrix has been refreshed with the exact capability-by-capability mapping.
 - Latest exact-head CI is pending; no test or APK verification is claimed for these commits yet.
+
+
+## 13. Additional omics and phylogenetic mobile workflows — 2026-11-18
+
+- Commit `ce54dfbcd9f724ee857d8420a7aef52b17b48991` adds Android workflows for CPM/CLR omics normalisation, cross-omics Pearson correlation and Jukes–Cantor neighbour-joining from caller-supplied alignments.
+- All three routes are explicitly allow-listed, have bounded matrix/sequence sizes and include limitations to prevent unsupported interpretation.
+- The Android app now exposes 24 of 68 catalogue capabilities; 44 catalogue capabilities remain unconnected. Including the separate public-reference-database service, 25 Android workflows are available in source.
+- Updated the integration matrix with these routes. Exact-head CI is pending and no APK verification is claimed yet.

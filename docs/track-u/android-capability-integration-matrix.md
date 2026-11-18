@@ -8,8 +8,8 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **21**
-- Catalogue entries not yet connected to Android: **47**
+- Catalogue entries connected to Android workflows: **24**
+- Catalogue entries not yet connected to Android: **44**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.
@@ -44,6 +44,10 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 | `kinetics.inhibition_rate` | Competitive, uncompetitive, noncompetitive and mixed inhibition equation calculator |
 | `phylo.upgma` | Rooted UPGMA construction from supplied distance matrix |
 
+| `omics.normalisation` | CPM or CLR transformation for bounded feature-by-sample matrices |
+| `omics.cross_correlation` | Pairwise Pearson correlation between matched multi-omics matrices |
+| `phylo.jukes_cantor_nj` | Neighbour joining from supplied aligned sequences using Jukes–Cantor distances |
+
 All local forms use an explicit bridge allow-list and bounded input/work limits. Their method-specific limitations are returned or displayed with results.
 
 ## Complete catalogue mapping
@@ -71,14 +75,14 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `structure.pdb_geometry` | `python/kinetics/structure.py` | Not connected — Python source only |
 | `chemistry.sdf_graph` | `python/kinetics/chemistry.py` | Connected — local Android form + Python bridge |
 | `phylo.newick` | `python/kinetics/phylo.py` | Connected — local Android form + Python bridge |
-| `omics.normalisation` | `python/kinetics/omics.py` | Not connected — Python source only |
+| `omics.normalisation` | `python/kinetics/omics.py` | Connected — local Android form + Python bridge |
 | `microbiome.diversity` | `python/kinetics/omics.py` | Connected — local Android form + Python bridge |
 | `genes.ncbi_catalogue` | `python/kinetics/catalog.py` | Not connected — Python source only |
 | `molecular.primer_screen` | `python/kinetics/molecular.py` | Connected — local Android form + Python bridge |
 | `molecular.crispr_pam` | `python/kinetics/molecular.py` | Connected — local Android form + Python bridge |
 | `phylo.upgma` | `python/kinetics/phylo.py` | Connected — local Android form + Python bridge |
 | `omics.logistic_growth` | `python/kinetics/omics.py` | Connected — local Android form + Python bridge |
-| `omics.cross_correlation` | `python/kinetics/omics.py` | Not connected — Python source only |
+| `omics.cross_correlation` | `python/kinetics/omics.py` | Connected — local Android form + Python bridge |
 | `genomics.variant_normalization` | `python/kinetics/genomics.py` | Not connected — Python source only |
 | `kinetics.bootstrap_intervals` | `python/kinetics/kinetics.py` | Not connected — Python source only |
 | `structure.sasa` | `python/kinetics/structure.py` | Connected — local Android form + Python bridge |
@@ -86,7 +90,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `omics.nb2_glm` | `python/kinetics/omics.py` | Not connected — Python source only |
 | `genomics.bam_core` | `python/kinetics/genomics.py` | Not connected — Python source only |
 | `pgx.star_allele_definitions` | `python/kinetics/pgx.py` | Not connected — Python source only |
-| `phylo.jukes_cantor_nj` | `python/kinetics/phylo.py` | Not connected — Python source only |
+| `phylo.jukes_cantor_nj` | `python/kinetics/phylo.py` | Connected — local Android form + Python bridge |
 | `structure.interaction_candidates` | `python/kinetics/structure.py` | Connected — local Android form + Python bridge |
 | `chemistry.rdkit_adapter` | `python/kinetics/chemistry_rdkit.py` | Not connected — Python source only |
 | `genomics.htslib_bam_cram` | `python/kinetics/genomics_htslib.py` | Not connected — Python source only |

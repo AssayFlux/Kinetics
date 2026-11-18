@@ -150,8 +150,7 @@ abi=arm64-v8a
 recipe_sha256=$(sha256sum "$ANDROID_DIR/biopython-wheel/meta.yaml" | awk '{print $1}')"
 mkdir -p "$BIOPYTHON_WHEEL_DIR"
 if [[ -s "$BIOPYTHON_WHEEL" && -s "$BIOPYTHON_WHEEL_INFO" ]] &&
-   [[ "$(cat "$BIOPYTHON_WHEEL_INFO")" == "$BIOPYTHON_BUILD_ID
-wheel_sha256=$(sha256sum "$BIOPYTHON_WHEEL" | awk '{print $1}')" ]]; then
+   [[ "$(cat "$BIOPYTHON_WHEEL_INFO")" == "$(printf '%s\nwheel_sha256=%s' "$BIOPYTHON_BUILD_ID" "$(sha256sum "$BIOPYTHON_WHEEL" | awk '{print $1}')")" ]]; then
   python - "$BIOPYTHON_WHEEL" <<'PY'
 import sys, zipfile
 from pathlib import Path
@@ -194,13 +193,13 @@ import json, sys
 from pathlib import Path
 recipe = Path(sys.argv[1])
 source = json.dumps(str(Path(sys.argv[2]).resolve()))
-recipe.write_text(recipe.read_text() + f"\\nsource:\\n  path: {source}\\n")
+recipe.write_text(recipe.read_text() + f"\nsource:\n  path: {source}\n")
 PY
   cd "$CHAQUOPY_DIR/server/pypi"
   python build-wheel.py --python 3.11 --abi arm64-v8a "$BIOPYTHON_RECIPE"
   cp dist/biopython/*.whl "$BIOPYTHON_WHEEL"
   BIOPYTHON_WHEEL_SHA="$(sha256sum "$BIOPYTHON_WHEEL" | awk '{print $1}')"
-  printf '%s\\nwheel_sha256=%s\\n' "$BIOPYTHON_BUILD_ID" "$BIOPYTHON_WHEEL_SHA" > "$BIOPYTHON_WHEEL_INFO"
+  printf '%s\nwheel_sha256=%s\n' "$BIOPYTHON_BUILD_ID" "$BIOPYTHON_WHEEL_SHA" > "$BIOPYTHON_WHEEL_INFO"
   echo "Created pinned Biopython wheel cache: $BIOPYTHON_WHEEL_SHA"
 fi
 

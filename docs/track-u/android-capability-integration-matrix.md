@@ -8,8 +8,8 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **26**
-- Catalogue entries not yet connected to Android: **42**
+- Catalogue entries connected to Android workflows: **29**
+- Catalogue entries not yet connected to Android: **39**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.
@@ -51,6 +51,10 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 | `genome.gff3_annotation_import` | GFF3 structural validation and feature/parent graph checks |
 | `genome.gff3_transcript_cds_reconstruction` | CDS reconstruction from validated GFF3 and caller-supplied contigs |
 
+| `protein.fixed_width_motif_scan` | Caller-supplied, hash-pinned fixed-width motif pack scan |
+| `genome.prokaryotic_orf_candidate_scan` | Bounded multi-contig prokaryotic ORF candidate scan |
+| `kinetics.bootstrap_intervals` | Paired nonparametric Michaelis–Menten bootstrap percentile intervals |
+
 All local forms use an explicit bridge allow-list and bounded input/work limits. Their method-specific limitations are returned or displayed with results.
 
 ## Complete catalogue mapping
@@ -64,7 +68,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `sequence.explicit_genetic_code_translation` | `python/kinetics/genetic_code.py` | Connected — local Android form + Python bridge |
 | `sequence.genetic_code_candidate_inference` | `python/kinetics/genetic_code_inference.py` | Connected — local Android form + Python bridge |
 | `genome.orf_candidate_scan` | `python/kinetics/orf.py` | Connected — local Android form + Python bridge |
-| `genome.prokaryotic_orf_candidate_scan` | `python/kinetics/genome_orf.py` | Not connected — Python source only |
+| `genome.prokaryotic_orf_candidate_scan` | `python/kinetics/genome_orf.py` | Connected — local Android form + Python bridge |
 | `sequence.local_blastp` | `python/kinetics/blastp.py` | Not connected — Python source only |
 | `sequence.local_hmmpress` | `python/kinetics/hmmer_runner.py` | Not connected — Python source only |
 | `sequence.local_hmmscan` | `python/kinetics/hmmer_runner.py` | Not connected — Python source only |
@@ -87,7 +91,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `omics.logistic_growth` | `python/kinetics/omics.py` | Connected — local Android form + Python bridge |
 | `omics.cross_correlation` | `python/kinetics/omics.py` | Connected — local Android form + Python bridge |
 | `genomics.variant_normalization` | `python/kinetics/genomics.py` | Not connected — Python source only |
-| `kinetics.bootstrap_intervals` | `python/kinetics/kinetics.py` | Not connected — Python source only |
+| `kinetics.bootstrap_intervals` | `python/kinetics/kinetics.py` | Connected — local Android form + Python bridge |
 | `structure.sasa` | `python/kinetics/structure.py` | Connected — local Android form + Python bridge |
 | `phylo.newick_export` | `python/kinetics/phylo.py` | Not connected — Python source only |
 | `omics.nb2_glm` | `python/kinetics/omics.py` | Not connected — Python source only |
@@ -111,7 +115,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `structure.prediction_envelope_validation` | `python/kinetics/structure_prediction.py` | Not connected — Python source only |
 | `structure.experimental_ca_comparison` | `python/kinetics/structure_prediction.py` | Not connected — Python source only |
 | `genome.contig_assembly_qc` | `python/kinetics/genome_qc.py` | Connected — local Android form + Python bridge |
-| `protein.fixed_width_motif_scan` | `python/kinetics/protein_motifs.py` | Not connected — Python source only |
+| `protein.fixed_width_motif_scan` | `python/kinetics/protein_motifs.py` | Connected — local Android form + Python bridge |
 | `protein.design_brief_validation` | `python/kinetics/protein_design.py` | Not connected — Python source only |
 | `structure.alignment_coordinate_mapping` | `python/kinetics/structure_alignment.py` | Not connected — Python source only |
 | `sequence.local_alignment_reference_search` | `python/kinetics/sequence_reference.py` | Not connected — Python source only |

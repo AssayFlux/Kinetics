@@ -179,3 +179,11 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - The bridge applies 1 MB input bounds, 50,000-feature annotation bounds, 10,000-transcript reconstruction bounds and caller-selected genetic-code table metadata. It does not infer gene function or clinical effects.
 - The Android app now exposes 26 of 68 catalogue capabilities; 42 remain unconnected. The separate public-reference-database service brings the source-level mobile workflow count to 27.
 - Updated the capability integration matrix. Exact-head CI is pending.
+
+
+## 15. Additional protein, genome and kinetics workflows — 2026-11-18
+
+- Commit `e9a94daff65e799ab141097bc182986a97776fcb` adds a bounded Android protein motif scanner that hashes the caller-supplied motif pack and requires source/licence metadata; it does not download or independently verify the pack.
+- Commit `c4640967d7c3ce0982a94372ac0ea06b2b92149f` adds a multi-contig prokaryotic ORF candidate scanner and paired Michaelis–Menten bootstrap intervals with a 100–500 replicate mobile limit.
+- The Android app now exposes 29 of 68 catalogue capabilities; 39 remain unconnected. The separate public-reference-database service brings the source-level Android workflow count to 30.
+- Updated the capability matrix. Exact-head CI is still pending.

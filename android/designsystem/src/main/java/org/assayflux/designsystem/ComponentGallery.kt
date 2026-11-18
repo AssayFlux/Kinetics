@@ -67,6 +67,9 @@ fun KineticsComponentGallery() {
             MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
                 var field by remember(name) { mutableStateOf("") }
                 var pressed by remember(name) { mutableStateOf(false) }
+                var chipSelected by remember(name) { mutableStateOf(false) }
+                var showDialog by remember(name) { mutableStateOf(false) }
+                var showSheet by remember(name) { mutableStateOf(false) }
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text("$name appearance", style = MaterialTheme.typography.titleLarge)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -102,6 +105,29 @@ fun KineticsComponentGallery() {
                         supportingText = "52 dp target · 10 dp radius",
                     )
                     KineticsStatus(label = "Research Mode · local")
+                    KineticsDivider()
+                    KineticsListRow(
+                        title = "Reusable list row",
+                        supportingText = "56 dp minimum · optional leading and trailing slots",
+                        trailing = { KineticsStatus("Local") },
+                        onClick = { pressed = !pressed },
+                    )
+                    KineticsChip("Selected state", chipSelected, { chipSelected = !chipSelected })
+                    KineticsSecondaryButton("Preview confirmation dialog", { showDialog = true }, Modifier.fillMaxWidth())
+                    KineticsSecondaryButton("Preview bottom sheet", { showSheet = true }, Modifier.fillMaxWidth())
+                }
+                if (showDialog) KineticsConfirmationDialog(
+                    title = "Component preview",
+                    message = "This is a reusable confirmation pattern. No data is changed by this gallery.",
+                    confirmLabel = "Got it", dismissLabel = "Close",
+                    onConfirm = { showDialog = false }, onDismiss = { showDialog = false },
+                )
+                if (showSheet) KineticsBottomSheet(onDismissRequest = { showSheet = false }) {
+                    Text("Contextual actions", style = MaterialTheme.typography.titleLarge)
+                    Text("A restrained 20 dp top-corner sheet with 20 dp content padding.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    KineticsPrimaryButton("Close sheet", { showSheet = false }, Modifier.fillMaxWidth())
                 }
             }
         }

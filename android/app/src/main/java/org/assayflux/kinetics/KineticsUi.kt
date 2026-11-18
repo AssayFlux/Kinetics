@@ -16,9 +16,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.runtime.*
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.saveable.rememberSaveable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,6 +41,10 @@ import androidx.compose.ui.unit.sp
 import org.assayflux.designsystem.KineticsTokens
 import org.assayflux.designsystem.KineticsTypography
 import org.assayflux.designsystem.KineticsScientificTextStyle
+import org.assayflux.designsystem.KineticsAppBar
+import org.assayflux.designsystem.KineticsField
+import org.assayflux.designsystem.KineticsListRow
+import org.assayflux.designsystem.KineticsComponentGallery
 import org.json.JSONArray
 
 internal enum class KineticsTab(val label: String) {
@@ -67,8 +74,15 @@ internal fun KineticsAppShell(
     themeFamily: String, onThemeFamilyChange: (String) -> Unit,
     biometricEnabled: Boolean, biometricAvailable: Boolean,
     onBiometricChange: (Boolean) -> Unit,
+    debugBuild: Boolean,
 ) {
     var tab by rememberSaveable { mutableStateOf(KineticsTab.Home) }
+    var showSearch by rememberSaveable { mutableStateOf(false) }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var showComponentGallery by rememberSaveable { mutableStateOf(false) }
+    BackHandler(enabled = showSearch || showComponentGallery) {
+        if (showComponentGallery) showComponentGallery = false else showSearch = false
+    }
     val resolvedTheme = when (themeFamily) {
         "system" -> if (isSystemInDarkTheme()) "dark" else "light"
         else -> themeFamily
@@ -102,41 +116,66 @@ internal fun KineticsAppShell(
 
             @Composable
             fun Screen(modifier: Modifier) {
-                when (tab) {
-                    KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
-                        onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, modifier)
-                    KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, modifier)
-                    KineticsTab.Explore -> ExploreScreen(modifier)
-                    KineticsTab.Settings -> SettingsScreen(
-                        runtimeReport, onRunRuntime, onRefresh, themeFamily, onThemeFamilyChange,
-                        biometricEnabled, biometricAvailable, onBiometricChange, modifier,
+                when {
+                    showComponentGallery -> KineticsComponentGallery()
+                    showSearch -> GlobalSearchScreen(
+                        query = searchQuery,
+                        onQueryChange = { searchQuery = it },
+                        jobs = jobs,
+                        onSelectJob = { showSearch = false; tab = KineticsTab.Work },
+                        onSelectCapability = { showSearch = false; tab = KineticsTab.Explore },
+                        modifier = modifier,
                     )
+                    else -> when (tab) {
+                        KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
+                            onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, modifier)
+                        KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, modifier)
+                        KineticsTab.Explore -> ExploreScreen(modifier)
+                        KineticsTab.Settings -> SettingsScreen(
+                            runtimeReport, onRunRuntime, onRefresh, themeFamily, onThemeFamilyChange,
+                            biometricEnabled, biometricAvailable, onBiometricChange,
+                            debugBuild, { showComponentGallery = true }, modifier,
+                        )
+                    }
                 }
             }
 
             @Composable
             fun AppBar(showMenu: Boolean) {
-                Row(
-                    modifier = Modifier.fillMaxWidth().height(56.dp).padding(horizontal = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    if (showMenu) {
-                        IconButton(
-                            onClick = { drawerScope.launch { drawerState.open() } },
-                            modifier = Modifier.size(48.dp),
-                        ) {
-                            Icon(Icons.Outlined.Menu, contentDescription = "Open navigation menu")
+                KineticsAppBar(
+                    title = when {
+                        showSearch -> "Search"
+                        showComponentGallery -> "Design system"
+                        else -> "KINETICS"
+                    },
+                    subtitle = when {
+                        showSearch -> "Jobs and registered capabilities"
+                        showComponentGallery -> "Developer component preview"
+                        else -> tab.label
+                    },
+                    navigation = {
+                        when {
+                            showSearch || showComponentGallery -> IconButton(
+                                onClick = {
+                                    if (showComponentGallery) showComponentGallery = false else showSearch = false
+                                },
+                                modifier = Modifier.size(48.dp),
+                            ) { Icon(Icons.Outlined.ArrowBack, contentDescription = "Back") }
+                            showMenu -> IconButton(
+                                onClick = { drawerScope.launch { drawerState.open() } },
+                                modifier = Modifier.size(48.dp),
+                            ) { Icon(Icons.Outlined.Menu, contentDescription = "Open navigation menu") }
+                            else -> Spacer(Modifier.size(48.dp))
                         }
-                    } else {
-                        Spacer(Modifier.width(48.dp))
-                    }
-                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
-                        Text("KINETICS", style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold, letterSpacing = 1.1.sp)
-                        Text(tab.label, style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                }
+                    },
+                    actions = {
+                        if (!showSearch && !showComponentGallery) {
+                            IconButton(onClick = { showSearch = true }, modifier = Modifier.size(48.dp)) {
+                                Icon(Icons.Outlined.Search, contentDescription = "Search jobs and capabilities")
+                            }
+                        }
+                    },
+                )
             }
 
             @Composable
@@ -233,10 +272,87 @@ internal fun KineticsAppShell(
 }
 
 @Composable
+private fun GlobalSearchScreen(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    jobs: List<ResearchJob>,
+    onSelectJob: () -> Unit,
+    onSelectCapability: () -> Unit,
+    modifier: Modifier,
+) {
+    val context = LocalContext.current
+    val capabilities = remember(context) {
+        runCatching { loadCapabilityCatalogue(context) }.getOrDefault(emptyList())
+    }
+    val documents = remember(jobs, capabilities) {
+        jobs.map { job ->
+            SearchDocument(
+                id = "job:${job.id}",
+                title = job.inputName,
+                subtitle = "Research job · ${job.state}",
+                searchableText = listOfNotNull(job.id, job.sha256, job.message, job.provenanceToolId).joinToString(" "),
+                kind = SearchDocument.Kind.JOB,
+            )
+        } + capabilities.map { capability ->
+            SearchDocument(
+                id = "capability:${capability.id}",
+                title = capability.name,
+                subtitle = "${capability.domain} · ${capability.status.replace('_', ' ')}",
+                searchableText = "${capability.id} ${capability.implementation} ${capability.evidenceLevel}",
+                kind = SearchDocument.Kind.CAPABILITY,
+            )
+        }
+    }
+    val results = remember(query, documents) { filterSearchDocuments(query, documents) }
+    Frame("Find in Kinetics", "Search your workspace.", "Searches only saved local jobs and the bundled capability catalogue. No network search is performed.", modifier) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+            item {
+                KineticsField(
+                    value = query,
+                    onValueChange = onQueryChange,
+                    label = "Search jobs and capabilities",
+                    supportingText = "Names, job state, capability IDs and implementation metadata",
+                )
+            }
+            if (query.isBlank()) {
+                item { Empty("Start with a keyword", "Search a file name, tool name, domain or capability identifier.") }
+            } else if (results.isEmpty()) {
+                item { Empty("No matching results", "Try a different term. Search is limited to data currently stored on this device and the bundled catalogue.") }
+            } else {
+                item {
+                    Text("${results.size} matching result${if (results.size == 1) "" else "s"}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                items(results, key = { it.id }) { result ->
+                    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
+                        KineticsListRow(
+                            title = result.title,
+                            supportingText = result.subtitle,
+                            trailing = { Text("OPEN", style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                            onClick = {
+                                if (result.kind == SearchDocument.Kind.JOB) onSelectJob() else onSelectCapability()
+                            },
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    Box(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-      Column(Modifier.fillMaxWidth().widthIn(max = 840.dp).padding(horizontal = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    BoxWithConstraints(modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+      val horizontalPadding = when {
+          maxWidth < 390.dp -> 16.dp
+          maxWidth < 600.dp -> 20.dp
+          else -> 24.dp
+      }
+      val sectionGap = if (maxWidth < 390.dp) 16.dp else 24.dp
+      Column(Modifier.fillMaxWidth().widthIn(max = 840.dp).padding(horizontal = horizontalPadding),
+        verticalArrangement = Arrangement.spacedBy(sectionGap)) {
         Column(Modifier.padding(top = 20.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             Text(eyebrow, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium)
             Text(title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
@@ -906,6 +1022,7 @@ private fun SettingsScreen(
     runtime: String?, onRuntime: () -> Unit, onRefresh: () -> Unit,
     themeFamily: String, onThemeFamilyChange: (String) -> Unit,
     biometricEnabled: Boolean, biometricAvailable: Boolean, onBiometricChange: (Boolean) -> Unit,
+    debugBuild: Boolean, onOpenComponentGallery: () -> Unit,
     modifier: Modifier,
 ) {
     Frame("Workspace controls", "Settings & diagnostics.", "Understand the device, local data and privacy boundary.", modifier) {
@@ -949,6 +1066,13 @@ private fun SettingsScreen(
             item { SettingGroup("DATA PACKS & LICENCES", "Reference packs require version, source, checksum and licence metadata. Third-party engines retain their own terms.") }
             item { SettingGroup("ACCESSIBILITY", "System light/dark mode and font scaling are respected. Status is conveyed with text, not colour alone.") }
             item { SettingGroup("ABOUT KINETICS", "Research Mode · Version 0.0.1 · Apache-2.0 project code. Not for clinical use.") }
+            if (debugBuild) item {
+                SettingGroup("DESIGN SYSTEM · DEVELOPER", "Open the live V1 component gallery. This route is available only in debug builds.") {
+                    OutlinedButton(onClick = onOpenComponentGallery, modifier = Modifier.fillMaxWidth()) {
+                        Text("Open component gallery")
+                    }
+                }
+            }
             item { Footer() }
         }
     }

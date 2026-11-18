@@ -59,13 +59,16 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
     var themeFamily by remember {
         mutableStateOf(preferences.getString("theme_family", "light") ?: "light")
     }
+    var onboardingComplete by remember {
+        mutableStateOf(preferences.getBoolean("onboarding_complete", false))
+    }
     var biometricEnabled by remember {
         mutableStateOf(preferences.getBoolean("biometric_unlock_enabled", false))
     }
-    var biometricUnlocked by remember { mutableStateOf(!biometricEnabled) }
+    var biometricUnlocked by remember { mutableStateOf(true) }
     var biometricError by remember { mutableStateOf<String?>(null) }
-    LaunchedEffect(biometricEnabled) {
-        if (biometricEnabled) {
+    LaunchedEffect(biometricEnabled, onboardingComplete) {
+        if (biometricEnabled && onboardingComplete) {
             biometricUnlocked = false
             biometricError = null
             BiometricUnlock.authenticate(
@@ -301,7 +304,15 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
         jobs = store.recentJobs()
         onDispose { workInfos.removeObserver(observer); analysisInfos.removeObserver(observer) }
     }
-    if (biometricEnabled && !biometricUnlocked) {
+    if (!onboardingComplete) {
+        KineticsOnboardingScreen(
+            themeFamily = themeFamily,
+            onComplete = {
+                preferences.edit().putBoolean("onboarding_complete", true).apply()
+                onboardingComplete = true
+            },
+        )
+    } else if (biometricEnabled && !biometricUnlocked) {
         BiometricLockScreen(
             error = biometricError,
             themeFamily = themeFamily,
@@ -420,6 +431,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
         },
         biometricEnabled = biometricEnabled,
         biometricAvailable = BiometricUnlock.canAuthenticate(activity),
+        debugBuild = BuildConfig.DEBUG,
         onBiometricChange = { enabled ->
             if (!enabled || BiometricUnlock.canAuthenticate(activity)) {
                 preferences.edit().putBoolean("biometric_unlock_enabled", enabled).apply()

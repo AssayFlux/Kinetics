@@ -668,6 +668,35 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Does not address model misspecification, measurement error or study design",
             "A numerical interval is not a clinical or regulatory decision threshold",
         ]
+    elif capability_id == "protein.design_brief_validation":
+        from kinetics.protein_design import validate_protein_design_brief
+        try:
+            brief = json.loads(sequence_text)
+        except json.JSONDecodeError as exc:
+            raise ValueError("Protein design brief must be valid JSON") from exc
+        result = validate_protein_design_brief(brief)
+        limitations = [
+            "Brief validation only; no amino-acid sequence is generated or ranked",
+            "Model, weight, dataset licence, safety and independent review gates remain mandatory",
+            "A validated brief does not establish biological safety, function or experimental success",
+        ]
+    elif capability_id == "structure.geometry_screen_metrics":
+        from kinetics.structure import parse_pdb
+        from kinetics.structure_quality import structure_geometry_metrics
+        atoms = parse_pdb(sequence_text, include_hetero=False)
+        if len(atoms) > 2_000:
+            raise ValueError("Mobile structure geometry is limited to 2,000 parsed atoms")
+        result = structure_geometry_metrics(
+            atoms,
+            max_atoms=2_000,
+            max_candidate_pairs=100_000,
+            max_reported_clashes=20,
+        )
+        limitations = [
+            "Geometry screen only; no experimental validation or structure-quality certification",
+            "Atom pairs in the same residue are excluded because bond topology is unavailable",
+            "Unknown elements are excluded rather than assigned estimated radii",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

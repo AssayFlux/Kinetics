@@ -226,3 +226,26 @@ def test_prokaryotic_orf_and_kinetic_bootstrap_mobile_routes():
     )
     assert bootstrap["successful_replicates"] >= 80
     assert "confidence_intervals" in bootstrap
+
+def test_protein_design_brief_gate_and_structure_geometry_screen():
+    brief = {
+        "schema": "kinetics.protein-design-brief.v1",
+        "objective": "stability",
+        "target_description": "Research construct",
+        "length_min": 50,
+        "length_max": 200,
+        "fold_constraints": [],
+        "expression_host": "unspecified",
+        "localization": "unspecified",
+        "disallowed_motifs": [],
+        "safety_exclusions": ["No toxin or pathogen enhancement"],
+        "human_review_required": True,
+    }
+    validated = _run_probe("protein.design_brief_validation", __import__("json").dumps(brief))
+    assert validated["generation_status"] == "blocked_no_approved_model_or_benchmark"
+    pdb = (
+        "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\n"
+        "TER\\nEND\\n"
+    )
+    geometry = _run_probe("structure.geometry_screen_metrics", pdb)
+    assert geometry

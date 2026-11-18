@@ -32,6 +32,8 @@ internal object AndroidBasicCapabilityRunner {
         "protein.fixed_width_motif_scan",
         "genome.prokaryotic_orf_candidate_scan",
         "kinetics.bootstrap_intervals",
+        "protein.design_brief_validation",
+        "structure.geometry_screen_metrics",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

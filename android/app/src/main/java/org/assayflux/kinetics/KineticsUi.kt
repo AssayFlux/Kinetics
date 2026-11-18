@@ -462,6 +462,8 @@ private fun ServiceDetailScreen(
         "protein.fixed_width_motif_scan",
         "genome.prokaryotic_orf_candidate_scan",
         "kinetics.bootstrap_intervals",
+        "protein.design_brief_validation",
+        "structure.geometry_screen_metrics",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -695,6 +697,24 @@ private fun ServiceDetailScreen(
                     description = "Estimate exploratory paired-bootstrap percentile intervals for Vmax and Km. Input JSON includes substrate and rate arrays; 100 replicates minimum.",
                     sample = "{\"substrates\":[1,2,4,8,16],\"rates\":[16.7,28.6,44.4,61.5,76.2],\"replicates\":100,\"seed\":7}",
                     actionLabel = "Estimate intervals",
+                ) }
+            }
+            if (capability?.id == "protein.design_brief_validation") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "protein.design_brief_validation",
+                    title = "Protein design brief validation",
+                    description = "Validate a human-reviewed research brief and enforce a generation block until model, data and safety gates are approved. Does not generate sequences.",
+                    sample = "{\"schema\":\"kinetics.protein-design-brief.v1\",\"objective\":\"stability\",\"target_description\":\"Research construct\",\"length_min\":50,\"length_max\":200,\"fold_constraints\":[],\"expression_host\":\"unspecified\",\"localization\":\"unspecified\",\"disallowed_motifs\":[],\"safety_exclusions\":[\"No toxin or pathogen enhancement\"],\"human_review_required\":true}",
+                    actionLabel = "Validate research brief",
+                ) }
+            }
+            if (capability?.id == "structure.geometry_screen_metrics") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "structure.geometry_screen_metrics",
+                    title = "Structure geometry screen",
+                    description = "Summarize PDB atom/residue counts and bounded steric-overlap candidates. Geometry QC only; not a structure-quality certification.",
+                    sample = "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\nTER\nEND\n",
+                    actionLabel = "Screen geometry",
                 ) }
             }
             if (capability?.id == "structure.ligand_site_candidates" ||

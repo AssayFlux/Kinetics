@@ -4,6 +4,7 @@
 **Repository:** `AssayFlux/Kinetics`  
 **Target branch:** `main` only  
 **Audited baseline:** `dea7bec731f3e6bdc3732899dd3feeed2703bbc3`  
+**Audit and quality-report documentation commit:** `cb79b9110ff50a69b1b58d78a8b13e3c8843cf3b`  
 **Status:** **OPEN — foundation merged; product integration and acceptance remain incomplete**  
 **Design authority:** D-024, owner-supplied Premium Minimal Monochrome V1. Semantic decision colours may be used for status only; monochrome remains the visual authority.
 

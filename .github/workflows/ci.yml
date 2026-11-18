@@ -36,6 +36,8 @@ jobs:
         run: mypy scripts python/kinetics
       - name: Registry validation
         run: python scripts/check_registry.py
+      - name: Verify Track U completion audit is present
+        run: test -s docs/track-u/completion-audit.md
       - name: Track G governance structure and capability claims
         run: |
           python scripts/check_governance.py

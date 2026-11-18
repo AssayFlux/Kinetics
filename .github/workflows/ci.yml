@@ -184,6 +184,19 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-linux-android
+      # Persist pinned cross-build toolchains and downloaded Gradle/Rust dependencies.
+      # A clean runner otherwise repeats expensive Chaquopy and Biopython preparation.
+      - name: Restore Android cross-build caches
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/kinetics
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.gradle/caches
+          key: android-arm64-${{ runner.os }}-${{ hashFiles('scripts/build_android_local.sh', 'android/native-rust/Cargo.lock', 'android/app/build.gradle.kts', 'android/biopython-wheel/meta.yaml') }}
+          restore-keys: |
+            android-arm64-${{ runner.os }}-
       - name: Record build environment
         run: |
           java -version

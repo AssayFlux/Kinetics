@@ -2922,3 +2922,16 @@ Continue U0 token/component integration into actual screens, run exact-branch CI
 - App shell still needs exact-head build validation and visual inspection against the 393×852dp reference, plus compact/standard/large/tablet checks.
 - Search/onboarding, security/privacy surfaces and full result/provenance presentation remain open.
 - U4/U5 remain dependency-gated; U6 evidence remains outstanding. Step 2 audit has not run. Track U remains OPEN.
+
+
+## 2026-11-18 — Public scientific database retrieval and local integration
+
+- Added Home search/retrieval for NCBI Gene metadata, NCBI Nucleotide, NCBI Protein, UniProtKB and RCSB PDB entry IDs.
+- Added allow-listed HTTPS GET transport for NCBI E-utilities, UniProt REST and RCSB PDB; no redirects, strict UTF-8 decoding, connection/read timeouts and response-size ceilings.
+- Public query validation rejects FASTA/VCF payloads and long sequence-like search terms. The UI instructs users not to enter patient/sample identifiers or raw sequences. Imported research files and derived results are not sent to providers.
+- Added encrypted app-private public-record payload storage using the existing Android Keystore AES-GCM chunk format, SHA-256 verification, SQLite metadata, saved-record listing, deletion, authenticated reopen, FASTA reanalysis and RCSB structure reopen.
+- Connected fetched FASTA to the existing embedded Python FASTA QC adapter. Connected fetched RCSB mmCIF to the existing Python structure preparation/parser and offline viewer. No new folding model or experimental structure generator was introduced.
+- Updated the public-data rulebook, U-track implementation plan, completion audit, U3/U4 notes, UI specification, privacy notice, Android Settings inventory, threat model, data-flow inventory (DF-09), security verification matrix, governance checker/tests, P0 controls and architecture defaults.
+- Documented the storage limitation: raw public payloads are Keystore-encrypted; SQLite source metadata and analysis JSON remain unencrypted at rest. Provider release/licence metadata, cache quotas, explicit network cancellation/retry, RCSB text search and NCBI Gene-to-RefSeq linking remain open.
+- CI exposed an existing Kotlin runtime-card type mismatch (nullable Boolean passed where RuntimeStatusCard expects String) and governance inventory ID range assumptions. Runtime statuses now map to explicit labels; governance traceability remains G-REQ-001..008 and data flows DF-01..09.
+- Earlier CI runs 2959 and 2971 failed on pre-fix commits. Exact latest-main build/test verification remains pending; no APK is declared successful or available until the latest run produces and verifies its artifact.

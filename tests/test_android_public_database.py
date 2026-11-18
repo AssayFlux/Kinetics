@@ -65,3 +65,6 @@ def test_public_reference_cache_has_explicit_quota_and_clear_all() -> None:
     assert "fun totalBytes()" in store
     assert "fun recordCount()" in store
     assert "fun deleteAll()" in store
+    card = (ANDROID / "PublicDatabaseCard.kt").read_text()
+    assert "store.deleteAll()" in card
+    assert "Clear saved public records?" in card

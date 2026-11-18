@@ -2,7 +2,6 @@
 """Keep the Android capability integration summary consistent with its row-level matrix."""
 from __future__ import annotations
 
-import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,10 +19,10 @@ mapping = section("## Complete catalogue mapping", "## Remaining engineering wor
 connected_section = section("## Connected Android workflows", "## Complete catalogue mapping")
 
 def summary_count(label: str) -> int:
-    match = re.search(rf"- {re.escape(label)}: \\*\\*(\\d+)\\*\\*", summary)
-    if match is None:
+    line = next((item for item in summary.splitlines() if item.startswith(f"- {label}:")), "")
+    if "**" not in line:
         raise SystemExit(f"Missing numeric summary: {label}")
-    return int(match.group(1))
+    return int(line.split("**")[1])
 
 rows = []
 for line in mapping.splitlines():

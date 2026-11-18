@@ -13,12 +13,12 @@ This document turns the P0 evidence register into concrete engineering drafts. I
 | Field | Draft position | Review status |
 |---|---|---|
 | Current product purpose | Offline-first computational biology / in-silico research workbench | Owner and qualified reviewer confirmation pending |
-| Current permitted inputs | Generated synthetic fixtures; public non-patient source metadata; exact public resources only after source-specific terms review | Enforced engineering boundary is partial; independent security review pending |
+| Current permitted inputs | Synthetic fixtures; public source metadata/resources after source-specific terms review; patient-derived research datasets only within the institutional approval scope declared under D-025 | Enforced engineering boundary is partial; independent security review pending |
 | Current outputs | Exploratory computational summaries with input digest, reference/build provenance, method/version and limitations where implemented | Per-capability verification and wording review pending |
 | Proposed users | Bioinformatics / computational-biology researchers and software engineers; final user population not approved | Owner/adviser review pending |
 | Deployment | Android application and research software; public deployment and supported device claims not approved | Device and release evidence pending |
 | Excluded uses | Patient-specific diagnosis, risk scoring, treatment/medication selection, dosing, prescribing, clinical decision support and patient-facing reports | Must remain disabled |
-| Human-subject use | No recruitment, consent, intervention or prospective evaluation | Ethics determination required before any such activity |
+| Human-subject use | Only within the exact institutional approval and its procedures; no recruitment/intervention workflow is implemented in this app | Follow the approved protocol; separate implementation and verification required |
 | Jurisdictions | Not yet enumerated for any clinical or patient-data use | Qualified local legal/regulatory review required |
 | Claims | No clinical validity, clinical utility, regulatory compliance or diagnostic accuracy claims | Claims review required before publication/release |
 
@@ -48,7 +48,7 @@ The eventual PGx objective is a research direction only. A capability name, pars
 
 ### 2.3 Data-flow boundary
 
-Current intended flow is: synthetic fixture / reviewed public non-patient source → bounded parser → validated schema → provenance-bearing exploratory result. The flow must fail closed on malformed input, unverified source terms, unsupported variant representations or mismatched reference metadata. No clinical system, patient repository or external clinical service is connected or authorized.
+Current intended flow is: synthetic/public input or an institutionally approved patient-derived research dataset → authorized local device/environment → bounded parser → validated schema → provenance-bearing exploratory result. The flow must fail closed on malformed input, out-of-scope data, unverified public-source terms, unsupported variant representations or mismatched reference metadata. No clinical system, patient repository or external clinical service is connected or authorized.
 
 ## 3. P-specific threat-model draft
 

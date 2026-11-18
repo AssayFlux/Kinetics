@@ -1122,6 +1122,10 @@ private fun SettingsScreen(
                     style = MaterialTheme.typography.bodySmall)
                 Text("• Analysis results: FASTA/FASTQ result JSON and method parameters are currently stored in that SQLite database. Treat the device's app-private storage and OS account protection as part of the security boundary.",
                     style = MaterialTheme.typography.bodySmall)
+                Text("• Public reference records: raw FASTA/mmCIF payloads are encrypted with Android Keystore AES-GCM in app-private no-backup storage. Source metadata and public FASTA QC JSON are stored in a separate app-private SQLite database and are not separately encrypted.",
+                    style = MaterialTheme.typography.bodySmall)
+                Text("• Public network requests: only user-entered public names/accessions are sent to NCBI, UniProtKB or RCSB. Raw sequences, VCFs, patient/sample identifiers and private research files are not submitted. Retrieved data are parsed and analysed locally.",
+                    style = MaterialTheme.typography.bodySmall)
                 Text("• Preferences: appearance, onboarding acknowledgement and the optional local app-lock setting are stored in private SharedPreferences.",
                     style = MaterialTheme.typography.bodySmall)
                 Text("• Exports: only created after you select a destination in Android's document picker. Copies at that destination are outside Kinetics' control.",

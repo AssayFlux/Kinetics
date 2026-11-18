@@ -329,3 +329,34 @@ def test_catalogue_alias_workflows_share_the_same_bounded_local_engines():
         assert capability_id in UI
         assert capability_id in RUNNER or capability_id == "genes.ncbi_catalogue"
     assert 'capability_id == "phylo.newick_export"' in PROBE
+
+
+def test_mobile_omics_and_phylogeny_routes_reject_malformed_shapes_and_types():
+    import json
+    import pytest
+
+    with pytest.raises(ValueError, match="non-empty feature-by-sample"):
+        _run_probe(
+            "omics.cross_correlation",
+            json.dumps({"first": [], "second": [[1, 2, 3]]}),
+        )
+    with pytest.raises(ValueError, match="feature row"):
+        _run_probe(
+            "omics.cross_correlation",
+            json.dumps({"first": [[1, 2, 3]], "second": [None]}),
+        )
+    with pytest.raises(ValueError, match="at least three matched samples"):
+        _run_probe(
+            "omics.cross_correlation",
+            json.dumps({"first": [[1, 2]], "second": [[2, 3]]}),
+        )
+    with pytest.raises(ValueError, match="aligned DNA strings"):
+        _run_probe(
+            "phylo.jukes_cantor_nj",
+            json.dumps({"sequences": {"A": "A" * 20, "B": "A" * 20, "C": None}}),
+        )
+    with pytest.raises(ValueError, match="aligned DNA strings"):
+        _run_probe(
+            "phylo.jukes_cantor_nj",
+            json.dumps({"sequences": {"A": "A" * 20, "B": "A" * 20, "": "A" * 20}}),
+        )

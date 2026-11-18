@@ -490,11 +490,16 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             second = parameters["second"]
         except (KeyError, TypeError, json.JSONDecodeError) as exc:
             raise ValueError("Provide JSON with first and second feature-by-sample matrices") from exc
-        if not isinstance(first, list) or not isinstance(second, list):
-            raise ValueError("Both omics inputs must be matrices")
+        if not isinstance(first, list) or not isinstance(second, list) or not first or not second:
+            raise ValueError("Both omics inputs must be non-empty feature-by-sample matrices")
         if len(first) > 200 or len(second) > 200:
             raise ValueError("Each matrix is limited to 200 features")
-        if sum(len(row) for row in first + second if isinstance(row, list)) > 100_000:
+        if any(not isinstance(row, list) or not row for row in first + second):
+            raise ValueError("Every omics feature row must be a non-empty list")
+        sample_count = len(first[0])
+        if sample_count < 3 or any(len(row) != sample_count for row in first + second):
+            raise ValueError("All features must have the same order and at least three matched samples")
+        if sum(len(row) for row in first + second) > 100_000:
             raise ValueError("Omics matrices exceed the 100,000-value mobile limit")
         result = cross_omics_correlation(first, second)
         limitations = [
@@ -511,7 +516,12 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             raise ValueError("Provide JSON with a named sequences object") from exc
         if not isinstance(sequences, dict) or not 3 <= len(sequences) <= 20:
             raise ValueError("Neighbour joining requires 3–20 named aligned sequences")
-        if sum(len(value) for value in sequences.values() if isinstance(value, str)) > 200_000:
+        if any(
+            not isinstance(name, str) or not name.strip() or not isinstance(value, str)
+            for name, value in sequences.items()
+        ):
+            raise ValueError("Sequences must be non-empty named entries containing aligned DNA strings")
+        if sum(len(value) for value in sequences.values()) > 200_000:
             raise ValueError("Aligned sequences exceed the 200,000-base aggregate mobile limit")
         root = neighbor_joining_from_alignment(sequences, minimum_sites=20)
         result = {"newick": to_newick(root), "leaf_count": len(leaf_names(root))}

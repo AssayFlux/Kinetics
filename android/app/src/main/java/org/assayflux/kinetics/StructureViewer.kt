@@ -14,9 +14,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -96,6 +101,7 @@ internal fun StructureViewerPreview() {
     var pendingSvg by remember { mutableStateOf<String?>(null) }
     var viewerStateJson by remember { mutableStateOf<String?>(null) }
     var viewerWebView by remember { mutableStateOf<WebView?>(null) }
+    var fullScreen by remember { mutableStateOf(false) }
     var pendingPngBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var sourceLabel by remember { mutableStateOf("Synthetic preview fixture") }
     var importMessage by remember {
@@ -300,6 +306,9 @@ internal fun StructureViewerPreview() {
             Button(onClick = { picker.launch(arrayOf("*/*")) }) {
                 Text("Import PDB / mmCIF")
             }
+            Button(onClick = { fullScreen = true }, enabled = payloadJson != null) {
+                Text("Open full-screen structure viewer")
+            }
             Button(
                 onClick = {
                     val view = viewerWebView
@@ -415,17 +424,44 @@ internal fun StructureViewerPreview() {
             ) {
                 Text("Export viewer PNG")
             }
-            AndroidView(
-                factory = { FrameLayout(it).apply { viewerWebView = webView; addView(webView) } },
-                update = { frame ->
-                    viewerWebView = webView
-                    if (frame.childCount != 1 || frame.getChildAt(0) !== webView) {
-                        frame.removeAllViews()
-                        frame.addView(webView)
+            if (fullScreen) {
+                Dialog(
+                    onDismissRequest = { fullScreen = false },
+                    properties = DialogProperties(usePlatformDefaultWidth = false),
+                ) {
+                    Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                        Column(Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text("Structure viewer", style = MaterialTheme.typography.titleLarge)
+                                Button(onClick = { fullScreen = false }) { Text("Close") }
+                            }
+                            AndroidView(
+                                factory = { FrameLayout(it).apply { viewerWebView = webView; addView(webView) } },
+                                update = { frame ->
+                                    viewerWebView = webView
+                                    if (frame.childCount != 1 || frame.getChildAt(0) !== webView) {
+                                        frame.removeAllViews()
+                                        frame.addView(webView)
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth().weight(1f),
+                            )
+                        }
                     }
-                },
-                modifier = Modifier.fillMaxWidth().height(440.dp),
-            )
+                }
+            } else {
+                AndroidView(
+                    factory = { FrameLayout(it).apply { viewerWebView = webView; addView(webView) } },
+                    update = { frame ->
+                        viewerWebView = webView
+                        if (frame.childCount != 1 || frame.getChildAt(0) !== webView) {
+                            frame.removeAllViews()
+                            frame.addView(webView)
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().height(440.dp),
+                )
+            }
         }
     }
 }

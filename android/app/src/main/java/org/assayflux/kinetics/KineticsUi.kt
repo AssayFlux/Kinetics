@@ -540,7 +540,7 @@ private fun ServiceDetailScreen(
                     actionLabel = "Calculate rate",
                 ) }
             }
-            if (capability?.id == "phylo.newick") {
+            if (capability?.id in setOf("phylo.newick", "phylo.newick_export")) {
                 item { BasicResearchCapabilityCard(
                     capabilityId = "phylo.newick",
                     title = "Newick tree parser",
@@ -720,7 +720,7 @@ private fun ServiceDetailScreen(
                     actionLabel = "Validate research brief",
                 ) }
             }
-            if (capability?.id == "structure.geometry_screen_metrics") {
+            if (capability?.id in setOf("structure.geometry_screen_metrics", "structure.pdb_geometry")) {
                 item { BasicResearchCapabilityCard(
                     capabilityId = "structure.geometry_screen_metrics",
                     title = "Structure geometry screen",

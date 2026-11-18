@@ -106,4 +106,4 @@ Track implementation, automated build/test evidence, and physical-device accepta
 
 ## Local profile implementation note — 2026-11-18
 
-The profile page now supports a user-selected image (persisted URI permission), a locally saved display name and a generated installation-local workspace identifier. These values are stored in app-private preferences. The identifier is not a cloud account ID and is not synchronized. The top-right header still uses the neutral account glyph until the profile avatar state is hoisted into the app shell; remote sign-in, password reset, account recovery and cloud sign-out remain unavailable without an identity provider.
+The profile page now supports a user-selected image (persisted URI permission), a locally saved display name and a generated installation-local workspace identifier. These values are stored in app-private preferences. The identifier is not a cloud account ID and is not synchronized. The top-right header displays the saved local avatar when one is selected, otherwise a neutral account glyph; remote sign-in, password reset, account recovery and cloud sign-out remain unavailable without an identity provider.

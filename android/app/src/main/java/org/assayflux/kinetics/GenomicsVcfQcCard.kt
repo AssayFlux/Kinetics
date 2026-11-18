@@ -95,7 +95,7 @@ internal fun GenomicsVcfQcCard() {
                 )?.use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
             }.getOrNull()
         }
-        consentConfirmed = false
+        authorizationConfirmed = false
         report = null
         error = null
         status = if (uri == null) "No file selected." else "File selected. Confirm the data boundary before running aggregate QC."
@@ -116,8 +116,8 @@ internal fun GenomicsVcfQcCard() {
             ) { Text("Choose VCF / VCF.GZ file") }
             selectedName?.let { Text("File: $it", style = MaterialTheme.typography.labelMedium) }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = consentConfirmed, onCheckedChange = {
-                    consentConfirmed = it
+                Checkbox(checked = authorizationConfirmed, onCheckedChange = {
+                    authorizationConfirmed = it
                     report = null
                 })
                 Text(
@@ -155,7 +155,7 @@ internal fun GenomicsVcfQcCard() {
                         busy = false
                     }
                 },
-                enabled = !busy && selectedUri != null && consentConfirmed,
+                enabled = !busy && selectedUri != null && authorizationConfirmed,
                 modifier = Modifier.fillMaxWidth(),
             ) { Text(if (busy) "Checking…" else "Run aggregate QC") }
             Text(status, style = MaterialTheme.typography.bodySmall)

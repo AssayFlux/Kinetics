@@ -819,8 +819,8 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                 if (active) OutlinedButton(onClick = { onCancel(job) }) { Text("Cancel") }
                 if (job.state == "cancelled" || job.state == "failed") OutlinedButton(onClick = { onResume(job) }) { Text("Resume") }
-                if (success && job.analysisResultJson == null && job.inputName.substringAfterLast('.').lowercase() in setOf("fa", "fasta", "fna")) OutlinedButton(onClick = { onAnalyzeImported(job) }) { Text("Run FASTA QC") }
-                if (success && job.inputName.substringAfterLast('.').lowercase() in setOf("fastq", "fq")) OutlinedButton(onClick = { showPhredDialog = true }) { Text("Run FASTQ QC") }
+                if (success && job.analysisResultJson == null && job.inputName.lowercase().removeSuffix(".gz").substringAfterLast('.') in setOf("fa", "fasta", "fna")) OutlinedButton(onClick = { onAnalyzeImported(job) }) { Text("Run FASTA QC") }
+                if (success && job.inputName.lowercase().removeSuffix(".gz").substringAfterLast('.') in setOf("fastq", "fq")) OutlinedButton(onClick = { showPhredDialog = true }) { Text("Run FASTQ QC") }
                 if (success) Button(onClick = { onExport(job) }) { Text("Export") }
                 if (success || issue || job.state == "cancelled") OutlinedButton(onClick = { onDelete(job) }) { Text("Delete") }
             }

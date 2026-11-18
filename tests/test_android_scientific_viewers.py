@@ -114,3 +114,8 @@ def test_owner_blueprint_has_one_actionable_card_per_capability() -> None:
     assert "LOCAL DEVICE UNLOCK" in ui
     assert "not an online account sign-in" in ui
     assert "Public reference databases" in ui[ui.index("private fun GlobalSearchScreen"):]
+    assert '"local_profile_name"' in ui
+    assert '"local_profile_avatar_uri"' in ui
+    assert '"local_workspace_id"' in ui
+    assert "Device-local workspace ID" in ui
+    assert "Remote sign-in, password reset, account recovery" in ui

@@ -51,4 +51,4 @@ D-016 acceptance applies to every row: a screen is not complete until its action
 
 ## Design authority
 
-D-015 in `docs/ui/kinetics-visual-design-system.md` is the sole active visual authority. Historical neon/Obsidian Cyan and pre-D-015 palettes remain audit history only. Preserve owner assets byte-for-byte; do not claim screenshot fidelity until the repository reference images have been visually compared with actual running-app screenshots.
+D-024 owner V1 monochrome specification in `docs/ui/ui-spec.md` is the active visual authority. D-015 is historical where its visual language conflicts. Preserve owner assets byte-for-byte; do not claim screenshot fidelity until repository reference images have been visually compared with actual running-app screenshots.

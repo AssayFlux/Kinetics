@@ -1,6 +1,6 @@
 # Kinetics Android UI/UX specification — interaction requirements
 
-**Status:** Historical interaction baseline; current visual direction is D-015 in `docs/ui/kinetics-visual-design-system.md`. Where visual wording conflicts, D-015 supersedes this document. Implementation and usability validation remain required.
+**Status:** Active interaction baseline; visual direction is owner V1 monochrome under D-024 in `docs/ui/ui-spec.md`. Where visual wording conflicts, V1 supersedes this document. Implementation and usability validation remain required.
 **Product boundary:** Research Mode only. This interface is not for diagnosis, treatment, patient management or clinical decision support.
 
 ## Product principles
@@ -57,7 +57,7 @@ Bottom navigation (four destinations):
 
 ## Visual language — superseded by D-015
 
-Use the canonical D-015 visual system in `docs/ui/kinetics-visual-design-system.md`: Light Classic warm ivory/cream, deep maroon, restrained gold and peacock teal; coherent Dark Classic and System modes; spacious rounded surfaces; central horizontal workspace carousel with adjacent cards peeking and pagination; and role-based display/UI/scientific typography. Do not use the older deep-ink/navy and teal/blue palette as the active product direction. Preserve owner assets byte-for-byte. No font binaries or motifs are enabled until their licence, glyph, attribution, contrast and rendering gates pass.
+Use the owner V1 monochrome system in `docs/ui/ui-spec.md`: exact light/dark palettes, 4dp spacing rhythm, specified typography and component measurements, restrained shapes, thin line icons and native mobile behavior. Preserve owner assets byte-for-byte. No font binaries or third-party icon dependencies are enabled until licence, glyph, contrast and rendering gates pass.
 
 Interaction requirements in this document remain active where compatible: real import/job actions, no fake results, Research Mode only, accessible controls, honest progress/recovery/export states, and no runnable tool without a real dispatcher.
 

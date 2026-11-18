@@ -1,26 +1,39 @@
 # KINETICS — UI/UX master specification index
 
-**Current visual authority:** `docs/ui/kinetics-visual-design-system.md`  
-**Owner decision:** D-015, approved 2026-11-08.  
-**Status:** Visual direction approved; implementation and evidence in progress.
+**Current visual authority:** Owner-supplied Premium Minimal Monochrome Design System — V1 (D-024, 2026-11-17).  
+**Platform:** Native Android Jetpack Compose.  
+**Track:** U — User interface.
 
-This file is an index, not a competing design specification. Follow the canonical design system above for all current visual/UI instructions. Follow `NORTH_STAR.md`, `ROADMAP.md`, `DECISIONS.md`, capability registry, security/privacy policy and phase gates for product scope, architecture, data, safety and research claims.
+This file is an index, not a competing design specification. The 20-section owner prompt supplied on 2026-11-17 is the active visual contract. Its exact viewport, spacing, typography, light/dark colours, component measurements, interaction, safe-area, accessibility and responsive rules are transcribed in docs/ui/ui-spec.md. Product scope and real workflow behavior remain governed by NORTH_STAR.md, ROADMAP.md, the capability registry, architecture, privacy/security controls and phase gates.
 
-## Current approved design at a glance
-- Light Classic default: warm ivory/cream, deep maroon, restrained gold and peacock teal.
-- Coherent Dark Classic and System appearance options.
-- Refined rounded cards, spacious layout and a prominent horizontal workspace carousel with partially visible adjacent cards.
-- Splash, authentication, dashboard, navigation drawer, profile/settings and appearance screens.
-- Great Vibes (limited brand-script candidate), Cormorant Garamond display, IBM Plex Sans functional UI, IBM Plex Mono scientific data; licensing and glyph verification before bundling.
-- Optional culturally attributed Indian classical/folk-inspired motif system; implementation only after its cultural, accessibility, contrast, privacy and testing gates.
-- Native Jetpack Compose, actual capabilities/data only, preserve owner assets unchanged.
+## Active design at a glance
+- Monochromatic light/dark foundation: the exact V1 hex values; semantic colours only for status.
+- System, Light and Dark appearance.
+- 393 × 852 dp reference viewport; responsive compact, standard, large and tablet layouts.
+- 4 dp spacing system, restrained radii, precise component heights and native mobile behavior.
+- Refined sans-serif typography, tabular statistics and system font scaling.
+- Thin line icons, subtle separators, balanced whitespace and no decorative clutter.
+- Actual KINETICS workflows only: Home, Work, Explore, Settings, real local lock and supported research operations.
 
-## Retired UI-only directions
-Earlier dark-futuristic/Obsidian Cyan, neon palette proposals, generic three-direction selection gate and previous typography/palette combinations are superseded by D-015. Historical details remain in `DECISIONS.md` for auditability and must not be treated as current instructions.
+## Product truth
+- Home counts and activity derive from persisted ResearchStore jobs.
+- Work exposes actual import/job lifecycle and export/provenance actions.
+- Explore is registry-backed; only capabilities with a real Android dispatcher and result path can run.
+- Settings reflects actual persisted appearance, diagnostics and local app-lock behavior.
+- Local biometric app lock is not cloud account authentication.
+- No fabricated user identity, projects, jobs, metrics, ETAs, results or scientific services.
+
+## Supersession
+D-024 supersedes D-015 only where the older visual language conflicts with V1. D-015 remains historical evidence; its non-conflicting requirements remain active, including preservation of owner assets, native Compose, truthful workflows, Research Mode boundaries, and font/licence/accessibility review. Do not restore earlier neon/Obsidian Cyan palettes.
 
 ## Source and evidence
-- Canonical design, tokens, screen requirements, accessibility, asset constraints, implementation sequence and acceptance checklist: `docs/ui/kinetics-visual-design-system.md`.
-- Semantic token source: `design/tokens.json`.
-- Decision history: `DECISIONS.md`.
-- Implementation and verification status: `docs/ui/ui-spec.md`, `SESSION_LOG.md`, `ROADMAP.md`.
-- The six-screen concept image reviewed in chat is a visual reference only, not an app screenshot or proof of implementation.
+- Full active prompt and exact values: docs/ui/ui-spec.md.
+- Design tokens: design/tokens.json.
+- Generator: scripts/gen_design_tokens.py.
+- Compose design system: android/designsystem.
+- Screen and capability truth: docs/ui/screen-map.md and capabilities/registry.yaml.
+- Device matrix: docs/ui/device-matrix.md.
+- Quality evidence: docs/ui/quality-report.md.
+- Track plan and two-step gate: docs/track-u/implementation-plan.md.
+
+Concept images are references only. A screen is complete only when the real implementation, tests and required screenshot/device evidence exist.

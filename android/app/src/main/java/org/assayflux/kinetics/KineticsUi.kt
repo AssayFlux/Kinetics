@@ -12,6 +12,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Menu
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.WorkOutline
+import androidx.compose.material.Icon
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import kotlinx.coroutines.Dispatchers
@@ -34,8 +41,19 @@ import org.assayflux.designsystem.KineticsTypography
 import org.assayflux.designsystem.KineticsScientificTextStyle
 import org.json.JSONArray
 
-internal enum class KineticsTab(val label: String, val glyph: String) {
-    Home("Home", "⌂"), Work("Work", "▤"), Explore("Explore", "⌕"), Settings("Settings", "⚙")
+internal enum class KineticsTab(val label: String) {
+    Home("Home"), Work("Work"), Explore("Explore"), Settings("Settings")
+}
+
+@Composable
+private fun KineticsTabIcon(tab: KineticsTab) {
+    val image = when (tab) {
+        KineticsTab.Home -> Icons.Outlined.Home
+        KineticsTab.Work -> Icons.Outlined.WorkOutline
+        KineticsTab.Explore -> Icons.Outlined.Explore
+        KineticsTab.Settings -> Icons.Outlined.Settings
+    }
+    Icon(image, contentDescription = null)
 }
 
 @Composable
@@ -80,6 +98,8 @@ internal fun KineticsAppShell(
             val navigationMode = classifyNavigationMode(maxWidth.value, maxHeight.value)
             val useDrawer = navigationMode == NavigationMode.Drawer
             val useRail = navigationMode == NavigationMode.Rail
+            val drawerState = rememberDrawerState(DrawerValue.Closed)
+            val drawerScope = rememberCoroutineScope()
 
             @Composable
             fun Screen(modifier: Modifier) {
@@ -96,41 +116,89 @@ internal fun KineticsAppShell(
             }
 
             @Composable
+            fun AppBar(showMenu: Boolean) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().height(56.dp).padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (showMenu) {
+                        IconButton(
+                            onClick = { drawerScope.launch { drawerState.open() } },
+                            modifier = Modifier.size(48.dp),
+                        ) {
+                            Icon(Icons.Outlined.Menu, contentDescription = "Open navigation menu")
+                        }
+                    } else {
+                        Spacer(Modifier.width(48.dp))
+                    }
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+                        Text("KINETICS", style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold, letterSpacing = 1.1.sp)
+                        Text(tab.label, style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            }
+
+            @Composable
             fun NavigationItems() {
                 KineticsTab.entries.forEach { item ->
                     NavigationDrawerItem(
                         selected = tab == item,
-                        onClick = { tab = item },
-                        icon = { Text(item.glyph, fontSize = 20.sp) },
+                        onClick = {
+                            tab = item
+                            drawerScope.launch { drawerState.close() }
+                        },
+                        icon = { KineticsTabIcon(item) },
                         label = { Text(item.label) },
-                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
                     )
                 }
             }
 
             when {
-                useDrawer -> PermanentNavigationDrawer(
+                useDrawer -> ModalNavigationDrawer(
+                    drawerState = drawerState,
+                    gesturesEnabled = true,
                     drawerContent = {
-                        PermanentDrawerSheet(Modifier.width(280.dp)) {
-                            Spacer(Modifier.height(24.dp))
-                            Text("KINETICS", modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
-                                color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                        ModalDrawerSheet(
+                            modifier = Modifier.fillMaxHeight().widthIn(max = 340.dp),
+                            drawerContainerColor = MaterialTheme.colorScheme.surface,
+                        ) {
+                            Column(
+                                Modifier.fillMaxWidth().height(160.dp).padding(horizontal = 24.dp, vertical = 20.dp),
+                                verticalArrangement = Arrangement.Bottom,
+                            ) {
+                                Text("KINETICS", style = MaterialTheme.typography.headlineSmall,
+                                    fontWeight = FontWeight.SemiBold, letterSpacing = 1.4.sp)
+                                Spacer(Modifier.height(6.dp))
+                                Text("COMPUTATIONAL RESEARCH", style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.sp)
+                            }
+                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                            Spacer(Modifier.height(12.dp))
                             NavigationItems()
+                            Spacer(Modifier.weight(1f))
+                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                            Text("RESEARCH MODE", modifier = Modifier.padding(horizontal = 24.dp, vertical = 18.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                     },
                 ) {
-                    Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
-                        Screen(Modifier.padding(padding))
-                    }
+                    Scaffold(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        topBar = { AppBar(showMenu = true) },
+                    ) { padding -> Screen(Modifier.padding(padding)) }
                 }
                 useRail -> Row(Modifier.fillMaxSize()) {
-                    NavigationRail {
+                    NavigationRail(containerColor = MaterialTheme.colorScheme.surface) {
                         Spacer(Modifier.height(12.dp))
                         KineticsTab.entries.forEach { item ->
                             NavigationRailItem(
                                 selected = tab == item,
                                 onClick = { tab = item },
-                                icon = { Text(item.glyph, fontSize = 20.sp) },
+                                icon = { KineticsTabIcon(item) },
                                 label = { Text(item.label) },
                                 alwaysShowLabel = true,
                             )
@@ -139,16 +207,21 @@ internal fun KineticsAppShell(
                     Scaffold(
                         modifier = Modifier.weight(1f),
                         containerColor = MaterialTheme.colorScheme.background,
+                        topBar = { AppBar(showMenu = false) },
                     ) { padding -> Screen(Modifier.padding(padding)) }
                 }
                 else -> Scaffold(
                     containerColor = MaterialTheme.colorScheme.background,
+                    topBar = { AppBar(showMenu = true) },
                     bottomBar = {
-                        NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
+                        NavigationBar(
+                            modifier = Modifier.heightIn(min = 64.dp),
+                            containerColor = MaterialTheme.colorScheme.surface,
+                        ) {
                             KineticsTab.entries.forEach { item ->
                                 NavigationBarItem(
                                     selected = tab == item, onClick = { tab = item },
-                                    icon = { Text(item.glyph, fontSize = 20.sp, modifier = Modifier.semantics { contentDescription = item.label }) },
+                                    icon = { KineticsTabIcon(item) },
                                     label = { Text(item.label) },
                                 )
                             }
@@ -166,7 +239,7 @@ private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Mo
       Column(Modifier.fillMaxWidth().widthIn(max = 840.dp).padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Column(Modifier.padding(top = 20.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-            Text(eyebrow.uppercase(), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.4.sp)
+            Text(eyebrow, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium)
             Text(title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
             Text(subtitle, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodyMedium)
         }
@@ -214,7 +287,7 @@ private fun HomeScreen(
             else items(jobs.take(4), key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis) }
             item {
                 Section("Device health", "Run checks", onRuntime)
-                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
+                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Dot(MaterialTheme.colorScheme.primary)
@@ -259,8 +332,8 @@ private fun WorkspaceCarousel(
             when (page) {
                 0 -> Card(
                     onClick = onImport,
-                    modifier = Modifier.fillMaxWidth().height(218.dp),
-                    shape = RoundedCornerShape(26.dp),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 168.dp),
+                    shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = heroContainer),
                 ) {
                     Column(
@@ -345,7 +418,7 @@ private fun WorkspaceCarousel(
 
 @Composable
 private fun Metric(label: String, value: String, modifier: Modifier) {
-    OutlinedCard(modifier, shape = RoundedCornerShape(18.dp)) {
+    OutlinedCard(modifier, shape = RoundedCornerShape(12.dp)) {
         Column(Modifier.padding(11.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold, maxLines = 1)
             Text(value, style = KineticsScientificTextStyle.copy(fontSize = MaterialTheme.typography.headlineMedium.fontSize, fontWeight = FontWeight.Bold))
@@ -394,7 +467,7 @@ private fun WorkScreen(
                     }
                 }
             }
-            item { Button(onClick = onImport, Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp)) { Text("+  Import new data") } }
+            item { Button(onClick = onImport, Modifier.fillMaxWidth(), shape = RoundedCornerShape(10.dp)) { Text("Import new data") } }
             if (filtered.isEmpty()) item { Empty("No matching research jobs", "Try another search or import a dataset to begin.") }
             else items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis) }
         }
@@ -638,7 +711,7 @@ fun ExploreScreen(modifier: Modifier) {
                 }
             }
             items(groups, key = { it.first }) { (domain, tools) ->
-                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
+                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
                     Column(
                         Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -844,7 +917,7 @@ private fun SettingsScreen(
                         FilterChip(selected = themeFamily == key, onClick = { onThemeFamilyChange(key) }, label = { Text(label) }, modifier = Modifier.weight(1f))
                     }
                 }
-                Text("Calligraphic brand accent, editorial display, clear sans-serif UI and monospaced scientific data. Font files remain gated on licence and glyph review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("System sans-serif typography is used. Additional font files require licence and glyph review.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             } }
             item { SettingGroup(
                 "SECURITY · BIOMETRIC APP UNLOCK",
@@ -886,7 +959,7 @@ private fun SettingsScreen(
 private fun SettingGroup(title: String, description: String, content: @Composable () -> Unit = {}) {
     OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
-            Text(title, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
+            Text(title, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
             Text(description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             content()
         }
@@ -896,8 +969,8 @@ private fun SettingGroup(title: String, description: String, content: @Composabl
 
 @Composable
 private fun InfoPill(label: String) {
-    Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(50)) {
-        Text(label, Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+    Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(6.dp)) {
+        Text(label, Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
@@ -907,7 +980,7 @@ private fun InfoPill(label: String) {
 private fun Empty(title: String, detail: String) {
     OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(18.dp)) {
         Column(Modifier.fillMaxWidth().padding(22.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("✧", color = MaterialTheme.colorScheme.primary, fontSize = 30.sp)
+            Text("No recent items", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
             Text(title, fontWeight = FontWeight.Bold)
             Text(detail, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
@@ -985,7 +1058,7 @@ internal fun BiometricLockScreen(
             ) {
                 Card(
                     modifier = Modifier.fillMaxWidth().widthIn(max = 480.dp),
-                    shape = RoundedCornerShape(28.dp),
+                    shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     border = androidx.compose.foundation.BorderStroke(
                         1.dp, MaterialTheme.colorScheme.outline,
@@ -1052,7 +1125,7 @@ internal fun BiometricLockScreen(
 
 @Composable
 private fun Footer() {
-    Text("KINETICS  •  RESEARCH MODE ONLY  •  NOT FOR CLINICAL USE",
+    Text("KINETICS · Research Mode only · Not for clinical use",
         Modifier.fillMaxWidth().padding(vertical = 8.dp), color = MaterialTheme.colorScheme.onSurfaceVariant,
         style = MaterialTheme.typography.labelSmall, letterSpacing = .8.sp)
 }

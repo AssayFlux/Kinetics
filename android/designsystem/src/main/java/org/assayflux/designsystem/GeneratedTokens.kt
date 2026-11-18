@@ -16,21 +16,21 @@ data class KineticsPalette(
 )
 
 object KineticsTokens {
-    val spacingDp = listOf(4, 8, 12, 16, 24, 32, 48, 64)
-    val radiiDp = listOf(4, 8, 12, 16, 28)
+    val spacingDp = listOf(4, 8, 12, 16, 20, 24, 32, 40)
+    val radiiDp = listOf(8, 10, 12, 16, 20)
     const val minTouchTargetDp = 48
     const val targetGapDp = 8
     const val maxReadableContentDp = 840
     val KineticsLightClassic = KineticsPalette(
-        background = Color(0xFFFBF4E6),
-        surface = Color(0xFFFFFDF8),
-        surfaceAlt = Color(0xFFF7E6C8),
-        text = Color(0xFF2B1B14),
-        muted = Color(0xFF5A4638),
-        primary = Color(0xFF7B1E34),
-        secondary = Color(0xFF146C70),
-        tertiary = Color(0xFFD9A441),
-        outline = Color(0xFFE6D3A8)
+        background = Color(0xFFFAF9F6),
+        surface = Color(0xFFFFFFFF),
+        surfaceAlt = Color(0xFFF2F1ED),
+        text = Color(0xFF171717),
+        muted = Color(0xFF686868),
+        primary = Color(0xFF292929),
+        secondary = Color(0xFF292929),
+        tertiary = Color(0xFF686868),
+        outline = Color(0xFFE5E3DE)
     )
     val PorcelainBlue = KineticsPalette(
         background = Color(0xFFF7FAFF),
@@ -77,15 +77,15 @@ object KineticsTokens {
         outline = Color(0xFFE4D8CC)
     )
     val KineticsDarkClassic = KineticsPalette(
-        background = Color(0xFF120E18),
-        surface = Color(0xFF1E1726),
-        surfaceAlt = Color(0xFF3B2547),
-        text = Color(0xFFF2E8D5),
-        muted = Color(0xFFB8A9C9),
-        primary = Color(0xFFE3B655),
-        secondary = Color(0xFF4FB3B0),
-        tertiary = Color(0xFFE58A9B),
-        outline = Color(0xFF3A2F4A)
+        background = Color(0xFF121212),
+        surface = Color(0xFF1B1B1B),
+        surfaceAlt = Color(0xFF242424),
+        text = Color(0xFFF5F5F5),
+        muted = Color(0xFFA5A5A5),
+        primary = Color(0xFFE8E8E8),
+        secondary = Color(0xFFE8E8E8),
+        tertiary = Color(0xFFA5A5A5),
+        outline = Color(0xFF333333)
     )
     val ObsidianCyan = KineticsPalette(
         background = Color(0xFF070B12),

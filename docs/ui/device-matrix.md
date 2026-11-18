@@ -18,7 +18,7 @@
 | 200% font scale | all applicable | NOT RUN | — |
 | Largest display size | all applicable | NOT RUN | — |
 | RTL | all screens | NOT RUN | — |
-| Light/dark/neon | all themes | NOT RUN | — |
+| System/light/dark monochrome V1 | all screens | NOT RUN | — |
 | High-contrast light/dark | all screens | NOT IMPLEMENTED | — |
 | Gesture and 3-button navigation | compact/wide | NOT RUN | — |
 | Keyboard/mouse/trackpad/stylus | medium+ | NOT RUN | — |

@@ -2839,3 +2839,86 @@ The owner’s authorization starts engineering work; it does not substitute for 
 - Extended Android CI dependency evidence capture to include Gradle build environment, Cargo metadata and Python wheel hashes alongside existing runtime graph, Cargo tree and artifact hashes.
 - Reconciled the roadmap into G0–G7 and updated implementation plan, control register, traceability and SECURITY.md with exact-head evidence and remaining limitations.
 - **Disposition:** G0–G7 bounded research-only software foundation implemented/automated-check verified. Overall Track G remains OPEN pending owner policy acceptance, qualified role appointments, full SBOM and license review, independent security/privacy/scientific/legal reviews, merged-manifest/device verification, operational tabletop/access/recovery exercises and publication author/literature evidence. No external approval or exercise is fabricated. Track U remains gated on G's two-step assessment under D-023.
+
+
+## 2026-11-17 — Track U start: owner V1 design and Step 1 base
+**Phase:** Track U / Step 1 — documented base implementation
+**Baseline:** main commit e6c98e0b506223aed65b00d1c39f0916ef2a0446
+**Branch:** track-u-step1-base
+
+### Gate assessment
+- Track G bounded G0–G7 engineering foundation was reported CLOSED on exact main commit 31b1618c4e843d0ec90feb2ceae0d0e4fb1615b1; workflow 44108451571 passed 9/9 jobs.
+- Overall Track G acceptance remains OPEN for independent reviews, complete resolved SBOM/licensing, device verification, named specialist appointments, owner policy/risk acceptance and operational exercises. These remain carry-forward obligations; none is waived by starting U.
+- This satisfies the D-023 sequencing prerequisite to start Track U engineering.
+
+### Owner design direction
+- Added D-024 adopting the owner's complete Premium Minimal Monochrome Design System — V1 as the active UI visual authority, superseding D-015 only where visual direction conflicts.
+- Preserved non-conflicting constraints: original assets byte-for-byte, real KINETICS workflows, native Compose, Research Mode only, no fabricated accounts/jobs/results, and all existing security/privacy/licensing gates.
+
+### Step 1 base work committed on this branch
+- Added docs/track-u/implementation-plan.md with U0–U6 scope, product truth, integration contracts, two-step gate and evidence requirements.
+- Updated KINETICS_UI_SPEC.md, docs/ui/ui-spec.md, docs/ui/kinetics-visual-design-system.md and docs/android-ui-ux-spec.md to the V1 authority.
+- Migrated canonical active Light/Dark token values and shared spacing/radius values in design/tokens.json; regenerated GeneratedTokens.kt and kinetics-tokens.css.
+- Added shared Compose V1 primitives in android/designsystem/.../KineticsComponents.kt.
+- Updated screen map, device matrix, design-system README, UI quality report, docs index, roadmap and root README status.
+
+### Not verified / not done
+- No CI run, Kotlin compile, APK/AAB build or automated test result has yet been inspected for this branch.
+- No running-app screenshots, visual reference comparison, contrast measurements, TalkBack/200% font-scale/RTL checks or emulator/physical-device tests are claimed.
+- Existing Home/Work/Explore/Settings source has not yet been fully migrated to the new primitives and V1 component measurements.
+- Search/onboarding, full destination map, security/privacy surfaces, durable result viewers and U4–U6 remain incomplete or dependency-gated.
+- No Track U completion percentage is reported before Step 1 and Step 2 are both assessed.
+
+### Next
+Continue U0 token/component integration into actual screens, run exact-branch CI, inspect failures and fix them; then proceed through U1–U3 real workflow integration before Step 2 audit. Keep U4/U5 blocked until their S/P/I dependencies and licence/performance gates pass.
+
+
+## 2026-11-17 — Track U implementation continuation
+**Branch:** track-u-step1-base  
+**PR:** #76  
+**Latest source head at entry:** fe5d464367130f7dc14644e1f83b0852754e9665
+
+### Additional implementation
+- Corrected generated component catalogue so the deterministic design-token check no longer sees stale palette/spacing/radius documentation.
+- Replaced the old serif/display typography mapping with the owner's refined sans-serif V1 scale; scientific text uses tabular monospace.
+- Rebuilt the development component gallery around the shared V1 controls and compact flat grouping.
+- Replaced text-glyph navigation symbols with one outlined Material icon family and fixed the remaining stale glyph reference.
+- Added the standard Material Icons Core dependency; no new viewer/scientific runtime dependency was introduced.
+
+### Verification status
+- Workflow 44123373855 failed only because docs/ui/component-catalogue.md was stale after token generation; Android build was still in progress when that run was superseded.
+- On the corrected catalogue head 0f7e145a518aa6057a2941f123d48bd1eea8da5e, the Python foundation/registry/tests job passed; other host-side scientific smoke/security/SPDX jobs passed. Android arm64 APK/AAB job was still running at last inspection.
+- Exact latest head fe5d464367130f7dc14644e1f83b0852754e9665 has a new pull-request workflow run queued/pending. No result is claimed for that head yet.
+- No UI screenshot, contrast, TalkBack, 200% font-scale, RTL, emulator or physical-device evidence is claimed.
+
+### Remaining track work
+- App bar and navigation drawer still need full integration and exact dimension verification across compact/standard/large/tablet windows.
+- Search/onboarding and all settings/security/privacy surfaces need implementation against actual supported app behavior.
+- Review local biometric lifecycle/recovery, encrypted settings/data inventory/deletion disclosures, and decide FLAG_SECURE/Recents behavior only with documented threat/privacy review.
+- Finish durable result/provenance views and verify all workflow states with actual ResearchStore/WorkManager paths.
+- U4 viewers remain blocked on S1–S3 interfaces, dependency licence/security review and low-end-device performance evidence.
+- U5 remains blocked on P1–P3 and I2–I4; no clinical interpretation is permitted while P0 is blocked.
+- U6 needs actual screenshot/contrast/accessibility/window/device evidence; CI compilation alone is insufficient.
+- Step 2 exact-head integration audit has not run. Track U remains OPEN.
+
+
+## 2026-11-17 — Track U application shell continuation
+**Branch:** track-u-step1-base  
+**PR:** #76  
+**Source changes:** e08d2699c290dc42bb8c0ff1946823d8d4a8ee02 and 778747d7b6f0e797f6124ec54b81e5ef80186af2
+
+### Implemented
+- Added the V1 56dp application bar with a real menu action and current destination context.
+- Replaced the compact-width permanent drawer with a gesture-enabled modal drawer, constrained to a maximum 340dp width, with grouped brand header, real Home/Work/Explore/Settings destinations and selection/close behavior.
+- Retained adaptive navigation rail for expanded windows and bottom navigation for compact windows; all routes continue to use existing app screens.
+- Updated the UI quality report to distinguish implemented source behavior from unrun visual/device acceptance.
+
+### Exact-head verification
+- Workflow 44124996311 on prior source head 49f169f497058bfe02fd9f66c712b11b19eafc86: Python foundation/registry/tests, token reproducibility, SPDX inventory, scientific reference comparisons, RDKit descriptor sanity, OpenMM replica smoke, ADMET utility smoke and private Node security tests passed. Pinned Vina smoke and Android arm64 APK/AAB build were still running at last inspection.
+- New source commits have triggered additional PR workflows. Kotlin compilation, APK/AAB build, JVM tests and UI behavior are not yet claimed for the latest source head.
+- No screenshot, contrast, TalkBack, 200% font-scale, RTL, keyboard/switch navigation, emulator or physical-device evidence is claimed.
+
+### Remaining
+- App shell still needs exact-head build validation and visual inspection against the 393×852dp reference, plus compact/standard/large/tablet checks.
+- Search/onboarding, security/privacy surfaces and full result/provenance presentation remain open.
+- U4/U5 remain dependency-gated; U6 evidence remains outstanding. Step 2 audit has not run. Track U remains OPEN.

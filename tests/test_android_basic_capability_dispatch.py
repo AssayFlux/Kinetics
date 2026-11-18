@@ -1,10 +1,10 @@
 """Static contract checks for Android-to-Python capability exposure."""
 
+import sys
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-import sys
 
 sys.path.insert(0, str(ROOT / "android/app/src/main/python"))
 import kinetics_probe  # noqa: E402

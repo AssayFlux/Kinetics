@@ -5,17 +5,14 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-try:
-    import tomllib
-except ModuleNotFoundError:  # Python 3.10
-    try:
-        import tomli as tomllib
-    except ModuleNotFoundError as exc:
-        raise SystemExit("Python 3.10 requires the declared tomli development dependency") from exc
+# This developer utility runs in the pinned dev environment, which declares tomli
+# for Python 3.10 compatibility. Using the same parser on every host avoids
+# mypy resolving the Python 3.11-only stdlib module against the Python 3.10 target.
+import tomli
 
 ROOT = Path(__file__).resolve().parents[1]
 with (ROOT / "pyproject.toml").open("rb") as handle:
-    python_version = str(tomllib.load(handle)["project"]["version"])
+    python_version = str(tomli.load(handle)["project"]["version"])
 
 package_lines = (ROOT / "python/kinetics/__init__.py").read_text(encoding="utf-8").splitlines()
 package_line = next((line for line in package_lines if line.startswith("__version__")), "")

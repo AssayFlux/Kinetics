@@ -27,11 +27,12 @@ jobs:
         run: pre-commit validate-config
       - name: Install Kinetics research package
         run: python -m pip install -e .
-      - name: Normalize Python imports and formatting, then lint
-        run: |
-          ruff check --fix --select I scripts tests
-          ruff format scripts tests
-          ruff check scripts tests
+      # The legacy tree has import-order and formatter debt (66 import fixes and
+      # 75 formatting changes were previously applied only in the runner). Do not
+      # rewrite the checkout before tests: re-enable I and format --check after a
+      # dedicated formatting-only source commit.
+      - name: Check Python lint without modifying source
+        run: ruff check --ignore I scripts tests
       - name: Mypy production code
         run: mypy scripts python/kinetics
       - name: Registry validation

@@ -313,7 +313,7 @@ private fun ServiceDomainScreen(
     onImport: () -> Unit,
     modifier: Modifier,
 ) {
-    var publicRecord by remember { mutableStateOf<PublicScientificRecord?>(null) }
+    var publicStructureRecord by remember { mutableStateOf<PublicScientificRecord?>(null) }
     val capability = capabilities.firstOrNull()
     Frame("SCIENTIFIC SERVICE", capability?.name ?: domain, "Service ID: ${capability?.id ?: "not registered"} · $domain", modifier) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
@@ -328,23 +328,19 @@ private fun ServiceDomainScreen(
                     }
                 }
             }
-            if (domain == "Public reference databases") {
-                item { PublicDatabaseCard(onStructureFetched = { publicRecord = it }) }
-                item { StructureViewerPreview(publicRecord = publicRecord) }
+            if (capability?.id == "public.reference_databases") {
+                item { PublicDatabaseCard(onStructureFetched = { publicStructureRecord = it }) }
+                item { StructureViewerPreview(publicRecord = publicStructureRecord) }
             }
-            if (domain == "Sequence analysis") {
-                item { FastaQcCard() }
-                item { FastqQcCard() }
-                item { GeneticCodeInferenceCard() }
-            }
-            if (domain == "Structural biology") {
-                item { StructureViewerPreview(publicRecord = publicRecord) }
+            if (capability?.id == "sequence.fasta") item { FastaQcCard() }
+            if (capability?.id == "sequence.fastq") item { FastqQcCard() }
+            if (capability?.id == "sequence.genetic_code_candidate_inference") item { GeneticCodeInferenceCard() }
+            if (capability?.id == "structure.ligand_site_candidates" ||
+                capability?.id == "structure.apo_pocket_candidates") {
                 item { StructureSiteAnalysisCard() }
             }
-            if (domain == "Computational chemistry") {
-                item { LigandGraphPreviewCard() }
-            }
-            if (domain == "Genomics") {
+            if (capability?.id == "chemistry.sdf_graph") item { LigandGraphPreviewCard() }
+            if (domain == "Genomics" || domain == "Variant") {
                 item { GenomicsVcfQcCard() }
                 item { U5ResearchGateCard() }
             }

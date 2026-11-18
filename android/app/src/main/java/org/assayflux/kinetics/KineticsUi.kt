@@ -471,6 +471,11 @@ private fun ServiceDetailScreen(
         "structure.variant_coordinate_mapping",
         "sequence.exact_reference_search",
         "sequence.local_alignment_reference_search",
+        "sequence.local_fasta_exact_search",
+        "sequence.local_fasta_alignment_search",
+        "genes.ncbi_catalogue",
+        "phylo.newick_export",
+        "structure.pdb_geometry",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -492,7 +497,7 @@ private fun ServiceDetailScreen(
                     }
                 }
             }
-            if (capability?.id == "public.reference_databases") {
+            if (capability?.id == "public.reference_databases" || capability?.id == "genes.ncbi_catalogue") {
                 item { PublicDatabaseCard(onStructureFetched = { publicStructureRecord = it }) }
                 item { StructureViewerPreview(publicRecord = publicStructureRecord) }
             }
@@ -769,7 +774,7 @@ private fun ServiceDetailScreen(
                     actionLabel = "Map variant",
                 ) }
             }
-            if (capability?.id == "sequence.exact_reference_search") {
+            if (capability?.id in setOf("sequence.exact_reference_search", "sequence.local_fasta_exact_search")) {
                 item { BasicResearchCapabilityCard(
                     capabilityId = "sequence.exact_reference_search",
                     title = "Exact local reference search",
@@ -778,7 +783,7 @@ private fun ServiceDetailScreen(
                     actionLabel = "Search exact matches",
                 ) }
             }
-            if (capability?.id == "sequence.local_alignment_reference_search") {
+            if (capability?.id in setOf("sequence.local_alignment_reference_search", "sequence.local_fasta_alignment_search")) {
                 item { BasicResearchCapabilityCard(
                     capabilityId = "sequence.local_alignment_reference_search",
                     title = "Local reference alignment",

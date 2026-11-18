@@ -317,3 +317,15 @@ def test_local_reference_exact_and_alignment_search_use_caller_supplied_packs():
     assert exact
     aligned = _run_probe("sequence.local_alignment_reference_search", json.dumps(parameters))
     assert aligned
+
+def test_catalogue_alias_workflows_share_the_same_bounded_local_engines():
+    for capability_id in (
+        "sequence.local_fasta_exact_search",
+        "sequence.local_fasta_alignment_search",
+        "phylo.newick_export",
+        "structure.pdb_geometry",
+        "genes.ncbi_catalogue",
+    ):
+        assert capability_id in UI
+        assert capability_id in RUNNER or capability_id == "genes.ncbi_catalogue"
+    assert 'capability_id == "phylo.newick_export"' in PROBE

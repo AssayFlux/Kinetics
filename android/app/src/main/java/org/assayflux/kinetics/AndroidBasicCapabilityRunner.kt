@@ -41,6 +41,10 @@ internal object AndroidBasicCapabilityRunner {
         "structure.variant_coordinate_mapping",
         "sequence.exact_reference_search",
         "sequence.local_alignment_reference_search",
+        "sequence.local_fasta_exact_search",
+        "sequence.local_fasta_alignment_search",
+        "phylo.newick_export",
+        "structure.pdb_geometry",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

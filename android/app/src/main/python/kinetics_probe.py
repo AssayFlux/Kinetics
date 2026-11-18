@@ -680,7 +680,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Model, weight, dataset licence, safety and independent review gates remain mandatory",
             "A validated brief does not establish biological safety, function or experimental success",
         ]
-    elif capability_id == "structure.geometry_screen_metrics":
+    elif capability_id in {"structure.geometry_screen_metrics", "structure.pdb_geometry"}:
         from kinetics.structure import parse_pdb
         from kinetics.structure_quality import structure_geometry_metrics
         atoms = parse_pdb(sequence_text, include_hetero=False)
@@ -821,6 +821,8 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
     elif capability_id in {
         "sequence.exact_reference_search",
         "sequence.local_alignment_reference_search",
+        "sequence.local_fasta_exact_search",
+        "sequence.local_fasta_alignment_search",
     }:
         import hashlib
         from kinetics.sequence import iter_fasta_records
@@ -850,7 +852,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             content_sha256=hashlib.sha256(fasta.encode("utf-8")).hexdigest(),
         )
         references = iter_fasta_records(fasta.splitlines())
-        if capability_id == "sequence.exact_reference_search":
+        if capability_id in {"sequence.exact_reference_search", "sequence.local_fasta_exact_search"}:
             result = exact_reference_search(
                 query, references, sequence_type=sequence_type, reference_pack=pack,
                 max_records=1_000, max_total_residues=1_000_000, max_query_residues=100_000,
@@ -905,7 +907,7 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Deterministic model calculation only; no parameter fitting or uncertainty estimate",
             "Units must be consistent across substrate, Vmax and Km",
         ]
-    elif capability_id == "phylo.newick":
+    elif capability_id in {"phylo.newick", "phylo.newick_export"}:
         from kinetics.phylo import leaf_names, parse_newick, to_newick
         root = parse_newick(sequence_text)
         leaves = leaf_names(root)

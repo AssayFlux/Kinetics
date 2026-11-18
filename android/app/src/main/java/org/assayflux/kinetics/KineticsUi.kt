@@ -394,6 +394,7 @@ private fun HomeScreen(
     onExportAnalysis: (ResearchJob) -> Unit, onAnalyzeFastq: (ResearchJob, Int) -> Unit, modifier: Modifier,
 ) {
     val context = LocalContext.current
+    var publicStructureRecord by remember { mutableStateOf<PublicScientificRecord?>(null) }
     val services = remember(context) { runCatching { loadCapabilityCatalogue(context) }.getOrDefault(emptyList()) }
     val active = jobs.count { it.state in listOf("queued", "running", "cancel_requested") }
     val done = jobs.count { it.state == "succeeded" }
@@ -414,8 +415,8 @@ private fun HomeScreen(
                 )
             }
             item { Text("Scientific services", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
-            item { PublicDatabaseCard() }
-            item { StructureViewerPreview() }
+            item { PublicDatabaseCard(onStructureFetched = { publicStructureRecord = it }) }
+            item { StructureViewerPreview(publicRecord = publicStructureRecord) }
             if (services.any { it.id == "chemistry.sdf_graph" && it.status == "implemented" }) item { LigandGraphPreviewCard() }
             if (services.any { it.id == "sequence.fasta" && it.status == "implemented" }) item { FastaQcCard() }
             if (services.any { it.id == "sequence.fastq" && it.status == "implemented" }) item { FastqQcCard() }

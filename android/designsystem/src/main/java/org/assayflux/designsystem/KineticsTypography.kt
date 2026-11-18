@@ -66,7 +66,7 @@ val KineticsTypography = BaseTypography.copy(
     ),
     labelMedium = BaseTypography.labelMedium.copy(
         fontFamily = FontFamily.SansSerif, fontSize = 12.sp,
-        fontWeight = FontWeight.Regular,
+        fontWeight = FontWeight.Normal,
     ),
     labelSmall = BaseTypography.labelSmall.copy(
         fontFamily = FontFamily.SansSerif, fontSize = 11.sp,

@@ -160,6 +160,6 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 
 - Commit `3dce2837afd68b3deafbe0ffee634061c9b04d5f` adds local Android workflows for explicit NCBI genetic-code translation, enzyme inhibition rate calculation and UPGMA tree construction.
 - Commit `58b35adb8d03ec1b0e65f825efa9596a1aae2898` corrects host-test input fixtures to use actual line breaks and adds explicit allow-list coverage for the new routes.
-- The Android app now exposes 22 of 68 catalogue capabilities through dedicated Android forms and the local Python bridge. The separate public-reference-database service makes 23 Android workflows; 46 catalogue capabilities remain unconnected.
+- The Android app now exposes 21 of 68 catalogue capabilities through dedicated Android forms and the local Python bridge. The separate public-reference-database service makes 22 Android workflows; 47 catalogue capabilities remain unconnected.
 - The integration matrix has been refreshed with the exact capability-by-capability mapping.
 - Latest exact-head CI is pending; no test or APK verification is claimed for these commits yet.

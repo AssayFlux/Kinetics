@@ -195,3 +195,11 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - Commit `73dd399e9bf04bfff035245df32f1749e113da8e` corrects the PDB fixture and retains regression coverage for the bounded structure geometry screen.
 - The Android app now exposes 31 of 68 catalogue capabilities; 37 remain unconnected. Including the separate public-reference-database service, 32 Android workflows are represented in source.
 - Updated the integration matrix. Exact-head CI remains pending.
+
+
+## 17. Structure mapping and phylogenetic support workflows — 2026-11-18
+
+- Commit `09e0c5cfb467df24503159847b0783fe606b80e5` adds a bounded neighbour-joining alignment-site bootstrap and exact chain sequence mapping plus inter-chain contact geometry.
+- Commit `e5f3f1dac828bb8b583a03997b75a736b776c346` adds alignment-based coordinate mapping with ambiguity abstention and amino-acid variant-to-coordinate mapping. These are coordinate tools only; they do not predict biological or clinical effects.
+- The Android app now exposes 34 of 68 catalogue capabilities; 34 remain unconnected. Including the separate public-reference-database service, 35 Android workflows are represented in source.
+- Updated the integration matrix. Exact-head CI remains queued behind the current Android build.

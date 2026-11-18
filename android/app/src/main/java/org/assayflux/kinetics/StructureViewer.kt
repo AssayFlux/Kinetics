@@ -49,6 +49,7 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
+import java.util.zip.GZIPInputStream
 
 private const val VIEWER_URL = "https://appassets.androidplatform.net/assets/structure-viewer/structure-viewer.html"
 private const val MAX_STRUCTURE_SOURCE_BYTES = 16 * 1024 * 1024
@@ -70,10 +71,11 @@ private fun readDisplayName(context: android.content.Context, uri: Uri): String 
     }
 }
 
-private fun readBounded(context: android.content.Context, uri: Uri): ByteArray {
+private fun readBounded(context: android.content.Context, uri: Uri, gzip: Boolean): ByteArray {
     val input = context.contentResolver.openInputStream(uri)
         ?: error("The selected document could not be opened")
-    return input.use { stream ->
+    val decoded = if (gzip) GZIPInputStream(input) else input
+    return decoded.use { stream ->
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(32 * 1024)
         var total = 0
@@ -183,16 +185,15 @@ internal fun StructureViewerPreview() {
                 val result = withContext(Dispatchers.IO) {
                     runCatching {
                         val name = readDisplayName(context, uri)
+                        val lowerName = name.lowercase(java.util.Locale.ROOT).removeSuffix(".gz")
                         val format = when {
-                            name.endsWith(".pdb", ignoreCase = true) ||
-                                name.endsWith(".ent", ignoreCase = true) -> "pdb"
-                            name.endsWith(".cif", ignoreCase = true) ||
-                                name.endsWith(".mmcif", ignoreCase = true) -> "mmcif"
+                            lowerName.endsWith(".pdb") || lowerName.endsWith(".ent") -> "pdb"
+                            lowerName.endsWith(".cif") || lowerName.endsWith(".mmcif") -> "mmcif"
                             else -> error(
-                                "Unsupported file extension. Select .pdb, .ent, .cif or .mmcif",
+                                "Unsupported file extension. Select PDB, ENT, CIF, mmCIF or a .gz-compressed version.",
                             )
                         }
-                        val bytes = readBounded(context, uri)
+                        val bytes = readBounded(context, uri, name.endsWith(".gz", ignoreCase = true))
                         val sourceText = Charsets.UTF_8.newDecoder()
                             .onMalformedInput(CodingErrorAction.REPORT)
                             .onUnmappableCharacter(CodingErrorAction.REPORT)
@@ -305,7 +306,7 @@ internal fun StructureViewerPreview() {
             Text(sourceLabel, style = MaterialTheme.typography.labelMedium)
             Text(importMessage, style = MaterialTheme.typography.bodySmall)
             Button(onClick = { picker.launch(arrayOf("*/*")) }) {
-                Text("Import PDB / mmCIF")
+                Text("Import PDB / mmCIF / .gz")
             }
             Button(onClick = { fullScreen = true }, enabled = payloadJson != null) {
                 Text("Open full-screen structure viewer")

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,6 +50,7 @@ internal fun PublicDatabaseCard(
     var message by remember { mutableStateOf("Search public reference records. Network access occurs only when you choose an action.") }
     var analysisPreview by remember { mutableStateOf<String?>(null) }
     var savedRecords by remember { mutableStateOf(store.recent()) }
+    var confirmClearAll by rememberSaveable { mutableStateOf(false) }
 
     DisposableEffect(store) { onDispose { store.close() } }
 
@@ -227,7 +229,10 @@ internal fun PublicDatabaseCard(
                 )
             }
             if (savedRecords.isNotEmpty()) {
-                Text("Saved public records", style = MaterialTheme.typography.titleSmall)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text("Saved public records", style = MaterialTheme.typography.titleSmall)
+                    TextButton(enabled = !busy, onClick = { confirmClearAll = true }) { Text("Clear all") }
+                }
                 savedRecords.forEach { saved ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -315,5 +320,23 @@ internal fun PublicDatabaseCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+    }
+    if (confirmClearAll) {
+        AlertDialog(
+            onDismissRequest = { confirmClearAll = false },
+            title = { Text("Clear saved public records?") },
+            text = { Text("This deletes locally cached public reference payloads and their saved analysis metadata. It does not affect imported research jobs.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmClearAll = false
+                    scope.launch {
+                        val deleted = withContext(Dispatchers.IO) { store.deleteAll() }
+                        savedRecords = withContext(Dispatchers.IO) { store.recent() }
+                        message = "Deleted $deleted saved public reference records."
+                    }
+                }) { Text("Clear all") }
+            },
+            dismissButton = { TextButton(onClick = { confirmClearAll = false }) { Text("Cancel") } },
+        )
     }
 }

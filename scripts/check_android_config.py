@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static guardrails for the authorized Android CI build and offline app manifest."""
+"""Static guardrails for the Android build and user-initiated public-reference network boundary."""
 
 from __future__ import annotations
 
@@ -26,8 +26,11 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         node.get(ANDROID_NS + "name", "")
         for node in manifest.findall("uses-permission")
     }
-    if "android.permission.INTERNET" in permissions:
-        errors.append("offline Research Mode must not request INTERNET permission")
+    if "android.permission.INTERNET" not in permissions:
+        errors.append("public reference retrieval requires the INTERNET permission")
+    unexpected_permissions = permissions - {"android.permission.INTERNET"}
+    if unexpected_permissions:
+        errors.append(f"unexpected Android permissions are not approved: {sorted(unexpected_permissions)}")
     application = manifest.find("application")
     if application is None:
         errors.append("Android manifest is missing application")
@@ -97,8 +100,35 @@ def validate_android_config(root: Path = ROOT) -> list[str]:
         errors.append("Android backup must remain disabled for local research data")
     if 'android:usesCleartextTraffic="false"' not in manifest_text:
         errors.append("Android cleartext traffic must remain disabled")
-    if "android.permission.INTERNET" in manifest_text:
-        errors.append("Android application must not request INTERNET permission")
+    if "android.permission.INTERNET" not in manifest_text:
+        errors.append("Android manifest must declare INTERNET for explicit public-reference retrieval")
+    client_path = root / "android/app/src/main/java/org/assayflux/kinetics/PublicDatabaseClient.kt"
+    card_path = root / "android/app/src/main/java/org/assayflux/kinetics/PublicDatabaseCard.kt"
+    try:
+        client_source = client_path.read_text(encoding="utf-8")
+        card_source = card_path.read_text(encoding="utf-8")
+    except OSError as exc:
+        errors.append(f"Public database boundary source could not be read: {exc}")
+        client_source = ""
+        card_source = ""
+    for marker in (
+        '"eutils.ncbi.nlm.nih.gov"',
+        '"rest.uniprot.org"',
+        '"files.rcsb.org"',
+        'url.protocol == "https"',
+        'url.host in ALLOWED_HOSTS',
+        'instanceFollowRedirects = false',
+        'requestMethod = "GET"',
+        'CONNECT_TIMEOUT_MS',
+        'READ_TIMEOUT_MS',
+        'MAX_STRUCTURE_BYTES',
+    ):
+        if marker not in client_source:
+            errors.append(f"Public database client must retain its HTTPS/host/size boundary: {marker}")
+    if "never submit patient sequences" not in client_source:
+        errors.append("Public database client must explicitly prohibit private patient-data submission")
+    if "Imported patient data is never uploaded" not in card_source:
+        errors.append("Public database UI must disclose that imported patient data is never uploaded")
 
     package_init = root / "python/kinetics/__init__.py"
     runtime_probe = root / "android/app/src/main/python/kinetics_probe.py"
@@ -147,7 +177,7 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print("Android offline/build-first configuration guardrails are present.")
+    print("Android build and public-reference network boundary guardrails are present.")
     return 0
 
 

@@ -1,6 +1,6 @@
 # Android capability integration matrix
 
-**Baseline commit:** `4e8274091e593f71d4003725dd5fa0d4fca91d31`  
+**Baseline commit:** `bfc2f240af9fb2e383a9fccdd2ef9f3c8d21bcee`  
 **Branch:** `main`  
 **Purpose:** Separate Python source registration from an actual Android-executable workflow.  
 **Evidence boundary:** A connected route means the Android UI invokes a bounded Chaquopy bridge. It does not mean the scientific method has been independently validated, clinically approved, or device-accepted.
@@ -19,6 +19,7 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 | Capability ID | Android entry |
 |---|---|
 | `public.reference_databases` | Public database retrieval card; NCBI Gene/sequence, UniProt FASTA, RCSB mmCIF |
+| `genes.ncbi_catalogue` | Dedicated NCBI Gene search/retrieval card using the in-app public database client |
 | `sequence.fasta` | FASTA QC card |
 | `sequence.fastq` | FASTQ QC card |
 | `sequence.genetic_code_candidate_inference` | Genetic-code candidate inference card |

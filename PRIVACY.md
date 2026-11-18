@@ -1,7 +1,7 @@
 # Privacy principles and current status
 
 ## Current status
-The repository contains an Android research application with local import, encrypted app-private input storage, SQLite job/provenance records, WorkManager orchestration and user-initiated SAF export. The project owner declares institutional ethics approval obtained and has authorized research testing within its scope (D-024, 2026-11-18). The approval record is pending attachment; no independent verification is claimed. There is no account service, telemetry pipeline or remote compute service. CI uses synthetic fixtures only. No independent privacy assessment or real-device privacy audit has passed. This document is not a compliance claim.
+The repository contains an Android research application with local import, encrypted app-private input storage, SQLite job/provenance records, WorkManager orchestration and user-initiated SAF export. The project owner declares institutional ethics approval obtained and has authorized research testing within its scope (D-025, 2026-11-18). The approval record is pending attachment; no independent verification is claimed. There is no account service, telemetry pipeline or remote compute service. CI uses synthetic fixtures only. No independent privacy assessment or real-device privacy audit has passed. This document is not a compliance claim.
 
 ## Intended principles
 - Offline-first operation; no telemetry by default.

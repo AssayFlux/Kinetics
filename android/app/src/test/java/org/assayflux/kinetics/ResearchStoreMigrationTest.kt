@@ -201,6 +201,30 @@ class ResearchStoreMigrationTest {
     }
 
     @Test
+    fun cancelledImportCannotBeFinalizedByLateWorker() {
+        val store = ResearchStore(context)
+        val encryptedDir = java.io.File(context.noBackupFilesDir, "research-inputs")
+        val encryptedFile = java.io.File(encryptedDir, "cancelled-finalize.kdat")
+        try {
+            store.createJob("cancelled-finalize", "sample.fa", "content://sample")
+            assertTrue(store.startImport("cancelled-finalize"))
+            assertTrue(store.cancelActiveImport("cancelled-finalize"))
+            assertTrue(encryptedDir.isDirectory || encryptedDir.mkdirs())
+            encryptedFile.writeBytes(ByteArray(LocalCrypto.HEADER_BYTES + 1))
+            val finalization = runCatching {
+                store.completeImport(
+                    "cancelled-finalize", "e".repeat(64), 1L, encryptedFile.absolutePath,
+                )
+            }
+            assertTrue(finalization.isFailure)
+            assertTrue(store.isJobCancelled("cancelled-finalize"))
+        } finally {
+            encryptedFile.delete()
+            store.close()
+        }
+    }
+
+    @Test
     fun runningImportCanBeReclaimedAfterProcessRestart() {
         val store = ResearchStore(context)
         try {

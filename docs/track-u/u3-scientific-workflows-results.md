@@ -51,3 +51,8 @@
 7. UI screenshot, accessibility and physical-device review for the result panel and Phred selection dialog.
 
 **Decision:** U3 remains PARTIAL. The new FASTQ workflow is a concrete integration, not a claim that every scientific engine has a complete mobile UI.
+
+
+## Import lifecycle correction — 2026-11-18
+
+The import worker now atomically claims and finalizes the durable job state. Cancellation is committed before WorkManager cancellation, and finalization refuses a job no longer marked running. Resume transitions are explicit; WorkManager process recreation may reclaim a running job and continue from its authenticated encrypted partial. Automated store and worker regression tests were added. Exact-head CI and forced process-death/device testing remain outstanding.

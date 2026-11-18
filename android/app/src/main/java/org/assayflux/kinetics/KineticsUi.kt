@@ -460,7 +460,7 @@ private fun WorkspaceCarousel(
                     colors = CardDefaults.cardColors(containerColor = heroContainer),
                 ) {
                     Column(
-                        Modifier.fillMaxSize().padding(22.dp),
+                        Modifier.fillMaxSize().padding(16.dp),
                         verticalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -482,7 +482,7 @@ private fun WorkspaceCarousel(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                 ) {
                     Column(
-                        Modifier.fillMaxSize().padding(22.dp),
+                        Modifier.fillMaxSize().padding(16.dp),
                         verticalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -504,7 +504,7 @@ private fun WorkspaceCarousel(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 ) {
                     Column(
-                        Modifier.fillMaxSize().padding(22.dp),
+                        Modifier.fillMaxSize().padding(16.dp),
                         verticalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {

@@ -48,3 +48,11 @@ The source manifest declares allowBackup=false and no INTERNET permission. Merge
 7. Independent security/privacy assessment and retest against the exact release artifact.
 
 **Decision:** U2 remains PARTIAL / REVIEW REQUIRED. The code now discloses current limitations rather than implying that all local data is encrypted.
+
+
+## Import cancellation hardening — 2026-11-18
+
+- Import state transitions are now conditional: a worker claims only queued/running work, and finalization checks that the durable job state is still running inside the database transaction.
+- User cancellation first commits a terminal cancelled state; a late worker cannot overwrite it with succeeded. A cancelled or failed import is explicitly moved back to queued before resume scheduling.
+- A WorkManager-recreated worker can reclaim a durable running state after process death and continue from the authenticated encrypted partial file.
+- Automated ResearchStore tests cover cancellation, non-downgrade of completed jobs, explicit resume transitions and process-restart re-claim. Exact-head CI is pending; device/process-kill testing remains open.

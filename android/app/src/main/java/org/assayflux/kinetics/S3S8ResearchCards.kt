@@ -269,27 +269,74 @@ internal fun StructureSiteAnalysisCard() {
     }
 }
 
+private fun readGeneticCodeFasta(context: Context, uri: Uri): Pair<String, String> {
+    val name = context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
+        ?.use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
+        ?: uri.lastPathSegment ?: "sequence.fasta"
+    require(name.substringAfterLast('.', "").lowercase(Locale.ROOT) in setOf("fa", "fasta", "fna", "fas", "txt")) {
+        "Choose a FASTA sequence file (.fa, .fasta, .fna or .fas)."
+    }
+    val input = context.contentResolver.openInputStream(uri) ?: error("The selected sequence file could not be opened.")
+    val bytes = input.use { stream ->
+        val output = ByteArrayOutputStream()
+        val buffer = ByteArray(16 * 1024)
+        var total = 0
+        while (true) {
+            val count = stream.read(buffer)
+            if (count < 0) break
+            total += count
+            require(total <= S3S8Runner.MAX_FASTA_CHARS * 4) { "Sequence file exceeds the import limit." }
+            output.write(buffer, 0, count)
+        }
+        output.toByteArray()
+    }
+    val text = Charsets.UTF_8.newDecoder()
+        .onMalformedInput(CodingErrorAction.REPORT)
+        .onUnmappableCharacter(CodingErrorAction.REPORT)
+        .decode(ByteBuffer.wrap(bytes)).toString()
+    require(!text.contains('\u0000')) { "Sequence file contains a NUL byte." }
+    require(text.length <= S3S8Runner.MAX_FASTA_CHARS) { "Sequence file exceeds the supported character limit." }
+    return name to text
+}
+
 @Composable
 internal fun GeneticCodeInferenceCard() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var fastaText by rememberSaveable { mutableStateOf("") }
+    var selectedSequenceName by rememberSaveable { mutableStateOf<String?>(null) }
     var completeCds by rememberSaveable { mutableStateOf(false) }
     var running by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     var result by remember { mutableStateOf<JSONObject?>(null) }
+
+    val fastaPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) {
+            running = true
+            error = null
+            result = null
+            scope.launch {
+                val loaded = withContext(Dispatchers.IO) { runCatching { readGeneticCodeFasta(context, uri) } }
+                loaded.onSuccess { (name, text) -> selectedSequenceName = name; fastaText = text }
+                    .onFailure { error = it.message ?: "Could not read the selected FASTA file." }
+                running = false
+            }
+        }
+    }
 
     Card(Modifier.fillMaxWidth()) {
         Column(
             Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Text("S8 · Genetic-code candidate screening", style = MaterialTheme.typography.titleMedium)
+            Text("Genetic code finder", style = MaterialTheme.typography.titleMedium)
             Text(
-                "Paste independent coding-sequence FASTA records. The screen compares supported NCBI tables using in-frame stop evidence and, when selected, complete-CDS start/terminal-stop evidence.",
+                "Choose a FASTA file or paste DNA sequences. Kinetics handles sequence parsing and genetic-code comparison in the background.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Button(onClick = { fastaPicker.launch(arrayOf("text/plain", "application/octet-stream", "*/*")) }, enabled = !running, modifier = Modifier.fillMaxWidth()) { Text("Choose DNA sequence file") }
+            selectedSequenceName?.let { Text("Loaded: $it", style = MaterialTheme.typography.labelSmall) }
             OutlinedTextField(
                 value = fastaText,
                 onValueChange = {
@@ -300,17 +347,17 @@ internal fun GeneticCodeInferenceCard() {
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Coding-sequence FASTA") },
+                label = { Text("DNA sequence (FASTA)") },
                 minLines = 5,
                 maxLines = 10,
-                supportingText = { Text("Up to 1,000,000 characters · minimum 3 distinct records and 90 codons") },
+                supportingText = { Text("Up to 1,000,000 characters. Multiple sequences supported.") },
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = completeCds, onCheckedChange = {
                     completeCds = it
                     result = null
                 })
-                Text("Every record is a complete CDS (start and terminal codon included)")
+                Text("Sequences include complete start and stop codons")
             }
             Button(
                 onClick = {
@@ -328,7 +375,7 @@ internal fun GeneticCodeInferenceCard() {
                 },
                 enabled = !running && fastaText.isNotBlank(),
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text(if (running) "Screening…" else "Rank candidate genetic codes") }
+            ) { Text(if (running) "Analysing…" else "Find likely genetic code") }
             error?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
             result?.let { report ->
                 HorizontalDivider()

@@ -17,7 +17,7 @@ After successful baseline acceptance and freeze:
 - Do not update baseline dependencies, lockfiles, generated files, UI, methods, documentation or build scripts in place.
 - All next-version engineering happens only on the single branch named v0.1.1.
 - Do not create feature, develop, release, hotfix or other branches for next-version work. Use commits on v0.1.1. Do not merge next-version work into frozen main.
-- Critical fixes to the frozen v0.1.0 baseline are delivered as a new version, not by changing its commit or tag.
+- The next release is v0.1.1. It combines integration/usability hardening and the planned scientific rulebook foundation. Critical fixes to the frozen v0.1.0 baseline are delivered as a new version, not by changing its commit or tag.
 - Archive APK/AAB, SHA-256, build logs, SBOM, toolchain record, test reports and release notes.
 
 The GitHub administrator must enable branch protection/rulesets and tag protection. Do not claim these controls are active until verified in GitHub settings.
@@ -26,7 +26,7 @@ The GitHub administrator must enable branch protection/rulesets and tag protecti
 
 - main: v0.1.0 baseline source. It is still a candidate until the v0.1.0 exact-commit build and acceptance gates pass; after freeze it is read-only.
 - v0.1.1: the only permitted forward-development branch. It is created from the accepted v0.1.0 baseline commit. All next-version commits go here.
-- Existing legacy branches release/0.1.0 and develop/v0.1.2 are not to receive new work. Do not create additional branches.
+- Existing legacy branches release/0.1.0 and develop/v0.1.2 are obsolete and must receive no new work. The GitHub connection used for this change does not expose branch deletion; repository administrator should delete those obsolete branches. Do not create additional branches.
 - Before every meaningful integration or release candidate, fetch and compare v0.1.1 with main; verify merge base, changed files, version metadata, Android/Python contracts, capability registry, generated assets and tests. While main is not frozen, incorporate required baseline fixes into v0.1.1 without rewriting main. Once main is frozen, never rewrite it or merge v0.1.1 into it.
 - A branch name is not proof of protection. Verify GitHub rules before relying on required reviews or force-push restrictions.
 

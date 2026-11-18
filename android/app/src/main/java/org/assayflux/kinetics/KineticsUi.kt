@@ -555,9 +555,8 @@ private fun WorkspaceCarousel(
                                 color = MaterialTheme.colorScheme.secondary, letterSpacing = 1.1.sp)
                             Text("Know your instruments.", style = MaterialTheme.typography.headlineSmall,
                                 color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
-                            Text(runtime ?: "Run local checks for embedded Python, native engines and encrypted storage.",
-                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                maxLines = 3, overflow = TextOverflow.Ellipsis)
+                            Text("Check sequence processing, scientific computation and protected local storage.",
+                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         Text("RUN RUNTIME CHECKS  →", style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold)
@@ -576,7 +575,7 @@ private fun WorkspaceCarousel(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.1.sp)
                                 Text(service.name, style = MaterialTheme.typography.headlineSmall,
                                     color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
-                                Text(if (service.status == "implemented") "Available in this build" else "In development",
+                                Text(if (service.status == "implemented") "Engine implemented · Android access varies" else "In development",
                                     style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                             Text("SCIENTIFIC SERVICE", style = MaterialTheme.typography.labelLarge,

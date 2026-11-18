@@ -96,9 +96,17 @@ src="https://readme-typing-svg.demolab.com?font=Cinzel+Decorative&weight=600&siz
   <img src="https://img.shields.io/badge/ASSAYFLUX-Scientific_Systems-800020?style=flat-square">
   <img src="https://img.shields.io/badge/Architecture-Modular-78649A?style=flat-square">
   <img src="https://img.shields.io/badge/Workflow-Offline_First-527C72?style=flat-square">
-  <img src="https://img.shields.io/badge/Development-Pre--Release-B18B5E?style=flat-square">
+  <img src="https://img.shields.io/badge/Version-v0.1.0--target-B18B5E?style=flat-square">
   <img src="https://img.shields.io/badge/Intended_Use-Research_Only-8B7058?style=flat-square">
 </p>
+
+## RELEASE DIRECTION
+
+**v0.1.0** is the basic working-model target: a bounded, research-only Android workbench with real local workflows and verified packaging. It is not yet published; release acceptance remains gated by exact-head CI, APK verification, device, accessibility, security and licensing evidence.
+
+**v0.1.2** is planned for the first shared scientific rulebook and computational-generation foundation: common scientific objects, machine-readable rulebooks, chemistry and sequence construction, bounded peptide/structure generation, reaction models and validated engine adapters.
+
+See the [v0.1.0 and v0.1.2 release plan](docs/release-plan-v0.1.0-v0.1.2.md).
 
 ## ABOUT
 **Kinetics** is an open-source scientific research workbench from **AssayFlux Scientific Systems**. It combines an Android-native, offline-first application with a Python research core and selected C++ and Rust components. Sequence, structure, chemistry, kinetics and omics foundations sit behind versioned contracts and a capability registry.

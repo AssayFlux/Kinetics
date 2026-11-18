@@ -262,10 +262,10 @@ def test_vcf_aggregate_qc_never_returns_sample_names_or_genotypes() -> None:
     from kinetics.genomics import summarize_vcf_qc
 
     text = (
-        "##fileformat=VCFv4.3\\n"
-        "#CHROM\\tPOS\\tID\\tREF\\tALT\\tQUAL\\tFILTER\\tINFO\\tFORMAT\\tPRIVATE_SAMPLE_ID\\n"
-        "chr1\\t10\\t.\\tA\\tG\\t50\\tPASS\\t.\\tGT\\t0/1\\n"
-        "chr1\\t20\\t.\\tC\\tT,G\\t.\\tLowQual\\t.\\tGT\\t1|2\\n"
+        "##fileformat=VCFv4.3\n"
+        "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tPRIVATE_SAMPLE_ID\n"
+        "chr1\t10\t.\tA\tG\t50\tPASS\t.\tGT\t0/1\n"
+        "chr1\t20\t.\tC\tT,G\t.\tLowQual\t.\tGT\t1|2\n"
     )
     result = summarize_vcf_qc(text)
     assert result["record_count"] == 2
@@ -286,10 +286,10 @@ def test_vcf_aggregate_qc_enforces_resource_bounds_and_requires_records() -> Non
         summarize_vcf_qc("x" * (5 * 1024 * 1024 + 1))
     with pytest.raises(ValueError, match="max_records"):
         summarize_vcf_qc(
-            "#CHROM\\tPOS\\tID\\tREF\\tALT\\tQUAL\\tFILTER\\tINFO\\n"
-            "chr1\\t1\\t.\\tA\\tG\\t.\\tPASS\\t.\\n"
-            "chr1\\t2\\t.\\tA\\tC\\t.\\tPASS\\t.\\n",
+            "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n"
+            "chr1\t1\t.\tA\tG\t.\tPASS\t.\n"
+            "chr1\t2\t.\tA\tC\t.\tPASS\t.\n",
             max_records=1,
         )
     with pytest.raises(ValueError, match="no variant records"):
-        summarize_vcf_qc("#CHROM\\tPOS\\tID\\tREF\\tALT\\tQUAL\\tFILTER\\tINFO\\n")
+        summarize_vcf_qc("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\n")

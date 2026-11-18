@@ -171,3 +171,11 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - All three routes are explicitly allow-listed, have bounded matrix/sequence sizes and include limitations to prevent unsupported interpretation.
 - The Android app now exposes 24 of 68 catalogue capabilities; 44 catalogue capabilities remain unconnected. Including the separate public-reference-database service, 25 Android workflows are available in source.
 - Updated the integration matrix with these routes. Exact-head CI is pending and no APK verification is claimed yet.
+
+
+## 14. Genome annotation mobile workflows — 2026-11-18
+
+- Commit `617c1ef89e8714223739e61036a26c649bfcd335` adds Android workflows for GFF3 structural annotation validation and transcript CDS reconstruction from supplied contigs.
+- The bridge applies 1 MB input bounds, 50,000-feature annotation bounds, 10,000-transcript reconstruction bounds and caller-selected genetic-code table metadata. It does not infer gene function or clinical effects.
+- The Android app now exposes 26 of 68 catalogue capabilities; 42 remain unconnected. The separate public-reference-database service brings the source-level mobile workflow count to 27.
+- Updated the capability integration matrix. Exact-head CI is pending.

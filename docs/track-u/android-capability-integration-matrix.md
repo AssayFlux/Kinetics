@@ -8,8 +8,8 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **24**
-- Catalogue entries not yet connected to Android: **44**
+- Catalogue entries connected to Android workflows: **26**
+- Catalogue entries not yet connected to Android: **42**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.
@@ -47,6 +47,9 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 | `omics.normalisation` | CPM or CLR transformation for bounded feature-by-sample matrices |
 | `omics.cross_correlation` | Pairwise Pearson correlation between matched multi-omics matrices |
 | `phylo.jukes_cantor_nj` | Neighbour joining from supplied aligned sequences using Jukes–Cantor distances |
+
+| `genome.gff3_annotation_import` | GFF3 structural validation and feature/parent graph checks |
+| `genome.gff3_transcript_cds_reconstruction` | CDS reconstruction from validated GFF3 and caller-supplied contigs |
 
 All local forms use an explicit bridge allow-list and bounded input/work limits. Their method-specific limitations are returned or displayed with results.
 
@@ -112,9 +115,9 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `protein.design_brief_validation` | `python/kinetics/protein_design.py` | Not connected — Python source only |
 | `structure.alignment_coordinate_mapping` | `python/kinetics/structure_alignment.py` | Not connected — Python source only |
 | `sequence.local_alignment_reference_search` | `python/kinetics/sequence_reference.py` | Not connected — Python source only |
-| `genome.gff3_annotation_import` | `python/kinetics/gff3.py` | Not connected — Python source only |
+| `genome.gff3_annotation_import` | `python/kinetics/gff3.py` | Connected — local Android form + Python bridge |
 | `sequence.local_fasta_alignment_search` | `python/kinetics/sequence_pack.py` | Not connected — Python source only |
-| `genome.gff3_transcript_cds_reconstruction` | `python/kinetics/gff3_transcripts.py` | Not connected — Python source only |
+| `genome.gff3_transcript_cds_reconstruction` | `python/kinetics/gff3_transcripts.py` | Connected — local Android form + Python bridge |
 | `protein.hmmer_domain_candidate_ranking` | `python/kinetics/hmmer_rank.py` | Not connected — Python source only |
 | `protein.hmmscan_domtblout_evidence` | `python/kinetics/hmmer.py` | Not connected — Python source only |
 | `structure.pinned_local_prediction_process` | `python/kinetics/s4_process.py` | Not connected — Python source only |

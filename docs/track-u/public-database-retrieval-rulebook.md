@@ -80,14 +80,17 @@ Every fetched record should retain: source ID/name, exact request URL (redact qu
 - Saved public records are listed on Home, can be reopened (mmCIF) or re-analysed (FASTA), and can be deleted. Reopening decrypts to a short-lived app-private cache file, verifies the recorded SHA-256 and removes the temporary plaintext on completion. Deletion removes the encrypted payload and its index row.
 - Only public search terms and accessions are sent to providers. Patient inputs and private research metadata are not uploaded.
 
-### Not yet complete / not claimed
-- NCBI Gene results now expose ELink discovery actions for linked nucleotide and protein records, which can be fetched and analysed through the same FASTA path.
-- Saved records are listed, deletable, reopenable (mmCIF) and re-analysable (FASTA); a richer saved-record detail/browser is still open.
-- The public record metadata index and analysis JSON are app-private SQLite but are not encrypted at rest; only raw source payloads use the Android Keystore AES-GCM file format.
-- Explicit user cancellation, retry/backoff, ETag/source-release capture, licence/terms metadata, cache quota/eviction and background WorkManager retrieval are not yet implemented.
-- RCSB search by molecule/protein/organism is not yet implemented; retrieval currently requires a four-character PDB entry ID.
-- ENA, Ensembl, PubChem, AlphaFold DB, GEO, SRA and additional providers remain future adapters.
-- The structure pipeline reuses the existing bounded coordinate parser/viewer. It does not infer bonds, biological assemblies, secondary structure or confidence.
-- Sequence retrieval invokes the existing FASTA QC workflow only. It does not automatically run every sequence capability.
+### Remaining work / not claimed
+
+- The NCBI Gene card exposes ELink discovery for linked nucleotide and protein records; those linked accessions use the existing FASTA retrieval and QC path. This is not full gene annotation or transcript-to-protein biological interpretation.
+- Saved records are listed and deletable; FASTA can be re-analysed and mmCIF reopened. A richer saved-record detail/history browser remains open.
+- The metadata index and analysis JSON are app-private SQLite but are not encrypted at rest; only raw source payloads use Android Keystore AES-GCM chunked encryption.
+- Explicit cancellation, retry/backoff, ETag/source-release capture, licence/terms metadata, cache quota/eviction and background WorkManager retrieval remain open.
+- RCSB discovery currently requires a four-character entry ID; text, ligand and organism search are not implemented.
+- ENA, Ensembl, UCSC, PDBj, AlphaFold DB, PubChem, ChEBI, GEO and SRA remain future adapters pending source-specific terms, licences, rate limits and tests.
+- The structure path reuses the existing bounded coordinate parser/viewer. It does not infer biological assemblies, secondary structure, confidence, or a validated molecular surface.
+- Sequence retrieval invokes the existing bounded FASTA QC workflow only. It does not automatically run every sequence capability or provide clinical interpretation.
+- Broader parser coverage, canonical schema versioning and typed engine-registry dispatch remain open.
+- Exact-head CI and physical-device acceptance must pass before release readiness can be claimed.
 
 The public-data catalogue remains descriptive metadata. A source is not enabled for bulk mirroring or redistribution until its terms, licence, attribution, rate limits and intended-use requirements are reviewed. CI success does not establish provider availability or scientific validity.

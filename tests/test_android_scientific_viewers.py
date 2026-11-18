@@ -16,7 +16,7 @@ def test_home_routes_to_real_offline_structure_and_chemistry_viewers() -> None:
     assert "Scientific services" in ui
     assert "fun ExploreScreen" not in ui
     assert "KineticsTab.Explore" not in ui
-    assert "StructureViewerPreview()" in ui
+    assert "StructureViewerPreview(publicRecord = publicStructureRecord)" in ui
     assert "LigandGraphPreviewCard()" in ui
     assert "WebViewAssetLoader" in viewer
     assert "settings.blockNetworkLoads = true" in viewer

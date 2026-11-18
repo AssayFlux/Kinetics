@@ -88,3 +88,29 @@ Engineering closure is not held open merely because a scientific or ethics appro
 The following are external/owner gates rather than ordinary coding tasks: ethics approval for a defined protocol; data-use permissions and licences; qualified clinical/PGx review; independent scientific concordance; owner risk decisions; physical-device testing where no device is attached to CI. The app must not imply that those approvals have been granted.
 
 The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. It records the supported research-only demo path, local data handling, explicit exclusions and evidence gaps without claiming ethics approval.
+
+
+## 7. Public database retrieval integration — 2026-11-18
+
+### Source implementation now present
+- `PublicDatabaseClient.kt`: allow-listed HTTPS adapters for NCBI Gene/nuccore/protein, UniProtKB and RCSB PDB mmCIF-by-entry-ID.
+- `PublicDatabaseCard.kt`: Home search and retrieval controls, sequence analysis dispatch, saved-record listing and deletion.
+- `PublicRecordStore.kt`: encrypted app-private source payload cache using Android Keystore AES-GCM chunked files; SQLite metadata index.
+- `StructureViewer.kt`: accepts fetched RCSB mmCIF, invokes the existing Python preparation/parser and opens the offline structure viewer.
+- `KineticsUi.kt`: connects public structure retrieval to the existing Home structure viewer.
+- `PublicDatabaseClientValidationTest.kt`: input-validation tests for unsupported databases, malformed accessions and malformed PDB IDs.
+
+### Current truthful status
+- NCBI nucleotide/protein and UniProt FASTA: retrieval, encrypted payload save and existing on-device FASTA QC are wired in source.
+- RCSB PDB entry ID: mmCIF retrieval, encrypted payload save and existing parser/viewer handoff are wired in source.
+- NCBI Gene: metadata search only; no linked transcript/protein sequence action yet.
+- Saved records: visible and deletable; reopen/reanalyse is not yet a complete user workflow.
+- Source payload encryption is implemented; SQLite metadata and analysis JSON remain plaintext within app-private storage.
+- RCSB search is entry-ID based, not text/ligand/organism discovery.
+- Provider retry/cancellation, release/licence metadata, cache quotas, physical-device behavior and scientific validation remain open.
+
+### Required verification
+- Latest exact-main CI run: `44228107344` on source commit `9ddc0d9299b802781f399d1b78e0362266ab7c8e`; status pending at documentation update.
+- Do not report APK availability until artifact enumeration confirms a non-empty APK and its SHA-256.
+- Device tests must cover network failure, malformed response, large structure, Keystore loss, saved-record deletion, FASTA result persistence and actual 3D viewer opening.
+- Track U remains OPEN. Public retrieval source integration is not equivalent to U-track completion or scientific validation.

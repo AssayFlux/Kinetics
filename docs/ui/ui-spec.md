@@ -109,3 +109,8 @@ Consistent spacing, typography, radii, icons and component heights; balanced whi
 
 ## Track U
 The two-step execution plan and exact evidence requirements are in docs/track-u/implementation-plan.md. This document defines the desired UI, not a completion claim.
+
+
+## Public scientific database card — 2026-11-18
+
+Home includes an in-app public reference search card for NCBI Gene, NCBI Nucleotide, NCBI Protein, UniProtKB and RCSB PDB entry IDs. Search/retrieval is explicit user action. Fetched FASTA records are analysed by the existing local sequence QC workflow; fetched RCSB mmCIF records are handed to the existing offline structure parser/viewer. Raw public records are encrypted in app-private storage and can be deleted from the Home saved-record list. The source metadata and analysis result index are currently app-private SQLite without encryption at rest. The card must retain the monochrome visual system and use semantic status colours only. Search result browsing/reopen, cancellation, provider retry, accessibility/device acceptance and broader provider search remain open.

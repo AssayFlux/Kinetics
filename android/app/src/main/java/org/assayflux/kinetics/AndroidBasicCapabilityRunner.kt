@@ -34,6 +34,9 @@ internal object AndroidBasicCapabilityRunner {
         "kinetics.bootstrap_intervals",
         "protein.design_brief_validation",
         "structure.geometry_screen_metrics",
+        "phylo.nj_site_bootstrap",
+        "structure.exact_sequence_mapping",
+        "structure.chain_interface_contacts",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

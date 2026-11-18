@@ -464,6 +464,9 @@ private fun ServiceDetailScreen(
         "kinetics.bootstrap_intervals",
         "protein.design_brief_validation",
         "structure.geometry_screen_metrics",
+        "phylo.nj_site_bootstrap",
+        "structure.exact_sequence_mapping",
+        "structure.chain_interface_contacts",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -715,6 +718,33 @@ private fun ServiceDetailScreen(
                     description = "Summarize PDB atom/residue counts and bounded steric-overlap candidates. Geometry QC only; not a structure-quality certification.",
                     sample = "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\nTER\nEND\n",
                     actionLabel = "Screen geometry",
+                ) }
+            }
+            if (capability?.id == "phylo.nj_site_bootstrap") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "phylo.nj_site_bootstrap",
+                    title = "Neighbour-joining site bootstrap",
+                    description = "Estimate exploratory split support by resampling aligned nucleotide sites. Input JSON includes 4–10 aligned sequences and seed.",
+                    sample = "{\"sequences\":{\"A\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"B\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC\",\"C\":\"CCCCCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAAAAA\",\"D\":\"CCCCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAAAAAC\"},\"replicates\":100,\"seed\":7}",
+                    actionLabel = "Bootstrap tree",
+                ) }
+            }
+            if (capability?.id == "structure.exact_sequence_mapping") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "structure.exact_sequence_mapping",
+                    title = "Exact sequence-to-structure mapping",
+                    description = "Map a canonical protein sequence to a uniquely matching PDB chain. Input JSON includes sequence, chain_id and pdb.",
+                    sample = "{\"sequence\":\"G\",\"chain_id\":\"A\",\"pdb\":\"ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\nTER\\nEND\\n\"}",
+                    actionLabel = "Map chain",
+                ) }
+            }
+            if (capability?.id == "structure.chain_interface_contacts") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "structure.chain_interface_contacts",
+                    title = "Chain interface contacts",
+                    description = "Count inter-chain heavy-atom contacts and minimum residue-pair distances from PDB. Geometric contact evidence only.",
+                    sample = "{\"chain_a\":\"A\",\"chain_b\":\"B\",\"pdb\":\"ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\nATOM      2  CA  GLY B   1      16.000  13.800   9.500  1.00 20.00           C\\nTER\\nEND\\n\"}",
+                    actionLabel = "Count contacts",
                 ) }
             }
             if (capability?.id == "structure.ligand_site_candidates" ||

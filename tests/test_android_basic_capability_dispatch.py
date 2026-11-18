@@ -249,3 +249,31 @@ def test_protein_design_brief_gate_and_structure_geometry_screen():
     )
     geometry = _run_probe("structure.geometry_screen_metrics", pdb)
     assert geometry
+
+def test_phylogenetic_bootstrap_and_structure_mapping_routes_execute():
+    sequences = {
+        "A": "A" * 40,
+        "B": "A" * 39 + "C",
+        "C": "C" * 20 + "A" * 20,
+        "D": "C" * 19 + "A" * 21,
+    }
+    bootstrap = _run_probe(
+        "phylo.nj_site_bootstrap",
+        __import__("json").dumps({"sequences": sequences, "replicates": 100, "seed": 7}),
+    )
+    assert bootstrap["successful_replicates"] > 0
+    assert bootstrap["leaf_count"] == 4
+
+    pdb_a = "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\n"
+    pdb_b = "ATOM      2  CA  GLY B   1      16.000  13.800   9.500  1.00 20.00           C\n"
+    pdb = pdb_a + pdb_b + "TER\nEND\n"
+    mapping = _run_probe(
+        "structure.exact_sequence_mapping",
+        __import__("json").dumps({"sequence": "G", "chain_id": "A", "pdb": pdb}),
+    )
+    assert mapping["status"] == "exact_unique_match"
+    contacts = _run_probe(
+        "structure.chain_interface_contacts",
+        __import__("json").dumps({"chain_a": "A", "chain_b": "B", "pdb": pdb}),
+    )
+    assert contacts

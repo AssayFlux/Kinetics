@@ -697,6 +697,73 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Atom pairs in the same residue are excluded because bond topology is unavailable",
             "Unknown elements are excluded rather than assigned estimated radii",
         ]
+    elif capability_id == "phylo.nj_site_bootstrap":
+        from kinetics.phylo import bootstrap_neighbor_joining_from_alignment, to_newick
+        try:
+            parameters = json.loads(sequence_text)
+            sequences = parameters["sequences"]
+            replicates = parameters.get("replicates", 100)
+            seed = parameters.get("seed", 0)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with aligned sequences and optional replicates/seed") from exc
+        if not isinstance(sequences, dict) or not 4 <= len(sequences) <= 10:
+            raise ValueError("Mobile NJ bootstrap requires 4–10 named aligned sequences")
+        if sum(len(value) for value in sequences.values() if isinstance(value, str)) > 50_000:
+            raise ValueError("Alignment exceeds the 50,000-base aggregate mobile limit")
+        if not isinstance(replicates, int) or isinstance(replicates, bool) or not 100 <= replicates <= 200:
+            raise ValueError("Mobile bootstrap replicates must be between 100 and 200")
+        result = bootstrap_neighbor_joining_from_alignment(
+            sequences, replicates=replicates, seed=seed, minimum_sites=20,
+        )
+        result["tree"] = to_newick(result["tree"])
+        result["leaf_count"] = len(sequences)
+        limitations = [
+            "Exploratory Jukes–Cantor + neighbour-joining site bootstrap, not maximum-likelihood inference",
+            "Input must be a pre-aligned homologous nucleotide alignment",
+            "Support denominator excludes failed replicate trees; failure counts are returned",
+        ]
+    elif capability_id == "structure.exact_sequence_mapping":
+        from kinetics.sequence_structure import map_exact_chain_sequence
+        from kinetics.structure import parse_pdb
+        try:
+            parameters = json.loads(sequence_text)
+            query = parameters["sequence"]
+            chain_id = parameters["chain_id"]
+            pdb_text = parameters["pdb"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with sequence, chain_id and pdb") from exc
+        if not isinstance(pdb_text, str) or len(pdb_text) > 1_000_000:
+            raise ValueError("PDB text exceeds the 1 MB mobile limit")
+        atoms = parse_pdb(pdb_text, include_hetero=False)
+        result = map_exact_chain_sequence(
+            query, atoms, chain_id=chain_id,
+            max_query_residues=5_000, max_structure_residues=5_000, max_atoms=20_000,
+        )
+        limitations = [
+            "Exact unique chain-sequence mapping only; insertion-code-aware mapping is unsupported",
+            "Coordinate correspondence only; no structural, functional or clinical effect is predicted",
+        ]
+    elif capability_id == "structure.chain_interface_contacts":
+        from kinetics.sequence_structure import chain_interface_contacts
+        from kinetics.structure import parse_pdb
+        try:
+            parameters = json.loads(sequence_text)
+            chain_a = parameters["chain_a"]
+            chain_b = parameters["chain_b"]
+            pdb_text = parameters["pdb"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with chain_a, chain_b and pdb") from exc
+        if not isinstance(pdb_text, str) or len(pdb_text) > 1_000_000:
+            raise ValueError("PDB text exceeds the 1 MB mobile limit")
+        atoms = parse_pdb(pdb_text, include_hetero=False)
+        result = chain_interface_contacts(
+            atoms, chain_a=chain_a, chain_b=chain_b,
+            max_atoms=5_000, max_candidate_pairs=100_000, max_residue_pairs=10_000,
+        )
+        limitations = [
+            "Heavy-atom geometric contact counts only; not an interface energy or affinity estimate",
+            "No hydrogen placement, solvent, biological assembly or functional effect is inferred",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

@@ -6,7 +6,7 @@
 |---|---|---|---|
 | ui.home | Owner-blueprint dashboard | ui.home | four live summary panels and repository-backed horizontal service-area carousel implemented; visual/device acceptance pending |
 | ui.work | Work / job list and actions | ui.work | source present; import/job actions exist; registry-backed catalogue only; full analysis dispatcher not connected |
-| ui.services | Service carousel destinations | capability catalogue | 14 capability domains plus Public Reference Databases; dedicated domain destinations and existing workflow cards integrated; per-capability execution dispatch remains bounded and must not be inferred from catalogue status |
+| ui.services | Service carousel destinations | capability catalogue | 68 capability cards plus Public Reference Databases; each card is keyed by capability ID and opens a dedicated service detail page; execution dispatch remains bounded and must not be inferred from catalogue status |
 | ui.settings | Settings / theme family and diagnostics | ui.settings | partial; persistent Light/Dark/System preference and diagnostics; accessibility/device proof pending |
 | ui.domains | Service domain detail | ui.domains | domain-specific destination source implemented from capability catalogue; richer search/favourites/typed execution routing remain open |
 | ui.tools | Tool search/favourites/runner | ui.tools | planned |

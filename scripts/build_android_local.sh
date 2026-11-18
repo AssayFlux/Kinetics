@@ -138,34 +138,71 @@ curl --fail --location --retry 3 \
   "https://chaquo.com/pypi-13.1/numpy/$NUMPY_WHEEL" \
   --output "server/pypi/dist/numpy/$NUMPY_WHEEL"
 
-echo "[3/6] Cross-build pinned Biopython $BIOPYTHON_VERSION Android arm64 wheel"
-if [[ ! -d "$BIOPYTHON_DIR/.git" ]]; then
-  rm -rf "$BIOPYTHON_DIR"
-  mkdir -p "$(dirname "$BIOPYTHON_DIR")"
-  git clone --filter=blob:none --no-checkout https://github.com/biopython/biopython.git "$BIOPYTHON_DIR"
-fi
-git -C "$BIOPYTHON_DIR" fetch --depth 1 origin "$BIOPYTHON_COMMIT"
-git -C "$BIOPYTHON_DIR" checkout --detach "$BIOPYTHON_COMMIT"
-[[ "$(git -C "$BIOPYTHON_DIR" rev-parse HEAD)" == "$BIOPYTHON_COMMIT" ]] || fail "Biopython source revision differs from the pinned commit."
-BIOPYTHON_SOURCE_DIR="$BIOPYTHON_DIR/source"
-rm -rf "$BIOPYTHON_SOURCE_DIR"
-mkdir -p "$BIOPYTHON_SOURCE_DIR"
-git -C "$BIOPYTHON_DIR" archive "$BIOPYTHON_COMMIT" | tar -x -C "$BIOPYTHON_SOURCE_DIR"
-BIOPYTHON_RECIPE="$CHAQUOPY_DIR/server/pypi/kinetics-biopython-recipe"
-rm -rf "$BIOPYTHON_RECIPE"
-mkdir -p "$BIOPYTHON_RECIPE"
-cp "$ANDROID_DIR/biopython-wheel/meta.yaml" "$BIOPYTHON_RECIPE/meta.yaml"
-python - "$BIOPYTHON_RECIPE/meta.yaml" "$BIOPYTHON_SOURCE_DIR" <<'PY'
+echo "[3/6] Prepare pinned Biopython $BIOPYTHON_VERSION Android arm64 wheel"
+BIOPYTHON_WHEEL_DIR="$ANDROID_DIR/app/libs/python-wheels"
+BIOPYTHON_WHEEL="$BIOPYTHON_WHEEL_DIR/biopython-1.88-0-cp311-cp311-android_24_arm64_v8a.whl"
+BIOPYTHON_WHEEL_INFO="$BIOPYTHON_WHEEL_DIR/biopython-1.88-android-arm64.build-info"
+BIOPYTHON_BUILD_ID="version=$BIOPYTHON_VERSION
+source_commit=$BIOPYTHON_COMMIT
+chaquopy_commit=$CHAQUOPY_COMMIT
+python_target=$PYTHON_TARGET
+abi=arm64-v8a
+recipe_sha256=$(sha256sum "$ANDROID_DIR/biopython-wheel/meta.yaml" | awk '{print $1}')"
+mkdir -p "$BIOPYTHON_WHEEL_DIR"
+if [[ -s "$BIOPYTHON_WHEEL" && -s "$BIOPYTHON_WHEEL_INFO" ]] &&
+   [[ "$(cat "$BIOPYTHON_WHEEL_INFO")" == "$BIOPYTHON_BUILD_ID
+wheel_sha256=$(sha256sum "$BIOPYTHON_WHEEL" | awk '{print $1}')" ]]; then
+  python - "$BIOPYTHON_WHEEL" <<'PY'
+import sys, zipfile
+from pathlib import Path
+wheel = Path(sys.argv[1])
+with zipfile.ZipFile(wheel) as archive:
+    bad = archive.testzip()
+    names = archive.namelist()
+    metadata = next((n for n in names if n.endswith(".dist-info/METADATA")), None)
+    wheel_meta = next((n for n in names if n.endswith(".dist-info/WHEEL")), None)
+    if bad or metadata is None or wheel_meta is None:
+        raise SystemExit("Cached Biopython wheel failed ZIP/metadata validation")
+    if "Name: biopython" not in archive.read(metadata).decode():
+        raise SystemExit("Cached wheel has unexpected package metadata")
+    if "Version: 1.88" not in archive.read(metadata).decode():
+        raise SystemExit("Cached wheel has unexpected package version")
+    if "Tag: cp311-cp311-android_24_arm64_v8a" not in archive.read(wheel_meta).decode():
+        raise SystemExit("Cached wheel has unexpected Android ABI tag")
+print(f"Reusing verified cached Biopython wheel: {wheel.stat().st_size} bytes")
+PY
+else
+  echo "No verified Biopython wheel cache found; performing pinned source build."
+  if [[ ! -d "$BIOPYTHON_DIR/.git" ]]; then
+    rm -rf "$BIOPYTHON_DIR"
+    mkdir -p "$(dirname "$BIOPYTHON_DIR")"
+    git clone --filter=blob:none --no-checkout https://github.com/biopython/biopython.git "$BIOPYTHON_DIR"
+  fi
+  git -C "$BIOPYTHON_DIR" fetch --depth 1 origin "$BIOPYTHON_COMMIT"
+  git -C "$BIOPYTHON_DIR" checkout --detach "$BIOPYTHON_COMMIT"
+  [[ "$(git -C "$BIOPYTHON_DIR" rev-parse HEAD)" == "$BIOPYTHON_COMMIT" ]] || fail "Biopython source revision differs from the pinned commit."
+  BIOPYTHON_SOURCE_DIR="$BIOPYTHON_DIR/source"
+  rm -rf "$BIOPYTHON_SOURCE_DIR"
+  mkdir -p "$BIOPYTHON_SOURCE_DIR"
+  git -C "$BIOPYTHON_DIR" archive "$BIOPYTHON_COMMIT" | tar -x -C "$BIOPYTHON_SOURCE_DIR"
+  BIOPYTHON_RECIPE="$CHAQUOPY_DIR/server/pypi/kinetics-biopython-recipe"
+  rm -rf "$BIOPYTHON_RECIPE"
+  mkdir -p "$BIOPYTHON_RECIPE"
+  cp "$ANDROID_DIR/biopython-wheel/meta.yaml" "$BIOPYTHON_RECIPE/meta.yaml"
+  python - "$BIOPYTHON_RECIPE/meta.yaml" "$BIOPYTHON_SOURCE_DIR" <<'PY'
 import json, sys
 from pathlib import Path
 recipe = Path(sys.argv[1])
 source = json.dumps(str(Path(sys.argv[2]).resolve()))
-recipe.write_text(recipe.read_text() + f"\nsource:\n  path: {source}\n")
+recipe.write_text(recipe.read_text() + f"\\nsource:\\n  path: {source}\\n")
 PY
-cd "$CHAQUOPY_DIR/server/pypi"
-python build-wheel.py --python 3.11 --abi arm64-v8a "$BIOPYTHON_RECIPE"
-mkdir -p "$ANDROID_DIR/app/libs/python-wheels"
-cp dist/biopython/*.whl "$ANDROID_DIR/app/libs/python-wheels/"
+  cd "$CHAQUOPY_DIR/server/pypi"
+  python build-wheel.py --python 3.11 --abi arm64-v8a "$BIOPYTHON_RECIPE"
+  cp dist/biopython/*.whl "$BIOPYTHON_WHEEL"
+  BIOPYTHON_WHEEL_SHA="$(sha256sum "$BIOPYTHON_WHEEL" | awk '{print $1}')"
+  printf '%s\\nwheel_sha256=%s\\n' "$BIOPYTHON_BUILD_ID" "$BIOPYTHON_WHEEL_SHA" > "$BIOPYTHON_WHEEL_INFO"
+  echo "Created pinned Biopython wheel cache: $BIOPYTHON_WHEEL_SHA"
+fi
 
 echo "[4/6] Build local debug APK and AAB"
 cd "$ANDROID_DIR"

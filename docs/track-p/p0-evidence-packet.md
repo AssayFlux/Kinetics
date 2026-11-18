@@ -1,6 +1,6 @@
 # P0 — Governance and safety evidence packet
 
-**Status: OWNER-AUTHORIZED RESEARCH-TESTING GATE OPEN (D-024, 2026-11-18).**  
+**Status: OWNER-AUTHORIZED RESEARCH-TESTING GATE OPEN (D-025, 2026-11-18).**  
 **Institutional approval:** The project owner declares that institutional ethics approval has been obtained. The approval document, reference, institution, date, approved protocol scope and conditions have not yet been attached to this repository and are not independently verified here.  
 **Engineering authorization:** Full software implementation and testing, including institutionally authorized patient-data research testing, are authorized by the project owner.  
 **Remaining boundary:** This does not by itself establish regulatory clearance, clinical validity, medical-device authorization or permission for clinical deployment or treatment decisions.
@@ -37,7 +37,7 @@ Before importing any patient-derived dataset, the operator must ensure that the 
 | P0-E09 | Independent scientific validation strategy, truth sets, metrics, subgroup/bias analysis and abstention | Draft staged validation matrix in p0-controls-draft.md; independent reviewer approval pending; no clinical validation claimed | Independent scientific reviewers |
 | P0-E10 | Incident, stop-work, withdrawal, breach escalation and safe disablement procedure | Draft stop-work and incident workflow in p0-controls-draft.md; owner/security/privacy review pending | Owner + security/privacy leads |
 | P0-E11 | Consolidated risk register with mitigations, residual-risk acceptance and owners | Initial draft below; review pending | Engineering + owner + advisers |
-| P0-E12 | Final evidence review and explicit owner P0 gate decision recorded in DECISIONS.md | D-024 opens engineering and institutionally authorized research-testing scope; clinical deployment decision remains separate and open | Project owner |
+| P0-E12 | Final evidence review and explicit owner P0 gate decision recorded in DECISIONS.md | D-025 opens engineering and institutionally authorized research-testing scope; clinical deployment decision remains separate and open | Project owner |
 
 ## 4. Work products to prepare
 - Intended-use and claims register: users, environment, inputs/outputs, foreseeable misuse, exclusions and jurisdiction assumptions.

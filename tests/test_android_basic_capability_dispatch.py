@@ -384,20 +384,20 @@ def test_hmmer_domtblout_parser_and_threshold_ranker_mobile_routes():
             },
         }),
     )
-    assert parsed["result"]["schema"] == "kinetics.hmmscan-domain-evidence.v1"
-    assert len(parsed["result"]["hits"]) == 1
+    assert parsed["schema"] == "kinetics.hmmscan-domain-evidence.v1"
+    assert len(parsed["hits"]) == 1
     ranked = _run_probe(
         "protein.hmmer_domain_candidate_ranking",
         json.dumps({
-            "evidence": parsed["result"],
+            "evidence": parsed,
             "max_independent_evalue": 1e-5,
             "min_profile_coverage": 0.5,
             "min_query_coverage": 0.5,
             "min_accuracy": 0.5,
         }),
     )
-    assert ranked["result"]["passing_candidate_count"] == 1
-    assert ranked["result"]["candidates"][0]["rank"] == 1
+    assert ranked["passing_candidate_count"] == 1
+    assert ranked["candidates"][0]["rank"] == 1
 
 
 def test_hmmer_routes_are_explicitly_allow_listed_in_ui_kotlin_and_python():

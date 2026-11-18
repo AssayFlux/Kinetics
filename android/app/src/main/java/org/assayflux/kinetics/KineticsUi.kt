@@ -182,7 +182,7 @@ internal fun KineticsAppShell(
                             showSearch -> "Search"
                             showComponentGallery -> "Design system"
                             showProfile -> "Profile"
-                            selectedServiceId != null -> selectedServiceId!!
+                            selectedServiceId != null -> capabilities.firstOrNull { it.id == selectedServiceId }?.name ?: "Service"
                             tab == KineticsTab.Home -> ""
                             else -> "KINETICS"
                         },
@@ -500,7 +500,18 @@ private fun HomeScreen(
     onExportAnalysis: (ResearchJob) -> Unit, onAnalyzeFastq: (ResearchJob, Int) -> Unit, modifier: Modifier,
 ) {
     val context = LocalContext.current
-    val services = remember(context) { runCatching { loadCapabilityCatalogue(context) }.getOrDefault(emptyList()) }
+    val services = remember(context) {
+        runCatching {
+            loadCapabilityCatalogue(context) + CapabilityEntry(
+                id = "public.reference_databases",
+                name = "Public reference databases",
+                status = "implemented",
+                implementation = "PublicDatabaseClient.kt",
+                evidenceLevel = "none",
+                domain = "Public reference databases",
+            )
+        }.getOrDefault(emptyList())
+    }
     val active = jobs.count { it.state in listOf("queued", "running", "cancel_requested") }
     val done = jobs.count { it.state == "succeeded" }
     val attention = jobs.count { it.state in listOf("failed", "recovery_required") }

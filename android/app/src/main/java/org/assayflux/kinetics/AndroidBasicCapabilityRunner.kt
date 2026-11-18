@@ -21,6 +21,9 @@ internal object AndroidBasicCapabilityRunner {
         "structure.interaction_candidates",
         "microbiome.diversity",
         "omics.logistic_growth",
+        "sequence.explicit_genetic_code_translation",
+        "kinetics.inhibition_rate",
+        "phylo.upgma",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

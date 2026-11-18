@@ -383,6 +383,80 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Deterministic logistic model only; no parameter fitting or confidence intervals",
             "Parameters and output units must be interpreted in the context of the study design",
         ]
+    elif capability_id == "sequence.explicit_genetic_code_translation":
+        from kinetics.genetic_code import translate_coding_sequence
+        try:
+            parameters = json.loads(sequence_text)
+            sequence = parameters["sequence"]
+            table_id = parameters.get("table_id", 1)
+            frame = parameters.get("frame", 0)
+            cds = parameters.get("cds", False)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "Provide JSON with sequence and optional table_id, frame and cds"
+            ) from exc
+        if not isinstance(sequence, str) or len(sequence) > 100_000:
+            raise ValueError("Coding sequence must be text within the 100,000-base mobile limit")
+        result = translate_coding_sequence(
+            sequence, table_id=table_id, frame=frame, cds=cds,
+        )
+        limitations = [
+            "Caller-selected NCBI genetic code only; the organism's code is not inferred",
+            "Translation does not identify coding regions or variants",
+        ]
+    elif capability_id == "kinetics.inhibition_rate":
+        import math
+        from kinetics.kinetics import inhibition_rate
+        try:
+            parameters = json.loads(sequence_text)
+            substrate = float(parameters["substrate"])
+            inhibitor = float(parameters["inhibitor"])
+            vmax = float(parameters["vmax"])
+            km = float(parameters["km"])
+            ki = float(parameters["ki"])
+            mode = parameters["mode"]
+            ki_uncompetitive = parameters.get("ki_uncompetitive")
+            if ki_uncompetitive is not None:
+                ki_uncompetitive = float(ki_uncompetitive)
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "Provide numeric substrate, inhibitor, vmax, km, ki and a valid mode in JSON"
+            ) from exc
+        values = [substrate, inhibitor, vmax, km, ki]
+        if ki_uncompetitive is not None:
+            values.append(ki_uncompetitive)
+        if not all(math.isfinite(value) for value in values):
+            raise ValueError("Inhibition model parameters must be finite numbers")
+        rate = inhibition_rate(
+            substrate, inhibitor, vmax, km, ki, mode, ki_uncompetitive,
+        )
+        result = {"rate": rate, "mode": mode}
+        limitations = [
+            "Deterministic idealized inhibition equation; no parameter fitting or confidence intervals",
+            "Mixed inhibition requires an explicit ki_uncompetitive value",
+            "Units must be consistent and model choice must be justified experimentally",
+        ]
+    elif capability_id == "phylo.upgma":
+        from kinetics.phylo import to_newick, upgma
+        try:
+            parameters = json.loads(sequence_text)
+            labels = parameters["labels"]
+            distance_matrix = parameters["distance_matrix"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "Provide JSON with labels and distance_matrix"
+            ) from exc
+        if not isinstance(labels, list) or len(labels) > 200:
+            raise ValueError("UPGMA requires a list of 2–200 unique labels")
+        if not isinstance(distance_matrix, list):
+            raise ValueError("distance_matrix must be a square numeric matrix")
+        root = upgma(distance_matrix, labels)
+        result = {"newick": to_newick(root), "leaf_count": len(labels)}
+        limitations = [
+            "UPGMA assumes an ultrametric/equal-rate evolutionary process",
+            "Tree topology depends entirely on the supplied distance matrix",
+            "No sequence alignment, distance estimation or bootstrap support is performed",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

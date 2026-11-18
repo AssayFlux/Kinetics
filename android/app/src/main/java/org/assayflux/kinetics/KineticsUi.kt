@@ -451,6 +451,9 @@ private fun ServiceDetailScreen(
         "structure.interaction_candidates",
         "microbiome.diversity",
         "omics.logistic_growth",
+        "sequence.explicit_genetic_code_translation",
+        "kinetics.inhibition_rate",
+        "phylo.upgma",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -585,6 +588,33 @@ private fun ServiceDetailScreen(
                     description = "Enter JSON with timepoints, carrying_capacity, growth_rate and initial. Returns deterministic model predictions.",
                     sample = "{\"timepoints\":[0,1,2,3,4],\"carrying_capacity\":100,\"growth_rate\":0.5,\"initial\":5}",
                     actionLabel = "Run growth model",
+                ) }
+            }
+            if (capability?.id == "sequence.explicit_genetic_code_translation") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "sequence.explicit_genetic_code_translation",
+                    title = "Explicit genetic-code translation",
+                    description = "Translate one coding sequence using a caller-selected NCBI table and reading frame. Input JSON: sequence, table_id, frame, cds.",
+                    sample = "{\"sequence\":\"ATGGCTTAA\",\"table_id\":1,\"frame\":0,\"cds\":true}",
+                    actionLabel = "Translate sequence",
+                ) }
+            }
+            if (capability?.id == "kinetics.inhibition_rate") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "kinetics.inhibition_rate",
+                    title = "Enzyme inhibition rate",
+                    description = "Calculate competitive, uncompetitive, noncompetitive or mixed inhibition rate. Supply substrate, inhibitor, Vmax, Km, Ki and mode as JSON.",
+                    sample = "{\"substrate\":10,\"inhibitor\":2,\"vmax\":100,\"km\":5,\"ki\":1,\"mode\":\"competitive\"}",
+                    actionLabel = "Calculate inhibition rate",
+                ) }
+            }
+            if (capability?.id == "phylo.upgma") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "phylo.upgma",
+                    title = "UPGMA tree construction",
+                    description = "Build a rooted UPGMA tree from a finite symmetric distance matrix and unique labels. Supply distance_matrix and labels as JSON.",
+                    sample = "{\"labels\":[\"A\",\"B\",\"C\"],\"distance_matrix\":[[0,2,4],[2,0,4],[4,4,0]]}",
+                    actionLabel = "Build UPGMA tree",
                 ) }
             }
             if (capability?.id == "structure.ligand_site_candidates" ||

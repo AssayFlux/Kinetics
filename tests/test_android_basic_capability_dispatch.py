@@ -134,3 +134,21 @@ def test_android_probe_rejects_unknown_capability_and_malformed_parameters():
         kinetics_probe.run_android_basic_capability("kinetics.michaelis_menten", "10,100")
     with pytest.raises(ValueError, match="two non-empty sequences"):
         kinetics_probe.run_android_basic_capability("sequence.global_alignment", "ACGT")
+
+def test_translation_inhibition_and_upgma_routes_execute_and_validate():
+    translated = _run_probe(
+        "sequence.explicit_genetic_code_translation",
+        '{"sequence":"ATGGCTTAA","table_id":1,"frame":0,"cds":true}',
+    )
+    assert translated["protein"].startswith("MA")
+    inhibited = _run_probe(
+        "kinetics.inhibition_rate",
+        '{"substrate":10,"inhibitor":2,"vmax":100,"km":5,"ki":1,"mode":"competitive"}',
+    )
+    assert inhibited["rate"] > 0
+    tree = _run_probe(
+        "phylo.upgma",
+        '{"labels":["A","B","C"],"distance_matrix":[[0,2,4],[2,0,4],[4,4,0]]}',
+    )
+    assert tree["leaf_count"] == 3
+    assert tree["newick"].endswith(";")

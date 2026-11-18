@@ -1235,75 +1235,71 @@ internal fun BiometricLockScreen(
     }
     MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Box(
+                Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 32.dp),
+                contentAlignment = Alignment.Center,
             ) {
-                Card(
-                    modifier = Modifier.fillMaxWidth().widthIn(max = 480.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    border = androidx.compose.foundation.BorderStroke(
-                        1.dp, MaterialTheme.colorScheme.outline,
-                    ),
+                Column(
+                    Modifier.fillMaxWidth().widthIn(max = 420.dp)
+                        .clip(RoundedCornerShape(30.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .padding(horizontal = 16.dp, vertical = 22.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Column(
-                        Modifier.fillMaxWidth().padding(28.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    repeat(3) {
+                        Surface(
+                            modifier = Modifier.fillMaxWidth().height(54.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            color = MaterialTheme.colorScheme.surface,
+                        ) {}
+                    }
+                    Surface(
+                        modifier = Modifier.fillMaxWidth().height(54.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surface,
                     ) {
-                        Text(
-                            "DEVICE SECURITY",
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.6.sp,
-                        )
-                        Text(
-                            "Welcome back",
-                            style = MaterialTheme.typography.headlineLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Text(
-                            "Unlock your local Kinetics research workspace.",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Text(
-                            "Use your enrolled biometric or your device screen credential to continue.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                        if (error != null) {
-                            Surface(
-                                color = MaterialTheme.colorScheme.errorContainer,
-                                shape = RoundedCornerShape(6.dp),
-                                modifier = Modifier.fillMaxWidth(),
+                        Box(contentAlignment = Alignment.Center) {
+                            IconButton(
+                                onClick = onRetry,
+                                modifier = Modifier.size(52.dp)
+                                    .semantics { contentDescription = "Unlock with device biometric or screen credential" },
                             ) {
-                                Text(
-                                    error,
-                                    Modifier.padding(14.dp),
-                                    color = MaterialTheme.colorScheme.onErrorContainer,
-                                    style = MaterialTheme.typography.bodySmall,
+                                Icon(
+                                    Icons.Outlined.Fingerprint,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(30.dp),
+                                    tint = MaterialTheme.colorScheme.primary,
                                 )
                             }
                         }
-                        Button(
-                            onClick = onRetry,
-                            modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-                            shape = RoundedCornerShape(10.dp),
-                        ) {
-                            Text("Try again")
-                        }
+                    }
+                    Text(
+                        "LOCAL DEVICE UNLOCK",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 1.1.sp,
+                    )
+                    if (error != null) {
                         Text(
-                            "This is a device-local app lock, not an online account sign-in. Android handles biometric data; Kinetics does not receive or store biometric templates.",
+                            error,
+                            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Unlock error: $error" },
+                            color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
+                    Text(
+                        "Use your enrolled biometric or device screen credential. This is not an online account sign-in.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    TextButton(onClick = onRetry) { Text("Try again") }
+                    Text(
+                        "Android manages biometric data. Kinetics does not receive or store biometric templates.",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
                 }
             }
         }

@@ -154,11 +154,12 @@ internal fun KineticsAppShell(
                     Spacer(Modifier.height(12.dp))
                     KineticsTab.entries.forEach { item ->
                         NavigationDrawerItem(
-                            selected = tab == item && selectedServiceId == null && !showProfile,
+                            selected = tab == item && selectedServiceId == null && !showProfile && !showSearch,
                             onClick = {
                                 tab = item
                                 selectedServiceId = null
                                 showProfile = false
+                                showSearch = false
                                 drawerScope.launch { drawerState.close() }
                             },
                             icon = { KineticsTabIcon(item) },
@@ -166,6 +167,18 @@ internal fun KineticsAppShell(
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
                         )
                     }
+                    NavigationDrawerItem(
+                        selected = showSearch,
+                        onClick = {
+                            showSearch = true
+                            showProfile = false
+                            selectedServiceId = null
+                            drawerScope.launch { drawerState.close() }
+                        },
+                        icon = { Icon(Icons.Outlined.Search, contentDescription = null) },
+                        label = { Text("Search") },
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
+                    )
                     Spacer(Modifier.weight(1f))
                     HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                     Text("RESEARCH MODE", modifier = Modifier.padding(horizontal = 24.dp, vertical = 18.dp),
@@ -216,9 +229,6 @@ internal fun KineticsAppShell(
                         },
                         actions = {
                             if (!showSearch && !showComponentGallery && !showProfile && selectedServiceId == null) {
-                                IconButton(onClick = { showSearch = true }, modifier = Modifier.size(48.dp)) {
-                                    Icon(Icons.Outlined.Search, contentDescription = "Search jobs and capabilities")
-                                }
                                 IconButton(onClick = { showProfile = true }, modifier = Modifier.size(48.dp)) {
                                     Icon(Icons.Outlined.AccountCircle, contentDescription = "Open profile")
                                 }

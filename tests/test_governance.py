@@ -49,8 +49,8 @@ def test_security_and_data_flow_inventories_have_complete_stable_ids() -> None:
     flow_ids = re.findall(r"\|\s*(DF-\d{2})\s*\|", flows)
     assert set(security_ids) == {f"SEC-{number:03d}" for number in range(1, 17)}
     assert len(security_ids) == len(set(security_ids)) == 16
-    assert set(flow_ids) == {f"DF-{number:02d}" for number in range(1, 9)}
-    assert len(flow_ids) == len(set(flow_ids)) == 8
+    assert set(flow_ids) == {f"DF-{number:02d}" for number in range(1, 10)}
+    assert len(flow_ids) == len(set(flow_ids)) == 9
 
 
 def test_operational_templates_keep_exercise_status_and_evidence_explicit() -> None:

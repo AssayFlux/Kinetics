@@ -26,6 +26,7 @@ def test_public_reference_payloads_are_encrypted_and_deletable() -> None:
     assert "LocalCrypto.decryptChunkedFile" in store
     assert "kinetics-public-record:" in store
     assert "fun delete(id: String)" in store
+    assert "fun loadRecord(id: String)" in store
     assert "public_records" in store
 
 
@@ -36,6 +37,9 @@ def test_public_sequences_and_structures_reach_existing_engines() -> None:
     assert 'callAttr("analyze_fasta", fetched.content)' in card
     assert "store.saveAnalysis(saved.id, analysis)" in card
     assert "onStructureFetched(fetched)" in card
+    assert "store.loadRecord(saved.id)" in card
+    assert "Reanalyse" in card
+    assert "Saved RCSB structure reopened from encrypted local storage." in card
     assert 'callAttr("prepare_structure_viewer_import", fetched.content, "mmcif")' in viewer
     assert "PublicDatabaseCard(onStructureFetched = { publicStructureRecord = it })" in ui
     assert "StructureViewerPreview(publicRecord = publicStructureRecord)" in ui

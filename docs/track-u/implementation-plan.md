@@ -119,6 +119,6 @@ Required test families:
 - No fold/hinge-safe claim until WindowManager posture integration and tests exist.
 - G independent/operational acceptance obligations remain carry-forward and are not declared complete.
 
-## 9. Current disposition
+## 9. Current disposition — audited 2026-11-18
 
-Track U is STARTED. U0–U3 are partial pre-existing implementation; U4–U6 are not started. This plan defines the Step 1 base; it is not a completion report. The Step 2 audit has not run. Track U percentage is intentionally not reported until both steps are assessed with a stated denominator.
+Track U remains OPEN. PR #76 merged the Step 1 monochrome foundation to main as `dea7bec731f3e6bdc3732899dd3feeed2703bbc3`. The compiler correction is included. U0–U3 remain partial; U4 is blocked/partial source; U5 is blocked/not implemented as a complete UI; U6 has not passed. The exact-main workflow `44208315663` was still running its Android arm64 APK/AAB build at the time of the audit. No APK success is claimed until artifacts and hashes are verified. See `docs/track-u/completion-audit.md` for package-by-package outstanding work, dependencies and exact closure evidence. No percentage is reported.

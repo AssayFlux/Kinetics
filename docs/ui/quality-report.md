@@ -1,6 +1,6 @@
 # UI quality report
 
-**Status:** NOT PASSED. This report distinguishes source-level checks from visual/device evidence. Last updated: 2026-11-17.
+**Status:** NOT PASSED. This report distinguishes source-level checks from visual/device evidence. Last updated: 2026-11-18. Exact-main build run 44208315663 is in progress; Android arm64 APK/AAB artifact verification is pending. See `docs/track-u/completion-audit.md` for the complete Track U gap register.
 
 | Area | Acceptance bar | Result | Evidence |
 |---|---|---|---|
@@ -26,5 +26,5 @@ No “best”, WCAG-conformant, accessible, device-responsive, performant or pro
 - Canonical token source migrated for active Light/Dark palettes and V1 spacing/radius values; Compose and WebView generated outputs refreshed.
 - Initial reusable Compose primitives added in android/designsystem/.../KineticsComponents.kt.
 - Integrated a 56dp app bar and gesture-enabled modal navigation drawer for compact navigation; adaptive rail and bottom navigation retain the same four real destinations. This is source implementation, not screenshot or device acceptance.
-- NOT YET VERIFIED: Kotlin compilation on the final branch head, screenshot rendering, screenshot rendering, semantic contrast, TalkBack, 200% font scale, RTL, keyboard/switch navigation, device matrix and physical-device behavior.
+- NOT YET VERIFIED: exact-main APK/AAB artifact and hashes, screenshot rendering, semantic contrast, TalkBack, 200% font scale, RTL, keyboard/switch navigation, device matrix and physical-device behavior.
 - Existing owner logo/reference assets have not been altered. Actual integration remains open pending path/role audit.

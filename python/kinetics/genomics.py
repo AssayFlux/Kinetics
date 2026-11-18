@@ -377,3 +377,71 @@ def iter_bam_records(
             "".join(cigar_parts) if cigar_parts else "*", sequence or "*", quality,
         )
 
+
+
+def summarize_vcf_qc(
+    text: str, *, max_input_bytes: int = 5 * 1024 * 1024,
+    max_records: int = 10_000, max_samples: int = 32,
+) -> dict[str, object]:
+    """Return aggregate-only, non-interpretive VCF syntax/QC counts.
+
+    Sample identifiers and genotype strings are parsed only to validate column
+    structure; neither is returned. This function does not check a reference
+    assembly, normalize variants, infer phase, or interpret genotypes.
+    """
+    import hashlib
+    from collections import Counter
+    from datetime import datetime, timezone
+
+    if not isinstance(text, str):
+        raise TypeError("VCF input must be text")
+    encoded = text.encode("utf-8")
+    if (
+        not isinstance(max_input_bytes, int)
+        or isinstance(max_input_bytes, bool)
+        or max_input_bytes <= 0
+    ):
+        raise ValueError("max_input_bytes must be a positive integer")
+    if len(encoded) > max_input_bytes:
+        raise ValueError("VCF input exceeds the 5 MiB limit")
+    if not isinstance(max_records, int) or isinstance(max_records, bool) or max_records <= 0:
+        raise ValueError("max_records must be a positive integer")
+    if not isinstance(max_samples, int) or isinstance(max_samples, bool) or max_samples <= 0:
+        raise ValueError("max_samples must be a positive integer")
+
+    variants = parse_vcf(text, max_records=max_records, max_samples=max_samples)
+    if not variants:
+        raise ValueError("VCF contains no variant records")
+    chrom_counts = Counter(str(row["chrom"]) for row in variants)
+    filter_counts = Counter(str(row["filter"]) for row in variants)
+    missing_quality = sum(row["qual"] == "." for row in variants)
+    multiallelic = sum("," in str(row["alt"]) for row in variants)
+    snv = sum(
+        len(str(row["ref"])) == 1
+        and all(len(alt) == 1 for alt in str(row["alt"]).split(","))
+        for row in variants
+    )
+    first_samples = variants[0].get("samples")
+    sample_count = len(first_samples) if isinstance(first_samples, list) else 0
+    return {
+        "schema_version": 1,
+        "tool_id": "genomics.vcf.aggregate_qc",
+        "tool_version": "1",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "source_sha256": hashlib.sha256(encoded).hexdigest(),
+        "input_bytes": len(encoded),
+        "record_count": len(variants),
+        "sample_count": sample_count,
+        "contig_count": len(chrom_counts),
+        "snv_record_count": snv,
+        "multiallelic_record_count": multiallelic,
+        "missing_quality_record_count": missing_quality,
+        "filter_counts": dict(sorted(filter_counts.items())[:20]),
+        "contig_record_counts": dict(sorted(chrom_counts.items())[:20]),
+        "limitations": [
+            "Aggregate counts only; sample identifiers and genotype strings are not returned or persisted.",
+            "Syntax and bounded record summary only; no reference-build or REF-allele concordance is performed.",
+            "No normalization, phasing, variant effect, pathogenicity, star-allele, phenotype or treatment interpretation is performed.",
+            "Use only synthetic or appropriately authorized public non-patient data while P0 remains not approved.",
+        ],
+    }

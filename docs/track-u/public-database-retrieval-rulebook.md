@@ -77,12 +77,12 @@ Every fetched record should retain: source ID/name, exact request URL (redact qu
 - Sequence records are fetched as FASTA, SHA-256 checked, encrypted in app-private no-backup storage using the existing Android Keystore AES-GCM chunk format, and indexed in a separate SQLite metadata store.
 - Retrieved FASTA is passed to the existing embedded Python `kinetics_probe.analyze_fasta` workflow; analysis JSON is retained with the public record. This is the existing bounded research QC workflow, not a new alignment/annotation engine.
 - RCSB mmCIF is encrypted and indexed, then passed to the existing `prepare_structure_viewer_import` Python adapter and offline WebView structure viewer. The viewer's 16 MiB parser limit remains authoritative.
-- Saved public records are listed on Home and can be deleted. Deletion removes the encrypted payload and its index row.
+- Saved public records are listed on Home, can be reopened (mmCIF) or re-analysed (FASTA), and can be deleted. Reopening decrypts to a short-lived app-private cache file, verifies the recorded SHA-256 and removes the temporary plaintext on completion. Deletion removes the encrypted payload and its index row.
 - Only public search terms and accessions are sent to providers. Patient inputs and private research metadata are not uploaded.
 
 ### Not yet complete / not claimed
 - NCBI Gene search currently returns metadata; gene-to-transcript/protein ELink resolution is not yet wired into the result action.
-- Saved records are listed and deletable, but there is not yet a complete saved-record reopen/reanalyse browser.
+- Saved records are listed, deletable, reopenable (mmCIF) and re-analysable (FASTA); a richer saved-record detail/browser is still open.
 - The public record metadata index and analysis JSON are app-private SQLite but are not encrypted at rest; only raw source payloads use the Android Keystore AES-GCM file format.
 - Explicit user cancellation, retry/backoff, ETag/source-release capture, licence/terms metadata, cache quota/eviction and background WorkManager retrieval are not yet implemented.
 - RCSB search by molecule/protein/organism is not yet implemented; retrieval currently requires a four-character PDB entry ID.

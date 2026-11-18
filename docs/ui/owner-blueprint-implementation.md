@@ -35,12 +35,12 @@ The second reference defines the Home screen's hierarchy:
 - The avatar opens the account/profile area. Display only identity data actually available. Local device security and account authentication must remain clearly distinguished.
 
 ### 3.2 Primary service carousel
-- A large horizontal pager directly below the header.
+- A large horizontal pager directly below the header, containing one card per registered service capability (68 catalogue entries at the current audit baseline) plus the Public Reference Databases service.
 - The active/central card is prominent; neighboring cards remain partially visible to communicate horizontal navigation.
 - Pagination indicators sit immediately below the cards.
 - Each card represents a real service present in the repository's capability catalogue.
 - Every card is an actionable control. Selecting one opens a dedicated service destination.
-- The catalogue and implementation status are the source of truth; do not invent capabilities.
+- The catalogue and implementation status are the source of truth; do not invent capabilities. Each card is keyed by its stable capability ID and opens the corresponding dedicated service detail destination.
 - A destination may report that a capability is registered but not yet available through an Android execution path. Never imply that registration alone means it can run on-device.
 - Do not place a second, duplicate service catalogue below the carousel.
 
@@ -86,8 +86,10 @@ Where a service is not yet implemented or lacks a real Android dispatcher, its p
 - [ ] Biometric action is connected to Android's actual biometric/device-credential flow.
 - [ ] Home header has working hamburger and profile controls.
 - [ ] No persistent bottom navigation or rail.
-- [ ] Service carousel uses repository-backed catalogue entries.
-- [ ] Cards are clickable and open dedicated service destinations.
+- [x] Service carousel uses repository-backed catalogue entries, one card per capability plus Public Reference Databases.
+- [x] Carousel pagination presents a five-indicator window while supporting the full service list.
+- [x] Each capability card opens its own ID-addressed service detail destination.
+- [x] Cards are clickable and open dedicated service destinations.
 - [ ] Pagination reflects the actual carousel page.
 - [ ] Service workflows are removed from the Home content column and placed in their relevant destinations.
 - [ ] Four dashboard panels show only persisted/runtime-derived information.

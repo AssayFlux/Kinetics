@@ -24,7 +24,7 @@ Use public, appropriately licensed, non-patient datasets only during preparation
 
 ## Hard boundary
 
-Under D-024 (2026-11-18), the owner authorizes engineering and patient-data research testing within the institutional approval the owner declares has been obtained. The approval reference and scope remain pending attachment. Patient data must stay within the approved environment and out of GitHub/CI/logs. Clinical interpretation, diagnosis, treatment recommendations and clinical mode remain separate, disabled activities.
+Under D-025 (2026-11-18), the owner authorizes engineering and patient-data research testing within the institutional approval the owner declares has been obtained. The approval reference and scope remain pending attachment. Patient data must stay within the approved environment and out of GitHub/CI/logs. Clinical interpretation, diagnosis, treatment recommendations and clinical mode remain separate, disabled activities.
 
 
 ## I4 — ADMET / PK / PD / PBPK source inventory (preparation only)

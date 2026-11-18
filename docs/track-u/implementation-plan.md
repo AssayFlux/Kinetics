@@ -127,3 +127,29 @@ Required test families:
 ## 9. Current disposition — audited 2026-11-18
 
 Track U remains OPEN. PR #76 merged the Step 1 monochrome foundation to main as `dea7bec731f3e6bdc3732899dd3feeed2703bbc3`. The compiler correction is included. U0–U3 remain partial; U4 is blocked/partial source; U5 is blocked/not implemented as a complete UI; U6 has not passed. The exact-main workflow `44208315663` was still running its Android arm64 APK/AAB build at the time of the audit. No APK success is claimed until artifacts and hashes are verified. See `docs/track-u/completion-audit.md` for package-by-package outstanding work, dependencies and exact closure evidence. No percentage is reported.
+
+
+## 10. Public scientific database integration — 2026-11-18
+
+**Source status:** initial Android source integration committed on main; exact-head Android build and device acceptance are pending.
+
+### Implemented source path
+- Home search controls: NCBI Gene, NCBI Nucleotide, NCBI Protein, UniProtKB and RCSB PDB entry ID.
+- FASTA records: direct retrieval → SHA-256 verification → Android Keystore AES-GCM encrypted local cache → embedded Python FASTA QC → saved analysis JSON.
+- RCSB mmCIF: direct retrieval → SHA-256 verification → encrypted local cache → existing Python structure preparation/parser → existing offline structure viewer.
+- Public source metadata and saved-record deletion are exposed in Home.
+- Raw public payloads are encrypted; SQLite metadata and QC result JSON remain app-private but are not encrypted at rest.
+
+### Remaining engineering checklist
+1. Add NCBI Gene-to-RefSeq transcript/protein link resolution and result-specific accession navigation.
+2. Add a saved-record detail/reopen/reanalyse flow, cache quotas and explicit retention controls.
+3. Add request cancellation, bounded retry/backoff and provider rate-limit handling.
+4. Capture ETag/Last-Modified/source release, MIME type, licence/terms and attribution metadata.
+5. Add RCSB metadata search rather than ID-only retrieval.
+6. Add ENA, Ensembl and PubChem adapters after source-specific terms and tests.
+7. Add parser fixtures and exact-source integration tests for malformed, empty, oversized, truncated and unsupported records.
+8. Verify encrypted cache integrity, delete behavior, Keystore-loss handling and process-death behavior on Android.
+9. Run exact-main Kotlin/JVM tests, arm64 APK/AAB build, then device and accessibility acceptance.
+
+### Release gate
+Do not mark the public-data integration complete until exact-head CI passes and a named Android device demonstrates: search, retrieval, cache persistence, FASTA QC, RCSB mmCIF parsing/viewing, deletion and offline reopening. No APK success or physical-device acceptance is implied by source commits alone.

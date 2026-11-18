@@ -376,7 +376,16 @@ private fun GlobalSearchScreen(
 ) {
     val context = LocalContext.current
     val capabilities = remember(context) {
-        runCatching { loadCapabilityCatalogue(context) }.getOrDefault(emptyList())
+        runCatching {
+            loadCapabilityCatalogue(context) + CapabilityEntry(
+                id = "public.reference_databases",
+                name = "Public reference databases",
+                status = "implemented",
+                implementation = "PublicDatabaseClient.kt",
+                evidenceLevel = "none",
+                domain = "Public reference databases",
+            )
+        }.getOrDefault(emptyList())
     }
     val documents = remember(jobs, capabilities) {
         jobs.map { job ->

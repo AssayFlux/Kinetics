@@ -529,6 +529,57 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Uses the Jukes–Cantor substitution model and caller-supplied alignment",
             "No alignment generation, model selection, bootstrap support or phylogenetic confidence",
         ]
+    elif capability_id in {"protein.hmmscan_domain_evidence", "protein.hmmscan_domtblout_evidence"}:
+        from kinetics.hmmer import parse_hmmscan_domtblout
+        try:
+            parameters = json.loads(sequence_text)
+            domtblout = parameters["domtblout"]
+            hmmer_version = parameters["hmmer_version"]
+            profile_pack = parameters["profile_pack"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "Provide JSON with domtblout, hmmer_version and profile_pack metadata"
+            ) from exc
+        if not isinstance(domtblout, str) or len(domtblout.encode("utf-8")) > 900_000:
+            raise ValueError("HMMER domtblout must be text within the 900 KB mobile limit")
+        if not isinstance(profile_pack, dict):
+            raise ValueError("profile_pack metadata must be a JSON object")
+        result = parse_hmmscan_domtblout(
+            domtblout.splitlines(),
+            hmmer_version=hmmer_version,
+            profile_pack=profile_pack,
+            max_lines=20_000,
+            max_line_bytes=16_384,
+            max_domains=10_000,
+        )
+        limitations = [
+            "Parses supplied HMMER domtblout only; no HMMER search is executed",
+            "Profile metadata and declared SHA-256 are caller-supplied and are not independently verified",
+            "Domain matches are candidate evidence, not confirmed protein function or orthology",
+        ]
+    elif capability_id == "protein.hmmer_domain_candidate_ranking":
+        from kinetics.hmmer_rank import rank_hmmer_domain_candidates
+        try:
+            parameters = json.loads(sequence_text)
+            evidence = parameters["evidence"]
+            thresholds = {
+                "max_independent_evalue": parameters["max_independent_evalue"],
+                "min_profile_coverage": parameters["min_profile_coverage"],
+                "min_query_coverage": parameters["min_query_coverage"],
+                "min_accuracy": parameters["min_accuracy"],
+            }
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide parsed HMMER evidence and all four ranking thresholds") from exc
+        result = rank_hmmer_domain_candidates(
+            evidence,
+            **thresholds,
+            max_candidates=10_000,
+        )
+        limitations = [
+            "Thresholds are caller-selected and are not calibrated by this module",
+            "Ranking does not establish protein family, domain function or orthology",
+            "Profile database licensing and provenance require separate approval",
+        ]
     elif capability_id == "genome.gff3_annotation_import":
         from kinetics.gff3 import parse_gff3
         if len(sequence_text.encode("utf-8")) > 1_000_000:

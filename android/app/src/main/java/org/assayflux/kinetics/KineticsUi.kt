@@ -460,6 +460,9 @@ private fun ServiceDetailScreen(
         "genome.gff3_annotation_import",
         "genome.gff3_transcript_cds_reconstruction",
         "protein.fixed_width_motif_scan",
+        "protein.hmmscan_domain_evidence",
+        "protein.hmmscan_domtblout_evidence",
+        "protein.hmmer_domain_candidate_ranking",
         "genome.prokaryotic_orf_candidate_scan",
         "kinetics.bootstrap_intervals",
         "protein.design_brief_validation",
@@ -691,6 +694,24 @@ private fun ServiceDetailScreen(
                     description = "Scan a protein against a caller-supplied hash-pinned motif pack. Input JSON includes query, motifs and source/license metadata; no external pack is downloaded.",
                     sample = "{\"query\":\"ACDGACDG\",\"motifs\":[{\"id\":\"example\",\"pattern\":\"A..G\"}],\"name\":\"Example pack\",\"version\":\"1\",\"license\":\"CC0-1.0\",\"source\":\"https://example.org/motif-pack\"}",
                     actionLabel = "Scan motifs",
+                ) }
+            }
+            if (capability?.id in setOf("protein.hmmscan_domain_evidence", "protein.hmmscan_domtblout_evidence")) {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = capability.id ?: "protein.hmmscan_domtblout_evidence",
+                    title = "HMMER domain evidence parser",
+                    description = "Parse caller-supplied hmmscan domtblout with profile-pack name, version, licence, source and SHA-256 metadata. This does not run HMMER or verify the profile file itself.",
+                    sample = "{\\"domtblout\\":\\"PF00001\\\\tPF00001.1\\\\t100\\\\tquery1\\\\t-\\\\t80\\\\t1e-20\\\\t50.0\\\\t0.0\\\\t1\\\\t1\\\\t1e-20\\\\t1e-20\\\\t50.0\\\\t0.0\\\\t1\\\\t80\\\\t1\\\\t80\\\\t1\\\\t80\\\\t0.95\\\\tExample domain\\\\n\\",\\"hmmer_version\\":\\"3.4\\",\\"profile_pack\\":{\\"name\\":\\"Example profiles\\",\\"version\\":\\"1\\",\\"license\\":\\"CC0-1.0\\",\\"source\\":\\"https://example.org/profiles\\",\\"content_sha256\\":\\"0000000000000000000000000000000000000000000000000000000000000000\\"}}",
+                    actionLabel = "Parse domain evidence",
+                ) }
+            }
+            if (capability?.id == "protein.hmmer_domain_candidate_ranking") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "protein.hmmer_domain_candidate_ranking",
+                    title = "HMMER candidate ranking",
+                    description = "Rank parsed profile-domain candidates using explicit caller-selected E-value, coverage and accuracy thresholds. Does not infer protein function or run HMMER.",
+                    sample = "{\\"evidence\\":{\\"schema\\":\\"kinetics.hmmscan-domain-evidence.v1\\",\\"hits\\":[]},\\"max_independent_evalue\\":0.00001,\\"min_profile_coverage\\":0.5,\\"min_query_coverage\\":0.5,\\"min_accuracy\\":0.5}",
+                    actionLabel = "Rank candidates",
                 ) }
             }
             if (capability?.id == "genome.prokaryotic_orf_candidate_scan") {

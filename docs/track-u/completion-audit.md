@@ -213,3 +213,12 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - Added six missing route rows to the integration matrix: exact/local FASTA reference search, local alignment reference search, Newick export alias and PDB geometry alias.
 - Hardened mobile cross-omics input validation for non-empty rectangular feature matrices with at least three matched samples, and rejected malformed neighbour-joining sequence names/values before engine dispatch.
 - Source-level integration is not a scientific validation claim. CI for the resulting commit is pending; no exact-head APK/build success is claimed in this addendum.
+
+
+## 19. HMMER evidence workflows — 2026-11-18
+
+- Added Android service-page routes for `protein.hmmscan_domain_evidence`, `protein.hmmscan_domtblout_evidence` and `protein.hmmer_domain_candidate_ranking`.
+- The two parser IDs share the bounded pure-Python domtblout parser (20,000 lines, 16 KB per line and 10,000 domains). Profile name/version/licence/source/SHA metadata is mandatory but remains caller-supplied; the app does not execute HMMER or independently verify the underlying profile pack.
+- The ranking route uses explicit caller thresholds for independent E-value, profile coverage, query coverage and alignment accuracy. Results remain candidate evidence and do not establish protein function or orthology.
+- The reconciled catalogue count is now **46 of 68 connected; 22 remain unconnected**, plus the separate public reference-database service.
+- Exact-head CI is pending. No APK success or scientific validation is claimed.

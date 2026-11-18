@@ -360,3 +360,52 @@ def test_mobile_omics_and_phylogeny_routes_reject_malformed_shapes_and_types():
             "phylo.jukes_cantor_nj",
             json.dumps({"sequences": {"A": "A" * 20, "B": "A" * 20, "": "A" * 20}}),
         )
+
+
+def test_hmmer_domtblout_parser_and_threshold_ranker_mobile_routes():
+    import json
+
+    domtblout = (
+        "PF00001\\tPF00001.1\\t100\\tquery1\\t-\\t80\\t1e-20\\t50.0\\t0.0"
+        "\\t1\\t1\\t1e-20\\t1e-20\\t50.0\\t0.0\\t1\\t80\\t1\\t80"
+        "\\t1\\t80\\t0.95\\tExample domain"
+    )
+    parsed = _run_probe(
+        "protein.hmmscan_domtblout_evidence",
+        json.dumps({
+            "domtblout": domtblout,
+            "hmmer_version": "3.4",
+            "profile_pack": {
+                "name": "Example profiles",
+                "version": "1",
+                "license": "CC0-1.0",
+                "source": "https://example.org/profiles",
+                "content_sha256": "0" * 64,
+            },
+        }),
+    )
+    assert parsed["result"]["schema"] == "kinetics.hmmscan-domain-evidence.v1"
+    assert len(parsed["result"]["hits"]) == 1
+    ranked = _run_probe(
+        "protein.hmmer_domain_candidate_ranking",
+        json.dumps({
+            "evidence": parsed["result"],
+            "max_independent_evalue": 1e-5,
+            "min_profile_coverage": 0.5,
+            "min_query_coverage": 0.5,
+            "min_accuracy": 0.5,
+        }),
+    )
+    assert ranked["result"]["passing_candidate_count"] == 1
+    assert ranked["result"]["candidates"][0]["rank"] == 1
+
+
+def test_hmmer_routes_are_explicitly_allow_listed_in_ui_kotlin_and_python():
+    for capability_id in (
+        "protein.hmmscan_domain_evidence",
+        "protein.hmmscan_domtblout_evidence",
+        "protein.hmmer_domain_candidate_ranking",
+    ):
+        assert capability_id in UI
+        assert capability_id in RUNNER
+        assert capability_id in PROBE

@@ -57,3 +57,18 @@ def test_alignment_assembly_structure_and_omics_routes_are_bounded():
     assert "max_cells=250_000" in PROBE
     assert "max_total_bases=1_000_000" in PROBE
     assert "5,000 parsed atoms" in PROBE
+
+def test_all_new_capabilities_are_reported_as_android_connected():
+    status_block = UI.split("val androidWorkflowAvailable", 1)[1].split("Frame(", 1)[0]
+    for capability_id in (
+        "genome.orf_candidate_scan",
+        "kinetics.michaelis_menten",
+        "phylo.newick",
+        "sequence.global_alignment",
+        "genome.contig_assembly_qc",
+        "structure.sasa",
+        "structure.interaction_candidates",
+        "microbiome.diversity",
+        "omics.logistic_growth",
+    ):
+        assert f'"{capability_id}"' in status_block

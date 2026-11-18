@@ -440,7 +440,7 @@ def summarize_vcf_qc(
         "contig_record_counts": dict(sorted(chrom_counts.items())[:20]),
         "limitations": [
             "Aggregate counts only; sample identifiers and genotype strings are not returned or persisted.",
-            "Syntax and bounded record summary only; no reference-build or REF-allele concordance is performed.",
+            "Basic VCF column structure and bounded record summary only; this is not a full VCF specification validator and performs no reference-build or REF-allele concordance.",
             "No normalization, phasing, variant effect, pathogenicity, star-allele, phenotype or treatment interpretation is performed.",
             "Use only synthetic or appropriately authorized public non-patient data while P0 remains not approved.",
         ],

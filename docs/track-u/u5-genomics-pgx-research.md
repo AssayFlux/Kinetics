@@ -7,13 +7,13 @@
 
 ### P1 — aggregate VCF research QC
 
-- Explore now exposes a VCF aggregate-QC card when the repository's genomics.sam_vcf source capability is present.
+- Explore now exposes a VCF record-structure QC card when the repository's genomics.sam_vcf source capability is present.
 - Android SAF accepts uncompressed .vcf files only, with strict UTF-8 decoding, NUL rejection and a 5 MiB input ceiling.
 - The user must explicitly attest that the selected file contains synthetic or authorized public non-patient data before analysis is enabled. This is an operator declaration, not automated data-origin verification.
 - The Python parser applies hard ceilings of 10,000 variant records and 32 sample columns.
 - The result contains aggregate record, contig, filter, missing-QUAL, SNV and multiallelic counts plus source SHA-256 and tool metadata.
 - Sample names and genotype strings are never returned in the result. The UI does not persist the VCF or result in ResearchStore and does not offer an export from this screen.
-- The output explicitly states that this is syntax/aggregate QC only: no reference build or REF concordance, normalization, phasing, variant effect, pathogenicity, PGx or clinical interpretation is performed.
+- The output explicitly states that this is basic record-structure and aggregate QC only: no reference build or REF concordance, normalization, phasing, variant effect, pathogenicity, PGx or clinical interpretation is performed.
 
 ### Explicit gate presentation
 

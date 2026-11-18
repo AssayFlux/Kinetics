@@ -19,7 +19,7 @@ Kinetics is an offline-first Android/Python research application. Its current na
 | FASTQ QC | Select Phred+33 or Phred+64 explicitly, then run QC | Read/base quality metrics; encoding is never guessed |
 | Structure viewer | Import a local PDB/ENT/CIF/mmCIF structure | Offline 2D atom/chain inspection; bounded JSON, PNG and SVG exports; not a validated 3D molecular viewer |
 | Chemistry graph | Import local SDF/MOL | Explicit-atom formula/mass and graph counts; not RDKit sanitization, stereochemical interpretation or drug-likeness |
-| VCF aggregate QC | Use only a synthetic or appropriately authorized public non-patient VCF; operator attestation is required | Bounded aggregate record counts and source SHA-256; sample identifiers and genotype strings are not returned; no reference concordance or variant interpretation |
+| VCF aggregate QC | Use only a synthetic or appropriately authorized public non-patient VCF; operator attestation is required | Basic VCF record-structure and aggregate counts plus source SHA-256; sample identifiers and genotype strings are not returned; not a full VCF specification validator; no reference concordance or variant interpretation |
 | Settings | Demonstrate appearance selection, diagnostics and optional local biometric/device-credential lock | Device-local controls; not remote account authentication |
 
 Only use synthetic or authorized public non-patient fixtures in a committee demonstration. Do not load patient, identifiable, clinical or human-subject data into the demo build.

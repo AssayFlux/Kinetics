@@ -103,7 +103,7 @@ internal fun GenomicsVcfQcCard() {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text("P1 · VCF aggregate research QC", style = MaterialTheme.typography.titleMedium)
             Text(
-                "Bounded local VCF syntax and record summary. Only aggregate counts are returned; sample identifiers and genotype strings are not displayed or persisted.",
+                "Bounded local VCF record-structure and aggregate summary. Only aggregate counts are returned; sample identifiers and genotype strings are not displayed or persisted.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -134,7 +134,7 @@ internal fun GenomicsVcfQcCard() {
                     busy = true
                     error = null
                     report = null
-                    status = "Checking the selected VCF locally…"
+                    status = "Checking VCF record structure locally…"
                     scope.launch {
                         val outcome = withContext(Dispatchers.IO) {
                             runCatching {

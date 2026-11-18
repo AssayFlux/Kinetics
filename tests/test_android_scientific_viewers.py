@@ -109,3 +109,8 @@ def test_owner_blueprint_has_one_actionable_card_per_capability() -> None:
     assert "NavigationRail(" not in ui
     assert 'label = { Text("Search") }' in ui
     assert 'contentDescription = "Open profile"' in ui
+    assert "Icons.Outlined.Fingerprint" in ui
+    assert "repeat(3)" in ui
+    assert "LOCAL DEVICE UNLOCK" in ui
+    assert "not an online account sign-in" in ui
+    assert "Public reference databases" in ui[ui.index("private fun GlobalSearchScreen"):]

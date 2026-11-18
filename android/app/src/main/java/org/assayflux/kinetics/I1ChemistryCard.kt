@@ -33,6 +33,7 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
+import java.util.zip.GZIPInputStream
 
 private data class I1LigandDocument(val name: String, val text: String)
 
@@ -42,12 +43,14 @@ private fun readI1LigandDocument(context: Context, uri: Uri): I1LigandDocument {
     )?.use { cursor ->
         if (cursor.moveToFirst()) cursor.getString(0) else null
     } ?: uri.lastPathSegment ?: "ligand"
-    require(name.endsWith(".sdf", ignoreCase = true) || name.endsWith(".mol", ignoreCase = true)) {
-        "Select a .sdf or .mol file."
+    val baseName = name.lowercase(java.util.Locale.ROOT).removeSuffix(".gz")
+    require(baseName.endsWith(".sdf") || baseName.endsWith(".mol")) {
+        "Select an SDF or MOL file, optionally gzip-compressed."
     }
     val input = context.contentResolver.openInputStream(uri)
         ?: error("The selected ligand document could not be opened.")
-    val bytes = input.use { stream ->
+    val decoded = if (name.endsWith(".gz", ignoreCase = true)) GZIPInputStream(input) else input
+    val bytes = decoded.use { stream ->
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(32 * 1024)
         var total = 0
@@ -125,7 +128,7 @@ internal fun LigandGraphPreviewCard() {
                 },
                 enabled = !busy,
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text(if (busy) "Working…" else "Choose SDF / MOL ligand") }
+            ) { Text(if (busy) "Working…" else "Choose SDF / MOL / .gz ligand") }
             document?.let { Text("Ligand: ${it.name}", style = MaterialTheme.typography.labelMedium) }
             Button(
                 onClick = {

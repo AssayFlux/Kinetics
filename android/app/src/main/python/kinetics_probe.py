@@ -1055,6 +1055,217 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Parses caller-supplied Newick topology and branch lengths only",
             "Does not infer a tree or assess evolutionary model fit",
         ]
+    elif capability_id == "sequence.local_reference_pack_loader":
+        import tempfile
+        from pathlib import Path
+        from kinetics.sequence_pack import load_local_fasta_reference_pack, search_local_fasta_reference
+        try:
+            p = json.loads(sequence_text)
+            fasta, manifest, query = p["fasta"], p["manifest"], p.get("query")
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide fasta, manifest and optional query") from exc
+        if not isinstance(fasta, str) or not isinstance(manifest, dict):
+            raise ValueError("fasta must be text and manifest a JSON object")
+        with tempfile.TemporaryDirectory(prefix="kinetics-refpack-") as d:
+            fp, mp = Path(d) / "ref.fasta", Path(d) / "manifest.json"
+            fp.write_text(fasta, encoding="utf-8")
+            mp.write_text(json.dumps(manifest), encoding="utf-8")
+            if query is None:
+                loaded = load_local_fasta_reference_pack(fp, mp, max_pack_bytes=900_000, max_records=10_000, max_total_residues=500_000)
+                result = {"record_count": len(loaded.records), "sequence_type": loaded.sequence_type, "reference_pack": loaded.metadata.__dict__}
+            else:
+                result = search_local_fasta_reference(query, fp, mp, max_pack_bytes=900_000, max_records=10_000, max_total_residues=500_000)
+        limitations = ["Local caller-supplied FASTA only; no network retrieval", "Manifest license/source metadata must be reviewed", "Exact matches are not functional or clinical interpretations"]
+    elif capability_id == "sequence.local_blastp":
+        from kinetics.blastp import run_local_blastp
+        try:
+            p = json.loads(sequence_text)
+            result = run_local_blastp(p["query_fasta"], executable_path=p["executable_path"], executable_sha256=p["executable_sha256"], database_prefix=p["database_prefix"], database_file_sha256=p["database_file_sha256"], database_id=p["database_id"], database_version=p["database_version"], database_license=p["database_license"], database_source=p["database_source"], max_input_bytes=900_000, max_database_bytes=2_000_000_000, max_executable_bytes=200_000_000, max_output_bytes=8_000_000, timeout_seconds=180)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("BLASTP requires query FASTA, local executable/database paths, SHA-256 pins and provenance") from exc
+        limitations = ["Requires a separately installed, locally hash-pinned BLASTP executable and database", "Execution is local; no sequence data is sent to public services", "Homology hits are candidate evidence only"]
+    elif capability_id == "sequence.local_hmmpress":
+        from kinetics.hmmer_runner import press_local_hmm_profile
+        try:
+            p = json.loads(sequence_text)
+            result = press_local_hmm_profile(hmmpress_executable_path=p["executable_path"], hmmpress_sha256=p["executable_sha256"], profile_path=p["profile_path"], source_hmm_sha256=p["source_hmm_sha256"], profile_name=p["profile_name"], profile_version=p["profile_version"], profile_license=p["profile_license"], profile_source=p["profile_source"], timeout_seconds=180)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("hmmpress requires local executable/profile paths, SHA-256 pins and profile provenance") from exc
+        limitations = ["Requires a locally installed hash-pinned HMMER hmmpress binary", "Profile license and source must be reviewed", "Preparation does not establish biological relevance"]
+    elif capability_id == "sequence.local_hmmscan":
+        from kinetics.hmmer_runner import run_local_hmmscan
+        try:
+            p = json.loads(sequence_text)
+            result = run_local_hmmscan(p["sequences_fasta"], executable_path=p["executable_path"], executable_sha256=p["executable_sha256"], profile_path=p["profile_path"], profile_pack=p["profile_pack"], max_input_bytes=900_000, max_profile_bytes=200_000_000, max_executable_bytes=200_000_000, max_output_bytes=8_000_000, timeout_seconds=180, max_domains=10_000)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("hmmscan requires FASTA, local executable/profile paths and pinned metadata") from exc
+        limitations = ["Requires a locally installed hash-pinned HMMER hmmscan binary and profile pack", "Candidate domains do not establish protein function or orthology", "No remote execution or profile download occurs"]
+    elif capability_id == "variant.reference_checked_normalization":
+        import hashlib
+        from kinetics.variant_reference import ReferenceSequence, normalize_against_reference
+        try:
+            p = json.loads(sequence_text)
+            ref = dict(p["reference"])
+            ref.setdefault("sequence_sha256", hashlib.sha256(ref["sequence"].encode("ascii")).hexdigest())
+            result = normalize_against_reference(ReferenceSequence(**ref), p["chrom"], p["position"], p["ref"], p["alt"])
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide reference metadata/sequence and chrom, position, ref and alt") from exc
+        limitations = ["Representation normalization only against the supplied exact reference", "No transcript mapping, pathogenicity, phasing or clinical interpretation", "Reference provenance must be independently verified"]
+    elif capability_id in {"genes.ncbi_catalogue", "genes.catalogue_coverage_report"}:
+        from kinetics.catalog import gene_catalogue_coverage_report, iter_ncbi_gene_info
+        try:
+            p = json.loads(sequence_text)
+            release, tsv = p["source_release"], p["gene_info_tsv"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide source_release and gene_info_tsv") from exc
+        if not isinstance(tsv, str) or len(tsv.encode("utf-8")) > 900_000:
+            raise ValueError("gene_info TSV exceeds the 900 KB mobile limit")
+        result = gene_catalogue_coverage_report(iter_ncbi_gene_info(tsv.splitlines(), source_release=release), max_entries=10_000)
+        limitations = ["Describes only the supplied source-release snapshot", "No genome-wide completeness percentage is inferred", "Source licensing and provenance remain caller responsibilities"]
+    elif capability_id == "genomics.variant_normalization":
+        from kinetics.genomics import normalize_small_variant
+        try:
+            p = json.loads(sequence_text)
+            result = normalize_small_variant(p["chrom"], p["position"], p["ref"], p["alt"], p["reference_sequence"])
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide chrom, position, ref, alt and reference_sequence") from exc
+        limitations = ["Literal biallelic small variants only", "Reference sequence is caller-supplied and not build-authenticated here", "No pathogenicity, transcript or clinical interpretation"]
+    elif capability_id == "omics.nb2_glm":
+        from kinetics.omics import negative_binomial_differential_expression
+        try:
+            p = json.loads(sequence_text)
+            result = negative_binomial_differential_expression(p["counts"], p["condition"], covariates=p.get("covariates"), feature_ids=p.get("feature_ids"))
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide counts matrix and binary condition vector") from exc
+        limitations = ["Exploratory NB2 GLM with unmoderated moment dispersions", "Asymptotic Wald p-values; no empirical-Bayes shrinkage or small-sample correction", "Requires independent samples and caller-encoded numeric covariates"]
+    elif capability_id == "genomics.bam_core":
+        import base64
+        import io
+        from kinetics.genomics import iter_bam_records
+        try:
+            raw = base64.b64decode(json.loads(sequence_text)["bam_base64"], validate=True)
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide bam_base64 containing BGZF-compressed BAM bytes") from exc
+        if len(raw) > 900_000:
+            raise ValueError("BAM payload exceeds the 900 KB mobile limit")
+        count = mapped = bases = mapq = 0
+        for record in iter_bam_records(io.BytesIO(raw), max_records=100_000, max_total_bases=5_000_000, max_header_bytes=2_000_000):
+            count += 1
+            mapped += int(record.reference != "*" and record.position > 0)
+            bases += 0 if record.sequence == "*" else len(record.sequence)
+            mapq += record.mapq
+        result = {"record_count": count, "mapped_record_count": mapped, "query_bases": bases, "mean_mapq": mapq / count if count else None}
+        limitations = ["BGZF BAM core fields only; CRAM and auxiliary tags are not decoded", "Only aggregate metrics are returned", "Caps: 900 KB compressed input, 100,000 records and 5 million query bases"]
+    elif capability_id == "pgx.star_allele_definitions":
+        from dataclasses import asdict
+        from kinetics.pgx import parse_star_allele_definitions, VariantKey, match_phased_haplotype
+        try:
+            p = json.loads(sequence_text)
+            definitions = parse_star_allele_definitions(p["definitions_json"], expected_source_release=p["source_release"], max_definitions=2_000)
+            observed = [VariantKey(**v) for v in p.get("observed_variants", [])]
+            match = match_phased_haplotype(p["gene_symbol"], observed, definitions, genome_build=p["genome_build"], phase_confirmed=bool(p.get("phase_confirmed", False)), call_complete=bool(p.get("call_complete", False)))
+            result = {"definition_count": len(definitions), "match": asdict(match)}
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide definition JSON, source release, gene symbol, genome build and observed variants") from exc
+        limitations = ["Exact matching only for complete, already phased calls", "Unphased/incomplete data returns no-call; no phase or copy-number inference", "Not a prescribing recommendation or clinical PGx interpretation"]
+    elif capability_id == "chemistry.rdkit_adapter":
+        from kinetics.chemistry_rdkit import analyze_smiles, analyze_molblock
+        try:
+            p = json.loads(sequence_text)
+            result = analyze_molblock(p["molblock"]) if p.get("molblock") else analyze_smiles(p["smiles"])
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide a SMILES string or V2000/V3000 molblock") from exc
+        limitations = ["Requires a compatible RDKit runtime; it is not bundled in the current Android Python environment", "Computed descriptors are not experimental ADMET or safety measurements"]
+    elif capability_id == "genomics.htslib_bam_cram":
+        from kinetics.genomics_htslib import iter_alignment_records
+        try:
+            p = json.loads(sequence_text)
+            records = iter_alignment_records(p["path"], reference_fasta=p.get("reference_fasta"), region=tuple(p["region"]) if p.get("region") else None)
+            count = bases = mapped = 0
+            for record in records:
+                count += 1
+                mapped += int(record.reference != "*" and record.position > 0)
+                bases += 0 if record.sequence == "*" else len(record.sequence)
+                if count > 100_000 or bases > 5_000_000:
+                    raise ValueError("HTSlib read exceeds configured mobile limits")
+            result = {"record_count": count, "mapped_record_count": mapped, "query_bases": bases}
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide a local BAM/CRAM path and optional reference FASTA/region") from exc
+        limitations = ["Requires pysam/HTSlib, which is not bundled in the current Android environment", "CRAM requires explicit local reference FASTA; remote reference fallback is disabled", "Local paths only"]
+    elif capability_id == "pgx.pharmvar_tsv":
+        from dataclasses import asdict
+        from kinetics.pharmvar import parse_pharmvar_tsv, PharmVarVariant, match_pharmvar_haplotype
+        try:
+            p = json.loads(sequence_text)
+            definitions = parse_pharmvar_tsv(p["tsv"], source_release=p["source_release"], source_url=p["source_url"], source_sha256=p["source_sha256"], license_id=p["license_id"], expected_release=p["expected_release"], max_input_bytes=900_000, max_rows=10_000)
+            observed = [PharmVarVariant(**v) for v in p.get("observed_variants", [])]
+            match = match_pharmvar_haplotype(p["gene_symbol"], p["reference_accession"], observed, definitions, phase_confirmed=bool(p.get("phase_confirmed", False)), call_complete=bool(p.get("call_complete", False)))
+            result = {"definition_count": len(definitions), "match": asdict(match)}
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide release-pinned PharmVar TSV, checksum, HTTPS source, license and match metadata") from exc
+        limitations = ["Exact reference-accession matching only", "Unphased/incomplete calls return no-call", "Not a phenotype, drug-response or prescribing interpretation"]
+    elif capability_id == "structure.viewer_payload":
+        from kinetics.structure import Atom
+        from kinetics.structure_view import prepare_viewer_payload, serialize_viewer_payload
+        try:
+            p = json.loads(sequence_text)
+            atoms = [Atom(**a) for a in p["atoms"]]
+            payload = prepare_viewer_payload(atoms, source_format=p["source_format"], max_atoms=20_000, max_payload_bytes=1_000_000)
+            result = {"payload": payload, "serialized_json": serialize_viewer_payload(payload, max_payload_bytes=1_000_000)}
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide source_format and atom records with coordinates and annotations") from exc
+        limitations = ["Coordinate payload only; no bonds, protonation, secondary structure or quality inference", "Viewer rendering is a separate component", "Mobile cap: 20,000 atoms and 1 MB serialized payload"]
+    elif capability_id == "structure.session_export":
+        import base64
+        from kinetics.structure_view import build_structure_session_export, validate_viewer_payload
+        try:
+            p = json.loads(sequence_text)
+            raw = base64.b64decode(p["source_base64"], validate=True)
+            validate_viewer_payload(p["payload"], max_payload_bytes=1_000_000)
+            result = {"session_json": build_structure_session_export(raw, p["payload"], parser_version=p["parser_version"], max_export_bytes=2_000_000)}
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide source_base64, a valid viewer payload and parser_version") from exc
+        limitations = ["Deterministic JSON session export; not a rendered structure or native project file", "Exports contain source coordinates; protect exported files accordingly"]
+    elif capability_id in {"structure.pinned_local_prediction_process", "structure.local_prediction_engine_adapter"}:
+        from kinetics.s4_process import PinnedSubprocessPredictionEngine, run_pinned_local_prediction
+        try:
+            p = json.loads(sequence_text)
+            engine = PinnedSubprocessPredictionEngine(executable_path=p["executable_path"], executable_sha256=p["executable_sha256"], weights_path=p["weights_path"], weights_sha256=p["weights_sha256"], model_name=p["model_name"], model_version=p["model_version"], model_license=p["model_license"], engine_id=p["engine_id"], software_version=p["software_version"], node_id=p["node_id"], run_id=p["run_id"], timeout_seconds=180)
+            result = run_pinned_local_prediction(p["sequence"], engine, max_residues=5_000, max_payload_bytes=1_000_000)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide sequence, local executable/weights paths, SHA-256 pins and model/node provenance") from exc
+        limitations = ["Requires separately installed local executable and model weights; neither is bundled", "Executable must implement the Kinetics JSON request/response protocol", "Envelope validation does not establish model accuracy or clinical validity"]
+    elif capability_id == "genome.augustus_local_gene_candidates":
+        from kinetics.augustus import run_local_augustus
+        from kinetics.sequence import iter_fasta_records
+        try:
+            p = json.loads(sequence_text)
+            records = iter_fasta_records(p["fasta"].splitlines())
+            result = run_local_augustus(records, executable_path=p["executable_path"], executable_sha256=p["executable_sha256"], config_path=p["config_path"], species=p["species"], species_model_sha256=p["species_model_sha256"], tool_version=p["tool_version"], timeout_seconds=180, max_contigs=500, max_total_bases=2_000_000, max_executable_bytes=200_000_000, max_model_bytes=500_000_000, max_gff3_bytes=8_000_000)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("AUGUSTUS requires FASTA, local executable/config paths, species and pinned hashes") from exc
+        limitations = ["Requires a separately installed local AUGUSTUS binary and species model; neither is bundled", "Output is candidate annotation, not a validated gene set", "Model and license provenance must be reviewed"]
+    elif capability_id == "genome.prodigal_local_gene_candidates":
+        from kinetics.prodigal import run_local_prodigal
+        from kinetics.sequence import iter_fasta_records
+        try:
+            p = json.loads(sequence_text)
+            records = iter_fasta_records(p["fasta"].splitlines())
+            result = run_local_prodigal(records, executable_path=p["executable_path"], executable_sha256=p["executable_sha256"], tool_version=p["tool_version"], translation_table=p.get("translation_table", 11), mode=p.get("mode", "single"), timeout_seconds=180, max_contigs=500, max_total_bases=2_000_000, max_executable_bytes=200_000_000, max_gff3_bytes=8_000_000)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Prodigal requires FASTA, local executable path/hash and tool version") from exc
+        limitations = ["Requires a separately installed local Prodigal binary; it is not bundled", "GFF3 contains candidate genes, not a validated gene set", "Only engine-supported translation tables are accepted"]
+    elif capability_id == "genome.pinned_local_gff3_annotator":
+        from kinetics.genome_annotation import run_pinned_local_gff3_annotator
+        from kinetics.sequence import iter_fasta_records
+        try:
+            p = json.loads(sequence_text)
+            records = iter_fasta_records(p["fasta"].splitlines())
+            result = run_pinned_local_gff3_annotator(records, executable_path=p["executable_path"], executable_sha256=p["executable_sha256"], annotator_id=p["annotator_id"], annotator_version=p["annotator_version"], mode=p.get("mode", "prokaryotic"), translation_table=p.get("translation_table", 11), timeout_seconds=180, max_contigs=500, max_total_bases=2_000_000, max_executable_bytes=200_000_000, max_gff3_bytes=8_000_000)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("GFF3 annotator requires FASTA, local executable path/hash and annotator provenance") from exc
+        limitations = ["Requires a separately installed local annotator binary; none is bundled", "Output is strict GFF3 but not validated biological annotation", "No network or public API is used"]
+
     else:
         raise ValueError("This capability is not exposed by the Android basic runner")
 

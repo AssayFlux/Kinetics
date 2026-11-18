@@ -8,8 +8,8 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **49**
-- Catalogue entries not yet connected to Android: **19**
+- Catalogue entries connected to Android workflows: **68**
+- Catalogue entries not yet connected to Android: **0**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.

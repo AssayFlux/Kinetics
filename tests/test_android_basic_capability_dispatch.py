@@ -509,3 +509,73 @@ def test_experimental_ca_comparison_route_is_allow_listed():
     assert capability_id in UI
     assert capability_id in RUNNER
     assert capability_id in PROBE
+
+
+def test_last_catalogue_mobile_routes_are_present_in_all_three_layers():
+    expected = (
+        "sequence.local_reference_pack_loader", "sequence.local_blastp",
+        "sequence.local_hmmpress", "sequence.local_hmmscan",
+        "variant.reference_checked_normalization", "genes.ncbi_catalogue",
+        "genomics.variant_normalization", "omics.nb2_glm", "genomics.bam_core",
+        "pgx.star_allele_definitions", "chemistry.rdkit_adapter",
+        "genomics.htslib_bam_cram", "pgx.pharmvar_tsv",
+        "structure.viewer_payload", "structure.session_export",
+        "structure.pinned_local_prediction_process",
+        "genome.augustus_local_gene_candidates",
+        "genome.prodigal_local_gene_candidates",
+        "genome.pinned_local_gff3_annotator",
+        "structure.local_prediction_engine_adapter",
+    )
+    for capability_id in expected:
+        assert capability_id in UI
+        assert capability_id in RUNNER
+        assert capability_id in PROBE
+
+
+def test_mobile_nb2_variant_and_viewer_payload_engines_execute():
+    import hashlib
+    import json
+
+    sequence = "ACGTACGT"
+    reference = {
+        "assembly": "GRCh-test", "accession": "NC_TEST.1",
+        "release": "test-release", "contig": "chrT", "sequence": sequence,
+        "sequence_sha256": hashlib.sha256(sequence.encode("ascii")).hexdigest(),
+        "retrieved_at": "2026-11-18T00:00:00Z",
+    }
+    variant = _run_probe("variant.reference_checked_normalization", json.dumps({
+        "reference": reference, "chrom": "chrT", "position": 2, "ref": "C", "alt": "T",
+    }))
+    assert variant["result"]["reference_sequence_sha256"] == reference["sequence_sha256"]
+
+    glm = _run_probe("omics.nb2_glm", json.dumps({
+        "counts": [[10, 12, 20, 22], [30, 28, 31, 29]],
+        "condition": [0, 0, 1, 1], "feature_ids": ["geneA", "geneB"],
+    }))
+    assert len(glm["result"]) == 2
+
+    viewer = _run_probe("structure.viewer_payload", json.dumps({
+        "source_format": "pdb",
+        "atoms": [{
+            "serial": 1, "name": "CA", "residue": "GLY", "chain": "A",
+            "residue_number": 1, "x": 0.0, "y": 0.0, "z": 0.0, "element": "C",
+        }],
+    }))
+    assert viewer["result"]["payload"]["atom_count"] == 1
+
+
+def test_mobile_pgx_incomplete_phase_returns_no_call():
+    import json
+
+    document = {
+        "schema_version": 1,
+        "source": {"name": "Synthetic", "release": "1", "url": "https://example.org",
+                   "license": "CC0-1.0", "sha256": "0" * 64},
+        "genome_build": "GRCh-test", "definitions": [],
+    }
+    result = _run_probe("pgx.star_allele_definitions", json.dumps({
+        "definitions_json": json.dumps(document), "source_release": "1",
+        "gene_symbol": "GENE", "genome_build": "GRCh-test",
+        "observed_variants": [], "phase_confirmed": False, "call_complete": False,
+    }))
+    assert result["result"]["match"]["status"] == "no_call_unphased"

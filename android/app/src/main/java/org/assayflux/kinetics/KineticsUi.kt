@@ -485,7 +485,26 @@ private fun ServiceDetailScreen(
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
-        "genomics.sam_vcf",
+        "genomics.sam_vcf",,
+        "sequence.local_reference_pack_loader",
+        "sequence.local_blastp",
+        "sequence.local_hmmpress",
+        "sequence.local_hmmscan",
+        "variant.reference_checked_normalization",
+        "genomics.variant_normalization",
+        "omics.nb2_glm",
+        "genomics.bam_core",
+        "pgx.star_allele_definitions",
+        "chemistry.rdkit_adapter",
+        "genomics.htslib_bam_cram",
+        "pgx.pharmvar_tsv",
+        "structure.viewer_payload",
+        "structure.session_export",
+        "structure.pinned_local_prediction_process",
+        "genome.augustus_local_gene_candidates",
+        "genome.prodigal_local_gene_candidates",
+        "genome.pinned_local_gff3_annotator",
+        "structure.local_prediction_engine_adapter"
     )
     Frame("SCIENTIFIC SERVICE", capability?.name ?: domain, "Service ID: ${capability?.id ?: "not registered"} · $domain", modifier) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
@@ -697,6 +716,36 @@ private fun ServiceDetailScreen(
                     description = "Summarize a bounded, source-release-pinned NCBI gene_info TSV snapshot. Reports composition and missing annotations only; it does not claim genome-wide completeness.",
                     sample = "{\"source_release\":\"NCBI Gene 2025-01\",\"gene_info_tsv\":\"9606\\t1\\tA1BG\\t-\\tA1B\\t-\\t19\\t19q13.43\\talpha-1-B glycoprotein\\tprotein-coding\\tA1BG\\talpha-1-B glycoprotein\\tApproved\\t-\\t20250101\\tgene\"}",
                     actionLabel = "Summarize gene snapshot",
+                ) }
+            }
+            if (capability?.id in setOf(
+                "sequence.local_reference_pack_loader",
+                "sequence.local_blastp",
+                "sequence.local_hmmpress",
+                "sequence.local_hmmscan",
+                "variant.reference_checked_normalization",
+                "genes.ncbi_catalogue",
+                "genomics.variant_normalization",
+                "omics.nb2_glm",
+                "genomics.bam_core",
+                "pgx.star_allele_definitions",
+                "chemistry.rdkit_adapter",
+                "genomics.htslib_bam_cram",
+                "pgx.pharmvar_tsv",
+                "structure.viewer_payload",
+                "structure.session_export",
+                "structure.pinned_local_prediction_process",
+                "genome.augustus_local_gene_candidates",
+                "genome.prodigal_local_gene_candidates",
+                "genome.pinned_local_gff3_annotator",
+                "structure.local_prediction_engine_adapter"
+            )) {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = capability.id ?: "",
+                    title = capability.name ?: "Advanced local workflow",
+                    description = "Advanced local workflow. Supply JSON input following the workflow schema in docs/track-u/android-capability-integration-matrix.md. Optional engine binaries/libraries must be installed and hash-pinned locally; unavailable dependencies are reported rather than simulated.",
+                    sample = "{}",
+                    actionLabel = "Run local workflow",
                 ) }
             }
             if (capability?.id == "protein.fixed_width_motif_scan") {

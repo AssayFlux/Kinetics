@@ -249,3 +249,13 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - Comparison requires exact chain/residue/residue-name correspondence and reports superposed CA RMSD only. It does not perform alignment, calculate TM-score, validate biological function or certify experimental accuracy.
 - The reconciled Android catalogue count is **49/68 connected; 19 remain unconnected**, plus the separate public reference-database service.
 - Exact-head CI remains pending; no APK or device acceptance is claimed.
+
+
+## 23. Android route completion for remaining catalogue entries — 2026-11-18
+
+- Added Android service-page access and Kotlin/Python allow-list routing for all 20 entries missing from the strict UI + Kotlin + Python intersection. `genes.ncbi_catalogue` already had a UI route; its Kotlin and Python routes were added here.
+- Implemented mobile bridges for local FASTA reference-pack ingestion/search, reference-bound and basic variant normalization, NCBI Gene snapshot ingestion, NB2 GLM, BGZF BAM core-field aggregation, PGx definition matching, PharmVar parsing/matching, deterministic structure viewer payload generation and structure-session export.
+- Added dependency-aware adapters for BLASTP, HMMER hmmpress/hmmscan, RDKit, pysam/HTSlib, S4 prediction process, AUGUSTUS, Prodigal and generic pinned GFF3 annotation. These require separately installed Android-compatible binaries/libraries; they are not bundled in the current Android build. RDKit and pysam/HTSlib are also not installed in the current Chaquopy environment. Those routes must report missing dependencies rather than pretend to execute.
+- The catalogue has **68/68 Android route registrations** across UI, Kotlin allow-list and Python dispatch. This is route coverage only—not proof that optional engines are packaged, executable out of the box, scientifically validated or clinically validated.
+- Added regression tests for route parity and execution of the NB2, reference-normalization, viewer-payload and conservative PGx no-call paths.
+- Exact-head CI/build is required before APK success is claimed.

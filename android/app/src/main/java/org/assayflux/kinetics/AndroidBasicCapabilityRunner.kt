@@ -50,7 +50,27 @@ internal object AndroidBasicCapabilityRunner {
         "sequence.local_fasta_exact_search",
         "sequence.local_fasta_alignment_search",
         "phylo.newick_export",
-        "structure.pdb_geometry",
+        "structure.pdb_geometry",,
+        "sequence.local_reference_pack_loader",
+        "sequence.local_blastp",
+        "sequence.local_hmmpress",
+        "sequence.local_hmmscan",
+        "variant.reference_checked_normalization",
+        "genes.ncbi_catalogue",
+        "genomics.variant_normalization",
+        "omics.nb2_glm",
+        "genomics.bam_core",
+        "pgx.star_allele_definitions",
+        "chemistry.rdkit_adapter",
+        "genomics.htslib_bam_cram",
+        "pgx.pharmvar_tsv",
+        "structure.viewer_payload",
+        "structure.session_export",
+        "structure.pinned_local_prediction_process",
+        "genome.augustus_local_gene_candidates",
+        "genome.prodigal_local_gene_candidates",
+        "genome.pinned_local_gff3_annotator",
+        "structure.local_prediction_engine_adapter"
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

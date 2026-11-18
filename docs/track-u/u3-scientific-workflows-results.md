@@ -16,7 +16,7 @@
 
 ### FASTQ quality summary
 
-- A new ImportedFastqAnalysisWorker accepts only FASTQ/FQ inputs from completed, hash-verified imports.
+- A new ImportedFastqAnalysisWorker accepts FASTQ/FQ inputs and gzip-compressed .fastq.gz/.fq.gz inputs from completed, hash-verified imports.
 - Input is bounded to 1,000,000 bytes and 1,000,000 decoded characters before Python analysis.
 - Phred offset is required as an explicit WorkManager input and restricted to 33 or 64. It is never guessed.
 - The Work UI asks the user to choose Phred+33 or Phred+64 before queuing the analysis.
@@ -56,3 +56,10 @@
 ## Import lifecycle correction — 2026-11-18
 
 The import worker now atomically claims and finalizes the durable job state. Cancellation is committed before WorkManager cancellation, and finalization refuses a job no longer marked running. Resume transitions are explicit; WorkManager process recreation may reclaim a running job and continue from its authenticated encrypted partial. Automated store and worker regression tests were added. Exact-head CI and forced process-death/device testing remain outstanding.
+
+
+### Gzip-compressed sequence inputs — 2026-11-18
+
+- The encrypted-import FASTA/FASTQ workers now detect gzip by filename suffix and decompress on-device.
+- Expanded content remains bounded to 1,000,000 bytes and 1,000,000 decoded characters before parsing; malformed UTF-8 and NUL bytes are rejected.
+- Provenance records the compression handling mode and expanded-size limit. Automated CI continues to use synthetic sequence fixtures only.

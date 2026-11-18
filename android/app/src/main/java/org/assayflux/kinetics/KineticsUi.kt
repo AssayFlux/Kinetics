@@ -1300,7 +1300,7 @@ internal fun BiometricLockScreen(
             ) {
                 Card(
                     modifier = Modifier.fillMaxWidth().widthIn(max = 480.dp),
-                    shape = RoundedCornerShape(20.dp),
+                    shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     border = androidx.compose.foundation.BorderStroke(
                         1.dp, MaterialTheme.colorScheme.outline,
@@ -1335,7 +1335,7 @@ internal fun BiometricLockScreen(
                         if (error != null) {
                             Surface(
                                 color = MaterialTheme.colorScheme.errorContainer,
-                                shape = RoundedCornerShape(12.dp),
+                                shape = RoundedCornerShape(6.dp),
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Text(

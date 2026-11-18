@@ -89,3 +89,14 @@ def test_spacing_and_touch_target_contract_is_present() -> None:
     assert tokens["shared"]["spacing_dp"] == [4, 8, 12, 16, 20, 24, 32, 40]
     assert tokens["shared"]["touch_target_min_dp"] == 48
     assert tokens["shared"]["target_gap_dp"] == 8
+
+
+def test_active_compose_cards_follow_v1_radius_scale() -> None:
+    ui = (
+        ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt"
+    ).read_text()
+    assert "RoundedCornerShape(18.dp)" not in ui
+    assert "RoundedCornerShape(20.dp)" not in ui
+    assert "RoundedCornerShape(26.dp)" not in ui
+    assert "RoundedCornerShape(16.dp)" in ui
+    assert "RoundedCornerShape(12.dp)" in ui

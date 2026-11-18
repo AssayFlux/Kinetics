@@ -1,7 +1,7 @@
 package org.assayflux.kinetics
 
 import androidx.work.ListenableWorker
-import androidx.work.TestListenableWorkerBuilder
+import androidx.work.testing.TestListenableWorkerBuilder
 import androidx.work.workDataOf
 import org.junit.After
 import org.junit.Assert.assertEquals

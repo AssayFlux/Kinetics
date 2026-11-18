@@ -8,8 +8,8 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **29**
-- Catalogue entries not yet connected to Android: **39**
+- Catalogue entries connected to Android workflows: **31**
+- Catalogue entries not yet connected to Android: **37**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.
@@ -54,6 +54,9 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 | `protein.fixed_width_motif_scan` | Caller-supplied, hash-pinned fixed-width motif pack scan |
 | `genome.prokaryotic_orf_candidate_scan` | Bounded multi-contig prokaryotic ORF candidate scan |
 | `kinetics.bootstrap_intervals` | Paired nonparametric Michaelis–Menten bootstrap percentile intervals |
+
+| `protein.design_brief_validation` | Human-reviewed protein research brief validation with sequence generation blocked |
+| `structure.geometry_screen_metrics` | Bounded PDB atom/residue and steric-overlap geometry screen |
 
 All local forms use an explicit bridge allow-list and bounded input/work limits. Their method-specific limitations are returned or displayed with results.
 
@@ -106,7 +109,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `structure.viewer_payload` | `python/kinetics/structure_view.py` | Not connected — Python source only |
 | `structure.session_export` | `python/kinetics/structure_view.py` | Not connected — Python source only |
 | `structure.exact_sequence_mapping` | `python/kinetics/sequence_structure.py` | Not connected — Python source only |
-| `structure.geometry_screen_metrics` | `python/kinetics/structure_quality.py` | Not connected — Python source only |
+| `structure.geometry_screen_metrics` | `python/kinetics/structure_quality.py` | Connected — local Android form + Python bridge |
 | `structure.variant_coordinate_mapping` | `python/kinetics/sequence_structure.py` | Not connected — Python source only |
 | `structure.chain_interface_contacts` | `python/kinetics/sequence_structure.py` | Not connected — Python source only |
 | `structure.ligand_site_candidates` | `python/kinetics/structure_pockets.py` | Connected — local Android form + Python bridge |
@@ -116,7 +119,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `structure.experimental_ca_comparison` | `python/kinetics/structure_prediction.py` | Not connected — Python source only |
 | `genome.contig_assembly_qc` | `python/kinetics/genome_qc.py` | Connected — local Android form + Python bridge |
 | `protein.fixed_width_motif_scan` | `python/kinetics/protein_motifs.py` | Connected — local Android form + Python bridge |
-| `protein.design_brief_validation` | `python/kinetics/protein_design.py` | Not connected — Python source only |
+| `protein.design_brief_validation` | `python/kinetics/protein_design.py` | Connected — local Android form + Python bridge |
 | `structure.alignment_coordinate_mapping` | `python/kinetics/structure_alignment.py` | Not connected — Python source only |
 | `sequence.local_alignment_reference_search` | `python/kinetics/sequence_reference.py` | Not connected — Python source only |
 | `genome.gff3_annotation_import` | `python/kinetics/gff3.py` | Connected — local Android form + Python bridge |

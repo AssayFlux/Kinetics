@@ -187,3 +187,11 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - Commit `c4640967d7c3ce0982a94372ac0ea06b2b92149f` adds a multi-contig prokaryotic ORF candidate scanner and paired Michaelis–Menten bootstrap intervals with a 100–500 replicate mobile limit.
 - The Android app now exposes 29 of 68 catalogue capabilities; 39 remain unconnected. The separate public-reference-database service brings the source-level Android workflow count to 30.
 - Updated the capability matrix. Exact-head CI is still pending.
+
+
+## 16. Protein design governance and structure geometry — 2026-11-18
+
+- Commit `74002543c0614e895c5750389fd36b4e5857a73c` adds Android validation of protein-design research briefs. The underlying engine explicitly blocks sequence generation until model, data, safety and review gates are approved.
+- Commit `73dd399e9bf04bfff035245df32f1749e113da8e` corrects the PDB fixture and retains regression coverage for the bounded structure geometry screen.
+- The Android app now exposes 31 of 68 catalogue capabilities; 37 remain unconnected. Including the separate public-reference-database service, 32 Android workflows are represented in source.
+- Updated the integration matrix. Exact-head CI remains pending.

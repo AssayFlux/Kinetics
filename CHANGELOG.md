@@ -4,6 +4,11 @@ All notable project changes will be recorded here.
 
 ## v0.1.0 — basic working model (release target; not yet published)
 
+- Added explicit immutable-baseline, branch, change-control and release-state governance; v0.1.0 remains a candidate until exact-commit acceptance and owner approval.
+- Added a machine-readable candidate release manifest and CI checks for version alignment and Android capability-matrix consistency.
+- Corrected the Android integration matrix: 36 of 68 catalogue capabilities are connected; 32 remain Python-only/not connected. The former 68/68 summary contradicted its own row-level table.
+- Added separate `release/0.1.0` stabilization and `develop/v0.1.2` future-development branches. Both are currently unprotected; repository-side protection still needs administrator configuration.
+
 - Set Python package and Android application metadata to version 0.1.0.
 - Defined the bounded first-release scope: local research workspace, truthful Home/Work/Settings shell, supported FASTA/FASTQ workflows, bounded structure/chemistry viewing, provenance and reproducible ARM64 packaging.
 - Explicitly exclude claims of complete Android dispatch for every registered tool, de-novo protein folding, clinically validated PGx, validated ADMET, general-purpose molecular dynamics and universal database coverage.

@@ -81,6 +81,9 @@ def test_all_new_capabilities_are_reported_as_android_connected():
         "structure.interaction_candidates",
         "microbiome.diversity",
         "omics.logistic_growth",
+        "sequence.explicit_genetic_code_translation",
+        "kinetics.inhibition_rate",
+        "phylo.upgma",
     ):
         assert f'"{capability_id}"' in status_block
 
@@ -104,14 +107,14 @@ def test_android_probe_dispatch_runs_all_exposed_capabilities_on_host():
     assert _run_probe("kinetics.michaelis_menten", "10,100,5")["rate"] > 0
     assert _run_probe("phylo.newick", "((A:0.1,B:0.2):0.3,C:0.4);")["leaf_count"] == 3
 
-    alignment = _run_probe("sequence.global_alignment", "ACGTACGT\\nACGTCGTT")
+    alignment = _run_probe("sequence.global_alignment", "ACGTACGT\nACGTCGTT")
     assert "score" in alignment
-    assembly = _run_probe("genome.contig_assembly_qc", ">a\\nACGTACGTACGT\\n>b\\nGGGGCCCC")
+    assembly = _run_probe("genome.contig_assembly_qc", ">a\nACGTACGTACGT\n>b\nGGGGCCCC")
     assert isinstance(assembly, dict)
 
     pdb = (
-        "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\n"
-        "TER\\nEND\\n"
+        "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\n"
+        "TER\nEND\n"
     )
     assert _run_probe("structure.sasa", pdb)
     assert _run_probe("structure.interaction_candidates", pdb)
@@ -152,3 +155,13 @@ def test_translation_inhibition_and_upgma_routes_execute_and_validate():
     )
     assert tree["leaf_count"] == 3
     assert tree["newick"].endswith(";")
+
+def test_translation_inhibition_and_upgma_routes_are_allow_listed():
+    for capability_id in (
+        "sequence.explicit_genetic_code_translation",
+        "kinetics.inhibition_rate",
+        "phylo.upgma",
+    ):
+        assert capability_id in UI
+        assert capability_id in RUNNER
+        assert capability_id in PROBE

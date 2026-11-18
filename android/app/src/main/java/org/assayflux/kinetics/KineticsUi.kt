@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.runtime.*
@@ -82,8 +83,19 @@ internal fun KineticsAppShell(
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var workSearchQuery by rememberSaveable { mutableStateOf("") }
     var showComponentGallery by rememberSaveable { mutableStateOf(false) }
-    BackHandler(enabled = showSearch || showComponentGallery) {
-        if (showComponentGallery) showComponentGallery = false else showSearch = false
+    var showProfile by rememberSaveable { mutableStateOf(false) }
+    var selectedServiceDomain by rememberSaveable { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+    val capabilities = remember(context) {
+        runCatching { loadCapabilityCatalogue(context) }.getOrDefault(emptyList())
+    }
+    BackHandler(enabled = showSearch || showComponentGallery || showProfile || selectedServiceDomain != null) {
+        when {
+            showComponentGallery -> showComponentGallery = false
+            showSearch -> showSearch = false
+            showProfile -> showProfile = false
+            else -> selectedServiceDomain = null
+        }
     }
     val resolvedTheme = when (themeFamily) {
         "system" -> if (isSystemInDarkTheme()) "dark" else "light"
@@ -96,8 +108,7 @@ internal fun KineticsAppShell(
             primary = palette.primary, secondary = palette.secondary, tertiary = palette.tertiary,
             background = palette.background, surface = palette.surface, onSurface = palette.text,
             onBackground = palette.text, surfaceVariant = palette.surfaceAlt,
-            onSurfaceVariant = palette.muted, outline = palette.outline,
-            error = decisionColors.error,
+            onSurfaceVariant = palette.muted, outline = palette.outline, error = decisionColors.error,
         )
     } else {
         darkColorScheme(
@@ -105,172 +116,243 @@ internal fun KineticsAppShell(
             secondary = palette.secondary, tertiary = palette.tertiary,
             background = palette.background, surface = palette.surface, onSurface = palette.text,
             onBackground = palette.text, surfaceVariant = palette.surfaceAlt,
-            onSurfaceVariant = palette.muted, outline = palette.outline,
-            error = decisionColors.error,
+            onSurfaceVariant = palette.muted, outline = palette.outline, error = decisionColors.error,
         )
     }
     MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
-        BoxWithConstraints(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
-            // Classify the app window, not the physical device. These are the
-            // current Android adaptive breakpoints recorded in docs/ui/verified-specs.md.
-            val navigationMode = classifyNavigationMode(maxWidth.value, maxHeight.value)
-            val useDrawer = navigationMode == NavigationMode.Drawer
-            val useRail = navigationMode == NavigationMode.Rail
-            val drawerState = rememberDrawerState(DrawerValue.Closed)
-            val drawerScope = rememberCoroutineScope()
-
-            @Composable
-            fun Screen(modifier: Modifier) {
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val drawerScope = rememberCoroutineScope()
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            gesturesEnabled = true,
+            drawerContent = {
+                ModalDrawerSheet(
+                    modifier = Modifier.fillMaxHeight().widthIn(max = 340.dp),
+                    drawerContainerColor = MaterialTheme.colorScheme.surface,
+                ) {
+                    Column(
+                        Modifier.fillMaxWidth().height(160.dp).padding(horizontal = 24.dp, vertical = 20.dp),
+                        verticalArrangement = Arrangement.Bottom,
+                    ) {
+                        Text("KINETICS", style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.SemiBold, letterSpacing = 1.4.sp)
+                        Spacer(Modifier.height(6.dp))
+                        Text("COMPUTATIONAL RESEARCH", style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.sp)
+                    }
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                    Spacer(Modifier.height(12.dp))
+                    KineticsTab.entries.forEach { item ->
+                        NavigationDrawerItem(
+                            selected = tab == item && selectedServiceDomain == null && !showProfile,
+                            onClick = {
+                                tab = item
+                                selectedServiceDomain = null
+                                showProfile = false
+                                drawerScope.launch { drawerState.close() }
+                            },
+                            icon = { KineticsTabIcon(item) },
+                            label = { Text(item.label) },
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
+                        )
+                    }
+                    Spacer(Modifier.weight(1f))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                    Text("RESEARCH MODE", modifier = Modifier.padding(horizontal = 24.dp, vertical = 18.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            },
+        ) {
+            Scaffold(
+                containerColor = MaterialTheme.colorScheme.background,
+                topBar = {
+                    KineticsAppBar(
+                        title = when {
+                            showSearch -> "Search"
+                            showComponentGallery -> "Design system"
+                            showProfile -> "Profile"
+                            selectedServiceDomain != null -> selectedServiceDomain!!
+                            else -> "KINETICS"
+                        },
+                        subtitle = when {
+                            showSearch -> "Jobs and registered capabilities"
+                            showComponentGallery -> "Developer component preview"
+                            showProfile -> "Local profile and device security"
+                            selectedServiceDomain != null -> "Scientific service workspace"
+                            else -> tab.label
+                        },
+                        navigation = {
+                            if (showSearch || showComponentGallery || showProfile || selectedServiceDomain != null) {
+                                IconButton(
+                                    onClick = {
+                                        when {
+                                            showSearch -> showSearch = false
+                                            showComponentGallery -> showComponentGallery = false
+                                            showProfile -> showProfile = false
+                                            else -> selectedServiceDomain = null
+                                        }
+                                    },
+                                    modifier = Modifier.size(48.dp),
+                                ) { Icon(Icons.Outlined.ArrowBack, contentDescription = "Back") }
+                            } else {
+                                IconButton(
+                                    onClick = { drawerScope.launch { drawerState.open() } },
+                                    modifier = Modifier.size(48.dp),
+                                ) { Icon(Icons.Outlined.Menu, contentDescription = "Open navigation menu") }
+                            }
+                        },
+                        actions = {
+                            if (!showSearch && !showComponentGallery && !showProfile && selectedServiceDomain == null) {
+                                IconButton(onClick = { showSearch = true }, modifier = Modifier.size(48.dp)) {
+                                    Icon(Icons.Outlined.Search, contentDescription = "Search jobs and capabilities")
+                                }
+                                IconButton(onClick = { showProfile = true }, modifier = Modifier.size(48.dp)) {
+                                    Icon(Icons.Outlined.AccountCircle, contentDescription = "Open profile")
+                                }
+                            }
+                        },
+                    )
+                },
+            ) { padding ->
+                val contentModifier = Modifier.padding(padding)
                 when {
                     showComponentGallery -> KineticsComponentGallery()
+                    showProfile -> ProfileScreen(biometricEnabled, biometricAvailable)
                     showSearch -> GlobalSearchScreen(
                         query = searchQuery,
                         onQueryChange = { searchQuery = it },
                         jobs = jobs,
-                        onSelectJob = { result -> workSearchQuery = result.title; showSearch = false; tab = KineticsTab.Work },
-                        onSelectCapability = { showSearch = false; tab = KineticsTab.Home },
-                        modifier = modifier,
+                        onSelectJob = { result ->
+                            workSearchQuery = result.title
+                            showSearch = false
+                            tab = KineticsTab.Work
+                        },
+                        onSelectCapability = { result ->
+                            val entry = capabilities.firstOrNull { it.id == result.id.removePrefix("capability:") }
+                            selectedServiceDomain = entry?.domain
+                            showSearch = false
+                        },
+                        modifier = contentModifier,
+                    )
+                    selectedServiceDomain != null -> ServiceDomainScreen(
+                        domain = selectedServiceDomain!!,
+                        capabilities = capabilities.filter { it.domain == selectedServiceDomain },
+                        onImport = onImport,
+                        modifier = contentModifier,
                     )
                     else -> when (tab) {
-                        KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
-                            onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, onAnalyzeFastq, modifier)
-                        KineticsTab.Work -> WorkScreen(jobs, workSearchQuery, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, onAnalyzeFastq, modifier)
+                        KineticsTab.Home -> HomeScreen(
+                            jobs, notice, runtimeReport, resolvedTheme, onImport, onRunRuntime,
+                            { tab = KineticsTab.Work }, { selectedServiceDomain = it },
+                            onCancel, onResume, onDelete, onExport, onExportProvenance,
+                            onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis,
+                            onAnalyzeFastq, contentModifier,
+                        )
+                        KineticsTab.Work -> WorkScreen(
+                            jobs, workSearchQuery, onImport, onCancel, onResume, onDelete, onExport,
+                            onExportProvenance, onExportProvenanceSummary, onAnalyzeImported,
+                            onExportAnalysis, onAnalyzeFastq, contentModifier,
+                        )
                         KineticsTab.Settings -> SettingsScreen(
                             runtimeReport, onRunRuntime, onRefresh, themeFamily, onThemeFamilyChange,
                             biometricEnabled, biometricAvailable, onBiometricChange,
-                            debugBuild, { showComponentGallery = true }, modifier,
+                            debugBuild, { showComponentGallery = true }, contentModifier,
                         )
                     }
                 }
             }
+        }
+    }
+}
 
-            @Composable
-            fun AppBar(showMenu: Boolean) {
-                KineticsAppBar(
-                    title = when {
-                        showSearch -> "Search"
-                        showComponentGallery -> "Design system"
-                        else -> "KINETICS"
+@Composable
+private fun ProfileScreen(biometricEnabled: Boolean, biometricAvailable: Boolean) {
+    Frame("ACCOUNT", "Local profile", "Account services are not configured in this build.", Modifier) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
+                Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Icon(Icons.Outlined.AccountCircle, contentDescription = null, modifier = Modifier.size(44.dp))
+                    Text("No signed-in account", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                    Text("Kinetics currently has no remote identity provider. A username, account ID, profile image, password reset and cloud sign-out cannot be shown or performed until account services are implemented.",
+                        style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+            SettingGroup("DEVICE SECURITY", "The existing biometric option is a local app lock, not account authentication.") {
+                Text(
+                    when {
+                        biometricEnabled && biometricAvailable -> "Biometric/device credential unlock is enabled on this device."
+                        biometricAvailable -> "Biometric/device credential unlock is available but not enabled."
+                        else -> "No supported biometric/device credential is currently enrolled."
                     },
-                    subtitle = when {
-                        showSearch -> "Jobs and registered capabilities"
-                        showComponentGallery -> "Developer component preview"
-                        else -> tab.label
-                    },
-                    navigation = {
-                        when {
-                            showSearch || showComponentGallery -> IconButton(
-                                onClick = {
-                                    if (showComponentGallery) showComponentGallery = false else showSearch = false
-                                },
-                                modifier = Modifier.size(48.dp),
-                            ) { Icon(Icons.Outlined.ArrowBack, contentDescription = "Back") }
-                            showMenu -> IconButton(
-                                onClick = { drawerScope.launch { drawerState.open() } },
-                                modifier = Modifier.size(48.dp),
-                            ) { Icon(Icons.Outlined.Menu, contentDescription = "Open navigation menu") }
-                            else -> Spacer(Modifier.size(48.dp))
-                        }
-                    },
-                    actions = {
-                        if (!showSearch && !showComponentGallery) {
-                            IconButton(onClick = { showSearch = true }, modifier = Modifier.size(48.dp)) {
-                                Icon(Icons.Outlined.Search, contentDescription = "Search jobs and capabilities")
-                            }
-                        }
-                    },
+                    style = MaterialTheme.typography.bodySmall,
                 )
+                Text("Manage the local app lock in Settings.", style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
+        }
+    }
+}
 
-            @Composable
-            fun NavigationItems() {
-                KineticsTab.entries.forEach { item ->
-                    NavigationDrawerItem(
-                        selected = tab == item,
-                        onClick = {
-                            tab = item
-                            drawerScope.launch { drawerState.close() }
-                        },
-                        icon = { KineticsTabIcon(item) },
-                        label = { Text(item.label) },
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
-                    )
-                }
+@Composable
+private fun ServiceDomainScreen(
+    domain: String,
+    capabilities: List<CapabilityEntry>,
+    onImport: () -> Unit,
+    modifier: Modifier,
+) {
+    var publicRecord by remember { mutableStateOf<PublicScientificRecord?>(null) }
+    Frame("SCIENTIFIC SERVICE", domain, "Capabilities and workflows currently registered for this service area.", modifier) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+            if (domain == "Public reference databases") {
+                item { PublicDatabaseCard(onStructureFetched = { publicRecord = it }) }
+                item { StructureViewerPreview(publicRecord = publicRecord) }
             }
-
-            when {
-                useDrawer -> ModalNavigationDrawer(
-                    drawerState = drawerState,
-                    gesturesEnabled = true,
-                    drawerContent = {
-                        ModalDrawerSheet(
-                            modifier = Modifier.fillMaxHeight().widthIn(max = 340.dp),
-                            drawerContainerColor = MaterialTheme.colorScheme.surface,
-                        ) {
-                            Column(
-                                Modifier.fillMaxWidth().height(160.dp).padding(horizontal = 24.dp, vertical = 20.dp),
-                                verticalArrangement = Arrangement.Bottom,
-                            ) {
-                                Text("KINETICS", style = MaterialTheme.typography.headlineSmall,
-                                    fontWeight = FontWeight.SemiBold, letterSpacing = 1.4.sp)
-                                Spacer(Modifier.height(6.dp))
-                                Text("COMPUTATIONAL RESEARCH", style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.sp)
-                            }
-                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                            Spacer(Modifier.height(12.dp))
-                            NavigationItems()
-                            Spacer(Modifier.weight(1f))
-                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-                            Text("RESEARCH MODE", modifier = Modifier.padding(horizontal = 24.dp, vertical = 18.dp),
-                                style = MaterialTheme.typography.labelSmall,
+            if (domain == "Sequence analysis") {
+                item { FastaQcCard() }
+                item { FastqQcCard() }
+                item { GeneticCodeInferenceCard() }
+            }
+            if (domain == "Structural biology") {
+                item { StructureViewerPreview(publicRecord = publicRecord) }
+                item { StructureSiteAnalysisCard() }
+            }
+            if (domain == "Computational chemistry") {
+                item { LigandGraphPreviewCard() }
+            }
+            if (domain == "Genomics") {
+                item { GenomicsVcfQcCard() }
+                item { U5ResearchGateCard() }
+            }
+            item {
+                Text("REGISTERED CAPABILITIES", style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
+            }
+            if (capabilities.isEmpty()) {
+                item { Empty("No catalogue entries", "This service area has no registered capability entries yet.") }
+            } else {
+                items(capabilities, key = { it.id }) { capability ->
+                    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
+                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                            Text(capability.name, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                            Text(capability.id, style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                    },
-                ) {
-                    Scaffold(
-                        containerColor = MaterialTheme.colorScheme.background,
-                        topBar = { AppBar(showMenu = true) },
-                    ) { padding -> Screen(Modifier.padding(padding)) }
-                }
-                useRail -> Row(Modifier.fillMaxSize()) {
-                    NavigationRail(containerColor = MaterialTheme.colorScheme.surface) {
-                        Spacer(Modifier.height(12.dp))
-                        KineticsTab.entries.forEach { item ->
-                            NavigationRailItem(
-                                selected = tab == item,
-                                onClick = { tab = item },
-                                icon = { KineticsTabIcon(item) },
-                                label = { Text(item.label) },
-                                alwaysShowLabel = true,
+                            Text(
+                                if (capability.status == "implemented") "Engine registered · Android execution path must be verified per workflow"
+                                else "Not implemented",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }
-                    Scaffold(
-                        modifier = Modifier.weight(1f),
-                        containerColor = MaterialTheme.colorScheme.background,
-                        topBar = { AppBar(showMenu = false) },
-                    ) { padding -> Screen(Modifier.padding(padding)) }
                 }
-                else -> Scaffold(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    topBar = { AppBar(showMenu = true) },
-                    bottomBar = {
-                        NavigationBar(
-                            modifier = Modifier.heightIn(min = 64.dp),
-                            containerColor = MaterialTheme.colorScheme.surface,
-                        ) {
-                            KineticsTab.entries.forEach { item ->
-                                NavigationBarItem(
-                                    selected = tab == item, onClick = { tab = item },
-                                    icon = { KineticsTabIcon(item) },
-                                    label = { Text(item.label) },
-                                )
-                            }
-                        }
-                    },
-                ) { padding -> Screen(Modifier.padding(padding)) }
             }
+            item {
+                OutlinedButton(onClick = onImport, modifier = Modifier.fillMaxWidth()) {
+                    Text("Import research input")
+                }
+            }
+            item { Footer() }
         }
     }
 }
@@ -386,7 +468,7 @@ private fun RuntimeStatusCard(label: String, status: String, modifier: Modifier 
 @Composable
 private fun HomeScreen(
     jobs: List<ResearchJob>, notice: String, runtime: String?, themeFamily: String, onImport: () -> Unit,
-    onRuntime: () -> Unit, onOpenWork: () -> Unit,
+    onRuntime: () -> Unit, onOpenWork: () -> Unit, onOpenService: (String) -> Unit,
     onCancel: (ResearchJob) -> Unit, onResume: (ResearchJob) -> Unit,
     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
     onExportProvenance: (ResearchJob) -> Unit,
@@ -394,207 +476,102 @@ private fun HomeScreen(
     onExportAnalysis: (ResearchJob) -> Unit, onAnalyzeFastq: (ResearchJob, Int) -> Unit, modifier: Modifier,
 ) {
     val context = LocalContext.current
-    var publicStructureRecord by remember { mutableStateOf<PublicScientificRecord?>(null) }
     val services = remember(context) { runCatching { loadCapabilityCatalogue(context) }.getOrDefault(emptyList()) }
     val active = jobs.count { it.state in listOf("queued", "running", "cancel_requested") }
     val done = jobs.count { it.state == "succeeded" }
     val attention = jobs.count { it.state in listOf("failed", "recovery_required") }
-    Frame("Your research workspace", "Good science starts here.", "A private, local-first environment for computational research.", modifier) {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+    val pythonPart = runtime?.substringAfter("Python probe:", "")?.substringBefore("Native probe:")?.trim()
+    val nativePart = runtime?.substringAfter("Native probe:", "")?.trim()
+    val pythonState = when { runtime == null -> "Not checked"; pythonPart.isNullOrBlank() -> "Partial"; pythonPart.contains("FAILED", true) -> "Not working"; pythonPart.contains("WARNING", true) || pythonPart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
+    val nativeState = when { runtime == null -> "Not checked"; nativePart.isNullOrBlank() -> "Partial"; nativePart.contains("FAILED", true) -> "Not working"; nativePart.contains("WARNING", true) || nativePart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
+    val storageState = when { runtime == null -> "Not checked"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> "OK"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: FAILED") -> "Not working"; else -> "Partial" }
+    Frame("YOUR RESEARCH WORKSPACE", "Good science starts here.", "A live overview of your local research environment.", modifier) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+            item { WorkspaceCarousel(services = services, onOpenService = onOpenService) }
             item {
-                WorkspaceCarousel(
-                    isDark = themeFamily == "dark",
-                    active = active,
-                    complete = done,
-                    attention = attention,
-                    runtime = runtime,
-                    services = services,
-                    onImport = onImport,
-                    onOpenWork = onOpenWork,
-                    onRuntime = onRuntime,
-                )
-            }
-            item { Text("Scientific services", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
-            item { PublicDatabaseCard(onStructureFetched = { publicStructureRecord = it }) }
-            item { StructureViewerPreview(publicRecord = publicStructureRecord) }
-            if (services.any { it.id == "chemistry.sdf_graph" && it.status == "implemented" }) item { LigandGraphPreviewCard() }
-            if (services.any { it.id == "sequence.fasta" && it.status == "implemented" }) item { FastaQcCard() }
-            if (services.any { it.id == "sequence.fastq" && it.status == "implemented" }) item { FastqQcCard() }
-            if (services.any { it.id == "structure.ligand_site_candidates" && it.status == "implemented" } && services.any { it.id == "structure.apo_pocket_candidates" && it.status == "implemented" }) item { StructureSiteAnalysisCard() }
-            if (services.any { it.id == "sequence.genetic_code_candidate_inference" && it.status == "implemented" }) item { GeneticCodeInferenceCard() }
-            if (services.any { it.id == "genomics.sam_vcf" && it.status == "implemented" }) { item { GenomicsVcfQcCard() }; item { U5ResearchGateCard() } }
-            items(services, key = { it.id }) { service ->
-                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-                    Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(service.name, fontWeight = FontWeight.SemiBold)
-                        Text(service.domain, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(if (service.status == "implemented") "Engine implemented · Android access varies" else "In development", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                }
+                DashboardPanel("SYSTEM READINESS", "Runtime and protected storage", "Sequence engine: $pythonState  ·  Native engine: $nativeState  ·  Private storage: $storageState", "Run diagnostics", onRuntime)
             }
             item {
-                Row(horizontalArrangement = Arrangement.spacedBy(9.dp), modifier = Modifier.fillMaxWidth()) {
-                    Metric("ACTIVE", active.toString(), Modifier.weight(1f))
-                    Metric("COMPLETE", done.toString(), Modifier.weight(1f))
-                    Metric("ATTENTION", attention.toString(), Modifier.weight(1f))
-                }
+                DashboardPanel("RESEARCH WORK", "$active active · $done complete · $attention need attention", "Your locally stored research jobs and their current lifecycle state.", "Open Work", onOpenWork)
             }
-            item { Section("Recent activity", "View all", onOpenWork) }
-            if (jobs.isEmpty()) item { Empty("Your workspace is clear", "Import a research file to create your first job.") }
-            else items(jobs.take(4), key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, onAnalyzeFastq) }
             item {
-                Section("Device health", "Run checks", onRuntime)
-                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Dot(MaterialTheme.colorScheme.primary)
-                            Spacer(Modifier.width(8.dp))
-                            Text("On-device runtime", fontWeight = FontWeight.SemiBold)
-                            Spacer(Modifier.weight(1f))
-                            Text("Diagnostics", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
-                        }
-                        Text("Check embedded Python, native engines and encrypted storage.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                        val pythonPart = runtime?.substringAfter("Python probe:", "")?.substringBefore("Native probe:")?.trim()
-                        val nativePart = runtime?.substringAfter("Native probe:", "")?.trim()
-                        val pythonState = when { runtime == null -> "Not checked"; pythonPart.isNullOrBlank() -> "Partial"; pythonPart.contains("FAILED", true) -> "Not working"; pythonPart.contains("WARNING", true) || pythonPart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
-                        val nativeState = when { runtime == null -> "Not checked"; nativePart.isNullOrBlank() -> "Partial"; nativePart.contains("FAILED", true) -> "Not working"; nativePart.contains("WARNING", true) || nativePart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
-                        val storageState = when { runtime == null -> "Not checked"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> "OK"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: FAILED") -> "Not working"; else -> "Partial" }
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            RuntimeStatusCard("Sequence processing", pythonState, Modifier.weight(1f))
-                            RuntimeStatusCard("Scientific tools", nativeState, Modifier.weight(1f))
-                            RuntimeStatusCard("Private storage", storageState, Modifier.weight(1f))
-                        }
-                    }
-                }
+                val latest = jobs.firstOrNull()
+                DashboardPanel("RECENT ACTIVITY", latest?.inputName ?: "No research activity yet",
+                    latest?.let { "Latest job: ${it.state} · ${it.updatedAt}" } ?: "Import a research input to begin your first local job.",
+                    if (latest == null) "Import input" else "View Work", if (latest == null) onImport else onOpenWork)
             }
-            item { Notice(notice) }
+            item {
+                DashboardPanel("LOCAL DATA & REFERENCES", "Private research storage", "Imported files remain in app-private storage. Public reference retrieval is available as a dedicated service.", "Open databases", { onOpenService("Public reference databases") })
+            }
+            if (notice.isNotBlank()) item { Notice(notice) }
             item { Footer() }
         }
     }
 }
 
 @Composable
-private fun WorkspaceCarousel(
-    isDark: Boolean,
-    active: Int,
-    complete: Int,
-    attention: Int,
-    runtime: String?,
-    services: List<CapabilityEntry>,
-    onImport: () -> Unit,
-    onOpenWork: () -> Unit,
-    onRuntime: () -> Unit,
+private fun DashboardPanel(
+    eyebrow: String,
+    title: String,
+    detail: String,
+    actionLabel: String,
+    onAction: () -> Unit,
 ) {
-    val pager = rememberPagerState(pageCount = { 3 + services.size })
-    val heroContainer = if (isDark) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary
-    val heroForeground = if (isDark) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary
-    val heroAction = if (isDark) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
+    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
+        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
+            Text(eyebrow, style = MaterialTheme.typography.labelSmall, letterSpacing = 1.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Text(detail, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            TextButton(onClick = onAction, contentPadding = PaddingValues(0.dp)) { Text(actionLabel) }
+        }
+    }
+}
+
+@Composable
+private fun WorkspaceCarousel(
+    services: List<CapabilityEntry>,
+    onOpenService: (String) -> Unit,
+) {
+    val domains = remember(services) { services.map { it.domain }.distinct().sorted() + "Public reference databases" }
+    val pager = rememberPagerState(pageCount = { domains.size })
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         HorizontalPager(
             state = pager,
-            contentPadding = PaddingValues(horizontal = 30.dp),
+            contentPadding = PaddingValues(horizontal = 42.dp),
             pageSpacing = 12.dp,
             modifier = Modifier.fillMaxWidth(),
         ) { page ->
-            when (page) {
-                0 -> Card(
-                    onClick = onImport,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 168.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = heroContainer),
-                ) {
-                    Column(
-                        Modifier.fillMaxSize().padding(16.dp),
-                        verticalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("KINETICS  /  RESEARCH WORKSPACE", style = MaterialTheme.typography.labelSmall,
-                                color = heroForeground.copy(alpha = .78f), letterSpacing = 1.1.sp)
-                            Text("Make room for discovery.", style = MaterialTheme.typography.headlineSmall,
-                                color = heroForeground, fontWeight = FontWeight.SemiBold)
-                            Text("Import a research input and create a protected local work item.",
-                                style = MaterialTheme.typography.bodyMedium, color = heroForeground.copy(alpha = .88f))
-                        }
-                        Text("IMPORT RESEARCH INPUT  →", style = MaterialTheme.typography.labelLarge,
-                            color = heroAction, fontWeight = FontWeight.Bold)
+            val domain = domains[page]
+            val count = services.count { it.domain == domain }
+            Card(
+                onClick = { onOpenService(domain) },
+                modifier = Modifier.fillMaxWidth().height(218.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+            ) {
+                Column(Modifier.fillMaxSize().padding(18.dp), verticalArrangement = Arrangement.SpaceBetween) {
+                    Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
+                        Text(if (domain == "Public reference databases") "REFERENCE DATA" else "SCIENTIFIC SERVICE",
+                            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            letterSpacing = 1.1.sp)
+                        Text(domain, style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
+                        Text(if (domain == "Public reference databases") "Search and retrieve public records directly inside Kinetics."
+                            else "$count registered capabilities in this service area.",
+                            style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
-                }
-                1 -> Card(
-                    onClick = onOpenWork,
-                    modifier = Modifier.fillMaxWidth().height(218.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                ) {
-                    Column(
-                        Modifier.fillMaxSize().padding(16.dp),
-                        verticalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("YOUR WORK", style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.primary, letterSpacing = 1.1.sp)
-                            Text("Research, in motion.", style = MaterialTheme.typography.headlineSmall,
-                                color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
-                            Text("$active active  ·  $complete complete  ·  $attention need attention",
-                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                        Text("OPEN WORKSPACE  →", style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-                    }
-                }
-                2 -> Card(
-                    onClick = onRuntime,
-                    modifier = Modifier.fillMaxWidth().height(218.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                ) {
-                    Column(
-                        Modifier.fillMaxSize().padding(16.dp),
-                        verticalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("DEVICE READINESS", style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.secondary, letterSpacing = 1.1.sp)
-                            Text("Know your instruments.", style = MaterialTheme.typography.headlineSmall,
-                                color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
-                            Text("Check sequence processing, scientific computation and protected local storage.",
-                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        }
-                        Text("RUN RUNTIME CHECKS  →", style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold)
-                    }
-                }
-                else -> {
-                    val service = services[page - 3]
-                    Card(
-                        modifier = Modifier.fillMaxWidth().height(218.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                    ) {
-                        Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.SpaceBetween) {
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text(service.domain.uppercase(), style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.1.sp)
-                                Text(service.name, style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
-                                Text(if (service.status == "implemented") "Engine implemented · Android access varies" else "In development",
-                                    style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
-                            Text("SCIENTIFIC SERVICE", style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-                        }
-                    }
+                    Text("OPEN SERVICE  →", style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                 }
             }
         }
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            repeat(3 + services.size) { index ->
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+            repeat(domains.size) { index ->
                 val selected = pager.currentPage == index
                 Box(
-                    Modifier.padding(horizontal = 4.dp).size(width = if (selected) 22.dp else 7.dp, height = 7.dp)
+                    Modifier.padding(horizontal = 3.dp)
+                        .size(width = if (selected) 20.dp else 7.dp, height = 7.dp)
                         .clip(RoundedCornerShape(50))
                         .background(if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
                 )

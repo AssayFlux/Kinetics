@@ -40,7 +40,7 @@ def test_vcf_research_screen_is_attestation_gated_and_aggregate_only() -> None:
     gate = (
         ROOT / "android/app/src/main/java/org/assayflux/kinetics/U5ResearchGateCard.kt"
     ).read_text()
-    assert "enabled = !busy && selectedUri != null && consentConfirmed" in card
+    assert "enabled = !busy && selectedUri != null && authorizationConfirmed" in card
     assert "MAX_INPUT_BYTES = 5 * 1024 * 1024" in runner
     assert "sample identifiers and genotype strings" in card
     assert "RESEARCH TESTING · OWNER AUTHORIZED" in gate

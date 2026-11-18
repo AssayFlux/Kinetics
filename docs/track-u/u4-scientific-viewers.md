@@ -38,3 +38,10 @@
 - The fetched record is passed to the existing Python `prepare_structure_viewer_import` adapter and existing offline structure viewer; the 16 MiB parser limit remains enforced.
 - This reuses the current coordinate payload and viewer implementation. It does not add bond inference, secondary structure, biological assembly expansion, structure prediction or a new renderer.
 - RCSB text search, saved-structure reopen, retry/cancel, source release/licence metadata and physical-device performance remain open. Exact-head CI and device verification are not yet passed.
+
+
+### Saved RCSB structure reuse — 2026-11-18
+
+- A saved mmCIF record can be reopened from encrypted app-private storage.
+- Authenticated decryption and SHA-256 verification occur before the record is passed to the existing Python structure parser and offline viewer.
+- A richer saved-record detail/history browser and explicit cache quotas remain open.

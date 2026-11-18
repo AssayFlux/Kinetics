@@ -151,6 +151,11 @@ internal fun PublicDatabaseCard(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Text(
+                "Search public names and accessions only. Do not enter patient/sample identifiers or raw sequences.",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it },

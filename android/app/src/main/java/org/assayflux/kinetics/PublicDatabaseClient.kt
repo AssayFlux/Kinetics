@@ -79,6 +79,48 @@ internal class PublicDatabaseClient {
         }
     }
 
+    fun searchNcbiGeneLinkedSequences(geneId: String, database: String, limit: Int = 20): List<PublicDatabaseHit> {
+        require(database in setOf("nuccore", "protein")) { "Choose nucleotide or protein gene links" }
+        val id = geneId.trim()
+        require(id.matches(Regex("[0-9]{1,12}"))) { "NCBI Gene identifier must be numeric" }
+        val count = checkedLimit(limit)
+        val linkUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi" +
+            "?dbfrom=gene&db=$database&id=${encode(id)}&retmode=json&tool=kinetics"
+        val linkSets = JSONObject(request(linkUrl, MAX_METADATA_BYTES))
+            .optJSONArray("linksets") ?: return emptyList()
+        val linkedIds = LinkedHashSet<String>()
+        for (index in 0 until linkSets.length()) {
+            val databases = linkSets.getJSONObject(index).optJSONArray("linksetdbs") ?: continue
+            for (dbIndex in 0 until databases.length()) {
+                val db = databases.getJSONObject(dbIndex)
+                if (db.optString("dbto") != database) continue
+                val links = db.optJSONArray("links") ?: continue
+                for (linkIndex in 0 until links.length()) {
+                    linkedIds.add(links.getString(linkIndex))
+                    if (linkedIds.size >= count) break
+                }
+                if (linkedIds.size >= count) break
+            }
+            if (linkedIds.size >= count) break
+        }
+        if (linkedIds.isEmpty()) return emptyList()
+        val joinedIds = linkedIds.joinToString(",")
+        val summaryUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi" +
+            "?db=$database&id=${encode(joinedIds)}&retmode=json&tool=kinetics"
+        val summary = JSONObject(request(summaryUrl, MAX_METADATA_BYTES)).getJSONObject("result")
+        return linkedIds.mapNotNull { linkedId ->
+            val item = summary.optJSONObject(linkedId) ?: return@mapNotNull null
+            PublicDatabaseHit(
+                source = if (database == "nuccore") "NCBI Nucleotide" else "NCBI Protein",
+                accession = item.optString("accessionversion").takeIf(String::isNotBlank) ?: linkedId,
+                title = item.optString("title", "NCBI record $linkedId"),
+                organism = item.optString("organism").takeIf(String::isNotBlank),
+                description = "Linked from NCBI Gene $id",
+                database = database,
+            )
+        }
+    }
+
     fun fetchNcbiFasta(database: String, accession: String): PublicScientificRecord {
         require(database in setOf("nuccore", "protein")) { "Only NCBI nuccore or protein records are supported" }
         val id = checkedAccession(accession)

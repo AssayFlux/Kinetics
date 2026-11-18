@@ -414,6 +414,7 @@ private fun HomeScreen(
                 )
             }
             item { Text("Scientific services", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
+            item { PublicDatabaseCard() }
             item { StructureViewerPreview() }
             if (services.any { it.id == "chemistry.sdf_graph" && it.status == "implemented" }) item { LigandGraphPreviewCard() }
             if (services.any { it.id == "sequence.fasta" && it.status == "implemented" }) item { FastaQcCard() }

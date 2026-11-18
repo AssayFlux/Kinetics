@@ -112,7 +112,10 @@ def test_owner_blueprint_has_one_actionable_card_per_capability() -> None:
     assert "NavigationRail(" not in ui
     assert 'label = { Text("Search") }' in ui
     assert 'contentDescription = "Open profile"' in ui
-    assert "Icons.Outlined.Fingerprint" in ui
+    assert "Icons.Filled.Fingerprint" in ui
+    assert "import androidx.compose.material.icons.filled.Fingerprint" in ui
+    assert 'if (capability?.id == "genomics.sam_vcf")' in ui
+    assert 'if (domain == "Genomics" || domain == "Variant")' not in ui
     assert "repeat(3)" in ui
     assert "LOCAL DEVICE UNLOCK" in ui
     assert "not an online account sign-in" in ui

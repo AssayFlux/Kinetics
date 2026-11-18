@@ -248,8 +248,8 @@ internal fun KineticsAppShell(
                         modifier = contentModifier,
                     )
                     selectedServiceId != null -> ServiceDomainScreen(
-                        domain = selectedServiceId!!,
-                        capabilities = capabilities.filter { it.domain == selectedServiceId },
+                        domain = capabilities.firstOrNull { it.id == selectedServiceId }?.domain ?: "Service",
+                        capabilities = capabilities.filter { it.id == selectedServiceId },
                         onImport = onImport,
                         modifier = contentModifier,
                     )
@@ -314,8 +314,20 @@ private fun ServiceDomainScreen(
     modifier: Modifier,
 ) {
     var publicRecord by remember { mutableStateOf<PublicScientificRecord?>(null) }
-    Frame("SCIENTIFIC SERVICE", domain, "Capabilities and workflows currently registered for this service area.", modifier) {
+    val capability = capabilities.firstOrNull()
+    Frame("SCIENTIFIC SERVICE", capability?.name ?: domain, "Service ID: ${capability?.id ?: "not registered"} · $domain", modifier) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+            item {
+                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
+                    Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Text(if (capability?.status == "implemented") "IMPLEMENTATION REGISTERED" else "NOT IMPLEMENTED",
+                            style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                        Text("Source: ${capability?.implementation ?: "not available"}", style = MaterialTheme.typography.bodySmall)
+                        Text("Catalogue registration does not prove a working Android dispatcher or scientific validation.",
+                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            }
             if (domain == "Public reference databases") {
                 item { PublicDatabaseCard(onStructureFetched = { publicRecord = it }) }
                 item { StructureViewerPreview(publicRecord = publicRecord) }
@@ -545,8 +557,7 @@ private fun WorkspaceCarousel(
     services: List<CapabilityEntry>,
     onOpenService: (String) -> Unit,
 ) {
-    val domains = remember(services) { services.map { it.domain }.distinct().sorted() + "Public reference databases" }
-    val pager = rememberPagerState(pageCount = { domains.size })
+    val pager = rememberPagerState(pageCount = { services.size })
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         HorizontalPager(
             state = pager,
@@ -554,24 +565,21 @@ private fun WorkspaceCarousel(
             pageSpacing = 12.dp,
             modifier = Modifier.fillMaxWidth(),
         ) { page ->
-            val domain = domains[page]
-            val count = services.count { it.domain == domain }
+            val service = services[page]
             Card(
-                onClick = { onOpenService(domain) },
+                onClick = { onOpenService(service.id) },
                 modifier = Modifier.fillMaxWidth().height(218.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             ) {
                 Column(Modifier.fillMaxSize().padding(18.dp), verticalArrangement = Arrangement.SpaceBetween) {
                     Column(verticalArrangement = Arrangement.spacedBy(9.dp)) {
-                        Text(if (domain == "Public reference databases") "REFERENCE DATA" else "SCIENTIFIC SERVICE",
-                            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            letterSpacing = 1.1.sp)
-                        Text(domain, style = MaterialTheme.typography.headlineSmall,
-                            color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
-                        Text(if (domain == "Public reference databases") "Search and retrieve public records directly inside Kinetics."
-                            else "$count registered capabilities in this service area.",
-                            style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(service.domain.uppercase(), style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.1.sp, maxLines = 1)
+                        Text(service.name, style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold, maxLines = 3)
+                        Text(if (service.status == "implemented") "Implementation registered · ${service.id}" else "Not implemented · ${service.id}",
+                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
                     }
                     Text("OPEN SERVICE  →", style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
@@ -579,14 +587,14 @@ private fun WorkspaceCarousel(
             }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-            repeat(domains.size) { index ->
-                val selected = pager.currentPage == index
-                Box(
-                    Modifier.padding(horizontal = 3.dp)
-                        .size(width = if (selected) 20.dp else 7.dp, height = 7.dp)
-                        .clip(RoundedCornerShape(50))
-                        .background(if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline),
-                )
+            val visibleCount = minOf(5, services.size)
+            val firstVisible = (pager.currentPage - visibleCount / 2).coerceIn(0, (services.size - visibleCount).coerceAtLeast(0))
+            repeat(visibleCount) { offset ->
+                val selected = pager.currentPage == firstVisible + offset
+                Box(Modifier.padding(horizontal = 3.dp)
+                    .size(width = if (selected) 20.dp else 7.dp, height = 7.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline))
             }
         }
     }

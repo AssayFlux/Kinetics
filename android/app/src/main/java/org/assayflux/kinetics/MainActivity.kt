@@ -59,7 +59,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
         activity.getSharedPreferences("kinetics_preferences", android.content.Context.MODE_PRIVATE)
     }
     var themeFamily by remember {
-        mutableStateOf(preferences.getString("theme_family", "light") ?: "light")
+        mutableStateOf(preferences.getString("theme_family", "system") ?: "system")
     }
     var onboardingComplete by remember {
         mutableStateOf(preferences.getBoolean("onboarding_complete", false))
@@ -112,7 +112,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
     }
     val store = remember { ResearchStore(activity) }
     var jobs by remember { mutableStateOf(store.recentJobs()) }
-    var notice by remember { mutableStateOf("Research Mode. Local files stay on this device.") }
+    var notice by remember { mutableStateOf("Caution: Use only datasets covered by your institutional approval. Research outputs are not clinically validated.") }
     var runtimeReport by remember { mutableStateOf<String?>(null) }
     var deleteTarget by remember { mutableStateOf<ResearchJob?>(null) }
     val scope = rememberCoroutineScope()

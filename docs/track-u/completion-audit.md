@@ -104,13 +104,14 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - NCBI nucleotide/protein and UniProt FASTA: retrieval, encrypted payload save and existing on-device FASTA QC are wired in source.
 - RCSB PDB entry ID: mmCIF retrieval, encrypted payload save and existing parser/viewer handoff are wired in source.
 - NCBI Gene: metadata search only; no linked transcript/protein sequence action yet.
-- Saved records: visible and deletable; reopen/reanalyse is not yet a complete user workflow.
+- Saved records: visible and deletable; saved mmCIF can be reopened in the viewer and saved FASTA can be re-analysed. A richer saved-record detail/history browser remains open.
 - Source payload encryption is implemented; SQLite metadata and analysis JSON remain plaintext within app-private storage.
 - RCSB search is entry-ID based, not text/ligand/organism discovery.
 - Provider retry/cancellation, release/licence metadata, cache quotas, physical-device behavior and scientific validation remain open.
 
 ### Required verification
-- Latest exact-main CI run: `44228107344` on source commit `9ddc0d9299b802781f399d1b78e0362266ab7c8e`; status pending at documentation update.
+- Latest exact-main CI run at this audit: run `2989` (`44229914862`) on commit `9c1be29d1cc97aec2a7ce75a585cce9732bccf33`; status pending. Older runs `2959` and `2971` failed on pre-fix commits: a Kotlin runtime-status type mismatch and governance identifier-range checks. Those source issues were corrected in subsequent main commits. Run `2985` is still running against an older commit (`3dfc8b903f6928b65e673b2bb9a7ffb0586ff335`) and is not exact-head evidence.
 - Do not report APK availability until artifact enumeration confirms a non-empty APK and its SHA-256.
+- No successful APK artifact has been verified for the latest main commit. The small diagnostic ZIP from failed run 2959 contains build logs, not an installable APK.
 - Device tests must cover network failure, malformed response, large structure, Keystore loss, saved-record deletion, FASTA result persistence and actual 3D viewer opening.
 - Track U remains OPEN. Public retrieval source integration is not equivalent to U-track completion or scientific validation.

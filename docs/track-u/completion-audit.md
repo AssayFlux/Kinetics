@@ -3,7 +3,7 @@
 **Audit date:** 2026-11-18  
 **Repository:** `AssayFlux/Kinetics`  
 **Target branch:** `main` only  
-**Current engineering review baseline:** `bfc2f240af9fb2e383a9fccdd2ef9f3c8d21bcee` (48/68 catalogue routes reconciled, bounded HMMER/structure-prediction/gene-catalogue additions; exact-head CI pending)
+**Current engineering review baseline:** `83cd39d543e607876f8b499cff6b0cf94fc6b004` (49/68 catalogue routes reconciled, bounded HMMER, prediction-envelope, gene-catalogue and CA-comparison additions; exact-head CI pending)
 **Audit and quality-report documentation commit:** `cb79b9110ff50a69b1b58d78a8b13e3c8843cf3b`  
 **Status:** **ENGINEERING INTEGRATION IN PROGRESS — distinguish code work from external/device acceptance**  
 **Design authority:** D-024, owner-supplied Premium Minimal Monochrome V1. Semantic decision colours may be used for status only; monochrome remains the visual authority.

@@ -1,6 +1,6 @@
 # Android capability integration matrix
 
-**Baseline commit:** `bfc2f240af9fb2e383a9fccdd2ef9f3c8d21bcee`  
+**Baseline commit:** `83cd39d543e607876f8b499cff6b0cf94fc6b004`  
 **Branch:** `main`  
 **Purpose:** Separate Python source registration from an actual Android-executable workflow.  
 **Evidence boundary:** A connected route means the Android UI invokes a bounded Chaquopy bridge. It does not mean the scientific method has been independently validated, clinically approved, or device-accepted.

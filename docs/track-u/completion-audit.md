@@ -203,3 +203,13 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - Commit `e5f3f1dac828bb8b583a03997b75a736b776c346` adds alignment-based coordinate mapping with ambiguity abstention and amino-acid variant-to-coordinate mapping. These are coordinate tools only; they do not predict biological or clinical effects.
 - The Android app now exposes 34 of 68 catalogue capabilities; 34 remain unconnected. Including the separate public-reference-database service, 35 Android workflows are represented in source.
 - Updated the integration matrix. Exact-head CI remains queued behind the current Android build.
+
+
+## 18. Current integration reconciliation — 2026-11-18
+
+- Reviewed the live 68-entry capability catalogue against the Home/service-page routing, Kotlin runner allow-list, Python bridge dispatch and the dedicated FASTA, FASTQ, genetic-code inference, VCF QC, chemistry and structure workflows.
+- The reconciled count is **43 of 68 catalogue capabilities connected to Android workflows; 25 remain unconnected**. The public reference-database retrieval service is additional to the 68-entry catalogue.
+- Added the missing Kotlin allow-list entry for `kinetics.inhibition_rate`; its Python handler and UI form already existed. Added regression coverage requiring UI, Kotlin and Python route parity.
+- Added six missing route rows to the integration matrix: exact/local FASTA reference search, local alignment reference search, Newick export alias and PDB geometry alias.
+- Hardened mobile cross-omics input validation for non-empty rectangular feature matrices with at least three matched samples, and rejected malformed neighbour-joining sequence names/values before engine dispatch.
+- Source-level integration is not a scientific validation claim. CI for the resulting commit is pending; no exact-head APK/build success is claimed in this addendum.

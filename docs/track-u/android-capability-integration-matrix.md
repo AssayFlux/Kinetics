@@ -1,6 +1,6 @@
 # Android capability integration matrix
 
-**Baseline commit:** `520d3b5777294871645a88f1566341ac8b1d1747`  
+**Baseline commit:** `4e8274091e593f71d4003725dd5fa0d4fca91d31`  
 **Branch:** `main`  
 **Purpose:** Separate Python source registration from an actual Android-executable workflow.  
 **Evidence boundary:** A connected route means the Android UI invokes a bounded Chaquopy bridge. It does not mean the scientific method has been independently validated, clinically approved, or device-accepted.
@@ -8,8 +8,8 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **36**
-- Catalogue entries not yet connected to Android: **32**
+- Catalogue entries connected to Android workflows: **43**
+- Catalogue entries not yet connected to Android: **25**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.
@@ -63,6 +63,13 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 | `structure.chain_interface_contacts` | Bounded inter-chain heavy-atom contact geometry |
 | `structure.alignment_coordinate_mapping` | Alignment-based residue-to-coordinate mapping with ambiguity abstention |
 | `structure.variant_coordinate_mapping` | Amino-acid substitution coordinate mapping only; no effect prediction |
+
+| `sequence.exact_reference_search` | Exact search against a caller-supplied, licence-described local FASTA reference pack |
+| `sequence.local_fasta_exact_search` | Local FASTA exact-search alias using the bounded reference-pack engine |
+| `sequence.local_alignment_reference_search` | Local alignment search against a caller-supplied reference pack |
+| `sequence.local_fasta_alignment_search` | Local FASTA alignment-search alias using the bounded reference-pack engine |
+| `phylo.newick_export` | Newick parse/normalise/export alias on the phylogeny service page |
+| `structure.pdb_geometry` | PDB geometry-screen alias on the structure service page |
 
 All local forms use an explicit bridge allow-list and bounded input/work limits. Their method-specific limitations are returned or displayed with results.
 

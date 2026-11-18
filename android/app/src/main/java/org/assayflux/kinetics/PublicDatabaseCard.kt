@@ -223,13 +223,22 @@ internal fun PublicDatabaseCard(
                                 enabled = !busy,
                                 onClick = {
                                     scope.launch {
-                                        val loaded = withContext(Dispatchers.IO) { store.loadRecord(saved.id) }
-                                        if (loaded != null) {
-                                            onStructureFetched(loaded)
-                                            message = "Saved RCSB structure reopened from encrypted local storage."
-                                        } else {
-                                            message = "Saved structure could not be authenticated or reopened."
+                                        val opened = runCatching {
+                                            withContext(Dispatchers.IO) { store.loadRecord(saved.id) }
                                         }
+                                        opened.fold(
+                                            { loaded ->
+                                                if (loaded != null) {
+                                                    onStructureFetched(loaded)
+                                                    message = "Saved RCSB structure reopened from encrypted local storage."
+                                                } else {
+                                                    message = "Saved structure is no longer available."
+                                                }
+                                            },
+                                            { error ->
+                                                message = "Saved structure could not be authenticated: ${error.message ?: "local storage error"}"
+                                            },
+                                        )
                                     }
                                 },
                             ) { Text("Open") }

@@ -74,7 +74,7 @@ def validate() -> list[str]:
                 mapped.update(CONTROL_ID.findall(row["control_ids"]))
             if len(requirement_ids) != len(set(requirement_ids)):
                 errors.append("Duplicate requirement_id in traceability CSV")
-            if len(rows) != 8 or set(requirement_ids) != {f"G-REQ-{n:03d}" for n in range(1, 10)}:
+            if len(rows) != 8 or set(requirement_ids) != {f"G-REQ-{n:03d}" for n in range(1, 9)}:
                 errors.append("Requirements traceability must contain exactly G-REQ-001 through G-REQ-008")
             unmapped = sorted(expected - mapped)
             if unmapped:

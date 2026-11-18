@@ -2935,3 +2935,11 @@ Continue U0 token/component integration into actual screens, run exact-branch CI
 - Documented the storage limitation: raw public payloads are Keystore-encrypted; SQLite source metadata and analysis JSON remain unencrypted at rest. Provider release/licence metadata, cache quotas, explicit network cancellation/retry, RCSB text search and NCBI Gene-to-RefSeq linking remain open.
 - CI exposed an existing Kotlin runtime-card type mismatch (nullable Boolean passed where RuntimeStatusCard expects String) and governance inventory ID range assumptions. Runtime statuses now map to explicit labels; governance traceability remains G-REQ-001..008 and data flows DF-01..09.
 - Earlier CI runs 2959 and 2971 failed on pre-fix commits. Exact latest-main build/test verification remains pending; no APK is declared successful or available until the latest run produces and verifies its artifact.
+
+
+## 2026-11-18 — NCBI Gene sequence linking
+
+- Added NCBI ELink-based discovery from a Gene ID to linked nucleotide or protein records, followed by ESummary metadata and the existing accession-based FASTA retrieval.
+- Home now exposes "Find nucleotide" and "Find protein" actions on NCBI Gene results.
+- Added validation tests for numeric Gene IDs and supported linked databases, plus static integration assertions.
+- This closes the previous metadata-only Gene search gap at source level; exact-head CI and provider-response/device tests remain pending.

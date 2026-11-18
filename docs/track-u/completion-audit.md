@@ -135,3 +135,13 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - Exact-head workflow `44245420057` is queued for `7fec05ca181790134b87e2704be77a651351ef83`; it has not yet produced Android build or JVM test evidence.
 - The 68-entry capability catalogue is not 68 runnable Android workflows. Current Android dispatchers are explicitly bounded to the implemented paths documented in `ServiceDetailScreen`; other entries are catalogue-backed service detail/status destinations and must not be represented as executable.
 - Remaining coding work includes typed Android-to-engine dispatch for additional capabilities, complete public-database lifecycle/reliability, login/account architecture decision and implementation, and missing service-specific workflow UI. Device/visual/scientific acceptance remains a later testing phase.
+
+
+## 10. Additional Android workflow integration — 2026-11-18
+
+- Commit `92824712238e7dd54ddcab5e5ab8e8552e1d0014` adds local Android execution for protein descriptors, primer property screening and SpCas9 NGG PAM scanning.
+- Commit `520d3b5777294871645a88f1566341ac8b1d1747` adds local Android execution for six-frame ORF candidate scanning, Michaelis–Menten rate calculation and Newick parsing.
+- Android-connected workflows now total 14 including the public-reference-database service; the other 54 catalogue entries remain Python-source-only from the Android app's perspective.
+- Added `docs/track-u/android-capability-integration-matrix.md` to map every catalogue entry to its Android integration state and to prevent source registration from being presented as mobile execution.
+- Exact-head CI for `520d3b5777294871645a88f1566341ac8b1d1747` is queued at the time of this update. No build/test success is claimed until that run completes.
+- Engineering integration is still open. The remaining work is enumerated in the matrix; scientific, device, accessibility and independent acceptance are later evidence gates.

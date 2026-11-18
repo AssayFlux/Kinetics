@@ -32,7 +32,7 @@ The eventual PGx objective is a research direction only. A capability name, pars
 |---|---|---|
 | Generated synthetic fixtures | Allowed for software tests | Label as synthetic; deterministic provenance where practical; never represent as biological cohort evidence |
 | Public source metadata | Allowed for catalogue discovery | Metadata only; source terms and attribution still require review |
-| Public non-patient payloads | Not yet approved by default | Exact accession/release, terms, attribution, intended use and digest must be reviewed before retrieval/retention |
+| Public non-patient payloads | User-initiated reference lookup is implemented for NCBI, UniProtKB and RCSB; source-specific retention/redistribution approval remains open | Exact accession/release, provider terms, attribution, intended use and digest must be reviewed; no bulk mirroring or redistribution before approval |
 | Patient / clinical records | Owner-authorized only within the declared institutional approval scope | Confirm exact protocol coverage, consent/waiver and permitted processing; keep on approved device/environment; never commit or upload to GitHub, CI, issues, logs or public artifacts |
 | Human-subject / identifiable data | Only where the exact activity is covered by institutional approval | Follow approved recruitment, consent, access, minimisation, retention and withdrawal procedures; no out-of-scope use |
 | Unknown-provenance data | Prohibited | Quarantine outside the application; do not infer non-patient status |

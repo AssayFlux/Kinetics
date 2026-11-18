@@ -10,7 +10,9 @@ sys.path.insert(0, str(ROOT / "android/app/src/main/python"))
 import kinetics_probe  # noqa: E402
 
 UI = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt").read_text()
-RUNNER = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/AndroidBasicCapabilityRunner.kt").read_text()
+RUNNER = (
+    ROOT / "android/app/src/main/java/org/assayflux/kinetics/AndroidBasicCapabilityRunner.kt"
+).read_text()
 PROBE = (ROOT / "android/app/src/main/python/kinetics_probe.py").read_text()
 
 
@@ -31,7 +33,8 @@ def test_android_sequence_runner_is_allow_listed_and_bounded():
     assert "MAX_INPUT_CHARS = 1_000_000" in RUNNER
     assert "1_000_000" in PROBE
     expected_error = (
-        'else:\n        raise ValueError("This capability is not exposed by the Android basic runner")'
+        'else:\n        raise ValueError("This capability is not exposed by the '
+        'Android basic runner")'
     )
     assert expected_error in PROBE
 
@@ -96,7 +99,8 @@ def test_android_probe_dispatch_runs_all_exposed_capabilities_on_host():
     assert isinstance(_run_probe("molecular.crispr_pam", "AACCGGTTACGGTAGGCTAACCGG"), list)
 
     orf_sequence = "ATG" + "GCT" * 29 + "TAA"
-    assert _run_probe("genome.orf_candidate_scan", orf_sequence)["sequence_length"] == len(orf_sequence)
+    orf_result = _run_probe("genome.orf_candidate_scan", orf_sequence)
+    assert orf_result["sequence_length"] == len(orf_sequence)
     assert _run_probe("kinetics.michaelis_menten", "10,100,5")["rate"] > 0
     assert _run_probe("phylo.newick", "((A:0.1,B:0.2):0.3,C:0.4);")["leaf_count"] == 3
 

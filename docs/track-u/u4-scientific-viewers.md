@@ -29,3 +29,12 @@
 - No S1–S3 external scientific validation gate is waived.
 
 **Decision:** U4's bounded offline structure/chemistry viewer integration is implemented on Home. Device, accessibility, performance and independent scientific acceptance remain open and are carried into U6 and Track S.
+
+
+## RCSB public structure retrieval — 2026-11-18
+
+- Home accepts a four-character RCSB PDB entry identifier and retrieves its mmCIF record over allow-listed HTTPS.
+- The raw record is SHA-256 verified and saved using the app-private Android Keystore AES-GCM chunked cache.
+- The fetched record is passed to the existing Python `prepare_structure_viewer_import` adapter and existing offline structure viewer; the 16 MiB parser limit remains enforced.
+- This reuses the current coordinate payload and viewer implementation. It does not add bond inference, secondary structure, biological assembly expansion, structure prediction or a new renderer.
+- RCSB text search, saved-structure reopen, retry/cancel, source release/licence metadata and physical-device performance remain open. Exact-head CI and device verification are not yet passed.

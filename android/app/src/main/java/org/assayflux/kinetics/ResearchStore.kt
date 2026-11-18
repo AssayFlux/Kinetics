@@ -288,6 +288,17 @@ class ResearchStore(context: Context) :
         )
     }
 
+    /** Update an explanatory message without changing the durable job state. */
+    fun updateJobMessage(id: String, message: String) {
+        val values = ContentValues().apply {
+            put("message", message)
+            put("updated_at", System.currentTimeMillis())
+        }
+        check(writableDatabase.update("jobs", values, "id=?", arrayOf(id)) == 1) {
+            "Research job does not exist"
+        }
+    }
+
     fun updateProgress(id: String, bytes: Long) {
         val values = ContentValues().apply {
             put("byte_count", bytes)

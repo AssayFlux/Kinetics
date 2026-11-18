@@ -22,7 +22,7 @@
 - The Work UI asks the user to choose Phred+33 or Phred+64 before queuing the analysis.
 - The worker calls the existing kinetics_probe.analyze_fastq Python adapter and verifies that the returned result records the selected offset and at least one read.
 - The persisted result records sequence.fastq.quality_summary, version 1, the imported SHA-256 binding and explicit offset/size parameters.
-- Worker guard tests cover missing/malformed job IDs, invalid Phred offsets, missing jobs, wrong input type and oversized input without materializing plaintext.
+- Worker guard tests cover missing/malformed job IDs, invalid Phred offsets, missing jobs, wrong input type, oversized input without materializing plaintext, and preservation of the queued/import state when analysis preflight fails. FASTA and FASTQ analysis failures now update the explanatory message without rewriting the import job's durable state.
 
 ### Result detail
 

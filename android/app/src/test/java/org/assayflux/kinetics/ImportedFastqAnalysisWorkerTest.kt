@@ -45,6 +45,20 @@ class ImportedFastqAnalysisWorkerTest {
     }
 
     @Test
+    fun incompleteJobRemainsQueuedWhenAnalysisPreflightFails() {
+        val store = ResearchStore(context)
+        try {
+            store.createJob("queued-fastq", "reads.fastq", "content://reads")
+            val result = worker("queued-fastq", 33).doWork()
+            assertTrue(result is ListenableWorker.Result.Failure)
+            assertTrue(store.recentJobs().single { it.id == "queued-fastq" }.state == "queued")
+        } finally {
+            store.close()
+            context.deleteDatabase("kinetics-research.db")
+        }
+    }
+
+    @Test
     fun nonFastqJobIsRejectedBeforePlaintextMaterialization() {
         val store = ResearchStore(context)
         try {

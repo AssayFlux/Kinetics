@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.ui.window.Dialog
@@ -430,7 +433,7 @@ internal fun StructureViewerPreview() {
                     onDismissRequest = { fullScreen = false },
                     properties = DialogProperties(usePlatformDefaultWidth = false),
                 ) {
-                    Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                    Surface(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing), color = MaterialTheme.colorScheme.background) {
                         Column(Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                                 Text("Structure viewer", style = MaterialTheme.typography.titleLarge)

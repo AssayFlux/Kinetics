@@ -129,7 +129,7 @@ The project owner is accountable for internal stop-work and release decisions. N
 
 For each section, record: reviewer name/role, competence and conflicts, organization, jurisdiction/scope, review date, comments, evidence link, unresolved findings, disposition and signature/approval method. Do not populate reviewer identity or approval status until an actual review occurs.
 
-**Current disposition:** all sections above are engineering drafts only. P0 remains **BLOCKED / NOT APPROVED**. No patient/human-subject activity, individual PGx interpretation, clinical recommendation or Clinical Mode is enabled.
+**Current disposition:** D-024 opens engineering and institutionally authorized research testing. The owner declares institutional approval obtained; its source record and exact scope remain pending attachment. Independent security/privacy review, scientific validation and clinical deployment authorization remain open. Clinical interpretation, clinical recommendations and Clinical Mode remain disabled.
 
 
 ## 8. Owner-authorized patient-data research testing

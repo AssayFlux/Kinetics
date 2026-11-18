@@ -125,7 +125,7 @@ internal fun StructureSiteAnalysisCard() {
             Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Text("S3 · Structure-site candidates", style = MaterialTheme.typography.titleMedium)
+            Text("Structure-site candidates", style = MaterialTheme.typography.titleMedium)
             Text(
                 "Run bounded local ligand-proximity or apo concavity screening. Results are geometric candidates, not binding, affinity or function predictions.",
                 style = MaterialTheme.typography.bodySmall,

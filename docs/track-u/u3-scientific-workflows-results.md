@@ -67,7 +67,7 @@ The import worker now atomically claims and finalizes the durable job state. Can
 
 ## Public reference sequence retrieval — 2026-11-18
 
-- Home exposes NCBI Nucleotide, NCBI Protein and UniProtKB search; NCBI Gene search is metadata-only at this stage.
+- Home exposes NCBI Nucleotide, NCBI Protein and UniProtKB search; NCBI Gene search exposes linked nucleotide/protein discovery through ELink; the linked records then use the FASTA retrieval path.
 - Selected NCBI nucleotide/protein or UniProtKB records are fetched directly as FASTA inside the app.
 - Retrieved payload bytes are SHA-256 checked and stored as Android Keystore AES-GCM chunked files in app-private no-backup storage. The SQLite record index stores source, accession, format, endpoint, retrieval time, byte count and digest; the index and result JSON are not encrypted at rest.
 - Retrieved FASTA is dispatched to the existing embedded Python `kinetics_probe.analyze_fasta` adapter and the bounded local FASTA QC result is retained with the record.

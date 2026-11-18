@@ -37,6 +37,7 @@ internal object AndroidBasicCapabilityRunner {
         "kinetics.bootstrap_intervals",
         "protein.design_brief_validation",
         "structure.geometry_screen_metrics",
+        "structure.prediction_envelope_validation",
         "phylo.nj_site_bootstrap",
         "structure.exact_sequence_mapping",
         "structure.chain_interface_contacts",

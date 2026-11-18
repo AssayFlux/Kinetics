@@ -222,3 +222,12 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - The ranking route uses explicit caller thresholds for independent E-value, profile coverage, query coverage and alignment accuracy. Results remain candidate evidence and do not establish protein function or orthology.
 - The reconciled catalogue count is now **46 of 68 connected; 22 remain unconnected**, plus the separate public reference-database service.
 - Exact-head CI is pending. No APK success or scientific validation is claimed.
+
+
+## 20. External structure-prediction envelope validation — 2026-11-18
+
+- Added `structure.prediction_envelope_validation` to the dedicated Structure service page and the bounded Kotlin/Python allow-lists.
+- The route validates sequence SHA-256 binding, model and node provenance fields, timestamp, structure-view payload, residue confidence vector and confidence summaries (5,000 residues / 1 MB viewer payload).
+- It does **not** execute a prediction engine, verify model weights/licences, calibrate confidence, assess node trust or certify structural accuracy. Valid output remains `unverified_prediction`.
+- The reconciled Android catalogue count is **47/68 connected; 21 remain unconnected**, plus Public Reference Databases as a separate service.
+- Exact-head CI remains pending; no APK or device acceptance is claimed.

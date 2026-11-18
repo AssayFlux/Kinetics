@@ -409,3 +409,54 @@ def test_hmmer_routes_are_explicitly_allow_listed_in_ui_kotlin_and_python():
         assert capability_id in UI
         assert capability_id in RUNNER
         assert capability_id in PROBE
+
+
+def test_prediction_envelope_validation_mobile_route_is_bounded_and_unverified():
+    import hashlib
+    import json
+
+    sequence = "G"
+    envelope = {
+        "schema": "kinetics.structure-prediction.v1",
+        "input_sequence_sha256": hashlib.sha256(sequence.encode("ascii")).hexdigest(),
+        "sequence_length": 1,
+        "model": {
+            "name": "Example model",
+            "version": "1",
+            "weights_sha256": "0" * 64,
+            "license": "CC0-1.0",
+        },
+        "node": {"node_id": "local-example", "software_version": "1", "run_id": "sample"},
+        "created_at": "2026-11-18T06:00:00Z",
+        "predicted_structure": {
+            "schema": "kinetics.structure-view.v1",
+            "source_format": "pdb",
+            "coordinate_unit": "angstrom",
+            "atom_count": 1,
+            "atoms": [{
+                "serial": 1, "name": "CA", "residue": "GLY", "chain": "A",
+                "residue_number": 1, "element": "C", "xyz": [0.0, 0.0, 0.0],
+            }],
+            "limitations": ["Coordinates only"],
+        },
+        "confidence": {
+            "plddt_per_residue": [75.0],
+            "mean_plddt": 75.0,
+            "pae_mean_angstrom": None,
+            "pae_max_angstrom": None,
+        },
+        "limitations": ["Unverified example envelope"],
+    }
+    result = _run_probe(
+        "structure.prediction_envelope_validation",
+        json.dumps({"sequence": sequence, "envelope": envelope}),
+    )
+    assert result["status"] == "unverified_prediction"
+    assert result["model_license_status"] == "not_approved"
+
+
+def test_prediction_envelope_route_is_allow_listed_in_ui_kotlin_and_python():
+    capability_id = "structure.prediction_envelope_validation"
+    assert capability_id in UI
+    assert capability_id in RUNNER
+    assert capability_id in PROBE

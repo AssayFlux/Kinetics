@@ -968,6 +968,27 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Deterministic model calculation only; no parameter fitting or uncertainty estimate",
             "Units must be consistent across substrate, Vmax and Km",
         ]
+    elif capability_id == "structure.prediction_envelope_validation":
+        from kinetics.structure_prediction import validate_prediction_envelope
+        try:
+            parameters = json.loads(sequence_text)
+            sequence = parameters["sequence"]
+            envelope = parameters["envelope"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with sequence and prediction envelope") from exc
+        if not isinstance(sequence, str) or not isinstance(envelope, dict):
+            raise ValueError("Sequence must be text and envelope must be a JSON object")
+        result = validate_prediction_envelope(
+            sequence,
+            envelope,
+            max_residues=5_000,
+            max_payload_bytes=1_000_000,
+        )
+        limitations = [
+            "Envelope validation only; no structure prediction is performed",
+            "Model accuracy, confidence calibration, licensing and node trust are not independently assessed",
+            "A structurally valid prediction record is not experimental or clinical validation",
+        ]
     elif capability_id in {"phylo.newick", "phylo.newick_export"}:
         from kinetics.phylo import leaf_names, parse_newick, to_newick
         root = parse_newick(sequence_text)

@@ -467,6 +467,7 @@ private fun ServiceDetailScreen(
         "kinetics.bootstrap_intervals",
         "protein.design_brief_validation",
         "structure.geometry_screen_metrics",
+        "structure.prediction_envelope_validation",
         "phylo.nj_site_bootstrap",
         "structure.exact_sequence_mapping",
         "structure.chain_interface_contacts",
@@ -757,6 +758,15 @@ private fun ServiceDetailScreen(
                     description = "Estimate exploratory split support by resampling aligned nucleotide sites. Input JSON includes 4–10 aligned sequences and seed.",
                     sample = "{\"sequences\":{\"A\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"B\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC\",\"C\":\"CCCCCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAAAAA\",\"D\":\"CCCCCCCCCCCCCCCCCCCAAAAAAAAAAAAAAAAAAAAC\"},\"replicates\":100,\"seed\":7}",
                     actionLabel = "Bootstrap tree",
+                ) }
+            }
+            if (capability?.id == "structure.prediction_envelope_validation") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "structure.prediction_envelope_validation",
+                    title = "Prediction provenance validator",
+                    description = "Validate the structure-prediction envelope, input sequence hash, model/node provenance, viewer payload and confidence fields. This validates structure only; it does not run a prediction model or certify accuracy.",
+                    sample = "{\"sequence\":\"G\",\"envelope\":{\"schema\":\"kinetics.structure-prediction.v1\",\"input_sequence_sha256\":\"333e0a1e27815d0ceee55c473fe3dc93d56c63e3bee2b3b4aee8eed6d70191a3\",\"sequence_length\":1,\"model\":{\"name\":\"Example model\",\"version\":\"1\",\"weights_sha256\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"license\":\"CC0-1.0\"},\"node\":{\"node_id\":\"local-example\",\"software_version\":\"1\",\"run_id\":\"sample\"},\"created_at\":\"2026-11-18T06:00:00Z\",\"predicted_structure\":{\"schema\":\"kinetics.structure-view.v1\",\"source_format\":\"pdb\",\"coordinate_unit\":\"angstrom\",\"atom_count\":1,\"atoms\":[{\"serial\":1,\"name\":\"CA\",\"residue\":\"GLY\",\"chain\":\"A\",\"residue_number\":1,\"element\":\"C\",\"xyz\":[0.0,0.0,0.0]}],\"limitations\":[\"Coordinates only\"]},\"confidence\":{\"plddt_per_residue\":[75.0],\"mean_plddt\":75.0,\"pae_mean_angstrom\":null,\"pae_max_angstrom\":null},\"limitations\":[\"Unverified example envelope\"]}}",
+                    actionLabel = "Validate prediction record",
                 ) }
             }
             if (capability?.id == "structure.exact_sequence_mapping") {

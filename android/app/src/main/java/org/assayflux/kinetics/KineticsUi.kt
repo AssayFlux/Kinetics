@@ -174,6 +174,7 @@ internal fun KineticsAppShell(
                             showComponentGallery -> "Design system"
                             showProfile -> "Profile"
                             selectedServiceDomain != null -> selectedServiceDomain!!
+                            tab == KineticsTab.Home -> ""
                             else -> "KINETICS"
                         },
                         subtitle = when {
@@ -181,6 +182,7 @@ internal fun KineticsAppShell(
                             showComponentGallery -> "Developer component preview"
                             showProfile -> "Local profile and device security"
                             selectedServiceDomain != null -> "Scientific service workspace"
+                            tab == KineticsTab.Home -> ""
                             else -> tab.label
                         },
                         navigation = {
@@ -486,8 +488,8 @@ private fun HomeScreen(
     val pythonState = when { runtime == null -> "Not checked"; pythonPart.isNullOrBlank() -> "Partial"; pythonPart.contains("FAILED", true) -> "Not working"; pythonPart.contains("WARNING", true) || pythonPart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
     val nativeState = when { runtime == null -> "Not checked"; nativePart.isNullOrBlank() -> "Partial"; nativePart.contains("FAILED", true) -> "Not working"; nativePart.contains("WARNING", true) || nativePart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
     val storageState = when { runtime == null -> "Not checked"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> "OK"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: FAILED") -> "Not working"; else -> "Partial" }
-    Frame("YOUR RESEARCH WORKSPACE", "Good science starts here.", "A live overview of your local research environment.", modifier) {
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
+    BoxWithConstraints(modifier.fillMaxSize()) {
+        LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(14.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
             item { WorkspaceCarousel(services = services, onOpenService = onOpenService) }
             item {
                 DashboardPanel("SYSTEM READINESS", "Runtime and protected storage", "Sequence engine: $pythonState  ·  Native engine: $nativeState  ·  Private storage: $storageState", "Run diagnostics", onRuntime)

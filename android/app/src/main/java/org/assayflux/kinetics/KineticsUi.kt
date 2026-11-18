@@ -291,13 +291,78 @@ internal fun KineticsAppShell(
 
 @Composable
 private fun ProfileScreen(biometricEnabled: Boolean, biometricAvailable: Boolean) {
-    Frame("ACCOUNT", "Local profile", "Account services are not configured in this build.", Modifier) {
+    val context = LocalContext.current
+    val preferences = remember(context) {
+        context.getSharedPreferences("kinetics_preferences", Context.MODE_PRIVATE)
+    }
+    var displayName by rememberSaveable {
+        mutableStateOf(preferences.getString("local_profile_name", "Researcher") ?: "Researcher")
+    }
+    var avatarUri by rememberSaveable {
+        mutableStateOf(preferences.getString("local_profile_avatar_uri", null))
+    }
+    val localWorkspaceId = remember {
+        preferences.getString("local_workspace_id", null) ?: java.util.UUID.randomUUID().toString().also {
+            preferences.edit().putString("local_workspace_id", it).apply()
+        }
+    }
+    val avatarPicker = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.OpenDocument(),
+    ) { uri ->
+        if (uri != null) {
+            runCatching {
+                context.contentResolver.takePersistableUriPermission(
+                    uri, android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                )
+            }
+            avatarUri = uri.toString()
+            preferences.edit().putString("local_profile_avatar_uri", avatarUri).apply()
+        }
+    }
+    val avatarBitmap by produceState<android.graphics.Bitmap?>(initialValue = null, avatarUri) {
+        value = withContext(Dispatchers.IO) {
+            avatarUri?.let { raw ->
+                runCatching {
+                    context.contentResolver.openInputStream(android.net.Uri.parse(raw))?.use {
+                        android.graphics.BitmapFactory.decodeStream(it)
+                    }
+                }.getOrNull()
+            }
+        }
+    }
+    Frame("ACCOUNT", "Local profile", "This profile belongs to this app installation; it is not a remote account.", Modifier) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-                Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Icon(Icons.Outlined.AccountCircle, contentDescription = null, modifier = Modifier.size(44.dp))
-                    Text("No signed-in account", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                    Text("Kinetics currently has no remote identity provider. A username, account ID, profile image, password reset and cloud sign-out cannot be shown or performed until account services are implemented.",
+                Column(Modifier.fillMaxWidth().padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (avatarBitmap != null) {
+                        Image(
+                            bitmap = avatarBitmap!!.asImageBitmap(),
+                            contentDescription = "Selected local profile image",
+                            modifier = Modifier.size(88.dp).clip(CircleShape),
+                        )
+                    } else {
+                        Icon(Icons.Outlined.AccountCircle, contentDescription = "Default profile image",
+                            modifier = Modifier.size(88.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    OutlinedButton(onClick = { avatarPicker.launch(arrayOf("image/*")) }) {
+                        Text(if (avatarUri == null) "Choose profile image" else "Change profile image")
+                    }
+                    OutlinedTextField(
+                        value = displayName,
+                        onValueChange = { displayName = it.take(60) },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Display name") },
+                        singleLine = true,
+                    )
+                    Button(
+                        onClick = { preferences.edit().putString("local_profile_name", displayName.trim().ifBlank { "Researcher" }).apply() },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) { Text("Save local profile") }
+                    Text("Device-local workspace ID", style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(localWorkspaceId, style = MaterialTheme.typography.bodySmall)
+                    Text("This identifier is generated on this device. It is not a user/account ID and is not synced.",
                         style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
@@ -312,6 +377,10 @@ private fun ProfileScreen(biometricEnabled: Boolean, biometricAvailable: Boolean
                 )
                 Text("Manage the local app lock in Settings.", style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            SettingGroup("ONLINE ACCOUNT", "Remote sign-in, password reset, account recovery and cloud sign-out are unavailable because no identity backend is configured.") {
+                Text("No remote account credentials are stored by Kinetics. Do not enter institutional or patient-system passwords here.",
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }

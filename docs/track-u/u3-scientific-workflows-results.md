@@ -1,0 +1,53 @@
+# U3 — Scientific workflows and result presentation
+
+**Disposition:** PARTIAL — two real sequence workflows are now reachable from persisted Work jobs; the broader workflow inventory and acceptance remain OPEN.
+**Scope:** Research Mode only. A successful parser/QC run is not independent scientific validation and is not clinical interpretation.
+
+## Existing integrated workflow retained
+
+- SAF imports are staged and stored using the existing encrypted, hash-verified import path.
+- WorkManager owns long-running import and analysis execution.
+- FASTA QC operates only on a completed import whose stored bytes are authenticated and whose SHA-256 is recorded.
+- FASTA result JSON is stored against the exact input digest with tool ID, tool version, parameters and creation timestamp.
+- Import provenance and analysis exports omit source URI and private storage paths.
+- Work cards retain cancel/resume/delete/export actions and distinguish failure/recovery states.
+
+## Added in this work package
+
+### FASTQ quality summary
+
+- A new ImportedFastqAnalysisWorker accepts only FASTQ/FQ inputs from completed, hash-verified imports.
+- Input is bounded to 1,000,000 bytes and 1,000,000 decoded characters before Python analysis.
+- Phred offset is required as an explicit WorkManager input and restricted to 33 or 64. It is never guessed.
+- The Work UI asks the user to choose Phred+33 or Phred+64 before queuing the analysis.
+- The worker calls the existing kinetics_probe.analyze_fastq Python adapter and verifies that the returned result records the selected offset and at least one read.
+- The persisted result records sequence.fastq.quality_summary, version 1, the imported SHA-256 binding and explicit offset/size parameters.
+- Worker guard tests cover missing/malformed job IDs, invalid Phred offsets, missing jobs, wrong input type and oversized input without materializing plaintext.
+
+### Result detail
+
+- Saved analysis records now expose method ID, method version, parameters and saved timestamp in the Work job model.
+- The result panel presents record count, total bases, selected Phred offset, mean quality, Q20/Q30 fractions, a bounded first-five record preview and method limitations where present.
+- The complete result remains available through the explicit SAF JSON export action.
+- The UI labels the displayed values as a bounded research QC result and surfaces method limitations; it does not infer biological function or clinical meaning.
+
+## Current limitations
+
+- Analysis result JSON and method parameters are stored in app-private SQLite in plaintext; U2 discloses this limitation. No encryption-at-rest claim is made for this table.
+- The result panel currently supports the persisted FASTA/FASTQ summary structures. Other registry tools are not automatically exposed as runnable.
+- Progress granularity for the bounded analysis workers is not yet streamed into the UI; WorkManager lifecycle and terminal success/failure remain the source of truth.
+- Retry/resume policy for analysis work is not yet a dedicated user-facing workflow.
+- Full result/provenance cross-linking, result schema validation, process-death tests, export round trips and every failure/partial state remain to be verified.
+- FASTQ parsing/quality summaries do not perform adapter detection, trimming, paired-read rescue, variant interpretation or clinical interpretation.
+
+## Required closure evidence
+
+1. Exact-main Android arm64 APK/AAB build and JVM tests including both worker suites.
+2. Valid and invalid FASTQ fixture tests through the embedded Android Python runtime for both supported offsets.
+3. Result persistence and digest mismatch tests for FASTQ as well as FASTA.
+4. Process-death/restart and WorkManager retry/cancel tests.
+5. SAF result/provenance export round-trip tests, including provider partial-write failures.
+6. Registry/dispatcher parity audit for every visible runnable control.
+7. UI screenshot, accessibility and physical-device review for the result panel and Phred selection dialog.
+
+**Decision:** U3 remains PARTIAL. The new FASTQ workflow is a concrete integration, not a claim that every scientific engine has a complete mobile UI.

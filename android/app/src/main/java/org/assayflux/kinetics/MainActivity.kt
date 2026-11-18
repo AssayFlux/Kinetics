@@ -39,6 +39,8 @@ import java.util.UUID
 import java.io.File
 import java.security.MessageDigest
 import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,6 +69,33 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
     }
     var biometricUnlocked by remember { mutableStateOf(true) }
     var biometricError by remember { mutableStateOf<String?>(null) }
+    DisposableEffect(activity, biometricEnabled, onboardingComplete) {
+        var hasBackgrounded = false
+        val observer = LifecycleEventObserver { _, event ->
+            if (biometricEnabled && onboardingComplete) {
+                when (event) {
+                    Lifecycle.Event.ON_STOP -> {
+                        hasBackgrounded = true
+                        biometricUnlocked = false
+                        biometricError = null
+                    }
+                    Lifecycle.Event.ON_START -> if (hasBackgrounded) {
+                        hasBackgrounded = false
+                        biometricUnlocked = false
+                        biometricError = null
+                        BiometricUnlock.authenticate(
+                            activity,
+                            onSuccess = { biometricUnlocked = true; biometricError = null },
+                            onError = { biometricError = it },
+                        )
+                    }
+                    else -> Unit
+                }
+            }
+        }
+        activity.lifecycle.addObserver(observer)
+        onDispose { activity.lifecycle.removeObserver(observer) }
+    }
     LaunchedEffect(biometricEnabled, onboardingComplete) {
         if (biometricEnabled && onboardingComplete) {
             biometricUnlocked = false
@@ -424,6 +453,18 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
             pendingProvenanceSummaryJob = job.id
             provenanceSummaryPicker.launch("kinetics-provenance-${job.id}.txt")
         },
+        onAnalyzeFastq = { job, offset ->
+            val request = OneTimeWorkRequestBuilder<ImportedFastqAnalysisWorker>()
+                .setInputData(workDataOf(
+                    ImportedFastqAnalysisWorker.KEY_JOB_ID to job.id,
+                    ImportedFastqAnalysisWorker.KEY_PHRED_OFFSET to offset,
+                ))
+                .addTag("kinetics-analysis").build()
+            WorkManager.getInstance(activity).enqueueUniqueWork(
+                "analysis-${job.id}", ExistingWorkPolicy.REPLACE, request,
+            )
+            notice = "Local FASTQ QC queued with explicit Phred+$offset encoding. The result will retain the imported SHA-256 provenance."
+        },
         themeFamily = themeFamily,
         onThemeFamilyChange = { selected ->
             preferences.edit().putString("theme_family", selected).apply()
@@ -456,6 +497,7 @@ private fun KineticsResearchHome(activity: FragmentActivity) {
                     TextButton(onClick = {
                         deleteTarget = null
                         WorkManager.getInstance(activity).cancelUniqueWork("import-" + target.id)
+                        WorkManager.getInstance(activity).cancelUniqueWork("analysis-" + target.id)
                         scope.launch {
                             val result = withContext(Dispatchers.IO) {
                                 runCatching { store.deleteStoredJob(target.id) }

@@ -46,6 +46,7 @@ import org.assayflux.designsystem.KineticsField
 import org.assayflux.designsystem.KineticsListRow
 import org.assayflux.designsystem.KineticsComponentGallery
 import org.json.JSONArray
+import org.json.JSONObject
 
 internal enum class KineticsTab(val label: String) {
     Home("Home"), Work("Work"), Explore("Explore"), Settings("Settings")
@@ -71,6 +72,7 @@ internal fun KineticsAppShell(
     onExportProvenance: (ResearchJob) -> Unit,
     onExportProvenanceSummary: (ResearchJob) -> Unit,
     onAnalyzeImported: (ResearchJob) -> Unit, onExportAnalysis: (ResearchJob) -> Unit,
+    onAnalyzeFastq: (ResearchJob, Int) -> Unit,
     themeFamily: String, onThemeFamilyChange: (String) -> Unit,
     biometricEnabled: Boolean, biometricAvailable: Boolean,
     onBiometricChange: (Boolean) -> Unit,
@@ -130,8 +132,8 @@ internal fun KineticsAppShell(
                     )
                     else -> when (tab) {
                         KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
-                            onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, modifier)
-                        KineticsTab.Work -> WorkScreen(jobs, workSearchQuery, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, modifier)
+                            onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, onAnalyzeFastq, modifier)
+                        KineticsTab.Work -> WorkScreen(jobs, workSearchQuery, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, onAnalyzeFastq, modifier)
                         KineticsTab.Explore -> ExploreScreen(modifier, exploreSearchQuery)
                         KineticsTab.Settings -> SettingsScreen(
                             runtimeReport, onRunRuntime, onRefresh, themeFamily, onThemeFamilyChange,
@@ -373,7 +375,7 @@ private fun HomeScreen(
     onDelete: (ResearchJob) -> Unit, onExport: (ResearchJob) -> Unit,
     onExportProvenance: (ResearchJob) -> Unit,
     onExportProvenanceSummary: (ResearchJob) -> Unit, onAnalyzeImported: (ResearchJob) -> Unit,
-    onExportAnalysis: (ResearchJob) -> Unit, modifier: Modifier,
+    onExportAnalysis: (ResearchJob) -> Unit, onAnalyzeFastq: (ResearchJob, Int) -> Unit, modifier: Modifier,
 ) {
     val active = jobs.count { it.state in listOf("queued", "running", "cancel_requested") }
     val done = jobs.count { it.state == "succeeded" }
@@ -401,7 +403,7 @@ private fun HomeScreen(
             }
             item { Section("Recent activity", "View all", onOpenWork) }
             if (jobs.isEmpty()) item { Empty("Your workspace is clear", "Import a research file to create your first job.") }
-            else items(jobs.take(4), key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis) }
+            else items(jobs.take(4), key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, onAnalyzeFastq) }
             item {
                 Section("Device health", "Run checks", onRuntime)
                 OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
@@ -559,7 +561,7 @@ private fun WorkScreen(
     onResume: (ResearchJob) -> Unit, onDelete: (ResearchJob) -> Unit,
     onExport: (ResearchJob) -> Unit, onExportProvenance: (ResearchJob) -> Unit,
     onExportProvenanceSummary: (ResearchJob) -> Unit, onAnalyzeImported: (ResearchJob) -> Unit,
-    onExportAnalysis: (ResearchJob) -> Unit, modifier: Modifier,
+    onExportAnalysis: (ResearchJob) -> Unit, onAnalyzeFastq: (ResearchJob, Int) -> Unit, modifier: Modifier,
 ) {
     var query by rememberSaveable(initialQuery) { mutableStateOf(initialQuery) }
     var filter by rememberSaveable { mutableStateOf("All") }
@@ -586,7 +588,7 @@ private fun WorkScreen(
             }
             item { Button(onClick = onImport, Modifier.fillMaxWidth(), shape = RoundedCornerShape(10.dp)) { Text("Import new data") } }
             if (filtered.isEmpty()) item { Empty("No matching research jobs", "Try another search or import a dataset to begin.") }
-            else items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis) }
+            else items(filtered, key = { it.id }) { JobCard(it, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, onAnalyzeFastq) }
         }
     }
 }
@@ -597,11 +599,14 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
                     onExportProvenance: (ResearchJob) -> Unit,
                     onExportProvenanceSummary: (ResearchJob) -> Unit,
                     onAnalyzeImported: (ResearchJob) -> Unit,
-                    onExportAnalysis: (ResearchJob) -> Unit) {
+                    onExportAnalysis: (ResearchJob) -> Unit,
+    onAnalyzeFastq: (ResearchJob, Int) -> Unit) {
     val active = job.state in listOf("queued", "running", "cancel_requested")
     val success = job.state == "succeeded"
     val issue = job.state in listOf("failed", "recovery_required")
     var provenanceExpanded by rememberSaveable(job.id) { mutableStateOf(false) }
+    var showPhredDialog by rememberSaveable(job.id) { mutableStateOf(false) }
+    var selectedPhredOffset by rememberSaveable(job.id) { mutableIntStateOf(33) }
     OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(9.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -688,14 +693,59 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
                     Text(if (analysisExpanded) "Hide analysis result" else "View saved analysis result")
                 }
                 if (analysisExpanded) {
-                    Text("Analysis method: ${job.analysisToolId ?: "unknown"}", style = MaterialTheme.typography.labelSmall)
-                    val previewLimit = 12_000
-                    Text(
-                        if (job.analysisResultJson.length > previewLimit) {
-                            job.analysisResultJson.take(previewLimit) + "\\n… Preview truncated. Export the complete JSON result."
-                        } else job.analysisResultJson,
-                        style = MaterialTheme.typography.bodySmall,
-                    )
+                    val result = remember(job.id, job.analysisResultJson) {
+                        runCatching { JSONObject(job.analysisResultJson) }.getOrNull()
+                    }
+                    Text("Method: ${job.analysisToolId ?: "unknown"} · Version: ${job.analysisToolVersion ?: "unknown"}",
+                        style = MaterialTheme.typography.labelSmall)
+                    job.analysisCreatedAt?.let { created ->
+                        Text("Saved: ${java.time.format.DateTimeFormatter.ISO_INSTANT.format(java.time.Instant.ofEpochMilli(created))}",
+                            style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    Text("Input SHA-256: ${job.sha256 ?: "not recorded"}",
+                        style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    job.analysisParametersJson?.let {
+                        Text("Parameters: $it", style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    if (result != null) {
+                        Text("Records: ${result.optInt("record_count")} · Total bases: ${result.optLong("total_bases")}",
+                            style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+                        if (result.has("phred_offset")) Text(
+                            "Encoding: Phred+${result.optInt("phred_offset")} · Mean quality: ${result.optDouble("mean_phred")}",
+                            style = MaterialTheme.typography.bodySmall)
+                        if (result.has("q20_fraction")) Text(
+                            "Q20: ${"%.1f".format(result.optDouble("q20_fraction") * 100)}% · Q30: ${"%.1f".format(result.optDouble("q30_fraction") * 100)}%",
+                            style = MaterialTheme.typography.bodySmall)
+                        val records = result.optJSONArray("records") ?: result.optJSONArray("reads")
+                        if (records != null) {
+                            Text("RECORD PREVIEW", style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            for (index in 0 until minOf(records.length(), 5)) {
+                                val item = records.optJSONObject(index) ?: continue
+                                val summary = buildString {
+                                    append(item.optString("identifier", "record ${index + 1}"))
+                                    append(" · ${item.optInt("length")} bases")
+                                    if (item.has("gc_percent")) append(" · GC ${item.optDouble("gc_percent")}%")
+                                    if (item.has("mean_phred")) append(" · mean Q ${item.optDouble("mean_phred")}")
+                                }
+                                Text(summary, style = MaterialTheme.typography.bodySmall)
+                            }
+                            if (records.length() > 5) Text("Showing first 5 of ${records.length()} records. Export the full result for all records.",
+                                style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        val limitations = result.optJSONArray("limitations")
+                        if (limitations != null) {
+                            Text("LIMITATIONS", style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            for (index in 0 until limitations.length()) {
+                                Text("• ${limitations.optString(index)}", style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    } else {
+                        Text("Saved result is not valid JSON and cannot be rendered as a structured preview. The original stored record remains exportable.",
+                            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                    }
                     TextButton(onClick = { onExportAnalysis(job) }) { Text("Export complete analysis JSON") }
                 }
             }
@@ -703,11 +753,33 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
                 if (active) OutlinedButton(onClick = { onCancel(job) }) { Text("Cancel") }
                 if (job.state == "cancelled" || job.state == "failed") OutlinedButton(onClick = { onResume(job) }) { Text("Resume") }
                 if (success && job.analysisResultJson == null && job.inputName.substringAfterLast('.').lowercase() in setOf("fa", "fasta", "fna")) OutlinedButton(onClick = { onAnalyzeImported(job) }) { Text("Run FASTA QC") }
+                if (success && job.inputName.substringAfterLast('.').lowercase() in setOf("fastq", "fq")) OutlinedButton(onClick = { showPhredDialog = true }) { Text("Run FASTQ QC") }
                 if (success) Button(onClick = { onExport(job) }) { Text("Export") }
                 if (success || issue || job.state == "cancelled") OutlinedButton(onClick = { onDelete(job) }) { Text("Delete") }
             }
         }
     }
+    if (showPhredDialog) AlertDialog(
+        onDismissRequest = { showPhredDialog = false },
+        title = { Text("Choose FASTQ quality encoding") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Kinetics never guesses the Phred offset. Select the encoding used by this file.")
+                listOf(33, 64).forEach { offset ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        RadioButton(selected = selectedPhredOffset == offset, onClick = { selectedPhredOffset = offset })
+                        Column {
+                            Text("Phred+$offset", style = MaterialTheme.typography.bodyMedium)
+                            Text(if (offset == 33) "Sanger / modern Illumina" else "Legacy Illumina 1.3–1.7",
+                                style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = { showPhredDialog = false; onAnalyzeFastq(job, selectedPhredOffset) }) { Text("Run QC") } },
+        dismissButton = { TextButton(onClick = { showPhredDialog = false }) { Text("Cancel") } },
+    )
 }
 
 @Composable
@@ -1079,7 +1151,25 @@ private fun SettingsScreen(
             item { SettingGroup("LOCAL STORAGE", "Research inputs use Keystore-backed AES-GCM and app-private storage.") {
                 OutlinedButton(onRefresh, Modifier.fillMaxWidth()) { Text("Refresh local job state") }
             } }
-            item { SettingGroup("PRIVACY", "No cloud account or remote compute service is implied. Imported data stays on this device unless explicitly exported.") }
+            item { SettingGroup(
+                "PRIVACY · LOCAL DATA INVENTORY",
+                "This app does not create a cloud account or send research files to a remote compute service. The following information is stored locally:",
+            ) {
+                Text("• Imported inputs: AES-256-GCM encrypted chunks in the app's no-backup private directory. Plaintext is materialized temporarily in app-private cache for analysis/export and is removed on normal completion; stale prefixed cache files older than 24 hours are cleaned at store startup.",
+                    style = MaterialTheme.typography.bodySmall)
+                Text("• Job database: input display name, selected content URI, job state, byte count, SHA-256, timestamps, storage path and import provenance are stored in the app-private SQLite database. This metadata database is not separately encrypted by the current implementation.",
+                    style = MaterialTheme.typography.bodySmall)
+                Text("• Analysis results: FASTA/FASTQ result JSON and method parameters are currently stored in that SQLite database. Treat the device's app-private storage and OS account protection as part of the security boundary.",
+                    style = MaterialTheme.typography.bodySmall)
+                Text("• Preferences: appearance, onboarding acknowledgement and the optional local app-lock setting are stored in private SharedPreferences.",
+                    style = MaterialTheme.typography.bodySmall)
+                Text("• Exports: only created after you select a destination in Android's document picker. Copies at that destination are outside Kinetics' control.",
+                    style = MaterialTheme.typography.bodySmall)
+                Text("Deletion removes the app-managed files and database rows where operations succeed. Flash-storage secure erasure and deletion of exported copies cannot be guaranteed. Android backup is disabled in the app manifest; merged-manifest and device verification remain pending.",
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Screenshot/Recents protection is not enabled pending explicit threat review and owner approval. Do not treat the optional app lock as protection against a compromised or rooted device.",
+                    style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            } }
             item { SettingGroup("DATA PACKS & LICENCES", "Reference packs require version, source, checksum and licence metadata. Third-party engines retain their own terms.") }
             item { SettingGroup("ACCESSIBILITY", "System light/dark mode and font scaling are respected. Status is conveyed with text, not colour alone.") }
             item { SettingGroup("ABOUT KINETICS", "Research Mode · Version 0.0.1 · Apache-2.0 project code. Not for clinical use.") }

@@ -19,6 +19,9 @@ data class ResearchJob(
     val provenanceParametersJson: String? = null,
     val provenanceCreatedAt: Long? = null,
     val analysisToolId: String? = null,
+    val analysisToolVersion: String? = null,
+    val analysisParametersJson: String? = null,
+    val analysisCreatedAt: Long? = null,
     val analysisResultJson: String? = null,
 )
 
@@ -516,7 +519,7 @@ class ResearchStore(context: Context) :
         readableDatabase.rawQuery(
             """SELECT j.id,j.input_name,j.state,j.sha256,j.message,
                       p.tool_id,p.tool_version,p.parameters_json,p.created_at,
-                      a.tool_id,a.result_json
+                      a.tool_id,a.tool_version,a.parameters_json,a.created_at,a.result_json
                FROM jobs j
                LEFT JOIN provenance p ON p.job_id=j.id
                LEFT JOIN analysis_results a ON a.job_id=j.id
@@ -535,7 +538,10 @@ class ResearchStore(context: Context) :
                     provenanceParametersJson = if (cursor.isNull(7)) null else cursor.getString(7),
                     provenanceCreatedAt = if (cursor.isNull(8)) null else cursor.getLong(8),
                     analysisToolId = if (cursor.isNull(9)) null else cursor.getString(9),
-                    analysisResultJson = if (cursor.isNull(10)) null else cursor.getString(10),
+                    analysisToolVersion = if (cursor.isNull(10)) null else cursor.getString(10),
+                    analysisParametersJson = if (cursor.isNull(11)) null else cursor.getString(11),
+                    analysisCreatedAt = if (cursor.isNull(12)) null else cursor.getLong(12),
+                    analysisResultJson = if (cursor.isNull(13)) null else cursor.getString(13),
                 )
             }
         }

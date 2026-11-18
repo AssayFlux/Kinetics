@@ -58,18 +58,18 @@ The UI must reflect actual repository capability, not a generic scientific app.
 5. Ensure process-death persistence for preferences and navigation where required.
 
 ### U2 — Security and privacy surfaces
-1. Audit biometric local lock, device-credential fallback, lifecycle, lockout and recovery.
-2. Implement FLAG_SECURE/Recents behavior only after threat/privacy impact and owner-facing disclosure are reviewed.
-3. Audit encrypted settings, consent, data inventory and deletion/export disclosures.
-4. Preserve Keystore-loss behavior: do not imply ciphertext recovery when key material is lost.
-5. Add negative, lifecycle, migration and UI security tests.
+1. Implemented: optional biometric/device-credential lock re-authenticates after Activity stop/foreground return; cancellation/error remains locked with retry. Lifecycle/device acceptance tests remain open.
+2. FLAG_SECURE/Recents remains deliberately disabled pending owner-approved threat/privacy impact review.
+3. Implemented: Settings local-data inventory discloses encrypted inputs separately from plaintext SQLite metadata/results, temporary cache, preferences and user-selected exports.
+4. Existing Keystore-loss behavior is preserved: ciphertext is retained and recovery-required is explicit; no replacement key is used to imply recovery.
+5. Job deletion now requests cancellation of the corresponding analysis work. Migration, lifecycle, backup/restore, Keystore fault-injection, merged-manifest, runtime-network and independent security/privacy tests remain open. See `u2-security-privacy.md`.
 
 ### U3 — Scientific workflows and result presentation
-1. Integrate only real dispatchers and typed contracts.
-2. Complete durable result/provenance viewing and truthful progress/failure/cancel/retry behavior.
-3. Add sequence and kinetics screens only against implemented engine operations and test fixtures.
-4. Export through SAF with explicit success/partial-failure outcomes and provenance.
-5. Keep clinical/PGx interpretation disabled and Research Mode only.
+1. Existing FASTA QC remains bound to authenticated imports and stored SHA-256. Added FASTQ QC worker accepts only committed FASTQ/FQ imports and requires explicit Phred+33 or Phred+64; the Work UI asks for the choice and the worker verifies the returned offset.
+2. Saved analysis metadata now includes tool version, parameters and creation time in the job view. FASTA/FASTQ results receive a structured bounded preview and retain full JSON SAF export.
+3. Analysis work is cancelled when its parent job is deleted. Broader registry/dispatcher integration, result schema validation, progress granularity, process-death/retry and export round-trip evidence remain open.
+4. SAF export continues to disclose success/partial-write failure; provenance exports omit source URI/private paths.
+5. Clinical/PGx interpretation remains disabled; Research Mode only. See `u3-scientific-workflows-results.md`.
 
 ### U4 — Scientific viewers
 Mol*/3Dmol.js, alignment, tree, chart and chemistry viewers only after S1–S3 contracts, dependency/licence approval, secure offline bridge and measured low-end-device performance budgets. Do not add viewer libraries before approval.

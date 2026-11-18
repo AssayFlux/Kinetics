@@ -3,7 +3,7 @@
 **Audit date:** 2026-11-18  
 **Repository:** `AssayFlux/Kinetics`  
 **Target branch:** `main` only  
-**Current engineering review baseline:** `aeec1d0e8918e14455f627fc5aa5cf933322b634` (per-capability carousel, individual service destinations and blueprint header; exact-head CI pending)
+**Current engineering review baseline:** `7fec05ca181790134b87e2704be77a651351ef83` (biometric icon correction, precise VCF destination routing and regression assertions; exact-head CI pending)
 **Audit and quality-report documentation commit:** `cb79b9110ff50a69b1b58d78a8b13e3c8843cf3b`  
 **Status:** **ENGINEERING INTEGRATION IN PROGRESS — distinguish code work from external/device acceptance**  
 **Design authority:** D-024, owner-supplied Premium Minimal Monochrome V1. Semantic decision colours may be used for status only; monochrome remains the visual authority.
@@ -125,3 +125,13 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - The earlier Android compiler failure was isolated to a test fixture passing a Long expression to a ByteArray size parameter. The fixture was corrected at `e89c475a2ad2fe4c5451926f077d5d1a9bb434a9`. This correction is not verified until exact-head JVM tests pass.
 - Documentation commits trigger a new exact-head run. At refresh, workflow `44233969938` for `ca95e2816d93feffc29b487195d7b7c3fa445e8c` was pending.
 - Track U and public database integration remain OPEN. Continue with exact-head CI, provider journey and encrypted-record lifecycle tests, retrieval cancellation/retry/cache management, typed parser/engine integration, then physical-device and accessibility acceptance.
+
+
+## 9. Engineering follow-through — 2026-11-18 05:37 UTC
+
+- Fixed the unresolved Compose biometric icon reference by using the available filled fingerprint vector. The earlier Android compile failure at `KineticsUi.kt:1398` is addressed in source at `2956ac803698c7d13212f036cab4112ea01b5139`.
+- Corrected service dispatch so aggregate VCF QC and the U5 research gate appear only on the exact `genomics.sam_vcf` capability destination, not on every capability whose broad domain label happens to be Genomics or Variant. Source change: `d99ed33d5ac8bc633b2e867d0d89d55f5567d239`.
+- Updated `tests/test_android_scientific_viewers.py` to assert the supported fingerprint icon reference and exact VCF service routing. Test change: `7fec05ca181790134b87e2704be77a651351ef83`.
+- Exact-head workflow `44245420057` is queued for `7fec05ca181790134b87e2704be77a651351ef83`; it has not yet produced Android build or JVM test evidence.
+- The 68-entry capability catalogue is not 68 runnable Android workflows. Current Android dispatchers are explicitly bounded to the implemented paths documented in `ServiceDetailScreen`; other entries are catalogue-backed service detail/status destinations and must not be represented as executable.
+- Remaining coding work includes typed Android-to-engine dispatch for additional capabilities, complete public-database lifecycle/reliability, login/account architecture decision and implementation, and missing service-specific workflow UI. Device/visual/scientific acceptance remains a later testing phase.

@@ -485,7 +485,7 @@ private fun ServiceDetailScreen(
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
-        "genomics.sam_vcf",,
+        "genomics.sam_vcf",
         "sequence.local_reference_pack_loader",
         "sequence.local_blastp",
         "sequence.local_hmmpress",

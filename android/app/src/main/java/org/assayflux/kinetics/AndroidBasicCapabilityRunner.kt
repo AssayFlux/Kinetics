@@ -50,7 +50,7 @@ internal object AndroidBasicCapabilityRunner {
         "sequence.local_fasta_exact_search",
         "sequence.local_fasta_alignment_search",
         "phylo.newick_export",
-        "structure.pdb_geometry",,
+        "structure.pdb_geometry",
         "sequence.local_reference_pack_loader",
         "sequence.local_blastp",
         "sequence.local_hmmpress",

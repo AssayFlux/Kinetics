@@ -84,17 +84,26 @@ internal fun KineticsAppShell(
     var workSearchQuery by rememberSaveable { mutableStateOf("") }
     var showComponentGallery by rememberSaveable { mutableStateOf(false) }
     var showProfile by rememberSaveable { mutableStateOf(false) }
-    var selectedServiceDomain by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedServiceId by rememberSaveable { mutableStateOf<String?>(null) }
     val context = LocalContext.current
     val capabilities = remember(context) {
-        runCatching { loadCapabilityCatalogue(context) }.getOrDefault(emptyList())
+        runCatching {
+            loadCapabilityCatalogue(context) + CapabilityEntry(
+                id = "public.reference_databases",
+                name = "Public reference databases",
+                status = "implemented",
+                implementation = "PublicDatabaseClient.kt",
+                evidenceLevel = "none",
+                domain = "Public reference databases",
+            )
+        }.getOrDefault(emptyList())
     }
-    BackHandler(enabled = showSearch || showComponentGallery || showProfile || selectedServiceDomain != null) {
+    BackHandler(enabled = showSearch || showComponentGallery || showProfile || selectedServiceId != null) {
         when {
             showComponentGallery -> showComponentGallery = false
             showSearch -> showSearch = false
             showProfile -> showProfile = false
-            else -> selectedServiceDomain = null
+            else -> selectedServiceId = null
         }
     }
     val resolvedTheme = when (themeFamily) {
@@ -145,10 +154,10 @@ internal fun KineticsAppShell(
                     Spacer(Modifier.height(12.dp))
                     KineticsTab.entries.forEach { item ->
                         NavigationDrawerItem(
-                            selected = tab == item && selectedServiceDomain == null && !showProfile,
+                            selected = tab == item && selectedServiceId == null && !showProfile,
                             onClick = {
                                 tab = item
-                                selectedServiceDomain = null
+                                selectedServiceId = null
                                 showProfile = false
                                 drawerScope.launch { drawerState.close() }
                             },
@@ -173,7 +182,7 @@ internal fun KineticsAppShell(
                             showSearch -> "Search"
                             showComponentGallery -> "Design system"
                             showProfile -> "Profile"
-                            selectedServiceDomain != null -> selectedServiceDomain!!
+                            selectedServiceId != null -> selectedServiceId!!
                             tab == KineticsTab.Home -> ""
                             else -> "KINETICS"
                         },
@@ -181,19 +190,19 @@ internal fun KineticsAppShell(
                             showSearch -> "Jobs and registered capabilities"
                             showComponentGallery -> "Developer component preview"
                             showProfile -> "Local profile and device security"
-                            selectedServiceDomain != null -> "Scientific service workspace"
+                            selectedServiceId != null -> "Scientific service workspace"
                             tab == KineticsTab.Home -> ""
                             else -> tab.label
                         },
                         navigation = {
-                            if (showSearch || showComponentGallery || showProfile || selectedServiceDomain != null) {
+                            if (showSearch || showComponentGallery || showProfile || selectedServiceId != null) {
                                 IconButton(
                                     onClick = {
                                         when {
                                             showSearch -> showSearch = false
                                             showComponentGallery -> showComponentGallery = false
                                             showProfile -> showProfile = false
-                                            else -> selectedServiceDomain = null
+                                            else -> selectedServiceId = null
                                         }
                                     },
                                     modifier = Modifier.size(48.dp),
@@ -206,7 +215,7 @@ internal fun KineticsAppShell(
                             }
                         },
                         actions = {
-                            if (!showSearch && !showComponentGallery && !showProfile && selectedServiceDomain == null) {
+                            if (!showSearch && !showComponentGallery && !showProfile && selectedServiceId == null) {
                                 IconButton(onClick = { showSearch = true }, modifier = Modifier.size(48.dp)) {
                                     Icon(Icons.Outlined.Search, contentDescription = "Search jobs and capabilities")
                                 }
@@ -233,21 +242,21 @@ internal fun KineticsAppShell(
                         },
                         onSelectCapability = { result ->
                             val entry = capabilities.firstOrNull { it.id == result.id.removePrefix("capability:") }
-                            selectedServiceDomain = entry?.domain
+                            selectedServiceId = entry?.id
                             showSearch = false
                         },
                         modifier = contentModifier,
                     )
-                    selectedServiceDomain != null -> ServiceDomainScreen(
-                        domain = selectedServiceDomain!!,
-                        capabilities = capabilities.filter { it.domain == selectedServiceDomain },
+                    selectedServiceId != null -> ServiceDomainScreen(
+                        domain = selectedServiceId!!,
+                        capabilities = capabilities.filter { it.domain == selectedServiceId },
                         onImport = onImport,
                         modifier = contentModifier,
                     )
                     else -> when (tab) {
                         KineticsTab.Home -> HomeScreen(
                             jobs, notice, runtimeReport, resolvedTheme, onImport, onRunRuntime,
-                            { tab = KineticsTab.Work }, { selectedServiceDomain = it },
+                            { tab = KineticsTab.Work }, { selectedServiceId = it },
                             onCancel, onResume, onDelete, onExport, onExportProvenance,
                             onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis,
                             onAnalyzeFastq, contentModifier,
@@ -504,7 +513,7 @@ private fun HomeScreen(
                     if (latest == null) "Import input" else "View Work", if (latest == null) onImport else onOpenWork)
             }
             item {
-                DashboardPanel("LOCAL DATA & REFERENCES", "Private research storage", "Imported files remain in app-private storage. Public reference retrieval is available as a dedicated service.", "Open databases", { onOpenService("Public reference databases") })
+                DashboardPanel("LOCAL DATA & REFERENCES", "Private research storage", "Imported files remain in app-private storage. Public reference retrieval is available as a dedicated service.", "Open databases", { onOpenService("public.reference_databases") })
             }
             if (notice.isNotBlank()) item { Notice(notice) }
             item { Footer() }

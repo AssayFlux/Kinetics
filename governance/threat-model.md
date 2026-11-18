@@ -12,7 +12,7 @@
 
 ## Defaults requiring explicit owner review
 
-- No network by default; offline-only is the active architecture boundary.
+- Offline-first by default. Public-reference lookup may make an explicit user-triggered HTTPS request to the reviewed provider allow-list; remote-node processing remains disabled unless separately configured and approved.
 - No automatic cloud backup of sensitive research data.
 - Sensitive project screenshot/Recents protection is a requirement pending UX/device review.
 - App lock and separate vault lock remain subject to recovery, accessibility and owner review.

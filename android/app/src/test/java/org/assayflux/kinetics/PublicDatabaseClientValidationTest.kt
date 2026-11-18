@@ -65,6 +65,15 @@ class PublicDatabaseClientValidationTest {
     }
 
     @Test
+    fun retryBackoffIsBoundedAndHonorsSmallRetryAfterValues() {
+        assertTrue(PublicDatabaseClient.retryDelayMillis(0, null) == 250L)
+        assertTrue(PublicDatabaseClient.retryDelayMillis(1, null) == 500L)
+        assertTrue(PublicDatabaseClient.retryDelayMillis(0, "1") == 1_000L)
+        assertTrue(PublicDatabaseClient.retryDelayMillis(1, "99") == 2_000L)
+        assertTrue(PublicDatabaseClient.retryDelayMillis(0, "invalid") == 250L)
+    }
+
+    @Test
     fun rejectsMalformedPdbIdentifierBeforeNetwork() {
         val error = runCatching { client.fetchRcsbMmcif("abc") }.exceptionOrNull()
         assertTrue(error is IllegalArgumentException)

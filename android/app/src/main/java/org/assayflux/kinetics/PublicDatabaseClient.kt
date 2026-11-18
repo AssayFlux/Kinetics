@@ -187,45 +187,65 @@ internal class PublicDatabaseClient {
         )
 
     private fun request(address: String, maximumBytes: Int): String {
-        val url = URL(address)
-        require(url.protocol == "https" && url.host in ALLOWED_HOSTS) {
-            "Public database host is not allow-listed"
-        }
-        val connection = (url.openConnection() as HttpURLConnection).apply {
-            requestMethod = "GET"
-            connectTimeout = CONNECT_TIMEOUT_MS
-            readTimeout = READ_TIMEOUT_MS
-            instanceFollowRedirects = false
-            setRequestProperty("Accept", "application/json, text/plain, chemical/x-mmcif")
-            setRequestProperty("User-Agent", "Kinetics-Android/0.1 (public reference retrieval)")
-        }
-        try {
-            val status = connection.responseCode
-            require(status in 200..299) { "Public database request failed (HTTP $status)" }
-            val declaredLength = connection.contentLengthLong
-            require(declaredLength < 0 || declaredLength <= maximumBytes) {
-                "Public database response exceeds the Kinetics size limit"
+        var lastFailure: java.io.IOException? = null
+        for (attempt in 0..MAX_RETRIES) {
+            val url = URL(address)
+            require(url.protocol == "https" && url.host in ALLOWED_HOSTS) {
+                "Public database host is not allow-listed"
             }
-            val output = ByteArrayOutputStream()
-            connection.inputStream.use { input ->
-                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
-                var total = 0
-                while (true) {
-                    val count = input.read(buffer)
-                    if (count < 0) break
-                    total += count
-                    require(total <= maximumBytes) { "Public database response exceeds the Kinetics size limit" }
-                    output.write(buffer, 0, count)
+            val connection = (url.openConnection() as HttpURLConnection).apply {
+                requestMethod = "GET"
+                connectTimeout = CONNECT_TIMEOUT_MS
+                readTimeout = READ_TIMEOUT_MS
+                instanceFollowRedirects = false
+                setRequestProperty("Accept", "application/json, text/plain, chemical/x-mmcif")
+                setRequestProperty("User-Agent", "Kinetics-Android/0.1 (public reference retrieval)")
+            }
+            try {
+                val status = connection.responseCode
+                if (status == 429 || status in 500..599) {
+                    if (attempt == MAX_RETRIES) {
+                        throw java.io.IOException("Public database request failed (HTTP $status)")
+                    }
+                    Thread.sleep(retryDelayMillis(attempt, connection.getHeaderField("Retry-After")))
+                    continue
                 }
+                require(status in 200..299) { "Public database request failed (HTTP $status)" }
+                val declaredLength = connection.contentLengthLong
+                require(declaredLength < 0 || declaredLength <= maximumBytes) {
+                    "Public database response exceeds the Kinetics size limit"
+                }
+                val output = ByteArrayOutputStream()
+                connection.inputStream.use { input ->
+                    val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                    var total = 0
+                    while (true) {
+                        if (Thread.currentThread().isInterrupted) {
+                            throw java.io.InterruptedIOException("Public database retrieval was cancelled")
+                        }
+                        val count = input.read(buffer)
+                        if (count < 0) break
+                        total += count
+                        require(total <= maximumBytes) {
+                            "Public database response exceeds the Kinetics size limit"
+                        }
+                        output.write(buffer, 0, count)
+                    }
+                }
+                return Charsets.UTF_8.newDecoder()
+                    .onMalformedInput(CodingErrorAction.REPORT)
+                    .onUnmappableCharacter(CodingErrorAction.REPORT)
+                    .decode(ByteBuffer.wrap(output.toByteArray()))
+                    .toString()
+            } catch (error: java.io.IOException) {
+                lastFailure = error
+                if (attempt == MAX_RETRIES) throw error
+                Thread.sleep(retryDelayMillis(attempt, null))
+            } finally {
+                connection.disconnect()
             }
-            return Charsets.UTF_8.newDecoder()
-                .onMalformedInput(CodingErrorAction.REPORT)
-                .onUnmappableCharacter(CodingErrorAction.REPORT)
-                .decode(ByteBuffer.wrap(output.toByteArray()))
-                .toString()
-        } finally {
-            connection.disconnect()
         }
+        throw lastFailure ?: java.io.IOException("Public database request failed")
     }
 
     private fun checkedQuery(value: String): String {
@@ -258,6 +278,13 @@ internal class PublicDatabaseClient {
 
     companion object {
         private val ALLOWED_HOSTS = setOf("eutils.ncbi.nlm.nih.gov", "rest.uniprot.org", "files.rcsb.org")
+        private const val MAX_RETRIES = 2
+        internal fun retryDelayMillis(attempt: Int, retryAfterSeconds: String?): Long {
+            require(attempt in 0..MAX_RETRIES)
+            val serverDelay = retryAfterSeconds?.trim()?.toLongOrNull()
+                ?.coerceIn(0L, 2L)?.times(1_000L)
+            return serverDelay ?: (250L shl attempt)
+        }
         private const val CONNECT_TIMEOUT_MS = 10_000
         private const val READ_TIMEOUT_MS = 20_000
         private const val MAX_METADATA_BYTES = 2 * 1024 * 1024

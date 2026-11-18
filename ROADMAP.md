@@ -275,3 +275,11 @@ This evidence closes the bounded P1–P7 software foundation only. It does not d
 - Started U Step 1 on branch track-u-step1-base. Added docs/track-u/implementation-plan.md and recorded D-024 for the owner's 20-section monochrome V1 prompt.
 - The V1 prompt supersedes D-015 only for conflicting visual direction; research scope, asset preservation, real workflows, security/privacy and architecture constraints remain.
 - U0–U3 are partial pre-existing source. U4–U6 are not started. No U completion percentage is reported before both steps are assessed.
+
+
+## 2026-11-18 — Public scientific data integration
+- Added direct Android retrieval source adapters for NCBI Gene/Nucleotide/Protein, UniProtKB and RCSB PDB entry IDs.
+- Added encrypted local public-record payload cache and Home retrieval UI.
+- Connected retrieved FASTA to the existing on-device QC adapter and RCSB mmCIF to the existing structure parser/viewer.
+- Remaining: saved-record reopen/reanalyse, NCBI Gene cross-links, RCSB search, ENA/Ensembl/PubChem, provider retry/cancellation, source terms/licence metadata, exact-head build and device acceptance.
+- This is a source-level integration milestone, not a release-ready or scientifically validated claim.

@@ -38,6 +38,13 @@ def kotlin_source(data: dict[str, Any]) -> str:
         "",
         "import androidx.compose.ui.graphics.Color",
         "",
+        "data class KineticsStatusColors(",
+        "    val success: Color,",
+        "    val warning: Color,",
+        "    val error: Color,",
+        "    val information: Color",
+        ")",
+        "",
         "data class KineticsPalette(",
     ]
     for index, prop in enumerate(PROPERTIES):
@@ -49,6 +56,14 @@ def kotlin_source(data: dict[str, Any]) -> str:
     lines.append(f"    const val minTouchTargetDp = {shared['touch_target_min_dp']}")
     lines.append(f"    const val targetGapDp = {shared['target_gap_dp']}")
     lines.append(f"    const val maxReadableContentDp = {shared['max_readable_content_dp']}")
+    for family in ("light", "dark"):
+        colors = data["semantic_colors"][family]
+        lines.append(f"    val Status{family.title()} = KineticsStatusColors(")
+        for index, role in enumerate(("success", "warning", "error", "information")):
+            suffix = "," if index < 3 else ""
+            color = colors[role].removeprefix("#")
+            lines.append(f"        {role} = Color(0xFF{color}){suffix}")
+        lines.append("    )")
     for family in ("light", "dark", "neon"):
         for palette in data["theme_families"][family]["themes"]:
             lines.append(f"    val {identifier(palette['id'])} = KineticsPalette(")
@@ -71,6 +86,9 @@ def css_source(data: dict[str, Any]) -> str:
         f"  --kinetics-target-gap: {shared['target_gap_dp']}px;",
         f"  --kinetics-readable-width: {shared['max_readable_content_dp']}px;",
     ]
+    for family in ("light", "dark"):
+        for role, color in data["semantic_colors"][family].items():
+            lines.append(f"  --kinetics-status-{family}-{role}: {color};")
     for family in ("light", "dark", "neon"):
         for palette in data["theme_families"][family]["themes"]:
             for prop in PROPERTIES:

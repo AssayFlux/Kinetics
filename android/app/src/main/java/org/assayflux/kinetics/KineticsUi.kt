@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.LocalContext
@@ -92,12 +93,14 @@ internal fun KineticsAppShell(
         else -> themeFamily
     }
     val palette = if (resolvedTheme == "dark") KineticsTokens.KineticsDarkClassic else KineticsTokens.KineticsLightClassic
+    val decisionColors = if (resolvedTheme == "dark") KineticsTokens.StatusDark else KineticsTokens.StatusLight
     val scheme = if (resolvedTheme == "light") {
         lightColorScheme(
             primary = palette.primary, secondary = palette.secondary, tertiary = palette.tertiary,
             background = palette.background, surface = palette.surface, onSurface = palette.text,
             onBackground = palette.text, surfaceVariant = palette.surfaceAlt,
             onSurfaceVariant = palette.muted, outline = palette.outline,
+            error = decisionColors.error,
         )
     } else {
         darkColorScheme(
@@ -106,6 +109,7 @@ internal fun KineticsAppShell(
             background = palette.background, surface = palette.surface, onSurface = palette.text,
             onBackground = palette.text, surfaceVariant = palette.surfaceAlt,
             onSurfaceVariant = palette.muted, outline = palette.outline,
+            error = decisionColors.error,
         )
     }
     MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
@@ -789,6 +793,18 @@ private fun StatePill(state: String) {
         "cancel_requested" -> "STOPPING"; "failed" -> "FAILED"; "cancelled" -> "CANCELLED"
         "recovery_required" -> "RECOVERY"; else -> state.uppercase()
     }
+    val statusColors = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) {
+        KineticsTokens.StatusDark
+    } else {
+        KineticsTokens.StatusLight
+    }
+    val statusColor = when (state) {
+        "succeeded" -> statusColors.success
+        "failed" -> statusColors.error
+        "recovery_required" -> statusColors.warning
+        "queued", "running", "cancel_requested" -> statusColors.information
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
     Surface(
         color = MaterialTheme.colorScheme.surfaceVariant,
         shape = RoundedCornerShape(6.dp),
@@ -796,7 +812,7 @@ private fun StatePill(state: String) {
     ) {
         Text(text, Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant)
+            color = statusColor)
     }
 }
 

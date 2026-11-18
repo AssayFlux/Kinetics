@@ -100,3 +100,22 @@ def test_active_compose_cards_follow_v1_radius_scale() -> None:
     assert "RoundedCornerShape(26.dp)" not in ui
     assert "RoundedCornerShape(16.dp)" in ui
     assert "RoundedCornerShape(12.dp)" in ui
+
+
+def test_semantic_decision_colours_remain_status_only_and_accessible() -> None:
+    tokens = json.loads((ROOT / "design/tokens.json").read_text())
+    for family in ("light", "dark"):
+        colors = tokens["semantic_colors"][family]
+        assert set(colors) == {"success", "warning", "error", "information"}
+        surface = "#F2F1ED" if family == "light" else "#242424"
+        for role, color in colors.items():
+            assert _contrast(color, surface) >= 4.5, (
+                f"{family} {role} status text lacks 4.5:1 contrast"
+            )
+    ui = (
+        ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt"
+    ).read_text()
+    assert "statusColors.success" in ui
+    assert "statusColors.warning" in ui
+    assert "statusColors.error" in ui
+    assert "statusColors.information" in ui

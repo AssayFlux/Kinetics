@@ -3,6 +3,13 @@ package org.assayflux.designsystem
 
 import androidx.compose.ui.graphics.Color
 
+data class KineticsStatusColors(
+    val success: Color,
+    val warning: Color,
+    val error: Color,
+    val information: Color
+)
+
 data class KineticsPalette(
     val background: Color,
     val surface: Color,
@@ -21,6 +28,18 @@ object KineticsTokens {
     const val minTouchTargetDp = 48
     const val targetGapDp = 8
     const val maxReadableContentDp = 840
+    val StatusLight = KineticsStatusColors(
+        success = Color(0xFF4F7458),
+        warning = Color(0xFF8A6428),
+        error = Color(0xFFA64B4B),
+        information = Color(0xFF526F8B)
+    )
+    val StatusDark = KineticsStatusColors(
+        success = Color(0xFFA3C9AA),
+        warning = Color(0xFFE1BE77),
+        error = Color(0xFFE6A0A0),
+        information = Color(0xFFA5C3DE)
+    )
     val KineticsLightClassic = KineticsPalette(
         background = Color(0xFFFAF9F6),
         surface = Color(0xFFFFFFFF),

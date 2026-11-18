@@ -54,7 +54,7 @@ internal fun KineticsOnboardingScreen(
             background = palette.background, surface = palette.surface,
             onSurface = palette.text, onBackground = palette.text,
             surfaceVariant = palette.surfaceAlt, onSurfaceVariant = palette.muted,
-            outline = palette.outline,
+            outline = palette.outline, error = KineticsTokens.StatusDark.error,
         )
     } else {
         lightColorScheme(
@@ -63,7 +63,7 @@ internal fun KineticsOnboardingScreen(
             background = palette.background, surface = palette.surface,
             onSurface = palette.text, onBackground = palette.text,
             surfaceVariant = palette.surfaceAlt, onSurfaceVariant = palette.muted,
-            outline = palette.outline,
+            outline = palette.outline, error = KineticsTokens.StatusLight.error,
         )
     }
     MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {

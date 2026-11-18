@@ -16,6 +16,14 @@
   --kinetics-touch-target-min: 48px;
   --kinetics-target-gap: 8px;
   --kinetics-readable-width: 840px;
+  --kinetics-status-light-success: #4F7458;
+  --kinetics-status-light-warning: #8A6428;
+  --kinetics-status-light-error: #A64B4B;
+  --kinetics-status-light-information: #526F8B;
+  --kinetics-status-dark-success: #A3C9AA;
+  --kinetics-status-dark-warning: #E1BE77;
+  --kinetics-status-dark-error: #E6A0A0;
+  --kinetics-status-dark-information: #A5C3DE;
   --kinetics-kinetics-light-classic-background: #FAF9F6;
   --kinetics-kinetics-light-classic-surface: #FFFFFF;
   --kinetics-kinetics-light-classic-surface-alt: #F2F1ED;

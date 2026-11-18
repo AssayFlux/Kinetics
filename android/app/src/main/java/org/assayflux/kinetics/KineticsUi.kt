@@ -120,6 +120,7 @@ internal fun KineticsAppShell(
         )
     }
     MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
+      BoxWithConstraints(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         val drawerScope = rememberCoroutineScope()
         ModalNavigationDrawer(
@@ -262,7 +263,7 @@ internal fun KineticsAppShell(
                     }
                 }
             }
-        }
+      }
     }
 }
 
@@ -497,7 +498,7 @@ private fun HomeScreen(
             item {
                 val latest = jobs.firstOrNull()
                 DashboardPanel("RECENT ACTIVITY", latest?.inputName ?: "No research activity yet",
-                    latest?.let { "Latest job: ${it.state} · ${it.updatedAt}" } ?: "Import a research input to begin your first local job.",
+                    latest?.let { "Latest job: ${it.state} · timestamp ${it.analysisCreatedAt ?: it.provenanceCreatedAt ?: "unavailable"}" } ?: "Import a research input to begin your first local job.",
                     if (latest == null) "Import input" else "View Work", if (latest == null) onImport else onOpenWork)
             }
             item {

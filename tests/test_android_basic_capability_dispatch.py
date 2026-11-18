@@ -304,7 +304,7 @@ def test_structure_alignment_and_variant_coordinate_mapping_routes():
 def test_local_reference_exact_and_alignment_search_use_caller_supplied_packs():
     parameters = {
         "query": "ACGTACGT",
-        "reference_fasta": ">ref1\\nACGTACGT\\n>ref2\\nTTTTAAAA",
+        "reference_fasta": ">ref1\nACGTACGT\n>ref2\\nTTTTAAAA",
         "sequence_type": "DNA",
         "name": "Example pack",
         "version": "1",

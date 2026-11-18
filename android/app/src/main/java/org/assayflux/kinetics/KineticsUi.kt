@@ -454,6 +454,9 @@ private fun ServiceDetailScreen(
         "sequence.explicit_genetic_code_translation",
         "kinetics.inhibition_rate",
         "phylo.upgma",
+        "omics.normalisation",
+        "omics.cross_correlation",
+        "phylo.jukes_cantor_nj",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -615,6 +618,33 @@ private fun ServiceDetailScreen(
                     description = "Build a rooted UPGMA tree from a finite symmetric distance matrix and unique labels. Supply distance_matrix and labels as JSON.",
                     sample = "{\"labels\":[\"A\",\"B\",\"C\"],\"distance_matrix\":[[0,2,4],[2,0,4],[4,4,0]]}",
                     actionLabel = "Build UPGMA tree",
+                ) }
+            }
+            if (capability?.id == "omics.normalisation") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "omics.normalisation",
+                    title = "Omics count normalisation",
+                    description = "Apply counts-per-million or centred log-ratio transformation to a rectangular feature-by-sample matrix. Input JSON includes method and matrix.",
+                    sample = "{\"method\":\"cpm\",\"matrix\":[[10,20],[30,40]]}",
+                    actionLabel = "Normalise matrix",
+                ) }
+            }
+            if (capability?.id == "omics.cross_correlation") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "omics.cross_correlation",
+                    title = "Cross-omics correlation",
+                    description = "Calculate pairwise Pearson correlations between two feature-by-sample matrices with matching sample order. Input JSON includes first and second matrices.",
+                    sample = "{\"first\":[[1,2,3],[3,2,1]],\"second\":[[2,4,6]]}",
+                    actionLabel = "Correlate features",
+                ) }
+            }
+            if (capability?.id == "phylo.jukes_cantor_nj") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "phylo.jukes_cantor_nj",
+                    title = "Jukes–Cantor neighbour joining",
+                    description = "Infer a neighbour-joining tree from caller-supplied aligned DNA sequences using pairwise-deletion Jukes–Cantor distances. Input JSON includes named sequences.",
+                    sample = "{\"sequences\":{\"A\":\"ACGTACGTACGTACGTACGT\",\"B\":\"ACGTACGTACGTACGTACGA\",\"C\":\"ACGTACGTACGTACGTACGG\"}}",
+                    actionLabel = "Build NJ tree",
                 ) }
             }
             if (capability?.id == "structure.ligand_site_candidates" ||

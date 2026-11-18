@@ -165,3 +165,21 @@ def test_translation_inhibition_and_upgma_routes_are_allow_listed():
         assert capability_id in UI
         assert capability_id in RUNNER
         assert capability_id in PROBE
+
+def test_omics_normalisation_correlation_and_jc_nj_routes_execute():
+    normalized = _run_probe(
+        "omics.normalisation",
+        '{"method":"cpm","matrix":[[10,20],[30,40]]}',
+    )
+    assert len(normalized) == 2
+    correlations = _run_probe(
+        "omics.cross_correlation",
+        '{"first":[[1,2,3],[3,2,1]],"second":[[2,4,6]]}',
+    )
+    assert len(correlations) == 2
+    tree = _run_probe(
+        "phylo.jukes_cantor_nj",
+        '{"sequences":{"A":"ACGTACGTACGTACGTACGT","B":"ACGTACGTACGTACGTACGA","C":"ACGTACGTACGTACGTACGG"}}',
+    )
+    assert tree["leaf_count"] == 3
+    assert tree["newick"].endswith(";")

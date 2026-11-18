@@ -457,6 +457,68 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Tree topology depends entirely on the supplied distance matrix",
             "No sequence alignment, distance estimation or bootstrap support is performed",
         ]
+    elif capability_id == "omics.normalisation":
+        from kinetics.omics import clr_transform, cpm
+        try:
+            parameters = json.loads(sequence_text)
+            matrix = parameters["matrix"]
+            method = parameters["method"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with method and matrix") from exc
+        if not isinstance(matrix, list) or not matrix or len(matrix) > 500:
+            raise ValueError("Matrix must contain 1–500 feature rows")
+        if any(not isinstance(row, list) or len(row) > 500 for row in matrix):
+            raise ValueError("Matrix rows must contain at most 500 samples")
+        if sum(len(row) for row in matrix) > 50_000:
+            raise ValueError("Matrix exceeds the 50,000-value mobile limit")
+        if method == "cpm":
+            result = cpm(matrix)
+        elif method == "clr":
+            pseudocount = float(parameters.get("pseudocount", 0.5))
+            result = clr_transform(matrix, pseudocount=pseudocount)
+        else:
+            raise ValueError("method must be 'cpm' or 'clr'")
+        limitations = [
+            "Transformation only; no batch correction, filtering, imputation or differential testing",
+            "CPM and CLR have different assumptions; select based on study design",
+        ]
+    elif capability_id == "omics.cross_correlation":
+        from kinetics.omics import cross_omics_correlation
+        try:
+            parameters = json.loads(sequence_text)
+            first = parameters["first"]
+            second = parameters["second"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with first and second feature-by-sample matrices") from exc
+        if not isinstance(first, list) or not isinstance(second, list):
+            raise ValueError("Both omics inputs must be matrices")
+        if len(first) > 200 or len(second) > 200:
+            raise ValueError("Each matrix is limited to 200 features")
+        if sum(len(row) for row in first + second if isinstance(row, list)) > 100_000:
+            raise ValueError("Omics matrices exceed the 100,000-value mobile limit")
+        result = cross_omics_correlation(first, second)
+        limitations = [
+            "Pairwise Pearson correlations only; no multiple-testing correction or causal inference",
+            "Rows must be features and columns must be matched samples in identical order",
+            "Small sample counts and outliers can make correlations unstable",
+        ]
+    elif capability_id == "phylo.jukes_cantor_nj":
+        from kinetics.phylo import leaf_names, neighbor_joining_from_alignment, to_newick
+        try:
+            parameters = json.loads(sequence_text)
+            sequences = parameters["sequences"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with a named sequences object") from exc
+        if not isinstance(sequences, dict) or not 3 <= len(sequences) <= 20:
+            raise ValueError("Neighbour joining requires 3–20 named aligned sequences")
+        if sum(len(value) for value in sequences.values() if isinstance(value, str)) > 200_000:
+            raise ValueError("Aligned sequences exceed the 200,000-base aggregate mobile limit")
+        root = neighbor_joining_from_alignment(sequences, minimum_sites=20)
+        result = {"newick": to_newick(root), "leaf_count": len(leaf_names(root))}
+        limitations = [
+            "Uses the Jukes–Cantor substitution model and caller-supplied alignment",
+            "No alignment generation, model selection, bootstrap support or phylogenetic confidence",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

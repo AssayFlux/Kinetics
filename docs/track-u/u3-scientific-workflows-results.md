@@ -63,3 +63,13 @@ The import worker now atomically claims and finalizes the durable job state. Can
 - The encrypted-import FASTA/FASTQ workers now detect gzip by filename suffix and decompress on-device.
 - Expanded content remains bounded to 1,000,000 bytes and 1,000,000 decoded characters before parsing; malformed UTF-8 and NUL bytes are rejected.
 - Provenance records the compression handling mode and expanded-size limit. Automated CI continues to use synthetic sequence fixtures only.
+
+
+## Public reference sequence retrieval — 2026-11-18
+
+- Home exposes NCBI Nucleotide, NCBI Protein and UniProtKB search; NCBI Gene search is metadata-only at this stage.
+- Selected NCBI nucleotide/protein or UniProtKB records are fetched directly as FASTA inside the app.
+- Retrieved payload bytes are SHA-256 checked and stored as Android Keystore AES-GCM chunked files in app-private no-backup storage. The SQLite record index stores source, accession, format, endpoint, retrieval time, byte count and digest; the index and result JSON are not encrypted at rest.
+- Retrieved FASTA is dispatched to the existing embedded Python `kinetics_probe.analyze_fasta` adapter and the bounded local FASTA QC result is retained with the record.
+- Saved public records are listed and deletable from Home. A saved-record reopen/reanalyse screen, WorkManager background execution, explicit cancel/retry, quotas, source release/licence fields and NCBI Gene-to-RefSeq linking remain open.
+- This is sequence QC integration, not full sequence annotation/alignment/ORF/translation integration. Exact-head CI and Android device verification remain required.

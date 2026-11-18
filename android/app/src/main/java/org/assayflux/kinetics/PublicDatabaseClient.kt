@@ -2,6 +2,8 @@ package org.assayflux.kinetics
 
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+import java.nio.charset.CodingErrorAction
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -174,7 +176,11 @@ internal class PublicDatabaseClient {
                     output.write(buffer, 0, count)
                 }
             }
-            return output.toString(Charsets.UTF_8.name())
+            return Charsets.UTF_8.newDecoder()
+                .onMalformedInput(CodingErrorAction.REPORT)
+                .onUnmappableCharacter(CodingErrorAction.REPORT)
+                .decode(ByteBuffer.wrap(output.toByteArray()))
+                .toString()
         } finally {
             connection.disconnect()
         }
@@ -184,6 +190,13 @@ internal class PublicDatabaseClient {
         val result = value.trim()
         require(result.length in 2..160 && result.none { it.isISOControl() }) {
             "Enter a search term between 2 and 160 characters"
+        }
+        require(!result.startsWith(">") && !result.contains("#CHROM", ignoreCase = true)) {
+            "Enter a public gene/protein name or accession, not a FASTA/VCF record"
+        }
+        val aminoAcids = Regex("[ACDEFGHIKLMNPQRSTVWYBXZJUOacdefghiklmnpqrstvwybxzjuo]+")
+        require(result.length < 25 || !aminoAcids.matches(result)) {
+            "Do not submit raw biological sequences to public search providers; use a public accession"
         }
         return result
     }

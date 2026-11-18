@@ -1,5 +1,7 @@
 # Release readiness checklist
 
+Baseline immutability, branch strategy and change-control rules are defined in [BASELINE_GOVERNANCE.md](BASELINE_GOVERNANCE.md). Current candidate identity and evidence fields are tracked in [`release-baseline.json`](../release-baseline.json).
+
 **Current state: NOT RELEASE READY.** This checklist is an evidence gate, not a declaration that checks have passed.
 
 ## Build and supply chain

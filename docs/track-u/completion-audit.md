@@ -70,7 +70,7 @@ A CI compile/build is not proof of UI acceptance, scientific validity, clinical 
 ## 5. Cross-track carry-forward gates
 
 - Track G independent/operational acceptance obligations remain OPEN as recorded in the implementation plan.
-- D-024 authorizes research testing within the declared institutional approval; clinical PGx interpretation, patient-facing diagnosis, treatment or dosing must not be implemented or implied.
+- D-025 authorizes research testing within the declared institutional approval; clinical PGx interpretation, patient-facing diagnosis, treatment or dosing must not be implemented or implied.
 - U4 remains dependent on S1–S3 and viewer dependency/security review.
 - U5 remains dependent on P1–P3 and I2–I4.
 - No UI work may silently change the established Python/C++/Rust ownership boundaries or the JSON Schema engine envelope.

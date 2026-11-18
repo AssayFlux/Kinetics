@@ -15,6 +15,7 @@ def test_public_database_adapters_are_bounded_and_allowlisted() -> None:
     assert "MAX_SEQUENCE_BYTES" in client
     assert "MAX_STRUCTURE_BYTES" in client
     assert "searchNcbiSequence" in client
+    assert "searchNcbiGeneLinkedSequences" in client
     assert "fetchUniProtFasta" in client
     assert "fetchRcsbMmcif" in client
 
@@ -37,6 +38,8 @@ def test_public_sequences_and_structures_reach_existing_engines() -> None:
     assert 'callAttr("analyze_fasta", fetched.content)' in card
     assert "store.saveAnalysis(saved.id, analysis)" in card
     assert "onStructureFetched(fetched)" in card
+    assert "searchGeneLinks(hit, \"nuccore\")" in card
+    assert "searchGeneLinks(hit, \"protein\")" in card
     assert "store.loadRecord(saved.id)" in card
     assert "Reanalyse" in card
     assert "Saved RCSB structure reopened from encrypted local storage." in card

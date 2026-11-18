@@ -161,7 +161,7 @@ def validate() -> list[str]:
     if data_flow_path.is_file():
         data_flow = data_flow_path.read_text(encoding="utf-8")
         flow_ids = re.findall(r"\|\s*(DF-\d{2})\s*\|", data_flow)
-        expected_flow_ids = {f"DF-{number:02d}" for number in range(1, 9)}
+        expected_flow_ids = {f"DF-{number:02d}" for number in range(1, 10)}
         if len(flow_ids) != len(set(flow_ids)) or set(flow_ids) != expected_flow_ids:
             errors.append("Data-flow inventory must contain DF-01 through DF-09 exactly once")
 

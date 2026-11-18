@@ -36,7 +36,7 @@ def test_public_sequences_and_structures_reach_existing_engines() -> None:
     viewer = (ANDROID / "StructureViewer.kt").read_text()
     ui = (ANDROID / "KineticsUi.kt").read_text()
     assert 'callAttr("analyze_fasta", fetched.content)' in card
-    assert "store.saveAnalysis(saved.id, analysis)" in card
+    assert "store.saveAnalysis(saved.id, json)" in card
     assert "onStructureFetched(fetched)" in card
     assert "searchGeneLinks(hit, \"nuccore\")" in card
     assert "searchGeneLinks(hit, \"protein\")" in card

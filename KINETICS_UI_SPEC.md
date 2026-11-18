@@ -26,6 +26,11 @@ This file is an index, not a competing design specification. The 20-section owne
 ## Supersession
 D-024 supersedes D-015 only where the older visual language conflicts with V1. D-015 remains historical evidence; its non-conflicting requirements remain active, including preservation of owner assets, native Compose, truthful workflows, Research Mode boundaries, and font/licence/accessibility review. Do not restore earlier neon/Obsidian Cyan palettes.
 
+## Owner-approved screen blueprint (2026-11-18)
+- The owner-supplied Login and Dashboard reference images are preserved at `Assets/App UI - Login Page Design.jpg` and `Assets/App UI - Dashboard Design.jpg`.
+- Their structural requirements, account/authentication truth boundaries, service-carousel behavior, four dashboard panels and acceptance checklist are documented in `docs/ui/owner-blueprint-implementation.md`.
+- D-024 remains the final visual authority; placeholder colours in the reference images do not supersede the monochrome system.
+
 ## Source and evidence
 - Full active prompt and exact values: docs/ui/ui-spec.md.
 - Design tokens: design/tokens.json.

@@ -15,6 +15,12 @@ internal object AndroidBasicCapabilityRunner {
         "genome.orf_candidate_scan",
         "kinetics.michaelis_menten",
         "phylo.newick",
+        "sequence.global_alignment",
+        "genome.contig_assembly_qc",
+        "structure.sasa",
+        "structure.interaction_candidates",
+        "microbiome.diversity",
+        "omics.logistic_growth",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

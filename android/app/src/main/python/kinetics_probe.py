@@ -303,6 +303,86 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Reports SpCas9 NGG PAM locations only",
             "No guide efficacy, off-target, editing outcome or safety prediction",
         ]
+    elif capability_id == "sequence.global_alignment":
+        from kinetics.sequence import needleman_wunsch
+        parts = [line.strip() for line in sequence_text.splitlines() if line.strip()]
+        if len(parts) != 2:
+            raise ValueError("Enter exactly two non-empty sequences on separate lines")
+        if (len(parts[0]) + 1) * (len(parts[1]) + 1) > 250_000:
+            raise ValueError("Alignment exceeds the 250,000-cell mobile limit")
+        result = needleman_wunsch(parts[0], parts[1], max_cells=250_000)
+        limitations = [
+            "Global linear-gap alignment with fixed default scoring",
+            "One deterministic optimal traceback is returned; this is not a clinical or variant interpretation",
+        ]
+    elif capability_id == "genome.contig_assembly_qc":
+        from kinetics.genome_qc import summarize_contigs
+        from kinetics.sequence import iter_fasta_records
+        records = iter_fasta_records(sequence_text.splitlines())
+        result = summarize_contigs(records, max_records=10_000, max_total_bases=1_000_000)
+        limitations = [
+            "Assembly statistics only; no gene prediction, taxonomic assignment or functional annotation",
+            "Mobile input is capped at 1 MB, 10,000 records and 1,000,000 total bases",
+        ]
+    elif capability_id == "structure.sasa":
+        from kinetics.structure import parse_pdb, solvent_accessible_surface_area
+        atoms = parse_pdb(sequence_text, include_hetero=False)
+        if len(atoms) > 2_000:
+            raise ValueError("Mobile SASA is limited to 2,000 parsed atoms")
+        result = solvent_accessible_surface_area(atoms)
+        limitations = [
+            "Approximate Shrake–Rupley surface sampling with default probe and point count",
+            "No hydrogens, atom-specific radii, residue-relative accessibility or calibrated quality grade",
+        ]
+    elif capability_id == "structure.interaction_candidates":
+        from kinetics.structure import interaction_candidates, parse_pdb
+        atoms = parse_pdb(sequence_text, include_hetero=False)
+        if len(atoms) > 5_000:
+            raise ValueError("Mobile interaction screening is limited to 5,000 parsed atoms")
+        result = interaction_candidates(atoms)
+        limitations = [
+            "Distance-only geometric candidates; no hydrogen placement, energetics or binding-affinity prediction",
+            "Mobile pairwise screening is limited to 5,000 parsed atoms",
+        ]
+    elif capability_id == "microbiome.diversity":
+        from kinetics.omics import shannon_diversity, simpson_diversity
+        try:
+            counts = [float(part.strip()) for part in sequence_text.split(",") if part.strip()]
+        except ValueError as exc:
+            raise ValueError("Enter comma-separated numeric abundance counts") from exc
+        if len(counts) > 10_000:
+            raise ValueError("Mobile diversity analysis is limited to 10,000 abundance values")
+        result = {
+            "sample_count": len(counts),
+            "shannon": shannon_diversity(counts),
+            "gini_simpson": simpson_diversity(counts),
+        }
+        limitations = [
+            "Diversity indices depend on the supplied count vector and sampling design",
+            "No taxonomic classification, differential abundance or clinical interpretation",
+        ]
+    elif capability_id == "omics.logistic_growth":
+        import json
+        from kinetics.omics import logistic_growth
+        try:
+            parameters = json.loads(sequence_text)
+            timepoints = parameters["timepoints"]
+            result_values = logistic_growth(
+                timepoints,
+                [0.0] * len(timepoints),
+                carrying_capacity=parameters["carrying_capacity"],
+                growth_rate=parameters["growth_rate"],
+                initial=parameters["initial"],
+            )
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "Provide JSON keys timepoints, carrying_capacity, growth_rate and initial"
+            ) from exc
+        result = {"timepoints": timepoints, "predicted_counts": result_values}
+        limitations = [
+            "Deterministic logistic model only; no parameter fitting or confidence intervals",
+            "Parameters and output units must be interpreted in the context of the study design",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

@@ -527,6 +527,60 @@ private fun ServiceDetailScreen(
                     actionLabel = "Scan PAM sites",
                 ) }
             }
+            if (capability?.id == "sequence.global_alignment") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "sequence.global_alignment",
+                    title = "Global pairwise alignment",
+                    description = "Needleman–Wunsch alignment. Enter two sequences on separate lines; work is limited to 250,000 dynamic-programming cells.",
+                    sample = "ACGTACGT\nACGTCGTT",
+                    actionLabel = "Align sequences",
+                ) }
+            }
+            if (capability?.id == "genome.contig_assembly_qc") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "genome.contig_assembly_qc",
+                    title = "Contig assembly QC",
+                    description = "Summarize FASTA contigs, N50/L50, GC and ambiguity burden. Input is capped at 1 MB and 10,000 records.",
+                    sample = ">contig_1\nACGTACGTACGT\n>contig_2\nGGGGCCCC",
+                    actionLabel = "Analyse assembly",
+                ) }
+            }
+            if (capability?.id == "structure.sasa") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "structure.sasa",
+                    title = "Structure solvent-accessible surface area",
+                    description = "Approximate Shrake–Rupley SASA from PDB ATOM records. Requires 1–2,000 supported atoms; geometry only.",
+                    sample = "",
+                    actionLabel = "Calculate SASA",
+                ) }
+            }
+            if (capability?.id == "structure.interaction_candidates") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "structure.interaction_candidates",
+                    title = "Structure interaction candidates",
+                    description = "Distance-only candidate screening for hydrogen bonds, salt bridges and disulfides. Not an energetic or binding-affinity calculation.",
+                    sample = "",
+                    actionLabel = "Screen interactions",
+                ) }
+            }
+            if (capability?.id == "microbiome.diversity") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "microbiome.diversity",
+                    title = "Microbiome diversity",
+                    description = "Calculate Shannon and Gini–Simpson diversity from comma-separated non-negative abundance counts.",
+                    sample = "12,8,5,3,2",
+                    actionLabel = "Calculate diversity",
+                ) }
+            }
+            if (capability?.id == "omics.logistic_growth") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "omics.logistic_growth",
+                    title = "Logistic growth model",
+                    description = "Enter JSON with timepoints, carrying_capacity, growth_rate and initial. Returns deterministic model predictions.",
+                    sample = "{\"timepoints\":[0,1,2,3,4],\"carrying_capacity\":100,\"growth_rate\":0.5,\"initial\":5}",
+                    actionLabel = "Run growth model",
+                ) }
+            }
             if (capability?.id == "structure.ligand_site_candidates" ||
                 capability?.id == "structure.apo_pocket_candidates") {
                 item { StructureSiteAnalysisCard() }

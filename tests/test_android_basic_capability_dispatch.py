@@ -40,3 +40,20 @@ def test_orf_kinetics_and_newick_are_bounded_explicit_android_routes():
     assert "max_candidate_orf_pairs_total=100_000" in PROBE
     assert "math.isfinite" in PROBE
     assert "normalized_newick" in PROBE
+
+def test_alignment_assembly_structure_and_omics_routes_are_bounded():
+    expected = (
+        "sequence.global_alignment",
+        "genome.contig_assembly_qc",
+        "structure.sasa",
+        "structure.interaction_candidates",
+        "microbiome.diversity",
+        "omics.logistic_growth",
+    )
+    for capability_id in expected:
+        assert capability_id in UI
+        assert capability_id in RUNNER
+        assert capability_id in PROBE
+    assert "max_cells=250_000" in PROBE
+    assert "max_total_bases=1_000_000" in PROBE
+    assert "5,000 parsed atoms" in PROBE

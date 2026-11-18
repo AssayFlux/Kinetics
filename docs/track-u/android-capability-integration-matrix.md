@@ -8,83 +8,58 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **68**
-- Catalogue entries not yet connected to Android: **0**
+- Catalogue entries connected to Android workflows: **36**
+- Catalogue entries not yet connected to Android: **32**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.
 
 ## Connected Android workflows
 
-| Capability ID | Android entry |
-|---|---|
-| `public.reference_databases` | Public database retrieval card; NCBI Gene/sequence, UniProt FASTA, RCSB mmCIF |
-| `genes.ncbi_catalogue` | Dedicated NCBI Gene search/retrieval card using the in-app public database client |
-| `sequence.fasta` | FASTA QC card |
-| `sequence.fastq` | FASTQ QC card |
-| `sequence.genetic_code_candidate_inference` | Genetic-code candidate inference card |
-| `protein.descriptors` | Protein descriptors form |
-| `molecular.primer_screen` | Primer property screen form |
-| `molecular.crispr_pam` | SpCas9 NGG PAM scan form |
-| `genome.orf_candidate_scan` | Six-frame ORF candidate scan form |
-| `kinetics.michaelis_menten` | Michaelis–Menten rate calculator |
-| `phylo.newick` | Newick parser |
-| `structure.ligand_site_candidates` | Ligand-site candidate analysis |
-| `structure.apo_pocket_candidates` | Apo-pocket candidate analysis |
-| `chemistry.sdf_graph` | SDF graph preview |
-| `genomics.sam_vcf` | Aggregate-only VCF QC and research gate |
+**36 of 68 catalogue capabilities** have an Android UI route and bounded bridge according to the mapping below. This is integration status only, not independent scientific validation or device acceptance.
 
-| `sequence.global_alignment` | Global pairwise alignment form (two sequences, bounded Needleman–Wunsch) |
-| `genome.contig_assembly_qc` | Contig assembly statistics from FASTA |
-| `structure.sasa` | PDB-based approximate Shrake–Rupley SASA |
-| `structure.interaction_candidates` | PDB distance-only interaction candidate screen |
-| `microbiome.diversity` | Shannon and Gini–Simpson count-vector calculator |
-| `omics.logistic_growth` | JSON-parameterized logistic growth model |
+| `public.reference_databases` | Public database retrieval card; NCBI Nucleotide/Protein, UniProtKB FASTA and RCSB mmCIF. This is an additional Android service, not one of the 68 catalogue entries. |
 
-| `sequence.explicit_genetic_code_translation` | Explicit NCBI genetic-code translation with caller-supplied table/frame/CDS mode |
-| `kinetics.inhibition_rate` | Competitive, uncompetitive, noncompetitive and mixed inhibition equation calculator |
-| `phylo.upgma` | Rooted UPGMA construction from supplied distance matrix |
-
-| `omics.normalisation` | CPM or CLR transformation for bounded feature-by-sample matrices |
-| `omics.cross_correlation` | Pairwise Pearson correlation between matched multi-omics matrices |
-| `phylo.jukes_cantor_nj` | Neighbour joining from supplied aligned sequences using Jukes–Cantor distances |
-
-| `genome.gff3_annotation_import` | GFF3 structural validation and feature/parent graph checks |
-| `genome.gff3_transcript_cds_reconstruction` | CDS reconstruction from validated GFF3 and caller-supplied contigs |
-
-| `protein.fixed_width_motif_scan` | Caller-supplied, hash-pinned fixed-width motif pack scan |
-| `genome.prokaryotic_orf_candidate_scan` | Bounded multi-contig prokaryotic ORF candidate scan |
-| `kinetics.bootstrap_intervals` | Paired nonparametric Michaelis–Menten bootstrap percentile intervals |
-
-| `protein.design_brief_validation` | Human-reviewed protein research brief validation with sequence generation blocked |
-| `structure.geometry_screen_metrics` | Bounded PDB atom/residue and steric-overlap geometry screen |
-
-| `phylo.nj_site_bootstrap` | Bounded alignment-site bootstrap support for neighbour-joining splits |
-| `structure.exact_sequence_mapping` | Exact unique protein sequence-to-PDB chain mapping |
-| `structure.chain_interface_contacts` | Bounded inter-chain heavy-atom contact geometry |
-| `structure.alignment_coordinate_mapping` | Alignment-based residue-to-coordinate mapping with ambiguity abstention |
-| `structure.variant_coordinate_mapping` | Amino-acid substitution coordinate mapping only; no effect prediction |
-
-| `sequence.exact_reference_search` | Exact search against a caller-supplied, licence-described local FASTA reference pack |
-| `sequence.local_fasta_exact_search` | Local FASTA exact-search alias using the bounded reference-pack engine |
-| `sequence.local_alignment_reference_search` | Local alignment search against a caller-supplied reference pack |
-| `sequence.local_fasta_alignment_search` | Local FASTA alignment-search alias using the bounded reference-pack engine |
-| `phylo.newick_export` | Newick parse/normalise/export alias on the phylogeny service page |
-| `structure.pdb_geometry` | PDB geometry-screen alias on the structure service page |
-
-| `protein.hmmscan_domain_evidence` | Bounded HMMER profile-domain evidence parser (domtblout input only; no HMMER execution) |
-| `protein.hmmscan_domtblout_evidence` | HMMER domtblout parser with caller-supplied profile provenance metadata |
-| `protein.hmmer_domain_candidate_ranking` | Caller-thresholded HMMER domain candidate ranking with explicit abstention |
-
-| `structure.prediction_envelope_validation` | Strict validation of external prediction envelope, provenance, viewer payload and confidence fields; no model execution |
-
-| `genes.catalogue_coverage_report` | Source-release-pinned summary of a bounded supplied NCBI gene_info TSV snapshot |
-
-| `structure.experimental_ca_comparison` | Exact-correspondence superposed C-alpha RMSD comparison with source hashes for two supplied PDB structures |
-
-All local forms use an explicit bridge allow-list and bounded input/work limits. Their method-specific limitations are returned or displayed with results.
+| `sequence.fasta` | local Android form + Python bridge |
+| `sequence.explicit_genetic_code_translation` | local Android form + Python bridge |
+| `sequence.genetic_code_candidate_inference` | local Android form + Python bridge |
+| `genome.orf_candidate_scan` | local Android form + Python bridge |
+| `genome.prokaryotic_orf_candidate_scan` | local Android form + Python bridge |
+| `sequence.fastq` | local Android form + Python bridge |
+| `sequence.global_alignment` | local Android form + Python bridge |
+| `genomics.sam_vcf` | local Android form + Python bridge |
+| `protein.descriptors` | local Android form + Python bridge |
+| `kinetics.michaelis_menten` | local Android form + Python bridge |
+| `chemistry.sdf_graph` | local Android form + Python bridge |
+| `phylo.newick` | local Android form + Python bridge |
+| `omics.normalisation` | local Android form + Python bridge |
+| `microbiome.diversity` | local Android form + Python bridge |
+| `molecular.primer_screen` | local Android form + Python bridge |
+| `molecular.crispr_pam` | local Android form + Python bridge |
+| `phylo.upgma` | local Android form + Python bridge |
+| `omics.logistic_growth` | local Android form + Python bridge |
+| `omics.cross_correlation` | local Android form + Python bridge |
+| `kinetics.bootstrap_intervals` | local Android form + Python bridge |
+| `structure.sasa` | local Android form + Python bridge |
+| `phylo.jukes_cantor_nj` | local Android form + Python bridge |
+| `structure.interaction_candidates` | local Android form + Python bridge |
+| `phylo.nj_site_bootstrap` | local Android form + Python bridge |
+| `structure.exact_sequence_mapping` | local Android form + Python bridge |
+| `structure.geometry_screen_metrics` | local Android form + Python bridge |
+| `structure.variant_coordinate_mapping` | local Android form + Python bridge |
+| `structure.chain_interface_contacts` | local Android form + Python bridge |
+| `structure.ligand_site_candidates` | local Android form + Python bridge |
+| `structure.apo_pocket_candidates` | local Android form + Python bridge |
+| `genome.contig_assembly_qc` | local Android form + Python bridge |
+| `protein.fixed_width_motif_scan` | local Android form + Python bridge |
+| `protein.design_brief_validation` | local Android form + Python bridge |
+| `structure.alignment_coordinate_mapping` | local Android form + Python bridge |
+| `genome.gff3_annotation_import` | local Android form + Python bridge |
+| `genome.gff3_transcript_cds_reconstruction` | local Android form + Python bridge |
 
 ## Complete catalogue mapping
+
+
 
 | Capability ID | Python source | Android integration |
 |---|---|---|

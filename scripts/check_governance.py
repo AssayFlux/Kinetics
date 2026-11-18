@@ -74,7 +74,7 @@ def validate() -> list[str]:
                 mapped.update(CONTROL_ID.findall(row["control_ids"]))
             if len(requirement_ids) != len(set(requirement_ids)):
                 errors.append("Duplicate requirement_id in traceability CSV")
-            if len(rows) != 8 or set(requirement_ids) != {f"G-REQ-{n:03d}" for n in range(1, 9)}:
+            if len(rows) != 8 or set(requirement_ids) != {f"G-REQ-{n:03d}" for n in range(1, 10)}:
                 errors.append("Requirements traceability must contain exactly G-REQ-001 through G-REQ-008")
             unmapped = sorted(expected - mapped)
             if unmapped:
@@ -163,7 +163,7 @@ def validate() -> list[str]:
         flow_ids = re.findall(r"\|\s*(DF-\d{2})\s*\|", data_flow)
         expected_flow_ids = {f"DF-{number:02d}" for number in range(1, 9)}
         if len(flow_ids) != len(set(flow_ids)) or set(flow_ids) != expected_flow_ids:
-            errors.append("Data-flow inventory must contain DF-01 through DF-08 exactly once")
+            errors.append("Data-flow inventory must contain DF-01 through DF-09 exactly once")
 
     roles_path = ROOT / "docs/track-g/roles-and-review-cadence.md"
     if roles_path.is_file():

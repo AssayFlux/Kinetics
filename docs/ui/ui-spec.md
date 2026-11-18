@@ -104,7 +104,7 @@ Consistent spacing, typography, radii, icons and component heights; balanced whi
 - No runnable capability without a real registry entry, dispatcher, input/result contract and tests.
 - Local biometric app lock must not be represented as cloud account authentication.
 - Preserve all owner assets byte-for-byte. Font binaries, icon libraries and other dependencies require licence/glyph/platform review.
-- Owner-authorized patient-data research testing is permitted only within the institutional approval scope declared under D-024; no patient data in GitHub/CI/logs. Diagnosis, treatment/dosing recommendations and Clinical Mode remain disabled.
+- Owner-authorized patient-data research testing is permitted only within the institutional approval scope declared under D-025; no patient data in GitHub/CI/logs. Diagnosis, treatment/dosing recommendations and Clinical Mode remain disabled.
 - Screenshot concepts are not running-app evidence. Device and accessibility status remain NOT RUN until recorded.
 
 ## Track U

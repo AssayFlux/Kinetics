@@ -119,7 +119,7 @@ Required test families:
 
 - No generic fabricated user profile, cloud account, fake login, sample research jobs or placeholder success.
 - No claims of device support without named-device evidence.
-- Patient-data research testing is owner-authorized only within the declared institutional approval (D-024); clinical mode, diagnosis, treatment/dosing and clinical PGx interpretation remain disabled.
+- Patient-data research testing is owner-authorized only within the declared institutional approval (D-025); clinical mode, diagnosis, treatment/dosing and clinical PGx interpretation remain disabled.
 - No motif/font/viewer additions until their respective provenance, licence, accessibility and dependency gates pass.
 - No fold/hinge-safe claim until WindowManager posture integration and tests exist.
 - G independent/operational acceptance obligations remain carry-forward and are not declared complete.

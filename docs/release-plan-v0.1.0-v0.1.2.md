@@ -1,4 +1,4 @@
-# Kinetics release plan — v0.1.0 foundation and v0.1.2 scientific engine
+# Kinetics release plan — v0.1.0 baseline and v0.1.1 next release
 
 **Planning baseline:** `main` at `a799f6619c080ee1695784faf01e60fef6405504` (2026-11-18).
 **Release policy:** version metadata may identify the v0.1.0 target, but no GitHub Release or immutable tag is to be published until every v0.1.0 acceptance gate below passes on the exact release commit.
@@ -8,7 +8,7 @@
 
 - **v0.1.0 — Basic working model:** a small, honest, installable Android research workbench. It proves the end-to-end application foundation, local data handling, a few real scientific workflows, result/provenance display and reproducible packaging. It does not claim that every registered capability is available from Android.
 - **v0.1.1 — Integration and usability hardening:** close the remaining app-shell, workflow, navigation, accessibility, device and reproducibility gaps discovered during v0.1.0 testing.
-- **v0.1.2 — Scientific rulebook and generation foundation:** introduce the first executable, versioned scientific rulebooks and shared computational interfaces. This is an architecture and bounded-engine release, not a promise of universal biological prediction.
+- **v0.1.1 — Scientific rulebook and generation foundation:** introduce the first executable, versioned scientific rulebooks and shared computational interfaces. This is an architecture and bounded-engine release, not a promise of universal biological prediction.
 
 ## 2. v0.1.0 — Basic working model
 
@@ -64,7 +64,9 @@
 
 **Current disposition:** NOT RELEASED. The repository's Track U audit records U0–U3 partial, U4 bounded integration with device/science acceptance open, U5 partial/gated and U6 not passed. The release checklist also records NOT RELEASE READY. These are blocking evidence gaps, not paperwork to waive.
 
-## 3. v0.1.2 — Scientific rulebook and computational generation plan
+## 3. v0.1.1 — Scientific rulebook and computational generation plan
+
+This is the same second release as the integration/usability hardening scope above. The two workstreams are combined under one version number; there is no v0.1.2 release in this roadmap.
 
 ### Architectural objective
 
@@ -105,7 +107,7 @@ The engine must label output class precisely:
 
 A rulebook alone cannot uniquely determine a protein's native fold or every biological outcome. Those tasks require additional evidence, trained models, physics-based computation or experimental data. Kinetics must not blur these categories.
 
-### v0.1.2 staged implementation
+### v0.1.1 staged implementation
 
 - **Stage A — Rulebook schema and validator:** define JSON Schema/Pydantic-style typed contracts, versioning, citations, units, preconditions, dependency and test-fixture metadata.
 - **Stage B — Shared chemistry kernel:** atom/bond graph, valence/charge checks, coordinate and geometry primitives, supported molecule serialization, unit tests against independently curated fixtures.
@@ -116,7 +118,7 @@ A rulebook alone cannot uniquely determine a protein's native fold or every biol
 - **Stage G — Prediction/simulation adapters:** integrate external/open-source engines only after ABI, license, data, benchmark, resource and device feasibility gates. AI model weights are separate governed artifacts, not silently downloaded.
 - **Stage H — Benchmark and release:** independent reference concordance, reproducibility, performance/resource tests, licensing and documented scientific limitations.
 
-### v0.1.2 exit criteria
+### v0.1.1 exit criteria
 
 - [ ] Rulebook schema is versioned, validated and documented with at least one executable rulebook in each delivered family.
 - [ ] Shared scientific object model has explicit units, coordinate conventions, stable identifiers and serialization tests.
@@ -131,7 +133,6 @@ A rulebook alone cannot uniquely determine a protein's native fold or every biol
 ## 4. Versioning and release discipline
 
 - v0.1.0 is the first basic working research model.
-- v0.1.1 is reserved for hardening and integration fixes without expanding scientific claims.
-- v0.1.2 adds the first shared rulebook/generation substrate and bounded generators.
+- v0.1.1 combines integration/usability hardening with the first shared rulebook/generation substrate and bounded generators.
 - Do not create or move release tags to a commit that has not passed its exact-head gates.
 - Never mark a capability validated merely because code, a dataset, a model or a viewer exists.

@@ -30,6 +30,8 @@ internal object AndroidBasicCapabilityRunner {
         "genome.gff3_annotation_import",
         "genome.gff3_transcript_cds_reconstruction",
         "protein.fixed_width_motif_scan",
+        "genome.prokaryotic_orf_candidate_scan",
+        "kinetics.bootstrap_intervals",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

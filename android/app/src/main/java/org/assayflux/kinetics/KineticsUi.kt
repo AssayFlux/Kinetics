@@ -460,6 +460,8 @@ private fun ServiceDetailScreen(
         "genome.gff3_annotation_import",
         "genome.gff3_transcript_cds_reconstruction",
         "protein.fixed_width_motif_scan",
+        "genome.prokaryotic_orf_candidate_scan",
+        "kinetics.bootstrap_intervals",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -675,6 +677,24 @@ private fun ServiceDetailScreen(
                     description = "Scan a protein against a caller-supplied hash-pinned motif pack. Input JSON includes query, motifs and source/license metadata; no external pack is downloaded.",
                     sample = "{\"query\":\"ACDGACDG\",\"motifs\":[{\"id\":\"example\",\"pattern\":\"A..G\"}],\"name\":\"Example pack\",\"version\":\"1\",\"license\":\"CC0-1.0\",\"source\":\"https://example.org/motif-pack\"}",
                     actionLabel = "Scan motifs",
+                ) }
+            }
+            if (capability?.id == "genome.prokaryotic_orf_candidate_scan") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "genome.prokaryotic_orf_candidate_scan",
+                    title = "Multi-contig prokaryotic ORF scan",
+                    description = "Scan FASTA contigs for complete ORF candidates using explicit NCBI table 11 and a genome-wide work budget. Not gene annotation.",
+                    sample = ">contig_1\nATG" + "GCT".repeat(29) + "TAA",
+                    actionLabel = "Scan contigs",
+                ) }
+            }
+            if (capability?.id == "kinetics.bootstrap_intervals") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "kinetics.bootstrap_intervals",
+                    title = "Michaelis–Menten bootstrap intervals",
+                    description = "Estimate exploratory paired-bootstrap percentile intervals for Vmax and Km. Input JSON includes substrate and rate arrays; 100 replicates minimum.",
+                    sample = "{\"substrates\":[1,2,4,8,16],\"rates\":[16.7,28.6,44.4,61.5,76.2],\"replicates\":100,\"seed\":7}",
+                    actionLabel = "Estimate intervals",
                 ) }
             }
             if (capability?.id == "structure.ligand_site_candidates" ||

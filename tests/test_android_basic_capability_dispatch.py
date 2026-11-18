@@ -214,3 +214,15 @@ def test_user_supplied_protein_motif_pack_is_hash_pinned_and_bounded():
         '"source":"https://example.org/motif-pack"}',
     )
     assert result
+
+def test_prokaryotic_orf_and_kinetic_bootstrap_mobile_routes():
+    fasta = ">contig1\\n" + "ATG" + "GCT" * 29 + "TAA"
+    scanned = _run_probe("genome.prokaryotic_orf_candidate_scan", fasta)
+    assert scanned["contig_count"] == 1
+    bootstrap = _run_probe(
+        "kinetics.bootstrap_intervals",
+        '{"substrates":[1,2,4,8,16],"rates":[16.7,28.6,44.4,61.5,76.2],'
+        '"replicates":100,"seed":7}',
+    )
+    assert bootstrap["successful_replicates"] >= 80
+    assert "confidence_intervals" in bootstrap

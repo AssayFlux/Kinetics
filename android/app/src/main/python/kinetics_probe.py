@@ -618,6 +618,56 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "A matching motif is a sequence-pattern observation, not proof of function or activity",
             "Source and licence metadata are user-supplied and are not independently verified",
         ]
+    elif capability_id == "genome.prokaryotic_orf_candidate_scan":
+        from kinetics.genome_orf import scan_contig_orf_candidates
+        from kinetics.sequence import iter_fasta_records
+        records = iter_fasta_records(sequence_text.splitlines())
+        result = scan_contig_orf_candidates(
+            records,
+            table_id=11,
+            min_protein_length=30,
+            max_contigs=1_000,
+            max_total_bases=1_000_000,
+            max_total_orfs=500,
+            max_candidate_pairs_total=100_000,
+        )
+        limitations = [
+            "Candidate enumeration only; not a gene caller or functional annotation pipeline",
+            "Uses explicit NCBI table 11; organism-specific code is not inferred",
+            "Genome-wide budget: 1,000 contigs, 1 MB bases, 500 ORFs and 100,000 candidate pairs",
+        ]
+    elif capability_id == "kinetics.bootstrap_intervals":
+        from kinetics.kinetics import bootstrap_michaelis_menten
+        try:
+            parameters = json.loads(sequence_text)
+            substrates = parameters["substrates"]
+            rates = parameters["rates"]
+            replicates = parameters.get("replicates", 100)
+            confidence_level = parameters.get("confidence_level", 0.95)
+            seed = parameters.get("seed", 0)
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "Provide JSON with substrate and rate arrays; optional replicates, confidence_level and seed"
+            ) from exc
+        if not isinstance(substrates, list) or not isinstance(rates, list):
+            raise ValueError("substrates and rates must be numeric arrays")
+        if len(substrates) != len(rates) or not 3 <= len(rates) <= 100:
+            raise ValueError("Provide 3–100 paired substrate/rate observations")
+        if not isinstance(replicates, int) or isinstance(replicates, bool) or not 100 <= replicates <= 500:
+            raise ValueError("Mobile bootstrap replicates must be between 100 and 500")
+        result = bootstrap_michaelis_menten(
+            substrates,
+            rates,
+            replicates=replicates,
+            confidence_level=confidence_level,
+            seed=seed,
+            grid_size=10,
+        )
+        limitations = [
+            "Exploratory paired percentile bootstrap; assumes independent identically distributed observations",
+            "Does not address model misspecification, measurement error or study design",
+            "A numerical interval is not a clinical or regulatory decision threshold",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

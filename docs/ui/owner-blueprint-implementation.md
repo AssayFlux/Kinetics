@@ -81,21 +81,21 @@ Where a service is not yet implemented or lacks a real Android dispatcher, its p
 
 ## 7. Acceptance checklist
 
-- [ ] Login/local-unlock screen follows the first reference structure.
+- [x] Login/local-unlock screen follows the first reference structure: centered monochrome rounded panel, four stacked rows, fingerprint action in the lowest row.
 - [ ] Four controls are not assigned invented semantics.
-- [ ] Biometric action is connected to Android's actual biometric/device-credential flow.
+- [x] Fingerprint action calls the existing AndroidX biometric/device-credential retry flow; biometric templates remain Android-managed.
 - [ ] Home header has working hamburger and profile controls.
 - [ ] No persistent bottom navigation or rail.
 - [x] Service carousel uses repository-backed catalogue entries, one card per capability plus Public Reference Databases.
 - [x] Carousel pagination presents a five-indicator window while supporting the full service list.
 - [x] Each capability card opens its own ID-addressed service detail destination.
 - [x] Cards are clickable and open dedicated service destinations.
-- [ ] Pagination reflects the actual carousel page.
-- [ ] Service workflows are removed from the Home content column and placed in their relevant destinations.
-- [ ] Four dashboard panels show only persisted/runtime-derived information.
-- [ ] No duplicate service list remains on Home.
-- [ ] Profile does not claim remote account/password features without a backend.
-- [ ] Light/dark/system themes, safe insets and accessibility are retained.
+- [x] Pagination indicator window follows `pager.currentPage` and shifts as the user swipes.
+- [x] Public databases, FASTA/FASTQ, genetic-code, structure, chemistry and VCF workflow cards are routed into their service destinations where implemented.
+- [x] Four dashboard panels show runtime diagnostics and ResearchStore job-derived counts/activity; local storage/reference panel states the actual local-storage boundary.
+- [x] No duplicate service list remains on Home.
+- [x] Profile explicitly discloses that remote account identity/password services are not configured; local device lock is separately described.
+- [x] Light/dark/system themes, safe insets and semantic control descriptions are retained in source; device-level accessibility acceptance remains open.
 - [ ] Android unit tests and CI build pass.
 - [ ] Device screenshots and interaction tests are recorded before declaring visual/device acceptance.
 

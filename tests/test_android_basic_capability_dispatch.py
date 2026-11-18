@@ -1,0 +1,33 @@
+"""Static contract checks for Android-to-Python capability exposure."""
+
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+UI = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt").read_text()
+RUNNER = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/AndroidBasicCapabilityRunner.kt").read_text()
+PROBE = (ROOT / "android/app/src/main/python/kinetics_probe.py").read_text()
+
+
+def test_simple_sequence_capabilities_are_explicitly_exposed_on_android():
+    expected = (
+        "protein.descriptors",
+        "molecular.primer_screen",
+        "molecular.crispr_pam",
+    )
+    for capability_id in expected:
+        assert capability_id in UI
+        assert capability_id in RUNNER
+        assert capability_id in PROBE
+
+
+def test_android_sequence_runner_is_allow_listed_and_bounded():
+    assert "capabilityId in supported" in RUNNER
+    assert "MAX_INPUT_CHARS = 1_000_000" in RUNNER
+    assert "1_000_000" in PROBE
+    assert 'else:\n        raise ValueError("This capability is not exposed by the Android sequence runner")' in PROBE
+
+
+def test_pam_and_primer_limitations_are_returned_with_results():
+    assert "No guide efficacy, off-target, editing outcome or safety prediction" in PROBE
+    assert "No salt, magnesium, concentration, hairpin or primer-dimer model" in PROBE

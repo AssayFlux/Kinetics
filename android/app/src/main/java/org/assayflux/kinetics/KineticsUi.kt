@@ -439,6 +439,9 @@ private fun ServiceDetailScreen(
         "sequence.fasta",
         "sequence.fastq",
         "sequence.genetic_code_candidate_inference",
+        "protein.descriptors",
+        "molecular.primer_screen",
+        "molecular.crispr_pam",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -467,6 +470,33 @@ private fun ServiceDetailScreen(
             if (capability?.id == "sequence.fasta") item { FastaQcCard() }
             if (capability?.id == "sequence.fastq") item { FastqQcCard() }
             if (capability?.id == "sequence.genetic_code_candidate_inference") item { GeneticCodeInferenceCard() }
+            if (capability?.id == "protein.descriptors") {
+                item { BasicSequenceCapabilityCard(
+                    capabilityId = "protein.descriptors",
+                    title = "Protein sequence descriptors",
+                    description = "Calculate composition, estimated molecular mass, mean hydropathy and theoretical pI for an unmodified linear peptide.",
+                    sample = "MKWVTFISLLFLFSSAYS",
+                    actionLabel = "Analyse protein",
+                ) }
+            }
+            if (capability?.id == "molecular.primer_screen") {
+                item { BasicSequenceCapabilityCard(
+                    capabilityId = "molecular.primer_screen",
+                    title = "Primer property screen",
+                    description = "Bounded Wallace-rule GC/Tm screening for one unambiguous 15–40 nt primer. Not an oligo design or wet-lab validation tool.",
+                    sample = "ATGCGTACGTAGCTAGCT",
+                    actionLabel = "Screen primer",
+                ) }
+            }
+            if (capability?.id == "molecular.crispr_pam") {
+                item { BasicSequenceCapabilityCard(
+                    capabilityId = "molecular.crispr_pam",
+                    title = "SpCas9 NGG PAM scan",
+                    description = "Locate NGG PAM triplets on both strands and report 0-based half-open coordinates. No guide efficacy or editing outcome is predicted.",
+                    sample = "AACCGGTTACGGTAGGCTAACCGG",
+                    actionLabel = "Scan PAM sites",
+                ) }
+            }
             if (capability?.id == "structure.ligand_site_candidates" ||
                 capability?.id == "structure.apo_pocket_candidates") {
                 item { StructureSiteAnalysisCard() }
@@ -1028,6 +1058,73 @@ private fun loadCapabilityCatalogue(context: Context): List<CapabilityEntry> {
                     domain = item.getString("domain"),
                 ),
             )
+        }
+    }
+}
+
+@Composable
+private fun BasicSequenceCapabilityCard(
+    capabilityId: String,
+    title: String,
+    description: String,
+    sample: String,
+    actionLabel: String,
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var input by rememberSaveable(capabilityId) { mutableStateOf(sample) }
+    var running by remember(capabilityId) { mutableStateOf(false) }
+    var result by remember(capabilityId) { mutableStateOf<String?>(null) }
+    var error by remember(capabilityId) { mutableStateOf<String?>(null) }
+    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(description, style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            OutlinedTextField(
+                value = input,
+                onValueChange = {
+                    if (it.length <= AndroidBasicCapabilityRunner.MAX_INPUT_CHARS) {
+                        input = it
+                        result = null
+                        error = null
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Sequence input") },
+                minLines = 3,
+                maxLines = 6,
+                supportingText = { Text("Processed locally · maximum 1,000,000 characters") },
+            )
+            Button(
+                onClick = {
+                    running = true
+                    error = null
+                    result = null
+                    scope.launch {
+                        val outcome = withContext(Dispatchers.IO) {
+                            runCatching {
+                                AndroidBasicCapabilityRunner.analyze(context, capabilityId, input)
+                            }
+                        }
+                        outcome.onSuccess { raw ->
+                            result = runCatching { JSONObject(raw).toString(2) }.getOrDefault(raw)
+                        }.onFailure { error = it.message ?: "Analysis failed" }
+                        running = false
+                    }
+                },
+                enabled = !running && input.isNotBlank(),
+                modifier = Modifier.fillMaxWidth(),
+            ) { Text(if (running) "Analysing…" else actionLabel) }
+            error?.let { Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall) }
+            result?.let {
+                HorizontalDivider()
+                Text("RESULT", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                Text(it, style = MaterialTheme.typography.bodySmall)
+                Text("Exploratory research output only. Interpret within the stated method limitations.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
         }
     }
 }

@@ -264,6 +264,55 @@ def infer_genetic_code_from_fasta(fasta_text: str, complete_cds: bool = False) -
 
 
 
+def run_basic_sequence_capability(capability_id: str, sequence_text: str) -> str:
+    """Explicit allow-list for bounded Android sequence/protein utilities."""
+    import json
+
+    if not isinstance(sequence_text, str) or len(sequence_text) > 1_000_000:
+        raise ValueError("Sequence input must be text within the 1,000,000-character limit")
+    if not isinstance(capability_id, str):
+        raise ValueError("Capability ID must be a string")
+
+    if capability_id == "protein.descriptors":
+        from kinetics.protein import protein_descriptors
+        sequence = "".join(sequence_text.split()).upper()
+        if len(sequence) > 100_000:
+            raise ValueError("Protein sequence exceeds the 100,000-residue mobile limit")
+        result = protein_descriptors(sequence)
+        limitations = [
+            "Assumes an unmodified linear peptide with free termini",
+            "Average residue masses are used",
+            "Theoretical pI is an approximate model, not an experimental measurement",
+        ]
+    elif capability_id == "molecular.primer_screen":
+        from kinetics.molecular import primer_properties
+        sequence = "".join(sequence_text.split()).upper()
+        result = primer_properties(sequence)
+        limitations = [
+            "Wallace-rule melting temperature is a rough estimate only",
+            "No salt, magnesium, concentration, hairpin or primer-dimer model",
+            "Not a primer design recommendation or wet-lab validation",
+        ]
+    elif capability_id == "molecular.crispr_pam":
+        from kinetics.molecular import scan_spcas9_ngg
+        sequence = "".join(sequence_text.split()).upper()
+        if len(sequence) > 1_000_000:
+            raise ValueError("DNA sequence exceeds the 1,000,000-base mobile limit")
+        result = scan_spcas9_ngg(sequence, strand="both")
+        limitations = [
+            "Reports SpCas9 NGG PAM locations only",
+            "No guide efficacy, off-target, editing outcome or safety prediction",
+        ]
+    else:
+        raise ValueError("This capability is not exposed by the Android sequence runner")
+
+    return json.dumps({
+        "capability_id": capability_id,
+        "result": result,
+        "limitations": limitations,
+    }, ensure_ascii=False, sort_keys=True)
+
+
 def analyze_ligand_sdf_graph(source_text: str):
     """Android bridge returning JSON for the bounded offline ligand graph preview."""
     from kinetics.chemistry import analyze_sdf_graph

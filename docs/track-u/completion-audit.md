@@ -145,3 +145,12 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - Added `docs/track-u/android-capability-integration-matrix.md` to map every catalogue entry to its Android integration state and to prevent source registration from being presented as mobile execution.
 - Exact-head CI for `520d3b5777294871645a88f1566341ac8b1d1747` is queued at the time of this update. No build/test success is claimed until that run completes.
 - Engineering integration is still open. The remaining work is enumerated in the matrix; scientific, device, accessibility and independent acceptance are later evidence gates.
+
+
+## 11. Further Android workflow integration — 2026-11-18
+
+- Commit `a136f133369cec91180b2d474dd03093008c9cb9` adds Android workflows for bounded global alignment, FASTA contig assembly QC, PDB SASA, distance-only interaction candidates, microbiome diversity indices and logistic growth.
+- Commit `b1bb7fc8ea9909f3cea6ac071144791ed674e3d6` updates the Android-connected status allow-list and adds a regression assertion that these routes are reported correctly.
+- The Android app now exposes 19 of 68 catalogue capabilities through dedicated local forms and typed/allow-listed Python bridge dispatch, plus the separate public-reference-database service: 20 Android workflows in total. The remaining 49 catalogue entries are not yet connected to Android.
+- Updated `docs/track-u/android-capability-integration-matrix.md` with the new route mapping, source-to-Android distinction and remaining integration work.
+- Exact-head CI has not yet completed for this source revision. These changes are not declared build-verified until CI passes.

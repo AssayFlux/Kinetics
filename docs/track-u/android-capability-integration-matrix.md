@@ -8,8 +8,8 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **13**
-- Catalogue entries not yet connected to Android: **55**
+- Catalogue entries connected to Android workflows: **19**
+- Catalogue entries not yet connected to Android: **49**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.
@@ -33,6 +33,13 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 | `chemistry.sdf_graph` | SDF graph preview |
 | `genomics.sam_vcf` | Aggregate-only VCF QC and research gate |
 
+| `sequence.global_alignment` | Global pairwise alignment form (two sequences, bounded Needleman–Wunsch) |
+| `genome.contig_assembly_qc` | Contig assembly statistics from FASTA |
+| `structure.sasa` | PDB-based approximate Shrake–Rupley SASA |
+| `structure.interaction_candidates` | PDB distance-only interaction candidate screen |
+| `microbiome.diversity` | Shannon and Gini–Simpson count-vector calculator |
+| `omics.logistic_growth` | JSON-parameterized logistic growth model |
+
 All local forms use an explicit bridge allow-list and bounded input/work limits. Their method-specific limitations are returned or displayed with results.
 
 ## Complete catalogue mapping
@@ -52,7 +59,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `sequence.local_hmmscan` | `python/kinetics/hmmer_runner.py` | Not connected — Python source only |
 | `protein.hmmscan_domain_evidence` | `python/kinetics/hmmer.py` | Not connected — Python source only |
 | `sequence.fastq` | `python/kinetics/sequence.py` | Connected — local Android form + Python bridge |
-| `sequence.global_alignment` | `python/kinetics/sequence.py` | Not connected — Python source only |
+| `sequence.global_alignment` | `python/kinetics/sequence.py` | Connected — local Android form + Python bridge |
 | `genomics.sam_vcf` | `python/kinetics/genomics.py` | Connected — local Android form + Python bridge |
 | `variant.reference_checked_normalization` | `python/kinetics/variant_reference.py` | Not connected — Python source only |
 | `protein.descriptors` | `python/kinetics/protein.py` | Connected — local Android form + Python bridge |
@@ -61,22 +68,22 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `chemistry.sdf_graph` | `python/kinetics/chemistry.py` | Connected — local Android form + Python bridge |
 | `phylo.newick` | `python/kinetics/phylo.py` | Connected — local Android form + Python bridge |
 | `omics.normalisation` | `python/kinetics/omics.py` | Not connected — Python source only |
-| `microbiome.diversity` | `python/kinetics/omics.py` | Not connected — Python source only |
+| `microbiome.diversity` | `python/kinetics/omics.py` | Connected — local Android form + Python bridge |
 | `genes.ncbi_catalogue` | `python/kinetics/catalog.py` | Not connected — Python source only |
 | `molecular.primer_screen` | `python/kinetics/molecular.py` | Connected — local Android form + Python bridge |
 | `molecular.crispr_pam` | `python/kinetics/molecular.py` | Connected — local Android form + Python bridge |
 | `phylo.upgma` | `python/kinetics/phylo.py` | Not connected — Python source only |
-| `omics.logistic_growth` | `python/kinetics/omics.py` | Not connected — Python source only |
+| `omics.logistic_growth` | `python/kinetics/omics.py` | Connected — local Android form + Python bridge |
 | `omics.cross_correlation` | `python/kinetics/omics.py` | Not connected — Python source only |
 | `genomics.variant_normalization` | `python/kinetics/genomics.py` | Not connected — Python source only |
 | `kinetics.bootstrap_intervals` | `python/kinetics/kinetics.py` | Not connected — Python source only |
-| `structure.sasa` | `python/kinetics/structure.py` | Not connected — Python source only |
+| `structure.sasa` | `python/kinetics/structure.py` | Connected — local Android form + Python bridge |
 | `phylo.newick_export` | `python/kinetics/phylo.py` | Not connected — Python source only |
 | `omics.nb2_glm` | `python/kinetics/omics.py` | Not connected — Python source only |
 | `genomics.bam_core` | `python/kinetics/genomics.py` | Not connected — Python source only |
 | `pgx.star_allele_definitions` | `python/kinetics/pgx.py` | Not connected — Python source only |
 | `phylo.jukes_cantor_nj` | `python/kinetics/phylo.py` | Not connected — Python source only |
-| `structure.interaction_candidates` | `python/kinetics/structure.py` | Not connected — Python source only |
+| `structure.interaction_candidates` | `python/kinetics/structure.py` | Connected — local Android form + Python bridge |
 | `chemistry.rdkit_adapter` | `python/kinetics/chemistry_rdkit.py` | Not connected — Python source only |
 | `genomics.htslib_bam_cram` | `python/kinetics/genomics_htslib.py` | Not connected — Python source only |
 | `pgx.pharmvar_tsv` | `python/kinetics/pharmvar.py` | Not connected — Python source only |
@@ -92,7 +99,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `genes.catalogue_coverage_report` | `python/kinetics/catalog.py` | Not connected — Python source only |
 | `structure.prediction_envelope_validation` | `python/kinetics/structure_prediction.py` | Not connected — Python source only |
 | `structure.experimental_ca_comparison` | `python/kinetics/structure_prediction.py` | Not connected — Python source only |
-| `genome.contig_assembly_qc` | `python/kinetics/genome_qc.py` | Not connected — Python source only |
+| `genome.contig_assembly_qc` | `python/kinetics/genome_qc.py` | Connected — local Android form + Python bridge |
 | `protein.fixed_width_motif_scan` | `python/kinetics/protein_motifs.py` | Not connected — Python source only |
 | `protein.design_brief_validation` | `python/kinetics/protein_design.py` | Not connected — Python source only |
 | `structure.alignment_coordinate_mapping` | `python/kinetics/structure_alignment.py` | Not connected — Python source only |

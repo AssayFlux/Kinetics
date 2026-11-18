@@ -1,11 +1,11 @@
 # Privacy principles and current status
 
 ## Current status
-The repository contains an Android research application with local import, encrypted app-private input storage, SQLite job/provenance records, WorkManager orchestration and user-initiated SAF export. The project owner declares institutional ethics approval obtained and has authorized research testing within its scope (D-025, 2026-11-18). The approval record is pending attachment; no independent verification is claimed. There is no account service, telemetry pipeline or remote compute service. CI uses synthetic fixtures only. No independent privacy assessment or real-device privacy audit has passed. This document is not a compliance claim.
+The repository contains an Android research application with local import, encrypted app-private input storage, SQLite job/provenance records, WorkManager orchestration and user-initiated SAF export. The project owner declares institutional ethics approval obtained and has authorized research testing within its scope (D-025, 2026-11-18). The approval record is pending attachment; no independent verification is claimed. There is no account service, telemetry pipeline or remote compute service. User-initiated public-reference retrieval is enabled for allow-listed NCBI, UniProt and RCSB endpoints; only public search terms/accessions are sent. CI uses synthetic fixtures only. No independent privacy assessment or real-device privacy audit has passed. This document is not a compliance claim.
 
 ## Intended principles
-- Offline-first operation; no telemetry by default.
-- Local genomic and research data remains on-device in the current Android app. Remote-node processing is not enabled by the current app manifest; any future client-side transfer requires a separately reviewed feature, explicit permission, destination-specific consent and renewed security/privacy/P0 gates.
+- Offline-first operation; explicit public-reference lookup is available, with no telemetry by default.
+- Imported genomic/research data and analysis remain on-device. Public lookup sends only a user-entered public search term or accession to the selected NCBI, UniProt or RCSB endpoint; patient sequences, VCFs, sample identifiers, file URIs and derived results are never sent. Remote-node processing is not enabled; any future remote-compute transfer requires a separately reviewed feature, explicit permission, destination-specific consent and renewed security/privacy gates.
 - No sensitive data in diagnostic logs.
 - Encryption at rest and in transit before sensitive workflows.
 - Purpose-specific, revocable consent; data minimisation; de-identification where appropriate; secure deletion.
@@ -27,3 +27,8 @@ These additions do not constitute an independent privacy/security review, compli
 ## Owner authorization note — 2026-11-18
 
 The project owner declares that institutional ethics approval has been obtained and authorizes research testing with patient data within that approval's scope. The source approval document, reference number, issuing institution, date and protocol conditions have not yet been attached to this repository. Patient data must not be committed to GitHub, CI, issue/PR attachments, logs or public artifacts. Current Android imported input payloads are encrypted at rest, but SQLite job metadata and saved analysis-result JSON are not separately encrypted; this limitation must be considered in device selection and test-data handling.
+
+
+## Public database retrieval disclosure — 2026-11-18
+
+Kinetics uses the internet only when the user explicitly searches or retrieves a public reference record. Current providers are NCBI, UniProtKB and RCSB PDB. These providers receive the public search term or accession needed to answer the request. Kinetics does not upload imported patient files, private sequences, VCFs, sample identifiers or analysis results. Retrieved records are processed locally; raw public payloads are encrypted in app-private storage. The local SQLite metadata and analysis-result index are not separately encrypted in the current implementation. Provider availability, terms and rate limits apply.

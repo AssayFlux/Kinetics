@@ -3,7 +3,7 @@
 **Audit date:** 2026-11-18  
 **Repository:** `AssayFlux/Kinetics`  
 **Target branch:** `main` only  
-**Current engineering review baseline:** `ad0b1d7b0f0594489cf4623b74df022d80619659`  
+**Current engineering review baseline:** `ca95e2816d93feffc29b487195d7b7c3fa445e8c` (documentation status refresh)  
 **Audit and quality-report documentation commit:** `cb79b9110ff50a69b1b58d78a8b13e3c8843cf3b`  
 **Status:** **ENGINEERING INTEGRATION IN PROGRESS — distinguish code work from external/device acceptance**  
 **Design authority:** D-024, owner-supplied Premium Minimal Monochrome V1. Semantic decision colours may be used for status only; monochrome remains the visual authority.
@@ -115,3 +115,13 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - An APK/AAB was produced by run 2985 on an older commit, but that run's JVM test stage failed and the artifact is not current-main evidence. No successful APK artifact has been verified for the latest main commit.
 - Device tests must cover network failure, malformed response, large structure, Keystore loss, saved-record deletion, FASTA result persistence and actual 3D viewer opening.
 - Track U remains OPEN. Public retrieval source integration is not equivalent to U-track completion or scientific validation.
+
+
+## 8. Public database integration follow-through — 2026-11-18
+
+- The integration checklist is committed at `docs/track-u/public-database-integration-checklist.md`; it separates implemented source paths from provider expansion, parser work, reliability and acceptance evidence.
+- The public database rulebook status is reconciled with implementation: NCBI Gene ELink discovery, saved-record listing/deletion, FASTA re-analysis and mmCIF reopen are present in source. Metadata/analysis SQLite remains plaintext; raw payloads alone are encrypted.
+- Workflow `44233607824` was created for `e89c475a2ad2fe4c5451926f077d5d1a9bb434a9`. Host-side scientific smoke/test jobs reported success; Android test/build was still running at audit refresh. No final Android conclusion or exact-head APK artifact is claimed.
+- The earlier Android compiler failure was isolated to a test fixture passing a Long expression to a ByteArray size parameter. The fixture was corrected at `e89c475a2ad2fe4c5451926f077d5d1a9bb434a9`. This correction is not verified until exact-head JVM tests pass.
+- Documentation commits trigger a new exact-head run. At refresh, workflow `44233969938` for `ca95e2816d93feffc29b487195d7b7c3fa445e8c` was pending.
+- Track U and public database integration remain OPEN. Continue with exact-head CI, provider journey and encrypted-record lifecycle tests, retrieval cancellation/retry/cache management, typed parser/engine integration, then physical-device and accessibility acceptance.

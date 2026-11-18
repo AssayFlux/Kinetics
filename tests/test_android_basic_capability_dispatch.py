@@ -460,3 +460,27 @@ def test_prediction_envelope_route_is_allow_listed_in_ui_kotlin_and_python():
     assert capability_id in UI
     assert capability_id in RUNNER
     assert capability_id in PROBE
+
+
+def test_gene_catalogue_snapshot_report_mobile_route_is_source_scoped():
+    import json
+
+    gene_info = (
+        "9606\\t1\\tA1BG\\t-\\tA1B\\t-\\t19\\t19q13.43\\talpha-1-B glycoprotein"
+        "\\tprotein-coding\\tA1BG\\talpha-1-B glycoprotein\\tApproved\\t-"
+        "\\t20250101\\tgene"
+    )
+    report = _run_probe(
+        "genes.catalogue_coverage_report",
+        json.dumps({"source_release": "NCBI Gene 2025-01", "gene_info_tsv": gene_info}),
+    )
+    assert report["scope"] == "supplied_catalogue_snapshot_only"
+    assert report["entry_count"] == 1
+    assert report["coverage_percentage"] is None
+
+
+def test_gene_catalogue_snapshot_route_is_allow_listed():
+    capability_id = "genes.catalogue_coverage_report"
+    assert capability_id in UI
+    assert capability_id in RUNNER
+    assert capability_id in PROBE

@@ -231,3 +231,12 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - It does **not** execute a prediction engine, verify model weights/licences, calibrate confidence, assess node trust or certify structural accuracy. Valid output remains `unverified_prediction`.
 - The reconciled Android catalogue count is **47/68 connected; 21 remain unconnected**, plus Public Reference Databases as a separate service.
 - Exact-head CI remains pending; no APK or device acceptance is claimed.
+
+
+## 21. NCBI Gene snapshot composition report — 2026-11-18
+
+- Added `genes.catalogue_coverage_report` as a dedicated Gene Reference Data service action.
+- The bridge accepts up to 900 KB of gene_info TSV and 10,000 records, requires an explicit source-release label, and reports taxonomy/gene-type/release counts and missing annotation fields.
+- The report intentionally returns no genome-wide coverage percentage: its scope is only the supplied snapshot. This is not a substitute for the in-app live NCBI Gene search/retrieval adapter.
+- The reconciled Android catalogue count is **48/68 connected; 20 remain unconnected**, plus the separate public reference-database service.
+- Exact-head CI remains pending; no APK/device acceptance is claimed.

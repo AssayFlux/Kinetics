@@ -529,6 +529,28 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Uses the Jukes–Cantor substitution model and caller-supplied alignment",
             "No alignment generation, model selection, bootstrap support or phylogenetic confidence",
         ]
+    elif capability_id == "genes.catalogue_coverage_report":
+        from kinetics.catalog import gene_catalogue_coverage_report, iter_ncbi_gene_info
+        try:
+            parameters = json.loads(sequence_text)
+            source_release = parameters["source_release"]
+            gene_info_tsv = parameters["gene_info_tsv"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with source_release and gene_info_tsv") from exc
+        if not isinstance(gene_info_tsv, str) or len(gene_info_tsv.encode("utf-8")) > 900_000:
+            raise ValueError("NCBI gene_info text exceeds the 900 KB mobile limit")
+        if not isinstance(source_release, str) or not source_release.strip():
+            raise ValueError("Pin a non-empty NCBI Gene source release")
+        entries = iter_ncbi_gene_info(
+            gene_info_tsv.splitlines(),
+            source_release=source_release,
+        )
+        result = gene_catalogue_coverage_report(entries, max_entries=10_000)
+        limitations = [
+            "Counts describe only the supplied TSV snapshot and source release",
+            "No completeness percentage is calculated without an independently defined expected gene universe",
+            "Catalogue presence does not imply assay, interpretation or clinical validation",
+        ]
     elif capability_id in {"protein.hmmscan_domain_evidence", "protein.hmmscan_domtblout_evidence"}:
         from kinetics.hmmer import parse_hmmscan_domtblout
         try:

@@ -30,6 +30,7 @@ internal object AndroidBasicCapabilityRunner {
         "genome.gff3_annotation_import",
         "genome.gff3_transcript_cds_reconstruction",
         "protein.fixed_width_motif_scan",
+        "genes.catalogue_coverage_report",
         "protein.hmmscan_domain_evidence",
         "protein.hmmscan_domtblout_evidence",
         "protein.hmmer_domain_candidate_ranking",

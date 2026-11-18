@@ -8,8 +8,8 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **47**
-- Catalogue entries not yet connected to Android: **21**
+- Catalogue entries connected to Android workflows: **48**
+- Catalogue entries not yet connected to Android: **20**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.
@@ -76,6 +76,8 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 | `protein.hmmer_domain_candidate_ranking` | Caller-thresholded HMMER domain candidate ranking with explicit abstention |
 
 | `structure.prediction_envelope_validation` | Strict validation of external prediction envelope, provenance, viewer payload and confidence fields; no model execution |
+
+| `genes.catalogue_coverage_report` | Source-release-pinned summary of a bounded supplied NCBI gene_info TSV snapshot |
 
 All local forms use an explicit bridge allow-list and bounded input/work limits. Their method-specific limitations are returned or displayed with results.
 

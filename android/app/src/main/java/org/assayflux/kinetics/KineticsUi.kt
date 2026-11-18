@@ -478,6 +478,7 @@ private fun ServiceDetailScreen(
         "sequence.local_fasta_exact_search",
         "sequence.local_fasta_alignment_search",
         "genes.ncbi_catalogue",
+        "genes.catalogue_coverage_report",
         "phylo.newick_export",
         "structure.pdb_geometry",
         "structure.ligand_site_candidates",
@@ -686,6 +687,15 @@ private fun ServiceDetailScreen(
                     description = "Reconstruct spliced CDS from validated GFF3 and supplied contigs. Input JSON contains gff3, contigs and optional table_id.",
                     sample = "{\"gff3\":\"##gff-version 3\\nchr1\\tKinetics\\tgene\\t1\\t9\\t.\\t+\\t.\\tID=g1\\nchr1\\tKinetics\\tmRNA\\t1\\t9\\t.\\t+\\t.\\tID=t1;Parent=g1\\nchr1\\tKinetics\\tCDS\\t1\\t9\\t.\\t+\\t0\\tID=c1;Parent=t1\",\"contigs\":{\"chr1\":\"ATGGCTTAA\"},\"table_id\":11}",
                     actionLabel = "Reconstruct CDS",
+                ) }
+            }
+            if (capability?.id == "genes.catalogue_coverage_report") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "genes.catalogue_coverage_report",
+                    title = "Gene catalogue snapshot report",
+                    description = "Summarize a bounded, source-release-pinned NCBI gene_info TSV snapshot. Reports composition and missing annotations only; it does not claim genome-wide completeness.",
+                    sample = "{\\"source_release\\":\\"NCBI Gene 2025-01\\",\\"gene_info_tsv\\":\\"9606\\\\t1\\\\tA1BG\\\\t-\\\\tA1B\\\\t-\\\\t19\\\\t19q13.43\\\\talpha-1-B glycoprotein\\\\tprotein-coding\\\\tA1BG\\\\talpha-1-B glycoprotein\\\\tApproved\\\\t-\\\\t20250101\\\\tgene\\"}",
+                    actionLabel = "Summarize gene snapshot",
                 ) }
             }
             if (capability?.id == "protein.fixed_width_motif_scan") {

@@ -231,9 +231,7 @@ internal fun KineticsAppShell(
                         },
                         actions = {
                             if (!showSearch && !showComponentGallery && !showProfile && selectedServiceId == null) {
-                                IconButton(onClick = { showProfile = true }, modifier = Modifier.size(48.dp)) {
-                                    Icon(Icons.Outlined.AccountCircle, contentDescription = "Open profile")
-                                }
+                                ProfileAvatarButton(onClick = { showProfile = true })
                             }
                         },
                     )
@@ -289,6 +287,33 @@ internal fun KineticsAppShell(
       }
     }
   }
+}
+
+@Composable
+private fun ProfileAvatarButton(onClick: () -> Unit) {
+    val context = LocalContext.current
+    val uri = context.getSharedPreferences("kinetics_preferences", Context.MODE_PRIVATE)
+        .getString("local_profile_avatar_uri", null)
+    val bitmap by produceState<android.graphics.Bitmap?>(initialValue = null, uri) {
+        value = withContext(Dispatchers.IO) {
+            uri?.let { raw ->
+                runCatching {
+                    context.contentResolver.openInputStream(android.net.Uri.parse(raw))?.use {
+                        android.graphics.BitmapFactory.decodeStream(it)
+                    }
+                }.getOrNull()
+            }
+        }
+    }
+    IconButton(onClick = onClick, modifier = Modifier.size(48.dp)) {
+        if (bitmap != null) {
+            Image(bitmap = bitmap!!.asImageBitmap(), contentDescription = "Open profile",
+                modifier = Modifier.size(36.dp).clip(CircleShape))
+        } else {
+            Icon(Icons.Outlined.AccountCircle, contentDescription = "Open profile",
+                modifier = Modifier.size(36.dp))
+        }
+    }
 }
 
 @Composable

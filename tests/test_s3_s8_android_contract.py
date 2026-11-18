@@ -34,9 +34,9 @@ def test_s3_s8_explore_cards_are_real_registry_gated_actions() -> None:
     cards = (ANDROID_JAVA / "S3S8ResearchCards.kt").read_text(encoding="utf-8")
     assert 'item { StructureSiteAnalysisCard() }' in ui
     assert 'item { GeneticCodeInferenceCard() }' in ui
-    assert 'it.id == "structure.ligand_site_candidates"' in ui
-    assert 'it.id == "structure.apo_pocket_candidates"' in ui
-    assert 'it.id == "sequence.genetic_code_candidate_inference"' in ui
+    assert 'capability?.id == "structure.ligand_site_candidates"' in ui
+    assert 'capability?.id == "structure.apo_pocket_candidates"' in ui
+    assert 'capability?.id == "sequence.genetic_code_candidate_inference"' in ui
     assert 'ActivityResultContracts.OpenDocument()' in cards
     assert "S3S8Runner.analyzeLigandSite" in cards
     assert "S3S8Runner.analyzeApoPockets" in cards
@@ -61,6 +61,6 @@ def test_i1_android_ligand_graph_preview_is_bounded_and_registry_gated() -> None
     assert "ActivityResultContracts.OpenDocument()" in card
     assert "readI1LigandDocument" in card
     assert "source_sha256" in bridge or "source_sha256" in (ROOT / "python/kinetics/chemistry.py").read_text(encoding="utf-8")
-    assert 'it.id == "chemistry.sdf_graph"' in ui
+    assert 'capability?.id == "chemistry.sdf_graph"' in ui
     assert "LigandGraphPreviewCard()" in ui
     assert "Graph-only parsing; no chemical sanitization or valence validation" in (ROOT / "python/kinetics/chemistry.py").read_text(encoding="utf-8")

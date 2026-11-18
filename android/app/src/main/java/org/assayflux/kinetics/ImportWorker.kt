@@ -24,7 +24,15 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
         val partial = File(stagingDirectory, "$jobId.encpart")
         var byteCount = 0L
         var finalizedFile: File? = null
+        var claimedImport = false
         return try {
+            check(store.startImport(jobId)) {
+                "Import is no longer queued; a cancelled, running or completed job cannot be started again"
+            }
+            claimedImport = true
+            if (isStopped || store.isJobCancelled(jobId)) {
+                return markCancelled(store, jobId, partial, byteCount)
+            }
             check(stagingDirectory.isDirectory || stagingDirectory.mkdirs()) {
                 "Private import staging directory could not be created"
             }
@@ -34,9 +42,6 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                     message = "Legacy plaintext staging file could not be removed",
                 )
                 return Result.failure()
-            }
-            check(store.startImport(jobId)) {
-                "Import is no longer queued; a cancelled or completed job cannot be started"
             }
             val digest = MessageDigest.getInstance("SHA-256")
             val partialPrefixDigest = MessageDigest.getInstance("SHA-256")
@@ -165,6 +170,7 @@ class ImportWorker(context: Context, parameters: WorkerParameters) : Worker(cont
                 if (!file.renameTo(partial)) file.delete()
             }
             finalizedFile = null
+            if (!claimedImport) return Result.failure()
             if (isStopped || store.isJobCancelled(jobId)) {
                 return markCancelled(store, jobId, partial, byteCount)
             }

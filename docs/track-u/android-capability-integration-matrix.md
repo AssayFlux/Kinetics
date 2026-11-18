@@ -1,6 +1,6 @@
 # Android capability integration matrix
 
-**Baseline commit:** `83cd39d543e607876f8b499cff6b0cf94fc6b004`  
+**Reconciled against main:** `00265bb7c4ad7ced908f2a4113e7fb7344e43007` (2026-11-18)  
 **Branch:** `main`  
 **Purpose:** Separate Python source registration from an actual Android-executable workflow.  
 **Evidence boundary:** A connected route means the Android UI invokes a bounded Chaquopy bridge. It does not mean the scientific method has been independently validated, clinically approved, or device-accepted.
@@ -18,6 +18,8 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 
 **36 of 68 catalogue capabilities** have an Android UI route and bounded bridge according to the mapping below. This is integration status only, not independent scientific validation or device acceptance.
 
+| Capability ID | Android integration |
+|---|---|
 | `public.reference_databases` | Public database retrieval card; NCBI Nucleotide/Protein, UniProtKB FASTA and RCSB mmCIF. This is an additional Android service, not one of the 68 catalogue entries. |
 
 | `sequence.fasta` | local Android form + Python bridge |

@@ -4,6 +4,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys
+
+sys.path.insert(0, str(ROOT / "android/app/src/main/python"))
+import kinetics_probe  # noqa: E402
+
 UI = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt").read_text()
 RUNNER = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/AndroidBasicCapabilityRunner.kt").read_text()
 PROBE = (ROOT / "android/app/src/main/python/kinetics_probe.py").read_text()
@@ -75,3 +80,53 @@ def test_all_new_capabilities_are_reported_as_android_connected():
         "omics.logistic_growth",
     ):
         assert f'"{capability_id}"' in status_block
+
+def _run_probe(capability_id: str, input_text: str):
+    import json
+
+    payload = json.loads(kinetics_probe.run_android_basic_capability(capability_id, input_text))
+    assert payload["capability_id"] == capability_id
+    assert "limitations" in payload
+    return payload["result"]
+
+
+def test_android_probe_dispatch_runs_all_exposed_capabilities_on_host():
+    assert _run_probe("protein.descriptors", "MKWVTFISLLFLFSSAYS")["length"] == 18
+    assert _run_probe("molecular.primer_screen", "ATGCGTACGTAGCTAGCT")["length"] == 18
+    assert isinstance(_run_probe("molecular.crispr_pam", "AACCGGTTACGGTAGGCTAACCGG"), list)
+
+    orf_sequence = "ATG" + "GCT" * 29 + "TAA"
+    assert _run_probe("genome.orf_candidate_scan", orf_sequence)["sequence_length"] == len(orf_sequence)
+    assert _run_probe("kinetics.michaelis_menten", "10,100,5")["rate"] > 0
+    assert _run_probe("phylo.newick", "((A:0.1,B:0.2):0.3,C:0.4);")["leaf_count"] == 3
+
+    alignment = _run_probe("sequence.global_alignment", "ACGTACGT\\nACGTCGTT")
+    assert "score" in alignment
+    assembly = _run_probe("genome.contig_assembly_qc", ">a\\nACGTACGTACGT\\n>b\\nGGGGCCCC")
+    assert isinstance(assembly, dict)
+
+    pdb = (
+        "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\n"
+        "TER\\nEND\\n"
+    )
+    assert _run_probe("structure.sasa", pdb)
+    assert _run_probe("structure.interaction_candidates", pdb)
+
+    diversity = _run_probe("microbiome.diversity", "12,8,5")
+    assert diversity["sample_count"] == 3
+    growth = _run_probe(
+        "omics.logistic_growth",
+        '{"timepoints":[0,1,2],"carrying_capacity":100,"growth_rate":0.5,"initial":5}',
+    )
+    assert len(growth["predicted_counts"]) == 3
+
+
+def test_android_probe_rejects_unknown_capability_and_malformed_parameters():
+    import pytest
+
+    with pytest.raises(ValueError, match="not exposed"):
+        kinetics_probe.run_android_basic_capability("unknown.tool", "ACGT")
+    with pytest.raises(ValueError, match="three comma-separated"):
+        kinetics_probe.run_android_basic_capability("kinetics.michaelis_menten", "10,100")
+    with pytest.raises(ValueError, match="two non-empty sequences"):
+        kinetics_probe.run_android_basic_capability("sequence.global_alignment", "ACGT")

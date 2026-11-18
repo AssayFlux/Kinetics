@@ -87,7 +87,7 @@ The project owner authorizes preparation and may approve internal project decisi
 - [ ] Risk register, stop/withdrawal and incident plans are reviewed; residual risks dispositioned.
 - [ ] Project owner reviews the complete evidence packet and records the formal P0 decision.
 
-**Until every applicable item is evidenced and the owner records the formal decision, P0 remains NOT APPROVED and all patient/clinical functionality remains disabled.**
+**Disposition:** the owner-authorized engineering and institutional research-testing scope is OPEN under D-025. This packet is not a clinical-deployment approval: clinical decision support, diagnosis, treatment/dosing recommendations and patient-facing clinical functionality remain disabled until their separate evidence and authorization are complete.
 
 
 ## 6. Owner declaration and approval-record completion

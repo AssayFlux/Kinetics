@@ -2,7 +2,7 @@
 
 **Track status:** STARTED 2026-11-11 by project-owner authorization (D-022).  
 **Execution model:** two steps — (1) build the documented base; (2) audit, test and fix the base.  
-**P0 status:** owner-authorized engineering and institutional research-testing scope OPEN under D-024 (2026-11-18); approval record details pending attachment.  
+**P0 status:** owner-authorized engineering and institutional research-testing scope OPEN under D-025 (2026-11-18); approval record details pending attachment.  
 **Allowed data:** synthetic/public data and patient-derived research data within the exact institutional approval scope and approved environment. Real patient data must not enter GitHub, CI, fixtures, logs or public artifacts.
 
 ## Component ownership and integration boundaries
@@ -50,10 +50,10 @@
 The **bounded software foundation** for P1–P7 is closed only when the exact-head automated workflow passes and the repository records the implemented contracts, tests and limitations. This does not close the full Precision Medicine track: P0 and all external, scientific, source/licensing, operational, device, ethics, privacy, security, regulatory and owner-acceptance gates remain open. P0 cannot be passed by owner authorization alone; it requires the competent external determinations and a separate formal owner gate decision. Physical-device tests and any human-subject/clinical evaluation are separate evidence classes.
 
 ## Current open items and verified software baseline
-- **P0 research-testing scope is owner-authorized under D-024.** The owner declares institutional ethics approval obtained; approval reference and protocol scope are pending attachment. Independent security/privacy review, qualified scientific validation and clinical/regulatory deployment decisions remain open.
+- **P0 research-testing scope is owner-authorized under D-025.** The owner declares institutional ethics approval obtained; approval reference and protocol scope are pending attachment. Independent security/privacy review, qualified scientific validation and clinical/regulatory deployment decisions remain open.
 - The public dataset catalogue contains candidate metadata only; acquired entries remain empty. No third-party source payload is approved or acquired by this track.
 - **P1:** aggregate-only synthetic VCF QC and reference-bound provenance are implemented. Independent authoritative reference concordance, exact-source terms review, fuzz/resource audit and device workflow verification remain open.
 - **P2:** parser/matcher contracts and synthetic regression coverage are implemented; licensed real-source packs, independent biological concordance, broad gene coverage and structural-variant/CNV support remain open.
 - **P3–P7:** research-only schemas, templates and validation contracts are implemented; guideline mapping, curator operations, ethics determination, completed risk/control verification and jurisdiction-specific advice remain open.
 - Exact-head baseline before this documentation closure: commit `7967ccb0288ea1d5b82af18f8ab8d886d18d4733`; workflow [#44078534173](https://github.com/AssayFlux/Kinetics/actions/runs/44078534173), 9/9 jobs passed. Python suite: 534 passed, 9 skipped (optional RDKit/pysam dependencies unavailable in that job); Ruff and strict mypy passed. Android arm64 APK/AAB build, package alignment and JVM tests passed. This is software/CI evidence, not independent PGx validation or device runtime acceptance.
-- Patient-data research testing is authorized only within the declared institutional approval. Individual clinical interpretation, diagnosis, treatment/dosing recommendations, patient-facing clinical reports and Clinical Mode are not authorized by D-024.
+- Patient-data research testing is authorized only within the declared institutional approval. Individual clinical interpretation, diagnosis, treatment/dosing recommendations, patient-facing clinical reports and Clinical Mode are not authorized by D-025.

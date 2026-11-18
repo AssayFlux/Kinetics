@@ -1083,9 +1083,26 @@ private fun SettingsScreen(
                 Button(onRuntime, Modifier.fillMaxWidth()) { Text("Run runtime diagnostics") }
                 val pythonPart = runtime?.substringAfter("Python probe:", "")?.substringBefore("Native probe:")?.trim()
                 val nativePart = runtime?.substringAfter("Native probe:", "")?.trim()
-                val pythonState = when { runtime == null -> null; pythonPart.isNullOrBlank() -> false; pythonPart.contains("FAILED", true) -> false; else -> true }
-                val nativeState = when { runtime == null -> null; nativePart.isNullOrBlank() -> false; nativePart.contains("FAILED", true) -> false; else -> true }
-                val storageState = when { runtime == null -> null; runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> true; runtime.contains("FAILED", true) -> false; else -> null }
+                val pythonState = when {
+                    runtime == null -> "Not checked"
+                    pythonPart.isNullOrBlank() -> "Partial"
+                    pythonPart.contains("FAILED", true) -> "Not working"
+                    pythonPart.contains("WARNING", true) || pythonPart.contains("PARTIAL", true) -> "Partial"
+                    else -> "OK"
+                }
+                val nativeState = when {
+                    runtime == null -> "Not checked"
+                    nativePart.isNullOrBlank() -> "Partial"
+                    nativePart.contains("FAILED", true) -> "Not working"
+                    nativePart.contains("WARNING", true) || nativePart.contains("PARTIAL", true) -> "Partial"
+                    else -> "OK"
+                }
+                val storageState = when {
+                    runtime == null -> "Not checked"
+                    runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> "OK"
+                    runtime.contains("FAILED", true) -> "Not working"
+                    else -> "Partial"
+                }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     RuntimeStatusCard("Sequence engine", pythonState, Modifier.weight(1f))
                     RuntimeStatusCard("Native engine", nativeState, Modifier.weight(1f))
@@ -1097,7 +1114,7 @@ private fun SettingsScreen(
             } }
             item { SettingGroup(
                 "PRIVACY · LOCAL DATA INVENTORY",
-                "This app does not create a cloud account or send research files to a remote compute service. The following information is stored locally:",
+                "This app has no cloud account or remote compute service. Public reference searches send only the chosen public query/accession to approved database endpoints; imported research files stay local. The following information is stored locally:",
             ) {
                 Text("• Imported inputs: AES-256-GCM encrypted chunks in the app's no-backup private directory. Plaintext is materialized temporarily in app-private cache for analysis/export and is removed on normal completion; stale prefixed cache files older than 24 hours are cleaned at store startup.",
                     style = MaterialTheme.typography.bodySmall)

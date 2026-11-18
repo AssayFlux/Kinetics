@@ -52,7 +52,7 @@ Before importing any patient-derived dataset, the operator must ensure that the 
 
 | Risk | Initial control | Residual status |
 |---|---|---|
-| Exploratory output mistaken for patient advice | Research-only UX, explicit limitations, no patient workflows or clinical claims | Open; misuse/wording review required |
+| Exploratory output mistaken for patient advice | Research-only UX, explicit limitations, no patient-care workflow or clinical claims | Open; misuse/wording review required |
 | Incorrect reference build/coordinate interpretation | Explicit assembly/accession/contig/coordinate contract, digest verification, abstention | Open; independent truth-set concordance required |
 | Unlicensed or misused public resource | Candidate-only catalogue; exact-release terms review before intake | Open; human review per source |
 | Sensitive data enters an unapproved workflow | Reject patient data at boundaries; no intake path; synthetic fixtures only | Open; threat-model negative tests required |

@@ -156,7 +156,7 @@ jobs:
     name: Android arm64 debug APK/AAB build and package tests
     # Pin the runner image and host Python independently from the Chaquopy target runtime.
     runs-on: ubuntu-26.04
-    timeout-minutes: 90
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -184,13 +184,14 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-linux-android
-      # Persist pinned cross-build toolchains and downloaded Gradle/Rust dependencies.
-      # A clean runner otherwise repeats expensive Chaquopy and Biopython preparation.
+      # Persist pinned toolchains, dependencies, and the verified Biopython Android wheel.
+      # The wheel is cached separately from ~/.cache because Gradle consumes it from the repo.
       - name: Restore Android cross-build caches
         uses: actions/cache@v4
         with:
           path: |
             ~/.cache/kinetics
+            android/app/libs/python-wheels
             ~/.cargo/registry
             ~/.cargo/git
             ~/.gradle/caches

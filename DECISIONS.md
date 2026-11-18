@@ -19,6 +19,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-020 | 2026-11-09 | Close R host audit and proceed to S | Approved — close the R implementation/host-regression audit on exact-source CI #2126, consolidate documentation, then begin S. Does not waive or relabel open R device, external-science, licensing, security, accessibility or release evidence | Project owner |
 | D-022 | 2026-11-11 | Start Track P and prepare P0 | Approved — start P engineering and P0 evidence preparation; formal P0 gate remains NOT APPROVED pending independent evidence and a separate owner gate decision | Project owner |
 | D-023 | 2026-11-12 | Add Track U after Track G in sequential execution order | Approved — current order is R → S → I → P → G → U; supersedes D-019's five-track order while preserving its historical record and two-step gate | Project owner |
+| D-024 | 2026-11-18 | Open engineering and institutional research-testing scope | Approved — owner declares institutional ethics approval obtained and authorizes patient-data research testing within its exact scope; approval record pending attachment; clinical deployment remains separate | Project owner |
 
 ## D-000 — Direction baseline (approved)
 - Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.

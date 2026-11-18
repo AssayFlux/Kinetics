@@ -141,7 +141,7 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 
 - Commit `92824712238e7dd54ddcab5e5ab8e8552e1d0014` adds local Android execution for protein descriptors, primer property screening and SpCas9 NGG PAM scanning.
 - Commit `520d3b5777294871645a88f1566341ac8b1d1747` adds local Android execution for six-frame ORF candidate scanning, Michaelis–Menten rate calculation and Newick parsing.
-- Android-connected workflows now total 14 including the public-reference-database service; the other 54 catalogue entries remain Python-source-only from the Android app's perspective.
+- Android-connected workflows now total 14 including the public-reference-database service; the other 55 catalogue entries remain Python-source-only from the Android app's perspective.
 - Added `docs/track-u/android-capability-integration-matrix.md` to map every catalogue entry to its Android integration state and to prevent source registration from being presented as mobile execution.
 - Exact-head CI for `520d3b5777294871645a88f1566341ac8b1d1747` is queued at the time of this update. No build/test success is claimed until that run completes.
 - Engineering integration is still open. The remaining work is enumerated in the matrix; scientific, device, accessibility and independent acceptance are later evidence gates.

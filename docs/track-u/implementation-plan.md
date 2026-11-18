@@ -153,3 +153,17 @@ Track U remains OPEN. PR #76 merged the Step 1 monochrome foundation to main as 
 
 ### Release gate
 Do not mark the public-data integration complete until exact-head CI passes and a named Android device demonstrates: search, retrieval, cache persistence, FASTA QC, RCSB mmCIF parsing/viewing, deletion and offline reopening. No APK success or physical-device acceptance is implied by source commits alone.
+
+
+## Owner-approved login/dashboard blueprint addendum — 2026-11-18
+
+The owner supplied the authoritative Login and Dashboard reference images in `Assets/App UI - Login Page Design.jpg` and `Assets/App UI - Dashboard Design.jpg`. Their structure is documented in `docs/ui/owner-blueprint-implementation.md` and supersedes earlier adaptive bottom-navigation/rail proposals for the active shell.
+
+- Home is a dashboard only: the horizontal carousel is the service launcher, followed by four dashboard summary panels.
+- The carousel now contains one card for each of the 68 bundled capability-catalogue entries plus Public Reference Databases. Cards navigate by stable capability ID to individual service detail pages; a five-indicator window reflects the active page.
+- Drawer navigation contains Home, Work and Settings. Persistent bottom navigation and navigation rail are removed.
+- The top-right avatar opens the local profile disclosure. No remote identity provider exists; no username, account ID, password reset or cloud sign-out is fabricated.
+- Existing biometric unlock remains device-local. The reference login sketch's four unlabeled controls have not been assigned invented semantics; the visual/login implementation remains open until local credential semantics or an identity-provider requirement is approved.
+- Four Home panels summarize runtime readiness, research work, recent activity and local data/reference status.
+- Service-specific workflow cards are gated by exact capability IDs; catalogue status alone is not treated as Android dispatcher proof.
+- Exact-head Android build, screenshot comparison, device interaction/accessibility and all external scientific/security gates remain open until recorded with evidence.

@@ -216,7 +216,7 @@ def test_user_supplied_protein_motif_pack_is_hash_pinned_and_bounded():
     assert result
 
 def test_prokaryotic_orf_and_kinetic_bootstrap_mobile_routes():
-    fasta = ">contig1\\n" + "ATG" + "GCT" * 29 + "TAA"
+    fasta = ">contig1\n" + "ATG" + "GCT" * 29 + "TAA"
     scanned = _run_probe("genome.prokaryotic_orf_candidate_scan", fasta)
     assert scanned["contig_count"] == 1
     bootstrap = _run_probe(
@@ -244,8 +244,8 @@ def test_protein_design_brief_gate_and_structure_geometry_screen():
     validated = _run_probe("protein.design_brief_validation", __import__("json").dumps(brief))
     assert validated["generation_status"] == "blocked_no_approved_model_or_benchmark"
     pdb = (
-        "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\n"
-        "TER\\nEND\\n"
+        "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\n"
+        "TER\nEND\n"
     )
     geometry = _run_probe("structure.geometry_screen_metrics", pdb)
     assert geometry
@@ -304,7 +304,7 @@ def test_structure_alignment_and_variant_coordinate_mapping_routes():
 def test_local_reference_exact_and_alignment_search_use_caller_supplied_packs():
     parameters = {
         "query": "ACGTACGT",
-        "reference_fasta": ">ref1\nACGTACGT\n>ref2\\nTTTTAAAA",
+        "reference_fasta": ">ref1\nACGTACGT\n>ref2\nTTTTAAAA",
         "sequence_type": "DNA",
         "name": "Example pack",
         "version": "1",

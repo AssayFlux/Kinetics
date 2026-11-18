@@ -13,7 +13,7 @@ def test_home_routes_to_real_offline_structure_and_chemistry_viewers() -> None:
     chemistry = (
         ROOT / "android/app/src/main/java/org/assayflux/kinetics/I1ChemistryCard.kt"
     ).read_text()
-    assert "ServiceDetailScreen" in ui
+    assert "ServiceDomainScreen" in ui
     assert "HorizontalPager(" in ui
     assert "OPEN SERVICE" in ui
     assert "fun ExploreScreen" not in ui
@@ -90,3 +90,20 @@ def test_android_safe_insets_status_cards_and_gzip_imports() -> None:
     assert "GZIPInputStream" in chemistry
     assert "GZIPInputStream" in sequence
     assert "total <= maxBytes" in sequence
+
+
+def test_owner_blueprint_has_one_actionable_card_per_capability() -> None:
+    ui = (ROOT / "android/app/src/main/java/org/assayflux/kinetics/KineticsUi.kt").read_text()
+    catalogue = json.loads((ROOT / "android/app/src/main/assets/capability-catalog.json").read_text())
+    assert len(catalogue) == 68
+    assert "rememberPagerState(pageCount = { services.size })" in ui
+    assert "onOpenService(service.id)" in ui
+    assert "capabilities.firstOrNull { it.id == selectedServiceId }" in ui
+    assert "val visibleCount = minOf(5, services.size)" in ui
+    assert 'id = "public.reference_databases"' in ui
+    assert "DashboardPanel(\"SYSTEM READINESS\"" in ui
+    assert "DashboardPanel(\"RESEARCH WORK\"" in ui
+    assert "DashboardPanel(\"RECENT ACTIVITY\"" in ui
+    assert "DashboardPanel(\"LOCAL DATA & REFERENCES\"" in ui
+    assert "NavigationBar(" not in ui
+    assert "NavigationRail(" not in ui

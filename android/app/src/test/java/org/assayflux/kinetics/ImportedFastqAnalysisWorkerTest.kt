@@ -15,7 +15,7 @@ import org.robolectric.annotation.Config
 class ImportedFastqAnalysisWorkerTest {
     private val context = RuntimeEnvironment.getApplication()
 
-    private fun worker(id: String?, offset: Int) =
+    private fun worker(id: String, offset: Int) =
         TestListenableWorkerBuilder<ImportedFastqAnalysisWorker>(context)
             .setInputData(workDataOf(
                 ImportedFastqAnalysisWorker.KEY_JOB_ID to id,
@@ -24,7 +24,8 @@ class ImportedFastqAnalysisWorkerTest {
 
     @Test
     fun missingJobIdFailsClosed() {
-        assertTrue(worker(null, 33).doWork() is ListenableWorker.Result.Failure)
+        val missingIdWorker = TestListenableWorkerBuilder<ImportedFastqAnalysisWorker>(context).build()
+        assertTrue(missingIdWorker.doWork() is ListenableWorker.Result.Failure)
     }
 
     @Test

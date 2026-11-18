@@ -368,10 +368,9 @@ private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Mo
 }
 
 @Composable
-private fun RuntimeStatusCard(label: String, working: Boolean?, modifier: Modifier = Modifier) {
+private fun RuntimeStatusCard(label: String, status: String, modifier: Modifier = Modifier) {
     val colors = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) KineticsTokens.StatusDark else KineticsTokens.StatusLight
-    val tint = when (working) { true -> colors.success; false -> colors.error; null -> colors.warning }
-    val status = when (working) { true -> "OK"; false -> "Not working"; null -> "Not checked" }
+    val tint = when (status) { "OK" -> colors.success; "Not working" -> colors.error; else -> colors.warning }
     OutlinedCard(modifier, shape = RoundedCornerShape(10.dp)) {
         Column(Modifier.padding(9.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
@@ -455,12 +454,12 @@ private fun HomeScreen(
                         Text("Check embedded Python, native engines and encrypted storage.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
                         val pythonPart = runtime?.substringAfter("Python probe:", "")?.substringBefore("Native probe:")?.trim()
                         val nativePart = runtime?.substringAfter("Native probe:", "")?.trim()
-                        val pythonState = when { runtime == null -> null; pythonPart.isNullOrBlank() -> false; pythonPart.contains("FAILED", true) -> false; else -> true }
-                        val nativeState = when { runtime == null -> null; nativePart.isNullOrBlank() -> false; nativePart.contains("FAILED", true) -> false; else -> true }
-                        val storageState = when { runtime == null -> null; runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> true; runtime.contains("FAILED", true) -> false; else -> null }
+                        val pythonState = when { runtime == null -> "Not checked"; pythonPart.isNullOrBlank() -> "Partial"; pythonPart.contains("FAILED", true) -> "Not working"; pythonPart.contains("WARNING", true) || pythonPart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
+                        val nativeState = when { runtime == null -> "Not checked"; nativePart.isNullOrBlank() -> "Partial"; nativePart.contains("FAILED", true) -> "Not working"; nativePart.contains("WARNING", true) || nativePart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
+                        val storageState = when { runtime == null -> "Not checked"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> "OK"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: FAILED") -> "Not working"; else -> "Partial" }
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            RuntimeStatusCard("Sequence engine", pythonState, Modifier.weight(1f))
-                            RuntimeStatusCard("Native engine", nativeState, Modifier.weight(1f))
+                            RuntimeStatusCard("Sequence processing", pythonState, Modifier.weight(1f))
+                            RuntimeStatusCard("Scientific tools", nativeState, Modifier.weight(1f))
                             RuntimeStatusCard("Private storage", storageState, Modifier.weight(1f))
                         }
                     }
@@ -1078,7 +1077,7 @@ private fun SettingsScreen(
                     )
                 }
             } }
-            item { SettingGroup("DEVICE RUNTIME", "Python 3.11 and native runtime probes execute locally.") {
+            item { SettingGroup("DEVICE RUNTIME", "Scientific processing and storage checks run locally on this device.") {
                 Button(onRuntime, Modifier.fillMaxWidth()) { Text("Run runtime diagnostics") }
                 val pythonPart = runtime?.substringAfter("Python probe:", "")?.substringBefore("Native probe:")?.trim()
                 val nativePart = runtime?.substringAfter("Native probe:", "")?.trim()

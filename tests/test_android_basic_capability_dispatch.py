@@ -25,7 +25,10 @@ def test_android_sequence_runner_is_allow_listed_and_bounded():
     assert "capabilityId in supported" in RUNNER
     assert "MAX_INPUT_CHARS = 1_000_000" in RUNNER
     assert "1_000_000" in PROBE
-    assert 'else:\n        raise ValueError("This capability is not exposed by the Android basic runner")' in PROBE
+    expected_error = (
+        'else:\n        raise ValueError("This capability is not exposed by the Android basic runner")'
+    )
+    assert expected_error in PROBE
 
 
 def test_pam_and_primer_limitations_are_returned_with_results():

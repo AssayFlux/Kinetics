@@ -78,7 +78,7 @@ private fun readVcfQcDocument(context: Context, uri: Uri): VcfQcDocument {
 internal fun GenomicsVcfQcCard() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var consentConfirmed by rememberSaveable { mutableStateOf(false) }
+    var authorizationConfirmed by rememberSaveable { mutableStateOf(false) }
     var selectedUri by remember { mutableStateOf<Uri?>(null) }
     var selectedName by remember { mutableStateOf<String?>(null) }
     var report by remember { mutableStateOf<JSONObject?>(null) }
@@ -103,7 +103,7 @@ internal fun GenomicsVcfQcCard() {
 
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("P1 · VCF aggregate research QC", style = MaterialTheme.typography.titleMedium)
+            Text("VCF aggregate research QC", style = MaterialTheme.typography.titleMedium)
             Text(
                 "Bounded local VCF record-structure and aggregate summary. Only aggregate counts are returned; sample identifiers and genotype strings are not displayed or persisted.",
                 style = MaterialTheme.typography.bodySmall,

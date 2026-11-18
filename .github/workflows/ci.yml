@@ -1,7 +1,7 @@
 name: Kinetics validation and Android build
 on:
   push:
-    branches: [main, release/0.1.0, develop/v0.1.2]
+    branches: [main, v0.1.1]
   pull_request:
     branches: [main, release/0.1.0, develop/v0.1.2]
   workflow_dispatch:

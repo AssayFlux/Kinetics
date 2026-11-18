@@ -8,8 +8,8 @@
 ## Summary
 
 - Catalogue entries: **68**
-- Catalogue entries connected to Android workflows: **19**
-- Catalogue entries not yet connected to Android: **49**
+- Catalogue entries connected to Android workflows: **21**
+- Catalogue entries not yet connected to Android: **47**
 - Additional Android service outside the JSON catalogue: `public.reference_databases` (NCBI/UniProt/RCSB retrieval).
 
 The Android UI must never display catalogue `status: implemented` as proof of Android integration. The service page separately reports whether an Android workflow is connected.
@@ -40,6 +40,10 @@ The Android UI must never display catalogue `status: implemented` as proof of An
 | `microbiome.diversity` | Shannon and Gini–Simpson count-vector calculator |
 | `omics.logistic_growth` | JSON-parameterized logistic growth model |
 
+| `sequence.explicit_genetic_code_translation` | Explicit NCBI genetic-code translation with caller-supplied table/frame/CDS mode |
+| `kinetics.inhibition_rate` | Competitive, uncompetitive, noncompetitive and mixed inhibition equation calculator |
+| `phylo.upgma` | Rooted UPGMA construction from supplied distance matrix |
+
 All local forms use an explicit bridge allow-list and bounded input/work limits. Their method-specific limitations are returned or displayed with results.
 
 ## Complete catalogue mapping
@@ -50,7 +54,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `sequence.exact_reference_search` | `python/kinetics/sequence_reference.py` | Not connected — Python source only |
 | `sequence.local_reference_pack_loader` | `python/kinetics/sequence_pack.py` | Not connected — Python source only |
 | `sequence.local_fasta_exact_search` | `python/kinetics/sequence_pack.py` | Not connected — Python source only |
-| `sequence.explicit_genetic_code_translation` | `python/kinetics/genetic_code.py` | Not connected — Python source only |
+| `sequence.explicit_genetic_code_translation` | `python/kinetics/genetic_code.py` | Connected — local Android form + Python bridge |
 | `sequence.genetic_code_candidate_inference` | `python/kinetics/genetic_code_inference.py` | Connected — local Android form + Python bridge |
 | `genome.orf_candidate_scan` | `python/kinetics/orf.py` | Connected — local Android form + Python bridge |
 | `genome.prokaryotic_orf_candidate_scan` | `python/kinetics/genome_orf.py` | Not connected — Python source only |
@@ -72,7 +76,7 @@ All local forms use an explicit bridge allow-list and bounded input/work limits.
 | `genes.ncbi_catalogue` | `python/kinetics/catalog.py` | Not connected — Python source only |
 | `molecular.primer_screen` | `python/kinetics/molecular.py` | Connected — local Android form + Python bridge |
 | `molecular.crispr_pam` | `python/kinetics/molecular.py` | Connected — local Android form + Python bridge |
-| `phylo.upgma` | `python/kinetics/phylo.py` | Not connected — Python source only |
+| `phylo.upgma` | `python/kinetics/phylo.py` | Connected — local Android form + Python bridge |
 | `omics.logistic_growth` | `python/kinetics/omics.py` | Connected — local Android form + Python bridge |
 | `omics.cross_correlation` | `python/kinetics/omics.py` | Not connected — Python source only |
 | `genomics.variant_normalization` | `python/kinetics/genomics.py` | Not connected — Python source only |

@@ -154,3 +154,12 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 - The Android app now exposes 19 of 68 catalogue capabilities through dedicated local forms and typed/allow-listed Python bridge dispatch, plus the separate public-reference-database service: 20 Android workflows in total. The remaining 49 catalogue entries are not yet connected to Android.
 - Updated `docs/track-u/android-capability-integration-matrix.md` with the new route mapping, source-to-Android distinction and remaining integration work.
 - Exact-head CI has not yet completed for this source revision. These changes are not declared build-verified until CI passes.
+
+
+## 12. Additional mobile scientific workflows — 2026-11-18
+
+- Commit `3dce2837afd68b3deafbe0ffee634061c9b04d5f` adds local Android workflows for explicit NCBI genetic-code translation, enzyme inhibition rate calculation and UPGMA tree construction.
+- Commit `58b35adb8d03ec1b0e65f825efa9596a1aae2898` corrects host-test input fixtures to use actual line breaks and adds explicit allow-list coverage for the new routes.
+- The Android app now exposes 22 of 68 catalogue capabilities through dedicated Android forms and the local Python bridge. The separate public-reference-database service makes 23 Android workflows; 46 catalogue capabilities remain unconnected.
+- The integration matrix has been refreshed with the exact capability-by-capability mapping.
+- Latest exact-head CI is pending; no test or APK verification is claimed for these commits yet.

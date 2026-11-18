@@ -69,6 +69,7 @@ internal class PublicRecordStore(context: Context) :
                 put("saved_at", System.currentTimeMillis())
             }
             writableDatabase.insertWithOnConflict("public_records", null, values, SQLiteDatabase.CONFLICT_REPLACE)
+            enforceCacheQuota(protectedId = id)
         } catch (error: Exception) {
             temporary.delete()
             throw error
@@ -106,6 +107,37 @@ internal class PublicRecordStore(context: Context) :
         return ids.mapNotNull(::get)
     }
 
+    fun totalBytes(): Long = readableDatabase.rawQuery(
+        "SELECT COALESCE(SUM(byte_count),0) FROM public_records", null,
+    ).use { cursor -> if (cursor.moveToFirst()) cursor.getLong(0) else 0L }
+
+    fun recordCount(): Int = readableDatabase.rawQuery(
+        "SELECT COUNT(*) FROM public_records", null,
+    ).use { cursor -> if (cursor.moveToFirst()) cursor.getInt(0) else 0 }
+
+    fun deleteAll(): Int {
+        val ids = readableDatabase.rawQuery("SELECT id FROM public_records", null).use { cursor ->
+            buildList { while (cursor.moveToNext()) add(cursor.getString(0)) }
+        }
+        return ids.count { delete(it) }
+    }
+
+    private fun enforceCacheQuota(protectedId: String) {
+        var bytes = totalBytes()
+        var count = recordCount()
+        if (bytes <= MAX_CACHE_BYTES && count <= MAX_RECORDS) return
+        val oldest = readableDatabase.rawQuery(
+            "SELECT id FROM public_records WHERE id<>? ORDER BY saved_at ASC", arrayOf(protectedId),
+        ).use { cursor -> buildList { while (cursor.moveToNext()) add(cursor.getString(0)) } }
+        for (id in oldest) {
+            if (bytes <= MAX_CACHE_BYTES && count <= MAX_RECORDS) break
+            val record = get(id) ?: continue
+            if (delete(id)) { bytes -= record.byteCount; count-- }
+        }
+        check(bytes <= MAX_CACHE_BYTES && count <= MAX_RECORDS) {
+            "Public reference cache quota cannot be met without deleting the newly saved record"
+        }
+    }
     fun <T> withContent(id: String, action: (File) -> T): T? {
         val saved = get(id) ?: return null
         val directory = File(appContext.noBackupFilesDir, "public-records").canonicalFile
@@ -158,6 +190,8 @@ internal class PublicRecordStore(context: Context) :
 
     companion object {
         private const val MAX_RECORD_BYTES = 24 * 1024 * 1024
+        private const val MAX_CACHE_BYTES = 200L * 1024 * 1024
+        private const val MAX_RECORDS = 50
         private const val MAX_ANALYSIS_CHARS = 2_000_000
     }
 }

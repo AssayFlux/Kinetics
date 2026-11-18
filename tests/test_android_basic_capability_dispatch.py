@@ -328,7 +328,7 @@ def test_catalogue_alias_workflows_share_the_same_bounded_local_engines():
     ):
         assert capability_id in UI
         assert capability_id in RUNNER or capability_id == "genes.ncbi_catalogue"
-    assert 'capability_id == "phylo.newick_export"' in PROBE
+    assert 'capability_id in {"phylo.newick", "phylo.newick_export"}' in PROBE
 
 
 def test_mobile_omics_and_phylogeny_routes_reject_malformed_shapes_and_types():

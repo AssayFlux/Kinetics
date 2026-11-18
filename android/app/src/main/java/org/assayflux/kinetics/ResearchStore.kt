@@ -116,14 +116,14 @@ class ResearchStore(context: Context) :
         writableDatabase.update("jobs", values, "id=?", arrayOf(id))
     }
 
-    /** Atomically claim a queued import; a cancelled job cannot be resurrected by a late worker. */
+    /** Atomically claim or recover a running import; a cancelled job cannot be resurrected by a late worker. */
     fun startImport(id: String): Boolean {
         val values = ContentValues().apply {
             put("state", "running")
             put("updated_at", System.currentTimeMillis())
         }
         return writableDatabase.update(
-            "jobs", values, "id=? AND state='queued'", arrayOf(id),
+            "jobs", values, "id=? AND state IN ('queued','running')", arrayOf(id),
         ) == 1
     }
 

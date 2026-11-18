@@ -201,6 +201,21 @@ class ResearchStoreMigrationTest {
     }
 
     @Test
+    fun runningImportCanBeReclaimedAfterProcessRestart() {
+        val store = ResearchStore(context)
+        try {
+            store.createJob("process-restart", "sample.fa", "content://sample")
+            assertTrue(store.startImport("process-restart"))
+            // WorkManager may recreate a Worker after process death while its durable
+            // job row still says running; claiming it again is the resume path.
+            assertTrue(store.startImport("process-restart"))
+            assertFalse(store.cancelActiveImport("missing-job"))
+        } finally {
+            store.close()
+        }
+    }
+
+    @Test
     fun resumeTransitionsOnlyFailedOrCancelledJobsBackToQueued() {
         val store = ResearchStore(context)
         try {

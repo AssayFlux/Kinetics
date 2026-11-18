@@ -253,9 +253,9 @@ def test_protein_design_brief_gate_and_structure_geometry_screen():
 def test_phylogenetic_bootstrap_and_structure_mapping_routes_execute():
     sequences = {
         "A": "A" * 40,
-        "B": "A" * 39 + "C",
-        "C": "C" * 20 + "A" * 20,
-        "D": "C" * 19 + "A" * 21,
+        "B": "C" + "A" * 39,
+        "C": "GC" + "A" * 38,
+        "D": "GG" + "A" * 38,
     }
     bootstrap = _run_probe(
         "phylo.nj_site_bootstrap",

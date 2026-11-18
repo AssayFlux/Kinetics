@@ -300,3 +300,20 @@ def test_structure_alignment_and_variant_coordinate_mapping_routes():
         }),
     )
     assert variant
+
+def test_local_reference_exact_and_alignment_search_use_caller_supplied_packs():
+    parameters = {
+        "query": "ACGTACGT",
+        "reference_fasta": ">ref1\\nACGTACGT\\n>ref2\\nTTTTAAAA",
+        "sequence_type": "DNA",
+        "name": "Example pack",
+        "version": "1",
+        "license": "CC0-1.0",
+        "source": "https://example.org/reference",
+    }
+    import json
+
+    exact = _run_probe("sequence.exact_reference_search", json.dumps(parameters))
+    assert exact
+    aligned = _run_probe("sequence.local_alignment_reference_search", json.dumps(parameters))
+    assert aligned

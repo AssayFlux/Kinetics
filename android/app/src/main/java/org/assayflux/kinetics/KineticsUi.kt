@@ -469,6 +469,8 @@ private fun ServiceDetailScreen(
         "structure.chain_interface_contacts",
         "structure.alignment_coordinate_mapping",
         "structure.variant_coordinate_mapping",
+        "sequence.exact_reference_search",
+        "sequence.local_alignment_reference_search",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -765,6 +767,24 @@ private fun ServiceDetailScreen(
                     description = "Map a caller-specified amino-acid substitution to a uniquely matched PDB chain. Coordinate mapping only; no effect prediction.",
                     sample = "{\"sequence\":\"G\",\"chain_id\":\"A\",\"position\":1,\"reference\":\"G\",\"alternate\":\"A\",\"pdb\":\"ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\nTER\\nEND\\n\"}",
                     actionLabel = "Map variant",
+                ) }
+            }
+            if (capability?.id == "sequence.exact_reference_search") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "sequence.exact_reference_search",
+                    title = "Exact local reference search",
+                    description = "Search caller-supplied FASTA references for exact full-length matches. Input JSON includes query, reference_fasta, sequence_type and source/license metadata.",
+                    sample = "{\"query\":\"ACGTACGT\",\"reference_fasta\":\">ref1\\nACGTACGT\\n>ref2\\nTTTTAAAA\",\"sequence_type\":\"DNA\",\"name\":\"Example pack\",\"version\":\"1\",\"license\":\"CC0-1.0\",\"source\":\"https://example.org/reference\"}",
+                    actionLabel = "Search exact matches",
+                ) }
+            }
+            if (capability?.id == "sequence.local_alignment_reference_search") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "sequence.local_alignment_reference_search",
+                    title = "Local reference alignment",
+                    description = "Run bounded Smith–Waterman local alignment against caller-supplied FASTA references. No E-values or calibrated homology claims.",
+                    sample = "{\"query\":\"ACGTACGT\",\"reference_fasta\":\">ref1\\nACGTACGT\\n>ref2\\nTTTTAAAA\",\"sequence_type\":\"DNA\",\"name\":\"Example pack\",\"version\":\"1\",\"license\":\"CC0-1.0\",\"source\":\"https://example.org/reference\"}",
+                    actionLabel = "Align local references",
                 ) }
             }
             if (capability?.id == "structure.ligand_site_candidates" ||

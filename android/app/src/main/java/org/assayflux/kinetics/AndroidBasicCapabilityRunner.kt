@@ -39,6 +39,8 @@ internal object AndroidBasicCapabilityRunner {
         "structure.chain_interface_contacts",
         "structure.alignment_coordinate_mapping",
         "structure.variant_coordinate_mapping",
+        "sequence.exact_reference_search",
+        "sequence.local_alignment_reference_search",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

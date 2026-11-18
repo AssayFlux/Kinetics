@@ -818,6 +818,56 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Requires a unique exact sequence match to the requested PDB chain",
             "Insertion-code-aware residue mapping is unsupported by the current atom model",
         ]
+    elif capability_id in {
+        "sequence.exact_reference_search",
+        "sequence.local_alignment_reference_search",
+    }:
+        import hashlib
+        from kinetics.sequence import iter_fasta_records
+        from kinetics.sequence_reference import (
+            ReferencePack, exact_reference_search, local_alignment_reference_search,
+        )
+        try:
+            parameters = json.loads(sequence_text)
+            query = parameters["query"]
+            fasta = parameters["reference_fasta"]
+            sequence_type = parameters["sequence_type"]
+            name = parameters["name"]
+            version = parameters["version"]
+            license_id = parameters["license"]
+            source = parameters["source"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "Provide query, reference_fasta, sequence_type and source/license metadata"
+            ) from exc
+        if not isinstance(fasta, str) or len(fasta.encode("utf-8")) > 1_000_000:
+            raise ValueError("Caller-supplied reference FASTA exceeds the 1 MB mobile limit")
+        pack = ReferencePack(
+            name=name,
+            version=version,
+            license=license_id,
+            source=source,
+            content_sha256=hashlib.sha256(fasta.encode("utf-8")).hexdigest(),
+        )
+        references = iter_fasta_records(fasta.splitlines())
+        if capability_id == "sequence.exact_reference_search":
+            result = exact_reference_search(
+                query, references, sequence_type=sequence_type, reference_pack=pack,
+                max_records=1_000, max_total_residues=1_000_000, max_query_residues=100_000,
+            )
+        else:
+            result = local_alignment_reference_search(
+                query, references, sequence_type=sequence_type, reference_pack=pack,
+                max_records=500, max_total_residues=250_000, max_query_residues=1_000,
+                max_alignment_cells=250_000, max_total_alignment_cells=2_000_000,
+                max_hits=50,
+            )
+        limitations = [
+            "Caller-supplied local FASTA only; the app does not download or independently verify this pack",
+            "Exact search reports exact full-length matches only; local alignment is exploratory identity scoring",
+            "No E-values, calibrated homology, family/domain membership or functional annotation",
+            "A no-hit result is not evidence of novelty",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

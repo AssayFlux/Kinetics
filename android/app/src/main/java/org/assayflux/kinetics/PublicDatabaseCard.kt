@@ -75,6 +75,23 @@ internal fun PublicDatabaseCard(
         }
     }
 
+    fun searchGeneLinks(hit: PublicDatabaseHit, database: String) {
+        busy = true
+        scope.launch {
+            val result = runCatching {
+                withContext(Dispatchers.IO) {
+                    client.searchNcbiGeneLinkedSequences(hit.accession, database)
+                }
+            }
+            hits = result.getOrDefault(emptyList())
+            message = result.fold(
+                { "${hit.title}: ${it.size} linked ${if (database == "nuccore") "nucleotide" else "protein"} records" },
+                { "NCBI Gene link lookup failed: ${it.message ?: "request error"}" },
+            )
+            busy = false
+        }
+    }
+
     fun fetchSequence(hit: PublicDatabaseHit) {
         busy = true
         analysisPreview = null
@@ -189,6 +206,12 @@ internal fun PublicDatabaseCard(
                     )
                     hit.description?.let {
                         Text(it, style = MaterialTheme.typography.bodySmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                    }
+                    if (hit.source == "NCBI Gene") {
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            TextButton(enabled = !busy, onClick = { searchGeneLinks(hit, "nuccore") }) { Text("Find nucleotide") }
+                            TextButton(enabled = !busy, onClick = { searchGeneLinks(hit, "protein") }) { Text("Find protein") }
+                        }
                     }
                     if (hit.source == "UniProtKB" || hit.database in setOf("nuccore", "protein")) {
                         TextButton(enabled = !busy, onClick = { fetchSequence(hit) }) { Text("Retrieve and analyse sequence") }

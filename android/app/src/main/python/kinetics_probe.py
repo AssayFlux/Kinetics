@@ -764,6 +764,60 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Heavy-atom geometric contact counts only; not an interface energy or affinity estimate",
             "No hydrogen placement, solvent, biological assembly or functional effect is inferred",
         ]
+    elif capability_id == "structure.alignment_coordinate_mapping":
+        from kinetics.structure import parse_pdb
+        from kinetics.structure_alignment import map_chain_sequence_by_alignment
+        try:
+            parameters = json.loads(sequence_text)
+            query = parameters["sequence"]
+            chain_id = parameters["chain_id"]
+            pdb_text = parameters["pdb"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError("Provide JSON with sequence, chain_id and pdb") from exc
+        if not isinstance(pdb_text, str) or len(pdb_text) > 1_000_000:
+            raise ValueError("PDB text exceeds the 1 MB mobile limit")
+        atoms = parse_pdb(pdb_text, include_hetero=False)
+        result = map_chain_sequence_by_alignment(
+            query, atoms, chain_id=chain_id,
+            minimum_identity=0.8, minimum_structure_coverage=0.8,
+            max_query_residues=2_000, max_structure_residues=2_000,
+            max_atoms=10_000, max_alignment_cells=250_000,
+        )
+        limitations = [
+            "Ambiguous optimal placements abstain rather than choosing arbitrarily",
+            "Only identical aligned residues are mapped; no structural or functional effect is predicted",
+            "Alignment thresholds are fixed at 80% identity and 80% structure coverage",
+        ]
+    elif capability_id == "structure.variant_coordinate_mapping":
+        from kinetics.sequence_structure import map_variant_to_structure
+        from kinetics.structure import parse_pdb
+        try:
+            parameters = json.loads(sequence_text)
+            query = parameters["sequence"]
+            chain_id = parameters["chain_id"]
+            position = parameters["position"]
+            reference = parameters["reference"]
+            alternate = parameters["alternate"]
+            pdb_text = parameters["pdb"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "Provide JSON with sequence, chain_id, position, reference, alternate and pdb"
+            ) from exc
+        if not isinstance(pdb_text, str) or len(pdb_text) > 1_000_000:
+            raise ValueError("PDB text exceeds the 1 MB mobile limit")
+        atoms = parse_pdb(pdb_text, include_hetero=False)
+        result = map_variant_to_structure(
+            query, atoms, chain_id=chain_id,
+            variant_position_1based=position,
+            reference_amino_acid=reference,
+            alternate_amino_acid=alternate,
+            max_query_residues=2_000, max_structure_residues=2_000, max_atoms=10_000,
+        )
+        limitations = [
+            "Coordinate correspondence only; no pathogenicity, stability, functional or clinical effect is predicted",
+            "Requires a unique exact sequence match to the requested PDB chain",
+            "Insertion-code-aware residue mapping is unsupported by the current atom model",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

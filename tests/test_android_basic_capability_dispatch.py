@@ -277,3 +277,26 @@ def test_phylogenetic_bootstrap_and_structure_mapping_routes_execute():
         __import__("json").dumps({"chain_a": "A", "chain_b": "B", "pdb": pdb}),
     )
     assert contacts
+
+def test_structure_alignment_and_variant_coordinate_mapping_routes():
+    pdb = (
+        "ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\n"
+        "TER\nEND\n"
+    )
+    aligned = _run_probe(
+        "structure.alignment_coordinate_mapping",
+        __import__("json").dumps({"sequence": "G", "chain_id": "A", "pdb": pdb}),
+    )
+    assert aligned
+    variant = _run_probe(
+        "structure.variant_coordinate_mapping",
+        __import__("json").dumps({
+            "sequence": "G",
+            "chain_id": "A",
+            "position": 1,
+            "reference": "G",
+            "alternate": "A",
+            "pdb": pdb,
+        }),
+    )
+    assert variant

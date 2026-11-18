@@ -467,6 +467,8 @@ private fun ServiceDetailScreen(
         "phylo.nj_site_bootstrap",
         "structure.exact_sequence_mapping",
         "structure.chain_interface_contacts",
+        "structure.alignment_coordinate_mapping",
+        "structure.variant_coordinate_mapping",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -745,6 +747,24 @@ private fun ServiceDetailScreen(
                     description = "Count inter-chain heavy-atom contacts and minimum residue-pair distances from PDB. Geometric contact evidence only.",
                     sample = "{\"chain_a\":\"A\",\"chain_b\":\"B\",\"pdb\":\"ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\nATOM      2  CA  GLY B   1      16.000  13.800   9.500  1.00 20.00           C\\nTER\\nEND\\n\"}",
                     actionLabel = "Count contacts",
+                ) }
+            }
+            if (capability?.id == "structure.alignment_coordinate_mapping") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "structure.alignment_coordinate_mapping",
+                    title = "Alignment-based coordinate mapping",
+                    description = "Map exact residue correspondences between a query protein and a PDB chain using bounded alignment. Ambiguous mappings abstain.",
+                    sample = "{\"sequence\":\"G\",\"chain_id\":\"A\",\"pdb\":\"ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\nTER\\nEND\\n\"}",
+                    actionLabel = "Map by alignment",
+                ) }
+            }
+            if (capability?.id == "structure.variant_coordinate_mapping") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "structure.variant_coordinate_mapping",
+                    title = "Variant-to-structure coordinate mapping",
+                    description = "Map a caller-specified amino-acid substitution to a uniquely matched PDB chain. Coordinate mapping only; no effect prediction.",
+                    sample = "{\"sequence\":\"G\",\"chain_id\":\"A\",\"position\":1,\"reference\":\"G\",\"alternate\":\"A\",\"pdb\":\"ATOM      1  CA  GLY A   1      12.000  13.800   9.500  1.00 20.00           C\\nTER\\nEND\\n\"}",
+                    actionLabel = "Map variant",
                 ) }
             }
             if (capability?.id == "structure.ligand_site_candidates" ||

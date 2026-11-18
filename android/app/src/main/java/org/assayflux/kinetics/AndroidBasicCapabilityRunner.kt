@@ -37,6 +37,8 @@ internal object AndroidBasicCapabilityRunner {
         "phylo.nj_site_bootstrap",
         "structure.exact_sequence_mapping",
         "structure.chain_interface_contacts",
+        "structure.alignment_coordinate_mapping",
+        "structure.variant_coordinate_mapping",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

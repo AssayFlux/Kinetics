@@ -213,7 +213,7 @@ class ResearchStoreMigrationTest {
             encryptedFile.writeBytes(ByteArray(LocalCrypto.HEADER_BYTES + 1))
             val finalization = runCatching {
                 store.completeImport(
-                    "cancelled-finalize", "e".repeat(64), 1L, encryptedFile.absolutePath,
+                    "cancelled-finalize", "e".repeat(64), 1, encryptedFile.absolutePath,
                 )
             }
             assertTrue(finalization.isFailure)

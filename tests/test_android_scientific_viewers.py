@@ -13,7 +13,9 @@ def test_home_routes_to_real_offline_structure_and_chemistry_viewers() -> None:
     chemistry = (
         ROOT / "android/app/src/main/java/org/assayflux/kinetics/I1ChemistryCard.kt"
     ).read_text()
-    assert "Scientific services" in ui
+    assert "ServiceDetailScreen" in ui
+    assert "HorizontalPager(" in ui
+    assert "OPEN SERVICE" in ui
     assert "fun ExploreScreen" not in ui
     assert "KineticsTab.Explore" not in ui
     assert "StructureViewerPreview(publicRecord = publicStructureRecord)" in ui

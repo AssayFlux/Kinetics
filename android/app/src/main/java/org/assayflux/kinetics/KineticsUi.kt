@@ -128,7 +128,7 @@ internal fun KineticsAppShell(
                         onQueryChange = { searchQuery = it },
                         jobs = jobs,
                         onSelectJob = { result -> workSearchQuery = result.title; showSearch = false; tab = KineticsTab.Work },
-                        onSelectCapability = { showSearch = false; tab = KineticsTab.Home }
+                        onSelectCapability = { showSearch = false; tab = KineticsTab.Home },
                         modifier = modifier,
                     )
                     else -> when (tab) {
@@ -427,7 +427,7 @@ private fun HomeScreen(
                     Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(service.name, fontWeight = FontWeight.SemiBold)
                         Text(service.domain, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(if (service.status == "implemented") "Available in this build" else "In development", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(if (service.status == "implemented") "Engine implemented · Android access varies" else "In development", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
             }

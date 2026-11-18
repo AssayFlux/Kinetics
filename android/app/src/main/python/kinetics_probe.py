@@ -269,3 +269,11 @@ def analyze_ligand_sdf_graph(source_text: str):
     from kinetics.chemistry import analyze_sdf_graph
 
     return json.dumps(analyze_sdf_graph(source_text), sort_keys=True)
+
+
+
+def summarize_vcf_research_qc(text: str) -> str:
+    """Android bridge for aggregate-only, bounded VCF syntax/QC; no genotype output."""
+    from kinetics.genomics import summarize_vcf_qc
+
+    return json.dumps(summarize_vcf_qc(text), ensure_ascii=False, sort_keys=True)

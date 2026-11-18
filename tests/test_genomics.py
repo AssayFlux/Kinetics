@@ -255,3 +255,41 @@ def test_bam_parser_rejects_invalid_header_budget() -> None:
 
     with pytest.raises(ValueError, match="max_header_bytes"):
         list(iter_bam_records(io.BytesIO(gzip.compress(b"NOPE")), max_header_bytes=0))
+
+
+
+def test_vcf_aggregate_qc_never_returns_sample_names_or_genotypes() -> None:
+    from kinetics.genomics import summarize_vcf_qc
+
+    text = (
+        "##fileformat=VCFv4.3\\n"
+        "#CHROM\\tPOS\\tID\\tREF\\tALT\\tQUAL\\tFILTER\\tINFO\\tFORMAT\\tPRIVATE_SAMPLE_ID\\n"
+        "chr1\\t10\\t.\\tA\\tG\\t50\\tPASS\\t.\\tGT\\t0/1\\n"
+        "chr1\\t20\\t.\\tC\\tT,G\\t.\\tLowQual\\t.\\tGT\\t1|2\\n"
+    )
+    result = summarize_vcf_qc(text)
+    assert result["record_count"] == 2
+    assert result["sample_count"] == 1
+    assert result["contig_record_counts"] == {"chr1": 2}
+    assert result["filter_counts"] == {"LowQual": 1, "PASS": 1}
+    assert result["multiallelic_record_count"] == 1
+    assert result["missing_quality_record_count"] == 1
+    assert "PRIVATE_SAMPLE_ID" not in str(result)
+    assert "0/1" not in str(result) and "1|2" not in str(result)
+    assert "genotypes" not in result and "samples" not in result
+
+
+def test_vcf_aggregate_qc_enforces_resource_bounds_and_requires_records() -> None:
+    from kinetics.genomics import summarize_vcf_qc
+
+    with pytest.raises(ValueError, match="5 MiB"):
+        summarize_vcf_qc("x" * (5 * 1024 * 1024 + 1))
+    with pytest.raises(ValueError, match="max_records"):
+        summarize_vcf_qc(
+            "#CHROM\\tPOS\\tID\\tREF\\tALT\\tQUAL\\tFILTER\\tINFO\\n"
+            "chr1\\t1\\t.\\tA\\tG\\t.\\tPASS\\t.\\n"
+            "chr1\\t2\\t.\\tA\\tC\\t.\\tPASS\\t.\\n",
+            max_records=1,
+        )
+    with pytest.raises(ValueError, match="no variant records"):
+        summarize_vcf_qc("#CHROM\\tPOS\\tID\\tREF\\tALT\\tQUAL\\tFILTER\\tINFO\\n")

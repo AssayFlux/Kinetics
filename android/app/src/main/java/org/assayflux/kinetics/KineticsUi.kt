@@ -882,6 +882,10 @@ fun ExploreScreen(modifier: Modifier, initialQuery: String = "") {
                     }
                 }
             }
+            item {
+                Text("U4 · STRUCTURE & CHEMISTRY VIEWERS", style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold)
+            }
             item { StructureViewerPreview() }
             if (entries.any { it.id == "chemistry.sdf_graph" && it.status == "implemented" }) {
                 item { LigandGraphPreviewCard() }
@@ -899,6 +903,14 @@ fun ExploreScreen(modifier: Modifier, initialQuery: String = "") {
             }
             if (entries.any { it.id == "sequence.genetic_code_candidate_inference" && it.status == "implemented" }) {
                 item { GeneticCodeInferenceCard() }
+            }
+            if (entries.any { it.id == "genomics.sam_vcf" && it.status == "implemented" }) {
+                item {
+                    Text("U5 · GENOMICS RESEARCH", style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold)
+                }
+                item { GenomicsVcfQcCard() }
+                item { U5ResearchGateCard() }
             }
             if (catalogue.isSuccess && visibleEntries.isEmpty()) {
                 item { Empty("No matching capabilities", "Try a different name, identifier or research domain.") }

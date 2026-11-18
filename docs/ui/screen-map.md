@@ -6,7 +6,7 @@
 |---|---|---|---|
 | ui.home | Home dashboard / import entry | ui.home | source present; D-015 refinement, brand integration and visual/device proof pending |
 | ui.work | Work / job list and actions | ui.work | source present; import/job actions exist; registry-backed catalogue only; full analysis dispatcher not connected |
-| ui.explore | Scientific capability catalogue | ui.explore | registry-backed catalogue; bounded FASTA and FASTQ QC cards launch from Explore; remaining listed tools are not dispatched |
+| ui.explore | Scientific capability catalogue | ui.explore | registry-backed catalogue; FASTA/FASTQ QC; offline structure viewer; SDF/MOL graph preview; S3 structure-site cards; S8 genetic-code candidate screen; aggregate-only VCF QC. PGx and host-only in-silico engines remain explicitly gated |
 | ui.settings | Settings / theme family and diagnostics | ui.settings | partial; persistent Light/Dark/System preference and diagnostics; accessibility/device proof pending |
 | ui.domains | Domain browser/detail | ui.domains | planned |
 | ui.tools | Tool search/favourites/runner | ui.tools | planned |
@@ -16,12 +16,12 @@
 | ui.sequence | Sequence viewer/editor | ui.sequence | FASTA basic QC and FASTQ quality-summary launch cards exist; dedicated sequence viewer/editor remains planned |
 | ui.alignment | Alignment viewer | ui.alignment | planned |
 | ui.tree | Tree viewer | ui.tree | planned |
-| ui.structure | 3D structure viewer | ui.structure | planned |
-| ui.chemistry | Chemistry viewer | ui.chemistry | planned |
+| ui.structure | Offline structure viewer | ui.structure | Explore-integrated PDB/mmCIF Canvas viewer; JSON/PNG/SVG/state export; physical-device acceptance open |
+| ui.chemistry | Chemistry graph viewer | ui.chemistry | Explore-integrated SDF/MOL graph-only preview; no RDKit sanitization or full 3D bond rendering claim |
 | ui.kinetics | Kinetics lab | ui.kinetics | planned |
-| ui.genomics | Genomics/variants | ui.genomics | planned |
-| ui.pgx | PGx Research Mode report | ui.pgx | planned; P0 blocks patient-facing interpretation |
-| ui.insilico | In-silico job builder | ui.insilico | planned; I2/I3 engine gates remain |
+| ui.genomics | Genomics/variants | ui.genomics | Explore-integrated aggregate-only VCF syntax/QC for synthetic or authorized public non-patient data; no sample/genotype output or reference concordance |
+| ui.pgx | PGx Research Mode report | ui.pgx | NOT ENABLED; P0 NOT APPROVED, licensed definitions and independent P2/P3 evidence outstanding |
+| ui.insilico | In-silico job builder | ui.insilico | NOT ENABLED on Android; host adapters only, compute-node/force-field/model and independent I2–I4 evidence gates remain |
 | ui.charts | Charts studio | ui.charts | planned |
 | ui.packs | Data pack manager | ui.packs | planned |
 | ui.provenance | Provenance viewer | ui.provenance | planned |

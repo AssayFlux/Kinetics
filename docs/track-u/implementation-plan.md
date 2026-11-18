@@ -72,10 +72,15 @@ The UI must reflect actual repository capability, not a generic scientific app.
 5. Clinical/PGx interpretation remains disabled; Research Mode only. See `u3-scientific-workflows-results.md`.
 
 ### U4 — Scientific viewers
-Mol*/3Dmol.js, alignment, tree, chart and chemistry viewers only after S1–S3 contracts, dependency/licence approval, secure offline bridge and measured low-end-device performance budgets. Do not add viewer libraries before approval.
+1. Implemented in Explore without new viewer dependencies: offline PDB/mmCIF Canvas structure viewer via AndroidX WebViewAssetLoader; local SAF import; hardened no-network/no-file/no-content/no-generic-bridge WebView; bounded JSON/PNG/SVG export and serializable view state.
+2. Integrated SDF/MOL graph-only chemistry preview and existing S3 ligand-site/apo-pocket candidate cards with explicit non-interpretive limitations.
+3. Remaining: physical low-end ARM64 memory/performance, supported WebView/device matrix, accessibility/lifecycle/import-export failure tests and independent S1–S3 scientific concordance. Alignment/tree/chart and full 3D chemistry are not claimed. See docs/track-u/u4-scientific-viewers.md. Do not add viewer libraries before approval.
 
 ### U5 — Genomics / PGx / in-silico screens
-Only after P1–P3 and I2–I4 dependencies. Synthetic/public non-patient fixtures only under existing gates. No patient-facing or clinical interpretation while P0 is blocked.
+1. Implemented: Explore includes a 5 MiB SAF VCF aggregate-QC surface, gated by explicit synthetic/authorized public non-patient attestation. Parser ceilings are 10,000 records/32 sample columns; results expose aggregate counts and SHA-256 only, never sample names or genotype strings; input/result are not persisted/exported.
+2. PGx remains unavailable in Android: no individual genotype, star-allele/diplotype/phenotype or guideline recommendations while P0 is NOT APPROVED and P2/P3 source/validation gates remain open.
+3. Docking/OpenMM/ADMET remain host-side or unselected; no secured compute node, approved force field or approved model/dataset exists. Do not add fake Android run actions.
+4. Remaining: P1 source terms/reference concordance/device verification; P2 licensed definitions/biological validation; P3 guideline source review; I2 redocking/cross-docking; I3 force-field/biomolecular validation; I4 licensed dataset/model calibration. See docs/track-u/u5-genomics-pgx-research.md.
 
 ### U6 — Quality, localisation and usability
 Responsive window matrix, RTL, font scaling, screen readers, keyboard/switch navigation, reduced motion, contrast, screenshot diffs, performance, process death, rotation, resize, offline, storage and usability evidence.

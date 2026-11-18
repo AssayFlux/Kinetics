@@ -2943,3 +2943,10 @@ Continue U0 token/component integration into actual screens, run exact-branch CI
 - Home now exposes "Find nucleotide" and "Find protein" actions on NCBI Gene results.
 - Added validation tests for numeric Gene IDs and supported linked databases, plus static integration assertions.
 - This closes the previous metadata-only Gene search gap at source level; exact-head CI and provider-response/device tests remain pending.
+
+
+## 2026-11-18 — Android package and JVM test verification
+
+- CI run 2985 (44229328602) on commit 3dfc8b903f6928b65e673b2bb9a7ffb0586ff335 successfully built arm64 debug APK and AAB and passed package/native 16 KiB alignment verification.
+- The same run's Android JVM test stage exposed a test-fixture compile error in ResearchStoreMigrationTest.kt: a Long literal was passed where the current completeImport contract expects an Int. Corrected the fixture from 1L to 1 at commit 2334b0703553e833adbf6a8de44c28826aebf05a.
+- The generated APK/AAB from 3dfc is not treated as a release candidate because the JVM test stage failed and later source changes are present on main. Exact-current-main build plus JVM tests and artifact hash verification remain required.

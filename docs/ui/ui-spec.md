@@ -100,11 +100,11 @@ Consistent spacing, typography, radii, icons and component heights; balanced whi
 
 ## Product and engineering constraints
 - The active visual system does not change KINETICS product scope or architecture.
-- Home/Work/Explore/Settings must use real app state and supported operations.
+- Home/Work/Settings must use real app state and supported operations. The separate Explore destination is removed; registered services are surfaced in the Home carousel and service list.
 - No runnable capability without a real registry entry, dispatcher, input/result contract and tests.
 - Local biometric app lock must not be represented as cloud account authentication.
 - Preserve all owner assets byte-for-byte. Font binaries, icon libraries and other dependencies require licence/glyph/platform review.
-- No patient/clinical data, diagnosis, treatment, dosing or Clinical Mode. P0 remains blocked.
+- Owner-authorized patient-data research testing is permitted only within the institutional approval scope declared under D-024; no patient data in GitHub/CI/logs. Diagnosis, treatment/dosing recommendations and Clinical Mode remain disabled.
 - Screenshot concepts are not running-app evidence. Device and accessibility status remain NOT RUN until recorded.
 
 ## Track U

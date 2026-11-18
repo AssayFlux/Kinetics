@@ -81,7 +81,7 @@ Every fetched record should retain: source ID/name, exact request URL (redact qu
 - Only public search terms and accessions are sent to providers. Patient inputs and private research metadata are not uploaded.
 
 ### Not yet complete / not claimed
-- NCBI Gene search currently returns metadata; gene-to-transcript/protein ELink resolution is not yet wired into the result action.
+- NCBI Gene results now expose ELink discovery actions for linked nucleotide and protein records, which can be fetched and analysed through the same FASTA path.
 - Saved records are listed, deletable, reopenable (mmCIF) and re-analysable (FASTA); a richer saved-record detail/browser is still open.
 - The public record metadata index and analysis JSON are app-private SQLite but are not encrypted at rest; only raw source payloads use the Android Keystore AES-GCM file format.
 - Explicit user cancellation, retry/backoff, ETag/source-release capture, licence/terms metadata, cache quota/eviction and background WorkManager retrieval are not yet implemented.

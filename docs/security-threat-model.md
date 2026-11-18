@@ -7,7 +7,7 @@
 ## 1. Security objectives and invariants
 
 - Preserve confidentiality and integrity of user-provided research files and derived outputs.
-- Keep local workflows offline by default; no upload, telemetry or remote processing is enabled by this threat model.
+- Keep local workflows offline by default. User-initiated public-reference GET requests are enabled for allow-listed NCBI, UniProt and RCSB endpoints; no patient-data upload, telemetry or remote scientific processing is enabled.
 - Treat user-selected files, SAF providers, data packs, metadata, URI values, parser inputs and all dependency artifacts as untrusted.
 - Keep plaintext, keys, tokens and sensitive paths out of logs.
 - Authenticate encrypted content; reject unknown versions and authentication failures without downgrade.
@@ -40,7 +40,7 @@
 6. **Data-pack boundary:** manifests and checksums can detect corruption but do not authenticate a publisher without a verified signature/trust root.
 7. **Build/supply-chain boundary:** Gradle plugins, Maven artifacts, PyPI wheels, Cargo crates, NDK/CMake and downloaded tools are untrusted until pinned, hashed and reviewed.
 8. **Export boundary:** SAF export intentionally sends user-selected content to an external provider/location; the app cannot control subsequent copies.
-9. **Remote boundary:** the source Android manifest currently declares no INTERNET permission. Any future network/remote-node feature is a new trust boundary requiring separate permission, consent, protocol, privacy and security review.
+9. **Public-reference network boundary:** the Android manifest declares INTERNET for explicit public-reference retrieval. The current client permits HTTPS GET only to allow-listed NCBI, UniProt and RCSB hosts, rejects redirects and enforces timeouts/response caps. Only public search terms and accessions may cross this boundary; patient inputs, VCFs, sample identifiers and derived results must never be sent. Runtime traffic capture and merged-manifest verification remain open. Any additional provider or remote compute feature requires separate review.
 
 ## 4. Threat register
 
@@ -57,7 +57,7 @@
 | T-09 | Lost/stolen/rooted device exposes data | Keystore-backed encryption and app-private storage | Root/instrumentation/OS compromise, screenshot and lock behavior need device review |
 | T-10 | Export sends confidential content to unintended destination | Explicit user-selected SAF action | Destination confirmation, partial-write and user disclosure tests open |
 | T-11 | Backup/restore or key loss causes disclosure or irreversible loss | Source manifest sets allowBackup=false | Merged-manifest/OEM/Keystore invalidation tests open |
-| T-12 | Unauthorized remote processing or data exfiltration | No INTERNET permission in inspected source manifest; network off by default | Verify merged manifest and runtime traffic; any network addition reopens G1/G4 |
+| T-12 | Unauthorized remote processing or data exfiltration | Explicit public-reference GET only; allow-listed HTTPS hosts, no redirects, bounded responses; private research inputs are not sent | Verify merged manifest, runtime traffic, DNS/redirect behavior and provider request contents; remote compute remains disabled |
 | T-13 | Malicious intent/clipboard/overlay surface | Minimise exported components and sensitive clipboard use | Merged-manifest audit and interaction tests open |
 | T-14 | Supply-chain license/security obligations missed | Candidate-only third-party register and source SPDX inventory | Exact resolved artifact and file-level review open |
 
@@ -89,3 +89,8 @@ Rooted or OS-compromised devices, malicious system providers, physical forensic 
 ## 8. Independent assessment requirement
 
 This is an engineering model, not an independent security assessment, penetration test, certification or risk acceptance. A qualified assessor must review the exact release artifact and source, report findings, verify remediation and document residual risk. No patient/clinical workflow may be enabled on the basis of this document.
+
+
+## Public-reference network boundary update — 2026-11-18
+
+The app now requests INTERNET permission for user-initiated public database retrieval. This is a deliberately limited network feature, not a general remote-compute channel. The current transport allow-list is NCBI E-utilities, UniProt REST and RCSB PDB file delivery. The client uses HTTPS GET, disables redirects and enforces response ceilings and timeouts. The UI discloses that imported patient data is never uploaded. The source-level control is not a substitute for merged-manifest inspection, runtime packet capture, provider endpoint verification or an independent security review. No patient or private research data may be included in provider requests.

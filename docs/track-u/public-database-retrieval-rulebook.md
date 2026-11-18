@@ -1,6 +1,6 @@
 # Public database retrieval and scientific format rulebook
 
-**Status:** Connector foundation specified; Android direct HTTPS adapters added for NCBI Gene search, NCBI nucleotide/protein FASTA retrieval, UniProtKB search/FASTA retrieval and RCSB PDB mmCIF retrieval. A user-facing search/import workflow, persistent provenance store, offline cache policy, broader database coverage and full parser/engine integration remain open.
+**Status (2026-11-18):** Android Home search/retrieval is integrated for NCBI Gene, NCBI Nucleotide, NCBI Protein, UniProtKB and RCSB PDB-by-ID. Retrieved FASTA is encrypted locally and passed to the existing on-device FASTA QC workflow; retrieved RCSB mmCIF is encrypted locally and passed to the existing Python parser and offline structure viewer. Exact-head CI, device acceptance, provider rate-limit/retry behavior, complete source licence metadata and broader database coverage remain open.
 
 ## Product contract
 
@@ -69,6 +69,25 @@ Structure: parse coordinates → validate geometry → select model/chain/assemb
 
 Every fetched record should retain: source ID/name, exact request URL (redact query values if sensitive), accession, source release/version or ETag/Last-Modified, UTC retrieved time, MIME type, byte count, SHA-256, parser/version, licence and terms URL, user-selected retention policy, and downstream engine/version/parameters. Do not persist a public record until the user has chosen to save it.
 
-## Implementation boundary
+## Android integration status — 2026-11-18
 
-The initial Android client is a transport adapter only. It does not yet expose a complete in-app search screen, persistent cache, mmCIF parser, or automatic dispatch into sequence/structure engines. Those are separate implementation steps and must not be described as complete until the UI and exact-source tests exist. The public-data catalogue remains metadata-only; source-specific reuse terms must be reviewed before bulk mirroring or redistribution.
+### Implemented in source
+- Home exposes NCBI Gene, NCBI Nucleotide, NCBI Protein, UniProtKB and RCSB PDB-by-ID search/retrieval controls.
+- Public retrieval uses allow-listed HTTPS hosts, GET-only requests, timeouts, response byte ceilings, strict accession checks and no automatic redirects.
+- Sequence records are fetched as FASTA, SHA-256 checked, encrypted in app-private no-backup storage using the existing Android Keystore AES-GCM chunk format, and indexed in a separate SQLite metadata store.
+- Retrieved FASTA is passed to the existing embedded Python `kinetics_probe.analyze_fasta` workflow; analysis JSON is retained with the public record. This is the existing bounded research QC workflow, not a new alignment/annotation engine.
+- RCSB mmCIF is encrypted and indexed, then passed to the existing `prepare_structure_viewer_import` Python adapter and offline WebView structure viewer. The viewer's 16 MiB parser limit remains authoritative.
+- Saved public records are listed on Home and can be deleted. Deletion removes the encrypted payload and its index row.
+- Only public search terms and accessions are sent to providers. Patient inputs and private research metadata are not uploaded.
+
+### Not yet complete / not claimed
+- NCBI Gene search currently returns metadata; gene-to-transcript/protein ELink resolution is not yet wired into the result action.
+- Saved records are listed and deletable, but there is not yet a complete saved-record reopen/reanalyse browser.
+- The public record metadata index and analysis JSON are app-private SQLite but are not encrypted at rest; only raw source payloads use the Android Keystore AES-GCM file format.
+- Explicit user cancellation, retry/backoff, ETag/source-release capture, licence/terms metadata, cache quota/eviction and background WorkManager retrieval are not yet implemented.
+- RCSB search by molecule/protein/organism is not yet implemented; retrieval currently requires a four-character PDB entry ID.
+- ENA, Ensembl, PubChem, AlphaFold DB, GEO, SRA and additional providers remain future adapters.
+- The structure pipeline reuses the existing bounded coordinate parser/viewer. It does not infer bonds, biological assemblies, secondary structure or confidence.
+- Sequence retrieval invokes the existing FASTA QC workflow only. It does not automatically run every sequence capability.
+
+The public-data catalogue remains descriptive metadata. A source is not enabled for bulk mirroring or redistribution until its terms, licence, attribution, rate limits and intended-use requirements are reviewed. CI success does not establish provider availability or scientific validity.

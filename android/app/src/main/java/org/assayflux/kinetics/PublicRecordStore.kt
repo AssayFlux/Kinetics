@@ -123,6 +123,22 @@ internal class PublicRecordStore(context: Context) :
         }
     }
 
+    fun loadRecord(id: String): PublicScientificRecord? {
+        val metadata = get(id) ?: return null
+        val content = withContent(id) { file ->
+            file.readText(Charsets.UTF_8)
+        } ?: return null
+        return PublicScientificRecord(
+            source = metadata.source,
+            accession = metadata.accession,
+            format = metadata.format,
+            sourceUrl = metadata.sourceUrl,
+            retrievedAt = metadata.retrievedAt,
+            sha256 = metadata.sha256,
+            content = content,
+        )
+    }
+
     fun delete(id: String): Boolean {
         val path = encryptedPath(id) ?: return false
         val directory = File(appContext.noBackupFilesDir, "public-records").canonicalFile

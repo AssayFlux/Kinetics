@@ -31,6 +31,22 @@ class PublicDatabaseClientValidationTest {
     }
 
     @Test
+    fun rejectsNonNumericGeneIdentifierBeforeNetwork() {
+        val error = runCatching {
+            client.searchNcbiGeneLinkedSequences("TP53", "nuccore")
+        }.exceptionOrNull()
+        assertTrue(error is IllegalArgumentException)
+    }
+
+    @Test
+    fun rejectsUnsupportedGeneLinkDatabaseBeforeNetwork() {
+        val error = runCatching {
+            client.searchNcbiGeneLinkedSequences("7157", "sra")
+        }.exceptionOrNull()
+        assertTrue(error is IllegalArgumentException)
+    }
+
+    @Test
     fun rejectsUnsupportedFetchDatabaseBeforeNetwork() {
         val error = runCatching { client.fetchNcbiFasta("sra", "SRR123") }.exceptionOrNull()
         assertTrue(error is IllegalArgumentException)

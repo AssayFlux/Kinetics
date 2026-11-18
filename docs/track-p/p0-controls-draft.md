@@ -1,8 +1,10 @@
 # P0 — Internal control and validation drafts
 
-**Status: DRAFT — FOR OWNER / QUALIFIED REVIEW — NOT APPROVED.**  
-**Applies to:** current public-non-patient metadata and synthetic-fixture engineering only.  
-**Does not authorize:** patient data, human-subject research, clinical interpretation, clinical decision support, prospective evaluation or regulated deployment.
+**Status: OWNER-AUTHORIZED RESEARCH TESTING; CONTROL VERIFICATION CONTINUES.**  
+**Applies to:** software engineering and research testing with synthetic, public or institutionally approved datasets within the exact approved protocol.  
+**Does not authorize by itself:** clinical interpretation, diagnosis, treatment/dosing recommendations, clinical decision support, public clinical deployment or regulated market release.
+
+The project owner declares institutional ethics approval obtained on 2026-11-18. The approval record and exact scope must be attached before the dataset is treated as verified as in-scope. The declaration is not independent verification.
 
 This document turns the P0 evidence register into concrete engineering drafts. It does not establish a lawful basis, classify the product in any jurisdiction, constitute a privacy impact assessment approved by a competent party, prove security controls, certify a QMS or validate clinical performance.
 
@@ -11,12 +13,12 @@ This document turns the P0 evidence register into concrete engineering drafts. I
 | Field | Draft position | Review status |
 |---|---|---|
 | Current product purpose | Offline-first computational biology / in-silico research workbench | Owner and qualified reviewer confirmation pending |
-| Current permitted inputs | Generated synthetic fixtures; public non-patient source metadata; exact public resources only after source-specific terms review | Enforced engineering boundary is partial; independent security review pending |
+| Current permitted inputs | Synthetic fixtures; public source metadata/resources after source-specific terms review; patient-derived research datasets only within the institutional approval scope declared under D-025 | Enforced engineering boundary is partial; independent security review pending |
 | Current outputs | Exploratory computational summaries with input digest, reference/build provenance, method/version and limitations where implemented | Per-capability verification and wording review pending |
 | Proposed users | Bioinformatics / computational-biology researchers and software engineers; final user population not approved | Owner/adviser review pending |
 | Deployment | Android application and research software; public deployment and supported device claims not approved | Device and release evidence pending |
 | Excluded uses | Patient-specific diagnosis, risk scoring, treatment/medication selection, dosing, prescribing, clinical decision support and patient-facing reports | Must remain disabled |
-| Human-subject use | No recruitment, consent, intervention or prospective evaluation | Ethics determination required before any such activity |
+| Human-subject use | Only within the exact institutional approval and its procedures; no recruitment/intervention workflow is implemented in this app | Follow the approved protocol; separate implementation and verification required |
 | Jurisdictions | Not yet enumerated for any clinical or patient-data use | Qualified local legal/regulatory review required |
 | Claims | No clinical validity, clinical utility, regulatory compliance or diagnostic accuracy claims | Claims review required before publication/release |
 
@@ -31,22 +33,22 @@ The eventual PGx objective is a research direction only. A capability name, pars
 | Generated synthetic fixtures | Allowed for software tests | Label as synthetic; deterministic provenance where practical; never represent as biological cohort evidence |
 | Public source metadata | Allowed for catalogue discovery | Metadata only; source terms and attribution still require review |
 | Public non-patient payloads | Not yet approved by default | Exact accession/release, terms, attribution, intended use and digest must be reviewed before retrieval/retention |
-| Patient / clinical records | Prohibited | No import, storage, transfer, processing or testing |
-| Human-subject / identifiable data | Prohibited | No recruitment, consent collection, intervention or analysis |
+| Patient / clinical records | Owner-authorized only within the declared institutional approval scope | Confirm exact protocol coverage, consent/waiver and permitted processing; keep on approved device/environment; never commit or upload to GitHub, CI, issues, logs or public artifacts |
+| Human-subject / identifiable data | Only where the exact activity is covered by institutional approval | Follow approved recruitment, consent, access, minimisation, retention and withdrawal procedures; no out-of-scope use |
 | Unknown-provenance data | Prohibited | Quarantine outside the application; do not infer non-patient status |
 
 ### 2.2 Data minimisation and lifecycle
 
-- Collect no direct identifiers, patient records, sample identifiers or individual-level clinical data in Track P before formal P0 approval.
+- Collect and process only the minimum patient or human-subject data required by the approved protocol; do not add direct identifiers unless explicitly required and authorized. Keep source data out of GitHub, CI, logs, fixtures and public artifacts.
 - Keep the committed public dataset catalogue metadata-only. An empty entries array means no payload is approved or acquired.
 - For any future public non-patient payload, record exact accession/version, source and licence URLs, terms, attribution, retrieval timestamp, intended use, SHA-256, storage location, retention owner and known limitations before intake.
 - Do not treat a URL, public availability, repository licence or owner authorization as permission to redistribute a third-party resource.
 - Do not place secrets, credentials, private keys or sensitive records in source control, CI logs, fixtures or issue reports.
-- Retention/deletion periods, controller/processor roles, lawful basis, data-subject handling, cross-border transfer and breach notification obligations remain undetermined pending qualified jurisdiction-specific advice.
+- Record retention/deletion periods, controller/processor roles, lawful basis, data-subject handling, cross-border transfer and breach notification obligations for the approved protocol; unresolved jurisdiction-specific issues remain deployment blockers.
 
 ### 2.3 Data-flow boundary
 
-Current intended flow is: synthetic fixture / reviewed public non-patient source → bounded parser → validated schema → provenance-bearing exploratory result. The flow must fail closed on malformed input, unverified source terms, unsupported variant representations or mismatched reference metadata. No clinical system, patient repository or external clinical service is connected or authorized.
+Current intended flow is: synthetic/public input or an institutionally approved patient-derived research dataset → authorized local device/environment → bounded parser → validated schema → provenance-bearing exploratory result. The flow must fail closed on malformed input, out-of-scope data, unverified public-source terms, unsupported variant representations or mismatched reference metadata. No clinical system, patient repository or external clinical service is connected or authorized.
 
 ## 3. P-specific threat-model draft
 
@@ -127,4 +129,19 @@ The project owner is accountable for internal stop-work and release decisions. N
 
 For each section, record: reviewer name/role, competence and conflicts, organization, jurisdiction/scope, review date, comments, evidence link, unresolved findings, disposition and signature/approval method. Do not populate reviewer identity or approval status until an actual review occurs.
 
-**Current disposition:** all sections above are engineering drafts only. P0 remains **BLOCKED / NOT APPROVED**. No patient/human-subject activity, individual PGx interpretation, clinical recommendation or Clinical Mode is enabled.
+**Current disposition:** D-025 opens engineering and institutionally authorized research testing. The owner declares institutional approval obtained; its source record and exact scope remain pending attachment. Independent security/privacy review, scientific validation and clinical deployment authorization remain open. Clinical interpretation, clinical recommendations and Clinical Mode remain disabled.
+
+
+## 8. Owner-authorized patient-data research testing
+
+The project owner has authorized full engineering and research testing and declares institutional ethics approval obtained. This permits implementation and testing with data only to the extent that the exact dataset and operation fall within the approval. The approval number, institution, date and protocol scope remain pending attachment to the approval register.
+
+Operational controls for testing:
+- Use the institution-approved device, account, storage location and network boundary.
+- Keep patient data out of source control, GitHub, pull requests, issues, CI, test fixtures, crash reports, analytics and public build artifacts.
+- Do not use real patient data in automated CI; use synthetic fixtures for reproducible tests.
+- Limit access to authorized personnel and minimum necessary fields.
+- Preserve provenance and audit events without logging identifiers or raw sequences.
+- The current Android implementation encrypts imported input payloads at rest; SQLite job metadata and saved analysis-result JSON are not separately encrypted. Do not assume the entire application data store is encrypted.
+- Stop processing if the data or intended operation falls outside the approved protocol.
+- This authorization is for research testing, not for clinical decision-making or patient-care deployment.

@@ -11,7 +11,7 @@
 
 Track G's bounded G0–G7 engineering foundation was reported CLOSED on exact main commit 31b1618c4e843d0ec90feb2ceae0d0e4fb1615b1; exact-head CI workflow 44108451571 passed 9/9 jobs. The overall G acceptance remains OPEN for independent reviews, owner policy/risk acceptance, full resolved SBOM/licensing, physical-device checks, named specialist appointments and operational exercises. Those carry-forward obligations do not prevent starting U's bounded engineering foundation; they are not waived by U.
 
-Pre-existing U0–U3 code and documents are retained as partial baseline, not retroactively accepted. Current source includes a four-destination Compose shell (Home, Work, Explore, Settings), adaptive bottom bar/rail/drawer classification, Light/Dark/System theme preference, a biometric local app-lock path, a horizontal dashboard carousel, registry-backed Explore catalogue, WorkManager/SAF job flows and bounded FASTA/FASTQ launch cards. CI evidence previously cited for some source is historical and must be rechecked at the new exact head. The complete UI remains incomplete.
+Pre-existing U0–U3 code and documents are retained as partial baseline, not retroactively accepted. Current source is being revised to a three-destination Compose shell (Home, Work, Settings), adaptive bottom bar/rail/drawer classification, System appearance by default, a biometric local app-lock path, a service-populated Home carousel, WorkManager/SAF job flows and bounded FASTA/FASTQ launch cards. CI evidence previously cited for some source is historical and must be rechecked at the new exact head. The complete UI remains incomplete.
 
 ## 2. Owner design contract — V1
 
@@ -35,7 +35,7 @@ The UI must reflect actual repository capability, not a generic scientific app.
 |---|---|---|
 | Home | ResearchStore jobs, import action, runtime diagnostics | Counts and activity derive from real persisted jobs; empty state when none |
 | Work | SAF import, WorkManager lifecycle, encrypted ResearchStore, export/provenance actions | Show actual states; preserve cancel/resume/recovery/delete/export semantics |
-| Explore | capabilities/registry.yaml and Android dispatcher map | Show maturity/availability; only show Run when a real dispatcher, input contract and result path exist |
+| Home services | capabilities/registry.yaml and Android dispatcher map | Surface every registered capability without internal track IDs; distinguish implemented engine from Android execution availability |
 | Settings | persisted appearance, diagnostics, biometric local lock and app settings | No fake account/profile, inert settings or false security promises |
 | Authentication / local lock | existing local app-lock and AndroidX BiometricPrompt integration | Clearly distinguish local app lock from remote account sign-in; no invented identity provider |
 | Research analysis | current FASTA QC and FASTQ quality-summary launch paths | Do not imply all registry tools are runnable |
@@ -72,12 +72,12 @@ The UI must reflect actual repository capability, not a generic scientific app.
 5. Clinical/PGx interpretation remains disabled; Research Mode only. See `u3-scientific-workflows-results.md`.
 
 ### U4 — Scientific viewers
-1. Implemented in Explore without new viewer dependencies: offline PDB/mmCIF Canvas structure viewer via AndroidX WebViewAssetLoader; local SAF import; hardened no-network/no-file/no-content/no-generic-bridge WebView; bounded JSON/PNG/SVG export and serializable view state.
+1. Implemented on Home without new viewer dependencies: offline PDB/mmCIF interactive 3D coordinate viewer via AndroidX WebViewAssetLoader; local SAF import; hardened no-network/no-file/no-content/no-generic-bridge WebView; bounded JSON/PNG/SVG export and serializable view state.
 2. Integrated SDF/MOL graph-only chemistry preview and existing S3 ligand-site/apo-pocket candidate cards with explicit non-interpretive limitations.
 3. Remaining: physical low-end ARM64 memory/performance, supported WebView/device matrix, accessibility/lifecycle/import-export failure tests and independent S1–S3 scientific concordance. Alignment/tree/chart and full 3D chemistry are not claimed. See docs/track-u/u4-scientific-viewers.md. Do not add viewer libraries before approval.
 
 ### U5 — Genomics / PGx / in-silico screens
-1. Implemented: Explore includes a 5 MiB SAF VCF aggregate-QC surface, gated by explicit synthetic/authorized public non-patient attestation. Parser ceilings are 10,000 records/32 sample columns; results expose aggregate counts and SHA-256 only, never sample names or genotype strings; input/result are not persisted/exported.
+1. Implemented: Home includes a 5 MiB SAF VCF aggregate-QC surface, gated by operator confirmation of institutional authorization for the selected research dataset. Parser ceilings are 10,000 records/32 sample columns; results expose aggregate counts and SHA-256 only, never sample names or genotype strings; input/result are not persisted/exported.
 2. PGx remains unavailable in Android: no individual genotype, star-allele/diplotype/phenotype or guideline recommendations while P0 is NOT APPROVED and P2/P3 source/validation gates remain open.
 3. Docking/OpenMM/ADMET remain host-side or unselected; no secured compute node, approved force field or approved model/dataset exists. Do not add fake Android run actions.
 4. Remaining: P1 source terms/reference concordance/device verification; P2 licensed definitions/biological validation; P3 guideline source review; I2 redocking/cross-docking; I3 force-field/biomolecular validation; I4 licensed dataset/model calibration. See docs/track-u/u5-genomics-pgx-research.md.
@@ -110,7 +110,7 @@ Required test families:
 - Navigation and every interactive control's real action/state transition.
 - Home/Work empty, loading, success, partial, failure and recovery-required states.
 - SAF import/export, cancellation, resume, process death, Keystore loss and encrypted storage regression.
-- Explore registry maturity and dispatcher gating.
+- Home service catalogue accuracy and Android execution-path mapping.
 - Accessibility: minimum 48 dp targets, labels, focus, TalkBack, 200% font scale, contrast and reduced motion.
 - Window matrix: 360×800, 393×852, 430×932, tablet 600 dp+, landscape, split-screen, RTL and keyboard.
 - Offline behavior and no unintended network/telemetry.
@@ -119,7 +119,7 @@ Required test families:
 
 - No generic fabricated user profile, cloud account, fake login, sample research jobs or placeholder success.
 - No claims of device support without named-device evidence.
-- No patient data, clinical mode, diagnosis, treatment, dosing or clinical PGx interpretation; P0 remains NOT APPROVED.
+- Patient-data research testing is owner-authorized only within the declared institutional approval (D-025); clinical mode, diagnosis, treatment/dosing and clinical PGx interpretation remain disabled.
 - No motif/font/viewer additions until their respective provenance, licence, accessibility and dependency gates pass.
 - No fold/hinge-safe claim until WindowManager posture integration and tests exist.
 - G independent/operational acceptance obligations remain carry-forward and are not declared complete.

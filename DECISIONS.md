@@ -19,6 +19,7 @@ Open questions are not decisions. Record date, context, options, choice, consequ
 | D-020 | 2026-11-09 | Close R host audit and proceed to S | Approved — close the R implementation/host-regression audit on exact-source CI #2126, consolidate documentation, then begin S. Does not waive or relabel open R device, external-science, licensing, security, accessibility or release evidence | Project owner |
 | D-022 | 2026-11-11 | Start Track P and prepare P0 | Approved — start P engineering and P0 evidence preparation; formal P0 gate remains NOT APPROVED pending independent evidence and a separate owner gate decision | Project owner |
 | D-023 | 2026-11-12 | Add Track U after Track G in sequential execution order | Approved — current order is R → S → I → P → G → U; supersedes D-019's five-track order while preserving its historical record and two-step gate | Project owner |
+| D-025 | 2026-11-18 | Open engineering and institutional research-testing scope | Approved — owner declares institutional ethics approval obtained and authorizes patient-data research testing within its exact scope; approval record pending attachment; clinical deployment remains separate | Project owner |
 
 ## D-000 — Direction baseline (approved)
 - Context: Owner supplied complete Kinetics master and instructed work to follow Parts 1–18 with approval gates.
@@ -234,3 +235,12 @@ The following historical decisions are retained for auditability but are no long
 - Retained constraints: D-015 remains historical evidence and its non-conflicting requirements remain active: preserve owner-supplied artwork byte-for-byte; use native Jetpack Compose; retain real Kinetics workflows and Research Mode boundaries; do not invent accounts, jobs, metrics, results, scientific dispatchers or device support; keep typography/font licensing checks; do not enable unreviewed decorative assets. Existing scientific, privacy, security, licensing, architecture and phase gates are unchanged.
 - Consequences: docs/ui/kinetics-visual-design-system.md, docs/ui/ui-spec.md, KINETICS_UI_SPEC.md, tokens/generator, Compose primitives, screen implementations, screenshots, contrast/accessibility tests and roadmap evidence must be reconciled to V1. No claim of implementation or visual verification follows from this decision alone.
 - Approver: Project owner, explicit instruction in chat on 2026-11-17.
+
+
+## D-025 — Owner authorization for full engineering and institutional research testing
+
+**Date:** 2026-11-18  
+**Decision:** Open blanket engineering-development blockers, including the P0 development/testing blocker, and proceed with the complete KINETICS implementation. The project owner declares that institutional ethics approval has been obtained and expressly authorizes testing with patient data within the scope of that approval.  
+**Consequences:** Engineering may implement and test the full software system. Patient-data testing must remain within the exact institutional protocol, consent/waiver, approved environment and applicable law. Patient data must never be placed in source control, GitHub issues/PRs, CI, fixtures, logs or public artifacts. Clinical diagnosis, treatment/dosing recommendations, patient-facing clinical decision support and production clinical deployment are not implicitly approved by this engineering decision.  
+**Approval record:** Institution, committee, approval/reference number, date, protocol version and conditions are pending attachment. The repository records the owner's declaration and does not claim independent verification.  
+**Approver:** Project owner (explicit instruction in project conversation).

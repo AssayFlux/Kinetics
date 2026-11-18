@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Search
@@ -50,7 +49,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 internal enum class KineticsTab(val label: String) {
-    Home("Home"), Work("Work"), Explore("Explore"), Settings("Settings")
+    Home("Home"), Work("Work"), Settings("Settings")
 }
 
 @Composable
@@ -58,7 +57,6 @@ private fun KineticsTabIcon(tab: KineticsTab) {
     val image = when (tab) {
         KineticsTab.Home -> Icons.Outlined.Home
         KineticsTab.Work -> Icons.Outlined.WorkOutline
-        KineticsTab.Explore -> Icons.Outlined.Explore
         KineticsTab.Settings -> Icons.Outlined.Settings
     }
     Icon(image, contentDescription = null)
@@ -83,7 +81,6 @@ internal fun KineticsAppShell(
     var showSearch by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var workSearchQuery by rememberSaveable { mutableStateOf("") }
-    var exploreSearchQuery by rememberSaveable { mutableStateOf("") }
     var showComponentGallery by rememberSaveable { mutableStateOf(false) }
     BackHandler(enabled = showSearch || showComponentGallery) {
         if (showComponentGallery) showComponentGallery = false else showSearch = false
@@ -113,7 +110,7 @@ internal fun KineticsAppShell(
         )
     }
     MaterialTheme(colorScheme = scheme, typography = KineticsTypography) {
-        BoxWithConstraints(Modifier.fillMaxSize()) {
+        BoxWithConstraints(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) {
             // Classify the app window, not the physical device. These are the
             // current Android adaptive breakpoints recorded in docs/ui/verified-specs.md.
             val navigationMode = classifyNavigationMode(maxWidth.value, maxHeight.value)
@@ -131,14 +128,13 @@ internal fun KineticsAppShell(
                         onQueryChange = { searchQuery = it },
                         jobs = jobs,
                         onSelectJob = { result -> workSearchQuery = result.title; showSearch = false; tab = KineticsTab.Work },
-                        onSelectCapability = { result -> exploreSearchQuery = result.title; showSearch = false; tab = KineticsTab.Explore },
+                        onSelectCapability = { showSearch = false; tab = KineticsTab.Home },
                         modifier = modifier,
                     )
                     else -> when (tab) {
                         KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
                             onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, onAnalyzeFastq, modifier)
                         KineticsTab.Work -> WorkScreen(jobs, workSearchQuery, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, onAnalyzeFastq, modifier)
-                        KineticsTab.Explore -> ExploreScreen(modifier, exploreSearchQuery)
                         KineticsTab.Settings -> SettingsScreen(
                             runtimeReport, onRunRuntime, onRefresh, themeFamily, onThemeFamilyChange,
                             biometricEnabled, biometricAvailable, onBiometricChange,
@@ -372,6 +368,22 @@ private fun Frame(eyebrow: String, title: String, subtitle: String, modifier: Mo
 }
 
 @Composable
+private fun RuntimeStatusCard(label: String, status: String, modifier: Modifier = Modifier) {
+    val colors = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) KineticsTokens.StatusDark else KineticsTokens.StatusLight
+    val tint = when (status) { "OK" -> colors.success; "Not working" -> colors.error; else -> colors.warning }
+    OutlinedCard(modifier, shape = RoundedCornerShape(10.dp)) {
+        Column(Modifier.padding(9.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                Box(Modifier.size(8.dp).clip(CircleShape).background(tint))
+                Text(status, style = MaterialTheme.typography.labelSmall, color = tint, fontWeight = FontWeight.Bold)
+            }
+            Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 2, overflow = TextOverflow.Ellipsis)
+        }
+    }
+}
+
+@Composable
 private fun HomeScreen(
     jobs: List<ResearchJob>, notice: String, runtime: String?, themeFamily: String, onImport: () -> Unit,
     onRuntime: () -> Unit, onOpenWork: () -> Unit,
@@ -381,6 +393,8 @@ private fun HomeScreen(
     onExportProvenanceSummary: (ResearchJob) -> Unit, onAnalyzeImported: (ResearchJob) -> Unit,
     onExportAnalysis: (ResearchJob) -> Unit, onAnalyzeFastq: (ResearchJob, Int) -> Unit, modifier: Modifier,
 ) {
+    val context = LocalContext.current
+    val services = remember(context) { runCatching { loadCapabilityCatalogue(context) }.getOrDefault(emptyList()) }
     val active = jobs.count { it.state in listOf("queued", "running", "cancel_requested") }
     val done = jobs.count { it.state == "succeeded" }
     val attention = jobs.count { it.state in listOf("failed", "recovery_required") }
@@ -393,10 +407,28 @@ private fun HomeScreen(
                     complete = done,
                     attention = attention,
                     runtime = runtime,
+                    services = services,
                     onImport = onImport,
                     onOpenWork = onOpenWork,
                     onRuntime = onRuntime,
                 )
+            }
+            item { Text("Scientific services", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold) }
+            item { StructureViewerPreview() }
+            if (services.any { it.id == "chemistry.sdf_graph" && it.status == "implemented" }) item { LigandGraphPreviewCard() }
+            if (services.any { it.id == "sequence.fasta" && it.status == "implemented" }) item { FastaQcCard() }
+            if (services.any { it.id == "sequence.fastq" && it.status == "implemented" }) item { FastqQcCard() }
+            if (services.any { it.id == "structure.ligand_site_candidates" && it.status == "implemented" } && services.any { it.id == "structure.apo_pocket_candidates" && it.status == "implemented" }) item { StructureSiteAnalysisCard() }
+            if (services.any { it.id == "sequence.genetic_code_candidate_inference" && it.status == "implemented" }) item { GeneticCodeInferenceCard() }
+            if (services.any { it.id == "genomics.sam_vcf" && it.status == "implemented" }) { item { GenomicsVcfQcCard() }; item { U5ResearchGateCard() } }
+            items(services, key = { it.id }) { service ->
+                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
+                    Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(service.name, fontWeight = FontWeight.SemiBold)
+                        Text(service.domain, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(if (service.status == "implemented") "Engine implemented · Android access varies" else "In development", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
             }
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(9.dp), modifier = Modifier.fillMaxWidth()) {
@@ -420,7 +452,16 @@ private fun HomeScreen(
                             Text("Diagnostics", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall)
                         }
                         Text("Check embedded Python, native engines and encrypted storage.", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
-                        runtime?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                        val pythonPart = runtime?.substringAfter("Python probe:", "")?.substringBefore("Native probe:")?.trim()
+                        val nativePart = runtime?.substringAfter("Native probe:", "")?.trim()
+                        val pythonState = when { runtime == null -> "Not checked"; pythonPart.isNullOrBlank() -> "Partial"; pythonPart.contains("FAILED", true) -> "Not working"; pythonPart.contains("WARNING", true) || pythonPart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
+                        val nativeState = when { runtime == null -> "Not checked"; nativePart.isNullOrBlank() -> "Partial"; nativePart.contains("FAILED", true) -> "Not working"; nativePart.contains("WARNING", true) || nativePart.contains("PARTIAL", true) -> "Partial"; else -> "OK" }
+                        val storageState = when { runtime == null -> "Not checked"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> "OK"; runtime.contains("Keystore AES-GCM + versioned file roundtrip: FAILED") -> "Not working"; else -> "Partial" }
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            RuntimeStatusCard("Sequence processing", pythonState, Modifier.weight(1f))
+                            RuntimeStatusCard("Scientific tools", nativeState, Modifier.weight(1f))
+                            RuntimeStatusCard("Private storage", storageState, Modifier.weight(1f))
+                        }
                     }
                 }
             }
@@ -437,11 +478,12 @@ private fun WorkspaceCarousel(
     complete: Int,
     attention: Int,
     runtime: String?,
+    services: List<CapabilityEntry>,
     onImport: () -> Unit,
     onOpenWork: () -> Unit,
     onRuntime: () -> Unit,
 ) {
-    val pager = rememberPagerState(pageCount = { 3 })
+    val pager = rememberPagerState(pageCount = { 3 + services.size })
     val heroContainer = if (isDark) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary
     val heroForeground = if (isDark) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary
     val heroAction = if (isDark) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary
@@ -497,7 +539,7 @@ private fun WorkspaceCarousel(
                             color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                     }
                 }
-                else -> Card(
+                2 -> Card(
                     onClick = onRuntime,
                     modifier = Modifier.fillMaxWidth().height(218.dp),
                     shape = RoundedCornerShape(16.dp),
@@ -512,12 +554,32 @@ private fun WorkspaceCarousel(
                                 color = MaterialTheme.colorScheme.secondary, letterSpacing = 1.1.sp)
                             Text("Know your instruments.", style = MaterialTheme.typography.headlineSmall,
                                 color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
-                            Text(runtime ?: "Run local checks for embedded Python, native engines and encrypted storage.",
-                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                maxLines = 3, overflow = TextOverflow.Ellipsis)
+                            Text("Check sequence processing, scientific computation and protected local storage.",
+                                style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         Text("RUN RUNTIME CHECKS  →", style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold)
+                    }
+                }
+                else -> {
+                    val service = services[page - 3]
+                    Card(
+                        modifier = Modifier.fillMaxWidth().height(218.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                    ) {
+                        Column(Modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.SpaceBetween) {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text(service.domain.uppercase(), style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant, letterSpacing = 1.1.sp)
+                                Text(service.name, style = MaterialTheme.typography.headlineSmall,
+                                    color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.SemiBold)
+                                Text(if (service.status == "implemented") "Engine implemented · Android access varies" else "In development",
+                                    style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            Text("SCIENTIFIC SERVICE", style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                        }
                     }
                 }
             }
@@ -527,7 +589,7 @@ private fun WorkspaceCarousel(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            repeat(3) { index ->
+            repeat(3 + services.size) { index ->
                 val selected = pager.currentPage == index
                 Box(
                     Modifier.padding(horizontal = 4.dp).size(width = if (selected) 22.dp else 7.dp, height = 7.dp)
@@ -756,8 +818,8 @@ private fun JobCard(job: ResearchJob, onCancel: (ResearchJob) -> Unit, onResume:
             Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                 if (active) OutlinedButton(onClick = { onCancel(job) }) { Text("Cancel") }
                 if (job.state == "cancelled" || job.state == "failed") OutlinedButton(onClick = { onResume(job) }) { Text("Resume") }
-                if (success && job.analysisResultJson == null && job.inputName.substringAfterLast('.').lowercase() in setOf("fa", "fasta", "fna")) OutlinedButton(onClick = { onAnalyzeImported(job) }) { Text("Run FASTA QC") }
-                if (success && job.inputName.substringAfterLast('.').lowercase() in setOf("fastq", "fq")) OutlinedButton(onClick = { showPhredDialog = true }) { Text("Run FASTQ QC") }
+                if (success && job.analysisResultJson == null && job.inputName.lowercase().removeSuffix(".gz").substringAfterLast('.') in setOf("fa", "fasta", "fna")) OutlinedButton(onClick = { onAnalyzeImported(job) }) { Text("Run FASTA QC") }
+                if (success && job.inputName.lowercase().removeSuffix(".gz").substringAfterLast('.') in setOf("fastq", "fq")) OutlinedButton(onClick = { showPhredDialog = true }) { Text("Run FASTQ QC") }
                 if (success) Button(onClick = { onExport(job) }) { Text("Export") }
                 if (success || issue || job.state == "cancelled") OutlinedButton(onClick = { onDelete(job) }) { Text("Delete") }
             }
@@ -845,163 +907,6 @@ private fun loadCapabilityCatalogue(context: Context): List<CapabilityEntry> {
         }
     }
 }
-
-@Composable
-fun ExploreScreen(modifier: Modifier, initialQuery: String = "") {
-    val context = LocalContext.current
-    val catalogue = remember(context) { runCatching { loadCapabilityCatalogue(context) } }
-    val entries = catalogue.getOrNull().orEmpty()
-    var query by rememberSaveable(initialQuery) { mutableStateOf(initialQuery) }
-    val visibleEntries = entries.filter { entry ->
-        query.isBlank() || entry.name.contains(query, true) || entry.id.contains(query, true) || entry.domain.contains(query, true)
-    }
-    val groups = visibleEntries.groupBy { it.domain }.toList()
-    Frame(
-        "Scientific toolkit",
-        "Explore the science.",
-        "A live view of the repository capability registry and its evidence maturity.",
-        modifier,
-    ) {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 24.dp),
-        ) {
-            item {
-                KineticsField(
-                    value = query,
-                    onValueChange = { query = it },
-                    label = "Filter registered capabilities",
-                    supportingText = "Capability name, identifier or research domain",
-                )
-            }
-            item {
-                Card(
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    ),
-                ) {
-                    Column(
-                        Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                    ) {
-                        Text("Capability transparency", fontWeight = FontWeight.Bold)
-                        Text(
-                            if (catalogue.isSuccess) {
-                                "${visibleEntries.size} matching of ${entries.size} registered source capabilities across ${groups.size} visible research areas. Registry status describes source implementation only; it does not imply an Android execution path or scientific validation."
-                            } else {
-                                "The capability catalogue could not be loaded. No capabilities are being presented as available."
-                            },
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            style = MaterialTheme.typography.bodySmall,
-                        )
-                    }
-                }
-            }
-            item {
-                Text("U4 · STRUCTURE & CHEMISTRY VIEWERS", style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold)
-            }
-            item { StructureViewerPreview() }
-            if (entries.any { it.id == "chemistry.sdf_graph" && it.status == "implemented" }) {
-                item { LigandGraphPreviewCard() }
-            }
-            if (entries.any { it.id == "sequence.fasta" && it.status == "implemented" }) {
-                item { FastaQcCard() }
-            }
-            if (entries.any { it.id == "sequence.fastq" && it.status == "implemented" }) {
-                item { FastqQcCard() }
-            }
-            if (entries.any { it.id == "structure.ligand_site_candidates" && it.status == "implemented" } &&
-                entries.any { it.id == "structure.apo_pocket_candidates" && it.status == "implemented" }
-            ) {
-                item { StructureSiteAnalysisCard() }
-            }
-            if (entries.any { it.id == "sequence.genetic_code_candidate_inference" && it.status == "implemented" }) {
-                item { GeneticCodeInferenceCard() }
-            }
-            if (entries.any { it.id == "genomics.sam_vcf" && it.status == "implemented" }) {
-                item {
-                    Text("U5 · GENOMICS RESEARCH", style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold)
-                }
-                item { GenomicsVcfQcCard() }
-                item { U5ResearchGateCard() }
-            }
-            if (catalogue.isSuccess && visibleEntries.isEmpty()) {
-                item { Empty("No matching capabilities", "Try a different name, identifier or research domain.") }
-            }
-            if (catalogue.isFailure) {
-                item {
-                    OutlinedCard(Modifier.fillMaxWidth()) {
-                        Text(
-                            "Catalogue unavailable: ${catalogue.exceptionOrNull()?.message ?: "asset read failed"}",
-                            Modifier.padding(16.dp),
-                            color = MaterialTheme.colorScheme.error,
-                        )
-                    }
-                }
-            }
-            items(groups, key = { it.first }) { (domain, tools) ->
-                OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-                    Column(
-                        Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                    ) {
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                domain,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                            )
-                            InfoPill("${tools.size} modules")
-                        }
-                        tools.forEachIndexed { index, tool ->
-                            if (index > 0) {
-                                HorizontalDivider(
-                                    color = MaterialTheme.colorScheme.outline.copy(alpha = .35f),
-                                )
-                            }
-                            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                                Text(tool.name, style = MaterialTheme.typography.bodyMedium)
-                                Text(
-                                    tool.id,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(7.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    InfoPill(
-                                        if (tool.status == "implemented") "Source implemented"
-                                        else tool.status.replaceFirstChar { it.uppercase() },
-                                    )
-                                    InfoPill(
-                                        if (tool.evidenceLevel == "none") "Not validated"
-                                        else tool.evidenceLevel,
-                                    )
-                                }
-                                Text(
-                                    tool.implementation,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 
 @Composable
 private fun FastaQcCard() {
@@ -1172,9 +1077,18 @@ private fun SettingsScreen(
                     )
                 }
             } }
-            item { SettingGroup("DEVICE RUNTIME", "Python 3.11 and native runtime probes execute locally.") {
+            item { SettingGroup("DEVICE RUNTIME", "Scientific processing and storage checks run locally on this device.") {
                 Button(onRuntime, Modifier.fillMaxWidth()) { Text("Run runtime diagnostics") }
-                runtime?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                val pythonPart = runtime?.substringAfter("Python probe:", "")?.substringBefore("Native probe:")?.trim()
+                val nativePart = runtime?.substringAfter("Native probe:", "")?.trim()
+                val pythonState = when { runtime == null -> null; pythonPart.isNullOrBlank() -> false; pythonPart.contains("FAILED", true) -> false; else -> true }
+                val nativeState = when { runtime == null -> null; nativePart.isNullOrBlank() -> false; nativePart.contains("FAILED", true) -> false; else -> true }
+                val storageState = when { runtime == null -> null; runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> true; runtime.contains("FAILED", true) -> false; else -> null }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    RuntimeStatusCard("Sequence engine", pythonState, Modifier.weight(1f))
+                    RuntimeStatusCard("Native engine", nativeState, Modifier.weight(1f))
+                    RuntimeStatusCard("Private storage", storageState, Modifier.weight(1f))
+                }
             } }
             item { SettingGroup("LOCAL STORAGE", "Research inputs use Keystore-backed AES-GCM and app-private storage.") {
                 OutlinedButton(onRefresh, Modifier.fillMaxWidth()) { Text("Refresh local job state") }

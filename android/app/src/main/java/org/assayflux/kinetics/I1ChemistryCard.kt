@@ -9,10 +9,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +36,7 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
+import java.util.zip.GZIPInputStream
 
 private data class I1LigandDocument(val name: String, val text: String)
 
@@ -38,12 +46,14 @@ private fun readI1LigandDocument(context: Context, uri: Uri): I1LigandDocument {
     )?.use { cursor ->
         if (cursor.moveToFirst()) cursor.getString(0) else null
     } ?: uri.lastPathSegment ?: "ligand"
-    require(name.endsWith(".sdf", ignoreCase = true) || name.endsWith(".mol", ignoreCase = true)) {
-        "Select a .sdf or .mol file."
+    val baseName = name.lowercase(java.util.Locale.ROOT).removeSuffix(".gz")
+    require(baseName.endsWith(".sdf") || baseName.endsWith(".mol")) {
+        "Select an SDF or MOL file, optionally gzip-compressed."
     }
     val input = context.contentResolver.openInputStream(uri)
         ?: error("The selected ligand document could not be opened.")
-    val bytes = input.use { stream ->
+    val decoded = if (name.endsWith(".gz", ignoreCase = true)) GZIPInputStream(input) else input
+    val bytes = decoded.use { stream ->
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(32 * 1024)
         var total = 0
@@ -77,6 +87,7 @@ internal fun LigandGraphPreviewCard() {
     }
     var error by remember { mutableStateOf<String?>(null) }
     var busy by remember { mutableStateOf(false) }
+    var fullScreen by remember { mutableStateOf(false) }
 
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
@@ -100,12 +111,15 @@ internal fun LigandGraphPreviewCard() {
         }
     }
 
-    Card(Modifier.fillMaxWidth()) {
+    @Composable
+    fun Panel(modifier: Modifier) {
+    Card(modifier) {
         Column(
             Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text("I1 · Ligand graph preview", style = MaterialTheme.typography.titleMedium)
+            Text("Ligand chemistry workspace", style = MaterialTheme.typography.titleMedium)
+            Button(onClick = { fullScreen = !fullScreen }) { Text(if (fullScreen) "Close full-screen view" else "Open full-screen chemistry") }
             Text(
                 "Offline-first SDF/MOL import with explicit-atom formula, graph counts and SHA-256 provenance. This is not RDKit sanitization or a drug-likeness verdict.",
                 style = MaterialTheme.typography.bodySmall,
@@ -117,7 +131,7 @@ internal fun LigandGraphPreviewCard() {
                 },
                 enabled = !busy,
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text(if (busy) "Working…" else "Choose SDF / MOL ligand") }
+            ) { Text(if (busy) "Working…" else "Choose SDF / MOL / .gz ligand") }
             document?.let { Text("Ligand: ${it.name}", style = MaterialTheme.typography.labelMedium) }
             Button(
                 onClick = {
@@ -166,5 +180,15 @@ internal fun LigandGraphPreviewCard() {
                 }
             }
         }
+    }
+    }
+    if (fullScreen) {
+        Dialog(onDismissRequest = { fullScreen = false }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+            Surface(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing), color = MaterialTheme.colorScheme.background) {
+                Panel(Modifier.fillMaxSize())
+            }
+        }
+    } else {
+        Panel(Modifier.fillMaxWidth())
     }
 }

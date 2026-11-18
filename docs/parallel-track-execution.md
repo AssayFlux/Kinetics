@@ -8,14 +8,14 @@
 
 1. The canonical source of truth is `ROADMAP.md`; phase IDs, dependencies, exit gates and status must match it.
 2. Parallel means independent tasks can progress at the same time. It does not mean a dependent phase is marked started, implemented, validated or released before its prerequisite is satisfied.
-3. Use public, redistributable test/reference data only unless a separate approved data governance gate exists. No real patient data, human-subject research or clinical advice.
+3. Use synthetic/public data by default. Patient-derived research data may be used only within the institutional approval scope declared by the owner under D-025; never put it in source control, CI, fixtures, logs or public artifacts.
 4. Separate source implementation, software tests, analytical validation, external replication, device verification and publication readiness in every report.
 5. Each scientific output records input hash, tool/version, database release, parameters, random seed, execution environment, warnings, uncertainty, exclusions and limitations.
 6. A failed/unsupported/ambiguous result must be representable; never convert absence of evidence into a positive call.
 7. Record license provenance for every dependency, model, dataset, reference database, font, renderer and generated asset before bundling or redistributing.
 8. Keep the UI a client of typed domain/orchestrator APIs. Scientific logic does not live in Compose or WebView JavaScript.
 9. Every phase change is evidence-backed. Update the capability registry only when the implementation path and tests exist; set validation evidence only after independent reference validation.
-10. Stop at all roadmap gates. In particular, P0 remains blocked; patient-facing PGx and Clinical Mode remain disabled.
+10. Keep the D-025 owner-authorized research-testing scope open for engineering and institutionally approved patient-data testing. Clinical PGx interpretation, patient-facing diagnosis/treatment/dosing and Clinical Mode remain disabled pending their separate evidence and authorization.
 
 ## Parallel work lanes
 
@@ -40,8 +40,8 @@
 - I5: define research-only variant-effect/virtual-cohort simulation schemas and bias/ancestry review. No real cohorts or clinical outputs.
 
 ### P — Precision medicine (PGx first)
-- P0 remains **blocked** until the intended-use, legal/ethics/regulatory advice, qualified advisers and owner-approved gate packet exist.
-- While blocked, only non-patient, public-data preparation is permitted: source inventory, schema/provenance, build/version metadata, test fixtures and coverage methodology.
+- The owner has opened engineering and institutionally authorized research-testing scope under D-025 (2026-11-18) and declares institutional ethics approval obtained; approval details remain pending attachment.
+- Patient-derived research data is permitted only within the exact approved protocol and approved environment. Keep it out of GitHub, CI, fixtures, logs and public artifacts. Clinical decision support and patient-care workflows remain separate gates.
 - P1–P4 implementation that could be mistaken for patient interpretation remains gated by P0 and relevant caller/reference/guideline licenses. Do not infer missing star alleles, diplotypes or phenotypes; indeterminate is a valid result.
 - P5–P7 remain blocked pending qualified review, ethics/regulatory approvals and prior phase evidence.
 
@@ -74,7 +74,7 @@ Required paper package:
 - A validation protocol and machine-readable result schema under `validation/`.
 - I1 descriptor correctness tests and public reference fixtures, reusing existing R6 primitives.
 - S6/S7 reference-pack manifest and sequence-evidence schema, without implying full annotation.
-- P-track public-data source/license inventory only; P0 remains blocked.
+- P-track engineering and institutionally authorized research testing; maintain source/license provenance and keep real patient data outside CI and source control.
 - R1/R2 runtime checklist and R3 independent kinetics reference comparison.
 
 ## Status vocabulary

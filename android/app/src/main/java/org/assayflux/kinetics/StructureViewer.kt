@@ -13,10 +13,18 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Surface
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -43,6 +51,7 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
+import java.util.zip.GZIPInputStream
 
 private const val VIEWER_URL = "https://appassets.androidplatform.net/assets/structure-viewer/structure-viewer.html"
 private const val MAX_STRUCTURE_SOURCE_BYTES = 16 * 1024 * 1024
@@ -64,10 +73,11 @@ private fun readDisplayName(context: android.content.Context, uri: Uri): String 
     }
 }
 
-private fun readBounded(context: android.content.Context, uri: Uri): ByteArray {
+private fun readBounded(context: android.content.Context, uri: Uri, gzip: Boolean): ByteArray {
     val input = context.contentResolver.openInputStream(uri)
         ?: error("The selected document could not be opened")
-    return input.use { stream ->
+    val decoded = if (gzip) GZIPInputStream(input) else input
+    return decoded.use { stream ->
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(32 * 1024)
         var total = 0
@@ -96,6 +106,7 @@ internal fun StructureViewerPreview() {
     var pendingSvg by remember { mutableStateOf<String?>(null) }
     var viewerStateJson by remember { mutableStateOf<String?>(null) }
     var viewerWebView by remember { mutableStateOf<WebView?>(null) }
+    var fullScreen by remember { mutableStateOf(false) }
     var pendingPngBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var sourceLabel by remember { mutableStateOf("Synthetic preview fixture") }
     var importMessage by remember {
@@ -176,16 +187,15 @@ internal fun StructureViewerPreview() {
                 val result = withContext(Dispatchers.IO) {
                     runCatching {
                         val name = readDisplayName(context, uri)
+                        val lowerName = name.lowercase(java.util.Locale.ROOT).removeSuffix(".gz")
                         val format = when {
-                            name.endsWith(".pdb", ignoreCase = true) ||
-                                name.endsWith(".ent", ignoreCase = true) -> "pdb"
-                            name.endsWith(".cif", ignoreCase = true) ||
-                                name.endsWith(".mmcif", ignoreCase = true) -> "mmcif"
+                            lowerName.endsWith(".pdb") || lowerName.endsWith(".ent") -> "pdb"
+                            lowerName.endsWith(".cif") || lowerName.endsWith(".mmcif") -> "mmcif"
                             else -> error(
-                                "Unsupported file extension. Select .pdb, .ent, .cif or .mmcif",
+                                "Unsupported file extension. Select PDB, ENT, CIF, mmCIF or a .gz-compressed version.",
                             )
                         }
-                        val bytes = readBounded(context, uri)
+                        val bytes = readBounded(context, uri, name.endsWith(".gz", ignoreCase = true))
                         val sourceText = Charsets.UTF_8.newDecoder()
                             .onMalformedInput(CodingErrorAction.REPORT)
                             .onUnmappableCharacter(CodingErrorAction.REPORT)
@@ -298,7 +308,10 @@ internal fun StructureViewerPreview() {
             Text(sourceLabel, style = MaterialTheme.typography.labelMedium)
             Text(importMessage, style = MaterialTheme.typography.bodySmall)
             Button(onClick = { picker.launch(arrayOf("*/*")) }) {
-                Text("Import PDB / mmCIF")
+                Text("Import PDB / mmCIF / .gz")
+            }
+            Button(onClick = { fullScreen = true }, enabled = payloadJson != null) {
+                Text("Open full-screen structure viewer")
             }
             Button(
                 onClick = {
@@ -415,17 +428,44 @@ internal fun StructureViewerPreview() {
             ) {
                 Text("Export viewer PNG")
             }
-            AndroidView(
-                factory = { FrameLayout(it).apply { viewerWebView = webView; addView(webView) } },
-                update = { frame ->
-                    viewerWebView = webView
-                    if (frame.childCount != 1 || frame.getChildAt(0) !== webView) {
-                        frame.removeAllViews()
-                        frame.addView(webView)
+            if (fullScreen) {
+                Dialog(
+                    onDismissRequest = { fullScreen = false },
+                    properties = DialogProperties(usePlatformDefaultWidth = false),
+                ) {
+                    Surface(Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing), color = MaterialTheme.colorScheme.background) {
+                        Column(Modifier.fillMaxSize().padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text("Structure viewer", style = MaterialTheme.typography.titleLarge)
+                                Button(onClick = { fullScreen = false }) { Text("Close") }
+                            }
+                            AndroidView(
+                                factory = { FrameLayout(it).apply { viewerWebView = webView; addView(webView) } },
+                                update = { frame ->
+                                    viewerWebView = webView
+                                    if (frame.childCount != 1 || frame.getChildAt(0) !== webView) {
+                                        frame.removeAllViews()
+                                        frame.addView(webView)
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth().weight(1f),
+                            )
+                        }
                     }
-                },
-                modifier = Modifier.fillMaxWidth().height(440.dp),
-            )
+                }
+            } else {
+                AndroidView(
+                    factory = { FrameLayout(it).apply { viewerWebView = webView; addView(webView) } },
+                    update = { frame ->
+                        viewerWebView = webView
+                        if (frame.childCount != 1 || frame.getChildAt(0) !== webView) {
+                            frame.removeAllViews()
+                            frame.addView(webView)
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().height(440.dp),
+                )
+            }
         }
     }
 }

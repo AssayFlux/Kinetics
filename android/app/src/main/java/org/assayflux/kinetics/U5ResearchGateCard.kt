@@ -18,7 +18,7 @@ internal fun U5ResearchGateCard() {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("PGx · NOT ENABLED", style = MaterialTheme.typography.titleSmall)
             Text(
-                "P2 parsers and phased-definition matching are research software foundations only. No licensed release-pinned allele pack, broad biological concordance or qualified review is approved for this app. Individual genotype interpretation, star-allele/diplotype/phenotype assignment and guideline recommendations remain unavailable while P0 is NOT APPROVED.",
+                "Genetic variant parsers and phased-definition matching remain research software foundations. The project owner declares institutional approval for research testing; use patient-derived data only within the approval scope and with required safeguards. Individual genotype interpretation, star-allele/diplotype/phenotype assignment and guideline recommendations are not enabled by this notice.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -29,12 +29,12 @@ internal fun U5ResearchGateCard() {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-                "P0 GATE · BLOCKED / NOT APPROVED",
+                "RESEARCH TESTING · OWNER AUTHORIZED",
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
-                "No patient data, human-subject data, clinical reports, diagnosis, treatment or dosing workflows are permitted. The VCF panel above is restricted to synthetic or authorized public non-patient data and returns aggregate syntax/QC counts only.",
+                "Institutional approval is declared by the project owner; approval reference, scope and conditions must be retained in the project record. Use only datasets covered by that approval. The VCF panel returns aggregate syntax/QC counts only and is not a clinical decision tool.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

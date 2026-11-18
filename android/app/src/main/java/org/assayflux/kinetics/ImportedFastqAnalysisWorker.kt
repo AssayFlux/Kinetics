@@ -22,17 +22,15 @@ class ImportedFastqAnalysisWorker(context: Context, parameters: WorkerParameters
             require(committedBytes in 1..MAX_INPUT_BYTES) {
                 "FASTQ import exceeds the 1,000,000-byte analysis limit"
             }
-            require(name.substringAfterLast('.').lowercase() in setOf("fastq", "fq")) {
+            val normalizedName = name.lowercase().removeSuffix(".gz")
+            require(normalizedName.substringAfterLast('.') in setOf("fastq", "fq")) {
                 "This worker accepts FASTQ files only"
             }
             val result = store.withStoredInput(jobId) { file ->
                 require(file.isFile && file.length() in 1..MAX_INPUT_BYTES) {
                     "FASTQ import exceeds the 1,000,000-byte analysis limit"
                 }
-                val text = file.readText(Charsets.UTF_8)
-                require(text.length <= MAX_INPUT_CHARS) {
-                    "FASTQ import exceeds the 1,000,000-character analysis limit"
-                }
+                val text = SequenceFileSupport.readText(file, name.lowercase().endsWith(".gz"), MAX_INPUT_BYTES, MAX_INPUT_CHARS)
                 if (!Python.isStarted()) Python.start(AndroidPlatform(applicationContext))
                 val json = Python.getInstance().getModule("kinetics_probe")
                     .callAttr("analyze_fastq", text, phredOffset).toString()
@@ -50,7 +48,7 @@ class ImportedFastqAnalysisWorker(context: Context, parameters: WorkerParameters
                 id = jobId,
                 toolId = "sequence.fastq.quality_summary",
                 toolVersion = "1",
-                parametersJson = """{"input":"authenticated-decrypted-import","phred_offset":$phredOffset,"max_bytes":1000000}""",
+                parametersJson = """{"input":"authenticated-decrypted-import","compression":"auto-by-gzip-extension","phred_offset":$phredOffset,"max_expanded_bytes":1000000}""",
                 resultJson = result,
             )
             Result.success()

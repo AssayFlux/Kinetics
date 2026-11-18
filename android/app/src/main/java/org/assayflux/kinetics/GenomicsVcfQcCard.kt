@@ -34,6 +34,7 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.nio.charset.CodingErrorAction
+import java.util.zip.GZIPInputStream
 
 private data class VcfQcDocument(val name: String, val text: String)
 
@@ -43,12 +44,13 @@ private fun readVcfQcDocument(context: Context, uri: Uri): VcfQcDocument {
     )?.use { cursor ->
         if (cursor.moveToFirst()) cursor.getString(0) else null
     } ?: uri.lastPathSegment ?: "variants.vcf"
-    require(name.endsWith(".vcf", ignoreCase = true)) {
-        "Select an uncompressed .vcf file. VCF.GZ is not supported by this screen."
+    require(name.endsWith(".vcf", ignoreCase = true) || name.endsWith(".vcf.gz", ignoreCase = true)) {
+        "Select a .vcf or .vcf.gz file."
     }
     val input = context.contentResolver.openInputStream(uri)
         ?: error("The selected VCF document could not be opened.")
-    val bytes = input.use { stream ->
+    val decodedInput = if (name.endsWith(".gz", ignoreCase = true)) GZIPInputStream(input) else input
+    val bytes = decodedInput.use { stream ->
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(16 * 1024)
         var total = 0
@@ -57,7 +59,7 @@ private fun readVcfQcDocument(context: Context, uri: Uri): VcfQcDocument {
             if (count < 0) break
             total += count
             require(total <= GenomicsVcfQcRunner.MAX_INPUT_BYTES) {
-                "VCF input exceeds the 5 MiB limit."
+                "Expanded VCF input exceeds the 5 MiB processing limit."
             }
             output.write(buffer, 0, count)
         }
@@ -76,11 +78,11 @@ private fun readVcfQcDocument(context: Context, uri: Uri): VcfQcDocument {
 internal fun GenomicsVcfQcCard() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var consentConfirmed by rememberSaveable { mutableStateOf(false) }
+    var authorizationConfirmed by rememberSaveable { mutableStateOf(false) }
     var selectedUri by remember { mutableStateOf<Uri?>(null) }
     var selectedName by remember { mutableStateOf<String?>(null) }
     var report by remember { mutableStateOf<JSONObject?>(null) }
-    var status by remember { mutableStateOf("Choose a synthetic or authorized public non-patient VCF file.") }
+    var status by remember { mutableStateOf("Choose a VCF dataset covered by your institutional research authorization.") }
     var error by remember { mutableStateOf<String?>(null) }
     var busy by remember { mutableStateOf(false) }
 
@@ -93,7 +95,7 @@ internal fun GenomicsVcfQcCard() {
                 )?.use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
             }.getOrNull()
         }
-        consentConfirmed = false
+        authorizationConfirmed = false
         report = null
         error = null
         status = if (uri == null) "No file selected." else "File selected. Confirm the data boundary before running aggregate QC."
@@ -101,7 +103,7 @@ internal fun GenomicsVcfQcCard() {
 
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("P1 · VCF aggregate research QC", style = MaterialTheme.typography.titleMedium)
+            Text("VCF aggregate research QC", style = MaterialTheme.typography.titleMedium)
             Text(
                 "Bounded local VCF record-structure and aggregate summary. Only aggregate counts are returned; sample identifiers and genotype strings are not displayed or persisted.",
                 style = MaterialTheme.typography.bodySmall,
@@ -111,20 +113,20 @@ internal fun GenomicsVcfQcCard() {
                 onClick = { picker.launch(arrayOf("text/vcf", "text/plain", "*/*")) },
                 enabled = !busy,
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text("Choose VCF file") }
+            ) { Text("Choose VCF / VCF.GZ file") }
             selectedName?.let { Text("File: $it", style = MaterialTheme.typography.labelMedium) }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = consentConfirmed, onCheckedChange = {
-                    consentConfirmed = it
+                Checkbox(checked = authorizationConfirmed, onCheckedChange = {
+                    authorizationConfirmed = it
                     report = null
                 })
                 Text(
-                    "I confirm this file contains only synthetic or authorized public non-patient data.",
+                    "I confirm I am authorized under the applicable institutional approval to use this dataset for this research.",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
             Text(
-                "This declaration is an operator attestation, not automated verification of data origin. Do not select patient, clinical, identifiable or human-subject data.",
+                "This is an operator attestation, not automated verification. Use only data within the approved protocol, with required consent, access controls and data minimisation. Do not use this exploratory QC output for diagnosis or treatment decisions.",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -153,7 +155,7 @@ internal fun GenomicsVcfQcCard() {
                         busy = false
                     }
                 },
-                enabled = !busy && selectedUri != null && consentConfirmed,
+                enabled = !busy && selectedUri != null && authorizationConfirmed,
                 modifier = Modifier.fillMaxWidth(),
             ) { Text(if (busy) "Checking…" else "Run aggregate QC") }
             Text(status, style = MaterialTheme.typography.bodySmall)

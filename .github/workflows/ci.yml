@@ -52,6 +52,8 @@ jobs:
           git diff --exit-code -- docs/ui/component-catalogue.md
       - name: Android offline/build-first configuration guardrails
         run: python scripts/check_android_config.py
+      - name: Verify Python and Android release versions stay aligned
+        run: python scripts/check_version.py
       - name: Validate public non-patient dataset catalogue
         run: python scripts/check_public_dataset_catalog.py
       - name: Validate metadata-only ADMET source catalogue

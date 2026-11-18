@@ -20,15 +20,15 @@ class ImportedFastaAnalysisWorker(context: Context, parameters: WorkerParameters
             require(committedBytes in 1..MAX_INPUT_BYTES) {
                 "FASTA import exceeds the 1,000,000-byte analysis limit"
             }
-            require(name.substringAfterLast('.').lowercase() in setOf("fa", "fasta", "fna")) {
+            val normalizedName = name.lowercase().removeSuffix(".gz")
+            require(normalizedName.substringAfterLast('.') in setOf("fa", "fasta", "fna")) {
                 "This worker accepts FASTA files only; FASTQ requires an explicit Phred offset."
             }
             val result = store.withStoredInput(jobId) { file ->
                 require(file.isFile && file.length() in 1..MAX_INPUT_BYTES) {
                     "FASTA import exceeds the 1,000,000-byte analysis limit"
                 }
-                val text = file.readText(Charsets.UTF_8)
-                require(text.length <= MAX_INPUT_CHARS) { "FASTA import exceeds the 1,000,000-character analysis limit" }
+                val text = SequenceFileSupport.readText(file, name.lowercase().endsWith(".gz"), MAX_INPUT_BYTES, MAX_INPUT_CHARS)
                 if (!Python.isStarted()) Python.start(AndroidPlatform(applicationContext))
                 val json = Python.getInstance().getModule("kinetics_probe")
                     .callAttr("analyze_fasta", text).toString()
@@ -44,7 +44,7 @@ class ImportedFastaAnalysisWorker(context: Context, parameters: WorkerParameters
                 id = jobId,
                 toolId = "sequence.fasta.qc",
                 toolVersion = "1",
-                parametersJson = """{"input":"authenticated-decrypted-import","max_bytes":1000000,"gc_denominator":"all sequence symbols"}""",
+                parametersJson = """{"input":"authenticated-decrypted-import","compression":"auto-by-gzip-extension","max_expanded_bytes":1000000,"gc_denominator":"all sequence symbols"}""",
                 resultJson = result,
             )
             Result.success()

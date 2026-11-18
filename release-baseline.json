@@ -3,7 +3,7 @@
   "project": "AssayFlux/Kinetics",
   "release": "0.1.0",
   "status": "candidate_not_frozen",
-  "source_branch": "release/0.1.0",
+  "source_branch": "main",
   "source_commit": null,
   "immutable_tag": null,
   "android_version_code": 1,
@@ -29,5 +29,5 @@
     "owner_approval": false
   },
   "frozen_at": null,
-  "note": "Candidate metadata only. Populate source_commit, immutable_tag, APK evidence and acceptance fields only after exact-commit release gates pass."
+  "note": "Candidate metadata only. v0.1.0 remains unfrozen until exact-commit build, artifact verification and acceptance pass. The frozen baseline will remain on main; forward development uses only v0.1.1."
 }

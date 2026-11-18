@@ -366,9 +366,9 @@ def test_hmmer_domtblout_parser_and_threshold_ranker_mobile_routes():
     import json
 
     domtblout = (
-        "PF00001\\tPF00001.1\\t100\\tquery1\\t-\\t80\\t1e-20\\t50.0\\t0.0"
-        "\\t1\\t1\\t1e-20\\t1e-20\\t50.0\\t0.0\\t1\\t80\\t1\\t80"
-        "\\t1\\t80\\t0.95\\tExample domain"
+        "PF00001\tPF00001.1\t100\tquery1\t-\t80\t1e-20\t50.0\t0.0"
+        "\t1\t1\t1e-20\t1e-20\t50.0\t0.0\t1\t80\t1\t80"
+        "\t1\t80\t0.95\tExample domain"
     )
     parsed = _run_probe(
         "protein.hmmscan_domtblout_evidence",

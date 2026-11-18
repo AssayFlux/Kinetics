@@ -3,7 +3,7 @@
 **Audit date:** 2026-11-18  
 **Repository:** `AssayFlux/Kinetics`  
 **Target branch:** `main` only  
-**Current engineering review baseline:** `21f998812d05e65250e7ed6bdf2c1d0de1c31a17` (68-card service carousel and capability-ID routing; exact-head CI pending)
+**Current engineering review baseline:** `aeec1d0e8918e14455f627fc5aa5cf933322b634` (per-capability carousel, individual service destinations and blueprint header; exact-head CI pending)
 **Audit and quality-report documentation commit:** `cb79b9110ff50a69b1b58d78a8b13e3c8843cf3b`  
 **Status:** **ENGINEERING INTEGRATION IN PROGRESS — distinguish code work from external/device acceptance**  
 **Design authority:** D-024, owner-supplied Premium Minimal Monochrome V1. Semantic decision colours may be used for status only; monochrome remains the visual authority.

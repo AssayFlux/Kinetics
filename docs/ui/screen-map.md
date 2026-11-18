@@ -4,11 +4,11 @@
 
 | Screen ID | Screen | Registry capability | Current status |
 |---|---|---|---|
-| ui.home | Home dashboard / import entry | ui.home | source present; D-015 refinement, brand integration and visual/device proof pending |
+| ui.home | Owner-blueprint dashboard | ui.home | four live summary panels and repository-backed horizontal service-area carousel implemented; visual/device acceptance pending |
 | ui.work | Work / job list and actions | ui.work | source present; import/job actions exist; registry-backed catalogue only; full analysis dispatcher not connected |
-| ui.explore | Scientific capability catalogue | ui.explore | registry-backed catalogue; FASTA/FASTQ QC; offline structure viewer; SDF/MOL graph preview; S3 structure-site cards; S8 genetic-code candidate screen; aggregate-only VCF QC. PGx and host-only in-silico engines remain explicitly gated |
+| ui.services | Service carousel destinations | capability catalogue | 14 capability domains plus Public Reference Databases; dedicated domain destinations and existing workflow cards integrated; per-capability execution dispatch remains bounded and must not be inferred from catalogue status |
 | ui.settings | Settings / theme family and diagnostics | ui.settings | partial; persistent Light/Dark/System preference and diagnostics; accessibility/device proof pending |
-| ui.domains | Domain browser/detail | ui.domains | planned |
+| ui.domains | Service domain detail | ui.domains | domain-specific destination source implemented from capability catalogue; richer search/favourites/typed execution routing remain open |
 | ui.tools | Tool search/favourites/runner | ui.tools | planned |
 | ui.data | Projects/imports/data packs | ui.data | planned |
 | ui.jobs | Job detail and logs | ui.jobs | planned |
@@ -38,11 +38,11 @@ Explore describes capability maturity; it is not a promise that all research too
 | Screen ID | Screen | Required behavior | Current status |
 |---|---|---|---|
 | ui.splash | Brand splash | Owner assets, platform launch behavior, no artificial delay | planned; original artwork integration pending |
-| ui.auth | Local app-lock/authentication boundary | Honest local-vs-account distinction, secure fallback and recovery | local biometric/device-credential lock screen implemented; lifecycle/device recovery acceptance remains open; no cloud identity |
+| ui.auth | Local app-lock/authentication boundary | Honest local-vs-account distinction, secure fallback and recovery | local biometric/device-credential lock screen implemented; visual match to owner login blueprint and lifecycle/device recovery acceptance remain open; no cloud identity |
 | ui.biometric | Biometric unlock | AndroidX BiometricPrompt, enrollment/capability checks, Keystore-backed operation, lockout and recovery | source implemented; ARM64 build/JVM task passed CI #2039; device verification and recovery review pending |
-| ui.dashboard | D-015 dashboard | Owner-reference composition, real workspace carousel, owner brand, truthful live data and empty states | horizontal carousel source exists; full D-015 visual refinement, reference-image comparison, brand integration and screenshot/device verification pending |
-| ui.navigation | Navigation/drawer | Every destination navigates or is explicitly unavailable | partial; four destinations only |
-| ui.profile | Profile and security | Real local profile/preferences/security actions; no fabricated account | planned |
+| ui.dashboard | Owner login/dashboard blueprint | Owner-reference composition, live summaries, interactive service carousel and navigation | dashboard composition and domain carousel source implemented; owner-image comparison, screenshot/device verification and final visual refinement pending |
+| ui.navigation | Hamburger drawer | Home, Work and Settings are drawer destinations; no persistent bottom bar or rail | source implemented; adaptive/device interaction verification pending |
+| ui.profile | Profile and security | Real local profile/preferences/security actions; no fabricated account | local profile disclosure implemented; remote account, user ID, password reset and sign-out unavailable until identity backend exists |
 | ui.appearance | Appearance | Persistent Light/Dark/System selection; no inert controls | preference source implemented; CI/device verification and D-015 appearance preview pending |
 | ui.explore | Scientific capability catalogue | Registry-backed availability and clear maturity | catalogue plus FASTA/FASTQ QC launch cards; other capabilities remain non-runnable |
 | ui.work | Work/job list | Real import/job lifecycle actions | source implemented; full test and device evidence required |

@@ -13,6 +13,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -77,6 +81,7 @@ internal fun LigandGraphPreviewCard() {
     }
     var error by remember { mutableStateOf<String?>(null) }
     var busy by remember { mutableStateOf(false) }
+    var fullScreen by remember { mutableStateOf(false) }
 
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {
@@ -100,12 +105,15 @@ internal fun LigandGraphPreviewCard() {
         }
     }
 
-    Card(Modifier.fillMaxWidth()) {
+    @Composable
+    fun Panel(modifier: Modifier) {
+    Card(modifier) {
         Column(
             Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text("I1 · Ligand graph preview", style = MaterialTheme.typography.titleMedium)
+            Text("Ligand chemistry workspace", style = MaterialTheme.typography.titleMedium)
+            Button(onClick = { fullScreen = !fullScreen }) { Text(if (fullScreen) "Close full-screen view" else "Open full-screen chemistry") }
             Text(
                 "Offline-first SDF/MOL import with explicit-atom formula, graph counts and SHA-256 provenance. This is not RDKit sanitization or a drug-likeness verdict.",
                 style = MaterialTheme.typography.bodySmall,
@@ -166,5 +174,15 @@ internal fun LigandGraphPreviewCard() {
                 }
             }
         }
+    }
+    }
+    if (fullScreen) {
+        Dialog(onDismissRequest = { fullScreen = false }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+            Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Panel(Modifier.fillMaxSize())
+            }
+        }
+    } else {
+        Panel(Modifier.fillMaxWidth())
     }
 }

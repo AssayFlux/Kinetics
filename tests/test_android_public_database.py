@@ -54,3 +54,14 @@ def test_public_database_never_submits_imported_patient_data() -> None:
     assert "never submit patient sequences" in client
     assert "Imported patient data is never uploaded" in card
     assert "contentResolver" not in card
+
+
+def test_public_reference_cache_has_explicit_quota_and_clear_all() -> None:
+    store = (ANDROID / "PublicRecordStore.kt").read_text()
+    assert "MAX_CACHE_BYTES = 200L * 1024 * 1024" in store
+    assert "MAX_RECORDS = 50" in store
+    assert "enforceCacheQuota(protectedId = id)" in store
+    assert "ORDER BY saved_at ASC" in store
+    assert "fun totalBytes()" in store
+    assert "fun recordCount()" in store
+    assert "fun deleteAll()" in store

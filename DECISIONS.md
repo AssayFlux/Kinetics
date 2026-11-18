@@ -234,3 +234,12 @@ The following historical decisions are retained for auditability but are no long
 - Retained constraints: D-015 remains historical evidence and its non-conflicting requirements remain active: preserve owner-supplied artwork byte-for-byte; use native Jetpack Compose; retain real Kinetics workflows and Research Mode boundaries; do not invent accounts, jobs, metrics, results, scientific dispatchers or device support; keep typography/font licensing checks; do not enable unreviewed decorative assets. Existing scientific, privacy, security, licensing, architecture and phase gates are unchanged.
 - Consequences: docs/ui/kinetics-visual-design-system.md, docs/ui/ui-spec.md, KINETICS_UI_SPEC.md, tokens/generator, Compose primitives, screen implementations, screenshots, contrast/accessibility tests and roadmap evidence must be reconciled to V1. No claim of implementation or visual verification follows from this decision alone.
 - Approver: Project owner, explicit instruction in chat on 2026-11-17.
+
+
+## D-024 — Owner authorization for full engineering and institutional research testing
+
+**Date:** 2026-11-18  
+**Decision:** Open blanket engineering-development blockers, including the P0 development/testing blocker, and proceed with the complete KINETICS implementation. The project owner declares that institutional ethics approval has been obtained and expressly authorizes testing with patient data within the scope of that approval.  
+**Consequences:** Engineering may implement and test the full software system. Patient-data testing must remain within the exact institutional protocol, consent/waiver, approved environment and applicable law. Patient data must never be placed in source control, GitHub issues/PRs, CI, fixtures, logs or public artifacts. Clinical diagnosis, treatment/dosing recommendations, patient-facing clinical decision support and production clinical deployment are not implicitly approved by this engineering decision.  
+**Approval record:** Institution, committee, approval/reference number, date, protocol version and conditions are pending attachment. The repository records the owner's declaration and does not claim independent verification.  
+**Approver:** Project owner (explicit instruction in project conversation).

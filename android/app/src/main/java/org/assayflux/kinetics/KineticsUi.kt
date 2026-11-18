@@ -247,7 +247,7 @@ internal fun KineticsAppShell(
                         },
                         modifier = contentModifier,
                     )
-                    selectedServiceId != null -> ServiceDomainScreen(
+                    selectedServiceId != null -> ServiceDetailScreen(
                         domain = capabilities.firstOrNull { it.id == selectedServiceId }?.domain ?: "Service",
                         capabilities = capabilities.filter { it.id == selectedServiceId },
                         onImport = onImport,
@@ -307,7 +307,7 @@ private fun ProfileScreen(biometricEnabled: Boolean, biometricAvailable: Boolean
 }
 
 @Composable
-private fun ServiceDomainScreen(
+private fun ServiceDetailScreen(
     domain: String,
     capabilities: List<CapabilityEntry>,
     onImport: () -> Unit,
@@ -345,31 +345,8 @@ private fun ServiceDomainScreen(
                 item { U5ResearchGateCard() }
             }
             item {
-                Text("REGISTERED CAPABILITIES", style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
-            }
-            if (capabilities.isEmpty()) {
-                item { Empty("No catalogue entries", "This service area has no registered capability entries yet.") }
-            } else {
-                items(capabilities, key = { it.id }) { capability ->
-                    OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-                        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                            Text(capability.name, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
-                            Text(capability.id, style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            Text(
-                                if (capability.status == "implemented") "Engine registered · Android execution path must be verified per workflow"
-                                else "Not implemented",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    }
-                }
-            }
-            item {
                 OutlinedButton(onClick = onImport, modifier = Modifier.fillMaxWidth()) {
-                    Text("Import research input")
+                    Text("Import to Work")
                 }
             }
             item { Footer() }

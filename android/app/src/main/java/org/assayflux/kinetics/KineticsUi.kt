@@ -21,6 +21,7 @@ import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.WorkOutline
+import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.runtime.*
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -1395,7 +1396,7 @@ internal fun BiometricLockScreen(
                                     .semantics { contentDescription = "Unlock with device biometric or screen credential" },
                             ) {
                                 Icon(
-                                    Icons.Outlined.Fingerprint,
+                                    Icons.Filled.Fingerprint,
                                     contentDescription = null,
                                     modifier = Modifier.size(30.dp),
                                     tint = MaterialTheme.colorScheme.primary,

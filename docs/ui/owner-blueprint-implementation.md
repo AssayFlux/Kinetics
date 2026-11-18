@@ -94,7 +94,7 @@ Where a service is not yet implemented or lacks a real Android dispatcher, its p
 - [x] Public databases, FASTA/FASTQ, genetic-code, structure, chemistry and VCF workflow cards are routed into their service destinations where implemented.
 - [x] Four dashboard panels show runtime diagnostics and ResearchStore job-derived counts/activity; local storage/reference panel states the actual local-storage boundary.
 - [x] No duplicate service list remains on Home.
-- [x] Profile explicitly discloses that remote account identity/password services are not configured; local device lock is separately described.
+- [x] Profile supports a locally saved display name and selected avatar image plus a device-local workspace UUID; it explicitly labels the UUID as not an account ID and discloses that remote login/password reset/recovery are not configured.
 - [x] Light/dark/system themes, safe insets and semantic control descriptions are retained in source; device-level accessibility acceptance remains open.
 - [ ] Android unit tests and CI build pass.
 - [ ] Device screenshots and interaction tests are recorded before declaring visual/device acceptance.
@@ -102,3 +102,8 @@ Where a service is not yet implemented or lacks a real Android dispatcher, its p
 ## 8. Evidence and completion policy
 
 Track implementation, automated build/test evidence, and physical-device acceptance separately. A green CI build does not establish visual fidelity or device testing. A registered scientific capability does not establish scientific validation or clinical suitability. Clinical diagnosis, treatment and dosing remain outside the app's validated scope unless separately governed and validated.
+
+
+## Local profile implementation note — 2026-11-18
+
+The profile page now supports a user-selected image (persisted URI permission), a locally saved display name and a generated installation-local workspace identifier. These values are stored in app-private preferences. The identifier is not a cloud account ID and is not synchronized. The top-right header still uses the neutral account glyph until the profile avatar state is hoisted into the app shell; remote sign-in, password reset, account recovery and cloud sign-out remain unavailable without an identity provider.

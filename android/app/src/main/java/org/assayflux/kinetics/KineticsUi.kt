@@ -1080,7 +1080,16 @@ private fun SettingsScreen(
             } }
             item { SettingGroup("DEVICE RUNTIME", "Python 3.11 and native runtime probes execute locally.") {
                 Button(onRuntime, Modifier.fillMaxWidth()) { Text("Run runtime diagnostics") }
-                runtime?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+                val pythonPart = runtime?.substringAfter("Python probe:", "")?.substringBefore("Native probe:")?.trim()
+                val nativePart = runtime?.substringAfter("Native probe:", "")?.trim()
+                val pythonState = when { runtime == null -> null; pythonPart.isNullOrBlank() -> false; pythonPart.contains("FAILED", true) -> false; else -> true }
+                val nativeState = when { runtime == null -> null; nativePart.isNullOrBlank() -> false; nativePart.contains("FAILED", true) -> false; else -> true }
+                val storageState = when { runtime == null -> null; runtime.contains("Keystore AES-GCM + versioned file roundtrip: passed") -> true; runtime.contains("FAILED", true) -> false; else -> null }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    RuntimeStatusCard("Sequence engine", pythonState, Modifier.weight(1f))
+                    RuntimeStatusCard("Native engine", nativeState, Modifier.weight(1f))
+                    RuntimeStatusCard("Private storage", storageState, Modifier.weight(1f))
+                }
             } }
             item { SettingGroup("LOCAL STORAGE", "Research inputs use Keystore-backed AES-GCM and app-private storage.") {
                 OutlinedButton(onRefresh, Modifier.fillMaxWidth()) { Text("Refresh local job state") }

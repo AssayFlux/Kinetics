@@ -79,6 +79,8 @@ internal fun KineticsAppShell(
     var tab by rememberSaveable { mutableStateOf(KineticsTab.Home) }
     var showSearch by rememberSaveable { mutableStateOf(false) }
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    var workSearchQuery by rememberSaveable { mutableStateOf("") }
+    var exploreSearchQuery by rememberSaveable { mutableStateOf("") }
     var showComponentGallery by rememberSaveable { mutableStateOf(false) }
     BackHandler(enabled = showSearch || showComponentGallery) {
         if (showComponentGallery) showComponentGallery = false else showSearch = false
@@ -122,15 +124,15 @@ internal fun KineticsAppShell(
                         query = searchQuery,
                         onQueryChange = { searchQuery = it },
                         jobs = jobs,
-                        onSelectJob = { showSearch = false; tab = KineticsTab.Work },
-                        onSelectCapability = { showSearch = false; tab = KineticsTab.Explore },
+                        onSelectJob = { result -> workSearchQuery = result.title; showSearch = false; tab = KineticsTab.Work },
+                        onSelectCapability = { result -> exploreSearchQuery = result.title; showSearch = false; tab = KineticsTab.Explore },
                         modifier = modifier,
                     )
                     else -> when (tab) {
                         KineticsTab.Home -> HomeScreen(jobs, notice, runtimeReport, resolvedTheme, onImport,
                             onRunRuntime, { tab = KineticsTab.Work }, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, modifier)
-                        KineticsTab.Work -> WorkScreen(jobs, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, modifier)
-                        KineticsTab.Explore -> ExploreScreen(modifier)
+                        KineticsTab.Work -> WorkScreen(jobs, workSearchQuery, onImport, onCancel, onResume, onDelete, onExport, onExportProvenance, onExportProvenanceSummary, onAnalyzeImported, onExportAnalysis, modifier)
+                        KineticsTab.Explore -> ExploreScreen(modifier, exploreSearchQuery)
                         KineticsTab.Settings -> SettingsScreen(
                             runtimeReport, onRunRuntime, onRefresh, themeFamily, onThemeFamilyChange,
                             biometricEnabled, biometricAvailable, onBiometricChange,
@@ -276,8 +278,8 @@ private fun GlobalSearchScreen(
     query: String,
     onQueryChange: (String) -> Unit,
     jobs: List<ResearchJob>,
-    onSelectJob: () -> Unit,
-    onSelectCapability: () -> Unit,
+    onSelectJob: (SearchDocument) -> Unit,
+    onSelectCapability: (SearchDocument) -> Unit,
     modifier: Modifier,
 ) {
     val context = LocalContext.current
@@ -332,7 +334,7 @@ private fun GlobalSearchScreen(
                             trailing = { Text("OPEN", style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant) },
                             onClick = {
-                                if (result.kind == SearchDocument.Kind.JOB) onSelectJob() else onSelectCapability()
+                                if (result.kind == SearchDocument.Kind.JOB) onSelectJob(result) else onSelectCapability(result)
                             },
                         )
                     }
@@ -553,14 +555,14 @@ private fun Section(title: String, action: String, onClick: () -> Unit) {
 
 @Composable
 private fun WorkScreen(
-    jobs: List<ResearchJob>, onImport: () -> Unit, onCancel: (ResearchJob) -> Unit,
+    jobs: List<ResearchJob>, initialQuery: String, onImport: () -> Unit, onCancel: (ResearchJob) -> Unit,
     onResume: (ResearchJob) -> Unit, onDelete: (ResearchJob) -> Unit,
     onExport: (ResearchJob) -> Unit, onExportProvenance: (ResearchJob) -> Unit,
     onExportProvenanceSummary: (ResearchJob) -> Unit, onAnalyzeImported: (ResearchJob) -> Unit,
     onExportAnalysis: (ResearchJob) -> Unit, modifier: Modifier,
 ) {
-    var query by remember { mutableStateOf("") }
-    var filter by remember { mutableStateOf("All") }
+    var query by rememberSaveable(initialQuery) { mutableStateOf(initialQuery) }
+    var filter by rememberSaveable { mutableStateOf("All") }
     val filtered = jobs.filter { job ->
         (query.isBlank() || job.inputName.contains(query, true)) && when (filter) {
             "Active" -> job.state in listOf("queued", "running", "cancel_requested")
@@ -757,11 +759,15 @@ private fun loadCapabilityCatalogue(context: Context): List<CapabilityEntry> {
 }
 
 @Composable
-fun ExploreScreen(modifier: Modifier) {
+fun ExploreScreen(modifier: Modifier, initialQuery: String = "") {
     val context = LocalContext.current
     val catalogue = remember(context) { runCatching { loadCapabilityCatalogue(context) } }
     val entries = catalogue.getOrNull().orEmpty()
-    val groups = entries.groupBy { it.domain }.toList()
+    var query by rememberSaveable(initialQuery) { mutableStateOf(initialQuery) }
+    val visibleEntries = entries.filter { entry ->
+        query.isBlank() || entry.name.contains(query, true) || entry.id.contains(query, true) || entry.domain.contains(query, true)
+    }
+    val groups = visibleEntries.groupBy { it.domain }.toList()
     Frame(
         "Scientific toolkit",
         "Explore the science.",
@@ -772,6 +778,14 @@ fun ExploreScreen(modifier: Modifier) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(bottom = 24.dp),
         ) {
+            item {
+                KineticsField(
+                    value = query,
+                    onValueChange = { query = it },
+                    label = "Filter registered capabilities",
+                    supportingText = "Capability name, identifier or research domain",
+                )
+            }
             item {
                 Card(
                     shape = RoundedCornerShape(20.dp),
@@ -786,7 +800,7 @@ fun ExploreScreen(modifier: Modifier) {
                         Text("Capability transparency", fontWeight = FontWeight.Bold)
                         Text(
                             if (catalogue.isSuccess) {
-                                "${entries.size} registered source capabilities across ${groups.size} research areas. Registry status describes source implementation only; it does not imply an Android execution path or scientific validation."
+                                "${visibleEntries.size} matching of ${entries.size} registered source capabilities across ${groups.size} visible research areas. Registry status describes source implementation only; it does not imply an Android execution path or scientific validation."
                             } else {
                                 "The capability catalogue could not be loaded. No capabilities are being presented as available."
                             },
@@ -813,6 +827,9 @@ fun ExploreScreen(modifier: Modifier) {
             }
             if (entries.any { it.id == "sequence.genetic_code_candidate_inference" && it.status == "implemented" }) {
                 item { GeneticCodeInferenceCard() }
+            }
+            if (catalogue.isSuccess && visibleEntries.isEmpty()) {
+                item { Empty("No matching capabilities", "Try a different name, identifier or research domain.") }
             }
             if (catalogue.isFailure) {
                 item {

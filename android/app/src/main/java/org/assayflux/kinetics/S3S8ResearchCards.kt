@@ -276,11 +276,13 @@ private fun readGeneticCodeFasta(context: Context, uri: Uri): Pair<String, Strin
     val name = context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
         ?.use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
         ?: uri.lastPathSegment ?: "sequence.fasta"
-    require(name.substringAfterLast('.', "").lowercase(Locale.ROOT) in setOf("fa", "fasta", "fna", "fas", "txt")) {
-        "Choose a FASTA sequence file (.fa, .fasta, .fna or .fas)."
+    val baseName = name.lowercase(Locale.ROOT).removeSuffix(".gz")
+    require(baseName.substringAfterLast('.', "") in setOf("fa", "fasta", "fna", "fas", "txt")) {
+        "Choose a FASTA sequence file (.fa, .fasta, .fna or .fas), optionally gzip-compressed."
     }
     val input = context.contentResolver.openInputStream(uri) ?: error("The selected sequence file could not be opened.")
-    val bytes = input.use { stream ->
+    val decoded = if (name.endsWith(".gz", ignoreCase = true)) GZIPInputStream(input) else input
+    val bytes = decoded.use { stream ->
         val output = ByteArrayOutputStream()
         val buffer = ByteArray(16 * 1024)
         var total = 0

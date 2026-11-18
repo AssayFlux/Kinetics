@@ -289,6 +289,21 @@ internal fun KineticsAppShell(
   }
 }
 
+private fun loadLocalProfileBitmap(context: Context, uriText: String): android.graphics.Bitmap? {
+    val uri = android.net.Uri.parse(uriText)
+    val resolver = context.contentResolver
+    val bounds = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    resolver.openInputStream(uri)?.use { android.graphics.BitmapFactory.decodeStream(it, null, bounds) }
+    if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
+    var sample = 1
+    while (bounds.outWidth / sample > 512 || bounds.outHeight / sample > 512) sample *= 2
+    val options = android.graphics.BitmapFactory.Options().apply {
+        inSampleSize = sample
+        inPreferredConfig = android.graphics.Bitmap.Config.RGB_565
+    }
+    return resolver.openInputStream(uri)?.use { android.graphics.BitmapFactory.decodeStream(it, null, options) }
+}
+
 @Composable
 private fun ProfileAvatarButton(onClick: () -> Unit) {
     val context = LocalContext.current
@@ -298,9 +313,7 @@ private fun ProfileAvatarButton(onClick: () -> Unit) {
         value = withContext(Dispatchers.IO) {
             uri?.let { raw ->
                 runCatching {
-                    context.contentResolver.openInputStream(android.net.Uri.parse(raw))?.use {
-                        android.graphics.BitmapFactory.decodeStream(it)
-                    }
+                    loadLocalProfileBitmap(context, raw)
                 }.getOrNull()
             }
         }
@@ -350,9 +363,7 @@ private fun ProfileScreen(biometricEnabled: Boolean, biometricAvailable: Boolean
         value = withContext(Dispatchers.IO) {
             avatarUri?.let { raw ->
                 runCatching {
-                    context.contentResolver.openInputStream(android.net.Uri.parse(raw))?.use {
-                        android.graphics.BitmapFactory.decodeStream(it)
-                    }
+                    loadLocalProfileBitmap(context, raw)
                 }.getOrNull()
             }
         }

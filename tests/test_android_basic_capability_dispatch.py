@@ -179,7 +179,10 @@ def test_omics_normalisation_correlation_and_jc_nj_routes_execute():
     assert len(correlations) == 2
     tree = _run_probe(
         "phylo.jukes_cantor_nj",
-        '{"sequences":{"A":"ACGTACGTACGTACGTACGT","B":"ACGTACGTACGTACGTACGA","C":"ACGTACGTACGTACGTACGG"}}',
+        (
+            '{"sequences":{"A":"ACGTACGTACGTACGTACGT",'
+            '"B":"ACGTACGTACGTACGTACGA","C":"ACGTACGTACGTACGTACGG"}}'
+        ),
     )
     assert tree["leaf_count"] == 3
     assert tree["newick"].endswith(";")

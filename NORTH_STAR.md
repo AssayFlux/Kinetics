@@ -40,7 +40,7 @@ Targets below are acceptance criteria to be measured, not claims that have alrea
 
 1. **Reproducibility:** every validated capability has a versioned validation record, benchmark/test vectors and provenance round-trip test; reproduce-all regenerates all committed paper tables and figures from a clean checkout.
 2. **Registry integrity:** CI rejects missing tool/engine/pack/domain references, unsupported status claims, missing validation evidence, missing device logs and clinical-mode exposure without the required gate.
-3. **Offline operation:** each capability designated Tier A passes an airplane-mode test on its declared supported device; network activity is limited to explicitly user-triggered pack downloads or a configured remote node.
+3. **Offline operation:** each capability designated Tier A passes an airplane-mode test on its declared supported device; network activity is limited to explicit public-reference retrieval, user-triggered pack downloads or a separately configured remote node. Public-reference requests must never contain patient data or private research inputs.
 4. **Device evidence:** each device-verified capability has a dated test log identifying device model, SoC, RAM, Android version, app/build version and test outcome.
 5. **Performance:** every benchmark records runtime and peak memory on named devices; battery/thermal measurements are included where practical. No performance claim without raw benchmark output.
 6. **Privacy:** no telemetry by default; no genomic or patient data in logs; local data encrypted at rest; remote traffic authenticated and encrypted; consent and deletion behaviours tested before sensitive-data workflows.

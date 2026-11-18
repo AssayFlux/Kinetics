@@ -19,13 +19,13 @@ with (ROOT / "pyproject.toml").open("rb") as handle:
     python_version = str(tomllib.load(handle)["project"]["version"])
 
 package_source = (ROOT / "python/kinetics/__init__.py").read_text(encoding="utf-8")
-package_match = re.search(r'^__version__\\s*=\\s*["\\']([^"\\']+)["\\']', package_source, re.MULTILINE)
+package_match = re.search(r'^__version__[ ]*=[ ]*["']([^"']+)["']', package_source, re.MULTILINE)
 if package_match is None:
     raise SystemExit("python/kinetics/__init__.py does not declare __version__")
 
 android_source = (ROOT / "android/app/build.gradle.kts").read_text(encoding="utf-8")
-android_match = re.search(r'versionName\\s*=\\s*"([^"]+)"', android_source)
-code_match = re.search(r'versionCode\\s*=\\s*(\\d+)', android_source)
+android_match = re.search(r'versionName[ ]*=[ ]*"([^"]+)"', android_source)
+code_match = re.search(r'versionCode[ ]*=[ ]*([0-9]+)', android_source)
 if android_match is None or code_match is None:
     raise SystemExit("Android versionName/versionCode are not declared")
 

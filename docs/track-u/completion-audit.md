@@ -103,7 +103,7 @@ The presentation brief is docs/ethics-committee/engineering-evidence-brief.md. I
 ### Current truthful status
 - NCBI nucleotide/protein and UniProt FASTA: retrieval, encrypted payload save and existing on-device FASTA QC are wired in source.
 - RCSB PDB entry ID: mmCIF retrieval, encrypted payload save and existing parser/viewer handoff are wired in source.
-- NCBI Gene: metadata search only; no linked transcript/protein sequence action yet.
+- NCBI Gene: metadata search plus linked nucleotide/protein discovery through ELink; selected linked records use the existing FASTA retrieval and QC path.
 - Saved records: visible and deletable; saved mmCIF can be reopened in the viewer and saved FASTA can be re-analysed. A richer saved-record detail/history browser remains open.
 - Source payload encryption is implemented; SQLite metadata and analysis JSON remain plaintext within app-private storage.
 - RCSB search is entry-ID based, not text/ligand/organism discovery.

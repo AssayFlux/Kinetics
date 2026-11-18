@@ -1,88 +1,64 @@
 # Baseline and branch governance
 
-**Policy version:** 1.0  
+**Policy version:** 2.0  
 **Applies to:** all Kinetics source, build, scientific data, documentation and release artifacts.
 
-## 1. Release states are distinct
+## 1. Release states
 
-A version moves through these states in order:
-
-1. **Declared** — version metadata and scope exist.
-2. **Candidate** — source is under release stabilization; acceptance gates remain open.
-3. **Built** — a clean build completed on the exact commit and produced verified artifacts.
-4. **Accepted** — required automated, scientific, security, device, legal and owner acceptance evidence is recorded.
-5. **Frozen baseline** — the accepted commit is tagged and protected from mutation.
-
-A version string, passing subset of CI, cancelled workflow, old artifact, or successful compilation step is not a release.
+A version moves through declared → candidate → built → accepted → frozen baseline. A version string, partial CI pass, cancelled workflow, old artifact, or successful compilation step is not a release.
 
 ## 2. v0.1.0 baseline immutability
 
-Before freeze, v0.1.0 is a candidate and may receive narrowly scoped release-blocker fixes.
+Until the exact v0.1.0 commit has a successful clean build, verified APK, required automated checks and owner acceptance, it remains a candidate and may receive narrowly scoped release-blocker fixes.
 
-After freeze:
+After successful baseline acceptance and freeze:
+- main is the immutable v0.1.0 baseline. Do not commit, merge, rebase, amend, squash, regenerate or otherwise change its tree.
+- Preserve the exact baseline commit and immutable v0.1.0 tag. Never force-move, delete/recreate or retarget the tag.
+- Do not update baseline dependencies, lockfiles, generated files, UI, methods, documentation or build scripts in place.
+- All next-version engineering happens only on the single branch named v0.1.1.
+- Do not create feature, develop, release, hotfix or other branches for next-version work. Use commits on v0.1.1. Do not merge next-version work into frozen main.
+- Critical fixes to the frozen v0.1.0 baseline are delivered as a new version, not by changing its commit or tag.
+- Archive APK/AAB, SHA-256, build logs, SBOM, toolchain record, test reports and release notes.
 
-- The v0.1.0 annotated tag and its target commit are immutable. Never force-move, delete/recreate, or retarget them.
-- The baseline source tree is read-only. Do not commit, rebase, squash, amend, regenerate, reformat, or cherry-pick changes onto the frozen baseline.
-- Do not update baseline dependencies, lockfiles, generated files, UI, scientific methods, documentation or build scripts in place.
-- All new work goes to the development branch and future version.
-- A critical defect is fixed on a new patch branch (for example v0.1.1), with a new version, tests, release notes and provenance. The v0.1.0 baseline remains unchanged.
-- Any backport is a new patch release derived from the frozen tag; it never changes the original tag or commit.
-- Preserve the original APK/AAB, SHA-256, build logs, SBOM, toolchain record, test reports and release notes as immutable evidence.
+The GitHub administrator must enable branch protection/rulesets and tag protection. Do not claim these controls are active until verified in GitHub settings.
 
-The GitHub repository administrator must enable branch protection/rulesets and tag protection for the release tag pattern. CI policy checks are defense in depth, not a substitute for GitHub-side access controls. The connector used for this repository cannot configure those administrative protections; do not claim they are enabled until verified in repository settings.
+## 3. Branch model — single forward branch
 
-## 3. Branch model
+- main: v0.1.0 baseline source. It is still a candidate until the v0.1.0 exact-commit build and acceptance gates pass; after freeze it is read-only.
+- v0.1.1: the only permitted forward-development branch. It is created from the accepted v0.1.0 baseline commit. All next-version commits go here.
+- Existing legacy branches release/0.1.0 and develop/v0.1.2 are not to receive new work. Do not create additional branches.
+- Before every meaningful integration or release candidate, fetch and compare v0.1.1 with main; verify merge base, changed files, version metadata, Android/Python contracts, capability registry, generated assets and tests. While main is not frozen, incorporate required baseline fixes into v0.1.1 without rewriting main. Once main is frozen, never rewrite it or merge v0.1.1 into it.
+- A branch name is not proof of protection. Verify GitHub rules before relying on required reviews or force-push restrictions.
 
-- `main`: integration line; never represents an immutable released baseline by itself.
-- `release/0.1.0`: stabilization candidate only. Merge only fixes required by v0.1.0 acceptance gates. Freeze it only after exact-head build and all acceptance gates pass.
-- `develop/v0.1.2`: forward development for the scientific rulebook and computation architecture. No unreviewed merge into the frozen baseline.
-- `release/0.1.1` (if required): patch/hardening line derived from the frozen v0.1.0 tag; never rewrite the tag.
-- Feature branches: short-lived, scoped, tested and merged through reviewed pull requests.
+## 4. Change control
 
-A branch name is not proof of protection. Verify GitHub branch rules before relying on required reviews, status checks or force-push restrictions.
+Every change must identify target release and requirement; affected app workflows, APIs, dispatchers, registry, schemas, data packs, docs and generated assets; tests for success and failure paths; compatibility/migration impact; dependency source/version/checksum/licence; scientific provenance, units, parameters, seeds and limitations; evidence-backed user claims; changelog/manifest updates; and exact-commit CI results.
 
-## 4. Change-control rules
+No force push to shared branches. No secrets, patient-identifiable data, private research data, signing keys or credentials in Git.
 
-Every change must:
+## 5. Research archive and build independence
 
-1. State its target release and requirement/issue.
-2. Identify affected app workflows, Python APIs, Android dispatchers, capability registry, schemas, data packs, docs and generated artifacts.
-3. Include tests for behaviour and negative/error paths.
-4. Preserve input/output compatibility or document a schema/API migration.
-5. Record dependency version, source, checksum and licence impact.
-6. Preserve provenance, units, parameter defaults, deterministic seeds and method limitations for scientific outputs.
-7. Update user-facing claims only when implementation and evidence support them.
-8. Update changelog, release manifest and relevant audit documents.
-9. Pass CI on the exact commit intended for merge/release.
-10. Receive review before merge; release approval remains an explicit owner decision.
+potential research project.md is a dormant archive only. Its research plans, rulebooks and future protocols must not activate app capabilities, datasets, training, CI jobs or runtime workflows until the owner explicitly authorizes a defined scope.
 
-No force push to shared branches. No direct commits to a frozen baseline. No secret, patient-identifiable data, private research data, signing keys or credentials in Git.
+Ordinary software engineering and Android packaging must not be blocked solely by future research protocol, ethics-committee, dataset-intake or scientific-validation work that is not part of the shipped v0.1.0 scope. Keep the archive non-executable and do not add its future research tasks as release prerequisites.
 
-## 5. Versioning
-
-- Python distribution version, Python `__version__`, Android `versionName`, changelog and release manifest must agree.
-- Android `versionCode` is monotonically increasing and must never be reused for a different artifact.
-- Semantic version changes require a changelog entry and release-plan update.
-- A dependency-only rebuild is a new artifact with its own source commit and hashes; it is not silently substituted for a previously published artifact.
-- Do not label a prerelease or candidate as stable.
+This separation does not waive engineering safeguards: protect data actually processed; enforce consent/access controls where applicable; keep sensitive/patient data out of GitHub, CI and public artifacts; manage secrets; comply with dependency/data licences; make truthful capability claims; and keep clinical decision functions disabled unless separately authorized.
 
 ## 6. Scientific integrity
 
-- Separate implementation, Android integration, independent validation, device acceptance and clinical approval.
-- A registry entry, test pass, smoke test, database record or model output does not alone establish scientific validation.
-- Every generated/predicted result must identify method class (rule-based, physics-based, statistical, AI prediction or retrieval), inputs, parameters, version, provenance, uncertainty and limitations.
-- Clinical and patient-specific interpretation stays disabled unless separately authorized through the relevant ethics, legal, regulatory and clinical gates.
+Separate implementation, Android integration, independent validation, device acceptance and clinical approval. A registry entry, test, smoke test, database record or model output does not alone establish scientific validation. Generated/predicted results must identify method class, inputs, parameters, version, provenance, uncertainty and limitations. No patient-specific clinical interpretation, diagnosis or treatment/dosing recommendation is enabled by the dormant archive.
 
 ## 7. v0.1.0 freeze checklist
 
-- [ ] Release candidate commit identified and reviewed.
-- [ ] Exact commit CI green, including APK build, JVM tests, Python suite, native/package checks.
-- [ ] APK installed and exercised on named ARM64 device and supported emulator; workflow, recovery, import/export and upgrade evidence archived.
+- [ ] Exact release candidate commit identified and reviewed.
+- [ ] Exact-commit CI green, including APK build, JVM tests, Python suite and native/package checks.
+- [ ] APK installed and exercised on a named ARM64 device and supported emulator; workflow, recovery, import/export and upgrade evidence archived.
 - [ ] UI, accessibility, security, privacy, licensing, notices and dependency/SBOM review accepted.
-- [ ] Scientific capability claims match the release scope and evidence.
+- [ ] Shipped capability claims match implementation and evidence.
 - [ ] Owner approves release notes, artifact hashes and distribution.
-- [ ] Annotated `v0.1.0` tag created once and protected against update/deletion.
-- [ ] Baseline manifest changed to `frozen` with exact tag, commit, APK SHA-256, CI run and evidence links.
+- [ ] Annotated v0.1.0 tag created once and protected.
+- [ ] Baseline manifest records exact tag, commit, APK SHA-256, CI run and evidence links.
 - [ ] GitHub-side branch/tag rules verified and documented.
+- [ ] v0.1.1 created from the accepted baseline commit as the sole forward branch.
 
-Until all boxes are checked, status must remain **CANDIDATE — NOT FROZEN**.
+Until all boxes are checked, status remains CANDIDATE — NOT FROZEN.

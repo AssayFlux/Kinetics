@@ -3,7 +3,7 @@
 **Status:** In progress. No release or device-support claim is implied.
 
 ## Scope
-- Offline-by-default manifest and network permission review.
+- Offline-first manifest and network permission review, including the restricted user-initiated public-reference provider allow-list.
 - Android Keystore encryption, app-private storage, backup exclusion and data lifecycle.
 - Registry integrity, provenance, reproducible builds and dependency/license inventory.
 - Accessibility, crash recovery, migration safety, process-death handling and threat modelling.
@@ -23,3 +23,8 @@
 
 ## Exit evidence
 All checks reproducible from a clean checkout; independent security review; dated device logs; measured benchmarks; signed release artifacts and owner acceptance. Never mark device-verified or validated without matching registry evidence.
+
+
+## Public reference network boundary — 2026-11-18
+
+The app now permits explicit user-triggered retrieval of public reference records from allow-listed NCBI, UniProt and RCSB endpoints. This does not enable remote-node execution, telemetry, account services or patient-data transfer. Merged-manifest review and runtime traffic capture remain required. Public database search is an intentional network exception to the offline-first default.

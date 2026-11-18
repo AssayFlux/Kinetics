@@ -205,3 +205,12 @@ def test_gff3_import_and_cds_reconstruction_routes_execute():
         }),
     )
     assert reconstructed
+
+def test_user_supplied_protein_motif_pack_is_hash_pinned_and_bounded():
+    result = _run_probe(
+        "protein.fixed_width_motif_scan",
+        '{"query":"ACDGACDG","motifs":[{"id":"example","pattern":"A..G"}],'
+        '"name":"Example pack","version":"1","license":"CC0-1.0",'
+        '"source":"https://example.org/motif-pack"}',
+    )
+    assert result

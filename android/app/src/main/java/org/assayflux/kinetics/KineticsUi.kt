@@ -459,6 +459,7 @@ private fun ServiceDetailScreen(
         "phylo.jukes_cantor_nj",
         "genome.gff3_annotation_import",
         "genome.gff3_transcript_cds_reconstruction",
+        "protein.fixed_width_motif_scan",
         "structure.ligand_site_candidates",
         "structure.apo_pocket_candidates",
         "chemistry.sdf_graph",
@@ -665,6 +666,15 @@ private fun ServiceDetailScreen(
                     description = "Reconstruct spliced CDS from validated GFF3 and supplied contigs. Input JSON contains gff3, contigs and optional table_id.",
                     sample = "{\"gff3\":\"##gff-version 3\\nchr1\\tKinetics\\tgene\\t1\\t9\\t.\\t+\\t.\\tID=g1\\nchr1\\tKinetics\\tmRNA\\t1\\t9\\t.\\t+\\t.\\tID=t1;Parent=g1\\nchr1\\tKinetics\\tCDS\\t1\\t9\\t.\\t+\\t0\\tID=c1;Parent=t1\",\"contigs\":{\"chr1\":\"ATGGCTTAA\"},\"table_id\":11}",
                     actionLabel = "Reconstruct CDS",
+                ) }
+            }
+            if (capability?.id == "protein.fixed_width_motif_scan") {
+                item { BasicResearchCapabilityCard(
+                    capabilityId = "protein.fixed_width_motif_scan",
+                    title = "Protein motif-pack scan",
+                    description = "Scan a protein against a caller-supplied hash-pinned motif pack. Input JSON includes query, motifs and source/license metadata; no external pack is downloaded.",
+                    sample = "{\"query\":\"ACDGACDG\",\"motifs\":[{\"id\":\"example\",\"pattern\":\"A..G\"}],\"name\":\"Example pack\",\"version\":\"1\",\"license\":\"CC0-1.0\",\"source\":\"https://example.org/motif-pack\"}",
+                    actionLabel = "Scan motifs",
                 ) }
             }
             if (capability?.id == "structure.ligand_site_candidates" ||

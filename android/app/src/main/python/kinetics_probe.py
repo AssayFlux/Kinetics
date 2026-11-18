@@ -571,6 +571,53 @@ def run_android_basic_capability(capability_id: str, sequence_text: str) -> str:
             "Only complete canonical CDSs with valid caller-selected table translation can pass CDS validation",
             "No gene function, expression, pathogenicity or clinical interpretation is performed",
         ]
+    elif capability_id == "protein.fixed_width_motif_scan":
+        import hashlib
+        from kinetics.protein_motifs import MotifPack, scan_protein_motif_pack
+        try:
+            parameters = json.loads(sequence_text)
+            query = parameters["query"]
+            motifs = parameters["motifs"]
+            name = parameters["name"]
+            version = parameters["version"]
+            license_id = parameters["license"]
+            source = parameters["source"]
+        except (KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                "Provide query, motifs, name, version, license and source in JSON"
+            ) from exc
+        if not isinstance(query, str) or len(query) > 100_000:
+            raise ValueError("Protein query is limited to 100,000 residues")
+        if not isinstance(motifs, list) or len(motifs) > 2_000:
+            raise ValueError("Caller-supplied motif list is limited to 2,000 entries")
+        pack_bytes = json.dumps(
+            {"schema_version": 1, "motifs": motifs},
+            ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+        ).encode("utf-8")
+        if len(pack_bytes) > 512 * 1024:
+            raise ValueError("Motif pack exceeds the 512 KiB mobile limit")
+        pack = MotifPack(
+            name=name,
+            version=version,
+            license=license_id,
+            source=source,
+            content_sha256=hashlib.sha256(pack_bytes).hexdigest(),
+        )
+        result = scan_protein_motif_pack(
+            query,
+            pack_bytes,
+            motif_pack=pack,
+            max_pack_bytes=512 * 1024,
+            max_motifs=2_000,
+            max_query_residues=100_000,
+            max_comparisons=5_000_000,
+            max_hits=10_000,
+        )
+        limitations = [
+            "Only caller-supplied motifs are searched; this is not a complete domain database",
+            "A matching motif is a sequence-pattern observation, not proof of function or activity",
+            "Source and licence metadata are user-supplied and are not independently verified",
+        ]
     elif capability_id == "genome.orf_candidate_scan":
         from kinetics.orf import find_orf_candidates
         sequence = "".join(sequence_text.split()).upper()

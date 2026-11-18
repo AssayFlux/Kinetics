@@ -29,6 +29,7 @@ internal object AndroidBasicCapabilityRunner {
         "phylo.jukes_cantor_nj",
         "genome.gff3_annotation_import",
         "genome.gff3_transcript_cds_reconstruction",
+        "protein.fixed_width_motif_scan",
     )
 
     fun analyze(context: Context, capabilityId: String, sequenceText: String): String {

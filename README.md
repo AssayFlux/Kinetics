@@ -166,7 +166,7 @@ The project prioritises reproducibility, provenance, bounded inputs and explicit
 | **S** | Structure, sequence and discovery | **SOFTWARE SCOPE CLOSED** | Independent references, licensed resources/models and device evidence remain. |
 | **I** | In-silico laboratory | **SOFTWARE AUDIT CLOSED** | Scientific benchmarks, licensing, secure-node and device evidence remain. |
 | **P** | Precision Medicine (PGx First) | **SOFTWARE FOUNDATION CLOSED** | D-025 opens owner-authorized research testing within the declared institutional approval; the approval record is pending attachment/verification. Clinical deployment and clinical decision support remain gated. |
-| **G** | Governance, assurance and publication readiness | **HISTORICAL G0–G7 ENGINEERING AUDIT CLOSED — CURRENT-HEAD CI NOT GREEN** | The latest exact-head run has a Python foundation failure; rerun after correction. Overall acceptance also requires independent reviews, complete SBOM/licensing, device checks, owner policy acceptance and operating exercises. |
+| **G** | Governance, assurance and publication readiness | **HISTORICAL G0–G7 ENGINEERING AUDIT CLOSED** | The 18 Nov baseline commit `83df8e7` had a Python foundation failure in its exact-head run; this correction requires a fresh exact-head CI result. Overall acceptance also requires independent reviews, complete SBOM/licensing, device checks, owner policy acceptance and operating exercises. |
 | **U** | User interface and experience | **STARTED — STEP 1 BASE IMPLEMENTATION** | Owner V1 monochrome UI specification adopted (D-024); U0–U3 remain partial baseline; U4–U6 remain dependency-gated. Step 2 audit not yet run. |
 
 | ENGINEERING AREA | POSITION |

@@ -31,7 +31,7 @@ internal fun U5ResearchGateCard() {
             Text(
                 "RESEARCH TESTING · OWNER AUTHORIZED",
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Text(
                 "Institutional approval is declared by the project owner; approval reference, scope and conditions must be retained in the project record. Use only datasets covered by that approval. The VCF panel returns aggregate syntax/QC counts only and is not a clinical decision tool.",

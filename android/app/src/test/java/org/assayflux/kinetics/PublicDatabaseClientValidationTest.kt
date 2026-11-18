@@ -13,6 +13,18 @@ class PublicDatabaseClientValidationTest {
     }
 
     @Test
+    fun rejectsRawNucleotideSequenceSearchBeforeNetwork() {
+        val error = runCatching { client.searchNcbiGene("ACGT".repeat(12)) }.exceptionOrNull()
+        assertTrue(error is IllegalArgumentException)
+    }
+
+    @Test
+    fun rejectsFastaHeaderSearchBeforeNetwork() {
+        val error = runCatching { client.searchUniProt(">patient-sequence") }.exceptionOrNull()
+        assertTrue(error is IllegalArgumentException)
+    }
+
+    @Test
     fun rejectsUnsupportedNcbiDatabaseBeforeNetwork() {
         val error = runCatching { client.searchNcbiSequence("gene", "TP53") }.exceptionOrNull()
         assertTrue(error is IllegalArgumentException)

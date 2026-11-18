@@ -88,24 +88,31 @@ internal fun PublicDatabaseCard(
                         else -> error("This search result does not expose a sequence accession")
                     }
                     val saved = store.save(fetched)
-                    if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
-                    val analysis = Python.getInstance().getModule("kinetics_probe")
-                        .callAttr("analyze_fasta", fetched.content).toString()
-                    val parsed = JSONObject(analysis)
-                    require(parsed.optInt("record_count", 0) > 0) {
-                        "Retrieved FASTA did not produce a valid sequence analysis"
+                    val analysis = runCatching {
+                        if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
+                        Python.getInstance().getModule("kinetics_probe")
+                            .callAttr("analyze_fasta", fetched.content).toString().also { json ->
+                                require(JSONObject(json).optInt("record_count", 0) > 0) {
+                                    "Retrieved FASTA did not produce a valid sequence analysis"
+                                }
+                                store.saveAnalysis(saved.id, json)
+                            }
                     }
-                    store.saveAnalysis(saved.id, analysis)
                     Pair(saved, analysis)
                 }
             }
             result.fold(
                 { (saved, analysis) ->
                     savedRecords = withContext(Dispatchers.IO) { store.recent() }
-                    analysisPreview = analysis
-                    message = "Retrieved, checksum-verified and encrypted locally · ${saved.source} ${saved.accession}. FASTA QC completed on-device."
+                    analysisPreview = analysis.getOrNull()
+                        ?: "Record safely saved. The current FASTA QC engine could not process it: ${analysis.exceptionOrNull()?.message ?: "unsupported record or size limit"}"
+                    message = if (analysis.isSuccess) {
+                        "Retrieved, checksum-verified and encrypted locally · ${saved.source} ${saved.accession}. FASTA QC completed on-device."
+                    } else {
+                        "Reference sequence saved locally · ${saved.source} ${saved.accession}. QC was not completed; see the limitation below."
+                    }
                 },
-                { error -> message = "Sequence retrieval or analysis failed: ${error.message ?: error.javaClass.simpleName}" },
+                { error -> message = "Sequence retrieval or storage failed: ${error.message ?: error.javaClass.simpleName}" },
             )
             busy = false
         }
@@ -205,6 +212,52 @@ internal fun PublicDatabaseCard(
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
+                        }
+                        if (saved.format.equals("mmCIF", ignoreCase = true)) {
+                            TextButton(
+                                enabled = !busy,
+                                onClick = {
+                                    scope.launch {
+                                        val loaded = withContext(Dispatchers.IO) { store.loadRecord(saved.id) }
+                                        if (loaded != null) {
+                                            onStructureFetched(loaded)
+                                            message = "Saved RCSB structure reopened from encrypted local storage."
+                                        } else {
+                                            message = "Saved structure could not be authenticated or reopened."
+                                        }
+                                    }
+                                },
+                            ) { Text("Open") }
+                        }
+                        if (saved.format.equals("FASTA", ignoreCase = true)) {
+                            TextButton(
+                                enabled = !busy,
+                                onClick = {
+                                    busy = true
+                                    scope.launch {
+                                        val analysis = runCatching {
+                                            withContext(Dispatchers.IO) {
+                                                val loaded = store.loadRecord(saved.id)
+                                                    ?: error("Saved FASTA record is unavailable")
+                                                if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
+                                                Python.getInstance().getModule("kinetics_probe")
+                                                    .callAttr("analyze_fasta", loaded.content).toString()
+                                                    .also { json ->
+                                                        require(JSONObject(json).optInt("record_count", 0) > 0)
+                                                        store.saveAnalysis(saved.id, json)
+                                                    }
+                                            }
+                                        }
+                                        analysisPreview = analysis.getOrNull()
+                                        message = analysis.fold(
+                                            { "Saved sequence reopened, re-analysed locally and result updated." },
+                                            { "Saved sequence could not be re-analysed: ${it.message ?: it.javaClass.simpleName}" },
+                                        )
+                                        savedRecords = withContext(Dispatchers.IO) { store.recent() }
+                                        busy = false
+                                    }
+                                },
+                            ) { Text("Reanalyse") }
                         }
                         TextButton(
                             enabled = !busy,

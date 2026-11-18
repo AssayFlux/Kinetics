@@ -29,6 +29,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -97,7 +98,7 @@ private fun readBounded(context: android.content.Context, uri: Uri, gzip: Boolea
 /** Offline-first structure viewer with bounded SAF import; no network or generic JS bridge. */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-internal fun StructureViewerPreview() {
+internal fun StructureViewerPreview(publicRecord: PublicScientificRecord? = null) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var payloadJson by remember { mutableStateOf<String?>(null) }
@@ -111,6 +112,43 @@ internal fun StructureViewerPreview() {
     var sourceLabel by remember { mutableStateOf("Synthetic preview fixture") }
     var importMessage by remember {
         mutableStateOf("Choose a local PDB or mmCIF file to inspect it offline.")
+    }
+    LaunchedEffect(publicRecord?.sha256) {
+        val fetched = publicRecord
+        if (fetched != null && fetched.format.equals("mmCIF", ignoreCase = true)) {
+            importMessage = "Preparing retrieved public structure for the offline viewer..."
+            val result = withContext(Dispatchers.IO) {
+                runCatching {
+                    require(fetched.content.toByteArray(Charsets.UTF_8).size <= MAX_STRUCTURE_SOURCE_BYTES) {
+                        "Retrieved structure exceeds the 16 MiB viewer parser limit"
+                    }
+                    if (!Python.isStarted()) Python.start(AndroidPlatform(context.applicationContext))
+                    val envelope = JSONObject(
+                        Python.getInstance().getModule("kinetics_probe")
+                            .callAttr("prepare_structure_viewer_import", fetched.content, "mmcif")
+                            .toString(),
+                    )
+                    ImportedStructure(
+                        payloadJson = envelope.getJSONObject("payload").toString(),
+                        name = "RCSB PDB ${fetched.accession}",
+                        sourceHash = envelope.getJSONObject("preparation").getString("source_sha256"),
+                        sessionJson = envelope.getString("session_export_json"),
+                    )
+                }
+            }
+            result.fold(
+                { imported ->
+                    payloadJson = imported.payloadJson
+                    sessionExportJson = imported.sessionJson
+                    viewerStateJson = null
+                    sourceLabel = imported.name
+                    importMessage = "Retrieved from RCSB PDB · parsed and validated · SHA-256 ${imported.sourceHash.take(16)}…"
+                },
+                { error ->
+                    importMessage = "Public structure parsing failed: ${error.message ?: error.javaClass.simpleName}"
+                },
+            )
+        }
     }
     val exportPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/json"),

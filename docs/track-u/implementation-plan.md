@@ -141,7 +141,7 @@ Track U remains OPEN. PR #76 merged the Step 1 monochrome foundation to main as 
 - Raw public payloads are encrypted; SQLite metadata and QC result JSON remain app-private but are not encrypted at rest.
 
 ### Remaining engineering checklist
-1. Add NCBI Gene-to-RefSeq transcript/protein link resolution and result-specific accession navigation.
+1. Complete NCBI Gene-to-RefSeq link coverage tests, accession-version navigation and edge-case handling.
 2. Add a saved-record detail/reopen/reanalyse flow, cache quotas and explicit retention controls.
 3. Add request cancellation, bounded retry/backoff and provider rate-limit handling.
 4. Capture ETag/Last-Modified/source release, MIME type, licence/terms and attribution metadata.

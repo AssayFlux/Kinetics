@@ -3,6 +3,7 @@ package org.assayflux.kinetics
 import androidx.work.ListenableWorker
 import androidx.work.TestListenableWorkerBuilder
 import androidx.work.workDataOf
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -15,6 +16,11 @@ import org.robolectric.annotation.Config
 @Config(sdk = [35])
 class ImportWorkerCancellationTest {
     private val context = RuntimeEnvironment.getApplication()
+
+    @After
+    fun cleanDatabase() {
+        context.deleteDatabase("kinetics-research.db")
+    }
 
     private fun worker(id: String) =
         TestListenableWorkerBuilder<ImportWorker>(context)

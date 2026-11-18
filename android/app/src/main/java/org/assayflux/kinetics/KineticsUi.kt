@@ -433,15 +433,28 @@ private fun ServiceDetailScreen(
 ) {
     var publicStructureRecord by remember { mutableStateOf<PublicScientificRecord?>(null) }
     val capability = capabilities.firstOrNull()
+    val androidWorkflowAvailable = capability?.id in setOf(
+        "public.reference_databases",
+        "sequence.fasta",
+        "sequence.fastq",
+        "sequence.genetic_code_candidate_inference",
+        "structure.ligand_site_candidates",
+        "structure.apo_pocket_candidates",
+        "chemistry.sdf_graph",
+        "genomics.sam_vcf",
+    )
     Frame("SCIENTIFIC SERVICE", capability?.name ?: domain, "Service ID: ${capability?.id ?: "not registered"} · $domain", modifier) {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
             item {
                 OutlinedCard(Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
                     Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                        Text(if (capability?.status == "implemented") "IMPLEMENTATION REGISTERED" else "NOT IMPLEMENTED",
+                        Text(if (capability?.status == "implemented") "ENGINE SOURCE REGISTERED" else "ENGINE SOURCE NOT IMPLEMENTED",
                             style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                        Text(if (androidWorkflowAvailable) "Android workflow: available" else "Android workflow: not connected",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Text("Source: ${capability?.implementation ?: "not available"}", style = MaterialTheme.typography.bodySmall)
-                        Text("Catalogue registration does not prove a working Android dispatcher or scientific validation.",
+                        Text("A registered Python engine is not automatically runnable in this Android app. No scientific validation is implied.",
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
